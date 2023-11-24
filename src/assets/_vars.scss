@@ -1,0 +1,47 @@
+:root {
+	--background: #000000;
+  	--colorWhite: #ffffff;
+  	--colorBlack: #000000;
+	--fontColor: #FFFFFF;
+  	--accentColor: #00FFAE;
+  	--buttonOutlineText: #DCFFF4;
+	--container: 1300px;
+	--gridGap: 20px;
+	--totalCol: 12;
+	--columnWidth: 90px;
+	--sideGutter: calc((100vw - var(--container)  ) / 2 - 8px - var(--gridGap));
+	--grid:  var(--sideGutter) repeat(var(--totalCol), 1fr) var(--sideGutter);
+	--gridinner: repeat(var(--totalCol), 1fr);
+	--centered: 2/-2;
+	--full_centered: 1/-1;
+	//forms and inputs
+  	--formBorder: #B6C1BE;
+  	--formBorderSelected: var(--accentColor);
+	//Panel
+	--bgPanelColor: rgba(36, 37, 41, 0.60);
+	--borderPanelColor:  rgba(96, 97, 99, 0.60);
+
+	@media screen and (max-width: 1279px){
+	  --container: 710px;
+	  --gridGap: 10px;
+	  --totalCol: 12;
+	  --centered: 3/-3;
+	  --sideGutter: 20px;
+	}
+	@media screen and (max-width: 743px){
+	  --sideGutter: 20px;
+	  --container: 350px;
+	  --gridGap: 10px;
+	  --totalCol: 6;
+	  --centered: 2/-2;
+	}
+  }
+html[data-theme='light'] {
+  --background: #fff;
+  --fontColor: #000;
+}
+
+html[data-theme='dark'] {
+  --background: #000000;
+  --fontColor: #fff;
+}

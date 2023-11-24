@@ -1,0 +1,30 @@
+.Layout {
+	display: grid;
+  	grid-template-columns: var(--grid);
+  	grid-template-rows: auto 1fr auto;
+  	padding: 3.5rem 0;
+  	min-height: 100vh;
+  	gap: var(--gridGap);
+  overflow: hidden;
+  position: relative;
+  	main {
+	  display: grid;
+	  grid-column: 1/-1;
+	  grid-template-columns: subgrid;
+	}
+}
+
+.main {
+  @media screen and (min-width: 744px){
+	padding: 7.5rem 0;
+	> *[class^="Panel"] {
+	  grid-column: 1/-1;
+	}
+  }
+  @media screen and (min-width: 1300px){
+
+	> *[class^="Panel"] {
+	  grid-column: 2/-2;
+	}
+  }
+}

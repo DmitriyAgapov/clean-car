@@ -1,0 +1,30 @@
+form {
+
+}
+input {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  padding: .875rem .625rem;
+  border: 2px solid;
+  line-height: 1;
+  outline: none;
+  border-radius: 10px;
+  border-color: var(--formBorder);
+  &:focus {
+	border-color: var(--formBorderSelected);
+	filter: drop-shadow(0 0 5px white);
+  }
+}
+label {
+  display: block;
+  margin: 0 0 .75rem;
+  font-family: 'RF Dewi Expanded', sans-serif;
+  font-weight: 500;
+  line-height: 129%;
+  color: var(--accentColor)
+}
+button {
+
+}

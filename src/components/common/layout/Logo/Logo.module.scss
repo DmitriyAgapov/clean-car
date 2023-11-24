@@ -1,0 +1,18 @@
+.Logo {
+	display: block;
+}
+.routeName {
+  font-family: 'RF Dewi Expanded';
+  color: var(--accentColor);
+  margin-left: 6px;
+  font-size: .75rem;
+  font-weight: 900;
+}
+.logoName {
+	font-family: 'RF Dewi Expanded', sans-serif;
+  	color: white;
+  white-space: nowrap;
+  	font-size: 1.5rem;
+  	text-decoration: none;
+  	cursor: pointer;
+}

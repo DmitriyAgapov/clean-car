@@ -1,0 +1,74 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  background-color: var(--background);
+  margin: 0;
+  font-size: 16px;
+  color: var(--fontColor);
+  line-height: 1.5;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'RF Dewi Expanded', sans-serif;
+  margin: 0 0 1rem;
+}
+h1 {
+  margin-bottom: 3.125rem;
+  font-size: 2rem;
+}
+h2 {
+  margin-bottom: 1.75rem;
+  font-size: 1.75rem;
+}
+h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+h4 {
+  margin-bottom: 1.25rem;
+  font-size: 1.25rem;
+}
+
+@media screen and (min-width: 744px) {
+  h1 {
+    margin-bottom: 2.25rem;
+    font-size: 2.25rem;
+  }
+  h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
+  h3 {
+    margin-bottom: 1.75rem;
+    font-size: 1.75rem;
+  }
+  h4 {
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  h1 {
+    margin-bottom: 3rem;
+    font-size: 3rem;
+  }
+  h2 {
+    margin-bottom: 2.5rem;
+    font-size: 2.5rem;
+  }
+  h3 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
+  h4 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+}

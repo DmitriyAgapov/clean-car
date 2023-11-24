@@ -1,0 +1,20 @@
+.Panel {
+
+  border-radius: 20px;
+
+  &[data-variant="withPadding"] {
+	padding: 4rem 1.25rem;
+	@media screen and (min-width: 744px) {
+	  padding: 4rem 3.75rem;
+	}
+
+	@media screen and (min-width: 1280px) {
+	  padding: 4.5rem 3rem;
+	}
+  }
+
+  &[data-background="glass"] {
+	border: 1px solid var(--borderPanelColor);
+	background-color: var(--bgPanelColor);
+  }
+}

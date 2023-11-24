@@ -1,0 +1,52 @@
+.Button {
+  padding: 1rem 4rem;
+  text-decoration: none;
+  line-height: 1;
+  border-radius: 81px;
+  display: inline-flex;
+  font-family: 'RF Dewi Expanded', sans-serif;
+  color: var(--colorWhite);
+  border: 1px solid transparent;
+  text-align: center;
+  justify-content: center;
+  margin: 0 .5rem;
+  align-self: center;
+  white-space: nowrap;
+  &:hover {
+	opacity: .7;
+  }
+  &[data-size="default"] {
+	padding: 1rem 4rem;
+  }
+
+  &[data-size="sm"] {
+	padding: .75rem 4rem;
+  }
+
+  &[data-variant="default"] {
+	background: transparent;
+  }
+
+  &[data-variant="accent"] {
+	background: var(--accentColor);
+	font-weight: 600;
+	color: var(--colorBlack);
+	border-color: var(--accentColor);
+	text-transform: uppercase;
+	font-size: .875rem;
+  }
+
+  &[data-variant="outline"] {
+	background: transparent;
+	border-color: var(--colorWhite);
+	color: var(--buttonOutlineText);
+  }
+
+  &[data-variant="accent-outline"] {
+	background: transparent;
+	border: 1px solid var(--accentColor);
+	text-transform: uppercase;
+	font-size: .875rem;
+	color: var(--accentColor);
+  }
+}

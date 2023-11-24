@@ -1,0 +1,25 @@
+.Section {
+	grid-column: 2/-2;
+  	display: grid;
+  	grid-template-columns: subgrid;
+	position: relative;
+  z-index: 5;
+  &[data-variant="centered"] {
+	align-self: center;
+  }
+
+  //> *[class^="Panel"] {
+	//grid-column: 2/-2;
+  //}
+  //@media screen and (min-width: 744px){
+	//> *[class^="Panel"] {
+	//  grid-column: 2/-2;
+	//}
+  //}
+  //@media screen and (min-width: 1300px){
+  //
+	//> *[class^="Panel"] {
+	//  grid-column: 2/-2;
+	//}
+  //}
+}
