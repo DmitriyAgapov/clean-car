@@ -4,9 +4,10 @@ import { Field, Form, Formik } from 'formik';
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import styles from "./FormAuth.module.scss";
 import { useStore } from "stores/store";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 const SignupSchema = Yup.object().shape({
-	cleanm: Yup.string().email('Invalid email').required('Required'),
+	cleanm: Yup.string().email('Invalid email').required('Обязательное поле'),
 	pwd: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль')
 });
 
@@ -55,7 +56,7 @@ const InnerForm = ({ message }: { message:string }) => {
 				</div>
 				<div className={styles.actionGroup}>
 					<Button text={"Войти"} size={ButtonSizeType.lg} variant={ButtonVariant.accent} action={event => {event.preventDefault();submitForm()}}/>
-					<Button text={"Не помню пароль"} size={ButtonSizeType.lg} variant={ButtonVariant["accent-outline"]} />
+					<LinkStyled to={'/restore'} text={"Не помню пароль"} size={ButtonSizeType.lg} variant={ButtonVariant["accent-outline"]} />
 				</div>
 			</Form>}
 		</Formik>

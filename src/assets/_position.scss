@@ -23,7 +23,7 @@
   z-index: -3;
   margin: auto;
   overflow: visible;
-  transform: translate(-640px, 190px);
+  transform: translate(-640px, 300px);
   animation: color-change-2x 10s linear infinite alternate-reverse both;
 }
 .authBgSec {
@@ -36,9 +36,10 @@
   z-index: -3;
   margin: auto;
   transform: translate(380px, 290px);
-
-    animation: color-change-2x 10s linear infinite alternate-reverse both;
-
+  animation: color-change-2x 10s linear infinite alternate-reverse both;
+  &.success {
+    transform: scale(1.5) translateX(-100px) rotateZ(31deg);
+  }
 }
 .lineBg {
   position: absolute;

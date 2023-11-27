@@ -85,6 +85,15 @@
 	align-items: center;
 	line-height: 16px;
 	padding: 17px 3.125rem 15px;
+	@media screen and (max-width: 743px){
+	  padding-left: 1.75rem;
+	  padding-right: 1.75rem;
+
+	  justify-self: center;
+	  width: 100%;
+
+
+	}
 	color: var(--accentColor);
 	&:hover, &:focus {
 	  background: var(--accentColor);
@@ -109,8 +118,4 @@
 
   }
 
-
-  & + & {
-	margin: 10px !important;
-  }
 }

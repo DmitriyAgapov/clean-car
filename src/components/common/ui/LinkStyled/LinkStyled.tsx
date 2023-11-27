@@ -16,9 +16,9 @@ interface ButtonProps  {
 	directory?: ButtonDirectory
 }
 
-const LinkStyled = ({ text, to, size = ButtonSizeType.base, directory, variant = ButtonVariant.default, ...props}: LinkProps & ButtonProps) => {
+const LinkStyled = ({ text, to, size = ButtonSizeType.base, className, directory, variant = ButtonVariant.default, ...props}: LinkProps & ButtonProps) => {
 
-	return <Link to={to}  className={styles.Button} data-directory={directory} data-variant={variant} data-size={size} {...props}>{text}</Link>;
+	return <Link to={to}  className={styles.Button + " " + className} data-directory={directory} data-variant={variant} data-size={size} {...props}>{text}</Link>;
 };
 
 export default LinkStyled;

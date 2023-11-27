@@ -4,8 +4,10 @@
   	grid-template-columns: subgrid;
 	position: relative;
   z-index: 5;
+  grid-template-rows: min-content;
   &[data-variant="centered"] {
 	align-self: center;
+	align-items: center;
   }
 
   //> *[class^="Panel"] {

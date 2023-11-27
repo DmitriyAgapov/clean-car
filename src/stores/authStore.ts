@@ -1,9 +1,9 @@
-import { observable, action, makeObservable } from 'mobx';
+import { observable, action, makeObservable, reaction } from 'mobx';
 import { AxiosError } from 'axios';
 import agent from '../utils/agent';
 import userStore from './userStore';
 import appStore from "./appStore";
-import data, { decodeToken } from "utils/getData";
+import { decodeToken } from "utils/getData";
 
 export class AuthStore {
   inProgress = false;
@@ -32,6 +32,15 @@ export class AuthStore {
       register: action,
       logout: action
     });
+    reaction(() => this.values,
+        values => {
+          if(values.email.length > 0 && values.password.length > 0) {
+            console.log('ready to login', values.email, values.password)
+          } else  {
+            console.log('ready to login', values)
+          }
+
+    })
   }
 
   setFirstname(first_name: string) {
@@ -64,9 +73,9 @@ export class AuthStore {
     this.inProgress = true;
     this.errors = undefined;
     return agent.Auth.login(this.values.email, this.values.password)
-      .then((resolve: any) => {
+      .then(action((resolve: any) => {
         appStore.setToken(resolve.access)
-    })
+      }))
       .then(() => {
         if(appStore.token) {
           const dataUser = decodeToken(appStore.token);
@@ -82,6 +91,7 @@ export class AuthStore {
       }))
       .finally(action(() => { this.inProgress = false; }));
   }
+
   register() {
     this.inProgress = true;
     this.errors = undefined;

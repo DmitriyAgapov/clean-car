@@ -14,7 +14,7 @@ export default function RegisterPage() {
 	const store = useStore()
 
 	useEffect(() => {
-		store.appStore.setAppRouteName('регистрация')
+		store.appStore.setAppRouteName('.регистрация')
 	});
 	return (
 		<Layout>

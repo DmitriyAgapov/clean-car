@@ -12,7 +12,7 @@ export enum PanelColor {
 }
 
 type PanelProps  = {
-	children: ReactNode | ReactNode[]
+	children?: ReactNode | ReactNode[]
 	header?: ReactNode | ReactNode[]
 	footer?: ReactNode | ReactNode[]
 	variant?: PanelVariant

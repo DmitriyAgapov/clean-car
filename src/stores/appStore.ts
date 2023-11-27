@@ -2,7 +2,7 @@ import { action, makeObservable, observable, reaction } from 'mobx';
 
 export class AppStore {
 	appName = 'Clean Car';
-	appRouteName = 'авторизация'
+	appRouteName = '.авторизация'
 	appTheme = "dark";
 	token = window.localStorage.getItem('jwt');
 	appLoaded = false;

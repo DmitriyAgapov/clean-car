@@ -1,7 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 import agent from "utils/agent";
 import authStore from "stores/authStore";
-import CurrentUser from "components/common/layout/CurrentUser/CurrentUser";
 
 export type User = {
 	id: string;
@@ -35,16 +34,16 @@ export class UserStore {
 
 	pullUser() {
 		this.loadingUser = true;
-		console.log(this.currentUser)
-		if(!this.currentUser?.id) {
-			action(() => {
-				// @ts-ignore
-				this.currentUser =  {
-					...agent.Auth.current(),
-					email: authStore.values.email
-				}
-			})
-		}
+
+		action(() => {
+			// @ts-ignore
+			this.currentUser =  {
+				...agent.Auth.current(),
+				email: authStore.values.email
+			}
+			console.log(this.currentUser)
+		})
+
 
 	}
 	//

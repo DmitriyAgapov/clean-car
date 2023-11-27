@@ -20,7 +20,7 @@ const SignupSchema = Yup.object().shape({
 		.max(16, 'Слишком длинное!')
 		.phone("RU", "Введите правильный номер")
 		.required("Требуется номер телефона"),
-	cleanm: Yup.string().email('Неверный email').required('Обязательное поле'),
+	cleanm: Yup.string().email('Неверный email').required('Укажите email'),
 	pwd: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль'),
 	pwd2: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль')
 });

@@ -13,7 +13,7 @@ const Logo = () => {
 	return (
 		<div className={styles.Logo}>
 			<Link to={"/"} className={styles.logoName}>{logoName}</Link>
-			<span className={styles.routeName}>.{routeName}</span>
+			<span className={styles.routeName}>{routeName}</span>
 		</div>
 	);
 };

@@ -5,11 +5,11 @@ import Panel from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button"
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import { Outlet } from "react-router-dom";
 
 export default function Root() {
 	return (
 		<Layout>
+
 			<Section type={SectionType.centered}>
 				<Panel className={"col-span-6"}
 					header={<Heading text={"Добро пожаловать в CleanCar."} variant={HeadingVariant.h1} color={HeadingColor.accent}/>}
