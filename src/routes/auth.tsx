@@ -4,11 +4,10 @@ import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import FormAuth from "components/Form/FormAuth/FormAuth";
-import "../assets/styles.scss"
 import { useStore } from "stores/store";
-import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
+import LinkStyled, { ButtonDirectory } from "components/common/ui/LinkStyled/LinkStyled";
 import { observer } from "mobx-react-lite";
-import Button from "components/common/ui/Button/Button";
+import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 
 function AuthPage() {
 	const store = useStore()
@@ -34,7 +33,9 @@ function AuthPage() {
 					<Panel className={"col-span-6 desktop:col-start-8 desktop:col-span-5 tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-2xl"} variant={PanelVariant.withPadding} background={PanelColor.glass}>
 						<FormAuth/>
 					</Panel> : <Panel className={"col-span-6 desktop:col-start-8 desktop:col-span-5 tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-2xl"}
-						footer={<Button text={'Logout'} action={() => store.authStore.logout() } />}
+						footer={<>
+							<Button text={'Logout'} action={() => store.authStore.logout() } />
+							<LinkStyled text={'в личный кабинет'} variant={ButtonVariant.accent} directory={ButtonDirectory.customer} to={'/register/success'} /></>}
 
 					>UserId: <h4>{store.userStore.currentUser?.id}</h4></Panel>}
 

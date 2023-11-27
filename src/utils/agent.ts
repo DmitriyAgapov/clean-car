@@ -6,6 +6,7 @@ import axios, {AxiosError} from "axios";
 import appStore from "stores/appStore";
 import authStore from "stores/authStore";
 import { decodeToken } from "utils/getData";
+import userStore, { User, UserStore } from "stores/userStore";
 // const superagent = superagentPromise(_superagent, global.Promise);
 
 const API_ROOT = process.env.REACT_APP_PUBLIC_API;
@@ -36,7 +37,7 @@ const requests = {
 			method: 'GET',
 			headers: tokenPlugin(),
 		})
-		.then(response => response.data)
+		.then(response => response)
 		.catch(handleErrors),
 	// put: (url: string, body: any) =>
 	// 	superagent
@@ -56,13 +57,13 @@ const requests = {
 };
 
 const Auth = {
-	current: () => new Promise((resolve, reject) => {
-		setTimeout(() => {
-			if(appStore.token) {
-				resolve(decodeToken(appStore.token)
-				)
-			}}, 100)
-	})
+	current: () => {
+		if(appStore.token) {
+			const dataUser = decodeToken(appStore.token);
+			// @ts-ignore
+			return { id: dataUser.user_id, first_name: dataUser.first_name, last_name: dataUser.last_name, phone: dataUser.phone, email: authStore.values.email}
+		}
+	}
 	// console.log('request current userr')
 		// requests.get('/user'),
 	,
@@ -70,14 +71,8 @@ const Auth = {
 		requests.post('/token/', { email: email, password: password  }),
 
 	register: (first_name: string, last_name: string, email: string, phone: string, password: string) =>
-		new Promise((resolve, reject) => {
-			setTimeout(() => resolve(
-				{email: email, phone: phone, first_name: first_name, last_name: last_name, password: password}
-			), 100)
-			setTimeout(() => reject('errror'))
-		})
-		// requests.post('/accounts/create_user/', {
-		// 	email: email, phone: phone, first_name: first_name, last_name: last_name, password: password}),
+		requests.post('/accounts/register/', {
+			email: email, phone: phone, first_name: first_name, last_name: last_name, password: password, password2: password}),
 	// save: (user: any) =>
 	// 	requests.put('/user', { user })
 };

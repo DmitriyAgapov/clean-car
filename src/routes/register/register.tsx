@@ -4,7 +4,7 @@ import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import FormRegister from "components/Form/FormRegister/FormRegister";
-import "../assets/styles.scss"
+
 import { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button"
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 

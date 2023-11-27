@@ -8,6 +8,7 @@ import Header from "components/common/layout/Header/Header";
 import Footer from "components/common/layout/Footer/Footer";
 import { SvgAuthBg, SvgAuthBgSec } from "components/common/ui/Icon";
 import Burger from "components/common/ui/Burger/Burger";
+import "../../../../assets/styles.scss"
 
 interface ChildrenProps  {
 	children: ReactNode | ReactNode[]
@@ -16,18 +17,16 @@ interface ChildrenProps  {
 const Layout:FC<ChildrenProps> = ({children}) => {
 
 	const store = useStore();
-	const { appStore, userStore } = useStore()
+	const { appStore, userStore } = store
 	useEffect(() => {
-
-
-			appStore.setAppLoading()
+		appStore.setAppLoading()
 		if (appStore.token) {
 			userStore.pullUser()
 		}
 			appStore.setAppLoaded()
 			// .finally(() => appStore.setAppLoaded())
 
-	})
+	}, [])
 
 	return <div className={styles.Layout} data-theme={store.appStore.appTheme}>
 		<Header>

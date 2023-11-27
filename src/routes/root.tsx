@@ -3,9 +3,9 @@ import Layout from "components/common/layout/Layout/Layout";
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import "../assets/styles.scss"
 import { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button"
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
+import { Outlet } from "react-router-dom";
 
 export default function Root() {
 	return (

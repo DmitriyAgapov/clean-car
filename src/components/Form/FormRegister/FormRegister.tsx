@@ -45,8 +45,9 @@ const InnerForm = () => {
 				store.authStore.setPhone(values.phone);
 				store.authStore.setEmail(values.cleanm);
 				if(values.pwd === values.pwd2) store.authStore.setPassword(values.pwd);
-				console.log(Object.values(store.authStore.values))
+
 				if(Object.values(store.authStore.values).length > 0) {
+					console.log('success', Object.values(store.authStore.values))
 					store.authStore.register()
 					actions.setSubmitting(false);
 				}

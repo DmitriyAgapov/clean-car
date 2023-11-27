@@ -1,6 +1,7 @@
 import { action, makeObservable, observable } from 'mobx';
-import appStore from "stores/appStore";
 import agent from "utils/agent";
+import authStore from "stores/authStore";
+import CurrentUser from "components/common/layout/CurrentUser/CurrentUser";
 
 export type User = {
 	id: string;
@@ -13,7 +14,7 @@ export type User = {
 }
 
 export class UserStore {
-	currentUser?: User;
+	currentUser: User | undefined;
 	loadingUser?: boolean;
 	updatingUser?: boolean;
 	updatingUserErrors: any;
@@ -34,24 +35,17 @@ export class UserStore {
 
 	pullUser() {
 		this.loadingUser = true;
+		console.log(this.currentUser)
+		if(!this.currentUser?.id) {
+			action(() => {
+				// @ts-ignore
+				this.currentUser =  {
+					...agent.Auth.current(),
+					email: authStore.values.email
+				}
+			})
+		}
 
-
-		return agent.Auth.current()
-			.then(
-				action((resolve:any) => {
-					// console.log(appStore.token)
-					this.currentUser = {
-						id: resolve.user_id,
-						email: 'email@email.ru',
-						first_name: 'test',
-						last_name: 'setest',
-						phone: '+7898798797'
-					};
-					// console.log('resolvePullUser', resolve)
-				})
-			)
-		// .then(action(({ user }: { user: User }) => { this.currentUser = user; }))
-		.finally(action(() => { this.loadingUser = false; }))
 	}
 	//
 	// updateUser(newUser: User) {

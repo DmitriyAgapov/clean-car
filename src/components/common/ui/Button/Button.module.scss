@@ -61,7 +61,7 @@
 	align-items: center;
 	line-height: 16px;
 	letter-spacing: normal;
-	padding: 1rem 3.125rem;
+	padding: 17px 3.125rem 15px;
 
 	&:hover, &:focus {
 	  background: var(--accentColor);
@@ -84,7 +84,7 @@
 	font-size: .875rem;
 	align-items: center;
 	line-height: 16px;
-	padding: 1rem 3.125rem;
+	padding: 17px 3.125rem 15px;
 	color: var(--accentColor);
 	&:hover, &:focus {
 	  background: var(--accentColor);
@@ -92,6 +92,24 @@
 	  color: black;
 	}
   }
+
+
+
+  &[data-directory="customer"] {
+	background: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
+	border: 0;
+  }
+  &[data-directory="admin"] {
+	background: linear-gradient(-120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
+	border: 0;
+  }
+  &[data-directory="executor"] {
+	border: 0;
+	background: linear-gradient(-90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
+
+  }
+
+
   & + & {
 	margin: 10px !important;
   }

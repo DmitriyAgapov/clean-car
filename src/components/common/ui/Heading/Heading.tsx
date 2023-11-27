@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Heading.module.scss';
+import { ButtonDirectory } from "components/common/ui/LinkStyled/LinkStyled";
 
 export enum HeadingVariant {
 	h1 =  "h1" ,
@@ -9,6 +10,12 @@ export enum HeadingVariant {
 	h5 = "h5",
 	h6 = "h6"
 }
+export enum HeadingDirectory {
+	admin =  "admin" ,
+	customer = "customer",
+	executor = "executor"
+}
+
 export enum HeadingColor {
 	default =  "default" ,
 	accent = "accent",
@@ -19,12 +26,13 @@ type HeadingProps = {
 	text: string
 	variant: HeadingVariant
 	color?: string
+	directory?: HeadingDirectory
 }
 
-const Heading = ({ text, variant = HeadingVariant.h2, color = HeadingColor.default }: HeadingProps) => {
+const Heading = ({ text, variant = HeadingVariant.h2, directory, color = HeadingColor.default }: HeadingProps) => {
 	switch (variant) {
 		case "h1":
-			return <h1 className={styles.Heading} color={color}>{text}</h1>
+			return <h1 className={styles.Heading} data-directory={directory} color={color}>{text}</h1>
 		case "h2":
 			return <h2 className={styles.Heading} color={color}>{text}</h2>
 		case "h3":

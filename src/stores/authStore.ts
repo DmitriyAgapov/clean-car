@@ -1,10 +1,9 @@
 import { observable, action, makeObservable } from 'mobx';
 import { AxiosError } from 'axios';
 import agent from '../utils/agent';
-import userStore, { User } from './userStore';
+import userStore from './userStore';
 import appStore from "./appStore";
 import data, { decodeToken } from "utils/getData";
-
 
 export class AuthStore {
   inProgress = false;
@@ -30,7 +29,7 @@ export class AuthStore {
       setPassword: action,
       reset: action,
       login: action,
-      // register: action,
+      register: action,
       logout: action
     });
   }
@@ -65,10 +64,17 @@ export class AuthStore {
     this.inProgress = true;
     this.errors = undefined;
     return agent.Auth.login(this.values.email, this.values.password)
-      .then(response => {
-        appStore.setToken(response.access)
-    }).then(() => {
-      // return console.log();
+      .then((resolve: any) => {
+        appStore.setToken(resolve.access)
+    })
+      .then(() => {
+        if(appStore.token) {
+          const dataUser = decodeToken(appStore.token);
+
+          // @ts-ignore
+          userStore.currentUser = { id: dataUser.user_id, first_name: dataUser.first_name, last_name: dataUser.last_name, phone: dataUser.phone, email: this.values.email}
+
+        }
     })
       .catch(action((err: AxiosError) => {
         this.errors = err.response && err.response.data;
@@ -76,22 +82,38 @@ export class AuthStore {
       }))
       .finally(action(() => { this.inProgress = false; }));
   }
-  //
   register() {
     this.inProgress = true;
     this.errors = undefined;
-
     return agent.Auth.register(this.values.first_name, this.values.last_name, this.values.email, this.values.phone, this.values.password)
+      .then(action
+          ((response :any) => {
+            authStore.values = { ...response, password: this.values.password }
+          }))
+    .then(action(() => this.login()))
+      .then(() => userStore.pullUser())
+      .catch(action((err: AxiosError) => {
         // @ts-ignore
-      .then(response => console.log('registered new User', response.data))
-      // .then(() => userStore.pullUser())
-      // .catch(action((err: AxiosError) => {
-      //   // @ts-ignore
-      // this.errors = err.response && err.response.data && err.response.data.detail;
-      //   throw err;
-      // }))
+          this.errors = err.response && err.response.data && err.response.data.detail;
+        throw err;
+      }))
       .finally(action(() => { this.inProgress = false; }));
   }
+  // register() {
+  //   this.inProgress = true;
+  //   this.errors = undefined;
+  //
+  //   return agent.Auth.register(this.values.first_name, this.values.last_name, this.values.email, this.values.phone, this.values.password)
+  //       // @ts-ignore
+  //     .then(response => console.log('registered new User', response.data))
+  //     // .then(() => userStore.pullUser())
+  //     // .catch(action((err: AxiosError) => {
+  //     //   // @ts-ignore
+  //     // this.errors = err.response && err.response.data && err.response.data.detail;
+  //     //   throw err;
+  //     // }))
+  //     .finally(action(() => { this.inProgress = false; }));
+  // }
 
   logout() {
     appStore.setToken(null);

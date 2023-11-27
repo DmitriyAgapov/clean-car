@@ -8,7 +8,8 @@ import {
 import Root from "routes/root";
 import ErrorPage from "error-page";
 import AuthPage from "routes/auth";
-import RegisterPage from "routes/register";
+import RegisterPage from "routes/register/register";
+import RegisterSuccessPage from "routes/register/registerSucces";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Root />,
-        errorElement: <ErrorPage />,
+        errorElement: <ErrorPage />
     },
     {
         path: "/auth",
@@ -28,8 +29,14 @@ const router = createBrowserRouter([
     {
         path: "/register",
         element: <RegisterPage />,
+        errorElement: <ErrorPage />
+    },
+    {
+        path: '/register/success',
+        element: <RegisterSuccessPage />,
         errorElement: <ErrorPage />,
     }
+
 ]);
 root.render(
     <StoreProvider>
