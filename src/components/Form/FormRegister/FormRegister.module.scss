@@ -22,12 +22,13 @@
 .twoCol {
   display: flex;
   gap: 1.25rem;
+  flex-wrap: wrap;
 
   label {
 	margin-top: 0;
   }
   > * {
-	flex: 1;
+	flex: 1 1 12rem;
 	margin: 0;
   }
 }

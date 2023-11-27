@@ -1,12 +1,14 @@
 import { observable, action, makeObservable } from 'mobx';
-// import { ResponseError } from 'superagent';
-// import agent from '../agent';
+import { AxiosError } from 'axios';
+import agent from '../utils/agent';
 import userStore, { User } from './userStore';
-import commonStore from './appStore';
+import appStore from "./appStore";
+import data, { decodeToken } from "utils/getData";
+
 
 export class AuthStore {
   inProgress = false;
-  errors = undefined;
+  errors:any = undefined ;
 
   values = {
     username: '',
@@ -23,7 +25,7 @@ export class AuthStore {
       setEmail: action,
       setPassword: action,
       reset: action,
-      // login: action,
+      login: action,
       // register: action,
       logout: action
     });
@@ -47,18 +49,21 @@ export class AuthStore {
     this.values.password = '';
   }
 
-  // login() {
-  //   this.inProgress = true;
-  //   this.errors = undefined;
-  //   return agent.Auth.login(this.values.email, this.values.password)
-  //     .then(({ user }: { user: User }) => commonStore.setToken(user.token))
-  //     .then(() => userStore.pullUser())
-  //     .catch(action((err: ResponseError) => {
-  //       this.errors = err.response && err.response.body && err.response.body.errors;
-  //       throw err;
-  //     }))
-  //     .finally(action(() => { this.inProgress = false; }));
-  // }
+  login() {
+    this.inProgress = true;
+    this.errors = undefined;
+    return agent.Auth.login(this.values.email, this.values.password)
+      .then(response => {
+        appStore.setToken(response.access)
+    }).then(() => {
+      return console.log();
+    })
+      .catch(action((err: AxiosError) => {
+        this.errors = err.response && err.response.data;
+        throw err;
+      }))
+      .finally(action(() => { this.inProgress = false; }));
+  }
   //
   // register() {
   //   this.inProgress = true;
@@ -74,10 +79,10 @@ export class AuthStore {
   // }
 
   logout() {
-    commonStore.setToken(null);
+    appStore.setToken(null);
     userStore.forgetUser();
     return Promise.resolve();
   }
 }
-
-export default new AuthStore();
+const authStore = new AuthStore()
+export default  authStore;

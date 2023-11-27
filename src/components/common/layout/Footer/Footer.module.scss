@@ -1,6 +1,11 @@
 .Footer {
-	grid-column: 2/-2;
-  	display: flex;
-  	justify-content: space-between;
-  	color: #ffffff50;
+  grid-column: 2/-2;
+  display: flex;
+  justify-content: space-between;
+  color: #ffffff50;
+  font-size: .75rem;
+  margin-top: 2rem;
+  @media screen and (min-width: 744px) {
+	font-size: .875rem;
+  }
 }

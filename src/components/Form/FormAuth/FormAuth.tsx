@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import { Field, Form, Formik } from 'formik';
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import styles from "./FormAuth.module.scss";
+import { useStore } from "stores/store";
 
 const SignupSchema = Yup.object().shape({
 	cleanm: Yup.string().email('Invalid email').required('Required'),
@@ -10,7 +11,7 @@ const SignupSchema = Yup.object().shape({
 });
 
 const InnerForm = ({ message }: { message:string }) => {
-
+	const store = useStore();
 	return (
 		<Formik
 			initialValues={{
@@ -19,33 +20,38 @@ const InnerForm = ({ message }: { message:string }) => {
 			}}
 			validationSchema={SignupSchema}
 			onSubmit={(values, actions) => {
-				console.log({ values, actions });
+				store.authStore.setEmail(values.cleanm)
+				store.authStore.setPassword(values.pwd)
+				store.authStore.login()
 				alert(JSON.stringify(values, null, 2));
 				actions.setSubmitting(false);
 			}}
 		>
 			{({submitForm , errors, touched }) =>
 			<Form className={styles.FormAuth}>
-				<div className={styles.inputGroup}>
+				<div className={styles.inputGroup}   data-form_error={errors.cleanm && touched.cleanm ? "error" : null}>
 					<label htmlFor="email">Ваш email</label>
 					<Field
-						autocomplete="off"
+						autoComplete="off"
 						id="cleanm"
 						name="cleanm"
 						type="email"
 					/>
 					{errors.cleanm && touched.cleanm ? (
-						<div>{errors.cleanm}</div>
+						<div className={'form-error'}>{errors.cleanm}</div>
 					) : null}
 				</div>
-				<div className={styles.inputGroup}>
+				<div className={styles.inputGroup}   data-form_error={errors.pwd && touched.pwd ? "error" : null}>
 					<label htmlFor="pswd">Пароль</label>
 					<Field
-						autocomplete="off"
+						autoComplete="off"
 						id="pwd"
 						name="pwd"
 						type="password"
 					/>
+					{errors.pwd && touched.pwd ? (
+						<div className={'form-error'}>{errors.cleanm}</div>
+					) : null}
 				</div>
 				<div className={styles.actionGroup}>
 					<Button text={"Войти"} size={ButtonSizeType.lg} variant={ButtonVariant.accent} action={event => {event.preventDefault();submitForm()}}/>

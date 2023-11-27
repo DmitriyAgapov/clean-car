@@ -1,5 +1,7 @@
-import  axios  from "axios";
+import * as jose from 'jose'
 
+
+export const decodeToken = (token:string) => jose.decodeJwt(token);
 const getToken = (request:any) => {
 
 }

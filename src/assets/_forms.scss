@@ -1,7 +1,7 @@
 form {
 
 }
-input {
+input, textarea {
   width: 100%;
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
@@ -10,21 +10,33 @@ input {
   border: 2px solid;
   line-height: 1;
   outline: none;
+  color: var(--colorInputText);
   border-radius: 10px;
   border-color: var(--formBorder);
   &:focus {
 	border-color: var(--formBorderSelected);
-	filter: drop-shadow(0 0 5px white);
+	filter: drop-shadow(0 0 10px rgba(0, 255, 174, .5)) ;
   }
 }
 label {
   display: block;
-  margin: 0 0 .75rem;
+  margin: 0 0 .625rem;
   font-family: 'RF Dewi Expanded', sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 129%;
   color: var(--accentColor)
 }
+.form-error {
+  position: absolute;
+  margin-top: .375rem;
+  font-size: .75rem;
+}
+[data-form_error="error"] {
+  label, .form-error {
+    color: var(--errorColor);
+  }
+}
+
 button {
 
 }

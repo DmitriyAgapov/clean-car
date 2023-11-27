@@ -3,7 +3,9 @@
   	--colorWhite: #ffffff;
   	--colorBlack: #000000;
 	--fontColor: #FFFFFF;
+  	--colorInputText: #171313;
   	--accentColor: #00FFAE;
+  	--errorColor: rgba(244, 86, 95, 1);
   	--buttonOutlineText: #DCFFF4;
 	--container: 1300px;
 	--gridGap: 20px;
@@ -21,7 +23,7 @@
 	--bgPanelColor: rgba(36, 37, 41, 0.60);
 	--borderPanelColor:  rgba(96, 97, 99, 0.60);
 
-	@media screen and (max-width: 1279px){
+	@media screen and (max-width: 1299px){
 	  --container: 710px;
 	  --gridGap: 10px;
 	  --totalCol: 12;
@@ -31,7 +33,7 @@
 	@media screen and (max-width: 743px){
 	  --sideGutter: 20px;
 	  --container: 350px;
-	  --gridGap: 10px;
+	  --gridGap: 0px;
 	  --totalCol: 6;
 	  --centered: 2/-2;
 	}

@@ -1,6 +1,11 @@
 .Panel {
-
   border-radius: 20px;
+
+  header, footer {
+	& > *:first-child, & > *:last-child {
+	  margin: 0;
+	}
+  }
 
   &[data-variant="withPadding"] {
 	padding: 4rem 1.25rem;
@@ -8,7 +13,7 @@
 	  padding: 4rem 3.75rem;
 	}
 
-	@media screen and (min-width: 1280px) {
+	@media screen and (min-width: 1299px) {
 	  padding: 4.5rem 3rem;
 	}
   }
@@ -17,4 +22,14 @@
 	border: 1px solid var(--borderPanelColor);
 	background-color: var(--bgPanelColor);
   }
+  header {
+	@apply mb-8 tablet:mb-10 desktop:mb-12;
+  }
+  footer {
+	@apply mt-11 tablet:mt-11 desktop:mt-20;
+  }
+}
+
+.panelBody {
+  display: block;
 }

@@ -1,18 +1,27 @@
 .Logo {
 	display: block;
+  align-self: center;
 }
 .routeName {
   font-family: 'RF Dewi Expanded';
   color: var(--accentColor);
   margin-left: 6px;
   font-size: .75rem;
-  font-weight: 900;
+  font-weight: 600;
+
 }
 .logoName {
 	font-family: 'RF Dewi Expanded', sans-serif;
   	color: white;
-  white-space: nowrap;
+  	white-space: nowrap;
   	font-size: 1.5rem;
   	text-decoration: none;
   	cursor: pointer;
+  @media screen and (max-width: 743px ){
+		font-size: 1.125rem;
+  }
+  @media screen and (max-width: 1299px ){
+		font-size: 1.25rem;
+  }
+
 }

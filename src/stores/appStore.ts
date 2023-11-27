@@ -16,7 +16,9 @@ export class AppStore {
 			appTheme: observable,
 			setToken: action,
 			setTheme: action,
-			setAppLoaded: action
+			setAppLoaded: action,
+			setAppLoading: action,
+			setAppRouteName: action
 		});
 
 		reaction(
@@ -45,6 +47,11 @@ export class AppStore {
 	setAppLoaded() {
 		this.appLoaded = true;
 	}
+	setAppLoading() {
+		this.appLoaded = false;
+	}
+
+
 	setAppRouteName(route: string) {
 		this.appRouteName = route;
 	}

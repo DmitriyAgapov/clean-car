@@ -1,0 +1,62 @@
+.Burger {
+  width: 1.625rem;
+  height: 1.625rem;
+  margin: 6px;
+  display: grid;
+  gap: 6px;
+  align-self: center;
+  justify-items: end;
+  transform: rotate(0deg);
+  transition: .5s ease-in-out;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  span {
+	background: var(--accentColor);
+	display: block;
+	border-radius: 10px;
+	height: 2px;
+	width: 100%;
+	opacity: 1;
+	position: absolute;
+	transform: rotate(0deg);
+	-webkit-transition: .25s ease-in-out;
+	-moz-transition: .25s ease-in-out;
+	-o-transition: .25s ease-in-out;
+	transition: .25s ease-in-out;
+	transform-origin: left;
+	&:nth-child(1) {
+	  top: 6px;
+	  transform-origin: left;
+	}
+
+	&:nth-child(2) {
+	  top: calc(6px + 2px + 6px);
+	  width: 66%;
+	  right: 0;
+	  left: initial;
+	}
+
+	&:nth-child(3) {
+	  top: calc(6px + 2px + 6px + 2px + 6px);
+	  //transform-origin: left;
+	}
+  }
+  &[data-state="true"] {
+	span {
+	  &:nth-child(1) {
+		transform: rotate(45deg) translate(0px, -1px);
+	  }
+
+	  &:nth-child(2) {
+		opacity: 0;
+		right: -60px;
+		width: 100%;
+	  }
+
+	  &:nth-child(3) {
+		transform: rotate(-45deg)  translate(-1px, 1px);
+	  }
+	}
+  }
+}

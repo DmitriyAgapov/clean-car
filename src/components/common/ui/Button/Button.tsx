@@ -1,12 +1,14 @@
 import React, { EventHandler } from 'react';
 import styles from './Button.module.scss';
 
+
 export enum ButtonVariant {
-	outline =  "outline" ,
+	tech =  "tech",
 	default = "default",
 	accent = "accent",
 	"accent-outline" = "accent-outline"
 }
+
 
 export enum ButtonSizeType {
 	sm =  "sm" ,
@@ -14,17 +16,18 @@ export enum ButtonSizeType {
 	lg = "accent"
 }
 
-type ButtonProps = {
+export type ButtonProps = {
 	text: string
 	variant?: ButtonVariant
 	size?: ButtonSizeType
 	action?: EventHandler<any>
+	className?: string
 	href?: string
 }
 
-const Button = ({ text, href = "#", size = ButtonSizeType.base, variant = ButtonVariant.default, action,  ...props}: ButtonProps) => {
+const Button = ({ text, href = "#", size = ButtonSizeType.base, className, variant = ButtonVariant.default, action,  ...props}: ButtonProps) => {
 
-	return <a href={href} className={styles.Button} data-variant={variant} data-size={size} onClick={action} {...props}>{text}</a>;
+	return <a href={href} className={styles.Button + " " + className} data-variant={variant} data-size={size} onClick={action} {...props}>{text}</a>;
 };
 
 export default Button;

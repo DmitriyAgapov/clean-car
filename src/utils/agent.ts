@@ -2,67 +2,80 @@
 // import _superagent, { ResponseError, Request, Response } from 'superagent';
 // import commonStore from './stores/commonStore';
 // import authStore from './stores/authStore';
-import * as process from "process";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
+import appStore from "stores/appStore";
+import authStore from "stores/authStore";
+import { decodeToken } from "utils/getData";
 // const superagent = superagentPromise(_superagent, global.Promise);
 
-const API_ROOT = process.env.PUBLIC_API;
+const API_ROOT = process.env.REACT_APP_PUBLIC_API;
 
-const encode = encodeURIComponent;
+// const encode = encodeURIComponent;
 
-// const handleErrors = (err: ResponseError) => {
-// 	if (err && err.response && err.response.status === 401) {
-// 		authStore.logout();
-// 	}
-// 	return err;
-// };
+const handleErrors = (err: AxiosError) => {
+	if (err && err.response && err.response.status === 401) {
+		authStore.logout();
+	}
+	return err;
+};
 
-const responseBody = (res: Response) => res.body;
-
-const tokenPlugin = (req: Request) => {
-	// if (commonStore.token) {
-	// 	req.set('authorization', `Token ${commonStore.token}`);
-	// }
+const tokenPlugin = () => {
+	if (appStore.token) return ({ 'authorization': `Token ${appStore.token}`})
 };
 
 const requests = {
 	// del: (url: string) =>
-	// 	superagent
-	// 	.del(`${API_ROOT}${url}`)
+	// 	axios
+	// 	.delete(`${API_ROOT}${url}`)
 	// 	.use(tokenPlugin)
 	// 	.end(handleErrors)
 	// 	.then(responseBody),
-	// get: (url: string) =>
-	// 	superagent
-	// 	.get(`${API_ROOT}${url}`)
-	// 	.use(tokenPlugin)
-	// 	.end(handleErrors)
-	// 	.then(responseBody),
+	get: (url: string) =>
+		axios({
+			url: `${API_ROOT}${url}`,
+			method: 'GET',
+			headers: tokenPlugin(),
+		})
+		.then(response => response.data)
+		.catch(handleErrors),
 	// put: (url: string, body: any) =>
 	// 	superagent
 	// 	.put(`${API_ROOT}${url}`, body)
 	// 	.use(tokenPlugin)
 	// 	.end(handleErrors)
 	// 	.then(responseBody),
-	// post: (url: string, body: any) =>
-	// 	superagent
-	// 	.post(`${API_ROOT}${url}`, body)
-	// 	.use(tokenPlugin)
-	// 	.end(handleErrors)
-	// 	.then(responseBody),
+	post: (url: string, body: any) =>
+		axios({
+			url: `${API_ROOT}${url}`,
+			headers: tokenPlugin(),
+			method: 'Post',
+			data: body
+		})
+		.then(response => response.data)
+		.catch(handleErrors),
 };
 
 const Auth = {
-	// current: () =>
-	// 	requests.get('/user'),
-	// login: (email: string, password: string) =>
-	// 	requests.post('/users/login', { user: { email, password } }),
+	current: () => new Promise((resolve, reject) => {
+
+
+			setTimeout(() => {
+				if(appStore.token) {
+					resolve(decodeToken(appStore.token)
+					)
+				}}, 100)
+
+	})
+	// console.log('request current userr')
+		// requests.get('/user'),
+	,
+	login: (email: string, password: string) =>
+		requests.post('/token/', { email: email, password: password  }),
 	// register: (username: string, email: string, password: string) =>
 	// 	requests.post('/users', { user: { username, email, password } }),
 	// save: (user: any) =>
 	// 	requests.put('/user', { user })
 };
-
 
 const limit = (count: any, p: any) => `limit=${count}&offset=${p ? p * count : 0}`;
 const omitSlug = (article: any) => Object.assign({}, article, { slug: undefined })

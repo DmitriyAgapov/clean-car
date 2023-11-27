@@ -7,17 +7,17 @@ import "yup-phone-lite";
 
 const SignupSchema = Yup.object().shape({
 	firstName: Yup.string()
-		.min(2, 'Too Short!')
-		.max(50, 'Too Long!')
-		.required('Required'),
+		.min(2, 'Слишком короткое!')
+		.max(50, 'Слишком длинное!')
+		.required('Обязательное поле'),
 	lastName: Yup.string()
-		.min(2, 'Too Short!')
-		.max(50, 'Too Long!')
-		.required('Required'),
+		.min(2, 'Слишком короткое!')
+		.max(50, 'Слишком длинное!')
+		.required('Обязательное поле'),
 	phone: Yup.string()
 		.phone("RU", "Введите правильный номер")
 		.required("Требуется номер телефона"),
-	cleanm: Yup.string().email('Invalid email').required('Required'),
+	cleanm: Yup.string().email('Неверный email').required('Обязательное поле'),
 	pwd: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль'),
 	pwd2: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль')
 });
@@ -43,7 +43,8 @@ const InnerForm = () => {
 		>
 			{({submitForm , errors, touched }) =>
 			<Form className={styles.FormAuth}>
-				<div className={styles.inputGroup}>
+
+				<div className={styles.inputGroup}  data-form_error={errors.firstName && touched.firstName ? "error" : null}>
 					<label htmlFor="firstName">Имя?</label>
 					<Field
 						autocomplete="off"
@@ -52,10 +53,11 @@ const InnerForm = () => {
 						type="text"
 					/>
 					{errors.firstName && touched.firstName ? (
-						<div>{errors.firstName}</div>
+
+						<div className={'form-error'}>{errors.firstName}</div>
 					) : null}
 				</div>
-				<div className={styles.inputGroup}>
+				<div className={styles.inputGroup}  data-form_error={errors.lastName && touched.lastName ? "error" : null}>
 					<label htmlFor="lastName">Фамилия?</label>
 					<Field
 						autocomplete="off"
@@ -64,11 +66,11 @@ const InnerForm = () => {
 						type="text"
 					/>
 					{errors.lastName && touched.lastName ? (
-						<div>{errors.lastName}</div>
+						<div className={'form-error'}>{errors.lastName}</div>
 					) : null}
 				</div>
 
-				<div className={styles.inputGroup}>
+				<div className={styles.inputGroup}  data-form_error={errors.phone && touched.phone ? "error" : null}>
 					<label htmlFor="phone">Ваш номер телефона</label>
 					<Field
 						autocomplete="off"
@@ -77,10 +79,10 @@ const InnerForm = () => {
 						type="tel"
 					/>
 					{errors.phone && touched.phone ? (
-						<div>{errors.phone}</div>
+						<div className={'form-error'}>{errors.phone}</div>
 					) : null}
 				</div>
-				<div className={styles.inputGroup}>
+				<div className={styles.inputGroup}  data-form_error={errors.cleanm && touched.cleanm ? "error" : null}>
 					<label htmlFor="email">Ваш email</label>
 					<Field
 						autocomplete="off"
@@ -89,27 +91,33 @@ const InnerForm = () => {
 						type="email"
 					/>
 					{errors.cleanm && touched.cleanm ? (
-						<div>{errors.cleanm}</div>
+						<div className={'form-error'}>{errors.cleanm}</div>
 					) : null}
 				</div>
 				<div className={styles.twoCol}>
-					<div className={styles.inputGroup}>
+					<div className={styles.inputGroup}   data-form_error={errors.pwd && touched.pwd ? "error" : null}>
 						<label htmlFor="pwd">Пароль</label>
 						<Field
-							autocomplete="off"
+							autoComplete="off"
 							id="pwd"
 							name="pwd"
 							type="password"
 						/>
+						{errors.pwd && touched.pwd ? (
+							<div className={'form-error'}>{errors.pwd}</div>
+						) : null}
 					</div>
-					<div className={styles.inputGroup}>
+					<div className={styles.inputGroup}  data-form_error={errors.pwd2 && touched.pwd2 ? "error" : null}>
 						<label htmlFor="pwd2">Повторите пароль</label>
 						<Field
-							autocomplete="off"
+							autoComplete="off"
 							id="pwd2"
 							name="pwd2"
 							type="password"
 						/>
+						{errors.pwd2 && touched.pwd2 ? (
+							<div className={'form-error'}>{errors.pwd2}</div>
+						) : null}
 					</div>
 				</div>
 				<div className={styles.actionGroup}>

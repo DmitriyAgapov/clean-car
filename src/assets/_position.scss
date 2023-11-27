@@ -20,15 +20,75 @@
   right: 0;
   top: 0;
   bottom: 0;
+  z-index: -3;
   margin: auto;
-  transform: translate(-750px, 400px);
+  overflow: visible;
+  transform: translate(-640px, 190px);
+  animation: color-change-2x 10s linear infinite alternate-reverse both;
 }
 .authBgSec {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
+  overflow: visible;
   bottom: 0;
+  z-index: -3;
   margin: auto;
-  transform: translate(380px, 140px);
+  transform: translate(380px, 290px);
+
+    animation: color-change-2x 10s linear infinite alternate-reverse both;
+
+}
+.lineBg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -2;
+  bottom: 0;
+  top: 0;
+  display: grid;
+  gap:  0 var(--gridGap);
+  margin-left: calc(var(--sideGutter) + var(--gridGap));
+  margin-right: calc(var(--sideGutter) + var(--gridGap));
+  grid-template-columns: repeat(5, 1px);
+  justify-content: space-between;
+
+  & > div {
+    background-color: rgba(0, 255, 174, .34);
+    grid-row: 1/2;
+    width: 1px;
+    &:nth-child(1) {
+      grid-column-start: 1;
+    }
+    &:nth-child(2) {
+      grid-column-start: 2;
+    }
+    &:nth-child(3) {
+      grid-column-start: 3;
+    }
+    &:nth-child(4) {
+      grid-column-start: 4;
+    }
+    &:nth-child(5) {
+      grid-column-start: 5;
+    }
+  }
+  .leftMask {
+    grid-column: 1/span 2;
+    margin-left: calc(0px - (var(--sideGutter) + var(--gridGap)));
+    width: calc(100% + calc((var(--sideGutter) + var(--gridGap))));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgb(0 0 0 / 42%));
+    grid-row: 1/2;
+    z-index: 1;
+    position: relative;
+  }
+  .rightMask {
+    grid-column: 3/6;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), rgb(0 0 0 / 72%));
+    grid-row: 1/2;
+    z-index: 1;
+    width: 100%;
+    position: relative;
+  }
 }

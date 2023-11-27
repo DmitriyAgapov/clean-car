@@ -1,20 +1,28 @@
 .Button {
-  padding: 1rem 4rem;
+  padding: .625rem 3.125rem;
   text-decoration: none;
   line-height: 1;
   border-radius: 81px;
   display: inline-flex;
-  font-family: 'RF Dewi Expanded', sans-serif;
-  color: var(--colorWhite);
-  border: 1px solid transparent;
+  font-family: 'Montserrat', sans-serif;
+  background: transparent;
+  height: 50px;
+  color: var(--buttonOutlineText);
+  font-size: 1rem;
+  border: 1px solid var(--colorWhite);
   text-align: center;
   justify-content: center;
-  margin: 0 .5rem;
+  align-items: center;
   align-self: center;
+  font-weight: 500;
   white-space: nowrap;
+
   &:hover {
-	opacity: .7;
+	background: transparent;
+	border-color: var(--accentColor);
+	color: var(--accentColor);
   }
+
   &[data-size="default"] {
 	padding: 1rem 4rem;
   }
@@ -27,13 +35,40 @@
 	background: transparent;
   }
 
+  &[data-variant="tech"] {
+	background: transparent;
+	padding: .625rem 1.875rem;
+	height: 40px;
+	font-size: 1rem;
+	color: var(--accentColor);
+	border-color: var(--accentColor);
+
+	&:hover, &:focus {
+	  background: var(--accentColor);
+	  border-color: var(--accentColor);
+	  color: black;
+	}
+  }
+
   &[data-variant="accent"] {
 	background: var(--accentColor);
 	font-weight: 600;
+	font-family: 'RF Dewi Expanded', sans-serif;
 	color: var(--colorBlack);
 	border-color: var(--accentColor);
 	text-transform: uppercase;
 	font-size: .875rem;
+	align-items: center;
+	line-height: 16px;
+	letter-spacing: normal;
+	padding: 1rem 3.125rem;
+
+	&:hover, &:focus {
+	  background: var(--accentColor);
+	  border-color: var(--accentColor);
+	  color: black;
+	  filter: drop-shadow(0 0 33px var(--accentColor));
+	}
   }
 
   &[data-variant="outline"] {
@@ -47,6 +82,17 @@
 	border: 1px solid var(--accentColor);
 	text-transform: uppercase;
 	font-size: .875rem;
+	align-items: center;
+	line-height: 16px;
+	padding: 1rem 3.125rem;
 	color: var(--accentColor);
+	&:hover, &:focus {
+	  background: var(--accentColor);
+	  border-color: var(--accentColor);
+	  color: black;
+	}
+  }
+  & + & {
+	margin: 10px !important;
   }
 }

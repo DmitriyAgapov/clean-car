@@ -1,5 +1,11 @@
 .FormAuth {
 	display: block;
+  & > *:first-child {
+	margin-top: 0;
+  }
+  & > *:last-child {
+	margin-bottom: 0;
+  }
 }
 .inputGroup {
   margin: 1.876rem 0;
