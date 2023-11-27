@@ -6,7 +6,7 @@ import axios, {AxiosError} from "axios";
 import appStore from "stores/appStore";
 import authStore from "stores/authStore";
 import { decodeToken } from "utils/getData";
-import userStore, { User, UserStore } from "stores/userStore";
+// import userStore, { User, UserStore } from "stores/userStore";
 // const superagent = superagentPromise(_superagent, global.Promise);
 
 const API_ROOT = process.env.REACT_APP_PUBLIC_API;
