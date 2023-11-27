@@ -23,7 +23,7 @@ const InnerForm = ({ message }: { message:string }) => {
 				store.authStore.setEmail(values.cleanm)
 				store.authStore.setPassword(values.pwd)
 				store.authStore.login()
-				alert(JSON.stringify(values, null, 2));
+				// alert(JSON.stringify(values, null, 2));
 				actions.setSubmitting(false);
 			}}
 		>

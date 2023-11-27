@@ -39,7 +39,7 @@ export class UserStore {
 		return agent.Auth.current()
 			.then(
 				action((resolve:any) => {
-					console.log(appStore.token)
+					// console.log(appStore.token)
 					this.currentUser = {
 						id: resolve.user_id,
 						email: 'email@email.ru',
@@ -47,7 +47,7 @@ export class UserStore {
 						last_name: 'setest',
 						phone: '+7898798797'
 					};
-					console.log('resolvePullUser', resolve)
+					// console.log('resolvePullUser', resolve)
 				})
 			)
 		// .then(action(({ user }: { user: User }) => { this.currentUser = user; }))

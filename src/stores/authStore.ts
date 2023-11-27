@@ -11,7 +11,9 @@ export class AuthStore {
   errors:any = undefined ;
 
   values = {
-    username: '',
+    first_name: '',
+    last_name: '',
+    phone: '',
     email: '',
     password: '',
   };
@@ -21,7 +23,9 @@ export class AuthStore {
       inProgress: observable,
       errors: observable,
       values: observable,
-      setUsername: action,
+      setFirstname: action,
+      setLastname: action,
+      setPhone: action,
       setEmail: action,
       setPassword: action,
       reset: action,
@@ -31,8 +35,14 @@ export class AuthStore {
     });
   }
 
-  setUsername(username: string) {
-    this.values.username = username;
+  setFirstname(first_name: string) {
+    this.values.first_name = first_name;
+  }
+  setLastname(last_name: string) {
+    this.values.last_name = last_name;
+  }
+  setPhone(phone: string) {
+    this.values.phone = phone;
   }
 
   setEmail(email: string) {
@@ -44,7 +54,9 @@ export class AuthStore {
   }
 
   reset() {
-    this.values.username = '';
+    this.values.first_name = '';
+    this.values.phone = '';
+    this.values.last_name = '';
     this.values.email = '';
     this.values.password = '';
   }
@@ -56,7 +68,7 @@ export class AuthStore {
       .then(response => {
         appStore.setToken(response.access)
     }).then(() => {
-      return console.log();
+      // return console.log();
     })
       .catch(action((err: AxiosError) => {
         this.errors = err.response && err.response.data;
@@ -65,18 +77,21 @@ export class AuthStore {
       .finally(action(() => { this.inProgress = false; }));
   }
   //
-  // register() {
-  //   this.inProgress = true;
-  //   this.errors = undefined;
-  //   return agent.Auth.register(this.values.username, this.values.email, this.values.password)
-  //     .then(({ user }: { user: User }) => commonStore.setToken(user.token))
-  //     .then(() => userStore.pullUser())
-  //     .catch(action((err: ResponseError) => {
-  //       this.errors = err.response && err.response.body && err.response.body.errors;
-  //       throw err;
-  //     }))
-  //     .finally(action(() => { this.inProgress = false; }));
-  // }
+  register() {
+    this.inProgress = true;
+    this.errors = undefined;
+
+    return agent.Auth.register(this.values.first_name, this.values.last_name, this.values.email, this.values.phone, this.values.password)
+        // @ts-ignore
+      .then(response => console.log('registered new User', response.data))
+      // .then(() => userStore.pullUser())
+      // .catch(action((err: AxiosError) => {
+      //   // @ts-ignore
+      // this.errors = err.response && err.response.data && err.response.data.detail;
+      //   throw err;
+      // }))
+      .finally(action(() => { this.inProgress = false; }));
+  }
 
   logout() {
     appStore.setToken(null);

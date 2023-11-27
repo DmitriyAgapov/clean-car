@@ -57,22 +57,27 @@ const requests = {
 
 const Auth = {
 	current: () => new Promise((resolve, reject) => {
-
-
-			setTimeout(() => {
-				if(appStore.token) {
-					resolve(decodeToken(appStore.token)
-					)
-				}}, 100)
-
+		setTimeout(() => {
+			if(appStore.token) {
+				resolve(decodeToken(appStore.token)
+				)
+			}}, 100)
 	})
 	// console.log('request current userr')
 		// requests.get('/user'),
 	,
 	login: (email: string, password: string) =>
 		requests.post('/token/', { email: email, password: password  }),
-	// register: (username: string, email: string, password: string) =>
-	// 	requests.post('/users', { user: { username, email, password } }),
+
+	register: (first_name: string, last_name: string, email: string, phone: string, password: string) =>
+		new Promise((resolve, reject) => {
+			setTimeout(() => resolve(
+				{email: email, phone: phone, first_name: first_name, last_name: last_name, password: password}
+			), 100)
+			setTimeout(() => reject('errror'))
+		})
+		// requests.post('/accounts/create_user/', {
+		// 	email: email, phone: phone, first_name: first_name, last_name: last_name, password: password}),
 	// save: (user: any) =>
 	// 	requests.put('/user', { user })
 };

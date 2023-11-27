@@ -4,6 +4,7 @@ import { Field, Form, Formik } from 'formik';
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import styles from "components/Form/FormRegister/FormRegister.module.scss";
 import "yup-phone-lite";
+import { useStore } from "stores/store";
 
 const SignupSchema = Yup.object().shape({
 	firstName: Yup.string()
@@ -15,6 +16,8 @@ const SignupSchema = Yup.object().shape({
 		.max(50, 'Слишком длинное!')
 		.required('Обязательное поле'),
 	phone: Yup.string()
+		.matches(/^\+1?\d{8,15}$/)
+		.max(16, 'Слишком длинное!')
 		.phone("RU", "Введите правильный номер")
 		.required("Требуется номер телефона"),
 	cleanm: Yup.string().email('Неверный email').required('Обязательное поле'),
@@ -23,7 +26,7 @@ const SignupSchema = Yup.object().shape({
 });
 
 const InnerForm = () => {
-
+	const store = useStore()
 	return (
 		<Formik
 			initialValues={{
@@ -36,9 +39,18 @@ const InnerForm = () => {
 			}}
 			validationSchema={SignupSchema}
 			onSubmit={(values, actions) => {
-				console.log({ values, actions });
-				alert(JSON.stringify(values, null, 2));
-				actions.setSubmitting(false);
+				// console.log({ values, actions });
+				store.authStore.setLastname(values.lastName);
+				store.authStore.setFirstname(values.firstName);
+				store.authStore.setPhone(values.phone);
+				store.authStore.setEmail(values.cleanm);
+				if(values.pwd === values.pwd2) store.authStore.setPassword(values.pwd);
+				console.log(Object.values(store.authStore.values))
+				if(Object.values(store.authStore.values).length > 0) {
+					store.authStore.register()
+					actions.setSubmitting(false);
+				}
+
 			}}
 		>
 			{({submitForm , errors, touched }) =>
