@@ -3,14 +3,13 @@ import Layout from "components/common/layout/Layout/Layout";
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
-import FormRegister from "components/Form/FormRegister/FormRegister";
 
 import { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button"
 import LinkStyled, { ButtonDirectory } from "components/common/ui/LinkStyled/LinkStyled";
 import { useStore } from "stores/store";
-import SpeedImg from '../../assets/icons/speed.png';
-import QualityImg from '../../assets/icons/quality.png';
-import ServiceImg from '../../assets/icons/service.png';
+import SpeedImg from '../../../public/icons/speed.png';
+import QualityImg from '../../../public/icons/quality.png';
+import ServiceImg from '../../../public/icons/service.png';
 import CardFeaturesCircle from "components/common/layout/Cards/CardFeaturesCircle/CardFeaturesCircle";
 import { SvgAuthBgSec } from "components/common/ui/Icon";
 
