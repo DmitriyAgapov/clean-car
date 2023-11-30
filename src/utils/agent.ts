@@ -9,7 +9,7 @@ import { decodeToken } from "utils/getData";
 // import userStore, { User, UserStore } from "stores/userStore";
 // const superagent = superagentPromise(_superagent, global.Promise);
 import * as jose from 'jose'
-import userStore, { User } from "stores/userStore";
+import { User } from "stores/userStore";
 const API_ROOT = process.env.REACT_APP_PUBLIC_API;
 
 // const encode = encodeURIComponent;
