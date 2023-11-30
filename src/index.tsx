@@ -14,6 +14,7 @@ import AccountPage from "routes/account/account";
 import DashboardPage from "routes/account/dashboard";
 import UsersPage from "routes/account/users";
 import { authUser } from "routes/loaders/loaders";
+import CompanyPage from "routes/account/company";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -57,7 +58,7 @@ const router = createBrowserRouter([
             },
             {
                 path: 'companies',
-                element: <UsersPage />,
+                element: <CompanyPage />,
             }
         ]
     }

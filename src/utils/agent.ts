@@ -22,7 +22,7 @@ const handleErrors = (err: AxiosError) => {
 };
 
 const tokenPlugin = () => {
-	if (appStore.token) return ({ 'authorization': `Token ${appStore.token}`})
+	if (appStore.token) return ({ 'Authorization': `Bearer ${appStore.token}`})
 };
 
 const requests = {
@@ -32,11 +32,11 @@ const requests = {
 	// 	.use(tokenPlugin)
 	// 	.end(handleErrors)
 	// 	.then(responseBody),
-	get: (url: string) =>
+	get: (url: string, body: any) =>
 		axios({
 			url: `${API_ROOT}${url}`,
-			method: 'GET',
 			headers: tokenPlugin(),
+			method: 'GET'
 		})
 		.then(response => response)
 		.catch(handleErrors),
@@ -62,15 +62,12 @@ const Auth = {
 		return new Promise((resolve, reject) => {
 			if (appStore.token) {
 				const dataUser = decodeToken(appStore.token);
-				const { user_id, first_name, last_name, phone, email } = dataUser
-				// console.log(jose.decodeJwt()
-				// @ts-ignore
+				const { user_id, first_name, last_name, phone } = dataUser
 				resolve(({ id: user_id, first_name: first_name, last_name: last_name, phone: phone, email: authStore.values.email } as User))
 			} else {
 				reject(new Error('no token'))
 			}
 		})
-
 	}
 	// console.log('request current userr')
 		// requests.get('/user'),
@@ -88,6 +85,18 @@ const Auth = {
 const limit = (count: any, p: any) => `limit=${count}&offset=${p ? p * count : 0}`;
 const omitSlug = (article: any) => Object.assign({}, article, { slug: undefined })
 
+const Companies = {
+	getListCompanyCustomer: (company_name?:string | undefined, page?: number | undefined) =>
+		requests.get('/companies/list_company_customer/', {
+			company_name: company_name,
+			page: page
+		}),
+	getListCompanyPerformer: (company_name:string | undefined, page: number | undefined) =>
+		requests.get('/companies/list_company_performer/', {
+			company_name: company_name,
+			page: page
+		})
+}
 const Profile = {
 	// follow: (username: string) =>
 	// 	requests.post(`/profiles/${username}/follow`, {}),
@@ -99,7 +108,8 @@ const Profile = {
 
 const agent = {
 	Auth,
-	Profile
+	Profile,
+	Companies
 };
 
 export default agent;

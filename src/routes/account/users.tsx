@@ -11,10 +11,10 @@ export default function UsersPage() {
 		<Section type={SectionType.default}>
 			<Panel className={"col-span-full"}
 				header={<>
-					<Heading text={"Компании"} variant={HeadingVariant.h4} className={'!mb-6 inline-flex'} color={HeadingColor.accent}/>
-					<Button text={'Создать компанию'} variant={ButtonVariant.accent} className={'inline-flex float-right'} directory={ButtonDirectory.admin} size={ButtonSizeType.sm}/>
+					<Heading text={"Пользователи"} variant={HeadingVariant.h4} className={'!mb-6'} color={HeadingColor.accent}/>
 					<div className={'form-search relative'}><input type={'search'} placeholder={'Быстрый поиск'} className={'search-dashboard'}/><SvgSearch className={'inline-block absolute top-2.5 left-2'}/> </div>
 				</>}/>
+
 			<Panel  className={"col-span-full"} variant={PanelVariant.default} background={PanelColor.glass}>
 				<Chips state={false} />
 				<Chips state={true} />
