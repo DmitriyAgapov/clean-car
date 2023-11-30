@@ -1,0 +1,60 @@
+.UserMenu {
+	display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+
+}
+.notification {
+  padding: .75rem;
+  background-color: #181818;
+  position: relative;
+  border-radius: 5px;
+  display: inline-block;
+  span {
+	background-color: #FBFF4A;
+	position: absolute;
+	color: black;
+	font-size: 10px;
+	font-weight: 600;
+	border-radius: 7px;
+	min-width: 14px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	right: -.5rem;
+  }
+}
+.user {
+  display: flex;
+  align-items: flex-start;
+  gap: .625rem;
+}
+.menuName {
+  display: inline-block;
+  flex-flow: column;
+}
+.svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  rotate: 180deg;
+  color: rgba(220, 220, 220, 0.5);
+}
+.photo {
+  background: var(--gradient-admin);
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 20px;
+  display: inline-block;
+  border: 1px solid transparent;
+}
+.name {
+  line-height: 1.29;
+  color: var(--accentColor);
+}
+.status {
+  color: rgba(220, 220, 220, 0.5);
+  font-size: .75rem;
+  line-height: 1.29;
+  text-transform: lowercase;
+}

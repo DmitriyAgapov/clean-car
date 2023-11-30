@@ -16,15 +16,15 @@
 
   margin: auto;
   &:nth-child(1) {
-	translate: 0 -250px;
+	translate: 0 -150px;
 	background: linear-gradient(360deg, rgba(19, 255, 113, 0.7) -9.57%, rgba(0, 183, 125, 0.337864) 42.21%, rgba(0, 129, 185, 0) 77.35%);;
   }
   &:nth-child(2) {
-	translate: -138px 0;
+	translate: -138px 100px;
 	background: linear-gradient(240deg, rgba(19, 255, 113, 0.7) -9.57%, rgba(0, 183, 125, 0.337864) 42.21%, rgba(0, 129, 185, 0) 77.35%);;
   }
   &:nth-child(3) {
-	translate: 138px 0;
+	translate: 138px 100px;
 	background: linear-gradient(120deg, rgba(19, 255, 113, 0.7) -9.57%, rgba(0, 183, 125, 0.337864) 42.21%, rgba(0, 129, 185, 0) 77.35%);;
   }
 

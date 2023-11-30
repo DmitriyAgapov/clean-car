@@ -5,9 +5,9 @@ import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import FormAuth from "components/Form/FormAuth/FormAuth";
 import { useStore } from "stores/store";
-import LinkStyled, { ButtonDirectory } from "components/common/ui/LinkStyled/LinkStyled";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { observer } from "mobx-react-lite";
-import Button, { ButtonVariant } from "components/common/ui/Button/Button";
+import Button, { ButtonVariant, ButtonDirectory } from "components/common/ui/Button/Button";
 import { SvgAuthBg, SvgAuthBgSec } from "components/common/ui/Icon";
 import FormRestore from "components/Form/FormRestore/FormRestore";
 
@@ -19,7 +19,7 @@ function RestorePasswordNewPage() {
 	}, [store.appStore.token]);
 
 	return (
-		<Layout>
+		<Layout className={'page-intro'} headerContent={<Button className={"tablet:inline-flex hidden ml-auto mr-8"} text={'Помощь'} variant={ButtonVariant.tech} />}>
 			<Section type={SectionType.centered}>
 				<Panel className={"col-span-6 mb-12 tablet:col-span-full desktop:col-span-6"}
 					header={<Heading text={"Восстановление пароля"}

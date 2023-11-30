@@ -16,7 +16,7 @@ const Sidebar = ({children, items, type, ...props}:SidebarProps) => {
 		<aside className={styles.Sidebar} {...props}>
 			<nav>
 				<ul>{items?.map((i, index) => {
-					console.log('eq', location.pathname.includes(i.url) )
+					
 					if(i.url === location.pathname) {
 
 					}

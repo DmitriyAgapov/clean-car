@@ -1,0 +1,19 @@
+.Chips {
+	font-size: .5rem;
+  font-weight: 600;
+  line-height: 1.29;
+  color: black;
+  padding: 2px 12px 3px;
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  border-radius: 8px;
+  text-transform: lowercase;
+  &[data-state="true"] {
+	background-color: var(--colorStateActive);
+  }
+  &[data-state="false"] {
+	background-color: var(--colorStateNotActive);
+  }
+
+}

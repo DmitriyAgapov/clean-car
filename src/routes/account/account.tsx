@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "components/common/layout/Layout/Layout";
+import styles from './account.module.scss'
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
@@ -7,6 +8,10 @@ import { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Butto
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import Sidebar from "components/common/layout/Sidebar/Sidebar";
 import { Outlet } from "react-router-dom";
+import { SvgAccount } from "components/common/ui/Icon";
+import { useStore } from "stores/store";
+import DateComponent from "components/common/layout/DateComponent/DateComponent";
+import UserMenu from "components/common/layout/UserMenu/UserMenu";
 const sidebarMenu: {icon: React.ReactNode, title: string, url: string}[] = [
 	{
 		icon: <img src={'/icons/home.png'} alt={''}/>,
@@ -70,10 +75,24 @@ const sidebarMenu: {icon: React.ReactNode, title: string, url: string}[] = [
 	},
 ]
 export default function AccountPage() {
+	const store = useStore()
+	const {appStore, userStore, authStore} = store;
+
+	useEffect(() => {
+		appStore.setAppRouteName('администратор системы')
+	}, []);
+
 	return (
-		<Layout>
+		<Layout className={'page-account'}
+			headerContent={
+			<>
+				<DateComponent/>
+				<UserMenu/>
+			</>
+		}>
 			<Sidebar items={sidebarMenu}/>
 			<Outlet />
+			<SvgAccount className={styles.svg}/>
 		</Layout>
 	)
 }

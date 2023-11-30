@@ -3,9 +3,13 @@
   	--colorWhite: #ffffff;
   	--colorBlack: #000000;
 	--fontColor: #FFFFFF;
+  --colorStateActive: #13FF71;
+  --colorStateNotActive: var(--errorColor);
   	--colorInputText: #171313;
-
-  	--accentColor: #00FFAE;
+	--gradient-admin: linear-gradient(120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
+	--gradient-customer: linear-gradient(120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
+	--gradient-executor: linear-gradient(90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
+  --accentColor: #00FFAE;
   	--errorColor: rgba(244, 86, 95, 1);
   	--buttonOutlineText: #DCFFF4;
 	--container: 1300px;

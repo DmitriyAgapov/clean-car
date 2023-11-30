@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: var(--grid);
   grid-template-rows: auto 1fr auto;
-  padding: 2rem 0;
+
   min-height: 100vh;
   gap: 0 var(--gridGap);
   overflow: hidden;
@@ -13,9 +13,7 @@
 	grid-column: 1/-1;
 	grid-template-columns: subgrid;
   }
-  @media screen and (min-width: 743px){
-	padding: 3.5rem 0 2.25rem;
-  }
+
 }
 
 .main {

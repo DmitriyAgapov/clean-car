@@ -3,6 +3,7 @@ import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { SvgSearch } from "components/common/ui/Icon";
+import SearchBar from "components/common/layout/SearchBar/SearchBar";
 
 const sidebarMenu: {icon: React.ReactNode, title: string, url: string}[] = [
 	{
@@ -73,7 +74,7 @@ export default function DashboardPage() {
 				<Panel className={"col-span-full"}
 					header={<>
 						<Heading text={"Дашборд"} variant={HeadingVariant.h4} className={'!mb-6'} color={HeadingColor.accent}/>
-						<div className={'form-search relative'}><input type={'search'} placeholder={'Быстрый поиск'} className={'search-dashboard'}/><SvgSearch className={'inline-block absolute top-2.5 left-2'}/> </div>
+						<SearchBar />
 				</>}/>
 				<Panel  className={"col-span-full"} variant={PanelVariant.default} background={PanelColor.glass}>
 

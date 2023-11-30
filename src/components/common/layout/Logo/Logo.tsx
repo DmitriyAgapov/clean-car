@@ -5,13 +5,14 @@ import { useStore } from "../../../../stores/store";
 import { Link } from 'react-router-dom';
 
 
+
 const Logo = () => {
 	const store = useStore()
 	const logoName = store.appStore.appName;
 	const routeName = store.appStore.appRouteName;
 
 	return (
-		<div className={styles.Logo}>
+		<div className={styles.Logo + " logo-header" }>
 			<Link to={"/"} className={styles.logoName}>{logoName}</Link>
 			<span className={styles.routeName}>{routeName}</span>
 		</div>

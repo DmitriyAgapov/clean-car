@@ -5,10 +5,11 @@ import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import FormAuth from "components/Form/FormAuth/FormAuth";
 import { useStore } from "stores/store";
-import LinkStyled, { ButtonDirectory } from "components/common/ui/LinkStyled/LinkStyled";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { observer } from "mobx-react-lite";
 import{ Navigate } from 'react-router-dom';
 import { SvgAuthBg, SvgAuthBgSec } from "components/common/ui/Icon";
+import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 
 function AuthPage() {
 	const store = useStore()
@@ -16,13 +17,10 @@ function AuthPage() {
 
 	useEffect(() => {
 		appStore.setAppRouteName('.авторизация')
-		if(appStore.token && !userStore.currentUser?.id) {
-			authStore.login()
-		}
-	}, [appStore.token]);
+	}, []);
 
 	return (
-		<Layout>
+		<Layout className={'page-intro'} headerContent={<Button className={"tablet:inline-flex hidden ml-auto mr-8"} text={'Помощь'} variant={ButtonVariant.tech} />}>
 			<Section type={SectionType.centered}>
 				<Panel className={"col-span-6 mb-12 tablet:col-span-full desktop:col-span-6"}
 					header={<Heading text={"Вход в систему"}

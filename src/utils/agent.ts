@@ -8,7 +8,8 @@ import authStore from "stores/authStore";
 import { decodeToken } from "utils/getData";
 // import userStore, { User, UserStore } from "stores/userStore";
 // const superagent = superagentPromise(_superagent, global.Promise);
-
+import * as jose from 'jose'
+import userStore, { User } from "stores/userStore";
 const API_ROOT = process.env.REACT_APP_PUBLIC_API;
 
 // const encode = encodeURIComponent;
@@ -58,11 +59,18 @@ const requests = {
 
 const Auth = {
 	current: () => {
-		if(appStore.token) {
-			const dataUser = decodeToken(appStore.token);
-			// @ts-ignore
-			return { id: dataUser.user_id, first_name: dataUser.first_name, last_name: dataUser.last_name, phone: dataUser.phone, email: authStore.values.email}
-		}
+		return new Promise((resolve, reject) => {
+			if (appStore.token) {
+				const dataUser = decodeToken(appStore.token);
+				const { user_id, first_name, last_name, phone, email } = dataUser
+				// console.log(jose.decodeJwt()
+				// @ts-ignore
+				resolve(({ id: user_id, first_name: first_name, last_name: last_name, phone: phone, email: authStore.values.email } as User))
+			} else {
+				reject(new Error('no token'))
+			}
+		})
+
 	}
 	// console.log('request current userr')
 		// requests.get('/user'),

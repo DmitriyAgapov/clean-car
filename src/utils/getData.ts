@@ -1,7 +1,7 @@
 import * as jose from 'jose'
 
 
-export const decodeToken = (token:string) => jose.decodeJwt(token);
+export const decodeToken = (token:string | any) => jose.decodeJwt(token)
 const getToken = (request:any) => {
 
 }

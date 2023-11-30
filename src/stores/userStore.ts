@@ -13,7 +13,7 @@ export type User = {
 }
 
 export class UserStore {
-	currentUser: User | undefined;
+	currentUser?: User;
 	loadingUser?: boolean;
 	updatingUser?: boolean;
 	updatingUserErrors: any;
@@ -34,16 +34,9 @@ export class UserStore {
 
 	pullUser() {
 		this.loadingUser = true;
-
-		action(() => {
-			// @ts-ignore
-			this.currentUser =  {
-				...agent.Auth.current(),
-				email: authStore.values.email
-			}
-			console.log(this.currentUser)
-		})
-
+		return agent.Auth.current()
+			.then(action((r:any) => {this.currentUser =  r;}))
+			.finally(action(() => {this.loadingUser = false;}))
 
 	}
 	//

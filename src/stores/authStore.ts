@@ -74,17 +74,9 @@ export class AuthStore {
     this.errors = undefined;
     return agent.Auth.login(this.values.email, this.values.password)
       .then(action((resolve: any) => {
-        appStore.setToken(resolve.access)
+        const {access, refresh} = resolve
+        appStore.setToken(access)
       }))
-      .then(() => {
-        if(appStore.token) {
-          const dataUser = decodeToken(appStore.token);
-
-          // @ts-ignore
-          userStore.currentUser = { id: dataUser.user_id, first_name: dataUser.first_name, last_name: dataUser.last_name, phone: dataUser.phone, email: this.values.email}
-
-        }
-    })
       .catch(action((err: AxiosError) => {
         this.errors = err.response && err.response.data;
         throw err;
@@ -100,7 +92,7 @@ export class AuthStore {
           ((response :any) => {
             authStore.values = { ...response, password: this.values.password }
           }))
-    .then(action(() => this.login()))
+      .then(action(() => this.login()))
       .then(() => userStore.pullUser())
       .catch(action((err: AxiosError) => {
         // @ts-ignore

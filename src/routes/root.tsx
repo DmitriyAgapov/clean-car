@@ -8,8 +8,7 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 export default function Root() {
 	return (
-		<Layout>
-
+		<Layout className={'page-intro'}>
 			<Section type={SectionType.centered}>
 				<Panel className={"col-span-6"}
 					header={<Heading text={"Добро пожаловать в CleanCar."} variant={HeadingVariant.h1} color={HeadingColor.accent}/>}

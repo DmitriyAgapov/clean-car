@@ -60,7 +60,7 @@ const InnerForm = () => {
 				<div className={styles.inputGroup}  data-form_error={errors.firstName && touched.firstName ? "error" : null}>
 					<label htmlFor="firstName">Имя?</label>
 					<Field
-						autocomplete="off"
+						autoComplete="off"
 						id="firstName"
 						name="firstName"
 						type="text"
@@ -73,7 +73,7 @@ const InnerForm = () => {
 				<div className={styles.inputGroup}  data-form_error={errors.lastName && touched.lastName ? "error" : null}>
 					<label htmlFor="lastName">Фамилия?</label>
 					<Field
-						autocomplete="off"
+						autoComplete="off"
 						id="lastName"
 						name="lastName"
 						type="text"
@@ -86,7 +86,7 @@ const InnerForm = () => {
 				<div className={styles.inputGroup}  data-form_error={errors.phone && touched.phone ? "error" : null}>
 					<label htmlFor="phone">Ваш номер телефона</label>
 					<Field
-						autocomplete="off"
+						autoComplete="off"
 						id="phone"
 						name="phone"
 						type="tel"
@@ -98,7 +98,7 @@ const InnerForm = () => {
 				<div className={styles.inputGroup}  data-form_error={errors.cleanm && touched.cleanm ? "error" : null}>
 					<label htmlFor="email">Ваш email</label>
 					<Field
-						autocomplete="off"
+						autoComplete="off"
 						id="cleanm"
 						name="cleanm"
 						type="email"

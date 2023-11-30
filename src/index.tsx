@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { StoreProvider } from 'stores/store';
 import {
@@ -13,6 +13,7 @@ import RestorePasswordPage from "routes/restore/restorePasswordPage";
 import AccountPage from "routes/account/account";
 import DashboardPage from "routes/account/dashboard";
 import UsersPage from "routes/account/users";
+import { authUser } from "routes/loaders/loaders";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -38,11 +39,13 @@ const router = createBrowserRouter([
         path: '/register/success',
         element: <RegisterSuccessPage />,
         errorElement: <ErrorPage />,
+        loader: () => authUser(),
     },
     {
         path: '/account',
         element: <AccountPage />,
         errorElement: <ErrorPage />,
+        loader: () => authUser(),
         children: [
             {
                 path: 'dashboard',
@@ -52,7 +55,10 @@ const router = createBrowserRouter([
                 path: 'users',
                 element: <UsersPage />,
             },
-
+            {
+                path: 'companies',
+                element: <UsersPage />,
+            }
         ]
     }
 

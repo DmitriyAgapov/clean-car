@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Heading.module.scss';
-import { ButtonDirectory } from "components/common/ui/LinkStyled/LinkStyled";
+import { ButtonDirectory } from "components/common/ui/Button/Button";
 
 export enum HeadingVariant {
 	h1 =  "h1" ,

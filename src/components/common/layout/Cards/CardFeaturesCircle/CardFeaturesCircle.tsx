@@ -11,7 +11,7 @@ type CardFeaturesCircleProps  = {
 }
 const CardFeaturesCircle = ({icon, title, text}:CardFeaturesCircleProps) => {
 	return (
-		<div className={styles.CardFeaturesCircle}>
+		<div className={styles.CardFeaturesCircle + " "}>
 			{icon && <img
 				// @ts-ignore
 				src={icon.type} alt={''}/>}
