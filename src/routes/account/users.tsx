@@ -2,7 +2,6 @@ import React from "react";
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button"
 import { SvgSearch } from "components/common/ui/Icon";
 import Chips from "components/common/ui/Chips/Chips";
 

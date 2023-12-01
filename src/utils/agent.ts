@@ -1,16 +1,9 @@
-// import superagentPromise from 'superagent-promise';
-// import _superagent, { ResponseError, Request, Response } from 'superagent';
-// import commonStore from './stores/commonStore';
-// import authStore from './stores/authStore';
 import axios, {AxiosError} from "axios";
 import appStore from "stores/appStore";
 import authStore from "stores/authStore";
 import { decodeToken } from "utils/getData";
-// import userStore, { User, UserStore } from "stores/userStore";
-// const superagent = superagentPromise(_superagent, global.Promise);
-import * as jose from 'jose'
 import { User } from "stores/userStore";
-const API_ROOT = process.env.REACT_APP_PUBLIC_API;
+const API_ROOT = 'https://dev.server.clean-car.net/api';
 
 // const encode = encodeURIComponent;
 
@@ -91,7 +84,7 @@ const Companies = {
 			company_name: company_name,
 			page: page
 		}),
-	getListCompanyPerformer: (company_name:string | undefined, page: number | undefined) =>
+	getListCompanyPerformer: (company_name?:string | undefined, page?: number | undefined) =>
 		requests.get('/companies/list_company_performer/', {
 			company_name: company_name,
 			page: page

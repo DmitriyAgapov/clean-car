@@ -13,7 +13,7 @@ import RestorePasswordPage from "routes/restore/restorePasswordPage";
 import AccountPage from "routes/account/account";
 import DashboardPage from "routes/account/dashboard";
 import UsersPage from "routes/account/users";
-import { authUser } from "routes/loaders/loaders";
+import { authUser, companyLoader } from "routes/loaders/loaders";
 import CompanyPage from "routes/account/company";
 
 const root = ReactDOM.createRoot(
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         path: '/account',
         element: <AccountPage />,
         errorElement: <ErrorPage />,
-        loader: () => authUser(),
+        loader: () => companyLoader(),
         children: [
             {
                 path: 'dashboard',

@@ -37,7 +37,6 @@ export class UserStore {
 		return agent.Auth.current()
 			.then(action((r:any) => {this.currentUser =  r;}))
 			.finally(action(() => {this.loadingUser = false;}))
-
 	}
 	//
 	// updateUser(newUser: User) {

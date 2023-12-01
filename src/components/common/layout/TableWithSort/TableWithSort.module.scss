@@ -1,0 +1,68 @@
+.TableWithSort {
+	border-top: 1px solid #242529;
+}
+.tableheader {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 6rem 2fr 1fr 1fr;
+}
+.TableWithSortPanel {
+  header {
+	@apply mb-0 tablet:mb-0 desktop:mb-0 py-2 px-5 flex;
+  }
+}
+.btnFilter {
+  cursor: pointer;
+  @apply w-6 h-6 inline-flex content-center items-center rounded-sm  p-1 bg-[#242529];
+  margin-left: auto !important;
+  path {
+	stroke-width: 1.5;
+  }
+  &:hover {
+	path {
+	  stroke: var(--accentColor);
+	}
+  }
+}
+.tableheading {
+  color: #929398;
+  font-size: .625rem;
+  text-transform: uppercase;
+  padding: 5px 0;
+  cursor: pointer;
+
+  &:hover {
+	color: #ffffff;
+  }
+
+  &:first-child {
+	padding-left: 1.125rem;
+  }
+
+}
+.tableRow {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 6rem 2fr 1fr 1fr;
+ 	&:hover {
+	  background: linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
+	}
+
+
+  cursor: pointer;
+
+  &:hover {
+	color: #ffffff;
+  }
+
+
+}
+.tableCell {
+	font-size: .75rem;
+  font-weight: 500;
+  display: block;
+  padding: 1rem 0;
+  &:first-child {
+	padding-left: 1.125rem;
+  }
+}
