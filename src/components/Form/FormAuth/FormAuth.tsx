@@ -8,7 +8,7 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 const SignupSchema = Yup.object().shape({
 	cleanm: Yup.string().email('Invalid email').required('Обязательное поле'),
-	pwd: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль')
+	pwd: Yup.string().min(1, 'Пароль короткий').required('Укажите пароль')
 });
 
 const InnerForm = ({ message }: { message:string }) => {
