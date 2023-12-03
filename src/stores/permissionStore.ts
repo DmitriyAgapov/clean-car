@@ -1,4 +1,4 @@
-import { action, IObservableArray, makeObservable, observable } from 'mobx';
+import { action, autorun, IObservableArray, makeObservable, observable, runInAction } from 'mobx';
 import agent from "utils/agent";
 import authStore from "stores/authStore";
 enum PermissionName {
@@ -23,45 +23,69 @@ export type Permissions = {
 }
 
 export class PermissionStore {
-	permissions: IObservableArray<Permissions> = observable.array([]);
+	permissions: IObservableArray<Permissions> = observable.array([], {
+		deep: true
+	});
+	permissionsMap = observable.map();
 	loadingPermissions: boolean = false;
-
+	errors?: string
 	constructor() {
 		makeObservable(this, {
 			permissions: observable,
-			loadingPermissions: observable
+			errors: observable,
+			loadingPermissions: observable,
+			loadPermissionAdmin: action,
+			getPermissionAdmin: action,
+			setPermissionStoreAdmin: action,
+			createPermissionStoreAdmin: action,
+			getAllPermissions: action
 		});
+		// autorun(() => {
+		// 	console.log(this.permissions)
+		// })
 	}
-	async loadPermissionAdmin() {
+	loadPermissionAdmin() {
 
 			this.loadingPermissions = true;
 			this.permissions.clear();
 			// @ts-ignore
-			const { data, status }  = await agent.PermissionsAdmin.getAllAdminPermissions();
-			if(status == 200 && data){
-				data.results.forEach((item: Permissions) => {
-					this.permissions.push(item)
-				})
-			}
-		console.log(this.permissions)
-			this.loadingPermissions = false
+			agent.PermissionsAdmin.getAllAdminPermissions()
+			.then(action((r) => {
+				// @ts-ignore
+				const {data: {results}} = r;
+				this.permissions.push(...results);
+			}))
+			.catch(action((error) => this.errors = error))
+			.finally(action(() => this.loadingPermissions = false));
 	}
+	getAllPermissions() {
+		this.loadPermissionAdmin()
+		return this.permissions
+	}
+
 	getPermissionAdmin(id: number) {
+		this.loadingPermissions = true;
 
-		return this.permissions.filter((value) => {
+		return agent.PermissionsAdmin.retriveAdminGroupIdPermission(id)
+			.then(r => r)
+			.finally(() => this.loadingPermissions = false)
 
-			if(Number(value.id) === Number(id)) {
-
-				return value
-			}
-		})
+		// this.permissions.filter((value) => {
+		// 	if(Number(value.id) === Number(id)) {
+		// 		return value
+		// 	}
+		// 	this.loadingPermissions = false
+		// })
 	}
 	setPermissionStoreAdmin(id: number, data:any) {
-		console.log(id, data)
+		this.loadingPermissions = true
 		agent.PermissionsAdmin.putUpdateAdminPermissions(data.id, data);
+		this.loadingPermissions = false
 	}
 	createPermissionStoreAdmin(data:any) {
+		this.loadingPermissions = true
 		agent.PermissionsAdmin.createAdminPermission(data)
+		this.loadingPermissions = false
 	}
 }
 const permissionStore = new PermissionStore()

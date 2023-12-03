@@ -25,7 +25,7 @@ function RestorePasswordPageSuccess() {
 				<Panel className={"col-span-6 mb-12 tablet:col-span-full desktop:col-span-6"}
 					header={<Heading text={"Восстановление пароля"}
 						variant={HeadingVariant.h1} color={HeadingColor.accent}/>}
-					footer={<LinkStyled text={'У меня нет аккаунта'}  to={'/'}/>}
+					footer={<LinkStyled text={'У меня нет аккаунта'}  to={'/register'}/>}
 				>
 					<p>
 						<strong>Пожалуйста, введите вашу почту, которую вы оставляли при регистрации.</strong> Мы отправим вам письмо с активной ссылкой для смены пароля.

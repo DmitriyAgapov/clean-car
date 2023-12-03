@@ -51,7 +51,7 @@ const Layout:FC<ChildrenProps> = ({children, headerContent, className = ""}) => 
 		<Header>
 			<Logo/>
 			{headerContent}
-			<Burger/>
+			<Burger className={"tablet:hidden"}/>
 		</Header>
 		<MobileMenu items={sidebarMenu} />
 		<main className={""}>{children}</main>

@@ -25,7 +25,7 @@ function AuthPage() {
 				<Panel className={"col-span-6 mb-12 tablet:col-span-full desktop:col-span-6"}
 					header={<Heading text={"Вход в систему"}
 						variant={HeadingVariant.h1} color={HeadingColor.accent}/>}
-					footer={<LinkStyled text={'У меня нет аккаунта'}  to={'/'}/>}
+					footer={<LinkStyled text={'У меня нет аккаунта'}  to={'/register'}/>}
 
 				>
 					<p>

@@ -8,14 +8,15 @@ import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { SvgBackArrow } from "components/common/ui/Icon";
 import Checkbox from "components/common/ui/Checkbox/Checkbox";
 import PermissionTable from "components/common/layout/PermissionTable/PermissionTable";
+import { observer } from "mobx-react-lite";
 
-export default function GroupPage() {
+export default observer(function GroupPage() {
 	const store = useStore();
 	const location = useLocation()
 	const navigate = useNavigate();
 	// @ts-ignore
 	const { group } = useLoaderData();
-
+	console.log(group)
 	return (
 		<Section type={SectionType.default}>
 			<Panel className={"col-span-full"}
@@ -31,7 +32,7 @@ export default function GroupPage() {
 
 				</>}>
 			</Panel>
-			<Panel className={"col-span-full py-7 px-14 grid grid-rows-[auto_1fr_auto]"}
+			<Panel state={store.permissionStore.loadingPermissions} className={"col-span-full py-7 px-14 grid grid-rows-[auto_1fr_auto]"}
 				header={<div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
 					<div>Название группы</div>
 					<div>Права группы</div>
@@ -73,4 +74,4 @@ export default function GroupPage() {
 		</Section>
 
 	)
-}
+});

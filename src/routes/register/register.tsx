@@ -23,7 +23,7 @@ export default function RegisterPage() {
 			<Section type={SectionType.centered}>
 				<Panel className={"col-span-6 mb-12 tablet:col-span-full desktop:col-span-6"}
 					header={<Heading text={"Добро пожаловать в CleanCar."} variant={HeadingVariant.h1} color={HeadingColor.accent}/>}
-					footer={<LinkStyled text={'У меня уже есть аккаунт'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.base} to={'/auth'}/>}
+					footer={<LinkStyled text={'У меня уже есть аккаунт'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.base} to={'/'}/>}
 				>
 					<p>Мы рады, что вы выбрали нас.<br/>
 						Пожалуйста, заполните данные для регистрации</p>

@@ -13,7 +13,7 @@ import RestorePasswordPage from "routes/restore/restorePasswordPage";
 import AccountPage from "routes/account/account";
 import DashboardPage from "routes/account/dashboard";
 import UsersPage from "routes/account/users";
-import { authUser, companyLoader, groupsLoader } from "routes/loaders/loaders";
+import { authUser, companyLoader, groupsCreatLoader, groupsIdLoader, groupsLoader } from "routes/loaders/loaders";
 import CompanyPage from "routes/account/company";
 import GroupsPage from "routes/account/groups";
 import GroupPage from "routes/account/group";
@@ -27,12 +27,12 @@ const root = ReactDOM.createRoot(
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: "/register",
         element: <RegisterPage />,
         errorElement: <ErrorPage />
     },
     {
-        path: "/auth",
+        path: "/",
         element: <AuthPage />,
         errorElement: <ErrorPage />,
     },
@@ -74,17 +74,17 @@ const router = createBrowserRouter([
             {
                 path: 'groups/create',
                 element: <GroupPageCreateAction />,
-                loader: groupsLoader,
+                loader: groupsCreatLoader,
             },
             {
                 path: 'groups/:id',
                 element: <GroupPage />,
-                loader: groupsLoader,
+                loader: groupsIdLoader,
             },
             {
                 path: 'groups/:id/edit',
                 element: <GroupPageEditAction />,
-                loader: groupsLoader,
+                loader: groupsIdLoader,
             }
         ]
     }

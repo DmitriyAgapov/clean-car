@@ -33,7 +33,8 @@ const requests = {
 			method: 'GET'
 		})
 		.then(response => response)
-		.catch(handleErrors),
+		.catch(handleErrors)
+	    .finally(() => ({loaded: true})),
 	put: (url: string, body: any) =>
 		axios({
 			url: `${API_ROOT}${url}`,
@@ -100,6 +101,10 @@ const PermissionsAdmin = {
 			permissions: toJS(data.permissions)
 		})
 	},
+	retriveAdminGroupIdPermission: (id: number) =>
+		requests.get('/permissions_admin/groups/109/retrive/', {
+			id: id
+	}),
 	createAdminPermission: (data: any) => {
 		requests.post('/permissions_admin/groups/create/', {
 			name: data.name,

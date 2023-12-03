@@ -9,6 +9,7 @@ interface ButtonProps  {
 	variant?: ButtonVariant
 	size?: ButtonSizeType
 	directory?: ButtonDirectory
+	action?: () => void
 }
 
 const LinkStyled = ({ text, to, size = ButtonSizeType.base, className, directory, variant = ButtonVariant.default, ...props}: LinkProps & ButtonProps) => {

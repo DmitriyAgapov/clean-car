@@ -5,13 +5,16 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import TableWithSort from "components/common/layout/TableWithSort/TableWithSort";
 import { useStore } from "stores/store";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
 
-export default function GroupsPage() {
+export default observer(function GroupsPage() {
 	const store = useStore();
 	const location = useLocation()
 	const navigate = useNavigate();
-
+	// @ts-ignore
+	const {groups} = useLoaderData();
+	console.log(groups)
 	return (
 		<Section type={SectionType.default}>
 			<Panel className={"col-span-full"}
@@ -25,7 +28,7 @@ export default function GroupsPage() {
 
 			<TableWithSort
 				ar={['Название группы', 'дата и время']}
-				data={store.permissionStore.permissions.map((item:any) => ({
+				data={groups.map((item:any) => ({
 					name: item.name,
 					date: item.date,
 					id: item.id
@@ -35,4 +38,4 @@ export default function GroupsPage() {
 		</Section>
 
 	)
-}
+})

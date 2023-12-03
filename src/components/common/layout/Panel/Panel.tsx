@@ -23,9 +23,11 @@ type PanelProps  = {
 	variant?: PanelVariant
 	background?: PanelColor
 	className?: string
+	state?: boolean
 }
 
-const Panel = ({children, header, footer, routeStyle = PanelRouteStyle.default, variant = PanelVariant.default, background = PanelColor.default, className = "" }:PanelProps) => {
+const Panel = ({children, state = false, header, footer, routeStyle = PanelRouteStyle.default, variant = PanelVariant.default, background = PanelColor.default, className = "" }:PanelProps) => {
+	if(state) return <div>{'loading'}</div>;
 	return (
 		<div className={styles.Panel + "  " + className} data-style={routeStyle}  data-variant={variant} data-background={background}>
 			{header && <header  data-panel={'header'}>

@@ -9,6 +9,7 @@ import { SvgBackArrow } from "components/common/ui/Icon";
 import Checkbox from "components/common/ui/Checkbox/Checkbox";
 import PermissionTable from "components/common/layout/PermissionTable/PermissionTable";
 import { toJS } from "mobx";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 export default function GroupPageEditAction(props:any) {
 	const store = useStore();
@@ -66,10 +67,14 @@ export default function GroupPageEditAction(props:any) {
 					</div>
 					<div className={'flex justify-end gap-5'}>
 						<Button text={'Отменить'} action={() => navigate(-1)}  className={'float-right'} variant={ButtonVariant.default}/>
-						<Button text={'Сохранить'} action={() => {
+						<Button text={'Сохранить'} action={async () => {
+							// @ts-ignore
 							store.permissionStore.setPermissionStoreAdmin(changes.id, changes);
-							navigate(-1);
+							setTimeout(() => navigate('/account/groups'), 500);
+							// navigate('/account/groups')
+
 						}}  className={'float-right'} variant={ButtonVariant.accent}/>
+
 					</div>
 			</div> }
 				background={PanelColor.glass}>
