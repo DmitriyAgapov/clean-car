@@ -19,7 +19,7 @@ export default function RegisterPage() {
 		store.appStore.setAppRouteName('.регистрация')
 	});
 	return (
-		<Layout className={'page-intro'} headerContent={<Button className={"tablet:inline-flex hidden ml-auto mr-8"} text={'Помощь'} variant={ButtonVariant.tech} />}>
+		<Layout className={'page-intro'} headerContent={<Button className={"!hidden tablet:!inline-flex ml-auto mr-8"} text={'Помощь'} variant={ButtonVariant.tech} />}>
 			<Section type={SectionType.centered}>
 				<Panel className={"col-span-6 mb-12 tablet:col-span-full desktop:col-span-6"}
 					header={<Heading text={"Добро пожаловать в CleanCar."} variant={HeadingVariant.h1} color={HeadingColor.accent}/>}
