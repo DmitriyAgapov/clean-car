@@ -21,22 +21,6 @@ const PermissionTable = ({ data, editable = false, action }:PermissionTableProps
 	const handleChange = (event:Event, id: number) => {
 		// @ts-ignore
 		action(event, id)
-		// // @ts-ignore
-		// console.log(event.target.checked)
-		// // @ts-ignore
-		// console.log(event.target.name)
-		// const indexAr = values.findIndex((value) => value.id === id);
-		// const newArrayItem = {
-		// 	...values[indexAr],
-		// 	// @ts-ignore
-		// 	[event.target.name]: event.target.checked
-		// }
-		// console.log(newArrayItem)
-		// const newArray = toJS(values);
-		// newArray.splice(indexAr, 1, newArrayItem);
-		// console.log(newArray)
-		//
-		// setValues(() => newArray)
 	}
 
 	return (

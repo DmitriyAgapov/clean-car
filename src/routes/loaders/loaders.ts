@@ -23,7 +23,7 @@ export const companyLoader = async () => {
 }
 
 export const groupsIdLoader = async ({params: {id}}:any) => {
-
+	console.log(id)
 	if (id) {
 		const currentGroup = await permissionStore.getPermissionAdmin(id);
 

@@ -65,7 +65,7 @@ export class PermissionStore {
 
 	getPermissionAdmin(id: number) {
 		this.loadingPermissions = true;
-
+		console.log(id)
 		return agent.PermissionsAdmin.retriveAdminGroupIdPermission(id)
 			.then(r => r)
 			.finally(() => this.loadingPermissions = false)

@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import styles from './Panel.module.scss';
+import { SvgLoading } from "components/common/ui/Icon";
 
 export enum PanelVariant {
 	default =  "default" ,
@@ -27,7 +28,7 @@ type PanelProps  = {
 }
 
 const Panel = ({children, state = false, header, footer, routeStyle = PanelRouteStyle.default, variant = PanelVariant.default, background = PanelColor.default, className = "" }:PanelProps) => {
-	if(state) return <div>{'loading'}</div>;
+	if(state) return <div className={'w-full col-span-full flex'}><SvgLoading className={'m-auto'}/></div>;
 	return (
 		<div className={styles.Panel + "  " + className} data-style={routeStyle}  data-variant={variant} data-background={background}>
 			{header && <header  data-panel={'header'}>

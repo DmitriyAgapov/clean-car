@@ -102,7 +102,7 @@ const PermissionsAdmin = {
 		})
 	},
 	retriveAdminGroupIdPermission: (id: number) =>
-		requests.get('/permissions_admin/groups/109/retrive/', {
+		requests.get(`/permissions_admin/groups/${id}/retrive/`, {
 			id: id
 	}),
 	createAdminPermission: (data: any) => {

@@ -79,7 +79,7 @@ export default function GroupPageEditAction(props:any) {
 			</div> }
 				background={PanelColor.glass}>
 
-				<div className={'accounts-group_body text-[#606163] gap-x-4 gap-y-16 grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
+				<div className={'accounts-group_body text-[#606163] w-full gap-x-4 gap-y-16 grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
 					<div>
 						<Heading text={'Введите название группы'} color={HeadingColor.accent} variant={HeadingVariant.h5}/></div>
 					<div>

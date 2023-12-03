@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './TableWithSort.module.scss';
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import { SvgFilter, SvgSort } from "components/common/ui/Icon";
+import { SvgFilter, SvgLoading, SvgSort } from "components/common/ui/Icon";
 import Chips from "components/common/ui/Chips/Chips";
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -43,7 +43,7 @@ const RowData = (props:any) => {
 
 const TableWithSort = ({data, state, ar, style = PanelRouteStyle.default}:TableWithSortProps) => {
 
-	if (state) return <div>'Loading'</div>
+	if (state) return <SvgLoading className={'m-auto'}/>
 
 	return (
 		<Panel className={styles.TableWithSortPanel + " " + "col-span-full"} routeStyle={style} variant={PanelVariant.default} background={PanelColor.glass}
@@ -51,7 +51,7 @@ const TableWithSort = ({data, state, ar, style = PanelRouteStyle.default}:TableW
 		>
 			<table className={styles.TableWithSort} data-style={style}>
 				<RowHeading ar={ar}/>
-				<tbody>{data.map((item:any, index: number) => <RowData {...item} key={index} />)}</tbody>
+				<tbody>{data.map((item:any, index: number) => <RowData {...item} key={item.id} />)}</tbody>
 			</table>
 		</Panel>
 	);
