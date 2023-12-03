@@ -35,7 +35,7 @@ function AuthPage() {
 				{!store.userStore.currentUser  ?
 					<Panel className={"col-span-6 desktop:col-start-8 desktop:col-span-5 tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-2xl"} variant={PanelVariant.withPadding} background={PanelColor.glass}>
 						<FormAuth/>
-					</Panel> : 	<Navigate to="/register/success" replace={true} />
+					</Panel> : 	<Navigate to="/account" replace={true} />
 				}
 
 

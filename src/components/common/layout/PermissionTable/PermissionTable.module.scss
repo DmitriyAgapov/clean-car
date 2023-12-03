@@ -1,0 +1,28 @@
+.PermissionTable {
+	display: grid;
+  gap: 1.125rem;
+}
+.PermissionTableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  & > *:first-child {
+	grid-column-start: 2;
+  }
+  background-color: #090909;
+  color: #929398;
+  font-size: 9px;
+  text-transform: uppercase;
+  line-height: 11px;
+  padding: .25rem 1.25rem;
+}
+.PermissionTableRow {
+  padding: 0 1.125rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+
+  & > *:first-child {
+	font-size: .75rem;
+	color: white;
+  }
+
+}

@@ -11,7 +11,7 @@ type ChipsProps = {
 	state: boolean
 }
 const Chips = ({ state }:ChipsProps) => {
-	console.log(state)
+
 	return (
 		<div className={styles.Chips} data-state={state}>
 			{state ? 'Активна' : 'Деактивна'}

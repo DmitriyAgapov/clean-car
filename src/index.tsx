@@ -13,8 +13,13 @@ import RestorePasswordPage from "routes/restore/restorePasswordPage";
 import AccountPage from "routes/account/account";
 import DashboardPage from "routes/account/dashboard";
 import UsersPage from "routes/account/users";
-import { authUser, companyLoader } from "routes/loaders/loaders";
+import { authUser, companyLoader, groupsLoader } from "routes/loaders/loaders";
 import CompanyPage from "routes/account/company";
+import GroupsPage from "routes/account/groups";
+import GroupPage from "routes/account/group";
+import GroupPageAction from "routes/account/groupEditAction";
+import GroupPageEditAction from "routes/account/groupEditAction";
+import GroupPageCreateAction from "routes/account/groupCreateAction";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -46,7 +51,7 @@ const router = createBrowserRouter([
         path: '/account',
         element: <AccountPage />,
         errorElement: <ErrorPage />,
-        loader: () => companyLoader(),
+        loader: () => authUser(),
         children: [
             {
                 path: 'dashboard',
@@ -59,6 +64,27 @@ const router = createBrowserRouter([
             {
                 path: 'companies',
                 element: <CompanyPage />,
+                loader: companyLoader,
+            },
+            {
+                path: 'groups',
+                element: <GroupsPage />,
+                loader: groupsLoader
+            },
+            {
+                path: 'groups/create',
+                element: <GroupPageCreateAction />,
+                loader: groupsLoader,
+            },
+            {
+                path: 'groups/:id',
+                element: <GroupPage />,
+                loader: groupsLoader,
+            },
+            {
+                path: 'groups/:id/edit',
+                element: <GroupPageEditAction />,
+                loader: groupsLoader,
             }
         ]
     }

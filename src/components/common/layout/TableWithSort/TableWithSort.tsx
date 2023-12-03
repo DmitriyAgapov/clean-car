@@ -1,46 +1,58 @@
-import React, { useId } from 'react';
+import React from 'react';
 import styles from './TableWithSort.module.scss';
-import { CustomerProfile, PerformerProfile } from "stores/companyStore";
-import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
-import { SvgFilter } from "components/common/ui/Icon";
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
+import { SvgFilter, SvgSort } from "components/common/ui/Icon";
 import Chips from "components/common/ui/Chips/Chips";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type TableWithSortProps = {
-	data: PerformerProfile[] | CustomerProfile[]
+	data: any[]
 	state: boolean
+	ar: string[]
+	style?: PanelRouteStyle
 }
 
 const RowHeading = ({ ar }: any) => {
-	const id = useId();
-	return <div className={styles.tableheader}>{ ar.map((arItem: string) => <div key={id}
-		className={styles.tableheading}>{arItem}</div>)}</div>
+
+	return <thead><tr className={styles.tableheader + " tableheader"}>{ ar.map((arItem: string, index: number) => <th key={`rh-${index}`}
+		className={styles.tableheading}><span>{arItem}</span> <SvgSort/></th>)}</tr></thead>
 }
 
-const RowData = ({status, company, type, city}:any) => {
-	const id = useId();
+const RowData = (props:any) => {
+	const navigate = useNavigate();
+	const location = useLocation();
+	const handleClick = () => props.id ? navigate(location.pathname+`/${props.id}`) : void null;
 
-	return <div className={styles.tableRow}>
-			<div key={id} className={styles.tableCell}>
-				<Chips state={status}/>
-			</div>
-			<div key={id} className={styles.tableCell}>{company}</div>
-			<div key={id} className={styles.tableCell}>{type}</div>
-			<div key={id} className={styles.tableCell}>{city}</div>
-	</div>
+	const propsRender = () => {
+		const ar = [];
+		for(const key in props) {
+			if(typeof props[key] === "boolean") {
+				ar.push(<td key={key}  className={styles.tableCell}>
+					<Chips state={props[key]}/>
+				</td>)
+			} else if(key !== "id") {
+				ar.push(<td key={key} className={styles.tableCell}>{props[key]}</td>)
+			}
+		}
+		return ar
+	}
+	return <tr className={styles.tableRow} onClick={handleClick}>
+		{propsRender()}
+	</tr>
 }
 
-const TableWithSort = ({data, state}:TableWithSortProps) => {
+const TableWithSort = ({data, state, ar, style = PanelRouteStyle.default}:TableWithSortProps) => {
 
 	if (state) return <div>'Loading'</div>
 
 	return (
-		<Panel className={styles.TableWithSortPanel + " " + "col-span-full"} variant={PanelVariant.default} background={PanelColor.glass}
+		<Panel className={styles.TableWithSortPanel + " " + "col-span-full"} routeStyle={style} variant={PanelVariant.default} background={PanelColor.glass}
 			header={<div className={styles.btnFilter}><SvgFilter/></div>}
 		>
-			<div className={styles.TableWithSort}>
-				<RowHeading ar={['Статус', 'Компания', 'Тип', 'Город']}/>
-				{data.map((item:any) => <RowData status={item.company.is_active} company={item.company.name} type={item.company_type} city={item.city} />)}
-			</div>
+			<table className={styles.TableWithSort} data-style={style}>
+				<RowHeading ar={ar}/>
+				<tbody>{data.map((item:any, index: number) => <RowData {...item} key={index} />)}</tbody>
+			</table>
 		</Panel>
 	);
 };

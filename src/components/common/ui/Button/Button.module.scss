@@ -1,4 +1,4 @@
-.Button {
+.Button:not([data-variant="text"]) {
   padding: .625rem 3.125rem;
   text-decoration: none;
   line-height: 1;
@@ -16,7 +16,7 @@
   align-self: center;
   font-weight: 500;
   white-space: nowrap;
-
+	cursor: pointer;
   &:hover {
 	background: transparent;
 	border-color: var(--accentColor);
@@ -119,4 +119,7 @@
 
   }
 
+}
+.Button[data-variant="text"] {
+  cursor: pointer;
 }

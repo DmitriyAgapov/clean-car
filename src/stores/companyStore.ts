@@ -46,7 +46,7 @@ export interface Companies {
 	companies: Company[] | []
 }
 export class CompanyStore {
-	companies= observable.array([])
+	companies= observable.array()
 	loadingCompanies: boolean = false;
 	updatingUser?: boolean;
 	updatingUserErrors: any;
@@ -55,6 +55,8 @@ export class CompanyStore {
 		makeObservable(this, {
 			companies: observable,
 			loadingCompanies: observable,
+			addCompany: action,
+			loadCompnies: action
 			// updatingUser: observable,
 			// updatingUserErrors: observable,
 
@@ -64,42 +66,46 @@ export class CompanyStore {
 		});
 	}
 
-	loadCompnies() {
+	async loadCompnies() {
 		this.loadingCompanies = true;
 		this.companies.clear()
-		agent.Companies.getListCompanyCustomer()
-			.then(r => {
-				// @ts-ignore
-			const {data} = r;
+		const dataCustomers = await agent.Companies.getListCompanyCustomer();
+		const dataPerformes = await agent.Companies.getListCompanyPerformer()
+		const data = await Promise.all([dataPerformes, dataCustomers]);
+		data.forEach(item => {
 			// @ts-ignore
-			console.log(data.results)
-			// @ts-ignore
-			data.results.forEach((item:any) => {
+			if(item.status == 200 && item.data){
 				// @ts-ignore
-				this.companies.push(item)
-			})
-			})
-			.catch(e => console.log(e))
+				this.companies.push(...item.data.results)
+			}
+		})
+		// console.log(this.companies)
+		this.loadingCompanies = false
+	}
+	addCompany() {
+		// this.loadingCompanies = true;
 
-		agent.Companies.getListCompanyPerformer()
-			.then(r => {
-				// @ts-ignore
-			const {data} = r;
-			data.results.forEach((item:any) => {
-				// @ts-ignore
-				this.companies.push(item)
-			})
-
-			// this.companies.replace([...this.companies, ...data.results])
-			// this.companies.push([...])
-			// data.results.forEach((i:any) => {
-			// 	this.companies.push(i)
-			// 	})
-			})
-
-			.catch(e => console.log(e))
-			.finally(() => this.loadingCompanies = false)
-		console.log(this.companies)
+		// @ts-ignore
+		this.companies.push({
+			"id": 12333,
+			"company": {
+				"name": "123Golden Gate",
+				"is_active": true,
+				"city": 1619
+			},
+			"address": "fВладимирская область, город Радужный, квартал 1, дом 17",
+			"connected_prices": "-",
+			"inn": null,
+			"ogrn": null,
+			"legal_address": "",
+			"contacts": "",
+			"payment": "Постоплата",
+			"bill": "0.00",
+			"overdraft": false,
+			"overdraft_sum": 1000,
+			"company_type": "Компания-Заказчик"
+		})
+		// this.loadingCompanies = true;
 	}
 	getCompanies() {
 		return this.companies

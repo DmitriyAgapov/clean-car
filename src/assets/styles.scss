@@ -1,8 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "fonts/RfDewi/stylesheet.css";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import "./fonts/RfDewi/stylesheet.css";
+@import 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap';
 @import "_vars";
 @import "_base";
 @import "_page";

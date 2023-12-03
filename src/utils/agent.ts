@@ -3,6 +3,7 @@ import appStore from "stores/appStore";
 import authStore from "stores/authStore";
 import { decodeToken } from "utils/getData";
 import { User } from "stores/userStore";
+import { toJS } from "mobx";
 const API_ROOT = 'https://dev.server.clean-car.net/api';
 
 // const encode = encodeURIComponent;
@@ -33,12 +34,15 @@ const requests = {
 		})
 		.then(response => response)
 		.catch(handleErrors),
-	// put: (url: string, body: any) =>
-	// 	superagent
-	// 	.put(`${API_ROOT}${url}`, body)
-	// 	.use(tokenPlugin)
-	// 	.end(handleErrors)
-	// 	.then(responseBody),
+	put: (url: string, body: any) =>
+		axios({
+			url: `${API_ROOT}${url}`,
+			headers: tokenPlugin(),
+			method: 'PUT',
+			data: body
+		})
+		.then(response => response)
+		.catch(handleErrors),
 	post: (url: string, body: any) =>
 		axios({
 			url: `${API_ROOT}${url}`,
@@ -61,10 +65,7 @@ const Auth = {
 				reject(new Error('no token'))
 			}
 		})
-	}
-	// console.log('request current userr')
-		// requests.get('/user'),
-	,
+	},
 	login: (email: string, password: string) =>
 		requests.post('/token/', { email: email, password: password  }),
 
@@ -90,6 +91,28 @@ const Companies = {
 			page: page
 		})
 }
+const PermissionsAdmin = {
+	getAllAdminPermissions: (ordering?:string, page?: number, page_size?: number) =>
+		requests.get('/permissions_admin/groups/list/', {}),
+	putUpdateAdminPermissions: (id: number, data: any) => {
+		requests.put(`/permissions_admin/groups/${id}/update/`, {
+			name: data.name,
+			permissions: toJS(data.permissions)
+		})
+	},
+	createAdminPermission: (data: any) => {
+		requests.post('/permissions_admin/groups/create/', {
+			name: data.name,
+			permissions: data.permissions.map((p:any) => ({
+				create: p.create,
+				read: p.read,
+				update: p.update,
+				delete: p.delete,
+				name: p.name
+			}))
+		})
+	}
+}
 const Profile = {
 	// follow: (username: string) =>
 	// 	requests.post(`/profiles/${username}/follow`, {}),
@@ -102,6 +125,7 @@ const Profile = {
 const agent = {
 	Auth,
 	Profile,
+	PermissionsAdmin,
 	Companies
 };
 

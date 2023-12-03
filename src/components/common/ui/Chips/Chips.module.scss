@@ -3,11 +3,13 @@
   font-weight: 600;
   line-height: 1.29;
   color: black;
-  padding: 2px 12px 3px;
-  display: inline-flex;
+  padding: 2px 0 3px;
+  display: inline-block;
   align-items: center;
   height: 16px;
   border-radius: 8px;
+  width: 60px;
+  text-align: center;
   text-transform: lowercase;
   &[data-state="true"] {
 	background-color: var(--colorStateActive);

@@ -10,26 +10,31 @@ export enum PanelColor {
 	default =  "default" ,
 	glass = "glass"
 }
-
+export enum PanelRouteStyle {
+	default =  "default" ,
+	company = "company",
+	groups = "groups"
+}
 type PanelProps  = {
 	children?: ReactNode | ReactNode[]
 	header?: ReactNode | ReactNode[]
 	footer?: ReactNode | ReactNode[]
+	routeStyle?: PanelRouteStyle
 	variant?: PanelVariant
 	background?: PanelColor
 	className?: string
 }
 
-const Panel = ({children, header, footer, variant = PanelVariant.default, background = PanelColor.default, className = "" }:PanelProps) => {
+const Panel = ({children, header, footer, routeStyle = PanelRouteStyle.default, variant = PanelVariant.default, background = PanelColor.default, className = "" }:PanelProps) => {
 	return (
-		<div className={styles.Panel + " " + className}  data-variant={variant} data-background={background}>
-			{header && <header>
+		<div className={styles.Panel + "  " + className} data-style={routeStyle}  data-variant={variant} data-background={background}>
+			{header && <header  data-panel={'header'}>
 				{header}
 			</header>}
-			<div className={styles.panelBody}>
+			<div className={styles.panelBody} data-panel={'body'}>
 				{children}
 			</div>
-			{footer && <footer>
+			{footer && <footer  data-panel={'footer'}>
 				{footer}
 			</footer>}
 </div>
