@@ -16,7 +16,6 @@ const SignupSchema = Yup.object().shape({
 		.max(50, 'Слишком длинное!')
 		.required('Обязательное поле'),
 	phone: Yup.string()
-		.matches(/^\+1?\d{8,15}$/)
 		.max(16, 'Слишком длинное!')
 		.phone("RU", "Введите правильный номер")
 		.required("Требуется номер телефона"),
