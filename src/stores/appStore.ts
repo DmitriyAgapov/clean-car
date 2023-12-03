@@ -1,7 +1,5 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
 import userStore from "./userStore";
-import { decodeToken } from "utils/getData";
-
 
 export class AppStore {
 	appName = 'CleanCar';
@@ -33,13 +31,7 @@ export class AppStore {
 			token => {
 				if (token) {
 					window.localStorage.setItem('jwt', token);
-					const dataUser = decodeToken(appStore.token);
-					console.log(dataUser)
 					userStore.pullUser()
-					// userStore.currentUser = { id: dataUser.user_id, first_name: dataUser.first_name, last_name: dataUser.last_name, phone: dataUser.phone, email: this.values.email}
-
-
-
 				} else {
 					window.localStorage.removeItem('jwt');
 				}

@@ -8,7 +8,7 @@ import logo from "components/common/layout/Logo/Logo";
 import { useId } from "react";
 
 export const authUser = async () => {
-	console.log('auth')
+
 	if (!appStore.token) {
 		return redirect('/auth')
 	} else {
@@ -23,7 +23,7 @@ export const companyLoader = async () => {
 }
 
 export const groupsIdLoader = async ({params: {id}}:any) => {
-	console.log(id)
+
 	if (id) {
 		const currentGroup = await permissionStore.getPermissionAdmin(id);
 
@@ -32,8 +32,7 @@ export const groupsIdLoader = async ({params: {id}}:any) => {
 			if(currentGroup.data) return { group: currentGroup.data }
 		}
 		return redirect('/account/groups')
-		//
-			// return redirect('/account/groups')
+
 	}
 	return  null
 }
