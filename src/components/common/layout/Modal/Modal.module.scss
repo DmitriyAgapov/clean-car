@@ -1,0 +1,38 @@
+.Modal {
+	display: flex;
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  bottom: 0;
+  top: 0;
+  justify-content: center;
+  background: rgba(0,0,0,.8);
+  align-items: center;
+  & > * {
+	flex: 0  1 600px;
+	display: grid;
+	justify-content: center;
+	min-height: 350px;
+	align-items: center;
+	a[data-close='true'] {
+	  cursor: pointer;
+	  position: absolute;
+	  top: 1.25rem;
+	  right: 1.25rem;
+	}
+	footer {
+	  display: flex;
+	  gap: 1rem;
+	  justify-content: center;
+	  justify-items: center;
+	  align-items: center;
+	  margin-top: 0 !important;
+	  a {
+		width: 50%;
+		flex: 1 0 50%;
+	  }
+	}
+  }
+
+}

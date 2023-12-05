@@ -9,6 +9,7 @@ import Burger from "components/common/ui/Burger/Burger";
 import "../../../../assets/styles.scss"
 import MobileMenu from "components/common/layout/MobileMenu/MobileMenu";
 import { useNavigate } from 'react-router-dom';
+import Modal from "components/common/layout/Modal/Modal";
 const sidebarMenu: {title: string, url: string}[] = [
 	{
 		title: 'Дашборд',
@@ -61,6 +62,7 @@ const Layout:FC<ChildrenProps> = ({children, headerContent, className = ""}) => 
 		</Footer>
 
 
+
 		<div className={"lineBg"}>
 			<div/>
 			<div/>
@@ -70,6 +72,7 @@ const Layout:FC<ChildrenProps> = ({children, headerContent, className = ""}) => 
 			<div className={'leftMask'}/>
 			<div className={"rightMask"}/>
 		</div>
+		<Modal/>
 	</div>;
 };
 

@@ -62,20 +62,19 @@ export class PermissionStore {
 		this.loadPermissionAdmin()
 		return this.permissions
 	}
-
+	deletePermissionStoreAdmin(id: number) {
+		this.loadingPermissions = true;
+		return agent.PermissionsAdmin.deleteAdminGroupIdPermission(id)
+			.then(r => r)
+			.finally(() => this.loadingPermissions = false)
+	}
 	getPermissionAdmin(id: number) {
 		this.loadingPermissions = true;
-		console.log(id)
+
 		return agent.PermissionsAdmin.retriveAdminGroupIdPermission(id)
 			.then(r => r)
 			.finally(() => this.loadingPermissions = false)
 
-		// this.permissions.filter((value) => {
-		// 	if(Number(value.id) === Number(id)) {
-		// 		return value
-		// 	}
-		// 	this.loadingPermissions = false
-		// })
 	}
 	setPermissionStoreAdmin(id: number, data:any) {
 		this.loadingPermissions = true

@@ -14,13 +14,14 @@ type PermissionTableRowProps = {
 type PermissionTableProps = {
 	data: PermissionTableRowProps[]
 	editable?: boolean
-	action?: any
+	action?: (event: Event, id: number) => void
 }
 const PermissionTable = ({ data, editable = false, action }:PermissionTableProps) => {
 
 	const handleChange = (event:Event, id: number) => {
-		// @ts-ignore
-		action(event, id)
+		if (action) {
+			action(event, id)
+		}
 	}
 
 	return (

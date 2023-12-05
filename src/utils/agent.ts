@@ -20,12 +20,15 @@ const tokenPlugin = () => {
 };
 
 const requests = {
-	// del: (url: string) =>
-	// 	axios
-	// 	.delete(`${API_ROOT}${url}`)
-	// 	.use(tokenPlugin)
-	// 	.end(handleErrors)
-	// 	.then(responseBody),
+	delete: (url: string, body: any) =>
+		axios({
+			url: `${API_ROOT}${url}`,
+			headers: tokenPlugin(),
+			method: 'DELETE',
+			data: body
+		})
+		.then(response => response)
+		.catch(handleErrors),
 	get: (url: string, body: any) =>
 		axios({
 			url: `${API_ROOT}${url}`,
@@ -101,6 +104,10 @@ const PermissionsAdmin = {
 			permissions: toJS(data.permissions)
 		})
 	},
+	deleteAdminGroupIdPermission:(id: number) =>
+		requests.delete(`/permissions_admin/groups/${id}/delete/`, {
+			id: id
+	}),
 	retriveAdminGroupIdPermission: (id: number) =>
 		requests.get(`/permissions_admin/groups/${id}/retrive/`, {
 			id: id

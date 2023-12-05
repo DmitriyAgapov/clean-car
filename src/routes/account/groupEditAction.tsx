@@ -9,7 +9,6 @@ import { SvgBackArrow } from "components/common/ui/Icon";
 import Checkbox from "components/common/ui/Checkbox/Checkbox";
 import PermissionTable from "components/common/layout/PermissionTable/PermissionTable";
 import { toJS } from "mobx";
-import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 export default function GroupPageEditAction(props:any) {
 	const store = useStore();
@@ -66,13 +65,26 @@ export default function GroupPageEditAction(props:any) {
 							disabled={true} label={'Недоступно'}/>
 					</div>
 					<div className={'flex justify-end gap-5'}>
+						<Button text={'Удалить'} action={async () => {
+							store.appStore.setModal({
+								actions: [
+									<Button text={'Нет'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
+									<Button text={'Да, удалять'} action={() => {
+										store.permissionStore.deletePermissionStoreAdmin(changes.id)
+										store.appStore.closeModal()
+										navigate('/account/groups')
+									}} variant={ButtonVariant["accent-outline"]} />
+								],
+								text: `Вы уверены, что хотите удалить ${changes.name}`,
+								state: true
+							})
+							;
+						}}  className={'float-right'} variant={ButtonVariant.default}/>
 						<Button text={'Отменить'} action={() => navigate(-1)}  className={'float-right'} variant={ButtonVariant.default}/>
 						<Button text={'Сохранить'} action={async () => {
 							// @ts-ignore
 							store.permissionStore.setPermissionStoreAdmin(changes.id, changes);
 							setTimeout(() => navigate('/account/groups'), 500);
-							// navigate('/account/groups')
-
 						}}  className={'float-right'} variant={ButtonVariant.accent}/>
 
 					</div>

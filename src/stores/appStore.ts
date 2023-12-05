@@ -1,4 +1,5 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
+import { ReactNode } from 'react';
 import userStore from "./userStore";
 
 export class AppStore {
@@ -10,10 +11,16 @@ export class AppStore {
 	appLoaded = false;
 	burgerState: boolean = false
 	bodyRef = document.body;
+	modal: {state: boolean, text: string, actions: ReactNode | null | undefined} = {
+		state: false,
+		text: "",
+		actions: null
+	}
 	constructor() {
 		makeObservable(this, {
 			appName: observable,
 			token: observable,
+			modal: observable,
 			appRouteName: observable,
 			appLoaded: observable,
 			burgerState: observable,
@@ -24,7 +31,8 @@ export class AppStore {
 			setAppLoaded: action,
 			setBurgerState: action,
 			setAppLoading: action,
-			setAppRouteName: action
+			setAppRouteName: action,
+			setModal: action
 		});
 		reaction(
 			() => this.token,
@@ -38,7 +46,16 @@ export class AppStore {
 			},
 		);
 	}
-
+	setModal({state, text, actions}:{state: boolean, text:string, actions: ReactNode | null }) {
+		this.modal = {state: state, text: text, actions: actions}
+	}
+	closeModal() {
+		this.modal = {
+			state: false,
+			text: "",
+			actions: null
+		}
+	}
 	setToken(token: string | null) {
 		this.token = token;
 	}
