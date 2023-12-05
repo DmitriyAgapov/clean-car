@@ -7,8 +7,11 @@ export enum ButtonVariant {
 	default = "default",
 	accent = "accent",
 	"accent-outline" = "accent-outline",
-	text = "text"
+	outline = "outline",
+	text = "text",
+	icon = "icon"
 }
+
 export enum ButtonDirectory {
 	admin =  "admin" ,
 	customer = "customer",

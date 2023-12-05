@@ -2,10 +2,17 @@ import { action, makeObservable, observable } from 'mobx';
 import agent from "utils/agent";
 import authStore from "stores/authStore";
 
+enum UserTypeEnum {
+	admin,
+	customer,
+	executor
+}
+
 export type User = {
 	id: string;
 	phone: string;
 	email: string;
+	userType?: UserTypeEnum
 	first_name:	string
 	last_name: string;
 	password?: string;

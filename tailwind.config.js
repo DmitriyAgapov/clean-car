@@ -5,6 +5,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        "accent": '#00FFAE'
+      },
       screens: {
         'tablet': '744px',
         // => @media (min-width: 640px) { ... }

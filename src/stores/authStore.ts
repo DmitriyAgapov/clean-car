@@ -120,6 +120,7 @@ export class AuthStore {
   logout() {
     appStore.setToken(null);
     userStore.forgetUser();
+    window.location.replace('/')
     return Promise.resolve();
   }
 }

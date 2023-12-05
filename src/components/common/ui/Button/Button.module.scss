@@ -1,4 +1,4 @@
-.Button:not([data-variant="text"]) {
+.Button:not([data-variant="text"],[data-variant="icon"]) {
   padding: .625rem 3.125rem;
   text-decoration: none;
   line-height: 1;
@@ -73,9 +73,40 @@
   }
 
   &[data-variant="outline"] {
-	background: transparent;
 	border-color: var(--colorWhite);
 	color: var(--buttonOutlineText);
+	font-size: .75rem;
+	font-weight: 400;
+
+	position: relative;
+	padding: 2px;
+	-webkit-background-clip: text  !important;
+	-webkit-text-fill-color: transparent   !important;
+
+	&:before {
+	  content: '';
+	  border-radius: 20px;
+	  background: var(--color);
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  bottom: 0;
+	  z-index:-1;
+	  left: 0;
+	}
+	&:after {
+	  content: '';
+	  border-radius: 20px;
+	  border: 2px solid transparent !important;
+	  background: #18191F !important;
+	  position: absolute;
+	  top: 1px;
+	  right: 1px;
+	  bottom: 1px;
+	  z-index:-1;
+	  left: 1px;
+	}
+
   }
 
   &[data-variant="accent-outline"] {
@@ -102,23 +133,26 @@
 	  color: black;
 	}
   }
-
-
+  &[data-variant="outline"] {
+	padding-left: .75rem;
+	padding-right: .75rem;
+  }
 
   &[data-directory="customer"] {
+	--color: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
 	background: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
 	border: 0;
   }
   &[data-directory="admin"] {
 	background: linear-gradient(-120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
 	border: 0;
+	--color: linear-gradient(-120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
   }
   &[data-directory="executor"] {
 	border: 0;
 	background: linear-gradient(-90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
-
+	--color: linear-gradient(-90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
   }
-
 }
 .Button[data-variant="text"] {
   cursor: pointer;

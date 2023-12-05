@@ -60,7 +60,9 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.3.5",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6",
     "typescript-plugin-styled-components": "^3.0.0"
   }
 }

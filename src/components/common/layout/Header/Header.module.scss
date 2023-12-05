@@ -1,5 +1,6 @@
 .Header {
 	grid-column: 2/-2;
+  position: relative;
   	display: flex;
   	justify-content: space-between;
   @media screen and (min-width: 1300px){
