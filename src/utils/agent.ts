@@ -1,4 +1,4 @@
-import axios, {AxiosError} from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
 import appStore from "stores/appStore";
 import authStore from "stores/authStore";
 import { decodeToken } from "utils/getData";
@@ -6,7 +6,7 @@ import { User } from "stores/userStore";
 import { toJS } from "mobx";
 const API_ROOT = 'https://dev.server.clean-car.net/api';
 
-// const encode = encodeURIComponent;
+const encode = encodeURIComponent;
 
 const handleErrors = (err: AxiosError) => {
 	if (err && err.response && err.response.status === 401) {
@@ -36,8 +36,8 @@ const requests = {
 			method: 'GET'
 		})
 		.then(response => response)
-		.catch(handleErrors)
-	    .finally(() => ({loaded: true})),
+		.catch(handleErrors),
+
 	put: (url: string, body: any) =>
 		axios({
 			url: `${API_ROOT}${url}`,
@@ -82,7 +82,12 @@ const Auth = {
 
 const limit = (count: any, p: any) => `limit=${count}&offset=${p ? p * count : 0}`;
 const omitSlug = (article: any) => Object.assign({}, article, { slug: undefined })
-
+const Users = {
+	getAllUsers: () =>
+		requests.get('/accounts/all_users/', {})
+	// getUser: (id: number) =>
+	// 	requests.get('')
+}
 const Companies = {
 	getListCompanyCustomer: (company_name?:string | undefined, page?: number | undefined) =>
 		requests.get('/companies/list_company_customer/', {
@@ -108,10 +113,9 @@ const PermissionsAdmin = {
 		requests.delete(`/permissions_admin/groups/${id}/delete/`, {
 			id: id
 	}),
-	retriveAdminGroupIdPermission: (id: number) =>
-		requests.get(`/permissions_admin/groups/${id}/retrive/`, {
-			id: id
-	}),
+	getAdminGroupIdPermission: (id: string) =>
+		requests.get(`/permissions_admin/groups/${id}/retrieve/`, {}),
+
 	createAdminPermission: (data: any) => {
 		requests.post('/permissions_admin/groups/create/', {
 			name: data.name,
@@ -126,6 +130,8 @@ const PermissionsAdmin = {
 	}
 }
 const Profile = {
+	getMyAccount: () =>
+		requests.get('/accounts/my_profile/', {})
 	// follow: (username: string) =>
 	// 	requests.post(`/profiles/${username}/follow`, {}),
 	// get: (username: string) =>
@@ -138,7 +144,8 @@ const agent = {
 	Auth,
 	Profile,
 	PermissionsAdmin,
-	Companies
+	Companies,
+	Users
 };
 
 export default agent;

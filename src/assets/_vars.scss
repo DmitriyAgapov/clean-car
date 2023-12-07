@@ -18,7 +18,7 @@
   	--shadow: -9px 10px 11px rgba(0, 0, 0, 0.25);
 	--columnWidth: 90px;
 	--sideGutter: calc((100vw - var(--container)  ) / 2 - 8px - var(--gridGap));
-	--grid:  var(--sideGutter) repeat(var(--totalCol), 1fr) var(--sideGutter);
+	--grid:  var(--sideGutter) repeat(2, minmax(96px, 1.33fr)) repeat(var(--totalCol), .95fr) var(--sideGutter);
 	--gridinner: repeat(var(--totalCol), 1fr);
 	--centered: 2/-2;
 	--full_centered: 1/-1;

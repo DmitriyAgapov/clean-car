@@ -7,6 +7,7 @@ import TableWithSort from "components/common/layout/TableWithSort/TableWithSort"
 import { useStore } from "stores/store";
 import { useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
+import moment from "moment";
 
 export default observer(function GroupsPage() {
 	const store = useStore();
@@ -14,7 +15,6 @@ export default observer(function GroupsPage() {
 	const navigate = useNavigate();
 	// @ts-ignore
 	const {groups} = useLoaderData();
-	console.log(groups)
 	return (
 		<Section type={SectionType.default}>
 			<Panel className={"col-span-full"}
@@ -27,10 +27,12 @@ export default observer(function GroupsPage() {
 			</Panel>
 
 			<TableWithSort
-				ar={['Название группы', 'дата и время']}
+				filter={true}
+				search={true}
+				ar={['дата и время' , 'Название группы']}
 				data={groups.map((item:any) => ({
+					date: moment(item.created).format("DD.MM.YYYY HH:mm"),
 					name: item.name,
-					date: item.date,
 					id: item.id
 				}))}
 				state={store.permissionStore.loadingPermissions}

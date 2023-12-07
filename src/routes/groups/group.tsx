@@ -10,13 +10,13 @@ import Checkbox from "components/common/ui/Checkbox/Checkbox";
 import PermissionTable from "components/common/layout/PermissionTable/PermissionTable";
 import { observer } from "mobx-react-lite";
 
-export default observer(function GroupPage() {
+const GroupPage = () => {
 	const store = useStore();
 	const location = useLocation()
 	const navigate = useNavigate();
 	// @ts-ignore
 	const { group } = useLoaderData();
-	console.log(group)
+
 	return (
 		<Section type={SectionType.default}>
 			<Panel className={"col-span-full"}
@@ -74,4 +74,5 @@ export default observer(function GroupPage() {
 		</Section>
 
 	)
-});
+}
+export default observer(GroupPage)

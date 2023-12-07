@@ -6,7 +6,7 @@ import photo from "assets/images/userphoto.png";
 import { SvgLogout, SvgPencil } from "components/common/ui/Icon";
 import styled from "styled-components";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useOutsideClick } from "utils/utils";
 const StyledAccounts = styled.ul`
 	margin: 0;
@@ -47,6 +47,7 @@ const StyledButton = styled(Button)`
 	display: inline-flex;
   align-items: center;
   font-size: .75rem;
+  cursor: pointer;
   color: rgba(220,220,220,.5);
   svg {
     width: 30px;
@@ -58,9 +59,13 @@ const StyledButton = styled(Button)`
 
 const UserPortal = ({state, name, company, accounts, className, action, ...props}:{action: () => void, state: boolean, name: string, company: string, accounts: any[], className?: string}) => {
 	const store = useStore()
+	const navigate = useNavigate();
 	if(state) return <Panel className={className + ` scale-in-ver-top absolute shadow-1 !m-0 right-0 max-w-[260px] w-full top-14 p-5 z-50 !bg-[#18191F]`}
 		{...props}
-		footer={<Button text={'Управление аккаунтом'} className={"w-full"} action={(event) => console.log('acc')} variant={ButtonVariant.outline} directory={ButtonDirectory.executor}/>}
+		footer={<Button text={'Управление аккаунтом'} className={"w-full"} action={() => {
+			navigate('/account/profile');
+
+		}} variant={ButtonVariant.outline} directory={ButtonDirectory.executor}/>}
 	>
 		<div className={'user__photo'}>
 			<Image src={photo} alt={''} width={80} height={80}/>

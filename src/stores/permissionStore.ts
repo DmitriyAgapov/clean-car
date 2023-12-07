@@ -1,6 +1,8 @@
 import { action, autorun, IObservableArray, makeObservable, observable, runInAction } from 'mobx';
 import agent from "utils/agent";
 import authStore from "stores/authStore";
+import { Company } from "stores/companyStore";
+import { User } from "stores/usersStore";
 enum PermissionName {
 	 'Компании',
 	 'Управление филиалами и отделами заказчиками',
@@ -13,6 +15,11 @@ enum PermissionName {
 	'Управление справочниками',
 	'Финансовый блок'
 }
+export type AccountProps = {
+	company: Company,
+	group: GroupProps,
+	id: number
+}
 export type Permissions = {
 	id: string;
 	name: PermissionName;
@@ -21,7 +28,12 @@ export type Permissions = {
 	update: boolean;
 	delete: boolean;
 }
-
+export type GroupProps = {
+	id: number
+	name: string
+	permissions: Permissions[]
+	created: string
+}
 export class PermissionStore {
 	permissions: IObservableArray<Permissions> = observable.array([], {
 		deep: true
@@ -40,12 +52,9 @@ export class PermissionStore {
 			createPermissionStoreAdmin: action,
 			getAllPermissions: action
 		});
-		// autorun(() => {
-		// 	console.log(this.permissions)
-		// })
 	}
-	loadPermissionAdmin() {
 
+	loadPermissionAdmin() {
 			this.loadingPermissions = true;
 			this.permissions.clear();
 			// @ts-ignore
@@ -58,34 +67,40 @@ export class PermissionStore {
 			.catch(action((error) => this.errors = error))
 			.finally(action(() => this.loadingPermissions = false));
 	}
+
 	getAllPermissions() {
 		this.loadPermissionAdmin()
 		return this.permissions
 	}
+
 	deletePermissionStoreAdmin(id: number) {
 		this.loadingPermissions = true;
 		return agent.PermissionsAdmin.deleteAdminGroupIdPermission(id)
 			.then(r => r)
 			.finally(() => this.loadingPermissions = false)
 	}
-	getPermissionAdmin(id: number) {
+
+	 getPermissionAdmin(id: string) {
 		this.loadingPermissions = true;
 
-		return agent.PermissionsAdmin.retriveAdminGroupIdPermission(id)
-			.then(r => r)
+		 return agent.PermissionsAdmin.getAdminGroupIdPermission(id)
+			.then((r) => r)
+		 	.catch(error => console.log(error))
 			.finally(() => this.loadingPermissions = false)
-
 	}
+
 	setPermissionStoreAdmin(id: number, data:any) {
 		this.loadingPermissions = true
 		agent.PermissionsAdmin.putUpdateAdminPermissions(data.id, data);
 		this.loadingPermissions = false
 	}
+
 	createPermissionStoreAdmin(data:any) {
 		this.loadingPermissions = true
 		agent.PermissionsAdmin.createAdminPermission(data)
 		this.loadingPermissions = false
 	}
+
 }
 const permissionStore = new PermissionStore()
 export default permissionStore;

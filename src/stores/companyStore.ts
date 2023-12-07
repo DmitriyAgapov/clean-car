@@ -5,10 +5,17 @@ export enum Payment  {
 	postoplata = "Постоплата",
 	predoplata = "Предоплата"
 }
-
+export type City = {
+	name: string
+	id: number
+}
 export type Company = {
 	name: string
-	is_active: boolean
+	is_active: boolean,
+	profile_id?: string
+	company_type?: string
+	city: City
+	id: number
 }
 export type  CustomerProfile = {
 	id: number;

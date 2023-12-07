@@ -14,7 +14,7 @@
 	}
 
 	@media screen and (min-width: 1299px) {
-	  padding: 4.5rem 3rem;
+	  padding: 3rem;
 	}
   }
 
@@ -22,8 +22,8 @@
 	border: 1px solid var(--borderPanelColor);
 	background-color: var(--bgPanelColor);
   }
-  header {
-	@apply mb-8 tablet:mb-10 desktop:mb-12;
+  header + * {
+	@apply mt-8;
   }
   footer {
 	@apply mt-11 tablet:mt-11 desktop:mt-20;

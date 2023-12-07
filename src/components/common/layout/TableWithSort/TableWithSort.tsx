@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './TableWithSort.module.scss';
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import { SvgFilter, SvgLoading, SvgSort } from "components/common/ui/Icon";
+import { SvgFilter, SvgLoading, SvgSearch, SvgSort } from "components/common/ui/Icon";
 import Chips from "components/common/ui/Chips/Chips";
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -10,6 +10,8 @@ type TableWithSortProps = {
 	state: boolean
 	ar: string[]
 	style?: PanelRouteStyle
+	search?: boolean
+	filter?: boolean
 }
 
 const RowHeading = ({ ar }: any) => {
@@ -40,14 +42,22 @@ const RowData = (props:any) => {
 		{propsRender()}
 	</tr>
 }
+export const TableSearch = () => <div className={'form-search relative h-8'}>
+	<input type={'search'} placeholder={'Быстрый поиск'} className={'search-dashboard'}/>
+	<SvgSearch />
+</div>
 
-const TableWithSort = ({data, state, ar, style = PanelRouteStyle.default}:TableWithSortProps) => {
-
+const TableWithSort = ({data,  search = false, filter = false, state, ar, style = PanelRouteStyle.default}:TableWithSortProps) => {
+	const [filterString, setFilterString ] = React.useState(null);
+	const sortArrayByString = React.useCallback(() => {
+		// @ts-ignore
+		if((typeof filterString == "string" || "number") && filterString && filterString.length > 0) ar.sort((a,b) => a[`${filterString}`] > b[`${filterString}`])
+	}, [filterString])
+	console.log(sortArrayByString())
 	if (state) return <SvgLoading className={'m-auto'}/>
-
 	return (
 		<Panel className={styles.TableWithSortPanel + " " + "col-span-full"} routeStyle={style} variant={PanelVariant.default} background={PanelColor.glass}
-			header={<div className={styles.btnFilter}><SvgFilter/></div>}
+			header={<>	{search && <TableSearch/>}{filter && <div className={styles.btnFilter}><SvgFilter/></div>}</>}
 		>
 			<table className={styles.TableWithSort} data-style={style}>
 				<RowHeading ar={ar}/>

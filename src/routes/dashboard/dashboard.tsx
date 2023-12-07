@@ -69,20 +69,18 @@ const sidebarMenu: {icon: React.ReactNode, title: string, url: string}[] = [
 ]
 export default function DashboardPage() {
 	return (
+		<Section type={SectionType.default}>
+			<Panel className={"col-span-full"}
+				header={<>
+					<Heading text={"Дашборд"} variant={HeadingVariant.h4} className={'!mb-6'} color={HeadingColor.accent}/>
+					<SearchBar />
+			</>}/>
+			<Panel  className={"col-span-full"} variant={PanelVariant.default} background={PanelColor.glass}>
 
-			<Section type={SectionType.default}>
-				<Panel className={"col-span-full"}
-					header={<>
-						<Heading text={"Дашборд"} variant={HeadingVariant.h4} className={'!mb-6'} color={HeadingColor.accent}/>
-						<SearchBar />
-				</>}/>
-				<Panel  className={"col-span-full"} variant={PanelVariant.default} background={PanelColor.glass}>
+				<p>Мы рады, что вы выбрали нас.<br/>
+					Пожалуйста, заполните данные для регистрации</p>
 
-					<p>Мы рады, что вы выбрали нас.<br/>
-						Пожалуйста, заполните данные для регистрации</p>
-
-				</Panel>
-			</Section>
-
+			</Panel>
+		</Section>
 	)
 }

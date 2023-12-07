@@ -13,7 +13,7 @@ import Modal from "components/common/layout/Modal/Modal";
 const sidebarMenu: {title: string, url: string}[] = [
 	{
 		title: 'Дашборд',
-		url: '/account/dashboard'
+		url: '/dashboard'
 	},
 	{
 		title: 'Сайт cleancar.ru',

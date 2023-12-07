@@ -1,6 +1,13 @@
 .TableWithSort {
 	border-top: 1px solid #242529;
   width: 100%;
+  thead {
+	background-color: #090909;
+  }
+  th {
+	line-height: 30px;
+	padding-top: 6px;
+  }
   tr {
 	width: 100%;
   }
@@ -27,28 +34,45 @@
 
 }
 .TableWithSortPanel {
+  overflow: hidden;
   header {
-	@apply mb-0 tablet:mb-0 desktop:mb-0 py-2 px-5 flex;
+	+ * {
+	  margin-top: 0 !important;
+	}
+	margin-bottom: 0;
+	@media screen and (min-width: 768px){
+	  margin-bottom: 0;
+	}
+	padding: 1.25rem 1.25rem .5rem;
+	display: flex;
+	align-items: center;
+	background: #090909;
   }
 }
 .btnFilter {
   cursor: pointer;
-  @apply w-6 h-6 inline-flex content-center items-center rounded-sm  p-1 bg-[#242529];
-  margin-left: auto !important;
-  path {
-	stroke-width: 1.5;
-  }
-  &:hover {
+	width: 1.75rem;
+  height: 1.75rem;
+  border-color: var(--accentColor);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+  border-radius: 10px;
+  padding: .25rem;
+  background-color: #242529;
+
 	path {
 	  stroke: var(--accentColor);
+	  stroke-width: 1;
 	}
-  }
+
 }
 .tableheading {
   color: #929398;
   font-size: .625rem;
   text-transform: uppercase;
-  padding: 5px 0;
+  //padding: 5px 0;
   cursor: pointer;
 
   &:hover {

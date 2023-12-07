@@ -8,9 +8,6 @@ import TableWithSort from "components/common/layout/TableWithSort/TableWithSort"
 import { useStore } from "stores/store";
 import { observer } from "mobx-react-lite";
 
-type Items = {
-	status: boolean, company: string, type: string, city: number
-}
 const  CompanyPage = () => {
 	const store = useStore();
 
@@ -21,14 +18,12 @@ const  CompanyPage = () => {
 				header={<>
 					<Heading text={"Компании"} variant={HeadingVariant.h4} className={'!mb-6 inline-block'} color={HeadingColor.accent}/>
 					<Button text={'Создать компанию'} action={() => store.companyStore.addCompany()}  variant={ButtonVariant.accent} className={'inline-flex float-right'} directory={ButtonDirectory.admin} size={ButtonSizeType.sm}/>
-					<div className={'form-search relative'}>
-						<input type={'search'} placeholder={'Быстрый поиск'} className={'search-dashboard'}/>
-						<SvgSearch className={'inline-block absolute top-2.5 left-2'}/>
-					</div>
 				</>}
 			/>
 
 			<TableWithSort
+				filter={true}
+				search={true}
 				style={PanelRouteStyle.company}
 				ar={['Статус', 'Компания', 'Тип', 'Город']}
 				data={store.companyStore.companies.map( (item : any) => ({

@@ -1,6 +1,7 @@
 form {
 
 }
+
 input, textarea {
   width: 100%;
   box-sizing: border-box;
@@ -13,11 +14,13 @@ input, textarea {
   color: var(--colorInputText);
   border-radius: 10px;
   border-color: var(--formBorder);
+
   &:focus {
 	border-color: var(--formBorderSelected);
-	filter: drop-shadow(0 0 10px rgba(0, 255, 174, .5)) ;
+	filter: drop-shadow(0 0 10px rgba(0, 255, 174, .5));
   }
 }
+
 label {
   display: block;
   margin: 0 0 .625rem;
@@ -26,28 +29,90 @@ label {
   line-height: 129%;
   color: var(--accentColor)
 }
+
 .form-error {
   position: absolute;
   margin-top: .375rem;
   font-size: .75rem;
 }
+
 [data-form_error="error"] {
   label, .form-error {
-    color: var(--errorColor);
+	color: var(--errorColor);
   }
 }
 
 button {
 
 }
+.form-search {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  svg {
+	top: 0.5rem;
+	left: 0.5rem;
+	right: 0;
+	position: absolute;
+	bottom: 0.5rem;
+	width: 1rem;
+	height: 1rem;
+  }
+  & + * {
+	margin-left: 1.25rem !important;
+  }
+}
 .search-dashboard {
-  height: 40px;
-  color: rgba(220, 220, 220, 1);
-  padding: .875rem 3rem .75rem;
+  height: 30px;
+  color: rgba(96, 97, 99, 1);
+  padding: .875rem 2rem .75rem;
+  width: 100%;
   line-height: 1;
+  display: flex;
   background-color: black;
-  border-color: #3F4147;
-  ::placeholder {
-    color: rgba(220, 220, 220, 0.61);
+  border: 1px solid #3F4147;
+
+  font-size: .75rem;
+  font-weight: 400;
+  input::placeholder {
+	font-size: .75rem;
+	font-weight: 400;
+	color: rgba(96, 97, 99, .5);
+	font-size: 20rem;
+  }
+}
+
+.account-form__input {
+  font-family: 'RF Dewi Expanded', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--accentColor);
+  display: grid;
+  gap: .875rem;
+  input {
+	height: 40px;
+
+  }
+}
+.account-form__input {
+  label {
+	padding-bottom: 0 !important;
+	top: 0 !important;
+	margin: initial;
+	&:after {
+	  content: none;
+	}
+  }
+  button {
+	border-top: 0 !important;
+  }
+  span {
+	@apply text-gray-3;
+	position: relative !important;
+	top: initial;
+	padding: 0 0 0 10px;
+	transform: initial;
+	margin: auto 0;
   }
 }
