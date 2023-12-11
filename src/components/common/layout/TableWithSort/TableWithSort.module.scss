@@ -1,46 +1,56 @@
 .TableWithSort {
-	border-top: 1px solid #242529;
+  border-top: 1px solid #242529;
   width: 100%;
+
   thead {
 	background-color: #090909;
   }
+
   th {
 	line-height: 30px;
 	padding-top: 6px;
   }
+
   tr {
 	width: 100%;
   }
+
   td {
 	span {
 	  vertical-align: text-bottom;
 	  line-height: 10px;
 	}
   }
+
   &[data-style="company"] {
-	  th:first-child, td:first-child,  {
-		width: 7rem;
-	  }
+	th:first-child, td:first-child, {
+	  width: 7rem;
+	}
   }
+
   svg {
 	display: inline-block;
 	margin-left: .5rem;
   }
 }
+
 .tableheader {
   //display: grid;
   grid-auto-flow: column;
   text-align: left;
 
 }
+
 .TableWithSortPanel {
   overflow: hidden;
+
   header {
 	+ * {
 	  margin-top: 0 !important;
 	}
+
 	margin-bottom: 0;
-	@media screen and (min-width: 768px){
+	@media screen and (min-width: 768px) {
 	  margin-bottom: 0;
 	}
 	padding: 1.25rem 1.25rem .5rem;
@@ -49,9 +59,10 @@
 	background: #090909;
   }
 }
+
 .btnFilter {
   cursor: pointer;
-	width: 1.75rem;
+  width: 1.75rem;
   height: 1.75rem;
   border-color: var(--accentColor);
   display: inline-flex;
@@ -62,12 +73,13 @@
   padding: .25rem;
   background-color: #242529;
 
-	path {
-	  stroke: var(--accentColor);
-	  stroke-width: 1;
-	}
+  path {
+	stroke: var(--accentColor);
+	stroke-width: 1;
+  }
 
 }
+
 .tableheading {
   color: #929398;
   font-size: .625rem;
@@ -83,26 +95,52 @@
 	padding-left: 1.125rem;
   }
 
+  &[data-sort-selected="true"] {
+	span {
+	  @apply text-accent;
+	}
+
+	path:nth-child(1) {
+	  fill: white;
+	}
+
+	&[data-sort-reversed="true"] {
+	  path:nth-child(1) {
+		fill: #606163;
+	  }
+
+	  path:nth-child(2) {
+		fill: white;
+	  }
+
+	}
+  }
+
 }
+
 .tableRow {
   //display: grid;
   width: 100%;
   grid-auto-flow: column;
   grid-template-columns: 6rem 2fr 1fr 1fr;
+
   &:hover {
 	background: linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
   }
+
   cursor: pointer;
 
   &:hover {
 	color: #ffffff;
   }
 }
+
 .tableCell {
-	font-size: .75rem;
+  font-size: .75rem;
   font-weight: 500;
   //display: block;
   padding: 1rem 0;
+
   &:first-child {
 	padding-left: 1.125rem;
   }

@@ -1,0 +1,13 @@
+@layer {
+  .DList {
+	dt {
+	  @apply text-gray-2 font-medium mb-2.5;
+	  line-height: 20px;
+	}
+
+	dd {
+	  @apply text-base font-sans font-semibold;
+	  line-height: 21px;
+	}
+  }
+}

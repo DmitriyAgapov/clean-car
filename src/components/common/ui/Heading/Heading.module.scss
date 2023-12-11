@@ -1,5 +1,26 @@
 .Heading {
-	&[color="accent"] {
-	  color: var(--accentColor);
-	}
+  &[color="accent"] {
+	color: var(--accentColor);
+  }
+
+  &h1 {
+	@apply text-4xl;
+  }
 }
+
+h1.Heading {
+  @apply text-2xl font-semibold mb-12;
+}
+
+h2.Heading {
+  @apply text-2xl font-semibold mb-5;
+}
+
+h3.Heading {
+  @apply text-lg font-semibold mb-4;
+}
+
+h4.Heading {
+  @apply text-base font-semibold  mb-4;
+}
+

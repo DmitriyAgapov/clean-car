@@ -9,6 +9,8 @@
 
   &[data-variant="withPadding"] {
 	padding: 4rem 1.25rem;
+
+
 	@media screen and (min-width: 744px) {
 	  padding: 4rem 3.75rem;
 	}
@@ -18,13 +20,36 @@
 	}
   }
 
+  &[data-variant="withPaddingLg"] {
+
+  }
+
+  &[data-variant="withPaddingSm"] {
+	header {
+	  @apply px-5 pt-5 pb-1.5;
+	  & + * {
+		margin-top: 0;
+	  }
+	}
+
+	footer {
+	  @apply px-5 pb-5 pt-1.5 mt-12  min-h-[3rem] grid items-end;
+	  & > * {
+		@apply border-t border-t-gray-2 pt-6;
+	  }
+	}
+  }
+
+
   &[data-background="glass"] {
 	border: 1px solid var(--borderPanelColor);
 	background-color: var(--bgPanelColor);
   }
+
   header + * {
 	@apply mt-8;
   }
+
   footer {
 	@apply mt-11 tablet:mt-11 desktop:mt-20;
   }
