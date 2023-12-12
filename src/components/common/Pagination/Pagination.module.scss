@@ -1,3 +1,4 @@
+
 .Pagination {
   display: flex;
   gap: .375rem;
@@ -9,7 +10,7 @@
 .PaginationBtn {
   display: inline-flex;
   cursor: pointer;
-  @apply w-6 h-6 bg-black/80 items-center justify-center text-gray-2 border border-gray-2 rounded-[.25rem];
+  @apply w-6 h-6 bg-black/80 items-center justify-center text-gray-2 border border-gray-2 rounded-sm;
   &[data-active="true"], &:active, &:hover {
 	@apply border-accent text-accent;
   }
