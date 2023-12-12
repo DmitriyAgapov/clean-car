@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './FormCreateCompany.module.scss'
-import { Field, Form, Formik, useFormik, useFormikContext } from 'formik'
+import { Field, Form, Formik} from 'formik'
 import * as Yup from 'yup'
 import 'yup-phone-lite'
 import Panel, { PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import CreateInput, { CreateInputProps } from 'components/common/ui/CreateInput/CreateInput'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useNavigate } from 'react-router-dom'
-import DataListInput from 'components/common/ui/DataListInput/DataListInput'
 import SelectFromList from 'components/common/SelectFromList/SelectFromList'
-import { toJS } from 'mobx'
 import SelectCustom from "components/common/ui/Select/Select";
-import { Demo } from "components/common/SelectFromList/SelectFromListTest";
 const SignupSchema =  Yup.object().shape({
     company_name: Yup.string()
         .min(1, 'Слишком короткое!')
