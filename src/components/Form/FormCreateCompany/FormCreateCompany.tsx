@@ -56,7 +56,7 @@ const initValues = {
 type FormCreateCompanyProps = {}
 const FormCreateCompany = () => {
     const store = useStore()
-    const [step, setStep] = useState(2)
+    const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
     const changeStep = () => {
         setAnimate((prevState) => !prevState)
