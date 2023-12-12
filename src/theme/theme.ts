@@ -28,27 +28,7 @@ export const theme = {
     valid: {
       variants: ['standard', 'outlined', 'static'],
       sizes: ['md', 'lg'],
-      colors: [
-        'blue-gray',
-        'gray',
-        'brown',
-        'deep-orange',
-        'orange',
-        'amber',
-        'yellow',
-        'lime',
-        'light-green',
-        'green',
-        'teal',
-        'cyan',
-        'light-blue',
-        'blue',
-        'indigo',
-        'deep-purple',
-        'purple',
-        'pink',
-        'red',
-      ],
+      colors: [''],
     },
     styles: {
       base: {
@@ -68,7 +48,7 @@ export const theme = {
           minHeight: 'min-h-[40px]',
           display: 'block',
           bg: 'bg-transparent',
-          color: 'text-blue-gray-700',
+          color: 'text-gray-2',
           fontFamily: 'base',
           fontWeight: 'font-medium',
           textAlign: 'text-left',
@@ -118,13 +98,13 @@ export const theme = {
           'tracking-wide': 'tracking-wide',
           border: 'border border-blue-gray-50',
           borderRadius: 'rounded-md',
-          boxShadow: 'shadow-lg shadow-blue-gray-500/10',
+          boxShadow: 'shadow-none',
           fontFamily: 'font-body',
           fontSize: 'text-base',
           fontWeight: 'font-medium',
           color: 'text-blue-gray-500',
           overflow: 'overflow-auto',
-          outline: 'focus:outline-none',
+          outline: 'outline-none focus:outline-none',
         },
         option: {
           initial: {
@@ -132,7 +112,7 @@ export const theme = {
             py: 'py-1',
             px: 'px-0',
             fontFamily: 'font-body',
-            fontSize: 'text-base',
+            fontSize: 'text-sm',
             borderRadius: 'rounded-md',
             lightHeight: 'leading-tight',
             cursor: 'cursor-pointer',
@@ -244,255 +224,255 @@ export const theme = {
             },
           },
           colors: {
-            select: {
-              'blue-gray': {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-blue-gray-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
+            // select: {
+            //   'blue-gray': {
+            //     close: {
+            //       borderColor: 'border-blue-gray-100',
+            //     },
+            //     open: {
+            //       borderColor: 'border-blue-gray-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-100',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   gray: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-gray-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   brown: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-brown-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   'deep-orange': {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-deep-orange-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   orange: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-orange-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   amber: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-amber-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   yellow: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-yellow-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   lime: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-lime-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   'light-green': {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-light-green-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   green: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-green-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   teal: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-teal-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   cyan: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-cyan-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   'light-blue': {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-light-blue-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            blue: {
+              close: {
+                borderColor: 'border-transparent',
               },
-              gray: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-gray-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
+              open: {
+                borderColor: 'border-transparent',
+                borderTopColor: 'border-t-transparent',
               },
-              brown: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-brown-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              'deep-orange': {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-deep-orange-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              orange: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-orange-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              amber: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-amber-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              yellow: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-yellow-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              lime: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-lime-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              'light-green': {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-light-green-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              green: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-green-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              teal: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-teal-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              cyan: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-cyan-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              'light-blue': {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-light-blue-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              blue: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-blue-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              indigo: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-indigo-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              'deep-purple': {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-deep-purple-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              purple: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-purple-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              pink: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-pink-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
-              },
-              red: {
-                close: {
-                  borderColor: 'border-blue-gray-200',
-                },
-                open: {
-                  borderColor: 'border-red-500',
-                  borderTopColor: 'border-t-transparent',
-                },
-                withValue: {
-                  borderColor: 'border-blue-gray-200',
-                  borderTopColor: 'border-t-transparent',
-                },
+              withValue: {
+                borderColor: 'border-transparent',
+                borderTopColor: 'border-t-transparent',
               },
             },
+            //   indigo: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-indigo-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   'deep-purple': {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-deep-purple-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   purple: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-purple-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   pink: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-pink-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            //   red: {
+            //     close: {
+            //       borderColor: 'border-blue-gray-200',
+            //     },
+            //     open: {
+            //       borderColor: 'border-red-500',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //     withValue: {
+            //       borderColor: 'border-blue-gray-200',
+            //       borderTopColor: 'border-t-transparent',
+            //     },
+            //   },
+            // },
             label: {
               'blue-gray': {
                 close: {
@@ -1129,10 +1109,14 @@ export const theme = {
           base: {
             select: {
               position: 'relative',
+              height: 'h-10',
             },
 
             label: {
-              position: 'top-2.5',
+              text: 'text-[var(--active]',
+              display: 'block',
+              color: 'text-[var(--active]',
+              position: 'relative',
               order: 'order-first',
               pb: 'pb-3',
               after: {
@@ -1427,15 +1411,15 @@ export const theme = {
               },
               gray: {
                 close: {
-                  color: 'text-blue-gray-500',
+                  color: 'text-accent',
                   after: 'after:border-gray-500',
                 },
                 open: {
-                  color: 'text-gray-500',
+                  color: 'text-accent',
                   after: 'after:border-gray-500',
                 },
                 withValue: {
-                  color: 'text-blue-gray-500',
+                  color: 'text-accent',
                   after: 'after:border-gray-500',
                 },
               },
@@ -1595,15 +1579,15 @@ export const theme = {
               },
               blue: {
                 close: {
-                  color: 'text-blue-gray-500',
+                  color: 'text-accent',
                   after: 'after:border-blue-500',
                 },
                 open: {
-                  color: 'text-blue-500',
+                  color: 'text-accent',
                   after: 'after:border-blue-500',
                 },
                 withValue: {
-                  color: 'text-blue-gray-500',
+                  color: 'text-accent',
                   after: 'after:border-blue-500',
                 },
               },

@@ -8,4 +8,10 @@
   @media screen and (min-width: 744px) {
 	font-size: .875rem;
   }
+
+  &[data-layout-account="true"] {
+	display: block;
+	@apply text-xss;
+	line-height: 1.5;
+  }
 }

@@ -31,6 +31,7 @@ export type ButtonProps = {
   action?: EventHandler<any>
   className?: string
   href?: string
+  type?: string
   directory?: ButtonDirectory
 }
 
@@ -40,10 +41,15 @@ const Button = ({
   size = ButtonSizeType.base,
   className,
   directory,
+  type,
   variant = ButtonVariant.default,
   action,
   ...props
 }: ButtonProps) => {
+  if(type === 'submit') return  <button type={'submit'} className={styles.Button + ' ' + className}
+    data-directory={directory}
+    data-variant={variant}
+    data-size={size}> {text}</button>
   return (
     <a
       href={href}

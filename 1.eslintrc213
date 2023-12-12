@@ -9,6 +9,7 @@
     "plugin:import/recommended"
   ],
   "plugins": [
+    "react",
     "@typescript-eslint",
     "jest",
     "prettier",

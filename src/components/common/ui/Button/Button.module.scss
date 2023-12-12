@@ -1,5 +1,5 @@
 .Button:not([data-variant="text"],[data-variant="icon"]) {
-  padding: .625rem 3.125rem;
+
   text-decoration: none;
   line-height: 1;
   border-radius: 81px;
@@ -7,7 +7,7 @@
   font-family: 'Montserrat', sans-serif;
   background: transparent;
   height: 50px;
-  color: var(--buttonOutlineText);
+  color: white;
   font-size: 1rem;
   border: 1px solid var(--colorWhite);
   text-align: center;
@@ -24,14 +24,52 @@
 	color: var(--accentColor);
   }
 
-  &[data-size="default"] {
-	padding: 1rem 4rem;
+  &[data-size="base"] {
+	height: 50px;
+	text-transform: initial;
+	font-size: .875rem;
+	padding: 15px 3.125rem 13px;
+	line-height: 1;
+	font-weight: 500;
+	letter-spacing: normal;
+	font-family: 'Montserrat';
+	@media screen and (max-width: 743px) {
+	  padding-left: 1.75rem;
+	  padding-right: 1.75rem;
+	  justify-self: center;
+	  width: 100%;
+	}
   }
 
   &[data-size="sm"] {
-	padding: .75rem 4rem;
+	padding: 15px 1.875rem 13px;
 	height: 40px;
+	font-weight: 500;
+	font-family: Montserrat, sans-serif !important;
+	text-transform: initial !important;
+	color: black;
   }
+
+  &[data-variant="accent"] {
+	background: var(--accentColor);
+
+	font-family: 'RF Dewi Expanded', sans-serif;
+	color: var(--colorBlack);
+	border-color: var(--accentColor);
+	text-transform: uppercase;
+
+	@apply font-sans;
+	align-items: center;
+
+
+	&:hover, &:focus {
+	  background: var(--accentColor);
+	  border-color: var(--accentColor);
+	  color: black;
+	  filter: drop-shadow(0 0 33px var(--accentColor));
+	}
+  }
+
 
   &[data-variant="default"] {
 	background: transparent;
@@ -52,24 +90,20 @@
 	}
   }
 
-  &[data-variant="accent"] {
-	background: var(--accentColor);
-	font-weight: 600;
-	font-family: 'RF Dewi Expanded', sans-serif;
-	color: var(--colorBlack);
-	border-color: var(--accentColor);
+
+  &[data-variant="accent-outline"] {
+	background: transparent;
+	border: 1px solid var(--accentColor);
 	text-transform: uppercase;
-	font-size: .875rem;
 	align-items: center;
-	line-height: 16px;
-	letter-spacing: normal;
-	padding: 17px 3.125rem 15px;
+	@apply font-sans;
+
+	color: var(--accentColor);
 
 	&:hover, &:focus {
 	  background: var(--accentColor);
 	  border-color: var(--accentColor);
 	  color: black;
-	  filter: drop-shadow(0 0 33px var(--accentColor));
 	}
   }
 
@@ -80,7 +114,7 @@
 	font-weight: 400;
 
 	position: relative;
-	padding: 2px;
+	padding: 1px;
 	-webkit-background-clip: text !important;
 	-webkit-text-fill-color: transparent !important;
 
@@ -111,31 +145,6 @@
 
   }
 
-  &[data-variant="accent-outline"] {
-	background: transparent;
-	border: 1px solid var(--accentColor);
-	text-transform: uppercase;
-	font-size: .875rem;
-	align-items: center;
-	line-height: 16px;
-	padding: 17px 3.125rem 15px;
-	@media screen and (max-width: 743px) {
-	  padding-left: 1.75rem;
-	  padding-right: 1.75rem;
-
-	  justify-self: center;
-	  width: 100%;
-
-
-	}
-	color: var(--accentColor);
-
-	&:hover, &:focus {
-	  background: var(--accentColor);
-	  border-color: var(--accentColor);
-	  color: black;
-	}
-  }
 
   &[data-variant="outline"] {
 	padding-left: .75rem;
@@ -149,9 +158,12 @@
   }
 
   &[data-directory="admin"] {
-	background: linear-gradient(-120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
+	background: linear-gradient(120deg, #D80BEA 7.5%, #00FFAE 42.5%, #00FFAE 57.5%, #D80BEA 93.5%);
+	background-size: 200%;
+	background-position: 0 50%;
 	border: 0;
 	--color: linear-gradient(-120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
+
   }
 
   &[data-directory="executor"] {
@@ -162,12 +174,19 @@
 
   &[data-directory="directory"] {
 	border: 0;
-	background: var(--gradient-directory);
+	background: var(--gradient-directory-200);
+	background-size: 200%;
+	background-position: 0 50%;
 	--color: var(--gradient-directory);
+
+	&:hover {
+	  background-position-x: 100%;
+	}
   }
 
 }
 
 .Button[data-variant="text"] {
   cursor: pointer;
+  @apply font-body text-sm hover:text-accent;
 }

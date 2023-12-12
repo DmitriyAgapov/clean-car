@@ -90,14 +90,13 @@ export default function GroupPageEditAction(props: any) {
                 })
               }}
               className={'justify-self-start'}
-              variant={ButtonVariant.default}
             />
             <div className={'flex justify-end gap-5'}>
               <Button
                 text={'Отменить'}
                 action={() => navigate(-1)}
                 className={'float-right'}
-                variant={ButtonVariant.default}
+                variant={ButtonVariant['accent-outline']}
               />
               <Button
                 text={'Сохранить'}
@@ -114,20 +113,20 @@ export default function GroupPageEditAction(props: any) {
         }
         background={PanelColor.glass}
       >
-        <div className={'accounts-group_body text-[#606163] w-full gap-x-4 gap-y-16 font-medium py-12'}>
+        <div className={'accounts-group_body text-[#606163] w-full gap-x-4 gap-y-16 font-medium py-10'}>
           <label className={'account-form__input flex-1  px-5 mb-7'} htmlFor='cleanm'>
             Название группы
             <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
           </label>
 
-          <div>
+
             <Heading
               text={'Настройте права группы'}
               color={HeadingColor.accent}
               variant={HeadingVariant.h4}
-              className={' px-5'}
+              className={' px-5 mt-7'}
             />
-          </div>
+
           <div>
             <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} />
           </div>

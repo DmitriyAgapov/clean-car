@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useEffect } from 'react'
+import React, { FC, ReactNode } from 'react'
 import styles from './Layout.module.scss'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
@@ -9,6 +9,7 @@ import Burger from 'components/common/ui/Burger/Burger'
 import '../../../../assets/styles.scss'
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
+import { entries, toJS, values } from 'mobx'
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -37,16 +38,12 @@ interface ChildrenProps {
   children: ReactNode | ReactNode[]
   className?: string
   headerContent?: ReactNode | ReactNode[]
+  footerContent?: ReactNode | ReactNode[]
 }
 
-const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '' }) => {
+const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent }) => {
   const store = useStore()
-  const { appStore, userStore, authStore } = store
-
-  useEffect(() => {
-    appStore.setAppRouteName('.авторизация')
-  }, [])
-
+  const { appStore, userStore, authStore } = store;
   return (
     <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
       <Header>
@@ -55,8 +52,9 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '' }) 
         <Burger className={'tablet:hidden'} />
       </Header>
       <MobileMenu items={sidebarMenu} />
-      <main className={''}>{children}</main>
+      <main className={'!contents'}>{children}</main>
       <Footer>
+        {footerContent}
         <div>2023 (c.)</div>
         <div>Политика конфиденциальности</div>
       </Footer>

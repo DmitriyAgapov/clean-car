@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import appStore from 'stores/appStore'
 import authStore from 'stores/authStore'
-import { decodeToken } from 'utils/getData'
+import data, { decodeToken } from 'utils/getData'
 import { User } from 'stores/userStore'
 import { toJS } from 'mobx'
 
@@ -64,6 +64,7 @@ const Auth = {
     return new Promise((resolve, reject) => {
       if (appStore.token) {
         const dataUser = decodeToken(appStore.token)
+        console.log(dataUser);
         const { user_id, first_name, last_name, phone } = dataUser
         resolve({
           id: user_id,
@@ -95,24 +96,49 @@ const Auth = {
 const limit = (count: any, p: any) => `limit=${count}&offset=${p ? p * count : 0}`
 const omitSlug = (article: any) => Object.assign({}, article, { slug: undefined })
 const Users = {
-  getAllUsers: () => requests.get('/accounts/all_users/', {}),
-  getUser: ({ company_id, id }: { company_id: number; id: number }) =>
-    requests.get(`/accounts/${company_id}/users/${id}/retrieve/`, {}),
-  // getUser: (id: number) =>
-  // 	requests.get('')
+    getAllUsers: () => requests.get('/accounts/all_users/', {}),
+    getUser: ({ company_id, id }: { company_id: number; id: number }) =>
+        requests.get(`/accounts/${company_id}/users/${id}/retrieve/`, {}),
+    // getUser: (id: number) =>
+    // 	requests.get('')
 }
+
+interface CompanyData {
+    name: string
+    is_active: boolean
+    city: number
+}
+
+interface CreateCompanyPerformerFormData {
+    company: CompanyData
+    address: string
+    connected_prices: string
+    inn: string
+    ogrn: string
+    legal_address: string
+    contacts: string
+    service_percent: number
+    application_type: string
+}
+
 const Companies = {
-  getListCompanyCustomer: (company_name?: string | undefined, page?: number | undefined) =>
-    requests.get('/companies/list_company_customer/', {
-      company_name: company_name,
-      page: page,
-    }),
-  getListCompanyPerformer: (company_name?: string | undefined, page?: number | undefined) =>
-    requests.get('/companies/list_company_performer/', {
-      company_name: company_name,
-      page: page,
-    }),
-  getAllCompanies: () => requests.get('/companies/all_companies/list/', {}),
+    createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
+      return  requests.post('/companies/performer/create/', data)
+    },
+    createCompanyCustomer: ( data: CreateCompanyPerformerFormData ) => {
+      return  requests.post('/companies/customer/create/', data)
+    },
+    getListCompanyCustomer: (company_name?: string | undefined, page?: number | undefined) =>
+        requests.get('/companies/customer/list/', {
+            company_name: company_name,
+            page: page,
+        }),
+    getListCompanyPerformer: (company_name?: string | undefined, page?: number | undefined) =>
+        requests.get('/companies/performer/list/', {
+            company_name: company_name,
+            page: page,
+        }),
+    getAllCompanies: () => requests.get('/companies/all_companies/list/', {}),
 }
 const PermissionsAdmin = {
   getAllAdminPermissions: (ordering?: string, page?: number, page_size?: number) =>

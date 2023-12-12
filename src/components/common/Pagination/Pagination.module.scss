@@ -1,0 +1,38 @@
+.Pagination {
+  display: flex;
+  gap: .375rem;
+  justify-content: end;
+  margin: 0 2rem !important;
+  position: relative;
+}
+
+.PaginationBtn {
+  display: inline-flex;
+  cursor: pointer;
+  @apply w-6 h-6 bg-black/80 items-center justify-center text-gray-2 border border-gray-2 rounded-[.25rem];
+  &[data-active="true"], &:active, &:hover {
+	@apply border-accent text-accent;
+  }
+}
+
+.PaginationArrow {
+  composes: PaginationBtn;
+  position: absolute;
+
+  &[data-direction-forward="false"] {
+	svg {
+	  rotate: -90deg;
+	}
+
+	left: -1.875rem;
+  }
+
+  &[data-direction-forward="true"] {
+	svg {
+	  rotate: 90deg;
+	}
+
+	right: -1.875rem;
+  }
+
+}

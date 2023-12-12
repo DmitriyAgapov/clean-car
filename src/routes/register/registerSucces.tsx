@@ -40,6 +40,7 @@ export default function RegisterSuccessPage() {
     store.appStore.setAppRouteName('.регистрация')
   })
 
+  // @ts-ignore
   return (
     <>
       <Layout
@@ -55,6 +56,7 @@ export default function RegisterSuccessPage() {
               <Heading
                 className={'desktop:!text-5xl tablet:!text-4xl !leading-snug !font-extrabold '}
                 directory={HeadingDirectory.executor}
+                // @ts-ignore
                 text={`${store.userStore.currentUser?.first_name}, регистрация прошла успешно!`}
                 variant={HeadingVariant.h1}
                 color={HeadingColor.accent}

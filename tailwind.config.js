@@ -4,8 +4,8 @@ module.exports = withMT({
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     fontFamily: {
-      sans: ['RF Dewi Expanded'],
-      body: ['Montserrat'],
+      sans: 'RF Dewi Expanded',
+      body: 'Montserrat',
     },
     fontSize: {
       xss: ['0.625rem', '.75rem'],

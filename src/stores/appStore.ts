@@ -1,6 +1,7 @@
-import { action, makeObservable, observable, reaction } from 'mobx'
-import { ReactNode } from 'react'
-import userStore, { UserTypeEnum } from './userStore'
+import { action, makeObservable, observable, reaction } from "mobx";
+import { ReactNode } from "react";
+import userStore, { UserTypeEnum } from "./userStore";
+import { Company } from "stores/companyStore";
 
 export class AppStore {
   appName = 'CleanCar'
@@ -10,7 +11,7 @@ export class AppStore {
   tokenFull: {} | null = null
   appLoaded = false
   burgerState: boolean = false
-  appType: UserTypeEnum = UserTypeEnum.admin
+  appType: UserTypeEnum | string = ''
   bodyRef = document.body
   modal: {
     state: boolean
@@ -48,6 +49,7 @@ export class AppStore {
         if (token) {
           window.localStorage.setItem('jwt', token)
           userStore.pullUser()
+          userStore.loadMyProfile()
         } else {
           window.localStorage.removeItem('jwt')
         }

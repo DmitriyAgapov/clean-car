@@ -1,71 +1,80 @@
 import React, { ReactNode } from 'react'
 import styles from './Panel.module.scss'
-import { SvgLoading } from 'components/common/ui/Icon'
 
 export enum PanelVariant {
-  default = 'default',
-  withPadding = 'withPadding',
-  withPaddingSm = 'withPaddingSm',
+    default = 'default',
+    withPadding = 'withPadding',
+    withPaddingSm = 'withPaddingSm',
+    withPaddingSmWithBody = 'withPaddingSmWithBody',
 }
 
 export enum PanelColor {
-  default = 'default',
-  glass = 'glass',
+    default = 'default',
+    glass = 'glass',
 }
 
 export enum PanelRouteStyle {
-  default = 'default',
-  company = 'company',
-  groups = 'groups',
+    default = 'default',
+    company = 'company',
+    groups = 'groups',
 }
 
 type PanelProps = {
-  search?: boolean
-  children?: ReactNode | ReactNode[]
-  header?: ReactNode | ReactNode[]
-  footer?: ReactNode | ReactNode[]
-  routeStyle?: PanelRouteStyle
-  variant?: PanelVariant
-  background?: PanelColor
-  className?: string
-  state?: boolean
-  ref?: any
-  action?: (event: any) => void | any
+    search?: boolean
+    children?: ReactNode | ReactNode[]
+    header?: ReactNode | ReactNode[]
+    footer?: ReactNode | ReactNode[]
+    routeStyle?: PanelRouteStyle
+    variant?: PanelVariant
+    background?: PanelColor
+    className?: string
+    headerClassName?: string
+    bodyClassName?: string
+    footerClassName?: string
+    state?: boolean
+    ref?: any
+    action?: (event: any) => void | any
 }
 
 const Panel = ({
-  children,
-  search = false,
-  action,
-  state = false,
-  header,
-  footer,
-  routeStyle = PanelRouteStyle.default,
-  variant = PanelVariant.default,
-  background = PanelColor.default,
-  className = '',
+    children,
+    search = false,
+    action,
+    state = false,
+    header,
+    headerClassName = '',
+    bodyClassName = '',
+    footerClassName = '',
+    footer,
+    routeStyle = PanelRouteStyle.default,
+    variant = PanelVariant.default,
+    background = PanelColor.default,
+    className = '',
 }: PanelProps) => {
-  if (state)
+    if (state) return <></>
     return (
-      <div className={'w-full col-span-full flex'}>
-        <SvgLoading className={'m-auto'} />
-      </div>
+        <div
+            onClick={action}
+            className={styles.Panel + '  ' + className}
+            data-style={routeStyle}
+            data-variant={variant}
+            data-background={background}
+        >
+            {header && (
+                <header data-panel={'header'} className={headerClassName}>
+                    {header}
+                </header>
+            )}
+            <div className={styles.panelBody + ' ' + bodyClassName} data-panel={'body'}>
+                {children}
+            </div>
+            {footer && (
+                <footer data-panel={'footer'} className={footerClassName}>
+                    {footer}
+                </footer>
+            )}
+        </div>
     )
-  return (
-    <div
-      onClick={action}
-      className={styles.Panel + '  ' + className}
-      data-style={routeStyle}
-      data-variant={variant}
-      data-background={background}
-    >
-      {header && <header data-panel={'header'}>{header}</header>}
-      <div className={styles.panelBody} data-panel={'body'}>
-        {children}
-      </div>
-      {footer && <footer data-panel={'footer'}>{footer}</footer>}
-    </div>
-  )
 }
 
-export default Panel
+export default Panel;

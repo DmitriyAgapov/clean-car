@@ -25,7 +25,7 @@ const Modal = (): JSX.Element | null => {
         <Panel
           footer={actions}
           background={PanelColor.glass}
-          className={'relative z-[999]'}
+          className={'relative z-[999] text-center content-center gap-10'}
           variant={PanelVariant.withPadding}
         >
           {text}

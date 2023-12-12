@@ -9,25 +9,29 @@ import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { observer } from 'mobx-react-lite'
 import { Navigate } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
-import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
+import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import { values } from 'mobx'
 
 function AuthPage() {
   const store = useStore()
   const { appStore, userStore, authStore } = store
 
-  useEffect(() => {
-    appStore.setAppRouteName('.авторизация')
-  }, [])
 
   return (
     <Layout
       className={'page-intro'}
       headerContent={
-        <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'} variant={ButtonVariant.tech} />
+        <Button
+          className={'!hidden tablet:!inline-flex ml-auto mr-8'}
+          text={'Помощь'}
+          variant={ButtonVariant['accent-outline']}
+          size={ButtonSizeType.sm}
+        />
       }
     >
       <Section type={SectionType.centered}>
         <Panel
+
           className={'col-span-6 mb-12 tablet:col-span-full desktop:col-span-6'}
           header={
             <Heading

@@ -12,9 +12,7 @@ import FormRestore from 'components/Form/FormRestore/FormRestore'
 
 function RestorePasswordNewPage() {
   const store = useStore()
-  useEffect(() => {
-    store.appStore.setAppRouteName('.авторизация')
-  }, [store.appStore.token])
+
 
   return (
     <Layout
@@ -68,6 +66,7 @@ function RestorePasswordNewPage() {
               </>
             }
           >
+
             UserId: <h4>{store.userStore.currentUser?.id}</h4>
           </Panel>
         )}

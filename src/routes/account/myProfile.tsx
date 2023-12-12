@@ -63,7 +63,3 @@ const MyProfilePage = () => {
 }
 
 export default observer(MyProfilePage)
-
-function useLoadData(): { data: any } {
-  throw new Error('Function not implemented.')
-}

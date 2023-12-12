@@ -1,10 +1,13 @@
 .Sidebar {
   border-radius: 20px;
-	grid-column: 2/span 2;
+  grid-column: 2/span 2;
   padding: 3rem 0;
+
   & + section {
 	grid-column: 4/-2;
+	grid-row: span 2;
   }
+
   @media screen and (min-width: 744px) {
 	//padding: 4rem 3.75rem;
   }
@@ -12,10 +15,11 @@
 	//padding: 4.5rem 3rem;
   }
 
-  background: linear-gradient(180.45deg, rgba(24,25,28,1) 0%,  rgba(24,25,28,.5) 65%,  rgba(24,25,28,0) 100%);
+  background: linear-gradient(180.45deg, rgba(24, 25, 28, 1) 0%, rgba(24, 25, 28, .5) 65%, rgba(24, 25, 28, 0) 100%);
 
 
 }
+
 .listItem {
   position: relative;
   display: flex;
@@ -24,11 +28,13 @@
 	position: absolute;
 	left: 18px;
 	top: calc(50% - 8px);
-	bottom:calc(50% - 8px);
+	bottom: calc(50% - 8px);
   }
+
   &[data-active="true"] {
 	border-right: 2px solid var(--accentColor);
   }
+
   &:hover, &[data-active="true"] {
 
 	a {
@@ -37,6 +43,7 @@
 	  background: linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 100.13%);
 
 	}
+
 	span {
 	  background-repeat: no-repeat;
 	  background-position: left center;
@@ -46,6 +53,7 @@
   }
 
 }
+
 .navLink {
   display: block;
   background-position: 0 center;
@@ -66,8 +74,8 @@
   border-top-left-radius: 8px;
 
   &:hover {
-		color: var(--accentColor);
+	color: var(--accentColor);
 	border-right: 0;
-	  background: linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 100.13%);
-	}
+	background: linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 100.13%);
+  }
 }

@@ -7,19 +7,22 @@
   --colorStateNotActive: var(--errorColor);
   --colorInputText: #171313;
   --gradient-admin: linear-gradient(120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
+  --gradient-admin-200: linear-gradient(120deg, #D80BEA 7.5%, #00FFAE 42.5%, #00FFAE 57.5%, #D80BEA 93.5%);;
   --gradient-customer: linear-gradient(120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
+  --gradient-customer-200: linear-gradient(120deg, #3FECAE 18.5%, rgb(5, 0, 255) 45.5%, rgba(5, 0, 255, 1) 55.5%, #3FECAE 88.5%);;
   --gradient-executor: linear-gradient(90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
+  --gradient-executor-200: linear-gradient(90.76deg, #00A8AA 0.27%, #F0F600 45.66%, #F0F600 55.66%, #00A8AA 99.27%);
   --accentColor: #00FFAE;
   --errorColor: rgba(244, 86, 95, 1);
   --buttonOutlineText: #DCFFF4;
-  --container: 1300px;
-  --gridGap: 20px;
+  --container: 84rem;
+  --gridGap: 1.25rem;
   --totalCol: 12;
   --gradient-directory: transparent;
   --shadow: -9px 10px 11px rgba(0, 0, 0, 0.25);
-  --columnWidth: 90px;
-  --sideGutter: calc((100vw - var(--container)) / 2 - 8px - var(--gridGap));
-  --grid: var(--sideGutter) repeat(2, minmax(96px, 1.33fr)) repeat(var(--totalCol), .95fr) var(--sideGutter);
+  --columnWidth: 5.625rem;
+  --sideGutter: calc((100vw - var(--container)) / 2 - .5rem - var(--gridGap));
+  --grid: var(--sideGutter) repeat(2, minmax(6rem, 1.33fr)) repeat(var(--totalCol), .95fr) var(--sideGutter);
   --gridinner: repeat(var(--totalCol), 1fr);
   --centered: 2/-2;
   --full_centered: 1/-1;
@@ -31,15 +34,15 @@
   --borderPanelColor: rgba(96, 97, 99, 0.60);
 
   @media screen and (max-width: 1299px) {
-	--container: 710px;
-	--gridGap: 10px;
+	--container: 44.375rem;
+	--gridGap: .625rem;
 	--totalCol: 12;
 	--centered: 3/-3;
-	--sideGutter: 20px;
+	--sideGutter: 1.25rem;
 	--grid: var(--sideGutter) repeat(var(--totalCol), 1fr) var(--sideGutter);
   }
   @media screen and (max-width: 743px) {
-	--sideGutter: 20px;
+	--sideGutter: 1.25rem;
 	--container: 350px;
 	--gridGap: 0px;
 	--totalCol: 6;
@@ -60,14 +63,17 @@ html[data-theme='dark'] {
 
 .page-account {
   &[data-app-type="admin"], [data-app-type="admin"] {
-	--gradient-directory: var(--gradient-admin)
+	--gradient-directory: var(--gradient-admin);
+	--gradient-directory-200: var(--gradient-admin-200);
   }
 
   &[data-app-type="customer"], [data-app-type="customer"] {
-	--gradient-directory: var(--gradient-customer)
+	--gradient-directory: var(--gradient-customer);
+	--gradient-directory-200: var(--gradient-customer-200);
   }
 
   &[data-app-type="executor"], [data-app-type="executor"] {
-	--gradient-directory: var(--gradient-executor)
+	--gradient-directory: var(--gradient-executor);
+	--gradient-directory-200: var(--gradient-executor-200);
   }
 }

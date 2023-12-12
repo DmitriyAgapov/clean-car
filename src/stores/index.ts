@@ -4,6 +4,7 @@ import appStore, { AppStore } from './appStore'
 import companyStore, { CompanyStore } from 'stores/companyStore'
 import permissionStore, { PermissionStore } from 'stores/permissionStore'
 import usersStore, { UsersStore } from 'stores/usersStore'
+import catalogStore, { CatalogStore } from 'stores/catalogStore'
 
 export type RootStore = {
   authStore: AuthStore
@@ -12,6 +13,7 @@ export type RootStore = {
   appStore: AppStore
   companyStore: CompanyStore
   userStore: UserStore
+  catalogStore: CatalogStore
 }
 
 const rootStore: RootStore = {
@@ -21,6 +23,7 @@ const rootStore: RootStore = {
   permissionStore,
   companyStore,
   userStore,
+  catalogStore,
 }
 
 export default rootStore

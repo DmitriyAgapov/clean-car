@@ -11,14 +11,13 @@ import {
   profileLoader,
   userLoader,
   usersLoader,
-} from './routes/loaders/loaders'
+} from "routes/loaders/loaders"
 import CompanyPage from './routes/company/company'
 import GroupsPage from './routes/groups/groups'
 import GroupPage from './routes/groups/group'
 import GroupPageEditAction from './routes/groups/groupEditAction'
 import GroupPageCreateAction from './routes/groups/groupCreateAction'
-import UsersPageCreateAction from './routes/users/usersCreateAction'
-import { theme } from './theme/theme'
+import { theme } from "theme/theme"
 import UserPage from './routes/users/user'
 import MyProfilePage from './routes/account/myProfile'
 import UsersPage from './routes/users/users'
@@ -30,6 +29,7 @@ import AuthPage from './routes/auth'
 import ErrorPage from './error-page'
 import { StoreProvider } from './stores/store'
 import AccountPage from './routes/account/account'
+import CompanyPageCreateAction from 'routes/company/companyCreateAction'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
@@ -53,13 +53,13 @@ const router = createBrowserRouter([
     path: '/register/success',
     element: <RegisterSuccessPage />,
     errorElement: <ErrorPage />,
-    loader: () => authUser(),
+    loader: authUser,
   },
   {
     path: '/account',
     element: <AccountPage />,
     errorElement: <ErrorPage />,
-    loader: () => authUser(),
+    loader: authUser,
     children: [
       {
         path: 'profile',
@@ -80,10 +80,6 @@ const router = createBrowserRouter([
             element: <UserPage />,
             loader: userLoader,
           },
-          {
-            path: 'create',
-            element: <UsersPageCreateAction />,
-          },
         ],
       },
       {
@@ -97,7 +93,7 @@ const router = createBrowserRouter([
           },
           {
             path: 'create',
-            element: <UsersPageCreateAction />,
+            element: <CompanyPageCreateAction />,
           },
         ],
       },

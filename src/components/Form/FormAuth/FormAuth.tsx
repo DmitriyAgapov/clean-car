@@ -1,7 +1,7 @@
 import React from 'react'
 import * as Yup from 'yup'
 import { Field, Form, Formik } from 'formik'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import styles from './FormAuth.module.scss'
 import { useStore } from 'stores/store'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
@@ -43,19 +43,13 @@ const InnerForm = ({ message }: { message: string }) => {
           <div className={styles.actionGroup}>
             <Button
               text={'Войти'}
-              size={ButtonSizeType.lg}
               variant={ButtonVariant.accent}
               action={(event) => {
                 event.preventDefault()
                 submitForm()
               }}
             />
-            <LinkStyled
-              to={'/restore'}
-              text={'Не помню пароль'}
-              size={ButtonSizeType.lg}
-              variant={ButtonVariant['accent-outline']}
-            />
+            <LinkStyled to={'/restore'} text={'Не помню пароль'} variant={ButtonVariant['accent-outline']} />
           </div>
         </Form>
       )}

@@ -2,14 +2,18 @@ import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
+import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 const CompanyPage = () => {
   const store = useStore()
-  console.log(store.companyStore.companies)
+  const location = useLocation()
+  const navigate = useNavigate()
+  if ('/account/companies' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -22,12 +26,12 @@ const CompanyPage = () => {
               className={'!mb-6 inline-block'}
               color={HeadingColor.accent}
             />
-            <Button
+            <LinkStyled
               text={'Создать компанию'}
-              action={() => store.companyStore.addCompany()}
-              variant={ButtonVariant.accent}
-              className={'inline-flex float-right'}
-              directory={ButtonDirectory.admin}
+              to={'create'}
+              // action={() => store.companyStore.addCompany()}
+              className={'float-right'}
+              directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}
             />
           </>

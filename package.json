@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
+    "@mantine/core": "^7.3.1",
+    "@mantine/hooks": "^7.3.1",
     "@material-tailwind/react": "^2.1.5",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -24,6 +26,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.8.0",
     "sass": "^1.69.5",
     "serve": "^14.2.1",
     "styled-components": "^6.1.1",

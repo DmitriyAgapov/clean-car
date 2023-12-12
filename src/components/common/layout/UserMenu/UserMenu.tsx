@@ -89,15 +89,18 @@ const UserMenu = () => {
   const ref = useOutsideClick(() => {
     setState(false)
   })
+
   return (
     <div className={styles.UserMenu} ref={ref}>
       <Notification />
       <User
         action={() => setState((prevState) => !prevState)}
+        // @ts-ignore
         name={store.userStore.currentUser?.first_name + ' ' + store.userStore.currentUser?.last_name}
       />
       <UserMenuStyled
         state={state}
+        // @ts-ignore
         name={store.userStore.currentUser?.first_name + ' ' + store.userStore.currentUser?.last_name}
         company={'Администратор'}
         accounts={['admin', 'user']}

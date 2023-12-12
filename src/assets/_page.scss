@@ -19,9 +19,9 @@
   .logo-header {
 	display: flex;
 	flex-flow: column;
-	flex: 0 1 218px;
+	flex: 0 1 14rem;
 	padding: .75rem 1.125rem;
-	border-radius: 20px;
+	border-radius: 1.25rem;
 	background: var(--gradient-directory);
 
 	a {
@@ -34,10 +34,15 @@
 	  font-family: Montserrat;
 	  font-weight: 700;
 	  text-transform: uppercase;
-	  font-size: 9px;
+	  @apply text-xss;
 	  color: rgba(23, 22, 22, 0.76);
-	  letter-spacing: .12em;
+	  letter-spacing: .1em;
 	}
+  }
+
+  & > footer {
+	grid-column: 2/4;
+	padding-left: 1.25rem;
   }
 }
 
@@ -52,5 +57,11 @@
 	@media screen and (min-width: 744px) {
 	  margin-top: clamp(1rem, 100%, 4rem);
 	}
+  }
+}
+
+.table-groups {
+  th:first-child {
+	width: 10rem;
   }
 }

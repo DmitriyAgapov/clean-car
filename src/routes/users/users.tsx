@@ -2,7 +2,7 @@ import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from 'stores/store'
@@ -38,7 +38,6 @@ const UsersPage = () => {
             <Button
               text={'Добавить пользователя'}
               action={() => navigate('/account/users/create')}
-              variant={ButtonVariant.accent}
               className={'inline-flex float-right'}
               directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}

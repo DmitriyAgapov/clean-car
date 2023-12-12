@@ -1,4 +1,4 @@
-import { action, flow, makeObservable, observable } from 'mobx'
+import { action, autorun, computed, flow, makeObservable, observable, reaction } from 'mobx'
 import agent from 'utils/agent'
 import type { AccountProps } from 'stores/permissionStore'
 import { GroupProps } from 'stores/permissionStore'
@@ -32,6 +32,7 @@ export class UserStore {
   loadingUser?: boolean
   updatingUser?: boolean
   updatingUserErrors: any
+
   loadMyProfile = flow(function* (this: UserStore) {
     this.loadingUser = true
     try {
@@ -40,6 +41,9 @@ export class UserStore {
       this.loadingUser = false
     } catch (error) {
       this.updatingUserErrors = 'error'
+    }
+    finally {
+      if(appStore.appType == '') appStore.setAppType(this.roles[0])
     }
   })
 
@@ -52,25 +56,43 @@ export class UserStore {
       updatingUser: observable,
       updatingUserErrors: observable,
       loadMyProfile: action,
+      roles: computed,
       // setUser: action,
       // updateUser: action,
       forgetUser: action,
     })
+   }
+  get roles() {
+    const roles = []
+    if(this.currentUser?.is_staff) {
+      // appStore.setAppType(UserTypeEnum.admin);
+      roles.push(UserTypeEnum.admin)
+    }
+    // @ts-ignore
+    if(this.currentUser?.account_bindings?.filter(value => value.company.company_type == "Компания-Заказчик").length > 0) {
+      appStore.setAppType(UserTypeEnum.customer);
+      roles.push(UserTypeEnum.customer)
+    }
+    // @ts-ignore
+    if(this.currentUser?.account_bindings?.filter(value => value.company.company_type == "Компания-Исполнитель").length > 0) {
+      appStore.setAppType(UserTypeEnum.executor);
+      roles.push(UserTypeEnum.executor)
+    }
+    return roles
   }
-
   pullUser() {
-    this.loadingUser = true
-    return agent.Auth.current()
-      .then(
-        action((r: any) => {
-          this.currentUser = r
-        }),
-      )
-      .finally(
-        action(() => {
-          this.loadingUser = false
-        }),
-      )
+
+      this.loadingUser = true
+      return agent.Auth.current()
+      .then(action((r: any) => {
+        this.currentUser = r
+      }))
+      .then(action(() => this.loadMyProfile())).finally(action(() => {
+        if(appStore.appType)
+         this.loadingUser = false
+      }),)
+
+
   }
 
   getCurrentUserActiveAccount() {

@@ -2,7 +2,7 @@
   padding: 1rem 4rem;
   text-decoration: none;
   line-height: 1;
-  border-radius: 81px;
+  border-radius: 5rem;
   display: inline-flex;
   font-family: 'RF Dewi Expanded', sans-serif;
   color: var(--colorWhite);
@@ -12,9 +12,11 @@
   margin: .5rem;
   align-self: center;
   white-space: nowrap;
+
   &:hover {
 	opacity: .7;
   }
+
   &[data-size="default"] {
 	padding: 1rem 4rem;
   }

@@ -4,10 +4,11 @@ import userStore from 'stores/userStore'
 import companyStore from 'stores/companyStore'
 import permissionStore from 'stores/permissionStore'
 import usersStore from 'stores/usersStore'
+import catalogStore from 'stores/catalogStore'
 
 export const authUser = async () => {
   if (!appStore.token) {
-    return redirect('/auth')
+    return redirect('/')
   } else {
     await userStore.pullUser()
   }
@@ -17,6 +18,8 @@ export const authUser = async () => {
 export const companyLoader = async ({ params: { id } }: any) => {
   console.log('loader', id)
   await companyStore.loadCompanies()
+  await catalogStore.getCities()
+  await companyStore.loadCompaniesPerformers()
 
   return null
 }
