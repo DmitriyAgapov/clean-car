@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @import "./fonts/RfDewi/stylesheet.css";
 @import 'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap';
 @import "_vars";
@@ -11,3 +12,4 @@
 @import "_forms";
 
 @import '@mantine/core/styles.css';
+@config "../../tailwind.config.js";

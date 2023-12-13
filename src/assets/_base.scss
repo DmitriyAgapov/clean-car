@@ -4,7 +4,7 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: calc(100lvh / 64);
+  font-size: var(--scaling-font);
 }
 
 body {
