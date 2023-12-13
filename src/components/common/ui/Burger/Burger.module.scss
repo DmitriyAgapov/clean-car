@@ -1,9 +1,9 @@
 .Burger {
   width: 1.625rem;
   height: 1.625rem;
-  margin: 6px;
+  margin: .375rem;
   display: grid;
-  gap: 6px;
+  gap: .375rem;
   align-self: center;
   justify-items: end;
   transform: rotate(0deg);
@@ -14,8 +14,8 @@
   span {
 	background: var(--accentColor);
 	display: block;
-	border-radius: 10px;
-	height: 2px;
+	border-radius: .625rem;
+	height: .125rem;
 	width: 100%;
 	opacity: 1;
 	position: absolute;
@@ -26,19 +26,19 @@
 	transition: .25s ease-in-out;
 	transform-origin: left;
 	&:nth-child(1) {
-	  top: 6px;
+	  top: .375rem;
 	  transform-origin: left;
 	}
 
 	&:nth-child(2) {
-	  top: calc(6px + 2px + 6px);
+	  top: calc(.375rem + .125rem + .375rem);
 	  width: 66%;
 	  right: 0;
 	  left: initial;
 	}
 
 	&:nth-child(3) {
-	  top: calc(6px + 2px + 6px + 2px + 6px);
+	  top: calc(.375rem + .125rem + .375rem + .125rem + .375rem);
 	  //transform-origin: left;
 	}
   }
@@ -50,7 +50,7 @@
 
 	  &:nth-child(2) {
 		opacity: 0;
-		right: -60px;
+		right: -3.75rem;
 		width: 100%;
 	  }
 

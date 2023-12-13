@@ -31,8 +31,8 @@ const StyledAccounts = styled.ul`
     font-family: 'RF Dewi Expanded', sans-serif;
     font-size: 0.75rem;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 1.875rem;
+    height: 1.875rem;
     margin-right: 1rem;
 
     &.user__type-admin {
@@ -56,8 +56,8 @@ const StyledButton = styled(Button)`
   color: rgba(220, 220, 220, 0.5);
 
   svg {
-    width: 30px;
-    height: 30px;
+    width: 1.875rem;
+    height: 1.875rem;
     padding: 0.5rem;
     margin-right: 1rem;
   }
@@ -86,7 +86,7 @@ const UserPortal = ({
       <Panel
         className={
           className +
-          ` scale-in-ver-top absolute shadow-1 !m-0 right-0 max-w-[260px] w-full top-14 p-5 z-50 !bg-[#18191F]`
+          ` scale-in-ver-top absolute shadow-1 !m-0 right-0 max-w-xss w-full top-14 p-5 z-50 !bg-[#18191F]`
         }
         {...props}
         footer={

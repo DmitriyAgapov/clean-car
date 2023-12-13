@@ -2,11 +2,11 @@
 
   text-decoration: none;
   line-height: 1;
-  border-radius: 81px;
+  border-radius: 6.5rem;
   display: inline-flex;
   font-family: 'Montserrat', sans-serif;
   background: transparent;
-  height: 50px;
+  height: 3.125rem;
   color: white;
   font-size: 1rem;
   border: 1px solid var(--colorWhite);
@@ -25,10 +25,10 @@
   }
 
   &[data-size="base"] {
-	height: 50px;
+	height: 3.125rem;
 	text-transform: initial;
 	font-size: .875rem;
-	padding: 15px 3.125rem 13px;
+	padding: 1rem 3.125rem .75rem;
 	line-height: 1;
 	font-weight: 500;
 	letter-spacing: normal;
@@ -42,8 +42,8 @@
   }
 
   &[data-size="sm"] {
-	padding: 15px 1.875rem 13px;
-	height: 40px;
+	padding: 1rem 1.875rem .875rem;
+	height: 2.5rem;
 	font-weight: 500;
 	font-family: Montserrat, sans-serif !important;
 	text-transform: initial !important;
@@ -78,7 +78,7 @@
   &[data-variant="tech"] {
 	background: transparent;
 	padding: .625rem 1.875rem;
-	height: 40px;
+	height: 2.5rem;
 	font-size: 1rem;
 	color: var(--accentColor);
 	border-color: var(--accentColor);
@@ -120,7 +120,7 @@
 
 	&:before {
 	  content: '';
-	  border-radius: 20px;
+	  border-radius: 1.25rem;
 	  background: var(--color);
 	  position: absolute;
 	  top: 0;
@@ -132,8 +132,8 @@
 
 	&:after {
 	  content: '';
-	  border-radius: 20px;
-	  border: 2px solid transparent !important;
+	  border-radius: 1.25rem;
+	  border: 1.25rem solid transparent !important;
 	  background: #18191F !important;
 	  position: absolute;
 	  top: 1px;
@@ -189,4 +189,8 @@
 .Button[data-variant="text"] {
   cursor: pointer;
   @apply font-body text-sm hover:text-accent;
+  svg {
+	width: 1em;
+	height: 1em;
+  }
 }

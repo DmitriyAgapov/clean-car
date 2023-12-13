@@ -2,12 +2,12 @@
   .DList {
 	dt {
 	  @apply text-gray-2 font-medium mb-2.5;
-	  line-height: 20px;
+	  line-height: 1.25rem;
 	}
 
 	dd {
 	  @apply text-base font-sans font-semibold;
-	  line-height: 21px;
+	  line-height: 1.25rem;
 	}
   }
 }

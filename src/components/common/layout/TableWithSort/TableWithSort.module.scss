@@ -7,8 +7,8 @@
   }
 
   th {
-	line-height: 30px;
-	padding-top: 6px;
+	line-height: 1.875rem;
+	padding-top: .625rem;
   }
 
   tr {
@@ -18,7 +18,7 @@
   td {
 	span {
 	  vertical-align: text-bottom;
-	  line-height: 10px;
+	  line-height: .625rem;
 	}
   }
 
@@ -31,6 +31,8 @@
   svg {
 	display: inline-block;
 	margin-left: .5rem;
+	width: .75rem;
+	height: .625rem;
   }
 }
 
@@ -69,7 +71,7 @@
   justify-content: center;
   align-items: center;
   margin-left: 1rem;
-  border-radius: 10px;
+  border-radius: .625rem;
   padding: .25rem;
   background-color: #242529;
 

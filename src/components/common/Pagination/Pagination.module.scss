@@ -19,7 +19,10 @@
 .PaginationArrow {
   composes: PaginationBtn;
   position: absolute;
-
+  svg {
+	width: 1rem;
+	height: 1rem;
+  }
   &[data-direction-forward="false"] {
 	svg {
 	  rotate: -90deg;

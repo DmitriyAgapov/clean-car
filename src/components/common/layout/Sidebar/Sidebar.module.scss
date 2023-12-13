@@ -1,5 +1,5 @@
 .Sidebar {
-  border-radius: 20px;
+  border-radius: 1.25rem;
   grid-column: 2/span 2;
   padding: 3rem 0;
 
@@ -23,16 +23,20 @@
 .listItem {
   position: relative;
   display: flex;
-
+	img {
+	  width: 1rem;
+	  height: 1rem;
+	  object-fit: contain;
+	}
   span {
 	position: absolute;
-	left: 18px;
-	top: calc(50% - 8px);
-	bottom: calc(50% - 8px);
+	left: 1.125rem;
+	top: calc(50% - .5rem);
+	bottom: calc(50% - .5rem);
   }
 
   &[data-active="true"] {
-	border-right: 2px solid var(--accentColor);
+	border-right: .125rem solid var(--accentColor);
   }
 
   &:hover, &[data-active="true"] {
@@ -64,14 +68,14 @@
   text-transform: initial;
   color: #606163;
   font-size: 1rem;
-  height: 50px;
+  height: 3.125rem;
   align-items: center;
-  line-height: 16px;
+  line-height: 1rem;
   letter-spacing: normal;
   flex: 1 100%;
-  padding: 17px 3.125rem 15px;
-  border-bottom-left-radius: 8px;
-  border-top-left-radius: 8px;
+  padding: 1rem 3.125rem;
+  border-bottom-left-radius: .5rem;
+  border-top-left-radius: .5rem;
 
   &:hover {
 	color: var(--accentColor);

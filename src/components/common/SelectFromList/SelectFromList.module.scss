@@ -12,7 +12,7 @@
 .listItem {
   @apply text-white text-xs flex py-1.5 border-b border-gray-2 justify-between mb-0;
   input {
-	flex: 0;
+	flex: 0 1rem;
 	margin-right: .25rem;
   }
 }

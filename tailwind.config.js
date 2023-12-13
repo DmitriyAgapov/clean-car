@@ -37,7 +37,9 @@ module.exports = withMT({
       colors: {
         accent: '#00FFAE',
       },
-
+      maxWidth: {
+        xss: '17rem',
+      },
       screens: {
         tablet: '744px',
         // => @media (min-width: 640px) { ... }

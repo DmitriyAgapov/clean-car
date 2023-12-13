@@ -62,16 +62,16 @@ export default function CompanyPageCreateAction(props: any) {
           </>
         }
       ></Panel>
-      <Panel
-        variant={PanelVariant.withPaddingSm}
-        state={store.permissionStore.loadingPermissions}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
-        background={PanelColor.glass}
-      >
-        <div className={'accounts-group_body  w-full gap-x-4 gap-y-16'}>
+      {/* <Panel */}
+      {/*   variant={PanelVariant.withPaddingSm} */}
+      {/*   state={store.permissionStore.loadingPermissions} */}
+      {/*   className={'col-span-full grid grid-rows-[auto_1fr_auto]'} */}
+      {/*   background={PanelColor.glass} */}
+      {/* > */}
+        {/* <div className={'accounts-group_body  w-full gap-x-4 gap-y-16'}> */}
           <FormCreateCompany />
-        </div>
-      </Panel>
+        {/* </div> */}
+      {/* </Panel> */}
     </Section>
   )
 }

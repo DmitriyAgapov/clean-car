@@ -1,5 +1,5 @@
 .Panel {
-  border-radius: 20px;
+  border-radius: 1.25rem;
 
   header, footer {
 	& > *:first-child, & > *:last-child {
@@ -68,7 +68,7 @@
 
 
   &[data-background="glass"] {
-	border: 1px solid var(--borderPanelColor);
+	border: 0.0625rem solid var(--borderPanelColor);
 	background-color: var(--bgPanelColor);
   }
 

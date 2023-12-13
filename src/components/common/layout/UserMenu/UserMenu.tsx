@@ -24,7 +24,7 @@ type UserProps = {
 const UserMenuStyled = styled(UserPortal)`
   border: 1px solid var(--borderPanelColor);
   background-color: var(--bgPanelColor);
-  border-radius: 20px;
+  border-radius: 1.25rem;
   display: grid;
 
   [data-panel='body'] {
@@ -41,8 +41,8 @@ const UserMenuStyled = styled(UserPortal)`
     margin-bottom: 0.625rem;
     a {
       position: absolute;
-      bottom: -2px;
-      right: -2px;
+      bottom: -.125rem;
+      right: -.125rem;
     }
   }
   hr {

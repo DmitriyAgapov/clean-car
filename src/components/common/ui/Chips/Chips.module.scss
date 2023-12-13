@@ -3,12 +3,12 @@
   font-weight: 600;
   line-height: 1.29;
   color: black;
-  padding: 2px 0 3px;
+  padding: .125rem 0;
   display: inline-block;
   align-items: center;
-  height: 16px;
-  border-radius: 8px;
-  width: 60px;
+  height: 1rem;
+  border-radius: .5rem;
+  width: 3.75rem;
   text-align: center;
   text-transform: lowercase;
   &[data-state="true"] {

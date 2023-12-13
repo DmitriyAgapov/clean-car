@@ -3,7 +3,7 @@ import styles from './FormCreateCompany.module.scss'
 import { Field, Form, Formik} from 'formik'
 import * as Yup from 'yup'
 import 'yup-phone-lite'
-import Panel, { PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
@@ -117,11 +117,15 @@ const FormCreateCompany = () => {
 
         }}>
           {({ errors, touched,values }) => (
-            <Form>
+            <Form style={{display: "contents"}}>
               <Panel
-                                            variant={PanelVariant.withPaddingSmWithBody}
-                                            state={step !== 1}
-                                            className={'overflow-x-hidden'}
+                variant={PanelVariant.withPaddingSmWithBody}
+                state={step !== 1}
+                className={'col-span-full grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
+                background={PanelColor.glass}
+                                            // variant={PanelVariant.withPaddingSmWithBody}
+                                            // state={step !== 1}
+                                            // className={'overflow-x-hidden'}
                                             headerClassName={!animate ? 'slide-in-left' : 'slide-out-right'}
                                             bodyClassName={!animate ? 'slide-in-left-500' : 'slide-out-right-500'}
                                             footer={
@@ -233,11 +237,14 @@ const FormCreateCompany = () => {
                                             </div>
                                         </Panel>
                                         <Panel
-                                            state={step !== 2}
-                                            className={'overflow-x-hidden'}
+                                          variant={PanelVariant.withPaddingSmWithBody}
+                                          state={step !== 2}
+                                          className={'col-span-full grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
+                                          background={PanelColor.glass}
+
                                             headerClassName={!animate ? 'slide-in-left' : 'slide-out-right'}
                                             bodyClassName={!animate ? 'slide-in-left-500' : 'slide-out-right-500'}
-                                            variant={PanelVariant.withPaddingSmWithBody}
+
                                             footer={
                                                 <div
                                                     className={
