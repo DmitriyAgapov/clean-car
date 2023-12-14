@@ -6,6 +6,7 @@ export enum PanelVariant {
     withPadding = 'withPadding',
     withPaddingSm = 'withPaddingSm',
     withPaddingSmWithBody = 'withPaddingSmWithBody',
+    'withPadding_1_2' = 'withPadding_1_2',
 }
 
 export enum PanelColor {

@@ -1,5 +1,6 @@
-import { action, flow, makeObservable, observable } from 'mobx'
+import { action, flow, get, makeObservable, observable, ObservableMap, set } from 'mobx'
 import agent from 'utils/agent'
+import data from "utils/getData";
 
 export enum Payment {
   postoplata = 'Постоплата',
@@ -67,17 +68,18 @@ export class CompanyStore {
       service_percent: 0,
       application_type: 'Заказчик'
     })
+    loadingError: boolean = false;
+    fullCompanyData  = new Map()
     updatingUser?: boolean
     updatingUserErrors: any
     addCompany = flow(function* ( this:CompanyStore, data: any, type: string ) {
-
         this.loadingCompanies = true
         try {
           if(type === 'Исполнитель') {
-            agent.Companies.createCompanyPerformers(data).then(r => console.log(r))
+            agent.Companies.createCompanyPerformers(data, 'performer').then(r => console.log(r))
           }
           if(type === 'Заказчик') {
-            agent.Companies.createCompanyCustomer(data).then(r => console.log(r))
+            agent.Companies.createCompanyCustomer(data, 'customer').then(r => console.log(r))
           }
         }
         catch (e) {
@@ -95,17 +97,36 @@ export class CompanyStore {
             const { data } = yield agent.Companies.getListCompanyPerformer()
             this.companiesPerformers = data.results
         } catch (e) {
+
             throw new Error('Filed load companies performers')
         }
     })
-
+    loadCompanyWithTypeAndId = flow(function* (this: CompanyStore, type: string, id: number){
+      this.loadingCompanies = true
+      try {
+        const { data, status } = yield agent.Companies.getCompanyData(id, type)
+        status == 200 && set(this.fullCompanyData, {[data.id]: data});
+      }
+      catch (e) {
+        this.loadingError = true
+        new Error('Create Company failed')
+      }
+      finally {
+        // console.log(data);
+        this.loadingCompanies = true
+      }
+    })
     constructor() {
         makeObservable(this, {
             companies: observable,
             loadingCompanies: observable,
+          fullCompanyData: observable,
             addCompany: action,
             loadCompanies: action,
+          loadCompanyWithTypeAndId: action,
+          loadCompaniesPerformers: action,
           setCompanyPerformValue: action,
+          getCompanyFullData: action,
 
             // updatingUser: observable,
             // updatingUserErrors: observable,
@@ -143,6 +164,10 @@ export class CompanyStore {
     getCompanies() {
         return this.companies
     }
+    getCompanyFullData(id: number) {
+        return get(this.fullCompanyData, `${id}`)
+    }
+
 }
 
 const companyStore = new CompanyStore()

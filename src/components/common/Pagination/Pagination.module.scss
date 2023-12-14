@@ -8,9 +8,10 @@
 }
 
 .PaginationBtn {
+  user-select: none;
   display: inline-flex;
   cursor: pointer;
-  @apply w-6 h-6 bg-black/80 items-center justify-center text-gray-2 border border-gray-2 rounded-sm;
+  @apply w-6 h-6 bg-black/80 items-center justify-center text-gray-2 border border-gray-2 rounded-[.25rem];
   &[data-active="true"], &:active, &:hover {
 	@apply border-accent text-accent;
   }

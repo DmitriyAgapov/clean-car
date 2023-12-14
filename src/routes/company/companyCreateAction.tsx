@@ -42,13 +42,7 @@ export default function CompanyPageCreateAction(props: any) {
         className={'col-span-full'}
         header={
           <>
-            <Button
-              text={
-                <>
-                  <SvgBackArrow />
-                  Назад к списку компаний{' '}
-                </>
-              }
+            <Button text={<><SvgBackArrow />Назад к списку компаний{' '}</>}
               className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-7'}
               action={() => navigate(-1)}
               variant={ButtonVariant.text}
@@ -61,17 +55,10 @@ export default function CompanyPageCreateAction(props: any) {
             />
           </>
         }
-      ></Panel>
-      {/* <Panel */}
-      {/*   variant={PanelVariant.withPaddingSm} */}
-      {/*   state={store.permissionStore.loadingPermissions} */}
-      {/*   className={'col-span-full grid grid-rows-[auto_1fr_auto]'} */}
-      {/*   background={PanelColor.glass} */}
-      {/* > */}
-        {/* <div className={'accounts-group_body  w-full gap-x-4 gap-y-16'}> */}
-          <FormCreateCompany />
-        {/* </div> */}
-      {/* </Panel> */}
+      />
+
+      <FormCreateCompany />
+
     </Section>
   )
 }

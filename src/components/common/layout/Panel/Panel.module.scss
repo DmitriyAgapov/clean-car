@@ -2,9 +2,12 @@
   border-radius: 1.25rem;
 
   header, footer {
-	& > *:first-child, & > *:last-child {
-	  margin: 0;
+	& > *:first-child {
+	  margin-top: 0;
 	}
+   & > *:last-child {
+	margin-bottom: 0;
+  }
   }
 
   &[data-variant="withPadding"] {
@@ -34,6 +37,23 @@
 
 	footer {
 	  @apply px-5 pb-5 pt-1.5 mt-12  min-h-[3rem] grid items-end;
+	  & > * {
+		@apply border-t border-t-gray-2 pt-6;
+	  }
+	}
+  }
+	&[data-variant="withPadding_1_2"] {
+	> header {
+	  @apply px-8 pt-8 pb-4 min-h-[2rem];
+	  & + * {
+		margin-top: 0;
+	  }
+	}
+	> [data-panel="body"] {
+	  @apply p-8;
+	}
+	> footer {
+	  @apply px-8 pb-8 pt-4 mt-12  min-h-[3rem] grid items-end min-h-[2rem];
 	  & > * {
 		@apply border-t border-t-gray-2 pt-6;
 	  }

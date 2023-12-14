@@ -21,6 +21,7 @@
 }
 
 .listItem {
+  user-select: none ;
   position: relative;
   display: flex;
 	img {

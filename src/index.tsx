@@ -12,7 +12,6 @@ import {
   userLoader,
   usersLoader,
 } from "routes/loaders/loaders"
-import CompanyPage from './routes/company/company'
 import GroupsPage from './routes/groups/groups'
 import GroupPage from './routes/groups/group'
 import GroupPageEditAction from './routes/groups/groupEditAction'
@@ -30,6 +29,8 @@ import ErrorPage from './error-page'
 import { StoreProvider } from './stores/store'
 import AccountPage from './routes/account/account'
 import CompanyPageCreateAction from 'routes/company/companyCreateAction'
+import CompaniesPage from "./routes/company/companies";
+import CompanyPage from "./routes/company/company";
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
@@ -84,12 +85,14 @@ const router = createBrowserRouter([
       },
       {
         path: 'companies',
-        element: <CompanyPage />,
+        element: <CompaniesPage />,
         loader: companyLoader,
         children: [
           {
-            path: ':id',
-            element: <UserPage />,
+            path: ':companytype/:id',
+            element: <CompanyPage />,
+            loader: companyLoader,
+
           },
           {
             path: 'create',

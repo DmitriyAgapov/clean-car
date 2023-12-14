@@ -1,0 +1,42 @@
+.createField {
+  //width: 100%;
+  width: 12.5rem;
+  border: 1px solid var(--accentColor);
+  display: grid;
+  height: 12.5rem;
+  border-radius: .625rem;
+  padding: 1rem;
+  user-select: none;
+  align-items: center;
+  cursor: pointer;
+  align-content: center;
+  gap: 2rem;
+  justify-content: center;
+  justify-items: center;
+  text-align: center;
+  @apply bg-gray-3 transition;
+	h3 {
+	  margin-bottom: 0;
+	  align-self: start;
+	}
+  svg {
+	align-self: end;
+	display: block;
+	width: 3.75rem;
+	height: 3.75rem;
+	border: 1px solid;
+	padding: 1.125rem;
+	@apply rounded-full border-gray-2;
+
+  }
+  &:hover {
+	@apply outline outline-accent transition  drop-shadow-2xl shadow-inner;
+	svg {
+	  scale: 1.1;
+	  @apply bg-accent drop-shadow-2xl  shadow-2xl;
+	  path {
+		@apply stroke-black stroke-[3px];
+	  }
+	}
+  }
+}

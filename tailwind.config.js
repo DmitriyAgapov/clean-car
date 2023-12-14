@@ -34,6 +34,9 @@ module.exports = withMT({
       notice: '#FBFF4A',
     },
     extend: {
+      borderRadius: {
+        '062': '.625rem'
+      },
       colors: {
         accent: '#00FFAE',
       },

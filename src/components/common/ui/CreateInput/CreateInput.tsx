@@ -11,6 +11,7 @@ export type CreateInputProps = {
     placeholder?: string
     type: string
     depend?: any
+    children?: React.ReactNode | React.ReactNode[]
     className?: string
     options?: never | { label: string; value?: boolean | string | number }[]
 }
@@ -25,6 +26,7 @@ const CreateInput = ({
   // @ts-ignore
   value,
   type,
+  children,
   options,
   className = '',
   ...props

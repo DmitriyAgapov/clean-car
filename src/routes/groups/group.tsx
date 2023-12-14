@@ -17,7 +17,6 @@ const GroupPage = () => {
   const navigate = useNavigate()
   // @ts-ignore
   const { group } = useLoaderData()
-  console.log(group)
   return (
     <Section type={SectionType.default}>
       <Panel

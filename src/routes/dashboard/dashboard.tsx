@@ -1,9 +1,9 @@
-import React from 'react'
-import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import SearchBar from 'components/common/layout/SearchBar/SearchBar'
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import React from "react";
+import Section, { SectionType } from "components/common/layout/Section/Section";
+import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
+import SearchBar from "components/common/layout/SearchBar/SearchBar";
+import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 
 const sidebarMenu: { icon: React.ReactNode; title: string; url: string }[] = [
   {
@@ -72,6 +72,7 @@ export default function DashboardPage() {
     <Section type={SectionType.default}>
       <Panel
         className={'col-span-full'}
+        search={true}
         header={
           <>
             <Heading text={'Дашборд'} variant={HeadingVariant.h1} className={'!mb-6'} color={HeadingColor.accent} />
@@ -79,17 +80,25 @@ export default function DashboardPage() {
           </>
         }
       />
-      <Panel className={'col-span-full'} variant={PanelVariant.default} background={PanelColor.glass}>
-        <Button text={'Сохранить'} variant={ButtonVariant.accent} />
-        <Button text={'Сохранить'} variant={ButtonVariant['accent-outline']} />
-        <Button text={'Сохранить'} />
-        <Button text={'Сохранить'} variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm} />
-        <Button text={'Сохранить'} variant={ButtonVariant.accent} size={ButtonSizeType.sm} />
-        <Button text={'Сохранить'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
-        <Button text={'Сохранить'} directory={ButtonDirectory.admin} size={ButtonSizeType.sm} />
-        <Button text={'Сохранить'} directory={ButtonDirectory.executor} size={ButtonSizeType.sm} />
-        <Button text={'Сохранить'} directory={ButtonDirectory.customer} size={ButtonSizeType.sm} />
-        <Button text={'Сохранить'} />
+      <Panel className={'col-span-full'} variant={PanelVariant.withPadding} background={PanelColor.glass}>
+        <div>
+          <Heading text={'Buttons'} variant={HeadingVariant.h1} color={HeadingColor.accent}/>
+          <div>
+            <Button text={'Сохранить'} variant={ButtonVariant.accent} />
+            <Button text={'Сохранить'} variant={ButtonVariant['accent-outline']} />
+            <Button text={'Сохранить'} />
+            <Button text={'Сохранить'} />
+          </div>
+          <div>
+            <Heading text={'Small'} variant={HeadingVariant.h3} className={'mt-8'}/>
+            <Button text={'Сохранить'} variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm} />
+            <Button text={'Сохранить'} variant={ButtonVariant.accent} size={ButtonSizeType.sm} />
+            <Button text={'Сохранить'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
+            <Button text={'Сохранить'} directory={ButtonDirectory.admin} size={ButtonSizeType.sm} />
+            <Button text={'Сохранить'} directory={ButtonDirectory.executor} size={ButtonSizeType.sm} />
+            <Button text={'Сохранить'} directory={ButtonDirectory.customer} size={ButtonSizeType.sm} />
+          </div>
+        </div>
         <p>
           Мы рады, что вы выбрали нас.
           <br />

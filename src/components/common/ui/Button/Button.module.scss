@@ -1,5 +1,5 @@
 .Button:not([data-variant="text"],[data-variant="icon"]) {
-
+user-select: none ;
   text-decoration: none;
   line-height: 1;
   border-radius: 6.5rem;
@@ -28,11 +28,12 @@
 	height: 3.125rem;
 	text-transform: initial;
 	font-size: .875rem;
-	padding: 1rem 3.125rem .75rem;
+	padding: 0 3.125rem;
 	line-height: 1;
 	font-weight: 500;
 	letter-spacing: normal;
 	font-family: 'Montserrat';
+
 	@media screen and (max-width: 743px) {
 	  padding-left: 1.75rem;
 	  padding-right: 1.75rem;
@@ -42,7 +43,7 @@
   }
 
   &[data-size="sm"] {
-	padding: 1rem 1.875rem .875rem;
+	padding: 0 1.875rem;
 	height: 2.5rem;
 	font-weight: 500;
 	font-family: Montserrat, sans-serif !important;
@@ -52,15 +53,11 @@
 
   &[data-variant="accent"] {
 	background: var(--accentColor);
-
-	font-family: 'RF Dewi Expanded', sans-serif;
 	color: var(--colorBlack);
 	border-color: var(--accentColor);
 	text-transform: uppercase;
-
-	@apply font-sans;
+	@apply font-sans font-semibold;
 	align-items: center;
-
 
 	&:hover, &:focus {
 	  background: var(--accentColor);
@@ -77,7 +74,7 @@
 
   &[data-variant="tech"] {
 	background: transparent;
-	padding: .625rem 1.875rem;
+	padding: 0 1.875rem;
 	height: 2.5rem;
 	font-size: 1rem;
 	color: var(--accentColor);
@@ -96,7 +93,7 @@
 	border: 1px solid var(--accentColor);
 	text-transform: uppercase;
 	align-items: center;
-	@apply font-sans;
+	@apply font-sans font-semibold;
 
 	color: var(--accentColor);
 

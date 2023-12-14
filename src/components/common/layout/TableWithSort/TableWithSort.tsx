@@ -84,7 +84,8 @@ const RowData = (props: any) => {
         return ''
     }, [])
     const queryUrl = querys()
-    const handleClick = () => (props.id ? navigate(location.pathname + queryUrl + `/${props.id}`) : void null)
+    const queryCompanyType = props.type == "Компания-Исполнитель" ? "/performer" : props.type == "Компания-Заказчик" ? "/customer" : null;
+    const handleClick = () => (props.id ? navigate(location.pathname + queryCompanyType + queryUrl + `/${props.id}`) : void null)
 
     const propsRender = () => {
         const ar = []

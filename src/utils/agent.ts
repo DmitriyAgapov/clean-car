@@ -21,12 +21,11 @@ const tokenPlugin = () => {
 }
 
 const requests = {
-  delete: (url: string, body: any) =>
+  delete: (url: string) =>
     axios({
       url: `${API_ROOT}${url}`,
       headers: tokenPlugin(),
-      method: 'DELETE',
-      data: body,
+      method: 'DELETE'
     })
       .then((response) => response)
       .catch(handleErrors),
@@ -45,18 +44,29 @@ const requests = {
       headers: tokenPlugin(),
       method: 'PUT',
       data: body,
-    })
+      })
       .then((response) => response)
       .catch(handleErrors),
+  patch: (url: string, body: any) =>
+    axios({
+        url: `${API_ROOT}${url}`,
+        headers: tokenPlugin(),
+        method: 'PATCH',
+        data: body,
+      })
+      .then((response) => response)
+      .catch(handleErrors),
+
   post: (url: string, body: any) =>
     axios({
-      url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
-      method: 'Post',
-      data: body,
-    })
+          url: `${API_ROOT}${url}`,
+          headers: tokenPlugin(),
+          method: 'Post',
+          data: body,
+       })
       .then((response) => response.data)
       .catch(handleErrors),
+
 }
 
 const Auth = {
@@ -64,7 +74,6 @@ const Auth = {
     return new Promise((resolve, reject) => {
       if (appStore.token) {
         const dataUser = decodeToken(appStore.token)
-        console.log(dataUser);
         const { user_id, first_name, last_name, phone } = dataUser
         resolve({
           id: user_id,
@@ -121,11 +130,27 @@ interface CreateCompanyPerformerFormData {
     application_type: string
 }
 
+const crudMethods = {
+  create: (data:any, type:string) => requests.post(`/companies/${type}/create/`, data),
+  update: (data:any, type:string, id: number) => requests.post(`/companies/${type}/${id}/update/`, data),
+  list: (type:string) => requests.get(`/companies/${type}/list/`),
+  read: (id: number, type:string) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
+  delete: (id: number) => requests.delete(`/companies/${id}/delete/`),
+}
+
+const apiEndPoint = {
+  company: crudMethods,
+}
 const Companies = {
-    createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
-      return  requests.post('/companies/performer/create/', data)
+
+    createCompanyPerformers: ( data: CreateCompanyPerformerFormData, type: string ) => {
+      return  apiEndPoint.company.create(data, type)
     },
-    createCompanyCustomer: ( data: CreateCompanyPerformerFormData ) => {
+    getCompanyData: (id: number, type: string) => apiEndPoint.company.read(id, type),
+    // createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
+    //   return  requests.post('/companies/performer/create/', data)
+    // },
+    createCompanyCustomer: ( data: CreateCompanyPerformerFormData, type: string ) => {
       return  requests.post('/companies/customer/create/', data)
     },
     getListCompanyCustomer: (company_name?: string | undefined, page?: number | undefined) =>
@@ -140,6 +165,7 @@ const Companies = {
         }),
     getAllCompanies: () => requests.get('/companies/all_companies/list/', {}),
 }
+
 const PermissionsAdmin = {
   getAllAdminPermissions: (ordering?: string, page?: number, page_size?: number) =>
     requests.get('/permissions_admin/groups/list/', {}),
@@ -150,9 +176,7 @@ const PermissionsAdmin = {
     })
   },
   deleteAdminGroupIdPermission: (id: number) =>
-    requests.delete(`/permissions_admin/groups/${id}/delete/`, {
-      id: id,
-    }),
+    requests.delete(`/permissions_admin/groups/${id}/delete/`),
   getAdminGroupIdPermission: (id: string) => requests.get(`/permissions_admin/groups/${id}/retrieve/`, {}),
 
   createAdminPermission: (data: any) => {

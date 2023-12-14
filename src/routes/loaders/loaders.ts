@@ -5,6 +5,7 @@ import companyStore from 'stores/companyStore'
 import permissionStore from 'stores/permissionStore'
 import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
+import { AxiosResponse } from 'axios'
 
 export const authUser = async () => {
   if (!appStore.token) {
@@ -15,13 +16,16 @@ export const authUser = async () => {
   return null
 }
 
-export const companyLoader = async ({ params: { id } }: any) => {
-  console.log('loader', id)
+export const companyLoader = async ({ params: { id, companytype } }: any) => {
+
+  if(id && companytype) {
+    await companyStore.loadCompanyWithTypeAndId(companytype, id);
+  }
   await companyStore.loadCompanies()
   await catalogStore.getCities()
   await companyStore.loadCompaniesPerformers()
 
-  return null
+  return { id: id, type: companytype }
 }
 
 export const usersLoader = async () => {
