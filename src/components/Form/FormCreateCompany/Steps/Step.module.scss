@@ -15,10 +15,10 @@
   justify-items: center;
   text-align: center;
   @apply bg-gray-3 transition;
-	h3 {
-	  margin-bottom: 0;
-	  align-self: start;
-	}
+  h3 {
+	margin-bottom: 0;
+	align-self: start;
+  }
   svg {
 	align-self: end;
 	display: block;
@@ -35,7 +35,7 @@
 	  scale: 1.1;
 	  @apply bg-accent drop-shadow-2xl  shadow-2xl;
 	  path {
-		@apply stroke-black stroke-[3px];
+		@apply stroke-black stroke-2;
 	  }
 	}
   }

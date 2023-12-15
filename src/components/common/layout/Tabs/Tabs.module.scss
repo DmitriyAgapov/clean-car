@@ -18,9 +18,11 @@
   @apply border-b border-gray-2;
 }
 .tabPanel {
-  @apply py-6 grid grid-cols-2 gap-y-12 gap-x-4 grid-flow-col grid-rows-[repeat(5,_minmax(0,_auto))];
+  @apply py-6 grid grid-cols-2 gap-y-12 gap-x-4 grid-flow-col;
+  grid-template-rows: repeat(5, minmax(0, auto));
   &[data-name="info"] {
-    @apply grid-cols-3 grid-cols-[1.5fr_2fr_0.5fr];
+    @apply grid-cols-3;
+    grid-template-columns: 1.5ft 2fr 0.5fr;
   }
 
 }
