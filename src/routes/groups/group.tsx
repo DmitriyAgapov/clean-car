@@ -20,6 +20,7 @@ const GroupPage = () => {
   return (
     <Section type={SectionType.default}>
       <Panel
+
         className={'col-span-full'}
         header={
           <>
@@ -44,11 +45,13 @@ const GroupPage = () => {
         }
       ></Panel>
       <Panel
-        variant={PanelVariant.withPaddingSm}
+        variant={PanelVariant.textPadding}
         state={store.permissionStore.loadingPermissions}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+        className={'grid grid-rows-[auto_1fr_auto]'}
+        headerClassName={'grid grid-cols-2'}
+        bodyClassName={'!p-0'}
         header={
-          <div className={'accounts-group_header pt-7 grid grid-cols-2'}>
+          <>
             <div>
               <Heading text={group.name} color={HeadingColor.accent} variant={HeadingVariant.h2} />
               <div className={'text-gray-2 text-xs'}>
@@ -61,7 +64,7 @@ const GroupPage = () => {
               className={'justify-self-end'}
               variant={ButtonVariant.default}
             />
-          </div>
+          </>
         }
         footer={
           <div className={'flex gap-10 text-gray-2 font-medium text-xs'}>
@@ -77,8 +80,8 @@ const GroupPage = () => {
         }
         background={PanelColor.glass}
       >
-        <div className={'accounts-group_body text-[#606163] pt-14'}>
-          <Heading className={'px-5'} text={'Права группы'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
+        <div className={'accounts-group_body text-[#606163] py-6'}>
+          <Heading className={'px-8'} text={'Права группы'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
           <PermissionTable data={group.permissions} />
         </div>
       </Panel>

@@ -30,9 +30,9 @@ export function FormStepSuccess(props: {
   }, [values.application_type]);
   const store = useStore()
   return (
-    <Panel variant={PanelVariant.withPaddingSmWithBody}
+    <Panel variant={PanelVariant.textPadding}
       state={props.step !== 3}
-      className={'col-span-full grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
+      className={'grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
       background={PanelColor.glass}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       bodyClassName={!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'}
@@ -56,7 +56,7 @@ export function FormStepSuccess(props: {
         <Heading text={`Шаг ${values.application_type == 'Исполнитель' && '2'|| props.title }. Компания создана `}
           color={HeadingColor.accent}
           variant={HeadingVariant.h2}
-          className={'mb-6'} />
+         />
         <div className={'text-base'}>
           Укажите информацию о счета компании и предпочтительных исполнителей, если такие есть
         </div>

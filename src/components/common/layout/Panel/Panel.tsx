@@ -3,10 +3,13 @@ import styles from './Panel.module.scss'
 
 export enum PanelVariant {
     default = 'default',
-    withPadding = 'withPadding',
-    withPaddingSm = 'withPaddingSm',
+    textPadding = 'textPadding',
+    dataPadding = 'dataPadding',
+    withGapOnly = 'withGapOnly',
+    modal = 'modal',
+    // withPaddingSm = 'withPaddingSm',
     withPaddingSmWithBody = 'withPaddingSmWithBody',
-    'withPadding_1_2' = 'withPadding_1_2',
+    // 'withPadding_1_2' = 'withPadding_1_2',
 }
 
 export enum PanelColor {
@@ -66,9 +69,10 @@ const Panel = ({
                     {header}
                 </header>
             )}
+            {children && (
             <div className={styles.panelBody + ' ' + bodyClassName} data-panel={'body'}>
                 {children}
-            </div>
+            </div>)}
             {footer && (
                 <footer data-panel={'footer'} className={footerClassName}>
                     {footer}

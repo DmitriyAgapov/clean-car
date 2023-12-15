@@ -5,10 +5,12 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import { observer } from 'mobx-react-lite'
 import styled from 'styled-components'
 import { SvgClose } from 'components/common/ui/Icon'
+import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 
 type ModalProps = {
   state: boolean
   text: string
+  header?: string
   actions: ReactNode[] | ReactNode | null
 }
 const SvgCloseStyled = styled(SvgClose)`
@@ -18,15 +20,16 @@ const SvgCloseStyled = styled(SvgClose)`
 `
 const Modal = (): JSX.Element | null => {
   const store = useStore()
-  const { state, text, actions } = store.appStore.modal
+  const { state, text,header, actions } = store.appStore.modal
   if (state) {
     return (
       <div className={styles.Modal}>
         <Panel
           footer={actions}
+          variant={PanelVariant.modal}
           background={PanelColor.glass}
-          className={'relative z-[999] text-center content-center gap-10'}
-          variant={PanelVariant.withPadding}
+          className={'relative z-[999]  gap-10'}
+          header={header  ? <Heading text={header} variant={HeadingVariant.h2} color={HeadingColor.accent}/> : null}
         >
           {text}
           <a

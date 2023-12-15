@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import styles from './Heading.module.scss'
 
 export enum HeadingVariant {
@@ -19,14 +19,16 @@ export enum HeadingDirectory {
 export enum HeadingColor {
   default = 'default',
   accent = 'accent',
+  active = 'active',
+  notActive = 'notActive',
   gradient = 'gradient',
 }
 
 type HeadingProps = {
-  text: string
+  text: string | ReactNode | ReactNode []
   variant: HeadingVariant
   color?: string
-  directory?: HeadingDirectory
+  directory?: HeadingDirectory | null
   className?: string
 }
 
@@ -34,7 +36,7 @@ const Heading = ({
   text,
   variant = HeadingVariant.h2,
   className,
-  directory,
+  directory = null,
   color = HeadingColor.default,
 }: HeadingProps) => {
   switch (variant) {
@@ -46,19 +48,19 @@ const Heading = ({
       )
     case 'h2':
       return (
-        <h2 className={styles.Heading + ' ' + className} color={color}>
+        <h2 className={styles.Heading + ' ' + className} data-directory={directory} color={color}>
           {text}
         </h2>
       )
     case 'h3':
       return (
-        <h3 className={styles.Heading + ' ' + className} color={color}>
+        <h3 className={styles.Heading + ' ' + className} data-directory={directory} color={color}>
           {text}
         </h3>
       )
     case 'h4':
       return (
-        <h4 className={styles.Heading + ' ' + className} color={color}>
+        <h4 className={styles.Heading + ' ' + className} data-directory={directory} color={color}>
           {text}
         </h4>
       )

@@ -50,7 +50,7 @@ export default function GroupPageCreateAction(props: any) {
                   Назад к списку групп{' '}
                 </>
               }
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-7'}
+              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'}
               action={() => navigate(-1)}
               variant={ButtonVariant.text}
             />
@@ -64,12 +64,11 @@ export default function GroupPageCreateAction(props: any) {
         }
       ></Panel>
       <Panel
-        variant={PanelVariant.withPaddingSm}
+        variant={PanelVariant.textPadding}
         state={store.permissionStore.loadingPermissions}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+        className={'grid grid-rows-[auto_1fr_auto]'}
         footer={
-          <div className={'accounts-group_header gap-4 text-[#606163] grid font-medium'}>
-            <div className={'flex justify-end gap-5 justify-self-end'}>
+            <>
               <Button
                 text={'Отменить'}
                 action={() => navigate(-1)}
@@ -88,27 +87,27 @@ export default function GroupPageCreateAction(props: any) {
                 className={'float-right'}
                 variant={ButtonVariant.accent}
               />
-            </div>
-          </div>
+            </>
         }
+        header={<label className={'account-form__input flex-1'} htmlFor='cleanm'>
+          Название группы
+          <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
+        </label>}
         background={PanelColor.glass}
       >
-        <div className={'accounts-group_body text-[#606163] w-full gap-x-4 gap-y-16 font-medium py-12'}>
-          <label className={'account-form__input flex-1  px-5 mb-7'} htmlFor='cleanm'>
-            Название группы
-            <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
-          </label>
+        <div className={'accounts-group_body text-[#606163] w-full gap-x-4 gap-y-16 font-medium py-5'}>
+
           <div>
             <Heading
               text={'Присвойте права группе'}
               color={HeadingColor.accent}
               variant={HeadingVariant.h4}
-              className={' px-5'}
+              className={'px-8'}
             />
           </div>
-          <div>
+
             <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} />
-          </div>
+
         </div>
       </Panel>
     </Section>

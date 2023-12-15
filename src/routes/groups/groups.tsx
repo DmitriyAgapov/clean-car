@@ -1,6 +1,6 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel from 'components/common/layout/Panel/Panel'
+import Panel, { PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
@@ -17,26 +17,27 @@ export default observer(function GroupsPage() {
     return (
         <Section type={SectionType.default}>
             <Panel
-                className={'col-span-full'}
+              variant={PanelVariant.withGapOnly}
+              headerClassName={'flex justify-between'}
                 header={
                     <>
                         <Heading
                             text={'Группы'}
                             variant={HeadingVariant.h1}
-                            className={'!mb-0 inline-block'}
+                            className={'inline-block'}
                             color={HeadingColor.accent}
                         />
                         <Button
                             text={'Создать группу'}
                             action={() => navigate('/account/groups/create')}
-                            className={'inline-flex float-right'}
+                            className={'inline-flex'}
                             directory={ButtonDirectory.directory}
                             size={ButtonSizeType.sm}
                         />
                     </>
                 }
             >
-                <p className={'-mt-4'}>
+                <p className={''}>
                     Вы можете создавать свою иерархию полномочий,
                     <br />
                     чтобы управлять доступом к различным ресурсам системы{' '}

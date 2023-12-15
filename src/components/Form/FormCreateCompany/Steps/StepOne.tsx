@@ -19,9 +19,9 @@ export function FormStep1(props: {
   const { values, touched, errors }:any = useFormikContext();
   return (
     <Panel
-      variant={PanelVariant.withPaddingSmWithBody}
+      variant={PanelVariant.textPadding}
       state={props.step !== 1}
-      className={'col-span-full grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
+      className={'grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
       background={PanelColor.glass}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       bodyClassName={!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'}
@@ -66,7 +66,7 @@ export function FormStep1(props: {
             text={'Шаг 1. Основная информация'}
             color={HeadingColor.accent}
             variant={HeadingVariant.h2}
-            className={'mb-6'}
+
           />
           <div className={'text-base'}>Укажите основную информацию о компании для добавления ее в список</div>
         </>
@@ -148,7 +148,7 @@ export function FormStep1(props: {
             <div className={'form-error'}>{errors.legal_address}</div>
           ) : null}
         </label>
-        <hr className={'my-10 flex-[1_0_100%] w-full border-gray-2'} />
+        <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         <SelectCustom
           label={'Тип'}
           value={props.values.city}

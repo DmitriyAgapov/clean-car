@@ -44,7 +44,7 @@ const MyProfilePage = () => {
         }
       ></Panel>
       <Panel
-        variant={PanelVariant.withPadding}
+        variant={PanelVariant.textPadding}
         background={PanelColor.glass}
         className={'col-span-full'}
         header={

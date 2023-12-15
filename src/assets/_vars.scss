@@ -42,7 +42,7 @@
 	--sideGutter: 1.25rem;
 	--grid: var(--sideGutter) repeat(var(--totalCol), 1fr) var(--sideGutter);
   }
-  @media screen and (min-width: 1921px) {
+  @media screen and (min-width: 1440px) {
 	--scaling-font: calc(100vh / 64);
   }
   @media screen and (max-width: 743px) {

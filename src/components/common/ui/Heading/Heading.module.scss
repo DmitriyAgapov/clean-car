@@ -2,6 +2,38 @@
   &[color="accent"] {
 	color: var(--accentColor);
   }
+  &[color="active"] {
+	color: var(--colorStateActive);
+  }
+  &[color="notActive"] {
+    color: var(--errorColor);
+  }
+  &[data-directory="customer"] {
+    --color: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
+    background: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
+    border: 0;
+    background: -webkit-linear-gradient(-120deg, #3FECAE 24.44%, #0500FF 119.81%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  &[data-directory="admin"] {
+    background: linear-gradient(120deg, #D80BEA 7.5%, #00FFAE 42.5%, #00FFAE 57.5%, #D80BEA 93.5%);
+    background: -webkit-linear-gradient(120deg, #D80BEA 7.5%, #00FFAE 42.5%, #00FFAE 57.5%, #D80BEA 93.5%);
+    background-size: 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-position: 0 50%;
+    border: 0;
+    --color: linear-gradient(-120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
+
+  }
+
+  &[data-directory="executor"] {
+    background: -webkit-linear-gradient(-45deg, #00A8AA 0.27%, #F0F600 87.66%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
   &h1 {
 	@apply text-4xl;
@@ -11,15 +43,15 @@
 }
 
 h1.Heading {
-  @apply text-2xl font-semibold mb-12;
+  @apply text-2xl font-semibold mb-8;
 }
 
 h2.Heading {
-  @apply text-2xl font-semibold mb-5;
+  @apply text-2xl font-semibold mb-6;
 }
 
 h3.Heading {
-  @apply text-lg font-semibold mb-4;
+  @apply text-lg font-semibold mb-5;
 }
 
 h4.Heading {

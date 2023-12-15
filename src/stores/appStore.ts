@@ -2,6 +2,7 @@ import { action, makeObservable, observable, reaction } from "mobx";
 import { ReactNode } from "react";
 import userStore, { UserTypeEnum } from "./userStore";
 import { Company } from "stores/companyStore";
+import heading from "components/common/ui/Heading/Heading";
 
 export class AppStore {
   appName = 'CleanCar'
@@ -15,7 +16,8 @@ export class AppStore {
   bodyRef = document.body
   modal: {
     state: boolean
-    text: string
+    text:  string | ReactNode | ReactNode []
+    header?:  string | ReactNode | ReactNode []
     actions: ReactNode | null | undefined
   } = {
     state: false,
@@ -75,8 +77,10 @@ export class AppStore {
     this.appRouteName = routeName
   }
 
-  setModal({ state, text, actions }: { state: boolean; text: string; actions: ReactNode | null }) {
-    this.modal = { state: state, text: text, actions: actions }
+  setModal({ state, text = '', actions , header}: {header?: string | ReactNode | ReactNode[]; state: boolean; text: string | ReactNode | ReactNode []; actions: ReactNode }) {
+    if(text) {
+      this.modal = { state: state, text: text, actions: actions, header: header }
+    }
   }
 
   closeModal() {

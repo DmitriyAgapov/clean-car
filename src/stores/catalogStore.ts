@@ -11,7 +11,7 @@ export class CatalogStore {
         cities = data.results
         this.cities = cities
       } catch (error) {}
-      console.log(this.cities);
+
       return this.cities
     }
   })

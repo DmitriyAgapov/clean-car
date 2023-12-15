@@ -1,6 +1,6 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
@@ -17,20 +17,21 @@ const CompaniesPage = () => {
   return (
     <Section type={SectionType.default}>
       <Panel
-        className={'col-span-full'}
+        headerClassName={'flex justify-between'}
+        variant={PanelVariant.withGapOnly}
         header={
           <>
             <Heading
               text={'Компании'}
               variant={HeadingVariant.h1}
-              className={'!mb-6 inline-block'}
+              className={'inline-block'}
               color={HeadingColor.accent}
             />
             <LinkStyled
               text={'Создать компанию'}
               to={'create'}
               // action={() => store.companyStore.addCompany()}
-              className={'float-right'}
+              className={'inline-flex'}
               directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}
             />

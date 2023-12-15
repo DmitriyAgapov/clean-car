@@ -38,7 +38,7 @@ export default function UsersPageCreateAction() {
       ></Panel>
       <Panel
         className={'col-span-full  grid grid-rows-[1fr_auto]'}
-        variant={PanelVariant.withPadding}
+        variant={PanelVariant.textPadding}
         footer={
           <div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
             <div className={'flex col-start-2 justify-end gap-5'}>

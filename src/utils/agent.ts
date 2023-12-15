@@ -130,16 +130,20 @@ interface CreateCompanyPerformerFormData {
     application_type: string
 }
 
-const crudMethods = {
+const crudCompanyMethods = {
   create: (data:any, type:string) => requests.post(`/companies/${type}/create/`, data),
   update: (data:any, type:string, id: number) => requests.post(`/companies/${type}/${id}/update/`, data),
   list: (type:string) => requests.get(`/companies/${type}/list/`),
   read: (id: number, type:string) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
   delete: (id: number) => requests.delete(`/companies/${id}/delete/`),
 }
+const crudAccountMethods = {
+  getUsers: (company_id: number) => requests.get(`/accounts/${company_id}/users/list/`)
+}
 
 const apiEndPoint = {
-  company: crudMethods,
+  company: crudCompanyMethods,
+  account: crudAccountMethods
 }
 const Companies = {
 
@@ -204,9 +208,14 @@ const Profile = {
 const Catalog = {
   getCities: () => requests.get('/catalog/cities/'),
 }
+const Account = {
+  getCompany: (id:number) =>   apiEndPoint.account.getUsers(id)
+}
+
 const agent = {
   Auth,
   Profile,
+  Account,
   PermissionsAdmin,
   Companies,
   Users,

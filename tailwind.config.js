@@ -27,7 +27,7 @@ module.exports = withMT({
       'gray-1': '#B6C1BE',
       'gray-2': '#606163',
       'gray-3': '#242529',
-      'gray-4/70': '#22252F',
+      'gray-4/70': 'rgba(33,36,46,0.7)',
       'black/80': 'rgba(0,0,0,0.8)',
       error: '#F4565F',
       active: '#13FF71',

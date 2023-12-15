@@ -1,14 +1,26 @@
 .Tabs {
-
+  display: block;
 }
 .tabHeader {
   @apply list-none text-xss uppercase text-gray-2 font-medium pb-3.5 border-b-2 border-transparent;
+  letter-spacing: 0.05em;
+  cursor: pointer;
   &[data-state="true"] {
-	@apply border-accent;
+	@apply border-accent text-accent;
+  }
+  &:hover, &:focus {
+    @apply border-accent text-accent opacity-60;
   }
 }
 .containerHeader {
   display: flex;
   justify-content: space-between;
-  @apply px-8 border-b border-gray-2;
+  @apply border-b border-gray-2;
+}
+.tabPanel {
+  @apply py-6 grid grid-cols-2 gap-y-12 gap-x-4 grid-flow-col grid-rows-[repeat(5,_minmax(0,_auto))];
+  &[data-name="info"] {
+    @apply grid-cols-3 grid-cols-[1.5fr_2fr_0.5fr];
+  }
+
 }

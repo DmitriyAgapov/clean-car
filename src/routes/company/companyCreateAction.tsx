@@ -22,20 +22,6 @@ export default function CompanyPageCreateAction(props: any) {
       name: event.target.value,
     }))
   }
-  // const handlePermissions = (event: any, id: number) => {
-  //   const indexAr = changes.permissions.findIndex((value: any) => value.id === id)
-  //   const newArrayItem = {
-  //     ...changes.permissions[indexAr],
-  //     [event.target.name]: event.target.checked,
-  //   }
-  //   const newArray = toJS(changes.permissions)
-  //   newArray.splice(indexAr, 1, newArrayItem)
-  //
-  //   setChanges((prevState: any) => ({
-  //     ...prevState,
-  //     permissions: newArray,
-  //   }))
-  // }
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -50,7 +36,7 @@ export default function CompanyPageCreateAction(props: any) {
             <Heading
               text={'Создание компании'}
               variant={HeadingVariant.h1}
-              className={'!mb-0 inline-block'}
+              className={'!mb-2 block'}
               color={HeadingColor.accent}
             />
           </>

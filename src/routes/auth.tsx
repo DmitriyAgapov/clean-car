@@ -43,7 +43,7 @@ function AuthPage() {
           }
           footer={<LinkStyled text={'У меня нет аккаунта'} to={'/register'} />}
         >
-          <p>
+          <p className={'!mb-4'}>
             <strong>Добро пожаловать в сервис CleanCar.</strong>
             <br />
             Для входа в систему, введите ваши данные{' '}
@@ -51,10 +51,11 @@ function AuthPage() {
         </Panel>
         {!store.userStore.currentUser ? (
           <Panel
+            bodyClassName={'!py-12'}
             className={
               'col-span-6 desktop:col-start-9 desktop:col-span-6  tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-2xl'
             }
-            variant={PanelVariant.withPadding}
+            variant={PanelVariant.textPadding}
             background={PanelColor.glass}
           >
             <FormAuth />

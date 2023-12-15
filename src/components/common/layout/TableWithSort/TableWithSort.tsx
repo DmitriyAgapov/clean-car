@@ -14,6 +14,7 @@ type TableWithSortProps = {
     style?: PanelRouteStyle
     search?: boolean
     filter?: boolean
+    variant?: PanelVariant
 }
 
 const RowHeading = ({ ar, sort, action }: any) => {
@@ -84,7 +85,7 @@ const RowData = (props: any) => {
         return ''
     }, [])
     const queryUrl = querys()
-    const queryCompanyType = props.type == "Компания-Исполнитель" ? "/performer" : props.type == "Компания-Заказчик" ? "/customer" : null;
+    const queryCompanyType = props.type == "Компания-Исполнитель" ? "/performer" : props.type == "Компания-Заказчик" ? "/customer" : '';
     const handleClick = () => (props.id ? navigate(location.pathname + queryCompanyType + queryUrl + `/${props.id}`) : void null)
 
     const propsRender = () => {
@@ -120,13 +121,14 @@ const RowData = (props: any) => {
     )
 }
 export const TableSearch = ({inputProps, action}:{ inputProps?: {list?:string}, action?: (e: any) => void}) => (
-    <div className={'form-search relative h-8'}>
+    <div className={'form-search relative h-10'}>
         <input type={'search'} placeholder={'Быстрый поиск'} onChange={action} className={'search-dashboard'} {...inputProps}/>
         <SvgSearch />
     </div>
 )
 
 const TableWithSort = ({
+  variant,
     data,
     search = false,
     filter = false,
@@ -182,7 +184,7 @@ const TableWithSort = ({
         <Panel
             className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto]'}
             routeStyle={style}
-            variant={PanelVariant.default}
+            variant={variant ? variant : PanelVariant.dataPadding}
             background={PanelColor.glass}
             footerClassName={'px-6 pt-2 pb-6 flex  justify-end'}
             headerClassName={''}

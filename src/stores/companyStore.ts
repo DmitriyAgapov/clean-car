@@ -1,4 +1,4 @@
-import { action, flow, get, makeObservable, observable, ObservableMap, set } from 'mobx'
+import { action, flow, get, makeObservable, observable, ObservableMap, remove, set } from 'mobx'
 import agent from 'utils/agent'
 import data from "utils/getData";
 
@@ -89,9 +89,8 @@ export class CompanyStore {
 
           this.loadingCompanies = true
         }
-        // @ts-ignore
-
     })
+
     loadCompaniesPerformers = flow(function* (this: CompanyStore) {
         try {
             const { data } = yield agent.Companies.getListCompanyPerformer()
@@ -101,10 +100,40 @@ export class CompanyStore {
             throw new Error('Filed load companies performers')
         }
     })
+
+  getCompanyUsers = flow(function* (this: CompanyStore, id: number) {
+      this.loadingCompanies = true
+      let result;
+      try {
+          const { data, status } = yield agent.Account.getCompany(id)
+          if (status === 200) {
+              result = data.results
+              console.log(result)
+              console.log(get(this.fullCompanyData, `${id}`))
+            // const oldData = get(this.fullCompanyData, `${id}`)
+            remove(this.fullCompanyData, `${id}`)
+            // set(this.fullCompanyData, `${id}`, result)
+            console.log(get(this.fullCompanyData, `${id}`))
+              // this.fullCompanyData.set(2, {get()})
+          }
+      }
+      catch (e) {
+        this.loadingError = true
+        new Error('get users failed')
+      }
+      finally {
+        console.log(this.fullCompanyData);
+        this.loadingCompanies = true
+      }
+      return result
+    })
+
     loadCompanyWithTypeAndId = flow(function* (this: CompanyStore, type: string, id: number){
       this.loadingCompanies = true
       try {
-        const { data, status } = yield agent.Companies.getCompanyData(id, type)
+        const { data, status } = yield agent.Companies.getCompanyData(id, type);
+        const users = yield agent.Account.getCompany(id);
+        data.users = users.data.results;
         status == 200 && set(this.fullCompanyData, {[data.id]: data});
       }
       catch (e) {
@@ -112,10 +141,11 @@ export class CompanyStore {
         new Error('Create Company failed')
       }
       finally {
-        // console.log(data);
         this.loadingCompanies = true
       }
+      return get(this.fullCompanyData, `${id}`)
     })
+
     constructor() {
         makeObservable(this, {
             companies: observable,
@@ -127,6 +157,7 @@ export class CompanyStore {
           loadCompaniesPerformers: action,
           setCompanyPerformValue: action,
           getCompanyFullData: action,
+          getCompanyUsers: action,
 
             // updatingUser: observable,
             // updatingUserErrors: observable,

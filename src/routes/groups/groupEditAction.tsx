@@ -64,11 +64,16 @@ export default function GroupPageEditAction(props: any) {
         }
       ></Panel>
       <Panel
-        variant={PanelVariant.withPaddingSm}
+        variant={PanelVariant.textPadding}
         state={store.permissionStore.loadingPermissions}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+        bodyClassName={'!pt-0 !px-0'}
+        className={'grid grid-rows-[auto_1fr_auto]'}
+        header={<label className={'account-form__input flex-1'} htmlFor='cleanm'>
+          Название группы
+          <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
+        </label>}
         footer={
-          <div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
+          <>
             <Button
               text={'Удалить'}
               action={async () => {
@@ -89,7 +94,7 @@ export default function GroupPageEditAction(props: any) {
                   state: true,
                 })
               }}
-              className={'justify-self-start'}
+              className={'justify-self-start mr-auto'}
             />
             <div className={'flex justify-end gap-5'}>
               <Button
@@ -109,27 +114,20 @@ export default function GroupPageEditAction(props: any) {
                 variant={ButtonVariant.accent}
               />
             </div>
-          </div>
+          </>
         }
         background={PanelColor.glass}
       >
-        <div className={'accounts-group_body text-[#606163] w-full gap-x-4 gap-y-16 font-medium py-10'}>
-          <label className={'account-form__input flex-1  px-5 mb-7'} htmlFor='cleanm'>
-            Название группы
-            <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
-          </label>
-
-
+        <div className={'accounts-group_body text-[#606163] py-6'}>
             <Heading
               text={'Настройте права группы'}
               color={HeadingColor.accent}
-              variant={HeadingVariant.h4}
-              className={' px-5 mt-7'}
+              variant={HeadingVariant.h3}
+              className={'px-8'}
             />
 
-          <div>
             <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} />
-          </div>
+
         </div>
       </Panel>
     </Section>

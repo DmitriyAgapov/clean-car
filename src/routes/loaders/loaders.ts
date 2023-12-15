@@ -6,6 +6,8 @@ import permissionStore from 'stores/permissionStore'
 import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
 import { AxiosResponse } from 'axios'
+import agent from "utils/agent";
+import logo from "components/common/layout/Logo/Logo";
 
 export const authUser = async () => {
   if (!appStore.token) {
@@ -17,15 +19,19 @@ export const authUser = async () => {
 }
 
 export const companyLoader = async ({ params: { id, companytype } }: any) => {
+  let users : any[] = []
+  if (id && companytype) {
+      const { data }: any = await agent.Account.getCompany(id)
 
-  if(id && companytype) {
-    await companyStore.loadCompanyWithTypeAndId(companytype, id);
+      const company = await companyStore.loadCompanyWithTypeAndId(companytype, id)
+      company.users = data.results
+
   }
   await companyStore.loadCompanies()
   await catalogStore.getCities()
   await companyStore.loadCompaniesPerformers()
 
-  return { id: id, type: companytype }
+  return { id: id, type: companytype, users: users }
 }
 
 export const usersLoader = async () => {

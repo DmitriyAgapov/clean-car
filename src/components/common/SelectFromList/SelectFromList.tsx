@@ -17,7 +17,7 @@ const SelectListAvailible = ({ items, action, selected }: SelectFromListProps) =
     return (
         <div className={styles.SelectListAvailible}>
             <Panel
-                variant={PanelVariant.withPaddingSmWithBody}
+                variant={PanelVariant.textPadding}
                 background={PanelColor.glass}
                 className={'flex-1 w-full  rounded-lg'}
             >
@@ -57,7 +57,7 @@ const SelectedCompanies = ({items}: SelectFromListProps) => {
 		return res
 	}, [items])
 	return <div className={styles.SelectListAvailible}>
-		<Panel variant={PanelVariant.withPaddingSmWithBody} background={PanelColor.glass} className={'flex-1 w-full rounded-lg'}>
+		<Panel variant={PanelVariant.dataPadding} background={PanelColor.glass} className={'flex-1 w-full rounded-lg'}>
 		<Heading text={'Выбранные компании'} variant={HeadingVariant.h4} color={HeadingColor.accent}/>
 		<div className={styles.SelectFromListList}>
 			{memoized}

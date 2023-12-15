@@ -37,7 +37,10 @@ const UserPage = () => {
     )
   }, [])
   return (
-    <Section type={SectionType.default}>
+    <Section
+      type={SectionType.default}
+
+    >
       <Panel
         className={'col-span-full'}
         header={
@@ -61,11 +64,11 @@ const UserPage = () => {
             />
           </>
         }
-      ></Panel>
+      />
       <Panel
         state={store.usersStore.loadingUsers}
         className={'col-span-full py-7 px-14 grid grid-rows-[auto_1fr_auto]'}
-        variant={PanelVariant.withPaddingSm}
+        variant={PanelVariant.textPadding}
         background={PanelColor.glass}
       >
         <div

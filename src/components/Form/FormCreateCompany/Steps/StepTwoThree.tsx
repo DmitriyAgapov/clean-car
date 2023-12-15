@@ -21,9 +21,9 @@ export function FormStepTwo(props: {
   const { values, touched, errors }:any = useFormikContext();
   const store = useStore()
   return (
-    <Panel variant={PanelVariant.withPaddingSmWithBody}
+    <Panel variant={PanelVariant.textPadding}
       state={props.step !== 2}
-      className={'col-span-full grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
+      className={' grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
       background={PanelColor.glass}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       bodyClassName={!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'}
@@ -53,7 +53,7 @@ export function FormStepTwo(props: {
         <Heading text={'Шаг 2. Информация о счете и индивидуальные настройки '}
           color={HeadingColor.accent}
           variant={HeadingVariant.h2}
-          className={'mb-6'} />
+          />
         <div className={'text-base'}>
           Укажите информацию о счета компании и предпочтительных исполнителей, если такие есть
         </div>
@@ -85,7 +85,7 @@ export function FormStepTwo(props: {
           name={'executors_list'}
           className={' w-fit  !flex-[0_0_10rem]'}
           options={[ { label: 'Да', value: '1' }, { label: 'Нет', value: '2' }, ]} />
-        <hr className={'my-10 flex-[1_0_100%] w-full border-gray-2'} />
+        <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         <SelectFromList items={store.companyStore.companiesPerformers} />
       </div>
     </Panel>

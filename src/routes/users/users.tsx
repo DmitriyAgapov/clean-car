@@ -1,6 +1,6 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel from 'components/common/layout/Panel/Panel'
+import Panel, { PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
@@ -26,19 +26,21 @@ const UsersPage = () => {
   return (
     <Section type={SectionType.default}>
       <Panel
+        variant={PanelVariant.withGapOnly}
         className={'col-span-full'}
+        headerClassName={'flex justify-between'}
         header={
           <>
             <Heading
               text={'Пользователи'}
               variant={HeadingVariant.h1}
-              className={'!mb-0 inline-block'}
+              className={'inline-block'}
               color={HeadingColor.accent}
             />
             <Button
               text={'Добавить пользователя'}
               action={() => navigate('/account/users/create')}
-              className={'inline-flex float-right'}
+              className={'inline-flex'}
               directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}
             />

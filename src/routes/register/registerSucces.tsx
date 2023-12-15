@@ -94,7 +94,7 @@ export default function RegisterSuccessPage() {
             className={
               'col-span-6 desktop:col-start-7 desktop:col-span-6 tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto relative hidden desktop:block'
             }
-            variant={PanelVariant.default}
+            variant={PanelVariant.textPadding}
             background={PanelColor.default}
           >
             {cardsData.map((c) => (

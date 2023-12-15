@@ -45,17 +45,18 @@ export default function RegisterPage() {
             />
           }
         >
-          <p>
+          <p className={'pb-8'}>
             Мы рады, что вы выбрали нас.
             <br />
             Пожалуйста, заполните данные для регистрации{' '}
           </p>
         </Panel>
         <Panel
+          bodyClassName={'!py-12'}
           className={
             'col-span-6 desktop:col-start-9 desktop:col-span-6 tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto'
           }
-          variant={PanelVariant.withPadding}
+          variant={PanelVariant.textPadding}
           background={PanelColor.glass}
         >
           <FormRegister />
