@@ -55,7 +55,7 @@ const Tabs = ({ data }: any) => {
                 <Tabs.Tab onClick={(event: Event) => handleChangeTabState(event, index)} title={d.label} state={index == state} key={index + `-tab`} />
               ))}
             </Tabs.TabHeaderContainer>
-            <Tabs.Panel state={false} name={'info'}>
+            <Tabs.Panel state={state == 0} name={'info'}>
                 <DList label={'Оплата'} title={data[0].value.payment} />
                 <DList label={'ИНН'} title={data[0].value.inn} />
                 <DList label={'ОГРН'} title={data[0].value.ogrn} />
@@ -108,7 +108,7 @@ Tabs.Tab = ({ title, state, ...props }: { title: string; state: boolean } | any)
 }
 Tabs.Panel = ({ children, state, name }: { children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string }) =>  {
   console.log('p', state);
- if(!state) return (
+ if(state) return (
     <div className={styles.tabPanel} data-state={state} data-name={name}>
       {children}
     </div>
