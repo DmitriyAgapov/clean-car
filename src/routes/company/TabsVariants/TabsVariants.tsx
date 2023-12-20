@@ -1,5 +1,4 @@
-import React, { ReactNode } from 'react'
-import styles from "./TabsVariants.module.scss";
+import React, { ReactNode } from "react";
 import DList from "components/common/ui/DList/DList";
 import CardSimple from "components/common/layout/Cards/CardSimple/CardSimple";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
@@ -8,11 +7,11 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import { PanelColor, PanelProps, PanelVariant } from "components/common/layout/Panel/Panel";
 import TableWithSort from "components/common/layout/TableWithSort/TableWithSort";
 import { User } from "stores/usersStore";
-import Tabs, {TabsProps} from "../../../components/common/layout/Tabs/Tabs";
+import Tabs, { TabsProps } from "../../../components/common/layout/Tabs/Tabs";
 import { useStore } from "stores/store";
-import CreateInput from 'components/common/ui/CreateInput/CreateInput'
-import { useNavigate } from 'react-router-dom'
-import { get } from 'mobx';
+import CreateInput from "components/common/ui/CreateInput/CreateInput";
+import { useNavigate } from "react-router-dom";
+
 type TabsVariantsProps = {
   label: string,
   data: any
@@ -77,7 +76,7 @@ const TabsVariants = ({label, data, state, name, className, companyId, ...props}
 
     case 'Сотрудники':
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none'}  bodyClassName={'!bg-transparent'}>
-        <TableWithSort  className={'rounded-none !bg-none overflow-visible'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+        {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={data.map((item: User & {rootRoute?: string} ) => ({
             state: item.is_active,
             name: item.first_name + ' ' + item.last_name,
@@ -93,7 +92,7 @@ const TabsVariants = ({label, data, state, name, className, companyId, ...props}
               company_id: companyId,
               rootRoute: `/account/users/${companyId}/${item.id}`,
             },
-          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Тип', 'Компания', 'Город']}/>
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Тип', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
       </Tabs.Panel>)
       break;
     default:
