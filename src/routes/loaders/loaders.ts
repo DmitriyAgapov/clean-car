@@ -19,19 +19,28 @@ export const authUser = async () => {
 }
 
 export const companyLoader = async ({ params: { id, companytype } }: any) => {
-  let users : any[] = []
+
+  const fullCompanyData = []
   if (id && companytype) {
+    const company = await companyStore.loadCompanyWithTypeAndId(companytype, id)
+    fullCompanyData.push({
+      label: 'Основная информация',
+      data: company
+    })
       const { data }: any = await agent.Account.getCompany(id)
 
-      const company = await companyStore.loadCompanyWithTypeAndId(companytype, id)
-      company.users = data.results
+      fullCompanyData.push({
+        label: 'Пользователи',
+        data: data.results
+      })
 
+      console.log(fullCompanyData);
   }
   await companyStore.loadCompanies()
   await catalogStore.getCities()
   await companyStore.loadCompaniesPerformers()
 
-  return { id: id, type: companytype, users: users }
+  return { id: id, type: companytype, data: fullCompanyData }
 }
 
 export const usersLoader = async () => {

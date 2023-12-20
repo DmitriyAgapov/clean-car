@@ -51,17 +51,17 @@
   }
 
   &[data-variant="dataPadding"] {
-	@apply bg-gray-4/70;
+
 	> header {
 	  @apply px-8 pt-8 pb-4;
 	}
 
 	> footer {
-	  @apply px-8 pb-8 pt-4 flex gap-6 justify-end items-end;
+	  @apply px-8 pb-8 pt-4 flex gap-6 justify-end items-end  bg-gray-4/70;
 	}
 
 	> [data-panel="body"] {
-	  @apply px-0 py-0;
+	  @apply px-0 py-0  bg-gray-4/70;
 	}
   }
   &[data-variant="dataPadding"] {

@@ -37,6 +37,7 @@ export class UserStore {
     this.loadingUser = true
     try {
       const { data } = yield agent.Profile.getMyAccount()
+      console.log(data);
       this.currentUser = data
       this.loadingUser = false
     } catch (error) {

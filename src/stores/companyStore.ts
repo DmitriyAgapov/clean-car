@@ -2,6 +2,8 @@ import { action, flow, get, makeObservable, observable, ObservableMap, remove, s
 import agent from 'utils/agent'
 import data from "utils/getData";
 
+import User from "routes/users/user";
+
 export enum Payment {
   postoplata = 'Постоплата',
   predoplata = 'Предоплата',
@@ -69,7 +71,7 @@ export class CompanyStore {
       application_type: 'Заказчик'
     })
     loadingError: boolean = false;
-    fullCompanyData  = new Map()
+    fullCompanyData  = new Map([])
     updatingUser?: boolean
     updatingUserErrors: any
     addCompany = flow(function* ( this:CompanyStore, data: any, type: string ) {
@@ -130,11 +132,26 @@ export class CompanyStore {
 
     loadCompanyWithTypeAndId = flow(function* (this: CompanyStore, type: string, id: number){
       this.loadingCompanies = true
+
       try {
-        const { data, status } = yield agent.Companies.getCompanyData(id, type);
+        let data = {
+          company: {},
+          users: []
+        };
+        const company = yield agent.Companies.getCompanyData(id, type);
         const users = yield agent.Account.getCompany(id);
-        data.users = users.data.results;
-        status == 200 && set(this.fullCompanyData, {[data.id]: data});
+        data.company = {
+          data:  company.data,
+          label: 'Основная информация'
+        };
+
+        data.users =  {
+          data: users.data.results,
+          label: 'Сотрудники'
+        } as any;
+        console.log(  data);
+        // @ts-ignore
+        set(this.fullCompanyData, {[data.company.data.id]: data});
       }
       catch (e) {
         this.loadingError = true
@@ -196,6 +213,7 @@ export class CompanyStore {
         return this.companies
     }
     getCompanyFullData(id: number) {
+      console.log(this.fullCompanyData);
         return get(this.fullCompanyData, `${id}`)
     }
 

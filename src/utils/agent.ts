@@ -107,7 +107,7 @@ const omitSlug = (article: any) => Object.assign({}, article, { slug: undefined 
 const Users = {
     getAllUsers: () => requests.get('/accounts/all_users/', {}),
     getUser: ({ company_id, id }: { company_id: number; id: number }) =>
-        requests.get(`/accounts/${company_id}/users/${id}/retrieve/`, {}),
+        requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
     // getUser: (id: number) =>
     // 	requests.get('')
 }

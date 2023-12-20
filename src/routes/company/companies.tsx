@@ -1,6 +1,6 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
@@ -14,6 +14,7 @@ const CompaniesPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   if ('/account/companies' !== location.pathname) return <Outlet />
+  if (location.pathname.includes('edit')) return <Outlet />
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -38,10 +39,10 @@ const CompaniesPage = () => {
           </>
         }
       />
-
       <TableWithSort
         filter={true}
         search={true}
+        background={PanelColor.glass}
         style={PanelRouteStyle.company}
         ar={['Статус', 'Компания', 'Тип', 'Город']}
         data={store.companyStore.companies.map((item: any) => ({
@@ -51,6 +52,7 @@ const CompaniesPage = () => {
           city: item.city.name,
           id: item.profile_id,
         }))}
+        initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
         state={store.companyStore.loadingCompanies}
       />
     </Section>

@@ -77,24 +77,49 @@
 
 .btnFilter {
   cursor: pointer;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-color: var(--accentColor);
+  width: 2.5rem;
+  height: 2.5rem;
   display: inline-flex;
   justify-content: center;
   align-items: center;
   margin-left: 1rem;
   border-radius: .625rem;
-  padding: .25rem;
+  padding: .5rem;
   background-color: #242529;
-
+  border: 2px solid transparent;
+  position: relative;
+  z-index: 1111;
+  overflow: visible;
   path {
 	stroke: var(--accentColor);
 	stroke-width: 1;
   }
-
+	&:hover, &:focus {
+	  border-color: var(--accentColor);
+	}
 }
+.filterBar {
+  background-color: #18191F;
+  padding: 1.25rem;
+  border-radius: 12px;
+  display: grid;
+  border: 2px solid transparent;
+  gap: 1.25rem;
+  position: absolute;
+  z-index: -1;
+  max-height: 0;
+  opacity: 0;
+  top: 3rem;
+  right: 0;
+  &[data-state="true"] {
+	z-index: 999;
+	max-height: initial;
+	opacity: 1;
+	box-shadow: -9px 10px 11px 0px rgba(0, 0, 0, 0.25);
+	border: 2px solid var(--accentColor);
 
+  }
+}
 .tableheading {
   color: #929398;
   font-size: .625rem;

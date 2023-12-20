@@ -1,6 +1,6 @@
-import { action, IObservableArray, makeObservable, observable } from 'mobx'
+import { action, flow, IObservableArray, makeObservable, observable } from 'mobx'
 import agent from 'utils/agent'
-import { Company } from 'stores/companyStore'
+import { Company, CompanyStore } from 'stores/companyStore'
 
 enum PermissionName {
   'Компании',
@@ -42,6 +42,19 @@ export class PermissionStore {
   permissionsMap = observable.map()
   loadingPermissions: boolean = false
   errors?: string
+  loadCompanyPermissions = flow(function*(companyStore: CompanyStore) {
+    companyStore.loadingCompanies = false
+    try {
+      // const permissions =
+    }
+    catch (e) {
+      companyStore.loadingError = true
+      new Error('Create Company failed')
+    }
+    finally {
+      companyStore.loadingCompanies = true
+    }
+  })
 
   constructor() {
     makeObservable(this, {

@@ -204,8 +204,9 @@ export const SvgChevron = ({ className }: { className?: string | undefined }) =>
     />
   </svg>
 )
-export const SvgFilter = ({ className }: { className?: string | undefined }) => (
-  <svg className={className} width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>
+export const SvgFilter = ({ className,
+...props }: { className?: string | undefined}) => (
+  <svg {...props} className={className} width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path
       fillRule='evenodd'
       clipRule='evenodd'

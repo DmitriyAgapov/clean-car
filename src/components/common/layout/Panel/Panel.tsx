@@ -23,7 +23,7 @@ export enum PanelRouteStyle {
     groups = 'groups',
 }
 
-type PanelProps = {
+export type PanelProps = {
     search?: boolean
     children?: ReactNode | ReactNode[]
     header?: ReactNode | ReactNode[]

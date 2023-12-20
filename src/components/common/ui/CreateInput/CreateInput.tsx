@@ -70,8 +70,6 @@ const CreateInput = ({
       )
       break
     case 'select':
-
-
       input = (
         <SelectCustom label={text} className={'bg-white account-form__input  w-full flex-grow  flex-1'} options={options}
           // @ts-ignore

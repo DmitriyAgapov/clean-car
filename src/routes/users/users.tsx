@@ -66,6 +66,7 @@ const UsersPage = () => {
           },
         }))}
         state={store.usersStore.loadingUsers}
+        initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]}
       />
     </Section>
   )

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Layout from 'components/common/layout/Layout/Layout'
 import styles from './account.module.scss'
 import Sidebar from 'components/common/layout/Sidebar/Sidebar'
@@ -75,7 +75,9 @@ const sidebarMenu: { icon: React.ReactNode; title: string; url: string }[] = [
 export default function AccountPage() {
     const store = useStore()
     const { appStore, userStore, authStore } = store
-
+    useEffect(() => {
+        console.log(store);
+    }, []);
     return (
         <Layout
             className={'page-account'}

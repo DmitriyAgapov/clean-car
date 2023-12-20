@@ -54,7 +54,7 @@ export class UsersStore {
     let user
     try {
       const { data } = yield agent.Users.getUser({ company_id: companyid, id: id })
-      console.log(data)
+
       user = data
     } catch (error) {
       new Error('get User failed')

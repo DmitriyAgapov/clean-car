@@ -31,6 +31,8 @@ import AccountPage from './routes/account/account'
 import CompanyPageCreateAction from 'routes/company/companyCreateAction'
 import CompaniesPage from "./routes/company/companies";
 import CompanyPage from "./routes/company/company";
+import CompanyPageEditAction from "routes/company/companyEditAction";
+import UsersPageCreateAction from "routes/users/usersCreateAction";
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
@@ -81,6 +83,12 @@ const router = createBrowserRouter([
             element: <UserPage />,
             loader: userLoader,
           },
+          {
+            path: 'create',
+            element: <UsersPageCreateAction />,
+            loader: userLoader,
+          },
+
         ],
       },
       {
@@ -92,12 +100,18 @@ const router = createBrowserRouter([
             path: ':companytype/:id',
             element: <CompanyPage />,
             loader: companyLoader,
-
+            children: [
+              {
+                path: 'edit',
+                element: <CompanyPageEditAction />,
+              }
+            ]
           },
           {
             path: 'create',
             element: <CompanyPageCreateAction />,
-          },
+          }
+
         ],
       },
       {

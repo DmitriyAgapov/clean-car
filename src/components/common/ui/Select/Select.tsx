@@ -9,9 +9,7 @@ const theme = createTheme({
 	 const [tempValue, setValue] = useState(value)
 	 const ref = useRef<HTMLInputElement>(null);
 	 const { values, submitForm , setValues} = useFormikContext();
-	 useEffect(() => {
-		 console.log(values);
-	 }, [values]);
+
 	 const handleSelectChange = (event:any) => {
 		 setValue(event)
 		 // @ts-ignore
