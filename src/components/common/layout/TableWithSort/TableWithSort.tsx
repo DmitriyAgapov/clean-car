@@ -1,15 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import styles from './TableWithSort.module.scss'
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
-import { SvgChevron, SvgFilter, SvgLoading, SvgSearch, SvgSort } from "components/common/ui/Icon";
+import { SvgChevron, SvgLoading, SvgSort } from 'components/common/ui/Icon'
 import Chips from 'components/common/ui/Chips/Chips'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Pagination from 'components/common/Pagination/Pagination'
-import DataFilter from "components/common/layout/TableWithSort/DataFilter";
+import DataFilter from 'components/common/layout/TableWithSort/DataFilter'
 import TableSearch from 'components/common/layout/TableWithSort/TableSearch'
 import { useDebouncedState } from '@mantine/hooks'
 import label from 'utils/labels'
 import { useWindowDimensions } from 'utils/utils'
+import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 
 type TableWithSortProps = {
     data: any[]
@@ -138,6 +139,7 @@ const RowData = (props: any) => {
             <div className={styles.mobileIcon} onClick={() => setOpen(prevState => !prevState)}>
                 <SvgChevron/>
             </div>
+            <Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/>
         </tr>
     )
 }

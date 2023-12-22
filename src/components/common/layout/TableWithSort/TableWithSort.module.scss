@@ -46,6 +46,9 @@
 	  svg {
 		margin: 0;
 	  }
+	  a {
+		display: none !important;
+	  }
 	  td {
 		padding-left: 0 !important;
 		padding: .375rem 0;
@@ -56,6 +59,7 @@
 		height: 0;
 		padding: 0;
 		overflow: hidden;
+
 		&:before {
 		  content: attr(data-label);
 		  font-size: .625rem;
@@ -102,7 +106,9 @@
 			padding: .75rem 0;
 		  }
 		}
-
+		a {
+		  display: inline-flex !important;
+		}
 	  }
 	}
 

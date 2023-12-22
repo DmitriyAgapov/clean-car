@@ -43,7 +43,7 @@
 	padding-left: 1.25rem;
   }
   section {
-	& > [data-variant="dataPadding"] {
+	& > [data-variant="dataPadding"], & > [data-variant="dataPadding"],  {
 	  margin: 0 -1.25rem;
 	}
   }
