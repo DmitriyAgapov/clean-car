@@ -2,7 +2,7 @@ import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
+import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
@@ -28,9 +28,10 @@ const CompaniesPage = () => {
               className={'inline-block'}
               color={HeadingColor.accent}
             />
-            <LinkStyled
+            <Button
               text={'Создать компанию'}
-              to={'create'}
+              action={() => navigate('create')}
+              trimText={true}
               // action={() => store.companyStore.addCompany()}
               className={'inline-flex'}
               directory={ButtonDirectory.directory}

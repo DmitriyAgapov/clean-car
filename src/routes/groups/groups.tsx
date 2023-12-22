@@ -28,6 +28,7 @@ export default observer(function GroupsPage() {
                             color={HeadingColor.accent}
                         />
                         <Button
+                          trimText={true}
                             text={'Создать группу'}
                             action={() => navigate('/account/groups/create')}
                             className={'inline-flex'}

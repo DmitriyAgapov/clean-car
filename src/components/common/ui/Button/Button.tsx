@@ -30,6 +30,7 @@ export type ButtonProps = {
   size?: ButtonSizeType
   action?: EventHandler<any>
   className?: string
+  trimText?: boolean
   href?: string
   type?: string
   directory?: ButtonDirectory
@@ -42,6 +43,7 @@ const Button = ({
   className,
   directory,
   type,
+  trimText,
   variant = ButtonVariant.default,
   action,
   ...props
@@ -50,6 +52,7 @@ const Button = ({
     data-directory={directory}
     data-variant={variant}
     data-size={size}> {text}</button>
+  // @ts-ignore
   return (
     <a
       href={href}
@@ -60,7 +63,7 @@ const Button = ({
       onClick={action}
       {...props}
     >
-      {text}
+      {trimText && typeof text === "string" ? text.split(' ')[0] : text}
     </a>
   )
 }

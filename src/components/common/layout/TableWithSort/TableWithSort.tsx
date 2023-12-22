@@ -102,7 +102,7 @@ const RowData = (props: any) => {
     }
 
     const propsRender = () => {
-        console.log(props);
+      
         const ar = []
         for (const key in props) {
             if (typeof props[key] !== 'object') {

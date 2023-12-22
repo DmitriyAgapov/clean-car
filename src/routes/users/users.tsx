@@ -39,6 +39,7 @@ const UsersPage = () => {
             />
 
             <Button
+              trimText={true}
               text={'Добавить пользователя'}
               action={() => navigate('/account/users/create')}
               className={'inline-flex'}
