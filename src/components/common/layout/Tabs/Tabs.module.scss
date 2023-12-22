@@ -22,7 +22,7 @@
   grid-template-rows: repeat(5, minmax(0, auto));
   &[data-name="info"] {
     @apply grid-cols-3;
-    grid-template-columns: 1.5ft 2fr 0.5fr;
+    grid-template-columns: 1.5fr 2fr 0.5fr;
   }
 
 }

@@ -190,9 +190,15 @@ user-select: none ;
 
 .Button[data-variant="text"] {
   cursor: pointer;
-  @apply font-body text-sm hover:text-accent;
+  font-size: 0;
+  @apply font-body  hover:text-accent lg:text-sm;
+
   svg {
-	width: 1em;
-	height: 1em;
+	min-width: 1.5rem;
+	min-height: 1.5rem;
+	@screen lg {
+	  min-width: 1rem;
+	  min-height: 1rem;
+	}
   }
 }
