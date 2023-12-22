@@ -5,7 +5,7 @@ import { SectionType } from '../Section/Section'
 import { useStore } from "stores/store";
 import Burger from 'components/common/ui/Burger/Burger'
 import { observer } from 'mobx-react-lite';
-import { useOutsideClick } from "utils/utils";
+import { useOutsideClick, useWindowDimensions } from "utils/utils";
 import Logo, { LogoProps } from "components/common/layout/Logo/Logo";
 
 type SidebarProps = {
@@ -26,11 +26,13 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   const ref = useOutsideClick(() => {
     store.appStore.setAsideClose()
   })
+  const {width} = useWindowDimensions()
+
   return (
     <>
       {store.appStore.asideState && <BackDrop/>}
     <aside ref={ref} className={styles.Sidebar} {...props} data-state={appStore.asideState}>
-      {store.userStore.currentUser && <Logo position={'aside'}/>}
+      {(width && width < 960) && <Logo position={'aside'}/>}
 
       <nav>
         <ul>
