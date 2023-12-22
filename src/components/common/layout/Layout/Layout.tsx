@@ -10,6 +10,7 @@ import '../../../../assets/styles.scss'
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
 import { entries, toJS, values } from 'mobx'
+import { useWindowDimensions } from "utils/utils";
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -43,11 +44,13 @@ interface ChildrenProps {
 
 const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent }) => {
   const store = useStore()
+  const {width} = useWindowDimensions()
+
   const { appStore, userStore, authStore } = store;
   return (
     <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
       <Header>
-        {!store.userStore.currentUser && <Logo className={' logo-header'}/>}
+        {(width  && width > 960) && <Logo className={' logo-header'}/>}
         {headerContent}
         <Burger className={'tablet:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
       </Header>
