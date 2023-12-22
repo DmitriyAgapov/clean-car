@@ -34,7 +34,7 @@ import CompanyPage from "./routes/company/company";
 import CompanyPageEditAction from "routes/company/companyEditAction";
 import UsersPageCreateAction from "routes/users/usersCreateAction";
 import FilialsPage from 'routes/filials/filials'
-import { createTheme, Input, MantineProvider } from '@mantine/core'
+import { createTheme, Input, Select, MantineProvider } from '@mantine/core'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 const theme = createTheme({
@@ -44,6 +44,13 @@ const theme = createTheme({
         input: styles.input,
       },
     }),
+    Select: Select.extend({
+        classNames: {
+          input: "bg-white",
+          dropdown: "bg-white"
+
+        }
+    })
   },
 });
 const router = createBrowserRouter([

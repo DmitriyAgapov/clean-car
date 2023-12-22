@@ -27,11 +27,11 @@ export function FormStep1(props: {
       bodyClassName={!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'}
       footer={
         <div className={'accounts-group_header gap-4 text-[#606163] grid font-medium'}>
-          <div className={'flex justify-end gap-5 justify-self-end'}>
+          <div className={'lg:flex block justify-end gap-5 justify-self-end'}>
             <Button
               text={'Отменить'}
               action={props.action}
-              className={'float-right'}
+              className={'float-right lg:mb-0 mb-5'}
               variant={ButtonVariant['accent-outline']}
             />
 
