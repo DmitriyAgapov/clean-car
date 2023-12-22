@@ -1,5 +1,6 @@
 import React, { EventHandler, ReactNode } from 'react'
 import styles from './Button.module.scss'
+import { useWindowDimensions } from "utils/utils";
 
 export enum ButtonVariant {
   tech = 'tech',
@@ -48,6 +49,8 @@ const Button = ({
   action,
   ...props
 }: ButtonProps) => {
+  const {width} = useWindowDimensions()
+
   if(type === 'submit') return  <button type={'submit'} className={styles.Button + ' ' + className}
     data-directory={directory}
     data-variant={variant}
@@ -63,7 +66,7 @@ const Button = ({
       onClick={action}
       {...props}
     >
-      {trimText && typeof text === "string" ? text.split(' ')[0] : text}
+      {(width && width < 960 && trimText && typeof text === "string") ? text.split(' ')[0] : text}
     </a>
   )
 }
