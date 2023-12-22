@@ -48,7 +48,7 @@ export interface Companies {
 }
 
 export class CompanyStore {
-    companies = observable.array()
+    companies = observable.array([])
     companiesPerformers = observable.array()
     loadingCompanies: boolean = false
     companyForm: PerformerProfile & CustomerProfile = observable.object({

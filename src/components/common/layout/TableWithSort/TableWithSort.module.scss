@@ -46,9 +46,7 @@
 	  svg {
 		margin: 0;
 	  }
-	  a {
-		display: none !important;
-	  }
+
 	  td {
 		padding-left: 0 !important;
 		padding: .375rem 0;
@@ -289,4 +287,7 @@
   svg {
 	@apply w-6 h-6 rotate-180 text-gray-2;
   }
+}
+.mobileButton {
+
 }

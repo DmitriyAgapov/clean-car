@@ -52,7 +52,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
       <Header>
         {(width  && width > 960) && <Logo className={' logo-header'}/>}
         {headerContent}
-        <Burger className={'tablet:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
+        <Burger className={'lg:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
       </Header>
       <MobileMenu items={sidebarMenu} />
       <main className={'!contents'}>{children}</main>

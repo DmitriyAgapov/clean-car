@@ -102,7 +102,7 @@ const RowData = (props: any) => {
     }
 
     const propsRender = () => {
-      
+
         const ar = []
         for (const key in props) {
             if (typeof props[key] !== 'object') {
@@ -136,10 +136,10 @@ const RowData = (props: any) => {
     return (
         <tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : void null} data-state-mobile={open}>
             {propsRender()}
-            <div className={styles.mobileIcon} onClick={() => setOpen(prevState => !prevState)}>
+            <td className={styles.mobileIcon} onClick={() => setOpen(prevState => !prevState)}>
                 <SvgChevron/>
-            </div>
-            <Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'!hidden w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/>
+            </td>
+            <td className={styles.mobileButton}><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'!hidden w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>
         </tr>
     )
 }

@@ -39,7 +39,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
             return (
               <li key={`item-${index}`} className={styles.listItem} data-active={location.pathname.includes(i.url)}>
                 <span>{i.icon}</span>
-                <Link className={styles.navLink} to={i.url}>
+                <Link className={styles.navLink} onClick={() => store.appStore.setAsideClose()} to={i.url}>
                   {i.title}
                 </Link>
               </li>
