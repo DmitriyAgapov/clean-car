@@ -139,7 +139,7 @@ const RowData = (props: any) => {
             <div className={styles.mobileIcon} onClick={() => setOpen(prevState => !prevState)}>
                 <SvgChevron/>
             </div>
-            <Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/>
+            <Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'!hidden w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/>
         </tr>
     )
 }
