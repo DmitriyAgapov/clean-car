@@ -134,7 +134,7 @@ const RowData = (props: any) => {
 
     const [open, setOpen] = useState(false);
     return (
-        <tr className={styles.tableRow} onClick={(width && width > 960) ? handleClick : void null} data-state-mobile={open}>
+        <tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : void null} data-state-mobile={open}>
             {propsRender()}
             <div className={styles.mobileIcon} onClick={() => setOpen(prevState => !prevState)}>
                 <SvgChevron/>

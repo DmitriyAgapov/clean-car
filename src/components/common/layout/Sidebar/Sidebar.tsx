@@ -15,23 +15,20 @@ type SidebarProps = {
     items?: { icon: React.ReactNode | never; title: string; url: string }[]
 }
 
-function BackDrop() {
-    return <div className={styles.backdrop}></div>
+function BackDrop({action}:any) {
+    return <div className={styles.backdrop} onClick={action}></div>
 }
 
 const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   const location = useLocation()
   const store = useStore()
   const {appStore} = store
-  const ref = useOutsideClick(() => {
-    store.appStore.setAsideClose()
-  })
   const {width} = useWindowDimensions()
 
   return (
     <>
-      {store.appStore.asideState && <BackDrop/>}
-    <aside ref={ref} className={styles.Sidebar} {...props} data-state={appStore.asideState}>
+      {store.appStore.asideState && <BackDrop action={() => store.appStore.setAsideClose()}/>}
+    <aside  className={styles.Sidebar} {...props} data-state={appStore.asideState}>
       {(width && width < 960) && <Logo position={'aside'}/>}
 
       <nav>
