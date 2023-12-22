@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { ThemeProvider } from '@material-tailwind/react'
+// @ts-ignore
+import styles from './assets/_forms.scss'
 import {
   authUser,
   companyLoader,
@@ -16,7 +17,6 @@ import GroupsPage from './routes/groups/groups'
 import GroupPage from './routes/groups/group'
 import GroupPageEditAction from './routes/groups/groupEditAction'
 import GroupPageCreateAction from './routes/groups/groupCreateAction'
-import { theme } from "theme/theme"
 import UserPage from './routes/users/user'
 import MyProfilePage from './routes/account/myProfile'
 import UsersPage from './routes/users/users'
@@ -33,9 +33,19 @@ import CompaniesPage from "./routes/company/companies";
 import CompanyPage from "./routes/company/company";
 import CompanyPageEditAction from "routes/company/companyEditAction";
 import UsersPageCreateAction from "routes/users/usersCreateAction";
+import FilialsPage from 'routes/filials/filials'
+import { createTheme, Input, MantineProvider } from '@mantine/core'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-
+const theme = createTheme({
+  components: {
+    Input: Input.extend({
+      classNames: {
+        input: styles.input,
+      },
+    }),
+  },
+});
 const router = createBrowserRouter([
   {
     path: '/',
@@ -100,12 +110,11 @@ const router = createBrowserRouter([
             path: ':companytype/:id',
             element: <CompanyPage />,
             loader: companyLoader,
-            children: [
-              {
-                path: 'edit',
-                element: <CompanyPageEditAction />,
-              }
-            ]
+          },
+           {
+            path: ':companytype/:id/edit',
+            element: <CompanyPageEditAction />,
+             loader: companyLoader,
           },
           {
             path: 'create',
@@ -113,6 +122,10 @@ const router = createBrowserRouter([
           }
 
         ],
+      },
+      {
+        path: 'filials',
+        element: <FilialsPage />
       },
       {
         path: 'groups',
@@ -139,10 +152,13 @@ const router = createBrowserRouter([
 ])
 root.render(
   <StoreProvider>
-    <ThemeProvider value={theme}>
+    <MantineProvider theme={theme} defaultColorScheme={'dark'}>
+    {/* <ThemeProvider value={theme}> */}
       <React.StrictMode>
         <RouterProvider router={router} />
       </React.StrictMode>
-    </ThemeProvider>
+    {/* </ThemeProvider> */}
+
+    </MantineProvider>
   </StoreProvider>,
 )

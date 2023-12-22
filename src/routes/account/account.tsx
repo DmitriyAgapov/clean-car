@@ -75,9 +75,7 @@ const sidebarMenu: { icon: React.ReactNode; title: string; url: string }[] = [
 export default function AccountPage() {
     const store = useStore()
     const { appStore, userStore, authStore } = store
-    useEffect(() => {
-        console.log(store);
-    }, []);
+
     return (
         <Layout
             className={'page-account'}

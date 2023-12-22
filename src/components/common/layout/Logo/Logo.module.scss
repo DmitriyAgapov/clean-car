@@ -2,6 +2,17 @@
 	display: block;
   align-self: center;
   user-select: none;
+  &[data-position="aside"] {
+	color: red;
+	padding: 2.5rem 1.25rem;
+	a {
+	  color: var(--accentColor);
+	  font-size: 1.625rem;
+	}
+	span {
+	  display: none;
+	}
+  }
 }
 .routeName {
   font-family: 'RF Dewi Expanded';

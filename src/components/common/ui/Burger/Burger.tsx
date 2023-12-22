@@ -5,13 +5,14 @@ import { useStore } from 'stores/store'
 
 type BurgerProps = {
   className?: string
+  action: () => void
 }
-const Burger = ({ className, ...props }: BurgerProps) => {
+const Burger = ({ className, action, ...props }: BurgerProps) => {
   const store = useStore()
   return (
     <a
       className={styles.Burger + ' ' + className}
-      onClick={() => store.appStore.setBurgerState()}
+      onClick={action}
       data-state={store.appStore.burgerState}
     >
       <span />

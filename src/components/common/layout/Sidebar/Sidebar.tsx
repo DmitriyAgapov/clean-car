@@ -2,17 +2,36 @@ import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import styles from './Sidebar.module.scss'
 import { SectionType } from '../Section/Section'
+import { useStore } from "stores/store";
+import Burger from 'components/common/ui/Burger/Burger'
+import { observer } from 'mobx-react-lite';
+import { useOutsideClick } from "utils/utils";
+import Logo, { LogoProps } from "components/common/layout/Logo/Logo";
 
 type SidebarProps = {
-  children?: React.ReactNode | React.ReactNode[]
-  type?: SectionType
-  items?: { icon: React.ReactNode | never; title: string; url: string }[]
+    children?: React.ReactNode | React.ReactNode[]
+    type?: SectionType
+
+    items?: { icon: React.ReactNode | never; title: string; url: string }[]
 }
+
+function BackDrop() {
+    return <div className={styles.backdrop}></div>
+}
+
 const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   const location = useLocation()
-
+  const store = useStore()
+  const {appStore} = store
+  const ref = useOutsideClick(() => {
+    store.appStore.setAsideClose()
+  })
   return (
-    <aside className={styles.Sidebar} {...props}>
+    <>
+      {store.appStore.asideState && <BackDrop/>}
+    <aside ref={ref} className={styles.Sidebar} {...props} data-state={appStore.asideState}>
+      {store.userStore.currentUser && <Logo position={'aside'}/>}
+
       <nav>
         <ul>
           {items?.map((i, index) => {
@@ -31,7 +50,9 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       </nav>
       {children}
     </aside>
+
+  </>
   )
 }
 
-export default Sidebar
+export default observer(Sidebar)

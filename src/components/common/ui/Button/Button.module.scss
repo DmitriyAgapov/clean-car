@@ -49,6 +49,11 @@ user-select: none ;
 	font-family: Montserrat, sans-serif !important;
 	text-transform: initial !important;
 	color: black;
+	@screen lg-max {
+	  padding: 0 1.125rem;
+	  font-size: .75rem;
+	  height: 2rem;
+	}
   }
 
   &[data-variant="accent"] {

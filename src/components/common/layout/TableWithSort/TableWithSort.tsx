@@ -1,12 +1,15 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './TableWithSort.module.scss'
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
-import { SvgFilter, SvgLoading, SvgSearch, SvgSort } from 'components/common/ui/Icon'
+import { SvgChevron, SvgFilter, SvgLoading, SvgSearch, SvgSort } from "components/common/ui/Icon";
 import Chips from 'components/common/ui/Chips/Chips'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Pagination from 'components/common/Pagination/Pagination'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import SelectPure from 'components/common/ui/Select/SelectPure'
+import DataFilter from "components/common/layout/TableWithSort/DataFilter";
+import TableSearch from 'components/common/layout/TableWithSort/TableSearch'
+import { useDebouncedState } from '@mantine/hooks'
+import label from 'utils/labels'
+import { useWindowDimensions } from 'utils/utils'
 
 type TableWithSortProps = {
     data: any[]
@@ -28,6 +31,7 @@ const RowHeading = ({ ar, sort, action }: any) => {
         count: 0,
     })
     const handleSortKey = (index: number) => {
+        console.log('click');
         let newVal = {
             index: index,
             reversed: false,
@@ -97,8 +101,8 @@ const RowData = (props: any) => {
     }
 
     const propsRender = () => {
-        const ar = []
         console.log(props);
+        const ar = []
         for (const key in props) {
             if (typeof props[key] !== 'object') {
                 if (props[key] === 'Активна') {
@@ -114,7 +118,7 @@ const RowData = (props: any) => {
                 } else {
                     if (key !== 'id' && key !== 'companyId') {
                         ar.push(<td key={key}
-                          className={styles.tableCell}>
+                          className={styles.tableCell} data-label={label(key)}>
                             {' '}
                             {props[key]}{' '}
                         </td>,)
@@ -124,72 +128,20 @@ const RowData = (props: any) => {
         }
         return ar
     }
+    // @ts-ignore
+    const {width} = useWindowDimensions()
 
+    const [open, setOpen] = useState(false);
     return (
-        <tr className={styles.tableRow} onClick={handleClick}>
+        <tr className={styles.tableRow} onClick={(width && width > 960) ? handleClick : void null} data-state-mobile={open}>
             {propsRender()}
+            <div className={styles.mobileIcon} onClick={() => setOpen(prevState => !prevState)}>
+                <SvgChevron/>
+            </div>
         </tr>
     )
 }
 
-export const TableSearch = ({ inputProps, action }: { inputProps?: { list?: string }; action?: (e: any) => void }) => (
-    <div className={'form-search relative h-10'}>
-        <input
-            type={'search'}
-            placeholder={'Быстрый поиск'}
-            onChange={action}
-            className={'search-dashboard'}
-            {...inputProps}
-        />
-        <SvgSearch />
-    </div>
-)
-
-interface FilterBarProps {
-    state: boolean
-    filters: {
-        filterData: {
-            label: string
-            options: any[]
-        }[]
-    }
-}
-
-function FilterBar({ filters, state = false }: FilterBarProps) {
-    return (
-        <div className={styles.filterBar} data-state={state}>
-            {filters.filterData.map((f) => {
-                console.log(f.options)
-                return <SelectPure label={f.label} value={f.options[0]} name={f.label} options={f.options} />
-            })}
-            <Button
-                text={'Применить'}
-                variant={ButtonVariant.accent}
-                size={ButtonSizeType.sm}
-                className={'!rounded-xl'}
-            />
-            <Button
-                text={'Сбросить'}
-                variant={ButtonVariant['accent-outline']}
-                size={ButtonSizeType.sm}
-                className={'!rounded-xl'}
-            />
-        </div>
-    )
-}
-
-function DataFilter(filterData: any) {
-    const [state, setState] = useState(false)
-
-    return (
-        <div className={styles.btnFilter}>
-            <a onClick={() => setState((prevState) => !prevState)}>
-                <SvgFilter />
-            </a>
-            <FilterBar state={state} filters={filterData} />
-        </div>
-    )
-}
 
 const TableWithSort = ({
     variant,
@@ -204,6 +156,7 @@ const TableWithSort = ({
     initFilterParams,
     ...props
 }: TableWithSortProps) => {
+
     const [filterString, setFilterString] = React.useState({
         index: 0,
         reversed: false,
@@ -216,11 +169,28 @@ const TableWithSort = ({
         setCurrentPage(value)
     }
 
-    //Сортировка результатов
+    // Быстрый поиск
 
+    const [fastSearchString, setFastSearchString] = useDebouncedState('', 200)
+
+    const fastSearch = React.useCallback(() => {
+        const newAr: any[] = []
+        dataSorted.forEach(item => {
+            if(JSON.stringify(item).includes(fastSearchString)) {
+                newAr.push(item)
+            }
+        })
+        console.log('fastSearch', [newAr]);
+        setSortedData(newAr)
+    }, [fastSearchString])
+
+    const handleFastSearch = (e: any) => {
+        setFastSearchString(e.target.value)
+    }
+
+    //Сортировка результатов
     const someData = React.useCallback(() => {
-        console.log(data);
-        let sortData = Object.keys(data[0])[filterString.index]
+        let sortData = Object.keys(dataSorted[0])[filterString.index]
         const fData = dataSorted.sort((a, b) => {
             if (a[sortData] < b[sortData]) {
                 return 1
@@ -231,10 +201,12 @@ const TableWithSort = ({
             return 0
         })
         if (!filterString.reversed) {
+
             setSortedData(fData.reverse())
         } else {
             setSortedData(fData)
         }
+        console.log('someData');
     }, [filterString])
 
     //Фильтрация результатов
@@ -254,7 +226,6 @@ const TableWithSort = ({
             })
             return tempAr
         }
-
         // @ts-ignore
         if(filterParams) return filterParams.map((item: any) => ({
             label: item.label,
@@ -264,17 +235,18 @@ const TableWithSort = ({
 
     const RowDataMemoized = React.useMemo(() => {
 
-        someData()
+
         return dataSorted
             .slice(currentPage == 1 ? currentPage - 1 : (currentPage - 1) * 10, currentPage * 10)
             .map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
-    }, [filterString, dataSorted, currentPage])
+    }, [filterString, currentPage, fastSearchString])
 
     const handleHeaderAction = (props: any) => {
         setFilterString({
             index: props.index,
             reversed: props.reversed,
         })
+        someData()
     }
 
     if (state) return <SvgLoading className={'m-auto'} />
@@ -288,8 +260,7 @@ const TableWithSort = ({
             headerClassName={''}
             header={
                 <>
-                    {' '}
-                    {search && <TableSearch />}
+                    {search && <TableSearch action={handleFastSearch} />}
                     {filter && <DataFilter filterData={filteredData} />}
                 </>
             }

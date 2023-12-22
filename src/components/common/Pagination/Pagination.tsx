@@ -68,9 +68,7 @@ const Pagination = ({ itemsLength, currenPage, action }: PaginationProps) => {
     }, [totalPages, currenPage])
 
     if (itemsLength < 10) return null
-    useEffect(() => {
-        console.log(currenPage)
-    }, [currenPage])
+
 
     return (
         <div className={styles.Pagination}>

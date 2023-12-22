@@ -37,7 +37,7 @@ const InnerForm = ({ message }: { message: string }) => {
           </div>
           <div className={styles.inputGroup} data-form_error={errors.pwd && touched.pwd ? 'error' : null}>
             <label htmlFor='pswd'>Пароль</label>
-            <Field autoComplete='off' id='pwd' name='pwd' type='password' />
+            <Field a autoComplete='off' id='pwd' name='pwd' type='password' />
             {errors.pwd && touched.pwd ? <div className={'form-error'}>{errors.cleanm}</div> : null}
           </div>
           <div className={styles.actionGroup}>

@@ -38,11 +38,12 @@ const theme = createTheme({
 
 	 }
 
-	 return   <MantineProvider>
+	 return  (
 			 <Select
 				 ref={ref}
 				 withCheckIcon={false}
 					classNames={{
+						root: className,
 						dropdown: "rounded-[0.625rem] border-color-[var(--formBorder)] hover:border-accent",
 						wrapper: `rounded-[0.625rem] ${className}`,
 						input: `rounded-[0.625rem] border-color-[var(--formBorder)] h-10`,
@@ -54,7 +55,6 @@ const theme = createTheme({
 				label={label}
 			 value={tempValue}
 			data={options}
-		/>
- </MantineProvider>
+		/>)
  }
 	 export default SelectCustom

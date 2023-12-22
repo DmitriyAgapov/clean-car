@@ -6,7 +6,7 @@ import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
+import FormCreateCompany from '../../components/Form/FormCreateCompany/FormCreateCompany'
 
 export default function CompanyPageCreateAction(props: any) {
   const store = useStore()

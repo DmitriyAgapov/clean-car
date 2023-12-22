@@ -4,9 +4,10 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
+import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
 
 export default function CompanyPageEditAction(props: any) {
   const store = useStore()
@@ -22,25 +23,22 @@ export default function CompanyPageEditAction(props: any) {
       name: event.target.value,
     }))
   }
-  useEffect(() => {
-    console.log(store.companyStore.fullCompanyData);
-    console.log(location.pathname.includes('edit'));
-  }, []);
-
-  if (location.pathname.includes('edit')) return <Outlet />
+  // @ts-ignore
+  const {data} = useLoaderData()
+  console.log(data[0].data);
   return (
     <Section type={SectionType.default}>
       <Panel
         className={'col-span-full'}
         header={
           <>
-            <Button text={<><SvgBackArrow />Назад к списку компаний{' '}</>}
+            <Button text={<><SvgBackArrow />Назад к компании</>}
               className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-7'}
               action={() => navigate(-1)}
               variant={ButtonVariant.text}
             />
             <Heading
-              text={'Создание компании'}
+              text={'Редактирование компании'}
               variant={HeadingVariant.h1}
               className={'!mb-2 block'}
               color={HeadingColor.accent}
@@ -48,9 +46,7 @@ export default function CompanyPageEditAction(props: any) {
           </>
         }
       />
-
-      <FormCreateCompany />
-
+      <FormEditCompany />
     </Section>
   )
 }

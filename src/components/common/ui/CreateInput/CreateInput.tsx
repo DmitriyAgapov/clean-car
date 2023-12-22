@@ -1,6 +1,7 @@
-import { Option, Select } from '@material-tailwind/react'
+// import { Option, Select } from '@material-tailwind/react'
 import React from 'react'
-import SelectCustom from "components/common/ui/Select/Select";
+import SelectCustom from 'components/common/ui/Select/Select'
+import { Field, useFormik, useFormikContext } from 'formik'
 
 export type CreateInputProps = {
     text: string
@@ -80,13 +81,49 @@ const CreateInput = ({
     case 'depend':
       if (depend)
         input = (
-          <label className={'account-form__input w-full flex-grow ' + className} htmlFor={name}>
-            {text}
-            <input id={name} name={name} placeholder={placeholder} type={'number'} onChange={action} value={value} />
-          </label>
+            <label className={'account-form__input w-full flex-grow ' + className} htmlFor={name}>
+                {text}
+                <input
+                    id={name}
+                    name={name}
+                    placeholder={placeholder}
+                    type={'number'}
+                    onChange={action}
+                    value={value}
+                />
+            </label>
         )
       break
   }
   return <>{input}</>
+}
+
+interface CreateFormikInputProps {
+  fieldName: string
+  placeHolder: string
+  fieldType: string
+  label: string
+  className?: string
+}
+
+export function CreateFormikInput({fieldName, placeHolder = "", label, fieldType, className }:CreateFormikInputProps) {
+  const {errors, touched}:any = useFormikContext()
+  return <label
+    className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
+    htmlFor={fieldName}
+    data-form_error={errors[`${fieldName}`] && touched[fieldName] && 'error'}
+
+  >
+    {label}
+    <Field
+      id={fieldName}
+      name={fieldName}
+      placeholder={placeHolder}
+      type={fieldType}
+    />
+    {errors[fieldName] && touched[fieldName] ? (
+      <div className={'form-error'}>{errors[fieldName]}</div>
+    ) : null}
+  </label>
 }
 export default CreateInput

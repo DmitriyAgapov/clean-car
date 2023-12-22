@@ -110,12 +110,11 @@ export class CompanyStore {
           const { data, status } = yield agent.Account.getCompany(id)
           if (status === 200) {
               result = data.results
-              console.log(result)
-              console.log(get(this.fullCompanyData, `${id}`))
+
             // const oldData = get(this.fullCompanyData, `${id}`)
             remove(this.fullCompanyData, `${id}`)
             // set(this.fullCompanyData, `${id}`, result)
-            console.log(get(this.fullCompanyData, `${id}`))
+
               // this.fullCompanyData.set(2, {get()})
           }
       }
@@ -124,7 +123,7 @@ export class CompanyStore {
         new Error('get users failed')
       }
       finally {
-        console.log(this.fullCompanyData);
+
         this.loadingCompanies = true
       }
       return result
@@ -149,7 +148,7 @@ export class CompanyStore {
           data: users.data.results,
           label: 'Сотрудники'
         } as any;
-        console.log(  data);
+
         // @ts-ignore
         set(this.fullCompanyData, {[data.company.data.id]: data});
       }
@@ -207,13 +206,13 @@ export class CompanyStore {
           ...this.companyForm,
           ...obj
         }
-      console.log(this.companyForm);
+
     }
     getCompanies() {
         return this.companies
     }
     getCompanyFullData(id: number) {
-      console.log(this.fullCompanyData);
+
         return get(this.fullCompanyData, `${id}`)
     }
 

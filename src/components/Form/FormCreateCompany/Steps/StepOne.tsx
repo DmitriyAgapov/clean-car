@@ -38,13 +38,6 @@ export function FormStep1(props: {
             {values.application_type == 'Заказчик' ? (
               <Button
                 text={'Дальше'}
-                // action={async () => {
-                //   // @ts-ignore
-                //   await store.permissionStore.createPermissionStoreAdmin(changes)
-                //   setTimeout(() => navigate('/account/groups'), 500)
-                //   // navigate('/account/groups')
-                // }}
-                // action={(event) => handleSubmit(event)}
                 action={props.action1}
                 className={'float-right'}
                 variant={ButtonVariant.accent}

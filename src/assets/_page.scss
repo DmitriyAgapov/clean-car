@@ -11,13 +11,8 @@
 	  margin-top: clamp(1rem, 100%, 2rem);
 	}
   }
-
-  aside + * {
-	padding-left: 2.5rem;
-  }
-
   .logo-header {
-	display: flex;
+	display: block;
 	flex-flow: column;
 	flex: 0 1 14rem;
 	padding: .75rem 1.125rem;
@@ -38,11 +33,19 @@
 	  color: rgba(23, 22, 22, 0.76);
 	  letter-spacing: .1em;
 	}
+	@screen lg {
+	  display: flex;
+	}
   }
 
   & > footer {
 	grid-column: 2/4;
 	padding-left: 1.25rem;
+  }
+  section {
+	& > [data-variant="dataPadding"] {
+	  margin: 0 -1.25rem;
+	}
   }
 }
 
@@ -58,5 +61,6 @@
 	  margin-top: clamp(1rem, 100%, 4rem);
 	}
   }
+
 }
 

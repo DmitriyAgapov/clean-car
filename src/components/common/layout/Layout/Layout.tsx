@@ -47,9 +47,9 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   return (
     <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
       <Header>
-        <Logo />
+        {!store.userStore.currentUser && <Logo className={' logo-header'}/>}
         {headerContent}
-        <Burger className={'tablet:hidden'} />
+        <Burger className={'tablet:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
       </Header>
       <MobileMenu items={sidebarMenu} />
       <main className={'!contents'}>{children}</main>

@@ -14,7 +14,7 @@ label {
   line-height: 129%;
   color: var(--accentColor)
 }
-input, textarea {
+input, input, textarea, .input, .textarea {
   width: 100%;
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
@@ -27,12 +27,22 @@ input, textarea {
   border-radius: .625rem;
   border-color: var(--formBorder);
 
+	background-color: white;
   &:focus {
 	border-color: var(--formBorderSelected);
 	filter: drop-shadow(0 0 .625rem rgba(0, 255, 174, .5));
   }
+  &:autofill, &:-webkit-autofill {
+	background-color: white !important;
+  }
 }
-
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: black;
+  -webkit-box-shadow: 0 0 0px 40rem #ffff inset;
+  box-shadow: 0 0 20px 40px inset white;
+}
 
 .form-error {
   position: absolute;

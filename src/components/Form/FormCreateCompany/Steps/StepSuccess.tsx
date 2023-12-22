@@ -25,9 +25,7 @@ export function FormStepSuccess(props: {
   prop8?: (o: any) => { label: any; value: string }
 }) {
   const { values, touched, errors }:any = useFormikContext();
-  useEffect(() => {
-    console.log('app', values.application_type);
-  }, [values.application_type]);
+
   const store = useStore()
   return (
     <Panel variant={PanelVariant.textPadding}

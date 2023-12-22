@@ -34,7 +34,6 @@ export const companyLoader = async ({ params: { id, companytype } }: any) => {
         data: data.results
       })
 
-      console.log(fullCompanyData);
   }
   await companyStore.loadCompanies()
   await catalogStore.getCities()

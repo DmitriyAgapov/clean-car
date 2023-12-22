@@ -12,6 +12,7 @@ export class AppStore {
   tokenFull: {} | null = null
   appLoaded = false
   burgerState: boolean = false
+  asideState: boolean = false
   appType: UserTypeEnum | string = ''
   bodyRef = document.body
   modal: {
@@ -33,6 +34,7 @@ export class AppStore {
       appRouteName: observable,
       appLoaded: observable,
       burgerState: observable,
+      asideState: observable,
       appTheme: observable,
       setToken: action,
       appType: observable,
@@ -114,6 +116,23 @@ export class AppStore {
     }
     this.burgerState = !this.burgerState
   }
+  setAsideClose() {
+    if (!this.asideState) {
+      this.bodyRef.style.overflow = 'hidden'
+    } else {
+      this.bodyRef.style.overflow = 'initial'
+    }
+    this.asideState = false
+  }
+  setAsideState() {
+      if (!this.asideState) {
+        this.bodyRef.style.overflow = 'hidden'
+      } else {
+        this.bodyRef.style.overflow = 'initial'
+      }
+      this.asideState = !this.asideState
+    console.log(this.asideState);
+    }
 
   setAppLoaded() {
     this.bodyRef.style.overflow = 'initial'

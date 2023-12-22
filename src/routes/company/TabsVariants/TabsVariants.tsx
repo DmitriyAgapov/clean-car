@@ -20,7 +20,7 @@ type TabsVariantsProps = {
 } & TabsProps & {className?: string, children?: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps
 
 const TabsVariants = ({label, data, state, name, className, companyId, ...props}:TabsVariantsProps) => {
-  console.log(data);
+
   const store = useStore()
   let result
 

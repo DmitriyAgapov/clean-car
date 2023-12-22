@@ -4,13 +4,18 @@ import { observer } from 'mobx-react-lite'
 import { useStore } from 'stores/store'
 import { Link } from 'react-router-dom'
 
-const Logo = () => {
+export interface LogoProps {
+  className?: string
+  position?: string
+}
+
+const Logo = ({className = "", position = ""}:LogoProps) => {
   const store = useStore()
   const logoName = store.appStore.appName
   const routeName = store.appStore.appRouteName
 
   return (
-    <div className={styles.Logo + ' logo-header'} data-app-type={store.appStore.appType}>
+    <div className={styles.Logo + " " + className} data-app-type={store.appStore.appType} data-position={position}>
       <Link to={'/'} className={styles.logoName}>
         {logoName}
       </Link>

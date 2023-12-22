@@ -19,7 +19,7 @@ export type TabsProps = {
   data: any
 }
 const Tabs = ({ data }: TabsProps) => {
-  console.log(data.company.data.id);
+
   const store = useStore()
     const [state, setState] = useState('Основная информация');
   // useEffect(() => {

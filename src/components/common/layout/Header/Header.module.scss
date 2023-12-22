@@ -7,4 +7,8 @@
   @media screen and (min-width: 1300px) {
 	grid-column: 2/-2;
   }
+  @screen lg-max {
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
 }

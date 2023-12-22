@@ -34,9 +34,10 @@ const UsersPage = () => {
             <Heading
               text={'Пользователи'}
               variant={HeadingVariant.h1}
-              className={'inline-block'}
+              className={'inline-block mr-auto flex-1'}
               color={HeadingColor.accent}
             />
+
             <Button
               text={'Добавить пользователя'}
               action={() => navigate('/account/users/create')}

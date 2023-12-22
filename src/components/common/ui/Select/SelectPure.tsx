@@ -5,14 +5,13 @@ const theme = createTheme({
 });
  const SelectPure = ({label, name, value, className, options, action, ...props}:{label?: string, placeholder?: string,value: any | string | number,className?: string, name: string, options: any[] | any, action?: (event: any) => void}) => {
 	if(options.includes(true)) {
-		console.log('bbb');
-		console.log('bbb');
+
 		options = options.map((item:boolean) => {
 			if(item) return 'Активна'
 			return 'Деактивна'
 		})
 	}
-	 console.log(options);
+
 	 const ref = useRef<HTMLInputElement>(null);
 	const [curValue, setCurValue] = useState<string | null>(options[0])
 	 const handleChange = (e:any) => {

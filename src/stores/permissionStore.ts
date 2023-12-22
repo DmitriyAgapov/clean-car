@@ -84,7 +84,7 @@ export class PermissionStore {
       throw new Error('Fetch data companies failed')
     } finally {
       this.loadingPermissions = false
-      console.log(this.permissions)
+
     }
   }
 

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styles from './SelectFromList.module.scss'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import { TableSearch } from 'components/common/layout/TableWithSort/TableWithSort'
+import  TableSearch  from 'components/common/layout/TableWithSort/TableSearch'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import { SvgRightArrow } from 'components/common/ui/Icon'
 
@@ -79,7 +79,6 @@ const SelectFromList = ({items}:SelectFromListProps) => {
 	}
 	const selectCompany = (props: any) => {
 		let id = props.currentTarget.id.split('-')[1];
-		console.log(companies);
 		const indexInAr = companies.findIndex((el:any) => el.id == id)
 		const selected = []
 		selected.push(companies[indexInAr])
