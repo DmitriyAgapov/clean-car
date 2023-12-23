@@ -3,6 +3,7 @@ import agent from 'utils/agent'
 import type { AccountProps } from 'stores/permissionStore'
 import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'
+import user from "routes/users/user";
 
 export enum UserTypeEnum {
   admin = 'admin',

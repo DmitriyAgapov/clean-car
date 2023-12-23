@@ -16,7 +16,7 @@ enum PermissionName {
 }
 
 export type AccountProps = {
-  company: Company
+  company: Company<any>
   group: GroupProps
   id: number
 }

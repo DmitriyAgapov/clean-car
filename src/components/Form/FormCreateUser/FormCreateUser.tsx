@@ -4,37 +4,28 @@ import * as Yup from 'yup'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
 import { useNavigate } from 'react-router-dom'
-import { FormStep1 } from "components/Form/FormCreateCompany/Steps/StepOne";
-import { FormStepTwo } from "components/Form/FormCreateCompany/Steps/StepTwoThree";
-import { FormStepSuccess } from "components/Form/FormCreateCompany/Steps/StepSuccess";
-import { CreateFormikInput } from "components/common/ui/CreateInput/CreateInput";
-import SelectPure from "components/common/ui/Select/SelectPure";
-import Select from "components/common/ui/Select/Select";
-import SelectCustom from "components/common/ui/Select/Select";
+import { CreateFormikInput } from 'components/common/ui/CreateInput/CreateInput'
+import SelectCustom from 'components/common/ui/Select/Select'
+import { UserTypeEnum } from 'stores/userStore'
+import label from "utils/labels";
 
 const SignupSchema = Yup.object().shape({
-    company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-    address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
-    legal_address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
-    inn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-    ogrn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-    contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+    first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+    last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+    phone: Yup.string()
+    .max(16, 'Слишком длинное!')
+    .phone('RU', 'Введите правильный номер')
+    .required('Требуется номер телефона'),
+    email: Yup.string().email('Неверный email').required('Укажите email')
 })
 const initValues = {
-    company_name: '',
-    address: '',
-    city: '',
-    inn: '',
-    ogrn: '',
-    legal_address: '',
-    application_type: 'customer',
-    contacts: '',
-    service_percent: 0,
-    overdraft_sum: 123,
-    payment: 'Предоплата',
-    overdraft: 'Да',
-    executors_list: 'Да',
-    bill: '100',
+    first_name: '',
+    last_name: '',
+    phone: '',
+    email: '',
+    user_type: UserTypeEnum.executor,
+    group: null,
+    is_active: true
 }
 
 type FormCreateCompanyProps = {}
@@ -53,33 +44,33 @@ const FormCreateUser = () => {
         }, 1200)
     }
     const navigate = useNavigate()
-
+    console.log(store.permissionStore.permissions);
     return (
         <Formik
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
-                if (values.application_type === 'Исполнитель') {
-                    store.companyStore.addCompany({ company: { name: values.company_name, is_active: true, /* @ts-ignore */ city: values.city, }, address: values.address, connected_prices: 'string', inn: String(values.inn), ogrn: String(values.ogrn), legal_address: values.legal_address, contacts: values.contacts, service_percent: values.service_percent, application_type: values.application_type, }, 'Исполнитель',).then(() => changeStep(3))
+                if (values.user_type === UserTypeEnum.executor) {
+                    // store.companyStore.addCompany({ company: { name: values.company_name, is_active: true, /* @ts-ignore */ city: values.city, }, address: values.address, connected_prices: 'string', inn: String(values.inn), ogrn: String(values.ogrn), legal_address: values.legal_address, contacts: values.contacts, service_percent: values.service_percent, application_type: values.application_type, }, 'Исполнитель',).then(() => changeStep(3))
                 }
-                if (values.application_type === 'Заказчик') {
-                    const data = {
-                        ...values,
-                        company: {
-                            name: values.company_name,
-                            is_active: true, // @ts-ignore
-                            city: Number(values.city),
-                        },
-                        address: values.address,
-                        connected_prices: 'some prices',
-                        inn: String(values.inn),
-                        ogrn: String(values.ogrn),
-                        legal_address: values.legal_address,
-                        contacts: values.contacts,
-                        application_type: values.application_type,
-                        overdraft: values.overdraft === '1',
-                    }
-                    store.companyStore.addCompany(data, 'Заказчик').then(() => changeStep(3))
+                if (values.user_type === UserTypeEnum.customer) {
+                    // const data = {
+                    //     ...values,
+                    //     company: {
+                    //         name: values.company_name,
+                    //         is_active: true, // @ts-ignore
+                    //         city: Number(values.city),
+                    //     },
+                    //     address: values.address,
+                    //     connected_prices: 'some prices',
+                    //     inn: String(values.inn),
+                    //     ogrn: String(values.ogrn),
+                    //     legal_address: values.legal_address,
+                    //     contacts: values.contacts,
+                    //     application_type: values.application_type,
+                    //     overdraft: values.overdraft === '1',
+                    // }
+                    // store.companyStore.addCompany(data, 'Заказчик').then(() => changeStep(3))
                 }
             }}
         >
@@ -90,9 +81,9 @@ const FormCreateUser = () => {
                         <CreateFormikInput fieldName={'user_lastName'} label={'Фамилия'} placeHolder={""} fieldType={"text"} className={'col-span-3'}/>
                         <CreateFormikInput fieldName={'user_phone'} label={'Номер телефона'} placeHolder={""} fieldType={"tel"} className={'col-span-3'}/>
                         <CreateFormikInput fieldName={'user_email'} label={'E-mail'} placeHolder={""} fieldType={"email"} className={'col-span-3'}/>
-                        <SelectCustom value={""} name={'user_type'} label={'Тип'} options={['Администратор']} className={'col-span-2'}/>
-                        <SelectCustom value={""} name={'user_groups'} label={'Группа'} options={['Администратор']} className={'col-span-2'}/>
-                        <SelectCustom value={""} name={'user_status'} label={'Статус'} options={['Администратор']} className={'col-span-2'}/>
+                        <SelectCustom value={""} name={'user_type'} label={'Тип'} options={Object.entries(UserTypeEnum).map((item:any) => ({  label: label(item[0]), value: item[1] }))} className={'col-span-2'}/>
+                        <SelectCustom value={""} name={'user_groups'} label={'Группа'} options={store.permissionStore.permissions.map((item:any) => ({  label: item.name, value: String(item.id)}))} className={'col-span-2'}/>
+                        <SelectCustom value={""} name={'user_status'} label={'Статус'} options={[{  label: 'Активен', value: 'true'},{  label: 'Неактивен', value: 'false'}]} className={'col-span-2'}/>
                 </Form>
             )}
         </Formik>

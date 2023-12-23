@@ -48,6 +48,7 @@ export const usersLoader = async () => {
 }
 export const userLoader = async ({ params: { id, companyid } }: any) => {
   const user = await usersStore.getUser(companyid, id)
+  console.log(user);
   await permissionStore.loadPermissionAdmin()
   return {
     user: user,

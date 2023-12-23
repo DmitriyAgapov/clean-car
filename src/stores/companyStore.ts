@@ -1,98 +1,83 @@
-import { action, flow, get, makeObservable, observable, ObservableMap, remove, set } from 'mobx'
+import { action, flow, get, IObservableArray, makeObservable, observable, ObservableMap, remove, set } from 'mobx'
 import agent from 'utils/agent'
-import data from "utils/getData";
-
-import User from "routes/users/user";
 
 export enum Payment {
   postoplata = 'Постоплата',
   predoplata = 'Предоплата',
+}
+export enum CompanyType {
+  customer = "Компания-Заказчик",
+  performer = "Компания-Исполнитель",
+  phislico = "Физическое лицо"
 }
 
 export type City = {
   name?: string
   id?: number
 }
-export type Company = {
-  name: string
-  is_active: boolean
-  profile_id?: string
-  company_type?: string
-  city: City
-  id?: number
-}
-export type CustomerProfile = {
-  payment?: Payment
-  bill?: string
-  overdraft?: boolean
-  overdraft_sum?: number
-} & PerformerProfile;
+export type Company<Type>  = {
+  id?: number;
+  name: string;
+  created?: string;
+  updated?: string;
+  is_active?: boolean;
+  profile_id?: string;
+  company_type: Type;
+  city: City | number;
+} & CompanyProfile<Type>
 
-export type PerformerProfile = {
-  id?: number
-  company: Company
-  created?: string
-  updated?: string
-  address: string
-  connected_prices: string
-  inn: string
-  ogrn: string
-  legal_address?: string
-  contacts?: string
-  service_percent?: number
-  application_type?: string
+export type CompanyProfile<Type> = Type extends CompanyType.customer ? CustomerProfile : PerformerProfile;
+export interface CustomerProfile {
+  customerprofile: {
+    address: string
+    inn: string
+    ogrn: string
+    legal_address: string
+    contacts: string
+    payment: Payment,
+    bill: string,
+    overdraft: boolean,
+    overdraft_sum: number,
+    performer_company: any[]
+  }
+}
+
+export interface PerformerProfile  {
+  performerprofile: {
+    address: string
+    inn: string
+    ogrn: string
+    legal_address?: string
+    contacts?: string
+    service_percent?: number
+    application_type?: string
+    working_time?: string
+    lat: number
+    lon: number
+  }
 }
 
 export interface Companies {
-  companies: Company[] | []
+  companies: Company<CompanyType>[]
 }
 
 export class CompanyStore {
-    companies = observable.array([])
+    companies: IObservableArray<Companies> = observable.array([])
     companiesPerformers = observable.array()
     loadingCompanies: boolean = false
-    companyForm: PerformerProfile & CustomerProfile = observable.object({
-      id: 0,
-      company: {
-        name: "",
-        is_active: true,
-        city: {
-          name: '',
-          id: 0
-        },
-      },
-      address: '',
-      connected_prices: " ",
-      inn: '',
-      ogrn: '',
-      legal_address: '',
-      contacts: '',
-      service_percent: 0,
-      application_type: 'Заказчик'
-    })
+    // companyForm: Company<CompanyType> = observable.object({
+    //
+    //
+    //   name: '',
+    //   is_active: true,
+    //   company_type: CompanyType,
+    //   city: {}
+    //
+    // })
     loadingError: boolean = false;
     fullCompanyData  = new Map([])
     updatingUser?: boolean
     updatingUserErrors: any
-    addCompany = flow(function* ( this:CompanyStore, data: any, type: string ) {
-        this.loadingCompanies = true
-        try {
-          if(type === 'Исполнитель') {
-            agent.Companies.createCompanyPerformers(data, 'performer').then(r => console.log(r))
-          }
-          if(type === 'Заказчик') {
-            agent.Companies.createCompanyCustomer(data, 'customer').then(r => console.log(r))
-          }
-        }
-        catch (e) {
-          new Error('Create COmpany failed')
-        }
-        finally {
-
-          this.loadingCompanies = true
-        }
-    })
-
     loadCompaniesPerformers = flow(function* (this: CompanyStore) {
         try {
             const { data } = yield agent.Companies.getListCompanyPerformer()
@@ -102,7 +87,6 @@ export class CompanyStore {
             throw new Error('Filed load companies performers')
         }
     })
-
   getCompanyUsers = flow(function* (this: CompanyStore, id: number) {
       this.loadingCompanies = true
       let result;
@@ -128,7 +112,6 @@ export class CompanyStore {
       }
       return result
     })
-
     loadCompanyWithTypeAndId = flow(function* (this: CompanyStore, type: string, id: number){
       this.loadingCompanies = true
 
@@ -157,9 +140,44 @@ export class CompanyStore {
         new Error('Create Company failed')
       }
       finally {
+        console.log(this.fullCompanyData);
         this.loadingCompanies = true
       }
       return get(this.fullCompanyData, `${id}`)
+    })
+    addCompany = flow(function* ( this:CompanyStore, data: any, type: CompanyType ) {
+        this.loadingCompanies = true
+        try {
+            if (type === CompanyType.performer) {
+
+                // @ts-ignore
+              const  response = yield agent.Companies.createCompanyPerformers(data, 'performer')
+
+                if (response.status > 199 && response.status < 299) {
+                  this.loadCompanyWithTypeAndId('performer', response.data.id)
+                  return response.data
+                }
+                return response.response
+            }
+            if (type === CompanyType.customer) {
+              console.log(data, type);
+                const  response  = yield agent.Companies.createCompanyCustomer(data, 'customer')
+              console.log(response);
+              if (response.status > 199 && response.status < 299) {
+                this.loadCompanyWithTypeAndId('customer', response.data.id)
+                return response.data
+              }
+              return response.response
+
+            }
+        } catch (e) {
+            // @ts-ignore
+          new Error('Create COmpany failed', e)
+            this.loadingCompanies = true
+            return 'error'
+        } finally {
+            this.loadingCompanies = true
+        }
     })
 
     constructor() {
@@ -202,10 +220,10 @@ export class CompanyStore {
         }
     }
     setCompanyPerformValue(obj: any) {
-        this.companyForm = {
-          ...this.companyForm,
-          ...obj
-        }
+        // this.companyForm = {
+        //   ...this.companyForm,
+        //   ...obj
+        // }
 
     }
     getCompanies() {

@@ -42,6 +42,8 @@ export class AppStore {
       setTheme: action,
       setAppLoaded: action,
       setBurgerState: action,
+      setAsideState: action,
+      setAsideClose: action,
       setAppLoading: action,
       setAppRouteName: action,
       setModal: action,
@@ -117,7 +119,7 @@ export class AppStore {
     this.burgerState = !this.burgerState
   }
   setAsideClose() {
-    if (!this.asideState) {
+    if (!this.asideState && this.bodyRef.clientWidth < 960) {
       this.bodyRef.style.overflow = 'hidden'
     } else {
       this.bodyRef.style.overflow = 'initial'

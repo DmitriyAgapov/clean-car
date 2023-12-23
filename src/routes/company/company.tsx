@@ -10,15 +10,14 @@ import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import Tabs from 'components/common/layout/Tabs/Tabs'
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import Logo from "components/common/layout/Logo/Logo";
 
 const CompanyPage = () => {
   const store = useStore()
   const location = useLocation()
   const { id, type,data }:any = useLoaderData()
   const navigate = useNavigate()
-  const  companyData = store.companyStore.getCompanyFullData(id)
-
+  const  companyData = store.companyStore.getCompanyFullData(id);
+  console.log(store.companyStore.fullCompanyData);
   const { company, users, address, application_type,   company_type, contacts, created,inn, legal_address, ogrn, service_percent, updated } = companyData
 
   return (
@@ -37,7 +36,7 @@ const CompanyPage = () => {
               headerClassName={'border-bottom-none'}
               header={
                   <>
-                      <Heading text={company.data.company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+                      <Heading text={company.data.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
                       <div className={'flex items-baseline justify-between'}>
                           <div className={'text-xs text-gray-2'}>
                               Дата и время регистрации: <span>{dateTransform(updated).date}</span>
@@ -45,8 +44,8 @@ const CompanyPage = () => {
                           <div className={'flex flex-1 justify-around'}>
                               <Heading
                                   className={'!m-0'}
-                                  text={company.data.company.is_active ? 'Активен' : 'Не активна'}
-                                  color={company.data.company.is_active ? HeadingColor.active : HeadingColor.notActive}
+                                  text={company.data.is_active ? 'Активен' : 'Не активна'}
+                                  color={company.data.is_active ? HeadingColor.active : HeadingColor.notActive}
                                   variant={HeadingVariant.h4}
                               />
                               <Heading
@@ -59,7 +58,7 @@ const CompanyPage = () => {
                                           : HeadingDirectory.executor
                                   }
                               />
-                              <Heading className={'!m-0'} text={company.data.company.city.name} variant={HeadingVariant.h4} />
+                              <Heading className={'!m-0'} text={company.data.city.name} variant={HeadingVariant.h4} />
                           </div>
                       </div>
                   </>

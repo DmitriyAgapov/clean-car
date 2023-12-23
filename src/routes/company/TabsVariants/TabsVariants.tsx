@@ -41,8 +41,8 @@ const TabsVariants = ({label, data, state, name, className, companyId, ...props}
           />,
         ],
         text: <div className={'grid gap-12 mb-12'}><CreateInput text={'Сумма начисления'} name={'paymoney'} type={'number'}/>
-          <DList label={'Компания'} title={data.company.name}/>
-          <DList label={'Зачислил'}  title={data.company.name}/>
+          <DList label={'Компания'} title={data.name}/>
+          <DList label={'Зачислил'}  title={data.name}/>
         </div>,
         header: 'Пополнить счет',
         state: true,
@@ -84,9 +84,9 @@ const TabsVariants = ({label, data, state, name, className, companyId, ...props}
             email: item.email,
             group: item.group,
             // @ts-ignore
-            company: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.company.name,
+            company: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.name,
             // @ts-ignore
-            city: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.company.city.name,
+            city: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.city.name,
             id: item.id,
             query: {
               company_id: companyId,

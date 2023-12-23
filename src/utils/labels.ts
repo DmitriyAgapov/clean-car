@@ -1,5 +1,9 @@
-const label = (key:string) => {
+const label = (key:string|unknown) => {
   const values = {
+    admin: "Администратор",
+    customer: "Заказчик",
+    executor: "Исполнитель",
+    name: "ФИО",
     phone: "Номер телефона",
     email: "E-mail",
     type: "Тип",

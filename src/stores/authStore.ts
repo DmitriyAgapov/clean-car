@@ -77,7 +77,7 @@ export class AuthStore {
     return agent.Auth.login(this.values.email, this.values.password)
       .then(
         action((resolve: any) => {
-          const { access, refresh } = resolve
+          const { access, refresh } = resolve.data
           appStore.setToken(access)
         }),
       )

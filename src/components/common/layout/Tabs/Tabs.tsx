@@ -51,7 +51,7 @@ const Tabs = ({ data }: TabsProps) => {
     const  handleChangeTabState = (event: Event, label: string) => {
      setState(label);
     }
-    const TabPanels = () => {
+    const TabPanels = ():any => {
     const result = []
       for(const key in data) {
         result.push(<TabsVariants companyId={data.company.data.id} label={data[key].label}
@@ -59,9 +59,7 @@ const Tabs = ({ data }: TabsProps) => {
           state={state == data[key].label}
           key={`var-${data[key].label}`} />)
       }
-        // data.map((i:any, index:number) =>
-        // <TabsVariants label={i.label} data={i.data} state={state == index} key={`var-${index}`}/>)
-      return <>{result}</>
+      return result
     }
 
     const HeadersTabs = () => {

@@ -4,6 +4,7 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import SelectCustom from 'components/common/ui/Select/Select'
 import { Field, useFormik, useFormikContext } from 'formik'
 import React from 'react'
+import { CompanyType } from "stores/companyStore";
 
 export function FormStep1(props: {
   step: any
@@ -16,7 +17,7 @@ export function FormStep1(props: {
   store: any
   prop8: (o: any) => { label: any; value: string }
 }) {
-  const { values, touched, errors }:any = useFormikContext();
+  const { values, touched,  errors, isValidating }:any = useFormikContext();
   return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -35,10 +36,10 @@ export function FormStep1(props: {
               variant={ButtonVariant['accent-outline']}
             />
 
-            {values.application_type == 'Заказчик' ? (
+            {values.application_type == CompanyType.customer ? (
               <Button
                 text={'Дальше'}
-                action={props.action1}
+                action={() => (Object.keys(errors).length == 0) && props.action1()}
                 className={'float-right'}
                 variant={ButtonVariant.accent}
               />
@@ -144,15 +145,16 @@ export function FormStep1(props: {
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         <SelectCustom
           label={'Тип'}
-          value={props.values.city}
+          defaultValue={props.values.application_type}
+          value={props.values.application_type}
           name={'application_type'}
           className={' w-fit'}
           options={[
-            { label: 'Заказчик', value: 'Заказчик' },
-            { label: 'Исполнитель', value: 'Исполнитель' },
+            { label: 'Заказчик', value: CompanyType.customer },
+            { label: 'Исполнитель', value: CompanyType.performer },
           ]}
         />
-        {props.values.application_type == 'Исполнитель' && (
+        {props.values.application_type == CompanyType.performer && (
           <label
             className={'account-form__input  !flex-[0_0_14rem]'}
             htmlFor={'service_percent'}

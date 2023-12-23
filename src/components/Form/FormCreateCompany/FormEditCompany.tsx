@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { FormStep1 } from "components/Form/FormCreateCompany/Steps/StepOne";
 import { FormStepTwo } from "components/Form/FormCreateCompany/Steps/StepTwoThree";
 import { FormStepSuccess } from "components/Form/FormCreateCompany/Steps/StepSuccess";
+import { CompanyType } from "stores/companyStore";
 
 const SignupSchema = Yup.object().shape({
     company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
@@ -61,10 +62,10 @@ const FormEditCompany = ({data}:any) => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
-                if (values.application_type === 'Исполнитель') {
-                    store.companyStore.addCompany({ company: { name: values.company_name, is_active: true, /* @ts-ignore */ city: values.city, }, address: values.address, connected_prices: 'string', inn: String(values.inn), ogrn: String(values.ogrn), legal_address: values.legal_address, contacts: values.contacts, service_percent: values.service_percent, application_type: values.application_type, }, 'Исполнитель',).then(() => changeStep(3))
+                if (values.application_type === CompanyType.performer) {
+                    store.companyStore.addCompany({ company: { name: values.company_name, is_active: true, /* @ts-ignore */ city: values.city, }, address: values.address, connected_prices: 'string', inn: String(values.inn), ogrn: String(values.ogrn), legal_address: values.legal_address, contacts: values.contacts, service_percent: values.service_percent, application_type: values.application_type, }, CompanyType.performer,).then(() => changeStep(3))
                 }
-                if (values.application_type === 'Заказчик') {
+                if (values.application_type === CompanyType.customer) {
                     const data = {
                         ...values,
                         company: {
@@ -81,7 +82,7 @@ const FormEditCompany = ({data}:any) => {
                         application_type: values.application_type,
                         overdraft: values.overdraft === '1',
                     }
-                    store.companyStore.addCompany(data, 'Заказчик').then(() => changeStep(3))
+                    store.companyStore.addCompany(data, CompanyType.customer).then(() => changeStep(3))
                 }
             }}
         >

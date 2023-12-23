@@ -33,15 +33,6 @@ const UserPage = () => {
             </span>
           }
         />
-        <DList
-          className={'my-8'}
-          label={'Статус'}
-          title={
-            <span className={user.is_active ? 'text-active' : 'text-error'}>
-              {user.is_active ? 'Активный' : 'Не активный'}
-            </span>
-          }
-        />
 
       </>
     )

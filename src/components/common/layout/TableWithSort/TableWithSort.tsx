@@ -134,12 +134,12 @@ const RowData = (props: any) => {
 
     const [open, setOpen] = useState(false);
     return (
-        <tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : void null} data-state-mobile={open}>
+        <tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : () => setOpen(prevState => !prevState)} data-state-mobile={open}>
             {propsRender()}
-            <td className={styles.mobileIcon} onClick={() => setOpen(prevState => !prevState)}>
+            {(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
                 <SvgChevron/>
-            </td>
-            <td className={styles.mobileButton}><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'!hidden w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>
+            </td>}
+            {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
         </tr>
     )
 }

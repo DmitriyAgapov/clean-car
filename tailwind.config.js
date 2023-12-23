@@ -49,6 +49,9 @@ module.exports = withMT({
 
         desktop: '1300px',
       },
+      letterSpacing: {
+        input: '0.02em'
+      }
     },
   },
   plugins: [],

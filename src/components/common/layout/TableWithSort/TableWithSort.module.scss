@@ -40,6 +40,8 @@
 	  border-radius: 1rem;
 	  align-items: center;
 	  grid-auto-flow: row;
+
+
 	  &:hover {
 		background: transparent !important;
 	  }
@@ -86,6 +88,32 @@
 		&:nth-child(3) {
 
 		}
+		&[data-position="icon-open"] {
+		  width: 1.5rem;
+		  height: 1.5rem;
+		  grid-column: -2/-1;
+		  grid-row: 1/2;
+		  padding:  0;
+		  svg {
+			rotate: 180deg;
+		  }
+		  svg {
+			width: 1.5rem;
+			height: 1.5rem;
+		  }
+		  overflow: initial;
+		  &:before {
+			content: none;
+		  }
+		}
+		&[data-position="button-mobile"] {
+
+			&:before {
+			  content: none;
+			}
+
+		}
+
 	  }
 	  &[data-state-mobile="true"] {
 		height: initial;
@@ -103,13 +131,14 @@
 		  &:nth-child(1), &:nth-child(2) {
 			padding: .75rem 0;
 		  }
+		  svg {
+			rotate: 0deg;
+		  }
 		}
 		> a {
 		  display: inline-flex !important;
 		}
-		svg {
-			rotate: 180deg;
-		}
+
 	  }
 	}
 

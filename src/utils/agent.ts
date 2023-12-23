@@ -4,6 +4,7 @@ import authStore from 'stores/authStore'
 import data, { decodeToken } from 'utils/getData'
 import { User } from 'stores/userStore'
 import { toJS } from 'mobx'
+import { Company, CompanyType } from "stores/companyStore";
 
 const API_ROOT = 'https://dev.server.clean-car.net/api'
 
@@ -64,7 +65,7 @@ const requests = {
           method: 'Post',
           data: body,
        })
-      .then((response) => response.data)
+      .then((response) => response)
       .catch(handleErrors),
 
 }
@@ -118,17 +119,7 @@ interface CompanyData {
     city: number
 }
 
-interface CreateCompanyPerformerFormData {
-    company: CompanyData
-    address: string
-    connected_prices: string
-    inn: string
-    ogrn: string
-    legal_address: string
-    contacts: string
-    service_percent: number
-    application_type: string
-}
+type CreateCompanyPerformerFormData = Company<CompanyType.performer>
 
 const crudCompanyMethods = {
   create: (data:any, type:string) => requests.post(`/companies/${type}/create/`, data),
@@ -148,6 +139,7 @@ const apiEndPoint = {
 const Companies = {
 
     createCompanyPerformers: ( data: CreateCompanyPerformerFormData, type: string ) => {
+      console.log();
       return  apiEndPoint.company.create(data, type)
     },
     getCompanyData: (id: number, type: string) => apiEndPoint.company.read(id, type),

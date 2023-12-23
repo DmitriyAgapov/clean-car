@@ -13,6 +13,7 @@ const CompaniesPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
+  console.log(store.companyStore.companies);
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -51,7 +52,7 @@ const CompaniesPage = () => {
           company: item.name,
           type: item.company_type,
           city: item.city.name,
-          id: item.profile_id,
+          id: item.id,
         }))}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
         state={store.companyStore.loadingCompanies}

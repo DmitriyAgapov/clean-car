@@ -27,7 +27,7 @@ export function FormStepTwo(props: {
       background={PanelColor.glass}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       bodyClassName={!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'}
-      footer={<div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
+      footer={<div className={'accounts-group_header flex-1 gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
         <Button text={'Назад'}
           action={props.action}
           className={'justify-self-start'} />
@@ -38,12 +38,6 @@ export function FormStepTwo(props: {
             variant={ButtonVariant['accent-outline']} />
 
           <Button text={'Сохранить'}
-            // action={async () => {
-            //   // @ts-ignore
-            //   await store.permissionStore.createPermissionStoreAdmin(changes)
-            //   setTimeout(() => navigate('/account/groups'), 500)
-            //   // navigate('/account/groups')
-            // }}
             type={'submit'}
             className={'float-right'}
             variant={ButtonVariant.accent} />
@@ -62,15 +56,15 @@ export function FormStepTwo(props: {
         <SelectCustom label={'Оплата'}
           value={values.payment}
           name={'payment'}
-          className={' w-fit  !flex-[0_0_10rem]'}
+          className={' w-fit  !flex-[0_0_auto]'}
           options={[ { label: 'Постоплата', value: 'Постоплата' }, { label: 'Предоплата', value: 'Предоплата' }, ]} />
 
         <SelectCustom label={'Овердрафт'}
           value={values.overdraft}
           name={'overdraft'}
-          className={' w-fit  !flex-[0_0_10rem]'}
+          className={' w-fit  !flex-[0_0_auto]'}
           options={[ { label: 'Да', value: '1' }, { label: 'Нет', value: '2' }, ]} />
-        <label className={'account-form__input w-full flex-grow   !flex-[0_0_10rem]'}
+        <label className={'account-form__input w-24 flex-grow   !flex-[0_1_auto]'}
           htmlFor={'overdraft_sum'}
           data-form_error={errors.overdraft_sum && touched.overdraft_sum && 'error'}>
           {' '}
@@ -83,7 +77,7 @@ export function FormStepTwo(props: {
         <SelectCustom label={'Список исполнителей'}
           value={values.executors_list}
           name={'executors_list'}
-          className={' w-fit  !flex-[0_0_10rem]'}
+          className={' w-fit  !flex-[0_0_auto]'}
           options={[ { label: 'Да', value: '1' }, { label: 'Нет', value: '2' }, ]} />
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         <SelectFromList items={store.companyStore.companiesPerformers} />

@@ -24,7 +24,7 @@ export type User = {
 }
 
 export class UsersStore {
-  users: (User & Company & Permissions)[] = observable.array([])
+  users: (User & Company<any> & Permissions)[] = observable.array([])
   loadingUsers: boolean = false
   loadingErrors?: any
   // }),

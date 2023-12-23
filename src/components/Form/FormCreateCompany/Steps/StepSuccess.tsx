@@ -6,6 +6,9 @@ import React, { useEffect } from "react";
 import { useStore } from "stores/store";
 import { SvgPlus } from "components/common/ui/Icon";
 import styles from './Step.module.scss'
+import { useNavigate } from "react-router-dom";
+import { CompanyType } from "stores/companyStore";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 const CreateField = ({ title }: {title:string}) => (
     <div className={styles.createField}>
@@ -26,7 +29,9 @@ export function FormStepSuccess(props: {
 }) {
   const { values, touched, errors }:any = useFormikContext();
 
+  const navigate = useNavigate()
   const store = useStore()
+
   return (
     <Panel variant={PanelVariant.textPadding}
       state={props.step !== 3}
@@ -38,13 +43,14 @@ export function FormStepSuccess(props: {
 
 
 
-          <Button text={'перейти к компании'}
+          <LinkStyled text={'перейти к компании'}
             // action={async () => {
             //   // @ts-ignore
             //   await store.permissionStore.createPermissionStoreAdmin(changes)
             //   setTimeout(() => navigate('/account/groups'), 500)
             //   // navigate('/account/groups')
             // }}
+            to={`/account/companies/${values.application_type == CompanyType.performer ? 'performer': 'customer'}/${values.id}`}
             type={'submit'}
             className={'float-right col-start-2 justify-self-end'}
             variant={ButtonVariant.accent} />

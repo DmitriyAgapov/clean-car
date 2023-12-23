@@ -23,6 +23,7 @@ input, input, textarea, .input, .textarea {
   border: 0.125rem solid;
   line-height: 1;
   outline: none;
+  letter-spacing: 0.02em;
   color: var(--colorInputText);
   border-radius: .625rem;
   border-color: var(--formBorder);

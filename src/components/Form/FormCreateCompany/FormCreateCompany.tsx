@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom'
 import { FormStep1 } from "components/Form/FormCreateCompany/Steps/StepOne";
 import { FormStepTwo } from "components/Form/FormCreateCompany/Steps/StepTwoThree";
 import { FormStepSuccess } from "components/Form/FormCreateCompany/Steps/StepSuccess";
+import { CompanyType, Payment } from "stores/companyStore";
+import type { Company } from "stores/companyStore";
 
 const SignupSchema = Yup.object().shape({
     company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
@@ -15,19 +17,21 @@ const SignupSchema = Yup.object().shape({
     inn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
     ogrn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
     contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+    service_percent: Yup.number().min(0, 'Минимум').max(100, 'Максимум')
 })
 const initValues = {
+    id: 0,
     company_name: '',
     address: '',
     city: '',
     inn: '',
     ogrn: '',
     legal_address: '',
-    application_type: 'customer',
+    application_type: CompanyType.performer,
     contacts: '',
     service_percent: 0,
     overdraft_sum: 123,
-    payment: 'Предоплата',
+    payment: Payment.postoplata,
     overdraft: 'Да',
     executors_list: 'Да',
     bill: '100',
@@ -55,27 +59,59 @@ const FormCreateCompany = () => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
-                if (values.application_type === 'Исполнитель') {
-                    store.companyStore.addCompany({ company: { name: values.company_name, is_active: true, /* @ts-ignore */ city: values.city, }, address: values.address, connected_prices: 'string', inn: String(values.inn), ogrn: String(values.ogrn), legal_address: values.legal_address, contacts: values.contacts, service_percent: values.service_percent, application_type: values.application_type, }, 'Исполнитель',).then(() => changeStep(3))
-                }
-                if (values.application_type === 'Заказчик') {
-                    const data = {
-                        ...values,
-                        company: {
-                            name: values.company_name,
-                            is_active: true, // @ts-ignore
-                            city: Number(values.city),
-                        },
-                        address: values.address,
-                        connected_prices: 'some prices',
-                        inn: String(values.inn),
-                        ogrn: String(values.ogrn),
-                        legal_address: values.legal_address,
-                        contacts: values.contacts,
-                        application_type: values.application_type,
-                        overdraft: values.overdraft === '1',
+                if (values.application_type === CompanyType.performer) {
+                    const data:Company<CompanyType.performer> = {
+                        company_type: values.application_type,
+                        city:  Number(values.city),
+                        name: values.company_name,
+                        performerprofile:  {
+                            address: values.address,
+                            inn: values.inn,
+                            ogrn: values.ogrn,
+                            legal_address: values.legal_address,
+                            contacts: values.contacts,
+                            application_type: values.application_type,
+                            lat: 0,
+                            lon: 0,
+                            service_percent: values.service_percent,
+                            working_time: ''
+                        }
                     }
-                    store.companyStore.addCompany(data, 'Заказчик').then(() => changeStep(3))
+                    store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
+                        values.id = r.id
+                        console.log(values);
+                        changeStep(3)
+                    })
+                }
+                if (values.application_type === CompanyType.customer) {
+                    console.log(values);
+                    const data:Company<CompanyType.customer> = {
+
+                        company_type: values.application_type,
+
+                        name: values.company_name,
+                            is_active: true,
+                            city: Number(values.city),
+                        customerprofile: {
+                             address: values.address,
+                                payment: values.payment,
+                             inn: String(values.inn),
+                             ogrn: String(values.ogrn),
+                             legal_address: values.legal_address,
+                             contacts: values.contacts,
+                            bill: String(values.bill),
+                             overdraft: values.overdraft === '1',
+                             overdraft_sum: values.overdraft_sum,
+
+                            performer_company: [4]
+                        }
+                    }
+                    store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
+                        console.log(r);
+                        values.id = r.id
+                        console.log(values);
+                        changeStep(3)
+                    })
                 }
             }}
         >

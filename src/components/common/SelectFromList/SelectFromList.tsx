@@ -26,7 +26,7 @@ const SelectListAvailible = ({ items, action, selected }: SelectFromListProps) =
                 <div className={styles.SelectFromListList}>
                     {items.map((item: any) => (
                         <label htmlFor={'company-' + item.id} className={styles.listItem}>
-                            {item.company.name}
+                            {item.name}
                             <input id={'company-' + item.id} type={'checkbox'} name={'company-' + item.id} onChange={handleSelected}/>
                         </label>
                     ))}
@@ -71,7 +71,7 @@ const SelectFromList = ({items}:SelectFromListProps) => {
 	const [companies, setCompanies] = useState(items);
 
 	const filterItemsAr = useMemo(() => {
-				return companies.filter((a:any) => a.company.name.toLowerCase().includes(filterString.toLowerCase()))
+				return companies.filter((a:any) => a.name.toLowerCase().includes(filterString.toLowerCase()))
 	}, [filterString, companies]);
 
 	const handleChange = (event: any) => {

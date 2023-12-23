@@ -10,12 +10,6 @@ import { observer } from 'mobx-react-lite'
 import { Company } from 'stores/companyStore'
 import { User } from 'stores/usersStore'
 
-interface ResponseUsers {
-  company: Company
-  employee: User
-  group: number
-}
-
 const UsersPage = () => {
   const store = useStore()
   const location = useLocation()
