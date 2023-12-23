@@ -22,54 +22,68 @@ const tokenPlugin = () => {
 }
 
 const requests = {
-  delete: (url: string) =>
-    axios({
-      url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
-      method: 'DELETE'
-    })
-      .then((response) => response)
-      .catch(handleErrors),
-  get: (url: string, body?: any) =>
-    axios({
-      url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
-      method: 'GET',
-    })
-      .then((response) => response)
-      .catch(handleErrors),
+    delete: (url: string) =>
+        axios({
+            url: `${API_ROOT}${url}`,
+            headers: tokenPlugin(),
+            method: 'DELETE',
+        })
+            .then((response) => response)
+            .catch(handleErrors),
+    get: (url: string, body?: any) =>
+        axios({
+            url: `${API_ROOT}${url}`,
+            headers: tokenPlugin(),
+            method: 'GET',
+        })
+            .then((response) => response)
+            .catch(handleErrors),
 
-  put: (url: string, body: any) =>
-    axios({
-      url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
-      method: 'PUT',
-      data: body,
-      })
-      .then((response) => response)
-      .catch(handleErrors),
-  patch: (url: string, body: any) =>
-    axios({
-        url: `${API_ROOT}${url}`,
-        headers: tokenPlugin(),
-        method: 'PATCH',
-        data: body,
-      })
-      .then((response) => response)
-      .catch(handleErrors),
+    put: (url: string, body: any) =>
+        axios({
+            url: `${API_ROOT}${url}`,
+            headers: tokenPlugin(),
+            method: 'PUT',
+            data: body,
+        })
+            .then((response) => response)
+            .catch(handleErrors),
+    patch: (url: string, body: any) =>
+        axios({
+            url: `${API_ROOT}${url}`,
+            headers: tokenPlugin(),
+            method: 'PATCH',
+            data: body,
+        })
+            .then((response) => response)
+            .catch(handleErrors),
 
-  post: (url: string, body: any) =>
-    axios({
-          url: `${API_ROOT}${url}`,
-          headers: tokenPlugin(),
-          method: 'Post',
-          data: body,
-       })
-      .then((response) => response)
-      .catch(handleErrors),
-
+    post: (url: string, body: any) =>
+        axios({
+            url: `${API_ROOT}${url}`,
+            headers: tokenPlugin(),
+            method: 'Post',
+            data: body,
+        })
+            .then((response) => response)
+            .catch(handleErrors),
+    postSuggest: (query: string) =>
+        axios({
+            url: 'http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+            headers: {
+                "Authorization": 'Token 194bded3651f373f0b44b56130a40aa5544e0e90',
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+            method: 'Post',
+            data: JSON.stringify({ query: query }) ,
+        })
+            .then((response) => response)
+            .catch(handleErrors),
 }
-
+const Utils = {
+  suggest: ({ query }:{query: string}) => requests.postSuggest(query)
+}
 const Auth = {
   current: () => {
     return new Promise((resolve, reject) => {
@@ -205,6 +219,7 @@ const Account = {
 }
 
 const agent = {
+  Utils,
   Auth,
   Profile,
   Account,
