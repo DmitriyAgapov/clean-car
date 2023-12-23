@@ -10,6 +10,7 @@ import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import Tabs from 'components/common/layout/Tabs/Tabs'
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
+import { CompanyType } from "stores/companyStore";
 
 const CompanyPage = () => {
   const store = useStore()
@@ -17,9 +18,9 @@ const CompanyPage = () => {
   const { id, type,data }:any = useLoaderData()
   const navigate = useNavigate()
   const  companyData = store.companyStore.getCompanyFullData(id);
-  console.log(store.companyStore.fullCompanyData);
-  const { company, users, address, application_type,   company_type, contacts, created,inn, legal_address, ogrn, service_percent, updated } = companyData
 
+  const { company, users, address, application_type,   company_type, contacts, created,inn, legal_address, ogrn, service_percent, updated } = companyData
+  console.log(company.company_type);
   return (
       <Section type={SectionType.default}>
           <Panel
@@ -50,10 +51,12 @@ const CompanyPage = () => {
                               />
                               <Heading
                                   className={'!m-0'}
-                                  text={company.data.company_type}
+                                  text={company.company_type == 'customer'
+                                    ? CompanyType.customer
+                                    : CompanyType.performer}
                                   variant={HeadingVariant.h4}
                                   directory={
-                                    company.data.company_type == 'Компания-Заказчик'
+                                    company.company_type == 'customer'
                                           ? HeadingDirectory.customer
                                           : HeadingDirectory.executor
                                   }

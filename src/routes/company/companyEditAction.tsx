@@ -25,7 +25,6 @@ export default function CompanyPageEditAction(props: any) {
   }
   // @ts-ignore
   const {data} = useLoaderData()
-  console.log(data[0].data);
   return (
     <Section type={SectionType.default}>
       <Panel

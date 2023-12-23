@@ -13,6 +13,7 @@ import { User } from 'stores/usersStore'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
 import TabsVariants from "routes/company/TabsVariants/TabsVariants";
 import Logo from "components/common/layout/Logo/Logo";
+import company from "routes/company/company";
 
 
 export type TabsProps = {
@@ -51,13 +52,17 @@ const Tabs = ({ data }: TabsProps) => {
     const  handleChangeTabState = (event: Event, label: string) => {
      setState(label);
     }
+  console.log(data);
     const TabPanels = ():any => {
     const result = []
       for(const key in data) {
         result.push(<TabsVariants companyId={data.company.data.id} label={data[key].label}
           data={data[key].data}
           state={state == data[key].label}
-          key={`var-${data[key].label}`} />)
+          key={`var-${data[key].label}`}
+          company_type={data.company.company_type}
+        />)
+
       }
       return result
     }
@@ -130,9 +135,10 @@ Tabs.Tab = ({ title, state, ...props }: { title: string; state: boolean } | any)
       </li>
   )
 }
-Tabs.Panel = ({ children, state, name, className = " ", ...props }: {className?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
+Tabs.Panel = ({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
+
  if(state) return (
-    <div  className={styles.tabPanel + " " + className} data-state={state} data-name={name}>
+    <div data-company-type={company_type}  className={styles.tabPanel + " " + className} data-state={state} data-name={name}>
       {children}
     </div>
   )

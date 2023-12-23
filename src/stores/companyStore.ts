@@ -118,12 +118,14 @@ export class CompanyStore {
       try {
         let data = {
           company: {},
-          users: []
+          users: [],
         };
         const company = yield agent.Companies.getCompanyData(id, type);
         const users = yield agent.Account.getCompany(id);
+
         data.company = {
           data:  company.data,
+          company_type: type,
           label: 'Основная информация'
         };
 
@@ -160,9 +162,9 @@ export class CompanyStore {
                 return response.response
             }
             if (type === CompanyType.customer) {
-              console.log(data, type);
+
                 const  response  = yield agent.Companies.createCompanyCustomer(data, 'customer')
-              console.log(response);
+
               if (response.status > 199 && response.status < 299) {
                 this.loadCompanyWithTypeAndId('customer', response.data.id)
                 return response.data

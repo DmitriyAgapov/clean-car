@@ -16,11 +16,12 @@ type TabsVariantsProps = {
   label: string,
   data: any
   companyId?: number
+  company_type?: string
 
 } & TabsProps & {className?: string, children?: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps
 
-const TabsVariants = ({label, data, state, name, className, companyId, ...props}:TabsVariantsProps) => {
-
+const TabsVariants = ({label, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
+  console.log(company_type);
   const store = useStore()
   let result
 
@@ -47,29 +48,33 @@ const TabsVariants = ({label, data, state, name, className, companyId, ...props}
         header: 'Пополнить счет',
         state: true,
       };
-      result = (<Tabs.Panel state={state} name={'info'} className={'py-12'}>
-        <DList label={'Оплата'} title={data.payment} />
-        <DList label={'ИНН'} title={data.inn} />
-        <DList label={'ОГРН'} title={data.ogrn} />
-        <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}>
-          <DList label={'Исполнители'} title={data.ogrn} />
+      result = (<Tabs.Panel state={state} name={'info'}  className={'py-12'} company_type={company_type}>
+         {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />}
+        <DList label={'ИНН'} title={data[`${company_type}profile`].inn} />
+        <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
+        {company_type === 'customer' && <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}>
+          <DList label={'Исполнители'} title={data[`${company_type}profile`].ogrn} />
           <CardSimple.Footer>
             <LinkStyled variant={ButtonVariant.text} style={{color: 'var(--accentColor)'}} text={'Подробнее'} to={'#'} />
           </CardSimple.Footer>
-        </CardSimple>
-        <DList label={'Счет'} title={<>
-          <Heading text={data.bill + ' ₽'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
-          <Heading text={data.overdraft_sum + ' ₽' + ' с овердрафтом'}  variant={HeadingVariant.h4} color={HeadingColor.accent} />
+        </CardSimple>}
+        {company_type === 'customer' ? <DList label={'Счет'} title={<>
+          <Heading text={data[`${company_type}profile`].bill + ' ₽'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
+          <Heading text={data[`${company_type}profile`].overdraft_sum + ' ₽' + ' с овердрафтом'}  variant={HeadingVariant.h4} color={HeadingColor.accent} />
         </>
 
-        }/>
-        <DList label={'Адрес'} title={data.address} />
-        <DList label={'Юридический адрес'} title={data.legal_address} />
+        }/>: <DList label={'Процент сервиса'} title={<>
+          <Heading text={data.performerprofile.service_percent + ' %'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
+        </>
+
+        }/>}
+        <DList label={'Адрес'} title={data[`${company_type}profile`].address} />
+        <DList label={'Юридический адрес'} title={data[`${company_type}profile`].legal_address} />
         <DList label={'Подключенные услуги'} title={''} />
-        <DList label={'Контакты для связи'} title={data.contacts} />
-        <Button text={'Пополнить счет'}  action={async () => {
+        <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts} />
+        {company_type === 'customer' &&  <Button text={'Пополнить счет'}  action={async () => {
           store.appStore.setModal(fundBill)
-        }} variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm}/>
+        }} variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm}/>}
       </Tabs.Panel>)
       break;
 

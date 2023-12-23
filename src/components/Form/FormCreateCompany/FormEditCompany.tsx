@@ -35,26 +35,26 @@ const FormEditCompany = ({data}:any) => {
         }, 1200)
     }
     const companyData:any = store.companyStore.fullCompanyData.get(`${id}`)
-    // @ts-ignore
-    const {address, company, contacts, inn, ogrn, legal_address, service_percent} = companyData.company.data;
 
-    console.log(address, company, contacts, inn, ogrn, legal_address, service_percent);
+    // @ts-ignore
+    const {company} = companyData;
+    console.log(company);
     const navigate = useNavigate()
     const initValues = {
-        company_name: company.name,
-        address: address,
-        city: '',
-        inn: '',
-        ogrn: '',
-        legal_address: '',
-        application_type: 'customer',
-        contacts: '',
-        service_percent: 0,
-        overdraft_sum: 123,
-        payment: 'Предоплата',
-        overdraft: 'Да',
+        company_name: company.data.name,
+        address: company.data[`${company.company_type}profile`].address,
+        city: String(company.data.city.id),
+        inn: company.data[`${company.company_type}profile`].inn,
+        ogrn: company.data[`${company.company_type}profile`].ogrn,
+        legal_address: company.data[`${company.company_type}profile`].legal_address,
+        application_type: company.company_type,
+        contacts: company.data[`${company.company_type}profile`].contacts,
+        service_percent: company.data[`${company.company_type}profile`].service_percent | 0,
+        overdraft_sum: company.data[`${company.company_type}profile`].overdraft_sum,
+        payment: company.data[`${company.company_type}profile`].payment,
+        overdraft: company.data[`${company.company_type}profile`].overdraft,
         executors_list: 'Да',
-        bill: '100',
+        bill: company.data[`${company.company_type}profile`].bill,
     }
 
     return (
