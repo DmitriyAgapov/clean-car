@@ -47,23 +47,25 @@ const UserPage = () => {
         headerClassName={'flex justify-between flex-wrap items-end'}
         header={
           <>
-            <Button
-              text={
-                <>
-                  <SvgBackArrow />
-                  Назад к списку пользователей{' '}
-                </>
-              }
-              className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-7'}
-              action={() => navigate(-1)}
-              variant={ButtonVariant.text}
-            />
-            <Heading
-              text={'Пользователь'}
-              variant={HeadingVariant.h1}
-              className={'!mb-0 inline-block flex-1'}
-              color={HeadingColor.accent}
-            />
+            <div>
+              <Button
+                text={
+                  <>
+                    <SvgBackArrow />
+                    Назад к списку пользователей{' '}
+                  </>
+                }
+                className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'}
+                action={() => navigate(-1)}
+                variant={ButtonVariant.text}
+              />
+              <Heading
+                text={'Пользователь'}
+                variant={HeadingVariant.h1}
+                className={'!mb-0 inline-block flex-1'}
+                color={HeadingColor.accent}
+              />
+            </div>
             <Button
               text={'Редактировать'}
               action={() => navigate('/account/users/create')}

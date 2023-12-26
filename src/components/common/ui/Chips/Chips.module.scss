@@ -1,14 +1,16 @@
 .Chips {
 	font-size: .5rem;
   font-weight: 600;
-  line-height: 1.29;
+
   color: black;
-  padding: .125rem 0;
-  display: inline-block;
-  align-items: center;
-  height: 1rem;
+  display: inline-flex;
+  line-height: 1.25;
+
+  padding: 0.5em 0 0.375em;
   border-radius: .5rem;
   width: 3.75rem;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   text-transform: lowercase;
   &[data-state="true"] {

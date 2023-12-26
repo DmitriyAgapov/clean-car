@@ -8,7 +8,6 @@ import { CreateFormikInput } from 'components/common/ui/CreateInput/CreateInput'
 import SelectCustom from 'components/common/ui/Select/Select'
 import { UserTypeEnum } from 'stores/userStore'
 import label from "utils/labels";
-
 const SignupSchema = Yup.object().shape({
     first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
     last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
@@ -27,11 +26,7 @@ const initValues = {
     group: null,
     is_active: true
 }
-
 type FormCreateCompanyProps = {}
-
-
-
 const FormCreateUser = () => {
     const store = useStore()
     const [step, setStep] = useState(1)
@@ -44,7 +39,6 @@ const FormCreateUser = () => {
         }, 1200)
     }
     const navigate = useNavigate()
-    console.log(store.permissionStore.permissions);
     return (
         <Formik
             initialValues={initValues}

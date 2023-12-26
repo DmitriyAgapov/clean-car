@@ -27,8 +27,10 @@ const initValues = {
     inn: '',
     ogrn: '',
     legal_address: '',
-    application_type: CompanyType.performer,
+    application_type: CompanyType.customer,
     contacts: '',
+    lat: 0,
+    lon: 0,
     service_percent: 0,
     overdraft_sum: 123,
     payment: Payment.postoplata,
@@ -49,6 +51,7 @@ const FormCreateCompany = () => {
         setAnimate((prevState) => !prevState)
         setTimeout(() => {
             setAnimate(false)
+            store.companyStore.loadingCompanies = false
             setStep(step ? step : 2)
         }, 1200)
     }
@@ -61,8 +64,8 @@ const FormCreateCompany = () => {
             onSubmit={(values) => {
                 if (values.application_type === CompanyType.performer) {
                     const data:Company<CompanyType.performer> = {
-                        company_type: values.application_type,
                         city:  Number(values.city),
+                        is_active: true,
                         name: values.company_name,
                         performerprofile:  {
                             address: values.address,
@@ -71,8 +74,8 @@ const FormCreateCompany = () => {
                             legal_address: values.legal_address,
                             contacts: values.contacts,
                             application_type: values.application_type,
-                            lat: 0,
-                            lon: 0,
+                            lat: values.lat,
+                            lon: values.lon,
                             service_percent: values.service_percent,
                             working_time: ''
                         }
@@ -102,7 +105,8 @@ const FormCreateCompany = () => {
                             bill: String(values.bill),
                              overdraft: values.overdraft === '1',
                              overdraft_sum: values.overdraft_sum,
-
+                            lat: values.lat,
+                            lon: values.lon,
                             performer_company: [4]
                         }
                     }

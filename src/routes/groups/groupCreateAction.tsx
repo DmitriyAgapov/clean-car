@@ -50,7 +50,7 @@ export default function GroupPageCreateAction(props: any) {
                   Назад к списку групп{' '}
                 </>
               }
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'}
+              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
               action={() => navigate(-1)}
               variant={ButtonVariant.text}
             />

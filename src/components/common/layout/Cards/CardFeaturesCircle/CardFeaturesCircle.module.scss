@@ -17,17 +17,17 @@
   margin: auto;
 
   &:nth-child(1) {
-	translate: 0 -9.375rem;
+	translate: 5.375rem -17.375rem;
 	background: linear-gradient(360deg, rgba(19, 255, 113, 0.7) -9.57%, rgba(0, 183, 125, 0.337864) 42.21%, rgba(0, 129, 185, 0) 77.35%);;
   }
 
   &:nth-child(2) {
-	translate: -8.625rem 6.25rem;
+	translate: -3.625rem 5.25rem;
 	background: linear-gradient(240deg, rgba(19, 255, 113, 0.7) -9.57%, rgba(0, 183, 125, 0.337864) 42.21%, rgba(0, 129, 185, 0) 77.35%);;
   }
 
   &:nth-child(3) {
-	translate: 8.625rem 6.25rem;
+	translate: 14.625rem 13.25rem;
 	background: linear-gradient(120deg, rgba(19, 255, 113, 0.7) -9.57%, rgba(0, 183, 125, 0.337864) 42.21%, rgba(0, 129, 185, 0) 77.35%);;
   }
 

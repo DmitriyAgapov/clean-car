@@ -6,11 +6,11 @@ import styles from './FormAuth.module.scss'
 import { useStore } from 'stores/store'
 
 const SignupSchema = Yup.object().shape({
-  cleanm: Yup.string().email('Invalid email').required('Укажите email'),
-  pwd: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль'),
+  cleanm: Yup.string().email('Некорректный email').required('Укажите email'),
+  pwd: Yup.string().min(8, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль'),
 })
 
-const InnerForm = ({ message }: { message: string }) => {
+const FormRestore = ({ message }: { message?: string }) => {
   const store = useStore()
   return (
     <Formik
@@ -23,7 +23,6 @@ const InnerForm = ({ message }: { message: string }) => {
         store.authStore.setEmail(values.cleanm)
         store.authStore.setPassword(values.pwd)
         store.authStore.login()
-        // alert(JSON.stringify(values, null, 2));
         actions.setSubmitting(false)
       }}
     >
@@ -51,8 +50,5 @@ const InnerForm = ({ message }: { message: string }) => {
   )
 }
 
-const FormRestore = () => {
-  return <InnerForm message='Sign up' />
-}
 
 export default FormRestore

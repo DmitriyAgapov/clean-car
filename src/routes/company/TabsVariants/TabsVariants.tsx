@@ -21,7 +21,7 @@ type TabsVariantsProps = {
 } & TabsProps & {className?: string, children?: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps
 
 const TabsVariants = ({label, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
-  console.log(company_type);
+
   const store = useStore()
   let result
 
@@ -48,7 +48,7 @@ const TabsVariants = ({label, data, state, name, className, companyId, company_t
         header: 'Пополнить счет',
         state: true,
       };
-      result = (<Tabs.Panel state={state} name={'info'}  className={'py-12'} company_type={company_type}>
+      result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
          {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />}
         <DList label={'ИНН'} title={data[`${company_type}profile`].inn} />
         <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />

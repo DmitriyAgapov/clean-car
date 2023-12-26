@@ -3,8 +3,9 @@ import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import SelectCustom from 'components/common/ui/Select/Select'
 import { Field, useFormik, useFormikContext } from 'formik'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CompanyType } from "stores/companyStore";
+import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
 
 export function FormStep1(props: {
   step: any
@@ -18,6 +19,8 @@ export function FormStep1(props: {
   prop8: (o: any) => { label: any; value: string }
 }) {
   const { values, touched,  errors, isValidating }:any = useFormikContext();
+  console.log(values.application_type || values.application_type.value == CompanyType.customer);
+  console.log(values.application_type == CompanyType.customer || values.application_type.value == CompanyType.performer  );
   return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -36,7 +39,7 @@ export function FormStep1(props: {
               variant={ButtonVariant['accent-outline']}
             />
 
-            {values.application_type == CompanyType.customer ? (
+            {values.application_type == CompanyType.customer || values.application_type.value == CompanyType.customer ? (
               <Button
                 text={'Дальше'}
                 action={() => (Object.keys(errors).length == 0) && props.action1()}
@@ -91,18 +94,8 @@ export function FormStep1(props: {
             className={' w-fit'}
             options={props.store.catalogStore.cities.map(props.prop8)}
           />
+          <InputAutocomplete />
         </React.Suspense>
-        <label
-          className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}
-          htmlFor={'address'}
-          data-form_error={errors.address && touched.address && 'error'}
-        >
-          {'Адрес'}
-          <Field id={'address'} name='address' placeholder={'Введите название компании'} type={'text'} />
-          {errors.address && touched.address ? (
-            <div className={'form-error'}>{errors.address}</div>
-          ) : null}
-        </label>
 
         <label
           className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}
@@ -145,8 +138,9 @@ export function FormStep1(props: {
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         <SelectCustom
           label={'Тип'}
-          defaultValue={props.values.application_type}
-          value={props.values.application_type}
+          disabled={props.values.application_type.readOnly}
+          defaultValue={props.values.application_type || props.values.application_type.value}
+          value={props.values.application_type.value || props.values.application_type.value}
           name={'application_type'}
           className={' w-fit'}
           options={[
@@ -154,7 +148,7 @@ export function FormStep1(props: {
             { label: 'Исполнитель', value: CompanyType.performer },
           ]}
         />
-        {props.values.application_type == CompanyType.performer && (
+        {props.values.application_type.value == CompanyType.performer && (
           <label
             className={'account-form__input  !flex-[0_0_14rem]'}
             htmlFor={'service_percent'}

@@ -26,7 +26,7 @@ export default function UsersPageCreateAction() {
                   Назад к списку пользователей{' '}
                 </>
               }
-              className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-7'}
+              className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
               action={() => navigate(-1)}
               variant={ButtonVariant.text}
             />

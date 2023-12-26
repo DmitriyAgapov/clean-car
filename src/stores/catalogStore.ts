@@ -1,8 +1,11 @@
 import { flow, makeObservable, observable } from 'mobx'
 import agent from 'utils/agent'
-
+type City = {
+  id: number
+  name: string
+}
 export class CatalogStore {
-  cities = []
+  cities: City[] = []
   getCities = flow(function* (this: CatalogStore) {
     let cities
     if (this.cities.length === 0) {
@@ -20,6 +23,9 @@ export class CatalogStore {
     makeObservable(this, {
       cities: observable,
     })
+  }
+  getCity(id:number) {
+    if(id) return this.cities.filter((item: City) => item.id == id)[0].name
   }
 }
 

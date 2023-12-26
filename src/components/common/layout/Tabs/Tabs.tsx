@@ -52,7 +52,6 @@ const Tabs = ({ data }: TabsProps) => {
     const  handleChangeTabState = (event: Event, label: string) => {
      setState(label);
     }
-  console.log(data);
     const TabPanels = ():any => {
     const result = []
       for(const key in data) {
@@ -62,7 +61,6 @@ const Tabs = ({ data }: TabsProps) => {
           key={`var-${data[key].label}`}
           company_type={data.company.company_type}
         />)
-
       }
       return result
     }

@@ -1,114 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, {  useRef, useState } from 'react'
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import SearchBar from "components/common/layout/SearchBar/SearchBar";
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import CreateInput from "components/common/ui/CreateInput/CreateInput";
-import { useDebouncedState, useDebouncedValue } from '@mantine/hooks'
 import agent from "utils/agent";
-import logo from 'components/common/layout/Logo/Logo'
-import { Combobox, Input, InputBase, Loader, Select, TextInput, useCombobox } from '@mantine/core'
+import { Combobox,Loader, TextInput, useCombobox } from '@mantine/core'
+import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
 
 
 
-export function AsyncAutocomplete() {
-  const combobox = useCombobox({
-    onDropdownClose: () => combobox.resetSelectedOption(),
-  });
 
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any[] | null>([]);
-  const [value, setValue] = useState('');
-  const [empty, setEmpty] = useState(false);
-  const abortController = useRef<AbortController>();
-  async function getData(query: string) {
-      try {
-          // @ts-ignore
-          const response = await agent.Utils.suggest({ query: query })
-          console.log(response)
-          // @ts-ignore
-          setData(response)
-          setLoading(false)
-          combobox.resetSelectedOption()
-        // @ts-ignore
-        const {data} = response
-        return data.suggestions
-
-
-      } catch (e) {
-      } finally {
-          console.log('success')
-        console.log(data);
-
-      }
-  }
-  const fetchOptions = (query: string) => {
-    abortController.current?.abort();
-    abortController.current = new AbortController();
-    setLoading(true);
-
-    getData(query)
-    .then((result) => {
-      console.log(result);
-      // @ts-ignore
-      setData(result);
-      setLoading(false);
-
-      // setEmpty(result.length === 0);
-      abortController.current = undefined;
-    })
-    .catch(() => {});
-  };
-
-  const options = (data || []).map((item, index) => (
-    <Combobox.Option value={item.value} key={index}>
-      {item.value}
-    </Combobox.Option>
-  ));
-
-  return (
-      <Combobox
-          onOptionSubmit={(optionValue) => {
-              setValue(optionValue)
-              combobox.closeDropdown()
-          }}
-          withinPortal={false}
-          store={combobox}
-      >
-          <Combobox.Target>
-              <TextInput
-                  label='Pick value or type anything'
-                  placeholder='Search groceries'
-                  value={value}
-                  onChange={(event: { currentTarget: { value: React.SetStateAction<string> } }) => {
-                      setValue(event.currentTarget.value)
-                      // @ts-ignore
-                    fetchOptions(event.currentTarget.value)
-                      combobox.resetSelectedOption()
-                      combobox.openDropdown()
-                  }}
-                  onClick={() => combobox.openDropdown()}
-                  onFocus={() => {
-                      combobox.openDropdown()
-                      if (data === null) {
-                          fetchOptions(value)
-                      }
-                  }}
-                  onBlur={() => combobox.closeDropdown()}
-                  rightSection={loading && <Loader size={18} />}
-              />
-          </Combobox.Target>
-
-          <Combobox.Dropdown hidden={data === null}>
-              <Combobox.Options>
-                  {options}
-                  {empty && <Combobox.Empty>No results found</Combobox.Empty>}
-              </Combobox.Options>
-          </Combobox.Dropdown>
-      </Combobox>
-  )
-}
 const sidebarMenu: { icon: React.ReactNode; title: string; url: string }[] = [
   {
     icon: <img src={'/icons/home.png'} alt={''} />,
@@ -239,7 +142,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <p>
-          <AsyncAutocomplete/>
+          <InputAutocomplete/>
           {/* <Select */}
           {/*   searchable */}
           {/*   value={value} */}

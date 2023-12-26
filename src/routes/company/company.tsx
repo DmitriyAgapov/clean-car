@@ -20,12 +20,14 @@ const CompanyPage = () => {
   const  companyData = store.companyStore.getCompanyFullData(id);
 
   const { company, users, address, application_type,   company_type, contacts, created,inn, legal_address, ogrn, service_percent, updated } = companyData
-  console.log(company.company_type);
+
   return (
       <Section type={SectionType.default}>
           <Panel
               variant={PanelVariant.withGapOnly}
-              header={<><div><Button text={<><SvgBackArrow />Назад к списку компаний{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-7'} action={() => navigate(-1)} variant={ButtonVariant.text} /><Heading text={'Компания'} variant={HeadingVariant.h1} className={'!mb-6 inline-block'} color={HeadingColor.accent} /></div><LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} /></>}
+              header={<><div>
+                <Button text={<><SvgBackArrow />Назад к списку компаний{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
+                <Heading text={'Компания'} variant={HeadingVariant.h1} className={'!mb-0 inline-block'} color={HeadingColor.accent} /></div><LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} /></>}
           />
 
           <Panel

@@ -141,10 +141,10 @@
 	}
   }
 
-
   &[data-background="glass"] {
 	border: 0.0625rem solid var(--borderPanelColor);
 	@apply bg-gray-4/70;
+	backdrop-filter: blur(2px);
   }
 }
 

@@ -67,7 +67,7 @@ export function FormStepTwo(props: {
         <label className={'account-form__input w-24 flex-grow   !flex-[0_1_auto]'}
           htmlFor={'overdraft_sum'}
           data-form_error={errors.overdraft_sum && touched.overdraft_sum && 'error'}>
-          {' '}
+          {'Сумма '}
           <Field id={'overdraft_sum'}
             name='overdraft_sum'
             placeholder={'Введите название компании'}

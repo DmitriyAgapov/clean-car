@@ -22,7 +22,7 @@ export type Company<Type>  = {
   updated?: string;
   is_active?: boolean;
   profile_id?: string;
-  company_type: Type;
+  company_type?: Type;
   city: City | number;
 } & CompanyProfile<Type>
 
@@ -36,6 +36,9 @@ export interface CustomerProfile {
     contacts: string
     payment: Payment,
     bill: string,
+    lat: number
+    lon: number
+    application_type?: string
     overdraft: boolean,
     overdraft_sum: number,
     performer_company: any[]
@@ -175,10 +178,43 @@ export class CompanyStore {
         } catch (e) {
             // @ts-ignore
           new Error('Create COmpany failed', e)
-            this.loadingCompanies = true
+            this.loadingCompanies = false
             return 'error'
         } finally {
-            this.loadingCompanies = true
+            this.loadingCompanies = false
+        }
+    })
+    editCompany = flow(function* ( this:CompanyStore, data: any, type: CompanyType, id ) {
+        this.loadingCompanies = true
+
+        try {
+            if (type === CompanyType.performer) {
+                // @ts-ignore
+              const  response = yield agent.Companies.editCompany(data, 'performer', id)
+              if (response.status > 199 && response.status < 299) {
+                this.loadCompanyWithTypeAndId('performer', response.data.id)
+                return response.data
+              }
+              return response.response
+            }
+            if (type === CompanyType.customer) {
+
+                const  response  = yield agent.Companies.editCompany(data, 'customer', id)
+
+              if (response.status > 199 && response.status < 299) {
+                this.loadCompanyWithTypeAndId('customer', response.data.id)
+                return response.data
+              }
+              return response.response
+
+            }
+        } catch (e) {
+            // @ts-ignore
+          new Error('Create COmpany failed', e)
+            this.loadingCompanies = false
+            return 'error'
+        } finally {
+            this.loadingCompanies = false
         }
     })
 
@@ -194,6 +230,7 @@ export class CompanyStore {
           setCompanyPerformValue: action,
           getCompanyFullData: action,
           getCompanyUsers: action,
+          editCompany: action,
 
             // updatingUser: observable,
             // updatingUserErrors: observable,

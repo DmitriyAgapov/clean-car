@@ -46,9 +46,10 @@ const theme = createTheme({
     }),
     Select: Select.extend({
         classNames: {
-          input: "bg-white",
+          input: "bg-white data-[disabled=true]:bg-white",
           dropdown: "bg-white",
-          option: 'tracking-input'
+          option: 'tracking-input',
+
 
         }
     })

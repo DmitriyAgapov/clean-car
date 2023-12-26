@@ -1,4 +1,6 @@
 import { MantineProvider, createTheme, Select } from '@mantine/core';
+import type { SelectProps } from '@mantine/core';
+
 import { useFormikContext } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
@@ -14,17 +16,18 @@ const theme = createTheme({
          className,
          options,
          action,
-         defaultValue
+         defaultValue,
+      disabled = false
      }: {
          label?: string
          placeholder?: string
-         value: any | string | number
+
          className?: string
          name: string
          options: any[] | any
 			 		defaultValue?: any
          action?: (event: any) => void
-     },
+     } & SelectProps,
 
  ) => {
      const [tempValue, setValue] = useState(value)
@@ -57,6 +60,7 @@ const theme = createTheme({
 
      return (
          <Select
+              disabled={disabled}
              ref={ref}
              withCheckIcon={false}
              classNames={{

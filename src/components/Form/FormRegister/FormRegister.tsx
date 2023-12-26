@@ -18,7 +18,7 @@ const SignupSchema = Yup.object().shape({
   pwd2: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль'),
 })
 
-const InnerForm = () => {
+const FormRegister = () => {
   const store = useStore()
   return (
     <Formik
@@ -32,7 +32,6 @@ const InnerForm = () => {
       }}
       validationSchema={SignupSchema}
       onSubmit={(values, actions) => {
-        // console.log({ values, actions });
         store.authStore.setLastname(values.lastName)
         store.authStore.setFirstname(values.firstName)
         store.authStore.setPhone(values.phone)
@@ -99,10 +98,6 @@ const InnerForm = () => {
       )}
     </Formik>
   )
-}
-
-const FormRegister = () => {
-  return <InnerForm />
 }
 
 export default FormRegister

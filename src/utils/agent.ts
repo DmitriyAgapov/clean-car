@@ -137,7 +137,7 @@ type CreateCompanyPerformerFormData = Company<CompanyType.performer>
 
 const crudCompanyMethods = {
   create: (data:any, type:string) => requests.post(`/companies/${type}/create/`, data),
-  update: (data:any, type:string, id: number) => requests.post(`/companies/${type}/${id}/update/`, data),
+  update: (data:any, type:string, id: number) => requests.put(`/companies/${type}/${id}/update/`, data),
   list: (type:string) => requests.get(`/companies/${type}/list/`),
   read: (id: number, type:string) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
   delete: (id: number) => requests.delete(`/companies/${id}/delete/`),
@@ -153,9 +153,12 @@ const apiEndPoint = {
 const Companies = {
 
     createCompanyPerformers: ( data: CreateCompanyPerformerFormData, type: string ) => {
-      console.log();
       return  apiEndPoint.company.create(data, type)
     },
+    editCompany: ( data: CreateCompanyPerformerFormData, type: string, id:number ) => {
+      return  apiEndPoint.company.update(data, type, id)
+    },
+
     getCompanyData: (id: number, type: string) => apiEndPoint.company.read(id, type),
     // createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
     //   return  requests.post('/companies/performer/create/', data)
@@ -174,6 +177,7 @@ const Companies = {
             page: page,
         }),
     getAllCompanies: () => requests.get('/companies/all_companies/list/', {}),
+
 }
 
 const PermissionsAdmin = {

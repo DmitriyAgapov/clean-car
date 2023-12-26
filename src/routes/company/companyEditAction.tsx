@@ -32,7 +32,7 @@ export default function CompanyPageEditAction(props: any) {
         header={
           <>
             <Button text={<><SvgBackArrow />Назад к компании</>}
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-7'}
+              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
               action={() => navigate(-1)}
               variant={ButtonVariant.text}
             />
