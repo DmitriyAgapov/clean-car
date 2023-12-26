@@ -17,7 +17,6 @@ const SignupSchema = Yup.object().shape({
     ogrn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
     contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
 })
-
 type FormCreateCompanyProps = {}
 
 const FormEditCompany = ({data}:any) => {

@@ -301,6 +301,7 @@
   grid-template-columns: 6rem 2fr 1fr 1fr;
 
   &:hover {
+	background-attachment: fixed;
 	background: -moz-linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
 	background: -webkit-linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
 	background: -o-linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
