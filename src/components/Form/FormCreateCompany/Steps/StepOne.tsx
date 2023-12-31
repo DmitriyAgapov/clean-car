@@ -19,7 +19,7 @@ export function FormStep1(props: {
   prop8: (o: any) => { label: any; value: string }
 }) {
   const { values, touched,  errors, isValidating }:any = useFormikContext();
-  console.log(values.application_type || values.application_type.value == CompanyType.customer);
+  console.log(values.application_type == CompanyType.performer || values.application_type.value == CompanyType.performer);
   console.log(values.application_type == CompanyType.customer || values.application_type.value == CompanyType.performer  );
   return (
     <Panel
@@ -148,7 +148,7 @@ export function FormStep1(props: {
             { label: 'Исполнитель', value: CompanyType.performer },
           ]}
         />
-        {props.values.application_type.value == CompanyType.performer && (
+        {(values.application_type == CompanyType.performer || values.application_type.value == CompanyType.performer) && (
           <label
             className={'account-form__input  !flex-[0_0_14rem]'}
             htmlFor={'service_percent'}

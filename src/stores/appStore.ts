@@ -1,14 +1,15 @@
 import { action, makeObservable, observable, reaction } from "mobx";
 import { ReactNode } from "react";
 import userStore, { UserTypeEnum } from "./userStore";
-import { Company } from "stores/companyStore";
-import heading from "components/common/ui/Heading/Heading";
+import { PermissionName, Permissions } from "stores/permissionStore";
+import label from "utils/labels";
 
 export class AppStore {
   appName = 'CleanCar'
   appRouteName = '.авторизация'
   appTheme = 'dark'
   token = window.localStorage.getItem('jwt')
+  appPermissions?: Permissions[]
   tokenFull: {} | null = null
   appLoaded = false
   burgerState: boolean = false
@@ -32,6 +33,7 @@ export class AppStore {
       token: observable,
       modal: observable,
       appRouteName: observable,
+      appPermissions: observable,
       appLoaded: observable,
       burgerState: observable,
       asideState: observable,
@@ -61,9 +63,48 @@ export class AppStore {
         }
       },
     )
+    reaction(() => this.appType,
+      (appType => {
+        // console.log(appType);
+        // console.log(userStore);
+        let ar = new Map([]);
+        // @ts-ignore
+        if(appType === UserTypeEnum.admin) {
+
+          for (let permissionNameKey in PermissionName) {
+
+            // @ts-ignore
+            ar.set(PermissionName[permissionNameKey], {
+              read: true,
+              create: true,
+              delete: true,
+              name: permissionNameKey,
+              update:true
+            })
+          }
+        } else {
+          this.appPermissions = userStore.currentUser?.account_bindings?.filter(value => value.company.company_type == label(appType+'_company_type'))[0].group.permissions
+          this.appPermissions?.forEach((item) => {
+            // @ts-ignore
+            ar.set(PermissionName[item.name], item)
+          })
+        }
+
+
+        // @ts-ignore
+
+        // console.log(get(this.currentUserPermissions, 0));
+
+
+        // @ts-ignore
+        userStore.setCurrentPermissions(ar);
+
+      })
+    )
   }
 
   setAppType(type: UserTypeEnum) {
+
     this.appType = type
 
     let routeName = ''
@@ -71,7 +112,7 @@ export class AppStore {
       case UserTypeEnum.admin:
         routeName = 'администратор системы'
         break
-      case UserTypeEnum.executor:
+      case UserTypeEnum.performer:
         routeName = 'Кабинет исполнителя'
         break
       case UserTypeEnum.customer:

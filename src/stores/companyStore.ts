@@ -7,8 +7,7 @@ export enum Payment {
 }
 export enum CompanyType {
   customer = "Компания-Заказчик",
-  performer = "Компания-Исполнитель",
-  phislico = "Физическое лицо"
+  performer = "Компания-Исполнитель"
 }
 
 export type City = {
@@ -68,15 +67,6 @@ export class CompanyStore {
     companies: IObservableArray<Companies> = observable.array([])
     companiesPerformers = observable.array()
     loadingCompanies: boolean = false
-    // companyForm: Company<CompanyType> = observable.object({
-    //
-    //
-    //   name: '',
-    //   is_active: true,
-    //   company_type: CompanyType,
-    //   city: {}
-    //
-    // })
     loadingError: boolean = false;
     fullCompanyData  = new Map([])
     updatingUser?: boolean
@@ -87,7 +77,7 @@ export class CompanyStore {
             this.companiesPerformers = data.results
         } catch (e) {
 
-            throw new Error('Filed load companies performers')
+            throw new Error('Failed load companies performers')
         }
     })
   getCompanyUsers = flow(function* (this: CompanyStore, id: number) {
@@ -115,6 +105,7 @@ export class CompanyStore {
       }
       return result
     })
+
     loadCompanyWithTypeAndId = flow(function* (this: CompanyStore, type: string, id: number){
       this.loadingCompanies = true
 
@@ -122,6 +113,7 @@ export class CompanyStore {
         let data = {
           company: {},
           users: [],
+          filials: []
         };
         const company = yield agent.Companies.getCompanyData(id, type);
         const users = yield agent.Account.getCompany(id);
@@ -134,8 +126,15 @@ export class CompanyStore {
 
         data.users =  {
           data: users.data.results,
+          label: 'Филиалы'
+        } as any;
+
+        data.filials =  {
+          data: users.data.results,
           label: 'Сотрудники'
         } as any;
+
+
 
         // @ts-ignore
         set(this.fullCompanyData, {[data.company.data.id]: data});
@@ -217,20 +216,36 @@ export class CompanyStore {
             this.loadingCompanies = false
         }
     })
+    getAllCompanies = flow(function*(this: CompanyStore){
+      let result;
+      try {
+        const {data, status} = yield agent.Companies.getAllCompanies()
+        if (status === 200) {
+          this.companies = data.results;
+          console.log(data);
+        }
+      } catch (error) {
+        throw new Error('Fetch data companies failed')
+      } finally {
+        this.loadingCompanies = false
+      }
+      return this.companies
+    })
 
     constructor() {
         makeObservable(this, {
             companies: observable,
             loadingCompanies: observable,
-          fullCompanyData: observable,
+            fullCompanyData: observable,
             addCompany: action,
             loadCompanies: action,
-          loadCompanyWithTypeAndId: action,
-          loadCompaniesPerformers: action,
-          setCompanyPerformValue: action,
-          getCompanyFullData: action,
-          getCompanyUsers: action,
-          editCompany: action,
+            loadCompanyWithTypeAndId: action,
+            loadCompaniesPerformers: action,
+            setCompanyPerformValue: action,
+            getCompanyFullData: action,
+            getCompanyUsers: action,
+            editCompany: action,
+            getAllCompanies: action
 
             // updatingUser: observable,
             // updatingUserErrors: observable,
@@ -257,7 +272,9 @@ export class CompanyStore {
         } finally {
             this.loadingCompanies = false
         }
+        return this.companies
     }
+
     setCompanyPerformValue(obj: any) {
         // this.companyForm = {
         //   ...this.companyForm,
@@ -265,6 +282,7 @@ export class CompanyStore {
         // }
 
     }
+
     getCompanies() {
         return this.companies
     }

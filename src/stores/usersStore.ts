@@ -6,7 +6,7 @@ import { Permissions } from 'stores/permissionStore'
 enum UserTypeEnum {
   admin,
   customer,
-  executor,
+  performer,
 }
 
 export type User = {
@@ -24,7 +24,7 @@ export type User = {
 }
 
 export class UsersStore {
-  users: (User & Company<any> & Permissions)[] = observable.array([])
+  users: User[] = observable.array([])
   loadingUsers: boolean = false
   loadingErrors?: any
   // }),
@@ -54,13 +54,14 @@ export class UsersStore {
     let user
     try {
       const { data } = yield agent.Users.getUser({ company_id: companyid, id: id })
-
+      console.log(data);
       user = data
     } catch (error) {
       new Error('get User failed')
     }
     return user
   })
+
 
   constructor() {
     makeObservable(this, {

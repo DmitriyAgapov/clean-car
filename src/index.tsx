@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Link, Navigate, RouterProvider } from 'react-router-dom'
 // @ts-ignore
 import styles from './assets/_forms.scss'
 import {
@@ -46,118 +46,116 @@ const theme = createTheme({
     }),
     Select: Select.extend({
         classNames: {
-          input: "bg-white data-[disabled=true]:bg-white",
+          input: "bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10",
           dropdown: "bg-white",
           option: 'tracking-input',
-
-
         }
     })
   },
 });
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <AuthPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: '/register',
-    element: <RegisterPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: '/restore',
-    element: <RestorePasswordPage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: '/register/success',
-    element: <RegisterSuccessPage />,
-    errorElement: <ErrorPage />,
-    loader: authUser,
-  },
-  {
-    path: '/account',
-    element: <AccountPage />,
-    errorElement: <ErrorPage />,
-    loader: authUser,
-    children: [
-      {
-        path: 'profile',
-        element: <MyProfilePage />,
-        loader: profileLoader,
-      },
-      {
-        path: 'dashboard',
-        element: <DashboardPage />,
-      },
-      {
-        path: 'users',
-        element: <UsersPage />,
-        loader: usersLoader,
+    {
+        path: '/',
+        element: <AuthPage />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: '/register',
+        element: <RegisterPage />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: '/restore',
+        element: <RestorePasswordPage />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: '/register/success',
+        element: <RegisterSuccessPage />,
+        errorElement: <ErrorPage />,
+        loader: authUser,
+    },
+    {
+        path: '/account',
+        element: <AccountPage />,
+        errorElement: <ErrorPage />,
+        loader: authUser,
         children: [
-          {
-            path: ':companyid/:id',
-            element: <UserPage />,
-            loader: userLoader,
-          },
-          {
-            path: 'create',
-            element: <UsersPageCreateAction />,
-            loader: userLoader,
-          },
+            {
+                path: 'profile',
+                element: <MyProfilePage />,
+                loader: profileLoader,
+            },
+            {
+                path: 'dashboard',
+                element: <DashboardPage />,
+            },
+            {
+                path: 'users',
+                element: <UsersPage />,
+                loader: usersLoader,
+                children: [
+                    {
+                        path: ':companyid/:id',
+                        element: <UserPage />,
+                        loader: userLoader,
+                    },
+                    {
+                        path: 'create',
+                        element: <UsersPageCreateAction />,
+                        loader: userLoader,
+                    },
+                ],
+            },
+            {
+                path: 'companies',
+                element: <CompaniesPage />,
+                loader: companyLoader,
+                errorElement: <Navigate to='/account' replace={true} />,
+                children: [
+                    {
+                        path: ':companytype/:id',
+                        element: <CompanyPage />,
+                        loader: (props) => companyLoader({ ...props, action: 'read' }),
+                    },
+                    {
+                        path: ':companytype/:id/edit',
+                        element: <CompanyPageEditAction />,
+                        loader: companyLoader,
+                    },
+                    {
+                        path: 'create',
+                        element: <CompanyPageCreateAction />
 
+                    },
+                ],
+            },
+            {
+                path: 'filial',
+                element: <FilialsPage />,
+            },
+            {
+                path: 'groups',
+                element: <GroupsPage />,
+                loader: groupsLoader,
+            },
+            {
+                path: 'groups/create',
+                element: <GroupPageCreateAction />,
+                loader: groupsCreatLoader,
+            },
+            {
+                path: 'groups/:id',
+                element: <GroupPage />,
+                loader: groupsIdLoader,
+            },
+            {
+                path: 'groups/:id/edit',
+                element: <GroupPageEditAction />,
+                loader: groupsIdLoader,
+            },
         ],
-      },
-      {
-        path: 'companies',
-        element: <CompaniesPage />,
-        loader: companyLoader,
-        children: [
-          {
-            path: ':companytype/:id',
-            element: <CompanyPage />,
-            loader: companyLoader,
-          },
-           {
-            path: ':companytype/:id/edit',
-            element: <CompanyPageEditAction />,
-             loader: companyLoader,
-          },
-          {
-            path: 'create',
-            element: <CompanyPageCreateAction />,
-          }
-
-        ],
-      },
-      {
-        path: 'filials',
-        element: <FilialsPage />
-      },
-      {
-        path: 'groups',
-        element: <GroupsPage />,
-        loader: groupsLoader,
-      },
-      {
-        path: 'groups/create',
-        element: <GroupPageCreateAction />,
-        loader: groupsCreatLoader,
-      },
-      {
-        path: 'groups/:id',
-        element: <GroupPage />,
-        loader: groupsIdLoader,
-      },
-      {
-        path: 'groups/:id/edit',
-        element: <GroupPageEditAction />,
-        loader: groupsIdLoader,
-      },
-    ],
-  },
+    },
 ])
 root.render(
   <StoreProvider>

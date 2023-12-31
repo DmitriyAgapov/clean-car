@@ -13,7 +13,7 @@ export enum HeadingVariant {
 export enum HeadingDirectory {
   admin = 'admin',
   customer = 'customer',
-  executor = 'executor',
+  performer = 'performer',
 }
 
 export enum HeadingColor {

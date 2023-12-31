@@ -9,73 +9,97 @@ import DateComponent from 'components/common/layout/DateComponent/DateComponent'
 import UserMenu from 'components/common/layout/UserMenu/UserMenu'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { ButtonVariant } from 'components/common/ui/Button/Button'
+import { observer } from 'mobx-react-lite'
 
-const sidebarMenu: { icon: React.ReactNode; title: string; url: string }[] = [
-    {
-        icon: <img src={'/icons/home.png'} alt={''} />,
-        title: 'Дашборд',
-        url: 'dashboard',
-    },
+const sidebarMenu: { icon: React.ReactNode; title: string; url: string, urlMap: string }[] = [
+
     {
         icon: <img src={'/icons/company.png'} alt={''} />,
         title: 'Компании',
         url: 'companies',
+        urlMap: 'companies',
     },
     {
         icon: <img src={'/icons/filials.png'} alt={''} />,
         title: 'Филиалы',
-        url: 'filials',
+        url: 'filial',
+        urlMap: 'filial',
     },
     {
         icon: <img src={'/icons/users.png'} alt={''} />,
         title: 'Пользователи',
         url: 'users',
+        urlMap: 'users',
     },
     {
         icon: <img src={'/icons/groups.png'} alt={''} />,
         title: 'Группы',
         url: 'groups',
+        urlMap: 'users',
     },
     {
         icon: <img src={'/icons/auto.png'} alt={''} />,
         title: 'Автомобили',
-        url: 'auto',
+        url: 'cars',
+        urlMap: 'cars',
     },
     {
         icon: <img src={'/icons/zayavki.png'} alt={''} />,
         title: 'Заявки',
-        url: 'orders',
+        url: 'bids',
+        urlMap: 'bids',
     },
     {
         icon: <img src={'/icons/price-list.png'} alt={''} />,
         title: 'Прайс-лист',
         url: 'price',
+        urlMap: 'price',
     },
     {
         icon: <img src={'/icons/limits.png'} alt={''} />,
         title: 'Лимиты',
         url: 'limits',
+        urlMap: 'limits',
     },
     {
         icon: <img src={'/icons/budget.png'} alt={''} />,
         title: 'Бюджет',
-        url: 'budget',
+        url: 'finance',
+        urlMap: 'finance',
     },
     {
         icon: <img src={'/icons/zp.png'} alt={''} />,
         title: 'Зарплата',
-        url: 'salary',
+        url: 'calculate',
+        urlMap: 'calculate',
     },
     {
         icon: <img src={'/icons/spravochnik.png'} alt={''} />,
         title: 'Справочник',
-        url: 'reference',
+        url: 'references',
+        urlMap: 'references',
     },
 ]
-export default function AccountPage() {
-    const store = useStore()
-    const { appStore, userStore, authStore } = store
 
+const AccountPage = () => {
+    const store = useStore()
+
+    const routesWithPermissions = React.useCallback(() => {
+        const routeWithPermissions: any[] = [  {
+            icon: <img src={'/icons/home.png'} alt={''} />,
+            title: 'Дашборд',
+            url: 'dashboard',
+        }]
+
+        const addRouteWithPermissions = (el: any) => {
+            const store = useStore()
+            if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
+               routeWithPermissions.push(el)
+            }
+        }
+        sidebarMenu.forEach((el) => addRouteWithPermissions(el))
+        return routeWithPermissions
+    }, [store.appStore.appType])
     return (
         <Layout
             className={'page-account'}
@@ -92,9 +116,11 @@ export default function AccountPage() {
                 </>
             }
         >
-            <Sidebar items={sidebarMenu} />
+            <Sidebar items={routesWithPermissions()} />
             <Outlet />
             <SvgAccount className={styles.svg} />
         </Layout>
     )
 }
+
+export default observer(AccountPage)

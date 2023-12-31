@@ -50,7 +50,7 @@ const TabsVariants = ({label, data, state, name, className, companyId, company_t
       };
       result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
          {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />}
-        <DList label={'ИНН'} title={data[`${company_type}profile`].inn} />
+        <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
         <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
         {company_type === 'customer' && <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}>
           <DList label={'Исполнители'} title={data[`${company_type}profile`].ogrn} />
@@ -63,7 +63,7 @@ const TabsVariants = ({label, data, state, name, className, companyId, company_t
           <Heading text={data[`${company_type}profile`].overdraft_sum + ' ₽' + ' с овердрафтом'}  variant={HeadingVariant.h4} color={HeadingColor.accent} />
         </>
 
-        }/>: <DList label={'Процент сервиса'} title={<>
+        }/> : <DList label={'Процент сервиса'} title={<>
           <Heading text={data.performerprofile.service_percent + ' %'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
         </>
 
@@ -73,15 +73,15 @@ const TabsVariants = ({label, data, state, name, className, companyId, company_t
         <DList label={'Подключенные услуги'} title={''} />
         <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts} />
         {company_type === 'customer' &&  <Button text={'Пополнить счет'}  action={async () => {
-          store.appStore.setModal(fundBill)
-        }} variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm}/>}
+        store.appStore.setModal(fundBill) }}
+         variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm} /> }
       </Tabs.Panel>)
       break;
 
 
     case 'Сотрудники':
-      result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none'}  bodyClassName={'!bg-transparent'}>
-        {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+      result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={data.map((item: User & {rootRoute?: string} ) => ({
             state: item.is_active,
             name: item.first_name + ' ' + item.last_name,

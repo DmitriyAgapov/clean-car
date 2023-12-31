@@ -137,7 +137,7 @@ export default function DashboardPage() {
             <Button text={'Сохранить'} variant={ButtonVariant.accent} size={ButtonSizeType.sm} />
             <Button text={'Сохранить'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
             <Button text={'Сохранить'} directory={ButtonDirectory.admin} size={ButtonSizeType.sm} />
-            <Button text={'Сохранить'} directory={ButtonDirectory.executor} size={ButtonSizeType.sm} />
+            <Button text={'Сохранить'} directory={ButtonDirectory.performer} size={ButtonSizeType.sm} />
             <Button text={'Сохранить'} directory={ButtonDirectory.customer} size={ButtonSizeType.sm} />
           </div>
         </div>
@@ -190,7 +190,7 @@ export default function DashboardPage() {
           <Button text={'Сохранить'} variant={ButtonVariant.accent} size={ButtonSizeType.sm} />
           <Button text={'Сохранить'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
           <Button text={'Сохранить'} directory={ButtonDirectory.admin} size={ButtonSizeType.sm} />
-          <Button text={'Сохранить'} directory={ButtonDirectory.executor} size={ButtonSizeType.sm} />
+          <Button text={'Сохранить'} directory={ButtonDirectory.performer} size={ButtonSizeType.sm} />
           <Button text={'Сохранить'} directory={ButtonDirectory.customer} size={ButtonSizeType.sm} />
         </div>
       </div>

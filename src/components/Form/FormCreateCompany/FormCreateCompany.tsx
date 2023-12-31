@@ -35,7 +35,7 @@ const initValues = {
     overdraft_sum: 123,
     payment: Payment.postoplata,
     overdraft: 'Да',
-    executors_list: 'Да',
+    performers_list: 'Да',
     bill: '100',
 }
 

@@ -49,7 +49,14 @@ const theme = createTheme({
                  ...values,
                  application_type: event,
              }))
-         } else {
+         }  else if (name === 'company_id') {
+             setValues(() => ({
+                 // @ts-ignore
+                 ...values,
+               company_id: Number(event),
+             }))
+         }
+         else {
              setValues(() => ({
                  // @ts-ignore
                  ...values,

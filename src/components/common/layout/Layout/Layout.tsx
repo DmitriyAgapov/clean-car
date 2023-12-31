@@ -9,7 +9,6 @@ import Burger from 'components/common/ui/Burger/Burger'
 import '../../../../assets/styles.scss'
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
-import { entries, toJS, values } from 'mobx'
 import { useWindowDimensions } from "utils/utils";
 
 const sidebarMenu: { title: string; url: string }[] = [

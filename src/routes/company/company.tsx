@@ -27,7 +27,8 @@ const CompanyPage = () => {
               variant={PanelVariant.withGapOnly}
               header={<><div>
                 <Button text={<><SvgBackArrow />Назад к списку компаний{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
-                <Heading text={'Компания'} variant={HeadingVariant.h1} className={'!mb-0 inline-block'} color={HeadingColor.accent} /></div><LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} /></>}
+                <Heading text={'Компания'} variant={HeadingVariant.h1} className={'!mb-0 inline-block'} color={HeadingColor.accent} /></div>
+              {store.userStore.getUserCan('companies', 'update') && <LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} />}</>}
           />
 
           <Panel
@@ -60,7 +61,7 @@ const CompanyPage = () => {
                                   directory={
                                     company.company_type == 'customer'
                                           ? HeadingDirectory.customer
-                                          : HeadingDirectory.executor
+                                          : HeadingDirectory.performer
                                   }
                               />
                               <Heading className={'!m-0'} text={company.data.city.name} variant={HeadingVariant.h4} />

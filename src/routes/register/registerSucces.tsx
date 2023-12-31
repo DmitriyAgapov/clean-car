@@ -55,7 +55,7 @@ export default function RegisterSuccessPage() {
             header={
               <Heading
                 className={'desktop:!text-5xl tablet:!text-4xl !leading-snug !font-extrabold '}
-                directory={HeadingDirectory.executor}
+                directory={HeadingDirectory.performer}
                 // @ts-ignore
                 text={`${store.userStore.currentUser?.first_name}, регистрация прошла успешно!`}
                 variant={HeadingVariant.h1}
@@ -66,7 +66,7 @@ export default function RegisterSuccessPage() {
               <div className={'gap-4 flex flex-wrap'}>
                 <LinkStyled
                   text={'В личный кабинет'}
-                  directory={ButtonDirectory.executor}
+                  directory={ButtonDirectory.performer}
                   variant={ButtonVariant['accent']}
                   size={ButtonSizeType.base}
                   to={'/account'}

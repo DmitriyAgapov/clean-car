@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateCompany from '../../components/Form/FormCreateCompany/FormCreateCompany'
 
@@ -13,6 +13,7 @@ export default function CompanyPageCreateAction(props: any) {
   const location = useLocation()
 
   const navigate = useNavigate()
+
   // @ts-ignore
   const [changes, setChanges] = useState({})
 
@@ -22,6 +23,7 @@ export default function CompanyPageCreateAction(props: any) {
       name: event.target.value,
     }))
   }
+  if(!store.userStore.getUserCan('companies', 'create')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel

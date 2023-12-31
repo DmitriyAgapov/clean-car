@@ -2,17 +2,18 @@ import { action, flow, IObservableArray, makeObservable, observable } from 'mobx
 import agent from 'utils/agent'
 import { Company, CompanyStore } from 'stores/companyStore'
 
-enum PermissionName {
-  'Компании',
-  'Управление филиалами и отделами заказчиками',
-  'Управление филиалами и отделами исполнителей',
-  'Управление пользователями',
-  'Управление автомобилями',
-  'Управление заявками',
-  'Управление прайс-листом',
-  'Управление лимитами',
-  'Управление справочниками',
-  'Финансовый блок',
+export enum PermissionName {
+  'Компании' = 'companies',
+  'Управление филиалами'  = 'filial',
+  'Управление пользователями' = 'users',
+  'Управление автомобилями' = 'cars',
+  'Управление заявками' = 'bids',
+  'Управление прайс-листом' = 'price',
+  'Управление лимитами' = 'limits',
+  'Управление справочниками' = 'references',
+  'Финансовый блок' = 'finance',
+  'Расчетный блок' = 'calculate',
+  'Индивидуальный расчет' = 'individual_calculate'
 }
 
 export type AccountProps = {
@@ -20,14 +21,17 @@ export type AccountProps = {
   group: GroupProps
   id: number
 }
-export type Permissions = {
-  id: string
-  name: PermissionName
+export type CRUD = {
   create: boolean
   read: boolean
   update: boolean
   delete: boolean
 }
+export type Permissions = {
+  id: string
+  name: PermissionName
+
+} & CRUD
 export type GroupProps = {
   id: number
   name: string
@@ -39,26 +43,18 @@ export class PermissionStore {
   permissions: IObservableArray<Permissions> = observable.array([], {
     deep: true,
   })
+  companyPermissions: IObservableArray<Permissions> = observable.array([], {
+    deep: true,
+  })
   permissionsMap = observable.map()
   loadingPermissions: boolean = false
   errors?: string
-  loadCompanyPermissions = flow(function*(companyStore: CompanyStore) {
-    companyStore.loadingCompanies = false
-    try {
-      // const permissions =
-    }
-    catch (e) {
-      companyStore.loadingError = true
-      new Error('Create Company failed')
-    }
-    finally {
-      companyStore.loadingCompanies = true
-    }
-  })
+
 
   constructor() {
     makeObservable(this, {
       permissions: observable,
+      companyPermissions: observable,
       errors: observable,
       loadingPermissions: observable,
       loadPermissionAdmin: action,
@@ -66,7 +62,27 @@ export class PermissionStore {
       setPermissionStoreAdmin: action,
       createPermissionStoreAdmin: action,
       getAllPermissions: action,
+      loadCompanyPermissions: action
     })
+  }
+  async loadCompanyPermissions( id: number) {
+
+    this.companyPermissions.clear()
+    try {
+      if(id !== 0) {
+        const permissions = await agent.Permissions.getAllCompanyPermissions(id)
+        if (permissions.status === 200) {
+          // @ts-ignore
+          this.companyPermissions = permissions.data.results
+        }
+      }
+      // const permissions =
+    } catch (e) {
+      new Error('Create Company failed')
+    } finally {
+
+    }
+    return this.companyPermissions
   }
 
   async loadPermissionAdmin() {
@@ -120,6 +136,7 @@ export class PermissionStore {
     agent.PermissionsAdmin.createAdminPermission(data)
     this.loadingPermissions = false
   }
+
 }
 
 const permissionStore = new PermissionStore()

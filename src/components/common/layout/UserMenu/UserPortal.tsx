@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserTypeEnum } from 'stores/userStore'
+import label from "utils/labels";
 
 const StyledAccounts = styled.ul`
   margin: 0;
@@ -39,8 +40,8 @@ const StyledAccounts = styled.ul`
       background: var(--gradient-admin);
     }
 
-    &.user__type-executor {
-      background: var(--gradient-executor);
+    &.user__type-performer {
+      background: var(--gradient-performer);
     }
 
     &.user__type-customer {
@@ -62,7 +63,18 @@ const StyledButton = styled(Button)`
     margin-right: 1rem;
   }
 `
+const UserCompanies = () => {
+  const store = useStore();
+  const userLinks = store.userStore.roles.map((item:UserTypeEnum) => <li>
+    <Link key={item+'link'} to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum[item])}>
+      <span className={`user__type-${item}`}>{label(item+'_k')}</span>Кабинет {label(item+'_name')}
+    </Link>
+  </li>)
 
+  return <StyledAccounts>
+    {userLinks}
+  </StyledAccounts>
+}
 const UserPortal = ({
   state,
   name,
@@ -113,23 +125,7 @@ const UserPortal = ({
         <div className={'user__name'}>{name}</div>
         <div className={'user__company'}>{company}</div>
         <hr />
-        <StyledAccounts>
-          <li>
-            <Link to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum.admin)}>
-              <span className={'user__type-admin'}>КА</span>Кабинет Администратора
-            </Link>
-          </li>
-          <li>
-            <Link to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum.executor)}>
-              <span className={'user__type-executor'}>КИ</span>Кабинет Исполнителя
-            </Link>
-          </li>
-          <li>
-            <Link to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum.customer)}>
-              <span className={'user__type-customer'}>КЗ</span>Кабинет Заказчика
-            </Link>
-          </li>
-        </StyledAccounts>
+        <UserCompanies />
         <hr />
         <StyledButton
           className={'button-exit'}

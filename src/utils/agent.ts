@@ -145,13 +145,16 @@ const crudCompanyMethods = {
 const crudAccountMethods = {
   getUsers: (company_id: number) => requests.get(`/accounts/${company_id}/users/list/`)
 }
+const crudPermissionsMethods = {
+  getCompanyPermissions: (company_id: number) => requests.get(`/permissions/${company_id}/groups/list/`),
+}
 
 const apiEndPoint = {
   company: crudCompanyMethods,
-  account: crudAccountMethods
+  account: crudAccountMethods,
+  permissions: crudPermissionsMethods
 }
 const Companies = {
-
     createCompanyPerformers: ( data: CreateCompanyPerformerFormData, type: string ) => {
       return  apiEndPoint.company.create(data, type)
     },
@@ -179,7 +182,10 @@ const Companies = {
     getAllCompanies: () => requests.get('/companies/all_companies/list/', {}),
 
 }
+const Permissions = {
+  getAllCompanyPermissions: (id:number) => apiEndPoint.permissions.getCompanyPermissions(id),
 
+}
 const PermissionsAdmin = {
   getAllAdminPermissions: (ordering?: string, page?: number, page_size?: number) =>
     requests.get('/permissions_admin/groups/list/', {}),
@@ -226,6 +232,7 @@ const agent = {
   Utils,
   Auth,
   Profile,
+  Permissions,
   Account,
   PermissionsAdmin,
   Companies,

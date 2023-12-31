@@ -4,18 +4,19 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import 'yup-phone-lite'
 import FormCreateUser from 'components/Form/FormCreateUser/FormCreateUser'
+import { useStore } from "stores/store";
 
 export default function UsersPageCreateAction() {
+  const store = useStore()
   const navigate = useNavigate()
-
+  if(!store.userStore.getUserCan('users', 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel
         className={'col-span-full'}
-
         headerClassName={'flex justify-between flex-wrap'}
         header={
           <>
@@ -82,7 +83,7 @@ export default function UsersPageCreateAction() {
         }
         background={PanelColor.glass}
       >
-<FormCreateUser/>
+      <FormCreateUser/>
       </Panel>
     </Section>
   )

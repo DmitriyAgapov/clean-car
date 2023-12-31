@@ -75,8 +75,8 @@ export function FormStepTwo(props: {
           {errors.overdraft_sum && touched.overdraft_sum ? (<div className={'form-error'}>{errors.overdraft_sum}</div>) : null}
         </label>
         <SelectCustom label={'Список исполнителей'}
-          value={values.executors_list}
-          name={'executors_list'}
+          value={values.performers_list}
+          name={'performers_list'}
           className={' w-fit  !flex-[0_0_auto]'}
           options={[ { label: 'Да', value: '1' }, { label: 'Нет', value: '2' }, ]} />
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />

@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { PermissionName } from "stores/permissionStore";
 
 const CompaniesPage = () => {
   const store = useStore()
@@ -28,7 +29,7 @@ const CompaniesPage = () => {
               className={'inline-block'}
               color={HeadingColor.accent}
             />
-            <Button
+            {store.userStore.getUserCan('companies', 'create') && <Button
               text={'Создать компанию'}
               action={() => navigate('create')}
               trimText={true}
@@ -36,7 +37,7 @@ const CompaniesPage = () => {
               className={'inline-flex'}
               directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}
-            />
+            />}
           </>
         }
       />

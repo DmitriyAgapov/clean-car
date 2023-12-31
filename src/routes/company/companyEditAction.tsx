@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
 import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
@@ -25,6 +25,7 @@ export default function CompanyPageEditAction(props: any) {
   }
   // @ts-ignore
   const {data} = useLoaderData()
+  if(!store.userStore.getUserCan('companies', 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel

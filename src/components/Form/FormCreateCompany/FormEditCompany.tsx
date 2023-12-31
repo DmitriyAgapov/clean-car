@@ -36,11 +36,11 @@ const FormEditCompany = ({data}:any) => {
     // @ts-ignore
     const {company} = companyData;
     const navigate = useNavigate()
-
+    console.log(companyData);
     const initValues = {
         id: id,
         company_name: company.data.name,
-        address: company.data[`${company.company_type}profile`].address,
+        address: company.data[`${company.company_type}profile`].address ? company.data[`${company.company_type}profile`].address : "Нет адреса",
         city: String(company.data.city.id),
         inn: company.data[`${company.company_type}profile`].inn,
         ogrn: company.data[`${company.company_type}profile`].ogrn,
@@ -57,7 +57,7 @@ const FormEditCompany = ({data}:any) => {
         overdraft_sum: company.data[`${company.company_type}profile`].overdraft_sum,
         payment: company.data[`${company.company_type}profile`].payment,
         overdraft: company.data[`${company.company_type}profile`].overdraft ? "1" : "2",
-        executors_list: 'Да',
+        performers_list: 'Да',
         bill: company.data[`${company.company_type}profile`].bill,
     }
 

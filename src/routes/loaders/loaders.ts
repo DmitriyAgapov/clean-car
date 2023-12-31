@@ -2,7 +2,7 @@ import { redirect } from 'react-router-dom'
 import appStore from 'stores/appStore'
 import userStore from 'stores/userStore'
 import companyStore from 'stores/companyStore'
-import permissionStore from 'stores/permissionStore'
+import permissionStore, { PermissionName } from "stores/permissionStore";
 import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
 import { AxiosResponse } from 'axios'
@@ -13,12 +13,18 @@ export const authUser = async () => {
   if (!appStore.token) {
     return redirect('/')
   } else {
-    await userStore.pullUser()
+    if(!userStore.currentUser) await userStore.pullUser()
   }
   return null
 }
-
-export const companyLoader = async ({ params: { id, companytype } }: any) => {
+const checkPermisssions = {
+  edit: (path:string) =>  (path.includes('edit') && userStore.getUserCan(path, 'update')),
+  create: (path:string) =>  (path.includes('create') && userStore.getUserCan(path, 'create')),
+  read: (path:string) => userStore.getUserCan(path, 'read')
+}
+export const companyLoader = async ({ params: { id, companytype, action }, ...props }: any) => {
+  const pathAr = props.request.url.split('/');
+  const actionName:string = pathAr[pathAr.length - 1] || 'read'
 
   const fullCompanyData = []
   if (id && companytype) {
@@ -39,7 +45,8 @@ export const companyLoader = async ({ params: { id, companytype } }: any) => {
   await catalogStore.getCities()
   await companyStore.loadCompaniesPerformers()
 
-  return { id: id, type: companytype, data: fullCompanyData }
+  if(checkPermisssions.read('companies')) return { id: id, type: companytype, data: fullCompanyData }
+  return;
 }
 
 export const usersLoader = async () => {
@@ -78,23 +85,16 @@ export const groupsLoader = async ({ params: { id } }: any) => {
 }
 
 export const groupsCreatLoader = async ({ params: { id } }: any) => {
-  const permissionSectionNames = [
-    'Компании',
-    'Управление филиалами и отделами заказчиками',
-    'Управление филиалами и отделами исполнителей',
-    'Управление пользователями',
-    'Управление автомобилями',
-    'Управление заявками',
-    'Управление прайс-листом',
-    'Управление лимитами',
-    'Управление справочниками',
-    'Финансовый блок',
-  ]
+  const ar = []
+  for (let permissionNameKey in PermissionName) {
+    // @ts-ignore
+    ar.push(permissionNameKey)
+  }
   return {
     group: {
       id: Math.random(),
       name: '',
-      permissions: permissionSectionNames.map((item: string) => ({
+      permissions: ar.map((item: string) => ({
         create: false,
         delete: false,
         id: Math.random(),

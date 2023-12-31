@@ -1,14 +1,14 @@
-import { action, autorun, computed, flow, makeObservable, observable, reaction } from 'mobx'
+import { action, autorun, computed, flow, get, makeObservable, observable, ObservableMap, reaction } from 'mobx'
 import agent from 'utils/agent'
-import type { AccountProps } from 'stores/permissionStore'
+import type { AccountProps, CRUD } from "stores/permissionStore";
 import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'
-import user from "routes/users/user";
+import currentUser from "components/common/layout/CurrentUser/CurrentUser";
 
 export enum UserTypeEnum {
   admin = 'admin',
-  customer = 'customer',
-  executor = 'executor',
+  customer = "customer",
+  performer = "performer"
 }
 
 export type User = {
@@ -29,61 +29,77 @@ export type User = {
 
 export class UserStore {
   currentUser?: User
+  currentUserPermissions = observable.map([]);
   currentUserActiveAccount?: UserTypeEnum
   loadingUser?: boolean
   updatingUser?: boolean
   updatingUserErrors: any
 
   loadMyProfile = flow(function* (this: UserStore) {
+    console.log('load profile');
     this.loadingUser = true
     try {
-      const { data } = yield agent.Profile.getMyAccount()
-
+      const { data } = yield agent.Profile.getMyAccount();
       this.currentUser = data
-      this.loadingUser = false
+      if(!appStore.appType) {
+        appStore.setAppType(this.roles[0])
+      }
     } catch (error) {
       this.updatingUserErrors = 'error'
     }
     finally {
-      if(appStore.appType == '') appStore.setAppType(this.roles[0])
+      this.loadingUser = false
+      // if(appStore.appType == '') appStore.setAppType(this.roles[0])
     }
   })
 
   constructor() {
     makeObservable(this, {
       currentUser: observable,
+      currentUserPermissions: observable,
       loadingUser: observable,
       getCurrentUserActiveAccount: action,
       currentUserActiveAccount: observable,
       updatingUser: observable,
       updatingUserErrors: observable,
       loadMyProfile: action,
+      setCurrentPermissions: action,
       roles: computed,
       // setUser: action,
       // updateUser: action,
       forgetUser: action,
     })
+
    }
   get roles() {
     const roles = []
+    const source: any = this.currentUser?.account_bindings
+
+
     if(this.currentUser?.is_staff) {
       // appStore.setAppType(UserTypeEnum.admin);
       roles.push(UserTypeEnum.admin)
     }
     // @ts-ignore
     if(this.currentUser?.account_bindings?.filter(value => value.company.company_type == "Компания-Заказчик").length > 0) {
-      appStore.setAppType(UserTypeEnum.customer);
+      // appStore.setAppType(UserTypeEnum.customer);
       roles.push(UserTypeEnum.customer)
     }
     // @ts-ignore
     if(this.currentUser?.account_bindings?.filter(value => value.company.company_type == "Компания-Исполнитель").length > 0) {
-      appStore.setAppType(UserTypeEnum.executor);
-      roles.push(UserTypeEnum.executor)
+      // appStore.setAppType(UserTypeEnum.performer);
+      roles.push(UserTypeEnum.performer)
     }
     return roles
   }
+  getUserCan(key: string, action: keyof CRUD) {
+    return this.currentUserPermissions.get(key)[action]
+  }
+  setCurrentPermissions(ar:ObservableMap<any, any>) {
+    this.currentUserPermissions = ar
+    console.log(this.currentUserPermissions);
+  }
   pullUser() {
-
       this.loadingUser = true
       return agent.Auth.current()
       .then(action((r: any) => {
@@ -93,8 +109,6 @@ export class UserStore {
         if(appStore.appType)
          this.loadingUser = false
       }),)
-
-
   }
 
   getCurrentUserActiveAccount() {

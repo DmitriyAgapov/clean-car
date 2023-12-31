@@ -3,7 +3,7 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useLoaderData, useNavigate } from 'react-router-dom'
+import { useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
@@ -12,15 +12,20 @@ import DList from 'components/common/ui/DList/DList'
 const UserPage = () => {
   const store = useStore()
   const navigate = useNavigate()
+  const {companyid} = useParams()
+  console.log(companyid);
   const { user }: any = useLoaderData()
+  // @ts-ignore
+  console.log(store.permissionStore.loadCompanyPermissions(companyid));
+  console.log(user.group);
   const userData = React.useMemo(() => {
     return (
       <>
-        <DList className={'my-8'} label={'Пользователь'} title={user.first_name + ' ' + user.last_name} />
-        <DList className={'my-8'} label={'Номер телефона'} title={user.phone} />
-        <DList className={'my-8'} label={'E-mail'} title={user.email} />
+        <DList  label={'Пользователь'} title={user.first_name + ' ' + user.last_name} />
+        <DList  label={'Номер телефона'} title={user.phone} />
+        <DList  label={'E-mail'} title={user.email} />
         <DList
-          className={'my-8'}
+
           label={'Группа'}
           title={store.permissionStore.permissions.filter((el) => el.id === user.group)[0].name}
         />
@@ -66,12 +71,12 @@ const UserPage = () => {
                 color={HeadingColor.accent}
               />
             </div>
-            <Button
+            {store.userStore.getUserCan('users', 'update') && <Button
               text={'Редактировать'}
               action={() => navigate('/account/users/create')}
               className={'inline-flex ml-auto'}
 
-            />
+            />}
           </>
         }
       />
@@ -80,11 +85,12 @@ const UserPage = () => {
         className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
+        bodyClassName={'!pl-44 grid grid-cols-2 items-start content-start gap-8'}
         headerClassName={'flex gap-10'}
         header={
         <>
           <div
-            className={'w-20 h-20 flex rounded-full'}
+            className={'w-24 h-24 flex rounded-full mr-2'}
             style={{ background: 'var(--gradient-directory)' }}
             data-app-type={'admin'}
           >
@@ -94,17 +100,9 @@ const UserPage = () => {
             </span>
           </div>
           <DList label={'Дата и время регистрации'} title={'08.10.23 07:14'} />
-          <Button
-            text={'Редактировать'}
-            action={() => navigate('/account/users/create')}
-            className={'inline-flex ml-auto'}
-
-          />
         </>
         }
       >
-
-
         {userData}
       </Panel>
     </Section>

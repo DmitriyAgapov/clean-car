@@ -15,7 +15,7 @@ export enum ButtonVariant {
 export enum ButtonDirectory {
   admin = 'admin',
   customer = 'customer',
-  executor = 'executor',
+  performer = 'performer',
   directory = 'directory',
 }
 

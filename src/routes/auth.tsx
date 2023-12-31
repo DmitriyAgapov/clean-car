@@ -14,8 +14,6 @@ import { values } from 'mobx'
 
 function AuthPage() {
   const store = useStore()
-  const { appStore, userStore, authStore } = store
-
 
   return (
     <Layout
