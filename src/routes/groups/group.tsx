@@ -58,12 +58,12 @@ const GroupPage = () => {
                 Дата и время создания {moment(group.created).format('DD.MM.YYYY HH:mm')}
               </div>
             </div>
-            <Button
+            {store.userStore.getUserCan('users', 'update') && <Button
               text={'Редактировать'}
               action={() => navigate(location.pathname + '/edit')}
               className={'justify-self-end'}
               variant={ButtonVariant.default}
-            />
+            />}
           </>
         }
         footer={

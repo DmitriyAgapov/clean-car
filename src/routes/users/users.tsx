@@ -32,14 +32,14 @@ const UsersPage = () => {
               color={HeadingColor.accent}
             />
 
-            <Button
+            {store.userStore.getUserCan('users', 'create') && <Button
               trimText={true}
               text={'Добавить пользователя'}
               action={() => navigate('/account/users/create')}
               className={'inline-flex'}
               directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}
-            />
+            />}
           </>
         }
       ></Panel>

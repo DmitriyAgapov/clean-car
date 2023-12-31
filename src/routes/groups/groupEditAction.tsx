@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { toJS } from 'mobx'
@@ -37,6 +37,7 @@ export default function GroupPageEditAction(props: any) {
       permissions: newArray,
     }))
   }
+  if(!store.userStore.getUserCan('users', 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel

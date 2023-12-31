@@ -27,14 +27,14 @@ export default observer(function GroupsPage() {
                             className={'inline-block'}
                             color={HeadingColor.accent}
                         />
-                        <Button
+                        {store.userStore.getUserCan('users', 'create') && <Button
                           trimText={true}
                             text={'Создать группу'}
                             action={() => navigate('/account/groups/create')}
                             className={'inline-flex'}
                             directory={ButtonDirectory.directory}
                             size={ButtonSizeType.sm}
-                        />
+                        />}
                     </>
                 }
             >
