@@ -57,19 +57,21 @@ const Tabs = ({ data, panels }: TabsProps & {panels?: any}) => {
       if(panels) {
         console.log(panels);
         panels.forEach((item: any) => {
-          result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={panels[0].company_type} data={item.data} label={item.label}/>)
+          result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={panels[0].company_type} data={item.data} label={item.label} props={panels}/>)
         })
         return result
+      } else {
+        for(const key in data) {
+          result.push(<TabsVariants companyId={data.company.data.id} content_type={data[key].label} label={data[key].label}
+            data={data[key].data}
+            state={state == data[key].label}
+            key={`var-${data[key].label}`}
+            company_type={data.company.company_type}
+          />)
+        }
       }
 
-      for(const key in data) {
-        result.push(<TabsVariants companyId={data.company.data.id} content_type={data[key].label} label={data[key].label}
-          data={data[key].data}
-          state={state == data[key].label}
-          key={`var-${data[key].label}`}
-          company_type={data.company.company_type}
-        />)
-      }
+
       return result
     }
 

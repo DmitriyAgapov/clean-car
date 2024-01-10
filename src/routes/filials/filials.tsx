@@ -13,6 +13,7 @@ const FilialsPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
+  console.log(store.companyStore.filials);
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -20,6 +21,7 @@ const FilialsPage = () => {
       <Panel
         headerClassName={'flex justify-between'}
         variant={PanelVariant.withGapOnly}
+
         header={
           <>
             <Heading
@@ -39,7 +41,7 @@ const FilialsPage = () => {
           </>
         }
       />
-      <Observer children={() => <TableWithSort
+    <TableWithSort
         filter={true}
         search={true}
         background={PanelColor.glass}
@@ -58,7 +60,7 @@ const FilialsPage = () => {
         }))}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
         state={store.companyStore.loadingCompanies}
-      /> as React.JSX.Element} />
+      />
 
     </Section>
   )

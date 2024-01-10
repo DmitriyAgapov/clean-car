@@ -6,24 +6,34 @@ import { Field, useFormik, useFormikContext } from 'formik'
 import React, { useEffect } from 'react'
 import { CompanyType } from "stores/companyStore";
 import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
+import { useStore } from "stores/store";
 
 export function Step(props: {
   step: any
   animate: any
-  action: () => any
+  action: (event:  any) => void
   action1: () => void
   children: React.ReactNode
   stepIndex: number
   footer?: React.ReactNode
   header?: React.ReactNode
 }) {
-  const { values, touched,  errors, isValidating, isValid }:any = useFormikContext();
-  // console.log(values);
+  const { values, touched, setValue, action, setValues,  errors, isValidating, isValid }:any = useFormikContext();
+  const store = useStore()
+  React.useEffect(() => {
+    // @ts-ignore
+    const models = store.catalogStore.getCarBrandModels(values.brand).then(r => r)
+    // @ts-ignore
+    console.log(models);
+    setValues({...values, carModels: models })
+
+    console.log(values.carModels);
+  }, [values.brand])
   return (
     <Panel
       variant={PanelVariant.textPadding}
       state={props.step !== props.stepIndex}
-      className={'grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
+      className={'grid grid-rows-[auto_1fr_auto] overflow-x-hidden flex-1'}
       background={PanelColor.glass}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       bodyClassName={!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'}

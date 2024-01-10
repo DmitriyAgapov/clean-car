@@ -6,6 +6,7 @@ import permissionStore, { PermissionName } from 'stores/permissionStore'
 import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
 import agent from 'utils/agent'
+import carStore from "stores/carStore";
 
 export const authUser = async () => {
   if (!appStore.token) {
@@ -33,14 +34,14 @@ export const companyLoader = async ({ params: { id, company_type, action, compan
 }
 export const filialsLoader = async() => {
   const company = await companyStore.loadCompanyWithTypeAndId()
-  console.log(company);
   const companies = await companyStore.getAllCompanies()
-  console.log(companies);
   await companyStore.getFilials()
   await catalogStore.getCities()
   return null
 }
 export const carsLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
+  await catalogStore.getCarBrands()
+  await catalogStore.getCities()
   return null
 }
 export const filialLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {

@@ -15,15 +15,15 @@ import RequestErrors from 'components/Form/RequestErrors'
 import { CompanyType } from 'stores/companyStore'
 
 const SignupSchema = Yup.object().shape({
-    first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-    last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+    first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!'),
+    last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!'),
     phone: Yup.string()
         .max(16, 'Слишком длинное!')
         .phone('RU', 'Введите правильный номер')
-        .required('Требуется номер телефона'),
-    email: Yup.string().email('Неверный email').required('Укажите email'),
-    group: Yup.number().min(1).required('Выберите группу'),
-    company_id: Yup.number().min(1).required('Выберите компанию'),
+        ,
+    email: Yup.string().email('Неверный email'),
+    group: Yup.number().min(1),
+    company_id: Yup.number().min(1),
 })
 const SelectCompanyFilials = () => {
     const store = useStore()
@@ -370,14 +370,14 @@ const FormCreateUser = ({ user, edit }: any) => {
                             fieldName={'phone'}
                             label={'Номер телефона'}
                             placeHolder={''}
-                            fieldType={'tel'}
+                            fieldType={'text'}
                             className={'col-span-3'}
                         />
                         <CreateFormikInput
                             fieldName={'email'}
                             label={'E-mail'}
                             placeHolder={''}
-                            fieldType={'email'}
+                            fieldType={'text'}
                             className={'col-span-3'}
                         />
                         <SelectCustom

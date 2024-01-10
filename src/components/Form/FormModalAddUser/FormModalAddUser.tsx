@@ -1,9 +1,10 @@
 import { CreateFormikInput } from "components/common/ui/CreateInput/CreateInput";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from 'formik'
 import React from "react";
 import * as Yup from "yup";
 import "yup-phone-lite";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
+import { useStore } from "stores/store";
 
 const SignupSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -19,8 +20,7 @@ const SignupSchema = Yup.object().shape({
   group: Yup.string().required('Required'),
 })
 const FormModalAddUser = () => {
-
-
+  const store = useStore()
   const initValues = {
     first_name: '',
     last_name: '',
@@ -101,29 +101,71 @@ const FormModalAddUser = () => {
     <Formik
       initialValues={initValues}
       validationSchema={SignupSchema}
+
       onSubmit={(values, FormikHelpers) => {
         console.log(values);
 
       }}
     >
       {({
-        submitForm,
-        setSubmitting,
-        setFieldError,
-        handleChange,
-        isSubmitting,
-        errors,
-        setValues,
-        touched,
-        values,
-        status,
-        isValid,
-        isValidating,
+        submitForm, handleChange, isSubmitting, errors, touched, values, isValid,
       }) => (
 
-        <Form style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
+        <Form onChange={() => store.formStore.handleChangeForm('formCreateUser', values)} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
             <Heading text={'Добавление нового сотрудника'} className={'col-span-2 !mb-0'} variant={HeadingVariant.h2} color={HeadingColor.accent}/>
             <p className={'col-span-2'}>Введите основные данные водителя</p>
+            <FormInputs/>
+        </Form>
+
+      )}
+    </Formik>
+  )
+}
+export const FormModalSelectUsers = () => {
+  const initValues = {
+    users: '',
+  }
+  const formData = [
+    {
+      label: 'Сотрудники',
+      name: 'users',
+      type: 'select',
+      placeholder: 'Выберите группу',
+      value: '',
+      options: [
+        { label: 'Группа 1', value: '1' },
+        { label: 'Группа 2', value: '2' },
+      ],
+      depend: false,
+    }
+  ]
+  const FormInputs = ():JSX.Element => {
+    const {handleChange, values} = useFormikContext()
+    // @ts-ignore
+    return formData.map((item:any, index:number) => <CreateFormikInput key={index+'car_inputs'} value={item.value} options={item.options} fieldName={item.name}
+      label={item.label}
+      placeHolder={item.placeholder}
+      fieldType={item.type}
+      className={''} />
+    )
+
+  }
+  return (
+    <Formik
+      initialValues={initValues}
+      validationSchema={SignupSchema}
+      onSubmit={(values, FormikHelpers) => {
+        console.log(values);
+
+      }}
+    >
+      {({
+        submitForm, handleChange, isSubmitting, errors, touched, values, isValid,
+      }) => (
+
+        <Form style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
+            <Heading text={'Выбрать сотрудника из списка пользователей'} className={'!mb-0'} variant={HeadingVariant.h2} color={HeadingColor.accent}/>
+            <p>Выберите пользователя</p>
             <FormInputs/>
         </Form>
 

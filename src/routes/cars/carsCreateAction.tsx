@@ -3,10 +3,9 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { Navigate, useNavigate } from 'react-router-dom'
 import 'yup-phone-lite'
-import FormCreateUser from 'components/Form/FormCreateUser/FormCreateUser'
 import { useStore } from "stores/store";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import FormCreateCar from "components/Form/FormCreateCar/FormCreateCar";

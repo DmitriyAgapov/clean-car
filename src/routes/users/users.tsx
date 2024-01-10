@@ -1,15 +1,15 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
-import { Company, CompanyType } from "stores/companyStore";
+import { Company } from 'stores/companyStore'
 import { User } from 'stores/usersStore'
-import { UserTypeEnum } from "stores/userStore";
+import { UserTypeEnum } from 'stores/userStore'
 
 const UsersPage = () => {
   const store = useStore()
@@ -23,6 +23,7 @@ const UsersPage = () => {
         variant={PanelVariant.withGapOnly}
         className={'col-span-full'}
         headerClassName={'flex justify-between'}
+
         header={
           <>
             <Heading
@@ -44,6 +45,7 @@ const UsersPage = () => {
         }
       ></Panel>
       <TableWithSort
+        background={PanelColor.glass}
         filter={true}
         search={true}
         ar={['Статус', 'ФИО', 'Телефон', 'e-mail', 'Тип', 'Компания', 'Город']}
@@ -64,6 +66,7 @@ const UsersPage = () => {
           },
         }))}
         state={store.usersStore.loadingUsers}
+        style={PanelRouteStyle.users}
         initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]}
       />
     </Section>

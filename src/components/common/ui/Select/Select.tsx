@@ -1,4 +1,4 @@
-import { MantineProvider, createTheme, Select } from '@mantine/core';
+import { MantineProvider,  createTheme, Select } from '@mantine/core';
 import type { SelectProps } from '@mantine/core';
 
 import { useFormikContext } from 'formik'
@@ -18,11 +18,13 @@ const theme = createTheme({
          action,
        placeholder,
          defaultValue,
-      disabled = false
+       searchable,
+      disabled = false,
+       ...props
      }: {
          label?: string
          placeholder?: string
-
+       searchable?: boolean
          className?: string
          name: string
          options: any[] | any
@@ -84,6 +86,8 @@ const theme = createTheme({
 
      return (
          <Select
+            {...props}
+           searchable={searchable}
               disabled={disabled}
              ref={ref}
            placeholder={placeholder}

@@ -85,6 +85,7 @@ const RowData = (props: any) => {
     const location = useLocation()
     const querys = React.useCallback(() => {
         let queryString = ''
+        console.log(props);
         if (props.query) {
             for (const key in props.query) {
                 queryString = queryString + `/${props.query[key]}`
@@ -96,7 +97,7 @@ const RowData = (props: any) => {
 
     const queryCompanyType = React.useCallback(() => {
         let queryString = ''
-        // console.log(CompanyType.performer);
+        console.log(props.type);
         if (props.type) {
             return props.type == CompanyType.performer ? '/performer' : props.type == CompanyType.customer ? '/customer' : '/admin'
         }
@@ -135,7 +136,7 @@ const RowData = (props: any) => {
                         ar.push(<td key={key}
                           className={styles.tableCell} data-label={label(key)}>
                             {' '}
-                            {props[key]}{' '}
+                            <p className={'m-0'}>{props[key]}{' '}</p>
                         </td>,)
                     }
                 }

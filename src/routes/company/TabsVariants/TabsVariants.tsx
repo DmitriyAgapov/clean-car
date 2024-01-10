@@ -19,12 +19,13 @@ type TabsVariantsProps = {
   company_type?: string
   content_type?: string
   parentCompany?: string
+  props?: any
 
 } & TabsProps & {className?: string, children?: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps
-export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
+export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, className, companyId, company_type, props}:TabsVariantsProps) => {
   const store = useStore()
   let result
-
+  console.log(props[0].data.name);
   switch (label) {
     case "Основная информация":
       console.log(parentCompany);
@@ -66,22 +67,49 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
       console.log(data);
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
-          data={data.map((item: User & {rootRoute?: string} ) => ({
-            state: item.is_active,
-            name: item.first_name + ' ' + item.last_name,
-            phone: item.phone,
-            email: item.email,
-            group: item.group,
+          data={props[2].data.map((item: User & any & {rootRoute?: string} ) => ({
+            state: item.employee.is_active,
+            name: item.employee.first_name + ' ' + item.employee.last_name,
+            phone: item.employee.phone,
+            email: item.employee.email,
+            group: item.group.name,
             // @ts-ignore
-            company: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.name,
+            company: props[0].data.name,
             // @ts-ignore
-            city: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.city.name,
+            city: props[0].data.city.name,
             id: item.id,
             query: {
               company_id: companyId,
               rootRoute: `/account/users/${companyId}/${item.id}`,
             },
-          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Группа', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Телефон', 'e-mail', 'Группа', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
+      </Tabs.Panel>)
+      break;
+      case 'Автомобили':
+      console.log(data);
+      result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+          data={props[2].data.map((item: User & any & {rootRoute?: string} ) => ({
+            state: item.employee.is_active,
+            name: item.employee.first_name + ' ' + item.employee.last_name,
+            phone: item.employee.phone,
+            email: item.employee.email,
+            group: item.group.name,
+            // @ts-ignore
+            company: props[0].data.name,
+            // @ts-ignore
+            city: props[0].data.city.name,
+            id: item.id,
+            query: {
+              company_id: companyId,
+              rootRoute: `/account/users/${companyId}/${item.id}`,
+            },
+          }))}
+          initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]}
+          state={false} variant={PanelVariant.dataPadding}
+          footer={false}
+          ar={['Статус', 'ФИО', 'Телефон', 'e-mail', 'Группа', 'Компания', 'Город']}/>
+          : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
       </Tabs.Panel>)
       break;
     default:

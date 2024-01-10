@@ -16,7 +16,7 @@ import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'
 import currentUser from "components/common/layout/CurrentUser/CurrentUser";
 import companyStore, { Company, CompanyType } from 'stores/companyStore'
-import { makePersistable } from 'mobx-persist-store';
+import { makePersistable, clearPersistedStore } from 'mobx-persist-store';
 import label from "utils/labels";
 
 export enum UserTypeEnum {
@@ -64,7 +64,6 @@ export class UserStore {
   loadingUser: boolean = false
   updatingUser: boolean = false
   updatingUserErrors: any = ''
-
   loadUserPermissions = flow(function* (this: UserStore) {
     if(this.currentUser.account_bindings && this.currentUser.account_bindings.length > 0) {
       let ar = observable.map(this.currentUser.account_bindings[0].group.permissions.map((el: any) => [label(el.name), el]));
@@ -116,6 +115,11 @@ export class UserStore {
     }
     return roles
   }
+
+  clearStore() {
+    clearPersistedStore(this)
+  }
+
   getUserCan(key: string, action: keyof CRUD) {
     return this.currentUserPermissions.get(key)[action]
   }
@@ -124,6 +128,7 @@ export class UserStore {
   }
   pullUser() {
       this.loadingUser = true
+      this.clearStore()
       return agent.Auth.current()
         .then(action((r: any) => {
           this.currentUser = r

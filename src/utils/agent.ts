@@ -230,17 +230,33 @@ const PermissionsAdmin = {
   },
 }
 const Profile = {
-  getMyAccount: () => requests.get('/accounts/my_profile/', {}),
-  getMyCompany: () => requests.get('/companies/my_companies/list/', {}),
-  // follow: (username: string) =>
-  // 	requests.post(`/profiles/${username}/follow`, {}),
-  // get: (username: string) =>
-  // 	requests.get(`/profiles/${username}`),
-  // unfollow: (username: string) =>
-  // 	requests.del(`/profiles/${username}/follow`)
+    getMyAccount: () => requests.get('/accounts/my_profile/', {}),
+    getMyCompany: () => requests.get('/companies/my_companies/list/', {}),
+    // follow: (username: string) =>
+    // 	requests.post(`/profiles/${username}/follow`, {}),
+    // get: (username: string) =>
+    // 	requests.get(`/profiles/${username}`),
+    // unfollow: (username: string) =>
+    // 	requests.del(`/profiles/${username}/follow`)
 }
 const Catalog = {
   getCities: () => requests.get('/catalog/cities/'),
+  getCarBrands: () => requests.get('/catalog/car_brands/'),
+  getCarBrandModels: (brand_id:number) => requests.get(`/catalog/${brand_id}/car_models/`),
+}
+
+interface FilterPropsCars {
+  number?: number
+  car_type?: string
+  model__name?: string
+  brand__name?: string
+  company__name?: string
+}
+
+const Cars = {
+  getCompanyCars: (company_id: number, params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars/${company_id}/list/`, params),
+  getAdminCars: ( params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars_admin/list/`, {...params, ...filter}),
+  createCompanyCar: (company_id: number, data: any) => requests.post(`/cars/${company_id}/create/`, data),
 }
 const Account = {
   getCompanyUsers: (id:number) =>   apiEndPoint.account.getUsers(id),
@@ -256,6 +272,7 @@ const Filials = {
 }
 const agent = {
   Utils,
+  Cars,
   Auth,
   Profile,
   Permissions,

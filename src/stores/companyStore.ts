@@ -64,6 +64,7 @@ export interface PerformerProfile {
 }
 
 export interface Companies {
+    id: number
     companies: Company<CompanyType>[]
 }
 
@@ -101,8 +102,6 @@ export class CompanyStore {
             const { data, status } = yield agent.Account.getCompanyUsers(id)
             if (status === 200) {
                 result = data.results
-
-                // const oldData = get(this.fullCompanyData, `${id}`)
                 remove(this.fullCompanyData, `${id}`)
                 // set(this.fullCompanyData, `${id}`, result)
 
@@ -419,9 +418,5 @@ export class CompanyStore {
 }
 
 const companyStore = new CompanyStore()
-autorun(() => {
-    if(companyStore.companies.length == 0) {
-        console.log('companies is empty');
-    }
-})
+
 export default companyStore

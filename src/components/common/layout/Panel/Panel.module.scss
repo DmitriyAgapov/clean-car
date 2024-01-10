@@ -64,11 +64,11 @@
 	}
 
 	> footer {
-	  @apply px-8 pb-8 pt-4 flex gap-6 justify-end items-end  bg-gray-4/70;
+	  @apply px-8 pb-8 pt-4 flex gap-6 justify-end items-end;
 	}
 
 	> [data-panel="body"] {
-	  @apply px-0 py-0  bg-gray-4/70;
+	  @apply px-0 py-0;
 	}
   }
   //&[data-variant="dataPadding"] {

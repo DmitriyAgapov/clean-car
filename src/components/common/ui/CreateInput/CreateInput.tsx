@@ -106,19 +106,23 @@ interface CreateFormikInputProps {
   label: string
   className?: string
   options?: []
+  onChange?: (e: React.ChangeEvent<any>) => void
 }
 
-export function CreateFormikInput({fieldName, placeHolder = "", label, options, fieldType, className }:CreateFormikInputProps):React.ReactElement {
-  const {errors, touched}:any = useFormikContext()
+export function CreateFormikInput({fieldName, placeHolder = "", onChange, label, options, fieldType, className }:CreateFormikInputProps):React.ReactElement {
+  const {errors, touched, values, set}:any = useFormikContext()
+
   const inputElement = React.useMemo(() => {
-    if(fieldType == 'divider') return <hr className={'col-span-full'}/>
+    if(fieldType == 'divider') return <hr className={'col-span-full flex-[1_100%]'}/>
     if(fieldType == 'select') return <label
       className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
       htmlFor={fieldName}
       data-form_error={errors[`${fieldName}`] && touched[fieldName] && 'error'}
 
     >
-      {label}<Select name={fieldName} options={options} placeholder={placeHolder}/>{errors[fieldName] && touched[fieldName] ? (
+      {label}
+      <SelectCustom action={onChange} name={fieldName} options={fieldName == 'model' ? values.carModels : options} placeholder={placeHolder}/>
+      {errors[fieldName] && touched[fieldName] ? (
       <div className={'form-error'}>{errors[fieldName]}</div>
     ) : null}
   </label>
@@ -129,6 +133,7 @@ export function CreateFormikInput({fieldName, placeHolder = "", label, options, 
 
     >
       {label}<Field
+
       id={fieldName}
       name={fieldName}
       placeholder={placeHolder}
@@ -137,8 +142,7 @@ export function CreateFormikInput({fieldName, placeHolder = "", label, options, 
       <div className={'form-error'}>{errors[fieldName]}</div>
     ) : null}
     </label>
-  }, [])
-  console.log(inputElement);
+  }, [values.carModels])
   return <>{inputElement}</>
 
 }

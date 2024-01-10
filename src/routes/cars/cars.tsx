@@ -1,6 +1,6 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
@@ -44,6 +44,7 @@ const CarsPage = () => {
         }
       ></Panel>
       <TableWithSort
+        background={PanelColor.glass}
         filter={true}
         search={true}
         ar={['Статус', 'ФИО', 'Телефон', 'e-mail', 'Тип', 'Компания', 'Город']}

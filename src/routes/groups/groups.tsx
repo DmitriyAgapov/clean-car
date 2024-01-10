@@ -1,6 +1,6 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
@@ -54,6 +54,7 @@ const GroupsPage = () => {
             </Panel>
 
             <TableWithSort
+              background={PanelColor.glass}
                 filter={false}
                 search={true}
                 className={'table-groups'}
