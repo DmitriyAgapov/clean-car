@@ -39,7 +39,7 @@ const FormRegister = () => {
         if (values.pwd === values.pwd2) store.authStore.setPassword(values.pwd)
 
         if (Object.values(store.authStore.values).length > 0) {
-          console.log('success', Object.values(store.authStore.values))
+          // console.log('success', Object.values(store.authStore.values))
           store.authStore.register()
           actions.setSubmitting(false)
         }

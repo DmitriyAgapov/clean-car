@@ -1,7 +1,11 @@
-import { flow, makeObservable, observable } from 'mobx'
+import { flow, makeAutoObservable,  get, set } from 'mobx'
 import agent from 'utils/agent'
-import { Company } from 'stores/companyStore'
-import { Permissions } from 'stores/permissionStore'
+import companyStore, { CompanyType } from "stores/companyStore";
+import { makePersistable, hydrateStore  } from 'mobx-persist-store';
+import permissionStore from "stores/permissionStore";
+import stores from "stores/index";
+import label from "utils/labels";
+
 
 enum UserTypeEnum {
   admin,
@@ -24,51 +28,120 @@ export type User = {
 }
 
 export class UsersStore {
-  users: User[] = observable.array([])
+  constructor() {
+    makeAutoObservable(this, {}, { autoBind: true });
+    makePersistable(this, {
+      name: 'usersStore',
+      properties: ['usersMap'],
+      storage: window.localStorage,
+    });
+  }
+  usersMap = new Map([])
+  users: User[] = []
   loadingUsers: boolean = false
-  loadingErrors?: any
-  // }),
+  loadingErrors: any = ''
 
-  // getUser = flow(function* (id:string) {
-  // 	this.loadingUsers = true
-  // 	try {
-  // 		const { data } = yield  agent.Users.getAllUsers();
-  //
-  // 		this.users = data.results
-  // 		this.loadingUsers = false
-  // 	} catch (error) {
-  // 		this.loadingErrors = "error"
-  // 	}
   getAllUser = flow(function* (this: UsersStore) {
     this.loadingUsers = true
+    this.usersMap = new Map([])
     try {
       const { data } = yield agent.Users.getAllUsers()
-
       this.users = data.results
+      this.users.forEach((el: any) => {
+        set(this.usersMap, { [el.employee.id]: {...el}
+      })})
       this.loadingUsers = false
     } catch (error) {
       this.loadingErrors = 'error'
     }
+    finally {
+      this.loadingUsers = false
+    }
   })
-  getUser = flow(function* (companyid: number, id: number) {
-    let user
+
+  hydrateStore = flow(function*(this: UsersStore) {
+    yield hydrateStore(this);
+  })
+
+  createUser = flow(function* (this: UsersStore, companyid: number, data: any) {
+    this.loadingUsers = true
+    this.loadingErrors = ''
+    let result;
     try {
-      const { data } = yield agent.Users.getUser({ company_id: companyid, id: id })
-      console.log(data);
-      user = data
+      const datas = yield agent.Account.createCompanyUser(companyid, data)
+      result = datas
+      if(datas.response.status > 299) {
+        this.loadingErrors = datas.response.data
+      }
+      return result
     } catch (error) {
-      new Error('get User failed')
+      new Error('create User failed')
+    }
+    finally {
+      this.loadingUsers = false
+      this.hydrateStore()
+    }
+    return result
+  })
+  updateUser = flow(function* (this: UsersStore, companyid: number, data: any) {
+    this.loadingUsers = true
+    this.loadingErrors = ''
+    let result;
+    try {
+      const datas = yield agent.Account.createCompanyUser(companyid, data)
+      result = datas
+      if(datas.response.status > 299) {
+        this.loadingErrors = datas.response.data
+      }
+      return result
+    } catch (error) {
+      new Error('create User failed')
+    }
+    finally {
+      this.loadingUsers = false
+      this.hydrateStore()
+    }
+    return result
+  })
+
+  getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type: CompanyType) {
+    let user: any = {}
+
+    if(companyid && company_type && id) {
+      try {
+        const data  = yield agent.Account.getCompanyUser(Number(companyid), Number(id));
+        user.employee = data.data
+      } catch (error) {
+        new Error('get User failed')
+      }
+      try {
+        if(company_type) {
+          const data  = yield companyStore.loadCompanyWithTypeAndId(company_type, Number(companyid));
+          // console.log(data);
+          user = {
+            ...user,
+            company: {company_type: label(data.company.company_type), ...data.company.data}
+          }
+        }
+      }
+      catch (e) {
+        new Error('get User company failed')
+      }
+      try {
+        const { data } = yield agent.Permissions.getUserPermissions(Number(companyid), Number(user.employee.group));
+        user = {
+          ...user,
+          group: data
+        }
+      }
+      catch (e) {
+        new Error('get User permissions failed')
+      }
     }
     return user
   })
-
-
-  constructor() {
-    makeObservable(this, {
-      users: observable,
-      // getUser: action,
-      loadingUsers: observable,
-    })
+  setLoadingErrors = (error: any) => {
+    this.loadingErrors = error
   }
 }
 

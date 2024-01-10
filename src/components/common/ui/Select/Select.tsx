@@ -16,6 +16,7 @@ const theme = createTheme({
          className,
          options,
          action,
+       placeholder,
          defaultValue,
       disabled = false
      }: {
@@ -35,6 +36,8 @@ const theme = createTheme({
      const { values, submitForm, setValues } = useFormikContext()
 
      const handleSelectChange = (event: any) => {
+
+         action && action(event)
          setValue(event)
          // @ts-ignore
          if (name === 'city') {
@@ -56,6 +59,20 @@ const theme = createTheme({
                company_id: Number(event),
              }))
          }
+         else if (name === 'is_active') {
+             setValues(() => ({
+                 // @ts-ignore
+                 ...values,
+               company_id: Boolean(event),
+             }))
+         }
+         else if (name === 'user_status') {
+             setValues(() => ({
+                 // @ts-ignore
+                 ...values,
+               company_id: Boolean(event),
+             }))
+         }
          else {
              setValues(() => ({
                  // @ts-ignore
@@ -69,6 +86,7 @@ const theme = createTheme({
          <Select
               disabled={disabled}
              ref={ref}
+           placeholder={placeholder}
              withCheckIcon={false}
              classNames={{
                  root: className,

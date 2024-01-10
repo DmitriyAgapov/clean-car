@@ -7,8 +7,9 @@ import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
-import { Company } from 'stores/companyStore'
+import { Company, CompanyType } from "stores/companyStore";
 import { User } from 'stores/usersStore'
+import { UserTypeEnum } from "stores/userStore";
 
 const UsersPage = () => {
   const store = useStore()
@@ -16,7 +17,6 @@ const UsersPage = () => {
   const navigate = useNavigate()
 
   if ('/account/users' !== location.pathname) return <Outlet />
-
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -46,7 +46,7 @@ const UsersPage = () => {
       <TableWithSort
         filter={true}
         search={true}
-        ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Тип', 'Компания', 'Город']}
+        ar={['Статус', 'ФИО', 'Телефон', 'e-mail', 'Тип', 'Компания', 'Город']}
         // @ts-ignore
         data={store.usersStore.users.map((item: { company: Company; group: number; employee: User }) => ({
           state: item.employee.is_active,
@@ -58,7 +58,9 @@ const UsersPage = () => {
           city: item.company.city.name,
           id: item.employee.id,
           query: {
+            type: item.company.company_type == 'Компания-заказчик' ? UserTypeEnum.customer : UserTypeEnum.performer,
             company_id: item.company.id,
+
           },
         }))}
         state={store.usersStore.loadingUsers}

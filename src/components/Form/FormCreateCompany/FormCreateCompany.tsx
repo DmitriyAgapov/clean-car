@@ -16,8 +16,8 @@ const SignupSchema = Yup.object().shape({
     legal_address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
     inn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
     ogrn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-    contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
-    service_percent: Yup.number().min(0, 'Минимум').max(100, 'Максимум')
+    contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле')
+    // service_percent: Yup.number().min(0, 'Минимум').max(100, 'Максимум')
 })
 const initValues = {
     id: 0,
@@ -62,6 +62,7 @@ const FormCreateCompany = () => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
+                // console.log(values);
                 if (values.application_type === CompanyType.performer) {
                     const data:Company<CompanyType.performer> = {
                         city:  Number(values.city),
@@ -82,12 +83,12 @@ const FormCreateCompany = () => {
                     }
                     store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
                         values.id = r.id
-                        console.log(values);
+                        // console.log(values);
                         changeStep(3)
                     })
                 }
                 if (values.application_type === CompanyType.customer) {
-                    console.log(values);
+                    // console.log(values);
                     const data:Company<CompanyType.customer> = {
 
                         company_type: values.application_type,
@@ -107,19 +108,19 @@ const FormCreateCompany = () => {
                              overdraft_sum: values.overdraft_sum,
                             lat: values.lat,
                             lon: values.lon,
-                            performer_company: [4]
+                            performer_company: []
                         }
                     }
                     store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
-                        console.log(r);
+                        // console.log(r);
                         values.id = r.id
-                        console.log(values);
+                        // console.log(values);
                         changeStep(3)
                     })
                 }
             }}
         >
-            {({ errors, touched, values }) => (
+            {({ errors, touched, values, isValid }) => (
                 <Form style={{ display: 'contents' }}>
                   <FormStep1 step={step}
                     animate={animate}

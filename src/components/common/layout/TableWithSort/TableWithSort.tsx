@@ -11,6 +11,8 @@ import { useDebouncedState } from '@mantine/hooks'
 import label from 'utils/labels'
 import { useWindowDimensions } from 'utils/utils'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import { UserTypeEnum } from "stores/userStore";
+import { CompanyType } from "stores/companyStore";
 
 type TableWithSortProps = {
     data: any[]
@@ -32,7 +34,7 @@ const RowHeading = ({ ar, sort, action }: any) => {
         count: 0,
     })
     const handleSortKey = (index: number) => {
-        console.log('click');
+        // console.log('click');
         let newVal = {
             index: index,
             reversed: false,
@@ -69,7 +71,7 @@ const RowHeading = ({ ar, sort, action }: any) => {
                             data-sort-selected={index === count.index}
                             data-sort-reversed={index === count.index && count.reversed === true}
                         >
-                            <span>{arItem}</span> <SvgSort />
+                            <div style={{display: 'flex'}}><span>{arItem}</span><SvgSort /></div>
                         </th>
                     )
                 })}
@@ -91,14 +93,26 @@ const RowData = (props: any) => {
         }
         return ''
     }, [])
+
+    const queryCompanyType = React.useCallback(() => {
+        let queryString = ''
+        // console.log(CompanyType.performer);
+        if (props.type) {
+            return props.type == CompanyType.performer ? '/performer' : props.type == CompanyType.customer ? '/customer' : '/admin'
+        }
+        return ''
+    }, [])
     const queryUrl = querys()
-    const queryCompanyType =
-        props.type == 'Компания-Исполнитель' ? '/performer' : props.type == 'Компания-Заказчик' ? '/customer' : ''
+    const queryCompanyTypeUrl = queryCompanyType()
+
+
     const handleClick = () => {
         if (props.query && props.query.rootRoute) {
             return navigate(props.query.rootRoute)
         }
-        props.id ? navigate(location.pathname + queryCompanyType + queryUrl + `/${props.id}`) : void null
+        const route = location.pathname + queryCompanyTypeUrl + queryUrl + `/${props.id}`
+
+        props.id ? navigate(route) : void null
     }
 
     const propsRender = () => {
@@ -111,7 +125,7 @@ const RowData = (props: any) => {
                       className={styles.tableCell}>
                         <Chips state={true} />
                     </td>,)
-                } else if(props[key] === 'Деактивна') {
+                } else if(props[key] === 'Неактивна') {
                     ar.push(<td key={key}
                       className={styles.tableCell}>
                         <Chips state={false} />
@@ -182,7 +196,6 @@ const TableWithSort = ({
                 newAr.push(item)
             }
         })
-        console.log('fastSearch', [newAr]);
         setSortedData(newAr)
     }, [fastSearchString])
 
@@ -208,7 +221,6 @@ const TableWithSort = ({
         } else {
             setSortedData(fData)
         }
-        console.log('someData');
     }, [filterString])
 
     //Фильтрация результатов
@@ -220,7 +232,7 @@ const TableWithSort = ({
             const tempAr: string | any[] = ['Все']
             ar.forEach((item: any) => {
                 if (typeof item[key] === 'boolean') {
-                    item[key] === true ? (item[key] = 'Активна') : (item[key] = 'Деактивна')
+                    item[key] === true ? (item[key] = 'Активна') : (item[key] = 'Неактивна')
                 }
                 if (!tempAr.includes(item[key])) {
                     tempAr.push(item[key])
@@ -236,8 +248,6 @@ const TableWithSort = ({
     }, [filterParams])
 
     const RowDataMemoized = React.useMemo(() => {
-
-
         return dataSorted
             .slice(currentPage == 1 ? currentPage - 1 : (currentPage - 1) * 10, currentPage * 10)
             .map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)

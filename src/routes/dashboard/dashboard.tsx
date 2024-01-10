@@ -75,39 +75,6 @@ const sidebarMenu: { icon: React.ReactNode; title: string; url: string }[] = [
   },
 ]
 export default function DashboardPage() {
-  const [value, setValue] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<string[]>([]);
-  async function getData() {
-    try {
-      // @ts-ignore
-      const response = await agent.Utils.suggest({ query: value })
-      console.log(response);
-      // @ts-ignore
-      setData(response.data.suggestions.map(item => item.value));
-      setLoading(false);
-
-      // @ts-ignore
-      setResult(response.data.suggestions)
-    } catch (e) {
-
-    } finally {
-      console.log('success');
-    }
-  }
-  // const [value, setValue] = useState('');
-  // const [debounced] = useDebouncedValue(value, 1200);
-  // const [result, setResult] = useState([]);
-
-  const handleSuggest  = (event: Event | string) => {
-    // @ts-ignore
-    // setValue(event && event.currentTarget.value || event)
-    setValue(event)
-  }
-  // useEffect( () => {
-  //
-  //   getData().then(r => r)
-  // }, [debounced]);
 
   return (
     <>
@@ -142,16 +109,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <p>
-          <InputAutocomplete/>
-          {/* <Select */}
-          {/*   searchable */}
-          {/*   value={value} */}
-          {/*   searchValue={value} */}
-          {/*   onSearchChange={(event) => handleSuggest(event)} */}
-          {/*   // @ts-ignore */}
-          {/*   data={result && result.data?.suggestions} */}
-          {/* /> */}
-          <CreateInput text={'suggest'} action={(event: any) => handleSuggest(event)} name={'suggest'} type={'text'} />
+
           Мы рады, что вы выбрали нас.
           <br />
           Пожалуйста, заполните данные для регистрации{' '}

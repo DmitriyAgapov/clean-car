@@ -1,0 +1,12 @@
+.cardform_step {
+  @apply px-4 py-5 border-gray-2 border rounded-md bg-gray-3 flex flex-col;
+  aspect-ratio: 300/200;
+  max-height: 12.5rem;
+  footer {
+    margin-top: auto;
+    display: flex;
+    & > * {
+      flex: 1;
+    }
+  }
+}

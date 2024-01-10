@@ -12,7 +12,7 @@ type ChipsProps = {
 const Chips = ({ state }: ChipsProps) => {
   return (
     <div className={styles.Chips} data-state={state}>
-      {state ? 'Активна' : 'Деактивна'}
+      {state ? 'Активна' : 'Неактивна'}
     </div>
   )
 }

@@ -39,78 +39,82 @@ export default function GroupPageCreateAction(props: any) {
   }
   if(!store.userStore.getUserCan('users', 'create')) return <Navigate to={'/account'}/>
   return (
-    <Section type={SectionType.default}>
-      <Panel
-        className={'col-span-full'}
-        header={
-          <>
-            <Button
-              text={
-                <>
-                  <SvgBackArrow />
-                  Назад к списку групп{' '}
-                </>
+      <Section type={SectionType.default}>
+          <Panel
+              className={'col-span-full'}
+              header={
+                  <>
+                      <Button
+                          text={
+                              <>
+                                  <SvgBackArrow />
+                                  Назад к списку групп{' '}
+                              </>
+                          }
+                          className={
+                              'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
+                          }
+                          action={() => navigate(-1)}
+                          variant={ButtonVariant.text}
+                      />
+                      <Heading
+                          text={'Создать группу'}
+                          variant={HeadingVariant.h1}
+                          className={'!mb-0 inline-block'}
+                          color={HeadingColor.accent}
+                      />
+                  </>
               }
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
-              action={() => navigate(-1)}
-              variant={ButtonVariant.text}
-            />
-            <Heading
-              text={'Создать группу'}
-              variant={HeadingVariant.h1}
-              className={'!mb-0 inline-block'}
-              color={HeadingColor.accent}
-            />
-          </>
-        }
-      ></Panel>
-      <Panel
-        variant={PanelVariant.textPadding}
-        state={store.permissionStore.loadingPermissions}
-        className={'grid grid-rows-[auto_1fr_auto]'}
-        footer={
-            <>
-              <Button
-                text={'Отменить'}
-                action={() => navigate(-1)}
-                className={'float-right'}
-                variant={ButtonVariant['accent-outline']}
-              />
+          ></Panel>
+          <Panel
+              variant={PanelVariant.textPadding}
+              state={store.permissionStore.loadingPermissions}
+              className={'grid grid-rows-[auto_1fr_auto]'}
+              footer={
+                  <>
+                      <Button
+                          text={'Отменить'}
+                          action={() => navigate(-1)}
+                          className={'float-right'}
+                          variant={ButtonVariant['accent-outline']}
+                      />
 
-              <Button
-                text={'Сохранить'}
-                action={async () => {
-                  // @ts-ignore
-                  await store.permissionStore.createPermissionStoreAdmin(changes)
-                  setTimeout(() => navigate('/account/groups'), 500)
-                  // navigate('/account/groups')
-                }}
-                className={'float-right'}
-                variant={ButtonVariant.accent}
-              />
-            </>
-        }
-        header={<label className={'account-form__input flex-1'} htmlFor='cleanm'>
-          Название группы
-          <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
-        </label>}
-        background={PanelColor.glass}
-      >
-        <div className={'accounts-group_body text-[#606163] w-full gap-x-4 gap-y-16 font-medium py-5'}>
+                      <Button
+                          text={'Сохранить'}
+                          action={async () => {
+                              // @ts-ignore
+                              store.permissionStore.createPermission(changes)
+                              .finally(() => {
+                                navigate('/account/groups')
+                              })
+                              // navigate('/account/groups')
+                          }}
+                          className={'float-right'}
+                          variant={ButtonVariant.accent}
+                      />
+                  </>
+              }
+              header={
+                  <label className={'account-form__input flex-1'} htmlFor='cleanm'>
+                      Название группы
+                      <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
+                  </label>
+              }
+              background={PanelColor.glass}
+          >
+              <div className={'accounts-group_body text-[#606163] w-full gap-x-4 gap-y-16 font-medium py-5'}>
+                  <div>
+                      <Heading
+                          text={'Присвойте права группе'}
+                          color={HeadingColor.accent}
+                          variant={HeadingVariant.h4}
+                          className={'px-8'}
+                      />
+                  </div>
 
-          <div>
-            <Heading
-              text={'Присвойте права группе'}
-              color={HeadingColor.accent}
-              variant={HeadingVariant.h4}
-              className={'px-8'}
-            />
-          </div>
-
-            <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} />
-
-        </div>
-      </Panel>
-    </Section>
+                  <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} />
+              </div>
+          </Panel>
+      </Section>
   )
 }

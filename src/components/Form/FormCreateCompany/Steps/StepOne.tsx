@@ -14,14 +14,14 @@ export function FormStep1(props: {
   values: any
   action1: () => void
   errors: any
+  isValid?: boolean
   touched: any
   store: any
   prop8: (o: any) => { label: any; value: string }
 }) {
-  const { values, touched,  errors, isValidating }:any = useFormikContext();
-  console.log(values.application_type == CompanyType.performer || values.application_type.value == CompanyType.performer);
-  console.log(values.application_type == CompanyType.customer || values.application_type.value == CompanyType.performer  );
-  return (
+  const { values, touched,  errors, isValidating, isValid }:any = useFormikContext();
+  // console.log(values);
+   return (
     <Panel
       variant={PanelVariant.textPadding}
       state={props.step !== 1}
@@ -43,12 +43,14 @@ export function FormStep1(props: {
               <Button
                 text={'Дальше'}
                 action={() => (Object.keys(errors).length == 0) && props.action1()}
+                // action={() => console.log(values)}
                 className={'float-right'}
                 variant={ButtonVariant.accent}
               />
             ) : (
               <Button
                 type={'submit'}
+                disabled={!isValid}
                 text={'Сохранить'}
                 className={'float-right'}
                 variant={ButtonVariant.accent}

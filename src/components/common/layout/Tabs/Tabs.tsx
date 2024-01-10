@@ -11,7 +11,7 @@ import CreateInput from 'components/common/ui/CreateInput/CreateInput'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { User } from 'stores/usersStore'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
-import TabsVariants from "routes/company/TabsVariants/TabsVariants";
+import TabsVariants, { TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import Logo from "components/common/layout/Logo/Logo";
 import company from "routes/company/company";
 
@@ -19,7 +19,7 @@ import company from "routes/company/company";
 export type TabsProps = {
   data: any
 }
-const Tabs = ({ data }: TabsProps) => {
+const Tabs = ({ data, panels }: TabsProps & {panels?: any}) => {
 
   const store = useStore()
     const [state, setState] = useState('Основная информация');
@@ -53,9 +53,17 @@ const Tabs = ({ data }: TabsProps) => {
      setState(label);
     }
     const TabPanels = ():any => {
-    const result = []
+    const result:any = []
+      if(panels) {
+        console.log(panels);
+        panels.forEach((item: any) => {
+          result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={panels[0].company_type} data={item.data} label={item.label}/>)
+        })
+        return result
+      }
+
       for(const key in data) {
-        result.push(<TabsVariants companyId={data.company.data.id} label={data[key].label}
+        result.push(<TabsVariants companyId={data.company.data.id} content_type={data[key].label} label={data[key].label}
           data={data[key].data}
           state={state == data[key].label}
           key={`var-${data[key].label}`}
@@ -79,48 +87,6 @@ const Tabs = ({ data }: TabsProps) => {
               <HeadersTabs/>
             </Tabs.TabHeaderContainer>
         <TabPanels/>
-          {/*   <Tabs.Panel state={state == 0} name={'info'} className={'py-12'}> */}
-          {/*       <DList label={'Оплата'} title={data[0].value.payment} /> */}
-          {/*       <DList label={'ИНН'} title={data[0].value.inn} /> */}
-          {/*       <DList label={'ОГРН'} title={data[0].value.ogrn} /> */}
-          {/*       <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}> */}
-          {/*         <DList label={'Исполнители'} title={data[0].value.ogrn} /> */}
-          {/*         <CardSimple.Footer> */}
-          {/*           <LinkStyled variant={ButtonVariant.text} style={{color: 'var(--accentColor)'}} text={'Подробнее'} to={'#'} /> */}
-          {/*         </CardSimple.Footer> */}
-          {/*       </CardSimple> */}
-          {/*      <DList label={'Счет'} title={<> */}
-          {/*        <Heading text={data[0].value.bill + ' ₽'}  variant={HeadingVariant.h2} color={HeadingColor.accent} /> */}
-          {/*        <Heading text={data[0].value.overdraft_sum + ' ₽' + ' с овердрафтом'}  variant={HeadingVariant.h4} color={HeadingColor.accent} /> */}
-          {/*      </> */}
-
-          {/*      }/> */}
-          {/*      <DList label={'Адрес'} title={data[0].value.address} /> */}
-          {/*      <DList label={'Юридический адрес'} title={data[0].value.legal_address} /> */}
-          {/*      <DList label={'Подключенные услуги'} title={''} /> */}
-          {/*      <DList label={'Контакты для связи'} title={data[0].value.contacts} /> */}
-          {/*     <Button text={'Пополнить счет'}  action={async () => { */}
-          {/*       store.appStore.setModal(fundBill) */}
-          {/*     }} variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm}/> */}
-          {/*   </Tabs.Panel> */}
-          {/* <Tabs.Panel  state={state === 2} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none'}  bodyClassName={'!bg-transparent'}> */}
-          {/*   <TableWithSort  className={'rounded-none !bg-none'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true} */}
-          {/*     data={data[0].value.users.map((item: User & {rootRoute?: string} ) => ({ */}
-
-          {/*     state: item.is_active, */}
-          {/*     name: item.first_name + ' ' + item.last_name, */}
-          {/*     phone: item.phone, */}
-          {/*     email: item.email, */}
-          {/*     group: item.group, */}
-          {/*     company: data[0].value.company.name, */}
-          {/*     city: data[0].value.company.city.name, */}
-          {/*     id: item.id, */}
-          {/*     query: { */}
-          {/*     company_id: data[0].value.company.id, */}
-          {/*     rootRoute: `account/users/${data[0].value.company.id}/${item.id}`, */}
-          {/*   }, */}
-          {/*   }))} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Тип', 'Компания', 'Город']}/> */}
-          {/* </Tabs.Panel> */}
 
         </div>
     )

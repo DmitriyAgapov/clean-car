@@ -1,18 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, Link, Navigate, RouterProvider } from 'react-router-dom'
-// @ts-ignore
-import styles from './assets/_forms.scss'
 import {
-  authUser,
-  companyLoader,
-  groupsCreatLoader,
-  groupsIdLoader,
-  groupsLoader,
-  profileLoader,
-  userLoader,
-  usersLoader,
-} from "routes/loaders/loaders"
+    authUser,carsLoader,
+    companyLoader, filialLoader, filialsLoader,
+    groupsCreatLoader,
+    groupsIdLoader,
+    groupsLoader,
+    profileLoader,
+    userLoader,
+    usersLoader
+} from "routes/loaders/loaders";
 import GroupsPage from './routes/groups/groups'
 import GroupPage from './routes/groups/group'
 import GroupPageEditAction from './routes/groups/groupEditAction'
@@ -35,24 +33,18 @@ import CompanyPageEditAction from "routes/company/companyEditAction";
 import UsersPageCreateAction from "routes/users/usersCreateAction";
 import FilialsPage from 'routes/filials/filials'
 import { createTheme, Input, Select, MantineProvider } from '@mantine/core'
+import { theme } from "theme/theme";
+import UsersPageEditAction from "routes/users/usersEditAction";
+import FilialsPageEditAction from "routes/filials/filialsEditAction";
+import FilialsPageCreateAction from "routes/filials/filialsCreateAction";
+import FilialPage from "routes/filials/filial";
+import CarsPage from "routes/cars/cars";
+import CarPage from "routes/cars/car";
+import CarsPageCreateAction from "routes/cars/carsCreateAction";
+import CarsPageEditAction from "routes/cars/carsEditAction";
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
-const theme = createTheme({
-  components: {
-    Input: Input.extend({
-      classNames: {
-        input: styles.input,
-      },
-    }),
-    Select: Select.extend({
-        classNames: {
-          input: "bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10",
-          dropdown: "bg-white",
-          option: 'tracking-input',
-        }
-    })
-  },
-});
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -96,17 +88,43 @@ const router = createBrowserRouter([
                 loader: usersLoader,
                 children: [
                     {
-                        path: ':companyid/:id',
+                        path: ':company_type/:companyid/:id',
                         element: <UserPage />,
                         loader: userLoader,
                     },
                     {
                         path: 'create',
-                        element: <UsersPageCreateAction />,
-                        loader: userLoader,
+                        element: <UsersPageCreateAction />
                     },
+                    {
+                        path: ':company_type/:companyid/:id/edit',
+                        element: <UsersPageEditAction />,
+                        loader: userLoader,
+                    }
                 ],
             },
+            {
+                path: 'cars',
+                element: <CarsPage />,
+                loader: carsLoader,
+                children: [
+                    {
+                        path: ':company_type/:companyid/:id',
+                        element: <CarPage />,
+                        loader: carsLoader,
+                    },
+                    {
+                        path: 'create',
+                        element: <CarsPageCreateAction />
+                    },
+                    {
+                        path: ':company_type/:companyid/:id/edit',
+                        element: <CarsPageEditAction />,
+                        loader: carsLoader,
+                    }
+                ],
+            },
+
             {
                 path: 'companies',
                 element: <CompaniesPage />,
@@ -114,12 +132,12 @@ const router = createBrowserRouter([
                 errorElement: <Navigate to='/account' replace={true} />,
                 children: [
                     {
-                        path: ':companytype/:id',
+                        path: ':company_type/:id',
                         element: <CompanyPage />,
-                        loader: (props) => companyLoader({ ...props, action: 'read' }),
+                        loader: companyLoader,
                     },
                     {
-                        path: ':companytype/:id/edit',
+                        path: ':company_type/:id/edit',
                         element: <CompanyPageEditAction />,
                         loader: companyLoader,
                     },
@@ -131,8 +149,26 @@ const router = createBrowserRouter([
                 ],
             },
             {
-                path: 'filial',
+                path: 'filials',
                 element: <FilialsPage />,
+                loader: filialsLoader,
+                children: [
+                    {
+                        path: ':company_type/:company_id/:id',
+                        element: <FilialPage />,
+                        loader: filialLoader,
+                    },
+                    {
+                        path: ':companytype/:id/edit',
+                        element: <FilialsPageEditAction />,
+                        loader: companyLoader,
+                    },
+                    {
+                        path: 'create',
+                        element: <FilialsPageCreateAction />
+
+                    },
+                ],
             },
             {
                 path: 'groups',
@@ -145,12 +181,12 @@ const router = createBrowserRouter([
                 loader: groupsCreatLoader,
             },
             {
-                path: 'groups/:id',
+                path: 'groups/:company_type/:id',
                 element: <GroupPage />,
                 loader: groupsIdLoader,
             },
             {
-                path: 'groups/:id/edit',
+                path: 'groups/:company_type/:id/edit',
                 element: <GroupPageEditAction />,
                 loader: groupsIdLoader,
             },

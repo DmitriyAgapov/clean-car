@@ -17,10 +17,79 @@ type TabsVariantsProps = {
   data: any
   companyId?: number
   company_type?: string
+  content_type?: string
+  parentCompany?: string
 
 } & TabsProps & {className?: string, children?: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps
+export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
+  const store = useStore()
+  let result
 
-const TabsVariants = ({label, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
+  switch (label) {
+    case "Основная информация":
+      console.log(parentCompany);
+      const navigate = useNavigate()
+      const fundBill = {
+        actions: [
+          <Button text={'Отменить'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
+          <Button
+            text={'Сохранить'}
+            action={() => {
+              // store.permissionStore.deletePermissionStoreAdmin(changes.id)
+              store.appStore.closeModal()
+              navigate('/account/groups')
+            }}
+            variant={ButtonVariant['accent-outline']}
+          />,
+        ],
+        text: <div className={'grid gap-12 mb-12'}><CreateInput text={'Сумма начисления'} name={'paymoney'} type={'number'}/>
+          <DList label={'Компания'} title={data.name}/>
+          <DList label={'Зачислил'}  title={data.name}/>
+        </div>,
+        header: 'Пополнить счет',
+        state: true,
+      };
+
+
+      result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
+
+        <DList label={'Адрес'} title={data[`${company_type}profile`].address} />
+
+        <DList label={'Компания'}
+          // @ts-ignore
+          title={parentCompany.data.name} />
+
+      </Tabs.Panel>)
+      break;
+
+    case 'Сотрудники':
+      console.log(data);
+      result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+          data={data.map((item: User & {rootRoute?: string} ) => ({
+            state: item.is_active,
+            name: item.first_name + ' ' + item.last_name,
+            phone: item.phone,
+            email: item.email,
+            group: item.group,
+            // @ts-ignore
+            company: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.name,
+            // @ts-ignore
+            city: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.city.name,
+            id: item.id,
+            query: {
+              company_id: companyId,
+              rootRoute: `/account/users/${companyId}/${item.id}`,
+            },
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Группа', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
+      </Tabs.Panel>)
+      break;
+    default:
+      return null;
+  }
+  return  result
+}
+const TabsVariants = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
 
   const store = useStore()
   let result
@@ -29,6 +98,7 @@ const TabsVariants = ({label, data, state, name, className, companyId, company_t
     case "Основная информация":
       const navigate = useNavigate()
       const fundBill = {
+        className: '',
         actions: [
           <Button text={'Отменить'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
           <Button
@@ -78,7 +148,6 @@ const TabsVariants = ({label, data, state, name, className, companyId, company_t
       </Tabs.Panel>)
       break;
 
-
     case 'Сотрудники':
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
@@ -97,7 +166,7 @@ const TabsVariants = ({label, data, state, name, className, companyId, company_t
               company_id: companyId,
               rootRoute: `/account/users/${companyId}/${item.id}`,
             },
-          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Тип', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Группа', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
       </Tabs.Panel>)
       break;
     default:

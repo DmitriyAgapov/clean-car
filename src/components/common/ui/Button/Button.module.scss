@@ -188,6 +188,11 @@ user-select: none ;
 
 }
 
+.Button[data-disabled="true"], .Button[disabled] {
+  opacity: .5;
+  filter: grayscale(1);
+  pointer-events: none;
+}
 .Button[data-variant="text"] {
   cursor: pointer;
   font-size: 0;

@@ -25,6 +25,93 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   const {appStore} = store
   const {width} = useWindowDimensions()
 
+  const sidebarMenu: { icon: React.ReactNode; title: string; url: string, urlMap: string }[] = [
+
+    {
+      icon: <img src={'/icons/company.png'} alt={''} />,
+      title: 'Компании',
+      url: 'companies',
+      urlMap: 'companies',
+    },
+    {
+      icon: <img src={'/icons/filials.png'} alt={''} />,
+      title: 'Филиалы',
+      url: 'filials',
+      urlMap: 'filial',
+    },
+    {
+      icon: <img src={'/icons/users.png'} alt={''} />,
+      title: 'Пользователи',
+      url: 'users',
+      urlMap: 'users',
+    },
+    {
+      icon: <img src={'/icons/groups.png'} alt={''} />,
+      title: 'Группы',
+      url: 'groups',
+      urlMap: 'users',
+    },
+    {
+      icon: <img src={'/icons/auto.png'} alt={''} />,
+      title: 'Автомобили',
+      url: 'cars',
+      urlMap: 'cars',
+    },
+    {
+      icon: <img src={'/icons/zayavki.png'} alt={''} />,
+      title: 'Заявки',
+      url: 'bids',
+      urlMap: 'bids',
+    },
+    {
+      icon: <img src={'/icons/price-list.png'} alt={''} />,
+      title: 'Прайс-лист',
+      url: 'price',
+      urlMap: 'price',
+    },
+    {
+      icon: <img src={'/icons/limits.png'} alt={''} />,
+      title: 'Лимиты',
+      url: 'limits',
+      urlMap: 'limits',
+    },
+    {
+      icon: <img src={'/icons/budget.png'} alt={''} />,
+      title: 'Бюджет',
+      url: 'finance',
+      urlMap: 'finance',
+    },
+    {
+      icon: <img src={'/icons/zp.png'} alt={''} />,
+      title: 'Зарплата',
+      url: 'calculate',
+      urlMap: 'calculate',
+    },
+    {
+      icon: <img src={'/icons/spravochnik.png'} alt={''} />,
+      title: 'Справочник',
+      url: 'references',
+      urlMap: 'references',
+    },
+  ]
+
+  const [routes, setRoutes] = React.useState<any[]>([])
+  React.useEffect(() => {
+    const routeWithPermissions: any[] = [  {
+      icon: <img src={'/icons/home.png'} alt={''} />,
+      title: 'Дашборд',
+      url: 'dashboard',
+    }]
+
+    const addRouteWithPermissions = (el: any) => {
+      if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
+        routeWithPermissions.push(el)
+      }
+    }
+    sidebarMenu.forEach((el) => addRouteWithPermissions(el))
+
+    setRoutes( routeWithPermissions)
+  }, [store.userStore.currentUserPermissions.size])
   return (
     <>
       {store.appStore.asideState && <BackDrop action={() => store.appStore.setAsideClose()}/>}
@@ -33,7 +120,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
 
       <nav>
         <ul>
-          {items?.map((i, index) => {
+          {routes.map((i, index) => {
             if (i.url === location.pathname) {
             }
             return (

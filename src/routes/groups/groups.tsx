@@ -9,16 +9,22 @@ import { observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import moment from 'moment'
 
-export default observer(function GroupsPage() {
+const GroupsPage = () => {
     const store = useStore()
     const location = useLocation()
     const navigate = useNavigate()
+    const [ar, setAr] = React.useState<any[]>([])
+    React.useEffect(() => {
+      // console.log(ar);
+      // console.log(store.permissionStore.permissions);
+    }, [store.permissionStore.permissions]);
 
     return (
         <Section type={SectionType.default}>
             <Panel
-              variant={PanelVariant.withGapOnly}
-              headerClassName={'flex justify-between'}
+                variant={PanelVariant.withGapOnly}
+                headerClassName={'flex justify-between'}
+                state={store.permissionStore.loadingPermissions}
                 header={
                     <>
                         <Heading
@@ -27,14 +33,16 @@ export default observer(function GroupsPage() {
                             className={'inline-block'}
                             color={HeadingColor.accent}
                         />
-                        {store.userStore.getUserCan('users', 'create') && <Button
-                          trimText={true}
-                            text={'Создать группу'}
-                            action={() => navigate('/account/groups/create')}
-                            className={'inline-flex'}
-                            directory={ButtonDirectory.directory}
-                            size={ButtonSizeType.sm}
-                        />}
+                        {store.userStore.getUserCan('users', 'create') && (
+                            <Button
+                                trimText={true}
+                                text={'Создать группу'}
+                                action={() => navigate('/account/groups/create')}
+                                className={'inline-flex'}
+                                directory={ButtonDirectory.directory}
+                                size={ButtonSizeType.sm}
+                            />
+                        )}
                     </>
                 }
             >
@@ -54,9 +62,14 @@ export default observer(function GroupsPage() {
                     date: moment(item.created).format('DD.MM.YYYY HH:mm'),
                     name: item.name,
                     id: item.id,
+                    query:{
+                      group: store.appStore.appType
+                    }
                 }))}
                 state={store.permissionStore.loadingPermissions}
             />
+
         </Section>
     )
-})
+}
+export default observer(GroupsPage)

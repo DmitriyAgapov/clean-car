@@ -5,17 +5,6 @@ import userStore from './userStore'
 import appStore from './appStore'
 
 export class AuthStore {
-  inProgress = false
-  errors: any = undefined
-
-  values = {
-    first_name: '',
-    last_name: '',
-    phone: '',
-    email: '',
-    password: '',
-  }
-
   constructor() {
     makeObservable(this, {
       inProgress: observable,
@@ -35,12 +24,22 @@ export class AuthStore {
       () => this.values,
       (values) => {
         if (values.email.length > 0 && values.password.length > 0) {
-          console.log('ready to login', values.email, values.password)
+          // console.log('ready to login', values.email, values.password)
         } else {
-          console.log('ready to login', values)
+          // console.log('ready to login', values)
         }
       },
     )
+  }
+  userIsLoggedIn: boolean = false
+  inProgress = false
+  errors: any = undefined
+  values = {
+    first_name: '',
+    last_name: '',
+    phone: '',
+    email: '',
+    password: '',
   }
 
   setFirstname(first_name: string) {
@@ -74,6 +73,7 @@ export class AuthStore {
   login() {
     this.inProgress = true
     this.errors = undefined
+
     return agent.Auth.login(this.values.email, this.values.password)
       .then(
         action((resolve: any) => {
@@ -89,6 +89,7 @@ export class AuthStore {
       )
       .finally(
         action(() => {
+
           this.inProgress = false
         }),
       )

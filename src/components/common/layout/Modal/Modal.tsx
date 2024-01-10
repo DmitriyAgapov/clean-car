@@ -20,7 +20,7 @@ const SvgCloseStyled = styled(SvgClose)`
 `
 const Modal = (): JSX.Element | null => {
   const store = useStore()
-  const { state, text,header, actions } = store.appStore.modal
+  const { state,component , className= '', text,header, actions } = store.appStore.modal
   if (state) {
     return (
       <div className={styles.Modal}>
@@ -28,10 +28,10 @@ const Modal = (): JSX.Element | null => {
           footer={actions}
           variant={PanelVariant.modal}
           background={PanelColor.glass}
-          className={'relative z-[999]  gap-10'}
+          className={'relative z-[999]  gap-10' + " " + className }
           header={header  ? <Heading text={header} variant={HeadingVariant.h2} color={HeadingColor.accent}/> : null}
         >
-          {text}
+          {text}{component}
           <a
             data-close={'true'}
             onClick={(event) => {

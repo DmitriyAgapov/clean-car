@@ -1,9 +1,23 @@
-import { action, autorun, computed, flow, get, makeObservable, observable, ObservableMap, reaction } from 'mobx'
+import {
+    action,
+    autorun,
+    computed,
+    flow,
+    get,
+    makeAutoObservable,
+    makeObservable,
+    observable,
+    ObservableMap,
+    reaction,
+} from 'mobx'
 import agent from 'utils/agent'
 import type { AccountProps, CRUD } from "stores/permissionStore";
 import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'
 import currentUser from "components/common/layout/CurrentUser/CurrentUser";
+import companyStore, { Company, CompanyType } from 'stores/companyStore'
+import { makePersistable } from 'mobx-persist-store';
+import label from "utils/labels";
 
 export enum UserTypeEnum {
   admin = 'admin',
@@ -12,8 +26,8 @@ export enum UserTypeEnum {
 }
 
 export type User = {
-  id: string
-  phone: string
+  id: number
+  phone?: string
   email: string
   userType?: UserTypeEnum
   first_name: string
@@ -25,16 +39,39 @@ export type User = {
   staff_group?: GroupProps
   is_active?: boolean
   account_bindings?: AccountProps[]
+  company?: Company<CompanyType>
 }
 
 export class UserStore {
-  currentUser?: User
+  constructor() {
+    makeAutoObservable(this, {}, { autoBind: true });
+    makePersistable(this, {
+      name: 'userStore',
+      properties: ['currentUser', 'currentUserPermissions'],
+      storage: window.localStorage,
+    });
+    reaction(() => this.currentUserPermissions,
+      (currentUserPermissions) => {
+        if(currentUserPermissions.size === 0) {
+          this.loadUserPermissions()
+        }
+      })
+  }
+
+  currentUser: User = {id: 0, email: '', first_name: '', last_name: ''};
   currentUserPermissions = observable.map([]);
   currentUserActiveAccount?: UserTypeEnum
-  loadingUser?: boolean
-  updatingUser?: boolean
-  updatingUserErrors: any
+  loadingUser: boolean = false
+  updatingUser: boolean = false
+  updatingUserErrors: any = ''
 
+  loadUserPermissions = flow(function* (this: UserStore) {
+    if(this.currentUser.account_bindings && this.currentUser.account_bindings.length > 0) {
+      let ar = observable.map(this.currentUser.account_bindings[0].group.permissions.map((el: any) => [label(el.name), el]));
+      // this.setCurrentPermissions(ar, this.currentUser.account_bindings[0].company.id);
+      console.log('currentUserPermissions', this.currentUser.account_bindings);
+    }
+  })
   loadMyProfile = flow(function* (this: UserStore) {
     console.log('load profile');
     this.loadingUser = true
@@ -49,39 +86,26 @@ export class UserStore {
     }
     finally {
       this.loadingUser = false
-      // if(appStore.appType == '') appStore.setAppType(this.roles[0])
+
     }
+    if(this.currentUserPermissions.size === 0) {
+      this.loadUserPermissions()
+    }
+    if(!this.currentUser.company) {
+      // @ts-ignore
+      this.currentUser.company = yield companyStore.getMyCompany()
+    }
+    this.loadingUser = false
   })
 
-  constructor() {
-    makeObservable(this, {
-      currentUser: observable,
-      currentUserPermissions: observable,
-      loadingUser: observable,
-      getCurrentUserActiveAccount: action,
-      currentUserActiveAccount: observable,
-      updatingUser: observable,
-      updatingUserErrors: observable,
-      loadMyProfile: action,
-      setCurrentPermissions: action,
-      roles: computed,
-      // setUser: action,
-      // updateUser: action,
-      forgetUser: action,
-    })
-
-   }
   get roles() {
     const roles = []
-    const source: any = this.currentUser?.account_bindings
-
-
-    if(this.currentUser?.is_staff) {
+    if(this.currentUser.is_staff) {
       // appStore.setAppType(UserTypeEnum.admin);
       roles.push(UserTypeEnum.admin)
     }
     // @ts-ignore
-    if(this.currentUser?.account_bindings?.filter(value => value.company.company_type == "Компания-Заказчик").length > 0) {
+    if(this.currentUser.account_bindings?.filter(value => value.company.company_type == "Компания-Заказчик").length > 0) {
       // appStore.setAppType(UserTypeEnum.customer);
       roles.push(UserTypeEnum.customer)
     }
@@ -95,17 +119,18 @@ export class UserStore {
   getUserCan(key: string, action: keyof CRUD) {
     return this.currentUserPermissions.get(key)[action]
   }
-  setCurrentPermissions(ar:ObservableMap<any, any>) {
+  setCurrentPermissions(ar:ObservableMap<any, any>, companyid?: number) {
     this.currentUserPermissions = ar
-    console.log(this.currentUserPermissions);
   }
   pullUser() {
       this.loadingUser = true
       return agent.Auth.current()
-      .then(action((r: any) => {
-        this.currentUser = r
-      }))
-      .then(action(() => this.loadMyProfile())).finally(action(() => {
+        .then(action((r: any) => {
+          this.currentUser = r
+        }))
+      .then(action(() => this.loadMyProfile()))
+      .then(action(() => this.loadUserPermissions()))
+      .finally(action(() => {
         if(appStore.appType)
          this.loadingUser = false
       }),)
@@ -123,9 +148,11 @@ export class UserStore {
   // }
 
   forgetUser() {
-    this.currentUser = undefined
+    this.currentUser = {} as User
   }
+
 }
 
 const userStore = new UserStore()
+
 export default userStore

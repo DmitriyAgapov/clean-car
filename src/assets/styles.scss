@@ -1,3 +1,8 @@
+
+
+@config "../../tailwind.config.js";
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,6 +15,4 @@
 @import "_animation";
 @import "_position";
 @import "_forms";
-
 @import '@mantine/core/styles.css';
-@config "../../tailwind.config.js";

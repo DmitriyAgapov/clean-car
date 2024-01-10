@@ -83,10 +83,12 @@ export default function GroupPageEditAction(props: any) {
                     <Button text={'Нет'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
                     <Button
                       text={'Да, удалять'}
-                      action={() => {
-                        store.permissionStore.deletePermissionStoreAdmin(changes.id)
-                        store.appStore.closeModal()
-                        navigate('/account/groups')
+                      action={async () => {
+                        store.permissionStore.deletePermissionStore(changes.id).then(() => {
+                          store.appStore.closeModal()
+                          navigate('/account/groups', { replace: false })
+                        })
+
                       }}
                       variant={ButtonVariant['accent-outline']}
                     />,
@@ -108,7 +110,7 @@ export default function GroupPageEditAction(props: any) {
                 text={'Сохранить'}
                 action={async () => {
                   // @ts-ignore
-                  store.permissionStore.setPermissionStoreAdmin(changes.id, changes)
+                  store.permissionStore.setPermissionStore(changes.id, changes)
                   setTimeout(() => navigate('/account/groups'), 500)
                 }}
                 className={'float-right'}

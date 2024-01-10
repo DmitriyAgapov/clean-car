@@ -14,7 +14,7 @@ import { values } from 'mobx'
 
 function AuthPage() {
   const store = useStore()
-
+  // console.log(store.appStore);
   return (
     <Layout
       className={'page-intro'}
@@ -47,7 +47,7 @@ function AuthPage() {
             Для входа в систему, введите ваши данные{' '}
           </p>
         </Panel>
-        {!store.userStore.currentUser ? (
+        {!store.appStore.token ? (
           <Panel
             bodyClassName={'!py-12'}
             className={

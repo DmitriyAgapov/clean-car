@@ -6,14 +6,13 @@ import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Bu
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { PermissionName } from "stores/permissionStore";
 
 const CompaniesPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
+
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -52,7 +51,7 @@ const CompaniesPage = () => {
           company: item.name,
           type: item.company_type,
           city: item.city.name,
-          id: item.id,
+          id: item.id
         }))}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
         state={store.companyStore.loadingCompanies}

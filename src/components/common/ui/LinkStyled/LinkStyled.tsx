@@ -4,7 +4,7 @@ import styles from '../Button/Button.module.scss'
 import { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 
 interface ButtonProps {
-  text: string
+  text: string | React.ReactNode
   variant?: ButtonVariant
   size?: ButtonSizeType
   directory?: ButtonDirectory

@@ -5,8 +5,9 @@ import data, { decodeToken } from 'utils/getData'
 import { User } from 'stores/userStore'
 import { toJS } from 'mobx'
 import { Company, CompanyType } from "stores/companyStore";
+import pagination from "components/common/Pagination/Pagination";
 
-const API_ROOT = 'https://dev.server.clean-car.net/api'
+export const API_ROOT = 'https://dev.server.clean-car.net/api'
 
 const encode = encodeURIComponent
 
@@ -20,7 +21,7 @@ const handleErrors = (err: AxiosError) => {
 const tokenPlugin = () => {
   if (appStore.token) return { Authorization: `Bearer ${appStore.token}` }
 }
-
+export type PaginationProps = {name?: string, ordering?: string, page?: number, page_size?: number}
 const requests = {
     delete: (url: string) =>
         axios({
@@ -30,11 +31,14 @@ const requests = {
         })
             .then((response) => response)
             .catch(handleErrors),
-    get: (url: string, body?: any) =>
+    get: (url: string, body?: any, pagination?:PaginationProps) =>
         axios({
             url: `${API_ROOT}${url}`,
             headers: tokenPlugin(),
             method: 'GET',
+            params: {
+              ...pagination
+            }
         })
             .then((response) => response)
             .catch(handleErrors),
@@ -89,6 +93,7 @@ const Auth = {
     return new Promise((resolve, reject) => {
       if (appStore.token) {
         const dataUser = decodeToken(appStore.token)
+        // console.log(dataUser);
         const { user_id, first_name, last_name, phone } = dataUser
         resolve({
           id: user_id,
@@ -139,14 +144,18 @@ const crudCompanyMethods = {
   create: (data:any, type:string) => requests.post(`/companies/${type}/create/`, data),
   update: (data:any, type:string, id: number) => requests.put(`/companies/${type}/${id}/update/`, data),
   list: (type:string) => requests.get(`/companies/${type}/list/`),
-  read: (id: number, type:string) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
+  read: (type:string, id: number) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
   delete: (id: number) => requests.delete(`/companies/${id}/delete/`),
 }
 const crudAccountMethods = {
-  getUsers: (company_id: number) => requests.get(`/accounts/${company_id}/users/list/`)
+  getUsers: (company_id: number) => requests.get(`/accounts/${company_id}/users/list/`),
+  getUser: (company_id: number, id: number) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
+  createUser: (company_id: number, data: any) => requests.post(`/accounts/${company_id}/users/create/`, data),
+  updateUser: (company_id: number, data: any) => requests.post(`/accounts/${company_id}/users/create/`, data),
 }
 const crudPermissionsMethods = {
   getCompanyPermissions: (company_id: number) => requests.get(`/permissions/${company_id}/groups/list/`),
+  getUserPermissions: (company_id: number, id: number) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve`),
 }
 
 const apiEndPoint = {
@@ -162,13 +171,14 @@ const Companies = {
       return  apiEndPoint.company.update(data, type, id)
     },
 
-    getCompanyData: (id: number, type: string) => apiEndPoint.company.read(id, type),
+    getCompanyData: (type: string, id: number ) => apiEndPoint.company.read(type, id),
     // createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
     //   return  requests.post('/companies/performer/create/', data)
     // },
     createCompanyCustomer: ( data: CreateCompanyPerformerFormData, type: string ) => {
       return  requests.post('/companies/customer/create/', data)
     },
+    getMyCompanies: (pagination?: PaginationProps) => requests.get('/companies/my_companies/list/', {},pagination),
     getListCompanyCustomer: (company_name?: string | undefined, page?: number | undefined) =>
         requests.get('/companies/customer/list/', {
             company_name: company_name,
@@ -179,12 +189,19 @@ const Companies = {
             company_name: company_name,
             page: page,
         }),
-    getAllCompanies: () => requests.get('/companies/all_companies/list/', {}),
+    getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', {}, pagination),
 
 }
 const Permissions = {
   getAllCompanyPermissions: (id:number) => apiEndPoint.permissions.getCompanyPermissions(id),
-
+  getUserPermissions: (company_id: number, id:number ) => apiEndPoint.permissions.getUserPermissions(company_id, id),
+  createPermission: (company_id: number, data: any) => requests.post(`/permissions/${company_id}/groups/create/`, data),
+  getPermissionById: (company_id: number, id: number) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve/`, {}),
+  putUpdatePermissions: (company_id: number, id: number, data: any) => requests.put(`/permissions/${company_id}/groups/${id}/update/`, {
+    name: data.name,
+    permissions: toJS(data.permissions),
+  }),
+  deletePermission: (company_id: number, id: number) => requests.delete(`/permissions/${company_id}/groups/${id}/delete/`),
 }
 const PermissionsAdmin = {
   getAllAdminPermissions: (ordering?: string, page?: number, page_size?: number) =>
@@ -197,7 +214,7 @@ const PermissionsAdmin = {
   },
   deleteAdminGroupIdPermission: (id: number) =>
     requests.delete(`/permissions_admin/groups/${id}/delete/`),
-  getAdminGroupIdPermission: (id: string) => requests.get(`/permissions_admin/groups/${id}/retrieve/`, {}),
+  getAdminGroupIdPermission: (id: number) => requests.get(`/permissions_admin/groups/${id}/retrieve/`, {}),
 
   createAdminPermission: (data: any) => {
     requests.post('/permissions_admin/groups/create/', {
@@ -214,6 +231,7 @@ const PermissionsAdmin = {
 }
 const Profile = {
   getMyAccount: () => requests.get('/accounts/my_profile/', {}),
+  getMyCompany: () => requests.get('/companies/my_companies/list/', {}),
   // follow: (username: string) =>
   // 	requests.post(`/profiles/${username}/follow`, {}),
   // get: (username: string) =>
@@ -225,9 +243,17 @@ const Catalog = {
   getCities: () => requests.get('/catalog/cities/'),
 }
 const Account = {
-  getCompany: (id:number) =>   apiEndPoint.account.getUsers(id)
-}
+  getCompanyUsers: (id:number) =>   apiEndPoint.account.getUsers(id),
+  getCompanyUser: (company_id: number, id: number) => apiEndPoint.account.getUser(company_id, id),
+  createCompanyUser: (company_id: number, data:any) => apiEndPoint.account.createUser(company_id, data),
+  updateCompanyUser: (company_id: number, data:any) => apiEndPoint.account.createUser(company_id, data),
 
+}
+const Filials = {
+  getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),
+  getFilial: (company_type: string, company_id: number, id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/${id}/retrieve/`, params),
+  createFilial: (company_type: string, company_id: number, data: any) => requests.post(`/${company_type}_branches/${company_id}/create/`, data),
+}
 const agent = {
   Utils,
   Auth,
@@ -236,6 +262,7 @@ const agent = {
   Account,
   PermissionsAdmin,
   Companies,
+  Filials,
   Users,
   Catalog,
 }

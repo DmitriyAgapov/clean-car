@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { CompanyType } from "stores/companyStore";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
-const CreateField = ({ title }: {title:string}) => (
+export const CreateField = ({ title }: {title:string}) => (
     <div className={styles.createField}>
         <SvgPlus />
         <Heading text={title} variant={HeadingVariant.h3} color={HeadingColor.accent} />
@@ -28,7 +28,7 @@ export function FormStepSuccess(props: {
   prop8?: (o: any) => { label: any; value: string }
 }) {
   const { values, touched, errors }:any = useFormikContext();
-  console.log(values.id);
+  // console.log(values.id);
   const navigate = useNavigate()
   const store = useStore()
 

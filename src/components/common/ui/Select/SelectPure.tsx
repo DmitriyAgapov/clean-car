@@ -8,7 +8,7 @@ const theme = createTheme({
 
 		options = options.map((item:boolean) => {
 			if(item) return 'Активна'
-			return 'Деактивна'
+			return 'Неактивна'
 		})
 	}
 

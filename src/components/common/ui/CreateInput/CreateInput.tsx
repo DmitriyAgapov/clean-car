@@ -2,6 +2,7 @@
 import React from 'react'
 import SelectCustom from 'components/common/ui/Select/Select'
 import { Field, useFormik, useFormikContext } from 'formik'
+import Select from "components/common/ui/Select/Select";
 
 export type CreateInputProps = {
     text: string
@@ -104,26 +105,41 @@ interface CreateFormikInputProps {
   fieldType: string
   label: string
   className?: string
+  options?: []
 }
 
-export function CreateFormikInput({fieldName, placeHolder = "", label, fieldType, className }:CreateFormikInputProps) {
+export function CreateFormikInput({fieldName, placeHolder = "", label, options, fieldType, className }:CreateFormikInputProps):React.ReactElement {
   const {errors, touched}:any = useFormikContext()
-  return <label
-    className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
-    htmlFor={fieldName}
-    data-form_error={errors[`${fieldName}`] && touched[fieldName] && 'error'}
+  const inputElement = React.useMemo(() => {
+    if(fieldType == 'divider') return <hr className={'col-span-full'}/>
+    if(fieldType == 'select') return <label
+      className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
+      htmlFor={fieldName}
+      data-form_error={errors[`${fieldName}`] && touched[fieldName] && 'error'}
 
-  >
-    {label}
-    <Field
+    >
+      {label}<Select name={fieldName} options={options} placeholder={placeHolder}/>{errors[fieldName] && touched[fieldName] ? (
+      <div className={'form-error'}>{errors[fieldName]}</div>
+    ) : null}
+  </label>
+    if(fieldType == 'text') return <label
+      className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
+      htmlFor={fieldName}
+      data-form_error={errors[`${fieldName}`] && touched[fieldName] && 'error'}
+
+    >
+      {label}<Field
       id={fieldName}
       name={fieldName}
       placeholder={placeHolder}
       type={fieldType}
-    />
-    {errors[fieldName] && touched[fieldName] ? (
+    />{errors[fieldName] && touched[fieldName] ? (
       <div className={'form-error'}>{errors[fieldName]}</div>
     ) : null}
-  </label>
+    </label>
+  }, [])
+  console.log(inputElement);
+  return <>{inputElement}</>
+
 }
 export default CreateInput

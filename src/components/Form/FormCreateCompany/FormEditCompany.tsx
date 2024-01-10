@@ -36,7 +36,7 @@ const FormEditCompany = ({data}:any) => {
     // @ts-ignore
     const {company} = companyData;
     const navigate = useNavigate()
-    console.log(companyData);
+    // console.log(companyData);
     const initValues = {
         id: id,
         company_name: company.data.name,
@@ -67,7 +67,7 @@ const FormEditCompany = ({data}:any) => {
             validationSchema={SignupSchema}
             onSubmit={(values) => {
                 // @ts-ignore
-                console.log(values.application_type.value);
+                // console.log(values.application_type.value);
                 // @ts-ignore
                 if (values.application_type.value === CompanyType.performer) {
                     const data:Company<CompanyType.performer> = {
@@ -112,7 +112,7 @@ const FormEditCompany = ({data}:any) => {
                                 performer_company: [4]
                             }
                         }
-                    console.log(data);
+                    // console.log(data);
                         store.companyStore.editCompany(data, CompanyType.customer, values.id).then((r) => {
                             !r.status ? navigate(`/account/companies/customer/${values.id}`) : 'Ошибка'
                         })

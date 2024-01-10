@@ -3,43 +3,46 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import DList from 'components/common/ui/DList/DList'
+import { CompanyType } from "stores/companyStore";
 
 const UserPage = () => {
   const store = useStore()
+  const location = useLocation()
   const navigate = useNavigate()
-  const {companyid} = useParams()
-  console.log(companyid);
   const { user }: any = useLoaderData()
-  // @ts-ignore
-  console.log(store.permissionStore.loadCompanyPermissions(companyid));
-  console.log(user.group);
+  // console.log(user);
   const userData = React.useMemo(() => {
     return (
-      <>
-        <DList  label={'Пользователь'} title={user.first_name + ' ' + user.last_name} />
-        <DList  label={'Номер телефона'} title={user.phone} />
-        <DList  label={'E-mail'} title={user.email} />
-        <DList
+        <>
+            <DList label={'Пользователь'} title={user.employee.first_name + ' ' + user.employee.last_name} />
+            <DList label={'Номер телефона'} title={user.employee.phone} />
+            <DList label={'E-mail'} title={user.employee.email} />
+            <DList
+                label={'Тип'}
+                title={user.company.company_type}
+                directory={user.company.company_type === CompanyType.customer ? 'customer' : 'performers'}
+            />
 
-          label={'Группа'}
-          title={store.permissionStore.permissions.filter((el) => el.id === user.group)[0].name}
-        />
-        <DList
-          className={'my-8'}
-          label={'Статус'}
-          title={
-            <span className={user.is_active ? 'text-active' : 'text-error'}>
-              {user.is_active ? 'Активный' : 'Не активный'}
-            </span>
-          }
-        />
+            <DList label={'Группа'} title={user.group.name} />
+            <DList
 
-      </>
+                label={'Статус'}
+                title={
+                    <span className={user.employee.is_active ? 'text-active' : 'text-error'}>
+                        {user.employee.is_active ? 'Активный' : 'Не активный'}
+                    </span>
+                }
+            />
+            {user.company.id && <hr className={'mt-0 col-span-2'}/>}
+          {user.company.name && <DList label={'Компания'} title={user.company.name} />}
+          {user.company.city.name && <DList label={'Город'} title={user.company.city.name} />}
+          {user.company.city.name && <DList label={'Филиал'} title={user.company.city.name} />}
+        </>
     )
   }, [])
   return (
@@ -73,7 +76,7 @@ const UserPage = () => {
             </div>
             {store.userStore.getUserCan('users', 'update') && <Button
               text={'Редактировать'}
-              action={() => navigate('/account/users/create')}
+              action={() => navigate(`${location.pathname}/edit`)}
               className={'inline-flex ml-auto'}
 
             />}
@@ -95,8 +98,8 @@ const UserPage = () => {
             data-app-type={'admin'}
           >
             <span className={'text-black font-sans uppercase text-3xl leading-none m-auto'}>
-              {user.first_name[0]}
-              {user.last_name[0]}
+              {user.employee.first_name[0]}
+              {user.employee.last_name[0]}
             </span>
           </div>
           <DList label={'Дата и время регистрации'} title={'08.10.23 07:14'} />

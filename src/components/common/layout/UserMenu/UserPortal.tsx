@@ -65,8 +65,8 @@ const StyledButton = styled(Button)`
 `
 const UserCompanies = () => {
   const store = useStore();
-  const userLinks = store.userStore.roles.map((item:UserTypeEnum) => <li>
-    <Link key={item+'link'} to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum[item])}>
+  const userLinks = store.userStore.roles.map((item:UserTypeEnum) => <li key={item+'link'} >
+    <Link to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum[item])}>
       <span className={`user__type-${item}`}>{label(item+'_k')}</span>Кабинет {label(item+'_name')}
     </Link>
   </li>)
@@ -118,7 +118,7 @@ const UserPortal = ({
           <Button
             className={'bg-accent rounded-full p-1.5 inline-block'}
             text={<SvgPencil />}
-            action={() => console.log('edit click')}
+            action={() =>  console.log('edit click')}
             variant={ButtonVariant.icon}
           />
         </div>

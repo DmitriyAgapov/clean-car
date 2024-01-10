@@ -5,6 +5,7 @@ import companyStore, { CompanyStore } from 'stores/companyStore'
 import permissionStore, { PermissionStore } from 'stores/permissionStore'
 import usersStore, { UsersStore } from 'stores/usersStore'
 import catalogStore, { CatalogStore } from 'stores/catalogStore'
+import carStore, { CarStore } from "stores/carStore";
 
 export type RootStore = {
   authStore: AuthStore
@@ -14,6 +15,7 @@ export type RootStore = {
   companyStore: CompanyStore
   userStore: UserStore
   catalogStore: CatalogStore
+  carStore: CarStore
 }
 
 const rootStore: RootStore = {
@@ -24,6 +26,7 @@ const rootStore: RootStore = {
   companyStore,
   userStore,
   catalogStore,
+  carStore
 }
 
 export default rootStore

@@ -18,9 +18,9 @@ const CompanyPage = () => {
   const { id, type,data }:any = useLoaderData()
   const navigate = useNavigate()
   const  companyData = store.companyStore.getCompanyFullData(id);
-
+  console.log(companyData);
   const { company, users, address, application_type,   company_type, contacts, created,inn, legal_address, ogrn, service_percent, updated } = companyData
-
+  // console.log(company.data.updated);
   return (
       <Section type={SectionType.default}>
           <Panel
@@ -43,7 +43,7 @@ const CompanyPage = () => {
                       <Heading text={company.data.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
                       <div className={'flex items-baseline justify-between'}>
                           <div className={'text-xs text-gray-2'}>
-                              Дата и время регистрации: <span>{dateTransform(updated).date}</span>
+                              Дата и время регистрации: <span>{dateTransform(company.data.updated).date}</span>
                           </div>
                           <div className={'flex flex-1 justify-around'}>
                               <Heading

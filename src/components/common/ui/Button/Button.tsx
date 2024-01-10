@@ -1,7 +1,7 @@
 import React, { EventHandler, ReactNode } from 'react'
 import styles from './Button.module.scss'
 import { useWindowDimensions } from "utils/utils";
-
+import { Button as Btn } from '@mantine/core';
 export enum ButtonVariant {
   tech = 'tech',
   default = 'default',
@@ -32,6 +32,7 @@ export type ButtonProps = {
   action?: EventHandler<any>
   className?: string
   trimText?: boolean
+  disabled?: boolean
   href?: string
   type?: string
   directory?: ButtonDirectory
@@ -43,6 +44,7 @@ const Button = ({
   size = ButtonSizeType.base,
   className,
   directory,
+  disabled = false,
   type,
   trimText,
   variant = ButtonVariant.default,
@@ -51,10 +53,18 @@ const Button = ({
 }: ButtonProps) => {
   const {width} = useWindowDimensions()
 
-  if(type === 'submit') return  <button type={'submit'} className={styles.Button + ' ' + className}
+  if(type === 'submit') return  <button type={'submit'} onClick={action} className={styles.Button + ' ' + className}
     data-directory={directory}
+    disabled={disabled}
     data-variant={variant}
     data-size={size}> {text}</button>
+  if(type === 'button') return  <Btn type={'button'} className={styles.Button + ' ' + className}
+    data-disabled={disabled}
+    data-directory={directory}
+    component="a"
+    data-variant={variant}
+    data-size={size}>{text}</Btn>
+
   // @ts-ignore
   return (
     <a

@@ -9,7 +9,7 @@ import catalogStore from "stores/catalogStore";
 type InputAutocomplete = {}
 
 
-export function InputAutocomplete() {
+export function InputAutocomplete(props:any) {
   const store= useStore()
   const { values, touched,  errors, isValidating }:any = useFormikContext();
   const combobox = useCombobox({
@@ -102,6 +102,7 @@ export function InputAutocomplete() {
         setValue(optionValue)
         combobox.closeDropdown()
       }}
+      {...props}
       withinPortal={false}
       store={combobox}
     >
