@@ -1,12 +1,23 @@
-import { action, makeObservable, observable, reaction } from 'mobx'
+import { action, flow, makeAutoObservable, makeObservable, observable, reaction } from "mobx";
 import { AxiosError } from 'axios'
 import agent from '../utils/agent'
 import userStore from './userStore'
 import appStore from './appStore'
 
 export class AuthStore {
+  userIsLoggedIn: boolean = false
+  inProgress = false
+  errors: any = undefined
+  values = {
+    first_name: '',
+    last_name: '',
+    phone: '',
+    email: '',
+    password: '',
+  }
+
   constructor() {
-    makeObservable(this, {
+    makeAutoObservable(this, {
       inProgress: observable,
       errors: observable,
       values: observable,
@@ -20,26 +31,23 @@ export class AuthStore {
       register: action,
       logout: action,
     })
-    reaction(
-      () => this.values,
-      (values) => {
-        if (values.email.length > 0 && values.password.length > 0) {
-          // console.log('ready to login', values.email, values.password)
-        } else {
-          // console.log('ready to login', values)
-        }
-      },
-    )
   }
-  userIsLoggedIn: boolean = false
-  inProgress = false
-  errors: any = undefined
-  values = {
-    first_name: '',
-    last_name: '',
-    phone: '',
-    email: '',
-    password: '',
+
+   refreshToken() {
+     return agent.Auth.tokenRefresh()
+      .then(
+        action((resolve: any) => {
+          const {access} = resolve.data
+          appStore.setToken(access)
+        },
+          ),
+      )
+      .catch(
+        action((err: AxiosError) => {
+          this.errors = err.response && err.response.data
+          throw err
+        }),
+      )
   }
 
   setFirstname(first_name: string) {
@@ -79,6 +87,7 @@ export class AuthStore {
         action((resolve: any) => {
           const { access, refresh } = resolve.data
           appStore.setToken(access)
+          appStore.setTokenRefresh(refresh)
         }),
       )
       .catch(
@@ -89,7 +98,6 @@ export class AuthStore {
       )
       .finally(
         action(() => {
-
           this.inProgress = false
         }),
       )
@@ -125,25 +133,9 @@ export class AuthStore {
         }),
       )
   }
-
-  // register() {
-  //   this.inProgress = true;
-  //   this.errors = undefined;
-  //
-  //   return agent.Auth.register(this.values.first_name, this.values.last_name, this.values.email, this.values.phone, this.values.password)
-  //       // @ts-ignore
-  //     .then(response => console.log('registered new User', response.data))
-  //     // .then(() => userStore.pullUser())
-  //     // .catch(action((err: AxiosError) => {
-  //     //   // @ts-ignore
-  //     // this.errors = err.response && err.response.data && err.response.data.detail;
-  //     //   throw err;
-  //     // }))
-  //     .finally(action(() => { this.inProgress = false; }));
-  // }
-
   logout() {
     appStore.setToken(null)
+    appStore.setTokenRefresh(null)
     userStore.forgetUser()
     window.location.replace('/')
     return Promise.resolve()

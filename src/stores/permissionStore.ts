@@ -1,13 +1,11 @@
 import { action, flow, IObservableArray, makeObservable, observable } from 'mobx'
 import agent from 'utils/agent'
-import { Company, CompanyStore } from 'stores/companyStore'
-import usersStore from "stores/usersStore";
+import { Company } from 'stores/companyStore'
 import userStore from "stores/userStore";
-import rootStore from "stores/index";
 import appStore from "stores/appStore";
 
-export enum PermissionName {
-  'Компании' = 'companies',
+export enum PermissionName  {
+   'Компании' = 'companies',
   'Управление филиалами'  = 'filial',
   'Управление пользователями' = 'users',
   'Управление автомобилями' = 'cars',
@@ -15,9 +13,7 @@ export enum PermissionName {
   'Управление прайс-листом' = 'price',
   'Управление лимитами' = 'limits',
   'Управление справочниками' = 'references',
-  'Финансовый блок' = 'finance',
-  // 'Расчетный блок' = 'calculate',
-  // 'Индивидуальный расчет' = 'individual_calculate'
+  'Финансовый блок' = 'finance'
 }
 
 export type AccountProps = {
@@ -325,4 +321,5 @@ export class PermissionStore {
 }
 
 const permissionStore = new PermissionStore()
+
 export default permissionStore

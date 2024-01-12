@@ -40,13 +40,16 @@ type CarBelongsTo = {
   belongs_to: 'filial' | 'company'
   belong_to_list: any[]
 }
+
 export class CarStore {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true })
     makePersistable(this, {
       name: 'carStore',
       properties: ['cars'],
-      storage: window.localStorage,
+      storage: window.sessionStorage,
+    }, {
+      fireImmediately: true,
     })
   }
   loadingCars = false

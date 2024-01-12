@@ -16,8 +16,7 @@ const MyProfilePage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const user = store.userStore.currentUser;
-  // console.log(user);
-
+  console.log(user);
   const userData = React.useMemo(() => {
     if(user)
       return (
@@ -31,7 +30,7 @@ const MyProfilePage = () => {
             directory={user.company?.company_type === CompanyType.customer ? 'customer' : 'performers'}
           />
 
-         <DList label={'Группа'} title={(user.account_bindings && user.account_bindings[0]) ? user.account_bindings[0]?.group?.name : user.staff_group?.name} />
+          {/* <DList label={'Группа'} title={store.userStore.currentUserPermissions.name} /> */}
           <DList
 
             label={'Статус'}
@@ -68,7 +67,7 @@ const MyProfilePage = () => {
 
               {/* {store.userStore.getUserCan('users', 'update') && <Button */}
               {/*   text={'Редактировать'} */}
-              {/*   action={() => navigate(`/account/users/${user.company.company_type === CompanyType.customer ? 'customer' : user.company.company_type === CompanyType.performer ? 'performer' : 'admin'}/${user?.company.id}/${user?.id}/edit`)} */}
+              {/*   action={() => navigate(`/account/users/${user.company.company_type === CompanyType.customer ? 'customer' : 'performer'}/${user?.company.id}/${user?.id}/edit`)} */}
               {/*   className={'inline-flex ml-auto'} */}
 
               {/* />} */}

@@ -11,7 +11,7 @@ export class CatalogStore {
     makePersistable(this, {
       name: 'catalogStore',
       properties: ['cities', 'carBrands'],
-      storage: window.localStorage,
+      storage: window.sessionStorage,
     })
     }
 

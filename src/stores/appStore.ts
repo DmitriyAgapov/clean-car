@@ -1,29 +1,38 @@
-import { action, makeAutoObservable, makeObservable, observable, reaction } from 'mobx'
+import { action, makeAutoObservable, observable, reaction } from 'mobx'
 import { ReactNode } from "react";
 import userStore, { UserTypeEnum } from "./userStore";
 import { PermissionName, Permissions } from "stores/permissionStore";
-import label from 'utils/labels'
 import { makePersistable } from 'mobx-persist-store'
 
 export class AppStore {
   constructor() {
     makeAutoObservable(this, {}, { autoBind: true } )
-
     makePersistable(this, {
       name: 'appStore',
       properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions'],
-      storage: window.localStorage,
-    });
+      storage: window.sessionStorage,
+    }, {
+      fireImmediately: true,
+    })
     reaction(
       () => this.token,
       (token) => {
         if (token) {
-          window.localStorage.clear();
           window.localStorage.setItem('jwt', token)
           userStore.pullUser()
           userStore.loadMyProfile()
         } else {
           window.localStorage.removeItem('jwt')
+        }
+      },
+    )
+    reaction(() => this.tokenRefresh,
+      (tokenRefresh) => {
+        if (tokenRefresh) {
+          console.log('tokenRefresh', tokenRefresh);
+          window.localStorage.setItem('jwt_refresh', tokenRefresh)
+        } else {
+          window.localStorage.removeItem('jwt_refresh')
         }
       },
     )
@@ -45,26 +54,20 @@ export class AppStore {
           }
         } else {
           if(userStore.currentUser.account_bindings && userStore.currentUser.account_bindings.length > 0) {
-
-
             this.appPermissions = userStore.currentUser.account_bindings[0].group.permissions
-            console.log(this.appPermissions);
           }
           if(userStore.currentUser.is_staff && userStore.currentUser.staff_group) {
             this.appPermissions = userStore.currentUser.staff_group.permissions
           }
           this.appPermissions?.forEach((item) => {
             const exepctions = ['Компании', 'Расчетный блок', 'Финансовый блок']
-
             if(exepctions.indexOf(item.name) == -1) {
               // @ts-ignore
               ar.set(PermissionName[item.name], item)
             }
-
           })
         }
         userStore.setCurrentPermissions(observable.map(ar));
-
       })
     )
   }
@@ -73,7 +76,9 @@ export class AppStore {
   appRouteName = '.авторизация'
   appTheme = 'dark'
   token = window.localStorage.getItem('jwt')
+  tokenRefresh = window.localStorage.getItem('jwt_refresh')
   appPermissions?: Permissions[]
+  tokerError: string | null = null
   tokenFull: {} | null = null
   appLoaded = false
   burgerState: boolean = false
@@ -93,8 +98,10 @@ export class AppStore {
     actions: null,
   }
 
+  setTokenError(error: string | null) {
+    this.tokerError = error
+  }
   setAppType(type: UserTypeEnum) {
-    // console.log(type);
     this.appType = type
     let routeName = ''
     switch (this.appType) {
@@ -131,9 +138,8 @@ export class AppStore {
   setToken(token: string | null) {
     this.token = token
   }
-
-  setFullToken(token: string | null | {}) {
-    this.tokenFull = token
+  setTokenRefresh(refresh: string | null) {
+    this.tokenRefresh = refresh
   }
 
   setTheme() {
@@ -151,6 +157,7 @@ export class AppStore {
     }
     this.burgerState = !this.burgerState
   }
+
   setAsideClose() {
     if (!this.asideState && this.bodyRef.clientWidth < 960) {
       this.bodyRef.style.overflow = 'hidden'
@@ -159,6 +166,7 @@ export class AppStore {
     }
     this.asideState = false
   }
+
   setAsideState() {
       if (!this.asideState) {
         this.bodyRef.style.overflow = 'hidden'
@@ -166,8 +174,7 @@ export class AppStore {
         this.bodyRef.style.overflow = 'initial'
       }
       this.asideState = !this.asideState
-    // console.log(this.asideState);
-    }
+  }
 
   setAppLoaded() {
     this.bodyRef.style.overflow = 'initial'

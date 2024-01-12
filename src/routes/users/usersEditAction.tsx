@@ -8,13 +8,14 @@ import { Navigate, useLoaderData, useNavigate } from 'react-router-dom'
 import 'yup-phone-lite'
 import FormCreateUser from 'components/Form/FormCreateUser/FormCreateUser'
 import { useStore } from "stores/store";
+import { observer } from "mobx-react-lite";
 
-export default function UsersPageEditAction() {
+const UsersPageEditAction = () => {
   const store = useStore()
   const navigate = useNavigate()
-  const { user }: any = useLoaderData()
-  console.log(user);
-  if(!store.userStore.getUserCan('users', 'update')) return <Navigate to={'/account'}/>
+  // const { user }: any = useLoaderData()
+  // console.log(user);
+  // if(!store.userStore.getUserCan('users', 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -57,8 +58,9 @@ export default function UsersPageEditAction() {
         }
       ></Panel>
 
-      <FormCreateUser user={user} edit={true}/>
+      {/* <FormCreateUser user={user} edit={true}/> */}
 
     </Section>
   )
 }
+export default UsersPageEditAction

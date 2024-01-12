@@ -1,4 +1,4 @@
-import { autorun, flow, makeAutoObservable, makeObservable, observable } from 'mobx'
+import { autorun, flow, makeAutoObservable, observable } from 'mobx'
 import agent from 'utils/agent'
 import { makePersistable } from 'mobx-persist-store'
 
@@ -8,41 +8,40 @@ export class FormStore {
     makePersistable(this, {
       name: 'formStore',
       properties: ['formCreateUser', 'formCreateCar'],
-      storage: window.localStorage,
+      storage: window.sessionStorage,
     })
   }
   loading = false
+  company_id: number = 0
+  company_type: string = ''
   formCreateUser:any = observable.object({})
   formCreateCar : any = observable.object({})
+  formSendDataUser = flow(function* ( this: FormStore, form: string | number, data?: any) {
+    this.loading = true
+    const response = yield agent.Account.createCompanyUser(this.company_id, data || this.formCreateUser)
+    console.log(response);
+
+    this.loading = false
+  })
 
   addPropertyToForm(form : string | number, property: string, value: any) {
     // @ts-ignore
     this[form][property] = value
   }
+
   handleChangeForm(form: string | number, data: any) {
     // @ts-ignore
     this[form] = data
   }
+
   setFormData(form: string | number, data: any) {
     // @ts-ignore
     this[form] = data
   }
+
   getFormData(form: string | number) {
     // @ts-ignore
     return this[form]
-  }
-  formSendDataUser(form: string | number, data?: any) {
-    this.loading = true
-    try {
-      const co_id = this.formCreateCar.company_id
-      console.log(co_id);
-      const response =  agent.Account.createCompanyUser(co_id, data || this.formCreateUser)
-      console.log(response);
-    }
-    catch (e) {
-      console.log(e);
-    }
-    this.loading = false
   }
 
   formClear(form: string | number) {
@@ -52,7 +51,5 @@ export class FormStore {
 }
 
 const formStore = new FormStore()
-autorun(() => {
-  console.log(formStore.formCreateUser);
-})
+
 export default formStore

@@ -1,9 +1,9 @@
-import { autorun, flow, get, IObservableArray, makeAutoObservable, observable, reaction, remove, set } from 'mobx'
+import { action,  computed, flow, get, IObservableArray, makeAutoObservable, observable, reaction,  set } from "mobx";
 import { hydrateStore, makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import appStore from 'stores/appStore'
 import userStore, { UserTypeEnum } from 'stores/userStore'
-
+import { AxiosError, AxiosResponse } from "axios";
 export enum Payment {
     postoplata = 'Постоплата',
     predoplata = 'Предоплата',
@@ -12,7 +12,6 @@ export enum CompanyType {
   customer = "Компания-Заказчик",
   performer = "Компания-Исполнитель"
 }
-
 export type City = {
     name?: string
     id?: number
@@ -28,7 +27,6 @@ export type Company<Type> = {
     company_type?: Type
     city: City & number
 } & CompanyProfile<Type>
-
 export type CompanyProfile<Type> = Type extends CompanyType.customer ? CustomerProfile : PerformerProfile
 export interface CustomerProfile {
     customerprofile: {
@@ -47,7 +45,6 @@ export interface CustomerProfile {
         performer_company: any[]
     }
 }
-
 export interface PerformerProfile {
     performerprofile: {
         address: string
@@ -62,29 +59,12 @@ export interface PerformerProfile {
         lon: number
     }
 }
-
 export interface Companies {
     id: number
     companies: Company<CompanyType>[]
 }
 
 export class CompanyStore {
-    constructor() {
-        makeAutoObservable(this, {}, { autoBind: true })
-        makePersistable(this, {
-            name: 'companyStore',
-            properties: ['fullCompanyData', 'filials'],
-            storage: window.localStorage,
-        })
-        reaction(
-            () => this.companies,
-            (companies: any) => {
-                if (companies.length > 0) {
-                    this.setFilials(observable.array(this.companies.filter((el: any) => el.parent !== null)))
-                }
-            },
-        )
-    }
 
     companies: IObservableArray<Companies> = [] as any
     filials: IObservableArray<Companies> = [] as any
@@ -92,36 +72,15 @@ export class CompanyStore {
     loadingCompanies: boolean = false
     loadingError: boolean = false
     fullCompanyData = new Map([])
-    updatingUser?: boolean
-    updatingUserErrors: any
-    // })
-    getCompanyUsers = flow(function* (this: CompanyStore, id: number) {
-        this.loadingCompanies = true
-        let result
-        try {
-            const { data, status } = yield agent.Account.getCompanyUsers(id)
-            if (status === 200) {
-                result = data.results
-                remove(this.fullCompanyData, `${id}`)
-                // set(this.fullCompanyData, `${id}`, result)
-
-                // this.fullCompanyData.set(2, {get()})
-            }
-        } catch (e) {
-            this.loadingError = true
-            new Error('get users failed')
-        } finally {
-            this.loadingCompanies = true
-        }
-        return result
+    myCompany: {
+        loading: boolean, error: null | AxiosError | AxiosResponse, company: any, users: any[], filials: any[] }
+      = observable.object({
+        loading: false,
+        error: null,
+        company: {},
+        users: [],
+        filials: []
     })
-    // loadCompaniesPerformers = flow(function* (this: CompanyStore) {
-    //     try {
-    //         const { data } = yield agent.Companies.getListCompanyPerformer()
-    //         this.companiesPerformers = data.results as any
-    //     } catch (e) {
-    //         throw new Error('Failed load companies performers')
-    //     }
     getMyCompany = flow(function* (this: CompanyStore) {
         let company = {
             company: {},
@@ -143,7 +102,6 @@ export class CompanyStore {
         }
         return company
     })
-
     loadFilialWithTypeAndId = flow(function* (this: CompanyStore, type: string, company_id: number, id: number) {
         // @ts-ignore
         return {
@@ -396,7 +354,58 @@ export class CompanyStore {
         }
     })
 
-    //@
+    constructor() {
+        makeAutoObservable(this, {
+            stateMyCompany: computed,
+        }, { autoBind: true })
+        makePersistable(this, {
+            name: 'companyStore',
+            properties: ['fullCompanyData', 'filials'],
+            storage: window.sessionStorage,
+        })
+        reaction(
+            () => this.companies,
+            (companies: any) => {
+                if (companies.length > 0) {
+                    this.setFilials(observable.array(this.companies.filter((el: any) => el.parent !== null)))
+                }
+            },
+        )
+    }
+
+    get stateMyCompany() {
+        return {
+            loading: this.myCompany.loading,
+            error: this.myCompany.error,
+            company: this.myCompany.company,
+            users: this.myCompany.users,
+            filials: this.myCompany.filials,
+        }
+    }
+
+    loadMyCompany(id: number) {
+        this.myCompany.loading = true
+        agent.Profile.getMyCompany()
+            .then(action((response:AxiosResponse) => response ))
+            .then(action((data:any) => this.myCompany.company = data.results))
+            .catch(action((error:AxiosError) => this.myCompany.error = error))
+            .finally(action(() => this.myCompany.loading = false))
+    }
+    loadMyCompanyUsers() {
+        agent.Account.getCompanyUsers(this.myCompany.company.id)
+            .then(action((response:AxiosResponse) => response ))
+            .then(action((data:any) => this.myCompany.users = data.results))
+            .catch(action((error:AxiosError) => this.myCompany.error = error))
+            .finally(action(() => this.myCompany.loading = false))
+    }
+    loadMyCompanyFilials(id: number) {
+        agent.Account.getCompanyUsers(id)
+            .then(action((response:AxiosResponse) => response ))
+            .then(action((data:any) => this.myCompany.users = data.results))
+            .catch(action((error:AxiosError) => this.myCompany.error = error))
+            .finally(action(() => this.myCompany.loading = false))
+    }
+
     setFilials(filials: IObservableArray<Companies>) {
         this.filials = filials
     }
