@@ -10,7 +10,7 @@ export class CatalogStore {
     makeAutoObservable(this, {}, { autoBind: true })
     makePersistable(this, {
       name: 'catalogStore',
-      properties: ['cities', 'carBrands'],
+      properties: ['cities', 'carBrands', 'brandModels'],
       storage: window.sessionStorage,
     })
     }
@@ -21,7 +21,7 @@ export class CatalogStore {
   getCarBrandModels = flow(function* (this: CatalogStore, id: number) {
     try {
       const { data } = yield agent.Catalog.getCarBrandModels(id)
-      console.log(data);
+
       this.brandModels = data.results.map((item: any) => ({ value: String(item.id), label: item.name }))
       console.log(this.brandModels);
 
@@ -37,7 +37,7 @@ export class CatalogStore {
       try {
         const { data } = yield agent.Catalog.getCarBrands()
         tempCarBrands = data.results
-        console.log(data);
+
         this.carBrands = tempCarBrands
       } catch (error) {
         console.log(error);

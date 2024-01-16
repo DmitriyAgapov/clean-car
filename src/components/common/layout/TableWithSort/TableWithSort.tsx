@@ -85,7 +85,6 @@ const RowData = (props: any) => {
     const location = useLocation()
     const querys = React.useCallback(() => {
         let queryString = ''
-        console.log(props);
         if (props.query) {
             for (const key in props.query) {
                 queryString = queryString + `/${props.query[key]}`
@@ -97,7 +96,6 @@ const RowData = (props: any) => {
 
     const queryCompanyType = React.useCallback(() => {
         let queryString = ''
-        console.log(props.type);
         if (props.type) {
             return props.type == CompanyType.performer ? '/performer' : props.type == CompanyType.customer ? '/customer' : '/admin'
         }
@@ -173,7 +171,6 @@ const TableWithSort = ({
     initFilterParams,
     ...props
 }: TableWithSortProps) => {
-
     const [filterString, setFilterString] = React.useState({
         index: 0,
         reversed: false,

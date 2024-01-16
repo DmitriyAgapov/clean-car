@@ -9,11 +9,12 @@ import 'yup-phone-lite'
 import { useStore } from "stores/store";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import FormCreateCar from "components/Form/FormCreateCar/FormCreateCar";
+import { PermissionNames } from "stores/permissionStore";
 
 export default function CarsPageCreateAction() {
   const store = useStore()
   const navigate = useNavigate()
-  if(!store.userStore.getUserCan('cars', 'update')) return <Navigate to={'/account'}/>
+  if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel

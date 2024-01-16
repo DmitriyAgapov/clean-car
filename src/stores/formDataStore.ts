@@ -8,14 +8,14 @@ export class FormStore {
     makePersistable(this, {
       name: 'formStore',
       properties: ['formCreateUser', 'formCreateCar'],
-      storage: window.sessionStorage,
+      storage: sessionStorage,
     })
   }
   loading = false
   company_id: number = 0
   company_type: string = ''
-  formCreateUser:any = observable.object({})
-  formCreateCar : any = observable.object({})
+  formCreateUser:any = {}
+  formCreateCar: any = {}
   formSendDataUser = flow(function* ( this: FormStore, form: string | number, data?: any) {
     this.loading = true
     const response = yield agent.Account.createCompanyUser(this.company_id, data || this.formCreateUser)
@@ -34,9 +34,9 @@ export class FormStore {
     this[form] = data
   }
 
-  setFormData(form: string | number, data: any) {
-    // @ts-ignore
-    this[form] = data
+  setFormDataCreateCar(data: any) {
+    console.log(data)
+    this.formCreateCar = data
   }
 
   getFormData(form: string | number) {

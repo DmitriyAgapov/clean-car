@@ -10,6 +10,7 @@ import { observer } from 'mobx-react-lite'
 import { Company } from 'stores/companyStore'
 import { User } from 'stores/usersStore'
 import { UserTypeEnum } from 'stores/userStore'
+import { PermissionNames } from "stores/permissionStore";
 
 const UsersPage = () => {
   const store = useStore()
@@ -33,7 +34,7 @@ const UsersPage = () => {
               color={HeadingColor.accent}
             />
 
-            {store.userStore.getUserCan('users', 'create') && <Button
+            {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create') && <Button
               trimText={true}
               text={'Добавить пользователя'}
               action={() => navigate('/account/users/create')}

@@ -19,8 +19,8 @@ axios.interceptors.response.use(
 		(response) => response,
 		async (error) => {
 			const config = error.config;
-
-			if (error.response.status === 401 && !config._retry) {
+			console.log(error);
+			if (error.response?.status === 401 && !config._retry) {
 				console.log('old token', appStore.token);
 				config._retry = true;
 				authStore.refreshToken()

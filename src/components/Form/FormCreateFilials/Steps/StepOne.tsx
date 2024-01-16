@@ -8,8 +8,9 @@ import { CompanyType } from "stores/companyStore";
 import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
 import { useStore } from 'stores/store'
 import { Combobox, Input, InputBase, ScrollArea, useCombobox } from '@mantine/core'
-import Select from "components/common/ui/Select/Select";
+import { Select } from '@mantine/core'
 import { UserTypeEnum } from "stores/userStore";
+import label from "utils/labels";
 
 export function FormStep1(props: {
   step: any
@@ -25,8 +26,9 @@ export function FormStep1(props: {
 }) {
   const  SelectCompanyFilials = () => {
     const store = useStore()
-    const {values, setValues} = useFormikContext<any>();
+    const {values, setValues, errors} = useFormikContext<any>();
     const [companies, setCompanies] = useState<any>([]);
+    console.log(errors);
     const combobox = useCombobox(
       {
         onDropdownClose: () => combobox.resetSelectedOption()
@@ -34,29 +36,46 @@ export function FormStep1(props: {
     const [ searchString, setSearchString] = useState<string>('')
 
     useEffect(() => {
+      const type = values.application_type === CompanyType.customer ? UserTypeEnum.customer : UserTypeEnum.performer
       const getCompany = async () => {
-        let data:any = []
-        if (values.company_filials == 'company') {
-          data = await store.companyStore.getAllCompanies({name: searchString})
+        if(type === UserTypeEnum.customer) {
+          if (values.company_filials == 'company') {
+            await store.companyStore.getCustomerCompany({name: searchString})
+          }
+          if(values.company_filials == 'filials') {
+            await store.companyStore.getPerformersCompany({name: searchString})
+          }
+          setCompanies(store.companyStore.companiesCustomer)
+        } else if(type === UserTypeEnum.performer) {
+          if (values.company_filials == 'company') {
+            await store.companyStore.getCustomerCompany({name: searchString})
+          }
+          if(values.company_filials == 'filials') {
+            await store.companyStore.getPerformersCompany({name: searchString})
+          }
+          setCompanies(store.companyStore.companiesPerformers)
         }
-        if(values.company_filials == 'filials' && searchString.length > 4) {
-          data = await store.companyStore.getAllFilials({name: searchString})
-        }
-        // console.log(data);
-        setCompanies(data)
       }
       getCompany()
 
-    }, [searchString, values.company_filials]);
+    }, [searchString, values.company_filials, values.type]);
     const handleChangeSearch = React.useCallback((e:any) => {
       setSearchString(e.currentTarget.value);
     }, [])
-    const options = companies.map((item:any) => (
-      <Combobox.Option value={item.id} onClick={() => setValues({...values, company_name: item.name, company_id: item.id, application_type: item.company_type, type: item.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : UserTypeEnum.performer})}
-        key={item.id}>
-        {item.name}
-      </Combobox.Option>
-    ));
+    const options = React.useMemo(() => {
+      console.log(companies);
+      if(companies.length !== 0) return companies.map((item:any) => (
+        <Combobox.Option value={item.id} onClick={() => setValues({...values, company_name: item.name, company_id: item.id, type: item.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : UserTypeEnum.performer})}
+          key={item.id}>
+          {item.name}
+        </Combobox.Option>
+      ))
+      return ([<Combobox.Option value={"no"} onClick={() => setValues({...values, company_name: 'Нет данных', company_id: 1, type: UserTypeEnum.customer})}
+        key={1}>
+        Нет данных
+        </Combobox.Option>])
+
+    }, [companies]);
 
     return (
       <>
@@ -119,10 +138,8 @@ export function FormStep1(props: {
       </>
     )
   }
-  const { values, touched,  errors, isValidating, isValid }:any = useFormikContext();
-  React.useEffect(() => {
-    // console.log(values);
-  } , [values])
+  const { values, touched,  errors, isValidating, isValid, setValues }:any = useFormikContext();
+
    return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -140,7 +157,13 @@ export function FormStep1(props: {
               className={'float-right lg:mb-0 mb-5'}
               variant={ButtonVariant['accent-outline']}
             />
-
+            <Button
+              type={'submit'}
+              disabled={!isValid}
+              text={'Сохранить'}
+              className={'float-right'}
+              variant={ButtonVariant.accent}
+            />
             {values.application_type == CompanyType.customer || values.application_type.value == CompanyType.customer ? (
               <Button
                 type={'submit'}
@@ -199,7 +222,7 @@ export function FormStep1(props: {
           htmlFor={'status'}
           data-form_error={errors.status && touched.status && 'error'}>
           {'Статус'}
-          <Select id={'status'}
+          <SelectCustom id={'status'}
             name='status'
             value={values.status ? 'active' : 'inactive'}
             defaultValue={values.status ? 'active' : 'inactive'}
@@ -213,6 +236,48 @@ export function FormStep1(props: {
             <div className={'form-error'}>{errors.filial_name}</div>
           ) : null}
         </label>
+        <Select
+          value={String(values.status)}
+          withCheckIcon={false}
+          name={'status'}
+          onChange={(value) => setValues({ ...values, status: value === 'true' })}
+          label={'Статус'}
+          data={[
+            { label: 'Активен', value: 'true' },
+            { label: 'Неактивен', value: 'false' },
+          ]}
+          className={'col-span-2'}
+        />
+        {/* <label className={'account-form__input w-fit flex-grow-0'} */}
+        {/*   htmlFor={'status'} */}
+        {/*   data-form_error={errors.status && touched.status && 'error'}> */}
+        {/*   {'Статус'} */}
+        {/*   <SelectCustom id={'status'} */}
+        {/*     name='status' */}
+        {/*     value={values.status ? 'active' : 'inactive'} */}
+        {/*     defaultValue={values.status ? 'active' : 'inactive'} */}
+
+        {/*     options={[ */}
+        {/*       { label: 'Активный', value: 'active' }, */}
+        {/*       { label: 'Неактивный', value: 'inactive' }, */}
+        {/*     ]} */}
+        {/*   /> */}
+        {/*   {errors.filial_name && touched.filial_name ? ( */}
+        {/*     <div className={'form-error'}>{errors.filial_name}</div> */}
+        {/*   ) : null} */}
+        {/* </label> */}
+        <SelectCustom
+          label={'Тип'}
+          disabled={props.values.application_type.readOnly}
+          defaultValue={props.values.application_type || props.values.application_type.value}
+          value={props.values.application_type.value || props.values.application_type.value}
+          name={'application_type'}
+          className={' w-fit'}
+          options={[
+            { label: 'Заказчик', value: CompanyType.customer },
+            { label: 'Исполнитель', value: CompanyType.performer },
+          ]}
+        />
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         {/* <SelectCustom */}
         {/*   label={'Тип'} */}
@@ -226,20 +291,6 @@ export function FormStep1(props: {
         {/*     { label: 'Исполнитель', value: CompanyType.performer }, */}
         {/*   ]} */}
         {/* /> */}
-        {(values.application_type == CompanyType.performer || values.application_type.value == CompanyType.performer) && (
-          <label className={'account-form__input  !flex-[0_0_14rem]'}
-            htmlFor={'service_percent'}
-            data-form_error={errors.service_percent && touched.service_percent && 'error'}>
-            {'Процент сервиса'}
-            <Field id={'service_percent'}
-              name='service_percent'
-              placeholder={'Введите название компании'}
-              type={'number'} />
-            {errors.service_percent && touched.service_percent ? (
-              <div className={'form-error'}>{errors.service_percent}</div>
-            ) : null}
-          </label>
-        )}
         <SelectCompanyFilials />
       </div>
     </Panel>

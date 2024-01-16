@@ -62,7 +62,6 @@ const FormCreateCompany = () => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
-                // console.log(values);
                 if (values.application_type === CompanyType.performer) {
                     const data:Company<CompanyType.performer> = {
                         city:  Number(values.city),
@@ -83,12 +82,10 @@ const FormCreateCompany = () => {
                     }
                     store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
                         values.id = r.id
-                        // console.log(values);
                         changeStep(3)
                     })
                 }
                 if (values.application_type === CompanyType.customer) {
-                    // console.log(values);
                     const data:Company<CompanyType.customer> = {
 
                         company_type: values.application_type,
@@ -112,9 +109,7 @@ const FormCreateCompany = () => {
                         }
                     }
                     store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
-                        // console.log(r);
                         values.id = r.id
-                        // console.log(values);
                         changeStep(3)
                     })
                 }

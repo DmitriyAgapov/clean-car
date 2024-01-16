@@ -11,6 +11,7 @@ import Tabs from 'components/common/layout/Tabs/Tabs'
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from "stores/companyStore";
+import { PermissionNames } from "stores/permissionStore";
 
 const CompanyPage = () => {
   const store = useStore()
@@ -18,7 +19,6 @@ const CompanyPage = () => {
   const { id, type,data }:any = useLoaderData()
   const navigate = useNavigate()
   const  companyData = store.companyStore.getCompanyFullData(id);
-  console.log(companyData);
   const { company, users, address, application_type,   company_type, contacts, created,inn, legal_address, ogrn, service_percent, updated } = companyData
   // console.log(company.data.updated);
   return (
@@ -28,7 +28,7 @@ const CompanyPage = () => {
               header={<><div>
                 <Button text={<><SvgBackArrow />Назад к списку компаний{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
                 <Heading text={'Компания'} variant={HeadingVariant.h1} className={'!mb-0 inline-block'} color={HeadingColor.accent} /></div>
-              {store.userStore.getUserCan('companies', 'update') && <LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} />}</>}
+              {store.userStore.getUserCan(PermissionNames['Компании'], 'update') && <LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} />}</>}
           />
 
           <Panel

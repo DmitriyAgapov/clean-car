@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Observer, observer } from 'mobx-react-lite'
+import {  observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -12,8 +12,8 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 const FilialsPage = () => {
   const store = useStore()
   const location = useLocation()
+
   const navigate = useNavigate()
-  console.log(store.companyStore.filials);
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -47,7 +47,9 @@ const FilialsPage = () => {
         background={PanelColor.glass}
         style={PanelRouteStyle.company}
         ar={['Статус', 'Название', 'Город', 'Тип', 'Принадлежит']}
-        data={store.companyStore.filials.map((item: any) => ({
+        data={store.companyStore.filials.map((item: any) => {
+
+          return ({
           status: item.is_active as boolean,
           company: item.name,
           city: item.city.name,
@@ -57,7 +59,7 @@ const FilialsPage = () => {
           query: {
             company_id: item.parent
           }
-        }))}
+        })})}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
         state={store.companyStore.loadingCompanies}
       />

@@ -5,17 +5,6 @@ import userStore from './userStore'
 import appStore from './appStore'
 
 export class AuthStore {
-  userIsLoggedIn: boolean = false
-  inProgress = false
-  errors: any = undefined
-  values = {
-    first_name: '',
-    last_name: '',
-    phone: '',
-    email: '',
-    password: '',
-  }
-
   constructor() {
     makeAutoObservable(this, {
       inProgress: observable,
@@ -33,7 +22,18 @@ export class AuthStore {
     })
   }
 
-   refreshToken() {
+  userIsLoggedIn: boolean = false
+  inProgress = false
+  errors: any = undefined
+  values = {
+    first_name: '',
+    last_name: '',
+    phone: '',
+    email: '',
+    password: '',
+  }
+
+  refreshToken() {
      return agent.Auth.tokenRefresh()
       .then(
         action((resolve: any) => {

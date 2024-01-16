@@ -7,6 +7,7 @@ import { useStore } from 'stores/store'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateFilial from '../../components/Form/FormCreateFilials/FormCreateFilials'
+import { PermissionNames } from "stores/permissionStore";
 
 export default function FilialsPageCreateAction(props: any) {
   const store = useStore()
@@ -23,7 +24,7 @@ export default function FilialsPageCreateAction(props: any) {
       name: event.target.value,
     }))
   }
-  if(!store.userStore.getUserCan('filial', 'create')) return <Navigate to={'/account'}/>
+  if(!store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'create')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel

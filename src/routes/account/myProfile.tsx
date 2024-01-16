@@ -15,8 +15,8 @@ const MyProfilePage = () => {
   const store = useStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const user = store.userStore.currentUser;
-  console.log(user);
+  const { loading, permissions, user, company, error } = store.userStore.myProfileState;
+
   const userData = React.useMemo(() => {
     if(user)
       return (
@@ -30,7 +30,7 @@ const MyProfilePage = () => {
             directory={user.company?.company_type === CompanyType.customer ? 'customer' : 'performers'}
           />
 
-          {/* <DList label={'Группа'} title={store.userStore.currentUserPermissions.name} /> */}
+          <DList label={'Группа'} title={store.userStore.myProfileData.permissions.name} />
           <DList
 
             label={'Статус'}

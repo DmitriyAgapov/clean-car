@@ -17,6 +17,7 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.2",
+    "axios-hooks": "^5.0.2",
     "fast-sort": "^3.4.0",
     "formik": "^2.4.5",
     "jose": "^5.1.1",

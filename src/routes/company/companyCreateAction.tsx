@@ -7,6 +7,7 @@ import { useStore } from 'stores/store'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateCompany from '../../components/Form/FormCreateCompany/FormCreateCompany'
+import { PermissionNames } from "stores/permissionStore";
 
 export default function CompanyPageCreateAction(props: any) {
   const store = useStore()
@@ -23,7 +24,7 @@ export default function CompanyPageCreateAction(props: any) {
       name: event.target.value,
     }))
   }
-  if(!store.userStore.getUserCan('companies', 'create')) return <Navigate to={'/account'}/>
+  if(!store.userStore.getUserCan(PermissionNames["Компании"], 'create')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel

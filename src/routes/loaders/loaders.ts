@@ -7,6 +7,7 @@ import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
 import agent from 'utils/agent'
 import carStore from "stores/carStore";
+import { toJS } from "mobx";
 
 export const authUser = async () => {
   if (!appStore.token) {
@@ -16,25 +17,25 @@ export const authUser = async () => {
   }
   return null
 }
-const checkPermisssions = {
-  edit: (path:string) =>  (path.includes('edit') && userStore.getUserCan(path, 'update')),
-  create: (path:string) =>  (path.includes('create') && userStore.getUserCan(path, 'create')),
-  read: (path:string) => userStore.getUserCan(path, 'read')
-}
+// const checkPermisssions = {
+//   edit: (path:string) =>  (path.includes('edit') && userStore.getUserCan(path, 'update')),
+//   create: (path:string) =>  (path.includes('create') && userStore.getUserCan(path, 'create')),
+//   read: (path:string) => userStore.getUserCan(path, 'read')
+// }
 export const companyLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
-  const pathAr = props.request.url.split('/');
-  const actionName:string = pathAr[pathAr.length - 1] || 'read'
+  // const pathAr = props.request.url.split('/');
+  // const actionName:string = pathAr[pathAr.length - 1] || 'read'
 
   const company = await companyStore.loadCompanyWithTypeAndId(company_type, id)
-  console.log(company);
+
   await companyStore.loadCompanies()
   await catalogStore.getCities()
-  if(checkPermisssions.read('companies')) return { id: id, type: company_type, data: company }
-  return;
+  return { id: id, type: company_type, data: company }
 }
 export const filialsLoader = async() => {
   const company = await companyStore.loadCompanyWithTypeAndId()
-  const companies = await companyStore.getAllCompanies()
+  // await companyStore.getAllCompanies()
+  await companyStore.loadCompanies()
   await companyStore.getFilials()
   await catalogStore.getCities()
   return null
@@ -53,9 +54,9 @@ export const usersLoader = async () => {
   await usersStore.getAllUser()
   return null
 }
-export const userLoader = async ({ params: { company_type, id, companyid } }: any) => {
+export const userLoader = async ({ params: { company_type, id, company_id } }: any) => {
 
-  const user = await usersStore.getUser(companyid, id, company_type)
+  const user = await usersStore.getUser(company_id, id, company_type)
   return {
     user: user,
   }
@@ -84,10 +85,14 @@ export const profileLoader = async () => {
 }
 
 export const groupsLoader =  async ({ params: { id } }: any) => {
-   const response = await permissionStore.getPermissions();
-  // console.log(response);
-
-  return null
+  console.log(userStore);
+  console.log(appStore.appType);
+  console.log(toJS(userStore));
+   const response =   await permissionStore.getPermissionsFlow();
+  console.log(response);
+   await permissionStore.getAllPermissions()
+ await permissionStore.allPermissionsState
+  return { id: id,  data: response }
 }
 
 export const groupsCreatLoader = async ({ params: { id } }: any) => {

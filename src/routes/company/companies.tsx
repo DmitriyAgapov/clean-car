@@ -7,12 +7,14 @@ import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { PermissionNames } from "stores/permissionStore";
 
 const CompaniesPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-
+  const { loading,companies, error } = store.companyStore.allCompanies;
+  console.log({ loading,companies, error });
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -28,7 +30,7 @@ const CompaniesPage = () => {
               className={'inline-block'}
               color={HeadingColor.accent}
             />
-            {store.userStore.getUserCan('companies', 'create') && <Button
+            {store.userStore.getUserCan(PermissionNames["Компании"], 'create') && <Button
               text={'Создать компанию'}
               action={() => navigate('create')}
               trimText={true}
@@ -46,7 +48,7 @@ const CompaniesPage = () => {
         background={PanelColor.glass}
         style={PanelRouteStyle.company}
         ar={['Статус', 'Компания', 'Тип', 'Город']}
-        data={store.companyStore.companies.map((item: any) => ({
+        data={companies.map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           type: item.company_type,

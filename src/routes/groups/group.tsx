@@ -10,6 +10,7 @@ import Checkbox from 'components/common/ui/Checkbox/Checkbox'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { observer } from 'mobx-react-lite'
 import moment from 'moment'
+import { PermissionNames } from "stores/permissionStore";
 
 const GroupPage = () => {
   const store = useStore()
@@ -58,7 +59,7 @@ const GroupPage = () => {
                 Дата и время создания {moment(group.created).format('DD.MM.YYYY HH:mm')}
               </div>
             </div>
-            {store.userStore.getUserCan('users', 'update') && <Button
+            {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
               text={'Редактировать'}
               action={() => navigate(location.pathname + '/edit')}
               className={'justify-self-end'}

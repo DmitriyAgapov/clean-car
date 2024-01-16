@@ -52,7 +52,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
       };
 
 
-      result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
+      result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type+'_filial'}>
 
         <DList label={'Адрес'} title={data[`${company_type}profile`].address} />
 
@@ -118,7 +118,6 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
   return  result
 }
 const TabsVariants = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
-
   const store = useStore()
   let result
 
@@ -156,8 +155,8 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
             <LinkStyled variant={ButtonVariant.text} style={{color: 'var(--accentColor)'}} text={'Подробнее'} to={'#'} />
           </CardSimple.Footer>
         </CardSimple>}
-        {company_type === 'customer' ? <DList label={'Счет'} title={<>
-          <Heading text={data[`${company_type}profile`].bill + ' ₽'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
+        {company_type === 'customer' ? data.balance && <DList label={'Счет'} title={<>
+          <Heading text={data.balance.total + ' ₽'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
           <Heading text={data[`${company_type}profile`].overdraft_sum + ' ₽' + ' с овердрафтом'}  variant={HeadingVariant.h4} color={HeadingColor.accent} />
         </>
 
@@ -177,14 +176,15 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
       break;
 
     case 'Сотрудники':
+      console.log(data);
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
-        {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
-          data={data.map((item: User & {rootRoute?: string} ) => ({
-            state: item.is_active,
-            name: item.first_name + ' ' + item.last_name,
-            phone: item.phone,
-            email: item.email,
-            group: item.group,
+        {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+          data={data.map((item: any & {rootRoute?: string} ) => ({
+            state: item.employee.is_active,
+            name: item.employee.first_name + ' ' + item.employee.last_name,
+            phone: item.employee.phone,
+            email: item.employee.email,
+            group: item.group.name,
             // @ts-ignore
             company: store.companyStore.fullCompanyData.get(`${companyId}`).company.data.name,
             // @ts-ignore
@@ -194,7 +194,23 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
               company_id: companyId,
               rootRoute: `/account/users/${companyId}/${item.id}`,
             },
-          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.dataPadding} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Группа', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Группа', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
+      </Tabs.Panel>)
+      break;
+    case 'Филиалы':
+      console.log(data);
+      result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+          data={data.map((item: any & {rootRoute?: string} ) => ({
+            state: item.is_active,
+            name: item.name,
+            city: item.city.name,
+            id: item.id,
+            query: {
+              company_id: companyId,
+              rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
+            },
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
       </Tabs.Panel>)
       break;
     default:

@@ -47,7 +47,7 @@ export class CarStore {
     makePersistable(this, {
       name: 'carStore',
       properties: ['cars'],
-      storage: window.sessionStorage,
+      storage: sessionStorage,
     }, {
       fireImmediately: true,
     })

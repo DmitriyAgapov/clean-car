@@ -8,6 +8,7 @@ import { Navigate, Outlet, useLoaderData, useLocation, useNavigate } from 'react
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
 import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
+import { PermissionNames } from "stores/permissionStore";
 
 export default function CompanyPageEditAction(props: any) {
   const store = useStore()
@@ -25,7 +26,7 @@ export default function CompanyPageEditAction(props: any) {
   }
   // @ts-ignore
   const {data} = useLoaderData()
-  if(!store.userStore.getUserCan('companies', 'update')) return <Navigate to={'/account'}/>
+  if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel

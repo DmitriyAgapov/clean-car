@@ -1,9 +1,11 @@
-import { action,  computed, flow, get, IObservableArray, makeAutoObservable, observable, reaction,  set } from "mobx";
+import { action, autorun, computed, flow, get, IObservableArray, makeAutoObservable, observable, reaction, set } from "mobx";
 import { hydrateStore, makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import appStore from 'stores/appStore'
 import userStore, { UserTypeEnum } from 'stores/userStore'
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from 'axios'
+import { PermissionNames } from 'stores/permissionStore'
+
 export enum Payment {
     postoplata = 'Постоплата',
     predoplata = 'Предоплата',
@@ -65,56 +67,45 @@ export interface Companies {
 }
 
 export class CompanyStore {
+    constructor() {
+        makeAutoObservable(this, {
+            stateMyCompany: computed,
+            allCompanies: computed,
+        }, { autoBind: true })
+        makePersistable(this, {
+            name: 'companyStore',
+            properties: ['fullCompanyData', 'companies', 'filials'],
+            storage: window.sessionStorage,
+
+        }, { fireImmediately: true})
+        reaction(
+            () => this.companies,
+            (companies: any) => {
+                if (companies.length > 0) {
+                    this.filials.length = 0
+                    const filials = companies.filter((el: any) => el.parent !== null)
+                    // @ts-ignore
+                    this.setFilials(filials)
+                }
+            },
+        )
+    }
 
     companies: IObservableArray<Companies> = [] as any
     filials: IObservableArray<Companies> = [] as any
-    companiesPerformers = observable.array()
+    companiesCustomer:IObservableArray<Companies> = [] as any
+    companiesPerformers:IObservableArray<Companies> = [] as any
     loadingCompanies: boolean = false
-    loadingError: boolean = false
+    errors: any
     fullCompanyData = new Map([])
-    myCompany: {
-        loading: boolean, error: null | AxiosError | AxiosResponse, company: any, users: any[], filials: any[] }
-      = observable.object({
-        loading: false,
-        error: null,
-        company: {},
-        users: [],
-        filials: []
-    })
-    getMyCompany = flow(function* (this: CompanyStore) {
-        let company = {
-            company: {},
-            users: [],
-            filials: [],
-        }
-        this.loadingCompanies = true
-        try {
-            const { data, status } = yield agent.Profile.getMyCompany()
-            if (status === 200) {
-                company = data.results[0]
-                console.log(data)
-            }
-        } catch (e) {
-            this.loadingError = true
-            new Error('get users failed')
-        } finally {
-            this.loadingCompanies = true
-        }
-        return company
-    })
     loadFilialWithTypeAndId = flow(function* (this: CompanyStore, type: string, company_id: number, id: number) {
-        // @ts-ignore
         return {
-            // @ts-ignore
             company: {
                 label: 'Основная информация',
-                // @ts-ignore
                 data: yield agent.Filials.getFilial(type, company_id, id).then((res) => res.data)
             },
-
             users: {
                 label: 'Сотрудники',
-                // @ts-ignore
                 data: yield agent.Account.getCompanyUsers(id).then((res) => res.data.results),
             },
             cars: {
@@ -131,7 +122,7 @@ export class CompanyStore {
         // if(id && type) {
         console.log('netu')
         let newid
-        if (userStore.currentUser) {
+        if (userStore.myProfileData.user) {
             if (appStore.appType && appStore.appType !== UserTypeEnum.admin) {
                 console.log('is not admin')
                 type = appStore.appType
@@ -141,21 +132,20 @@ export class CompanyStore {
                 newid = company_id
             }
         }
-
         this.loadingCompanies = true
-
         try {
             let data = {
                 company: {},
                 users: [],
                 filials: [],
+                cars: [],
             }
             if (newid && type) {
-                console.log('loadCompanyWithTypeAndId', newid, type)
                 const company = yield agent.Companies.getCompanyData(type, newid)
                 const users = yield agent.Account.getCompanyUsers(newid)
                 const filials = yield agent.Filials.getFilials(type, newid)
-                console.log(company)
+                const cars = yield agent.Cars.getCompanyCars(newid)
+
                 data.company = {
                     data: company.data,
                     company_type: type,
@@ -166,17 +156,20 @@ export class CompanyStore {
                     data: users.data.results,
                     label: 'Сотрудники',
                 } as any
-
+                data.cars = {
+                    data: cars.data.results,
+                    label: 'Автомобили',
+                } as any
                 data.filials = {
-                    data: users.data.results,
+                    data: filials.data.results,
                     label: 'Филиалы',
                 } as any
-
+                console.log(cars)
                 // @ts-ignore
                 set(this.fullCompanyData, { [data.company.data.id]: data })
             }
         } catch (e) {
-            this.loadingError = true
+            this.errors = e
             new Error('Create Company failed')
         } finally {
             this.loadingCompanies = false
@@ -216,26 +209,17 @@ export class CompanyStore {
             return 'error'
         } finally {
             this.loadingCompanies = false
-        }
-    })
-    getAllCompanies = flow(function* (this: CompanyStore, params?: PaginationProps) {
-        let result
-        try {
-            const { data, status } = userStore.currentUser.is_staff
-                ? yield agent.Companies.getAllCompanies(params)
-                : yield agent.Companies.getMyCompanies(params)
-            if (status === 200) {
-                this.companies = data.results
-                console.log(data)
-            }
-        } catch (error) {
-            throw new Error('Fetch data companies failed')
-        } finally {
-            this.loadingCompanies = false
-        }
-        return this.companies
+        }}
+    )
+    myCompany: { loading: boolean, error: null | AxiosError | AxiosResponse, company: any, users: any[], filials: any[] } = observable.object({
+        loading: false,
+        error: null,
+        company: {},
+        users: [],
+        filials: []
     })
     getAllFilials = flow(function* (this: CompanyStore, params?: PaginationProps) {
+        yield agent.Filials.getFilials
         let result
         try {
             if (
@@ -296,8 +280,8 @@ export class CompanyStore {
                 return response.response
             }
             if (type === CompanyType.customer) {
+                // @ts-ignore
                 const response = yield agent.Companies.createCompanyCustomer(data, 'customer')
-
                 if (response.status > 199 && response.status < 299) {
                     this.loadCompanyWithTypeAndId('customer', response.data.id)
                     return response.data
@@ -316,7 +300,7 @@ export class CompanyStore {
     })
     getFilials = flow(function* (this: CompanyStore) {
         this.loadingCompanies = true
-        let company_id = userStore.currentUser?.company?.id
+        let company_id = userStore.myProfileData.company?.id
         if (company_id) {
             try {
                 this.loadingCompanies = true
@@ -353,26 +337,13 @@ export class CompanyStore {
             this.loadingCompanies = false
         }
     })
-
-    constructor() {
-        makeAutoObservable(this, {
-            stateMyCompany: computed,
-        }, { autoBind: true })
-        makePersistable(this, {
-            name: 'companyStore',
-            properties: ['fullCompanyData', 'filials'],
-            storage: window.sessionStorage,
-        })
-        reaction(
-            () => this.companies,
-            (companies: any) => {
-                if (companies.length > 0) {
-                    this.setFilials(observable.array(this.companies.filter((el: any) => el.parent !== null)))
-                }
-            },
-        )
+    get allCompanies() {
+        return {
+            loading: this.loadingCompanies,
+            error: this.errors,
+            companies: this.companies
+        }
     }
-
     get stateMyCompany() {
         return {
             loading: this.myCompany.loading,
@@ -382,7 +353,64 @@ export class CompanyStore {
             filials: this.myCompany.filials,
         }
     }
+    getCustomerCompany (params?: PaginationProps) {
+        this.companiesCustomer.clear()
+        return agent.Companies.getListCompanyCustomer(params)
+        .then((response:any) => response)
+        .then((response:any) => response.data)
+        .then(action((data:any) => {
+            this.companiesCustomer = data.results
+        }))
+        .catch((errors:any) => this.errors = errors)
+    }
+    getPerformersCompany (params?: PaginationProps) {
+        this.companiesPerformers.clear()
+        return agent.Companies.getListCompanyPerformer(params)
+        .then((response:any) => response)
+        .then((response:any) => response.data)
+        .then(action((data:any) => {
+            console.log(data);
+            this.companiesPerformers = data.results
+        }))
+        .catch((errors:any) => this.errors = errors)
+    }
 
+
+    getAllCompanies (params?: PaginationProps) {
+        this.loadingCompanies = true
+        console.log(userStore.getUserCan(PermissionNames["Управление пользователями"], "read"))
+        if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
+            if(userStore.isAdmin) {
+                 agent.Companies.getAllCompanies(params)
+                    .then((response:any) => response)
+                    .then((response:any) => response.data)
+                    .then(action((data:any) => {
+                        this.companies = data.results
+                     }))
+                    .catch((errors:any) => this.errors = errors)
+
+                }
+            } else {
+                agent.Companies.getMyCompanies(params)
+                    .then((response:any) => response.data)
+                    .then((data:any) => this.myCompany.company = data.results)
+                    .catch((errors:any) => this.errors = errors)
+
+                 return this.stateMyCompany.company
+            }
+
+    }
+    loadCompanyData(company_type: string, id: number) {
+        this.loadingCompanies = true
+        return agent.Companies.getCompanyData(company_type === CompanyType.customer ? UserTypeEnum.customer : UserTypeEnum.performer, id)
+            .then((response:AxiosResponse) => response )
+            .then((data:any) => {
+                this.myCompany.company = data
+                return data
+            })
+            .catch((errors:AxiosError) => this.errors = errors)
+            .finally(() => this.loadingCompanies = false)
+    }
     loadMyCompany(id: number) {
         this.myCompany.loading = true
         agent.Profile.getMyCompany()
@@ -405,18 +433,9 @@ export class CompanyStore {
             .catch(action((error:AxiosError) => this.myCompany.error = error))
             .finally(action(() => this.myCompany.loading = false))
     }
-
     setFilials(filials: IObservableArray<Companies>) {
         this.filials = filials
     }
-
-    setCompanyPerformValue(obj: any) {
-        // this.companyForm = {
-        //   ...this.companyForm,
-        //   ...obj
-        // }
-    }
-
     getCompanies() {
         return this.companies
     }

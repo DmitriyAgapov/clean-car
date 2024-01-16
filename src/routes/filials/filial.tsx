@@ -11,6 +11,7 @@ import Tabs from 'components/common/layout/Tabs/Tabs'
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from "stores/companyStore";
+import { PermissionNames } from "stores/permissionStore";
 
 const FilialPage = () => {
   const store = useStore()
@@ -28,7 +29,7 @@ const FilialPage = () => {
               header={<><div>
                 <Button text={<><SvgBackArrow />Назад к списку филиалов{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
                 <Heading text={'Филиал'} variant={HeadingVariant.h1} className={'!mb-0 inline-block'} color={HeadingColor.accent} /></div>
-              {store.userStore.getUserCan('filial', 'update') && <LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} />}</>}
+              {store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'update') && <LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} />}</>}
           />
 
           <Panel

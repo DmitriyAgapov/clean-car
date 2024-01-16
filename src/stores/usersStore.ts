@@ -1,4 +1,4 @@
-import { flow, makeAutoObservable,  get, set } from 'mobx'
+import { flow, makeAutoObservable, get, set, observable, action, computed } from "mobx";
 import agent from 'utils/agent'
 import companyStore, { CompanyType } from "stores/companyStore";
 import { makePersistable, hydrateStore  } from 'mobx-persist-store';
@@ -29,18 +29,29 @@ export type User = {
 
 export class UsersStore {
   constructor() {
-    makeAutoObservable(this, {}, { autoBind: true });
+    makeAutoObservable(this, {
+      usersList: computed,
+    }, { autoBind: true });
     makePersistable(this, {
       name: 'usersStore',
-      properties: ['usersMap'],
-      storage: window.localStorage,
+      properties: ['usersMap', 'companyUsers', 'companyUsersSelected'],
+      storage: localStorage,
     });
   }
   usersMap = new Map([])
   users: User[] = []
   loadingUsers: boolean = false
   loadingErrors: any = ''
-
+  companyUsers: User[] = observable.array([])
+  companyUsersSelected: User[] = observable.array([])
+  get usersList() {
+    return ({
+      users: this.companyUsers,
+      loading: this.loadingUsers,
+      errors: this.loadingErrors,
+      selectedUsers: this.companyUsersSelected
+    })
+  }
   getAllUser = flow(function* (this: UsersStore) {
     this.loadingUsers = true
     this.usersMap = new Map([])
@@ -88,7 +99,7 @@ export class UsersStore {
     this.loadingErrors = ''
     let result;
     try {
-      const datas = yield agent.Account.createCompanyUser(companyid, data)
+      const datas = yield agent.Account.updateCompanyUser(companyid, data)
       result = datas
       if(datas.response.status > 299) {
         this.loadingErrors = datas.response.data
@@ -103,7 +114,13 @@ export class UsersStore {
     }
     return result
   })
-
+  async getUsers(company_id: any) {
+    return await agent.Account.getCompanyUsers(Number(company_id))
+      .then((resolve: any) => resolve)
+      .then((resolve: any) => resolve.data)
+      .then(action((data) => this.companyUsers = data.results))
+      .catch((error) => console.log(error))
+  }
   getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type: CompanyType) {
     let user: any = {}
 

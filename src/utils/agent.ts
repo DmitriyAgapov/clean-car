@@ -40,15 +40,14 @@ const requests = {
     })
     .then((response) => response.data)
     .catch(handleErrors),
-  get: (url: string, body?: any, pagination?:PaginationProps) =>
-    axios({
+  get: (url: string, body?: any, pagination?:PaginationProps) => {
+    console.log(pagination);
+    return axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
       method: 'GET',
-      params: {
-        ...pagination
-      }
-    }),
+      params: pagination
+    })},
   // .then((response) => response.data)
   // .catch(handleErrors),
 
@@ -160,14 +159,8 @@ const Companies = {
     // },
     createCompanyCustomer: ( data: CreateCompanyPerformerFormData, type: string ) => requests.post('/companies/customer/create/', data),
     getMyCompanies: (pagination?: PaginationProps) => requests.get('/companies/my_companies/list/', {},pagination),
-    getListCompanyCustomer: (company_name?: string | undefined, page?: number | undefined) => requests.get('/companies/customer/list/', {
-            company_name: company_name,
-            page: page,
-        }),
-    getListCompanyPerformer: (company_name?: string | undefined, page?: number | undefined) => requests.get('/companies/performer/list/', {
-            company_name: company_name,
-            page: page,
-        }),
+    getListCompanyCustomer: (pagination?: PaginationProps) => requests.get('/companies/customer/list/', {}, pagination),
+    getListCompanyPerformer: (pagination?: PaginationProps) => requests.get('/companies/performer/list/', {}, pagination),
     getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', {}, pagination),
 }
 const Permissions = {
@@ -231,7 +224,7 @@ const Account = {
   getCompanyUsers: (company_id:number) => requests.get(`/accounts/${company_id}/users/list/`),
   getCompanyUser: (company_id: number, id: number) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
   createCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/users/create/`, data),
-  updateCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/users/create/`, data),
+  updateCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/profile/${data.id}/update/`, data),
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),

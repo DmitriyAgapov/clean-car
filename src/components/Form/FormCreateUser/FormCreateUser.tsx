@@ -13,47 +13,52 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import RequestErrors from 'components/Form/RequestErrors'
 import { CompanyType } from 'stores/companyStore'
+import { observer, Observer } from "mobx-react-lite";
+import useAxios from "axios-hooks";
+import { API_ROOT } from "utils/agent";
+let initValues = {
+    id: 0,
+    company_id: 0,
+    company_name: '',
+    company_filials: 'company',
+    first_name: '',
+    last_name: '',
+    phone: '',
+    email: '',
+    type: '',
+    group: null,
+    is_active: true,
+}
 
-const SignupSchema = Yup.object().shape({
-    first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!'),
-    last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!'),
-    phone: Yup.string()
-        .max(16, 'Слишком длинное!')
-        .phone('RU', 'Введите правильный номер')
-        ,
-    email: Yup.string().email('Неверный email'),
-    group: Yup.number().min(1),
-    company_id: Yup.number().min(1),
-})
-const SelectCompanyFilials = () => {
+const SelectCompanyFilials = observer(() => {
     const store = useStore()
     const { values, setValues } = useFormikContext<any>()
-    const [companies, setCompanies] = useState<any>([])
+    console.log(values);
+
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
     })
     const [searchString, setSearchString] = useState<string>('')
+    const [companies, setCompanies] = useState<any>([])
     useEffect(() => {
-        const getCompany = async () => {
-            const data = await store.companyStore.getAllCompanies({ name: searchString })
-
-            setCompanies(data)
+        console.log(searchString);
+        const getCompany =  async () => {
+            const data =  await store.companyStore.getAllCompanies({ name: searchString })
+            console.log(data);
+            console.log(store.companyStore.allCompanies);
+            setCompanies(store.companyStore.companies)
         }
         getCompany()
     }, [searchString])
     const handleChangeSearch = React.useCallback((e: any) => {
-        setSearchString(e.currentTarget.value)
+        console.log(e);
+
         // console.log(e.currentTarget.value);
-    }, [])
-    const options = companies.map((item: any) => (
-        <Combobox.Option
-            value={item.id}
-            onClick={() => setValues({ ...values, company_name: item.name, company_id: item.id })}
-            key={item.id}
-        >
-            {item.name}
-        </Combobox.Option>
-    ))
+    }, [searchString])
+
+
+    console.log(store.companyStore.companies);
+
     return (
         <>
             <hr className={'col-span-full'} />
@@ -105,7 +110,7 @@ const SelectCompanyFilials = () => {
                 </Combobox.Target>
                 <Combobox.Dropdown>
                     <Combobox.Search
-                        onChange={handleChangeSearch}
+                        onChange={(e) => setSearchString(e.currentTarget.value)}
                         className={'border-0  w-full !px-3 pt-1 !placeholder:text-gray-1'}
                         classNames={{
                             input: 'border-1 px-0 border-accent',
@@ -114,7 +119,15 @@ const SelectCompanyFilials = () => {
                     />
                     <Combobox.Options>
                         <ScrollArea.Autosize type='scroll' mah={200}>
-                            {options}
+                         {store.companyStore.companies.map((item: any) => (
+                              <Combobox.Option
+                                value={item.id}
+                                onClick={() => setValues({ ...values, company_name: item.name, company_id: item.id })}
+                                key={item.id}
+                              >
+                                  {item.name}
+                              </Combobox.Option>
+                            ))}
                         </ScrollArea.Autosize>
                     </Combobox.Options>
                     <Combobox.Footer className={'pb-3 mt-0'}>+ Создать филиал</Combobox.Footer>
@@ -122,15 +135,24 @@ const SelectCompanyFilials = () => {
             </Combobox>
         </>
     )
-}
+})
 
-function UserGroupSelect() {
+const  UserGroupSelect = observer(()=> {
     const store = useStore()
     const { values, setValues } = useFormikContext<any>()
     const [permissions, setPermissions] = useState<any>([])
+    const [{ data, error, response, loading }, refetch] = useAxios(values.type !== UserTypeEnum.admin ? {
+        url: `${API_ROOT}/permissions/${values.company_id}/groups/list/`,
+        method: 'GET',
+    } : {
+        url: `${API_ROOT}/permissions_admin/groups/list/`,
+        method: 'GET',
+    })
 
     useEffect(() => {
-        const getGroups = () => {
+
+        const getGroups = async () => {
+            console.log(data);
             if (values.type == null) {
                 values.company_id = 0
                 setPermissions([])
@@ -143,19 +165,17 @@ function UserGroupSelect() {
             }
             if (values.type === UserTypeEnum.admin) {
                 setPermissions([])
-                setPermissions(store.permissionStore.permissions)
+                refetch().then(r => setPermissions(r.data.results)).catch(e => console.log(e))
             }
             if (values.company_id !== 0 && values.type !== UserTypeEnum.admin) {
+
                 setPermissions([])
-                store.permissionStore.loadCompanyPermissions(values.company_id).then((data) => {
-                    setPermissions(data)
-                })
+                refetch().then(r => setPermissions(r.data.results)).catch(e => console.log(e))
             }
-            values.group
         }
         getGroups()
-    }, [values.company_id, values.type, values.group])
-    console.log(values.group);
+    }, [values.type, values.company_id])
+
     return (
         <>
             {/*   <SelectCustom */}
@@ -171,7 +191,7 @@ function UserGroupSelect() {
             {/*   }))} */}
             {/*   className={'col-span-2'} */}
             {/* /> */}
-            <Select
+            {permissions && <Select
                 value={String(values.group)}
                 name={'groups'}
                 label={'Группа'}
@@ -181,16 +201,16 @@ function UserGroupSelect() {
                     setValues({ ...values, group: Number(value) })
                 }}
                 placeholder='Выбрать группу'
-                disabled={permissions.length < 1}
-                data={permissions.map((item: any) => ({
+                disabled={permissions.length === 0}
+                data={permissions && permissions.map((item: any) => ({
                     label: item.name,
                     value: String(item.id),
                 }))}
                 className={'col-span-2'}
-            />
+            />}
         </>
     )
-}
+})
 
 type UserData =
     | {
@@ -205,21 +225,22 @@ type UserData =
     | undefined
 
 const FormCreateUser = ({ user, edit }: any) => {
+    const store = useStore()
+    const SignupSchema = Yup.object().shape({
+        first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+        last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+        phone: Yup.string()
+        .max(16, 'Слишком длинное!')
+        .phone('RU', 'Введите правильный номер').required('Обязательное поле'),
+        email: Yup.string().email('Неверный email').required('Обязательное поле'),
+        group: Yup.number().min(1).required('Обязательное поле'),
+        company_id: Yup.number().min(1),
+    })
     const { company_type, companyid, id } = useParams<any>()
-    let initValues = {
-        company_id: 0,
-        company_name: '',
-        company_filials: 'company',
-        first_name: '',
-        last_name: '',
-        phone: '',
-        email: '',
-        type: UserTypeEnum.customer,
-        group: null,
-        is_active: true,
-    }
+
     if (edit) {
         initValues = {
+            id: user.employee.id,
             company_id: user.company.id,
             company_name: user.company.name,
             company_filials: 'company',
@@ -231,17 +252,6 @@ const FormCreateUser = ({ user, edit }: any) => {
             group: user.group.id,
             is_active: user.employee.is_active,
         }
-    }
-
-    const store = useStore()
-    const [step, setStep] = useState(1)
-    const [animate, setAnimate] = useState(false)
-    const changeStep = (step?: number) => {
-        setAnimate((prevState) => !prevState)
-        setTimeout(() => {
-            setAnimate(false)
-            setStep(step ? step : 2)
-        }, 1200)
     }
     React.useEffect(() => {
         if (companyid && id && company_type) {
@@ -257,16 +267,18 @@ const FormCreateUser = ({ user, edit }: any) => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values, FormikHelpers) => {
-                const data = {
-                    phone: values.phone,
-                    email: values.email,
-                    first_name: values.first_name,
-                    last_name: values.last_name,
-                    group: values.group,
-                    is_active: values.is_active,
-                }
+
                 let res: any
                 if(edit) {
+                    const data = {
+                        id: values.id,
+                        phone: values.phone,
+                        email: values.email,
+                        first_name: values.first_name,
+                        last_name: values.last_name,
+                        group: values.group,
+                        is_active: values.is_active,
+                    }
                     store.usersStore
                         .updateUser(values.company_id, data)
                         .then((r: any) => {
@@ -281,20 +293,25 @@ const FormCreateUser = ({ user, edit }: any) => {
                             FormikHelpers.setSubmitting(false)
                         })
                     return
-                }
-                store.usersStore
-                    .createUser(values.company_id, data)
-                    .then((r: any) => {
+                } else {
+                    const data = {
+                        phone: values.phone,
+                        email: values.email,
+                        first_name: values.first_name,
+                        last_name: values.last_name,
+                        group: values.group,
+                        is_active: values.is_active,
+                    }
+                    store.usersStore.createUser(values.company_id, data).then((r: any) => {
                         res = r
                         if (res && res.data.id)
                             navigate(`/account/users/${values.type}/${values.company_id}/${res.data.id}`)
-                    })
-                    .catch((error) => {
+                    }).catch((error) => {
                         throw new Error(error)
-                    })
-                    .finally(() => {
+                    }).finally(() => {
                         FormikHelpers.setSubmitting(false)
                     })
+                }
 
                 // @ts-ignore
 
@@ -357,6 +374,7 @@ const FormCreateUser = ({ user, edit }: any) => {
                             label={'Имя'}
                             placeHolder={''}
                             fieldType={'text'}
+
                             className={'col-span-3'}
                         />
                         <CreateFormikInput

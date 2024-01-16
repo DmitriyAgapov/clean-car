@@ -23,11 +23,7 @@ const Tabs = ({ data, panels }: TabsProps & {panels?: any}) => {
 
   const store = useStore()
     const [state, setState] = useState('Основная информация');
-  // useEffect(() => {
-  //   console.log(data);
-  //   console.log(state == 0);
-  //   // @ts-ignore
-  // }, [state]);
+
   const navigate = useNavigate()
   // const fundBill = {
   //   actions: [
@@ -55,7 +51,6 @@ const Tabs = ({ data, panels }: TabsProps & {panels?: any}) => {
     const TabPanels = ():any => {
     const result:any = []
       if(panels) {
-        console.log(panels);
         panels.forEach((item: any) => {
           result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={panels[0].company_type} data={item.data} label={item.label} props={panels}/>)
         })

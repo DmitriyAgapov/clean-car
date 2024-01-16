@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, observable, reaction } from 'mobx'
+import { action, autorun, makeAutoObservable, observable, reaction } from "mobx";
 import { ReactNode } from "react";
 import userStore, { UserTypeEnum } from "./userStore";
 import { PermissionName, Permissions } from "stores/permissionStore";
@@ -9,8 +9,8 @@ export class AppStore {
     makeAutoObservable(this, {}, { autoBind: true } )
     makePersistable(this, {
       name: 'appStore',
-      properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions'],
-      storage: window.sessionStorage,
+      properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions', 'token'],
+      storage: sessionStorage,
     }, {
       fireImmediately: true,
     })
@@ -23,6 +23,7 @@ export class AppStore {
           userStore.loadMyProfile()
         } else {
           window.localStorage.removeItem('jwt')
+          sessionStorage.clear()
         }
       },
     )
@@ -38,7 +39,7 @@ export class AppStore {
     )
     reaction(() => this.appType,
       (appType => {
-        let ar = new Map([]);
+        let ar:any = new Map([]);
 
         if(appType === UserTypeEnum.admin) {
           console.log('admin');
@@ -56,9 +57,6 @@ export class AppStore {
           if(userStore.currentUser.account_bindings && userStore.currentUser.account_bindings.length > 0) {
             this.appPermissions = userStore.currentUser.account_bindings[0].group.permissions
           }
-          if(userStore.currentUser.is_staff && userStore.currentUser.staff_group) {
-            this.appPermissions = userStore.currentUser.staff_group.permissions
-          }
           this.appPermissions?.forEach((item) => {
             const exepctions = ['Компании', 'Расчетный блок', 'Финансовый блок']
             if(exepctions.indexOf(item.name) == -1) {
@@ -67,7 +65,8 @@ export class AppStore {
             }
           })
         }
-        userStore.setCurrentPermissions(observable.map(ar));
+        userStore.setPermissionsVariants(ar)
+        // userStore.setCurrentPermissions(observable.map(ar));
       })
     )
   }
@@ -101,7 +100,7 @@ export class AppStore {
   setTokenError(error: string | null) {
     this.tokerError = error
   }
-  setAppType(type: UserTypeEnum) {
+  setAppType(type: UserTypeEnum | string) {
     this.appType = type
     let routeName = ''
     switch (this.appType) {
@@ -184,12 +183,13 @@ export class AppStore {
   setAppLoading() {
     this.appLoaded = false
   }
-
   setAppRouteName(route: string) {
     this.appRouteName = route
   }
 }
 
 const appStore = new AppStore()
-
+autorun(() => {
+  console.log(appStore)
+})
 export default appStore

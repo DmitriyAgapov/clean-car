@@ -10,12 +10,13 @@ import { observer } from 'mobx-react-lite'
 import { Company, CompanyType } from "stores/companyStore";
 import { User } from 'stores/usersStore'
 import { UserTypeEnum } from "stores/userStore";
+import { PermissionNames } from "stores/permissionStore";
 
 const CarsPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-
+  console.log(store.carStore)
   if ('/account/cars' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -32,7 +33,7 @@ const CarsPage = () => {
               color={HeadingColor.accent}
             />
 
-            {store.userStore.getUserCan('cars', 'create') && <Button
+            {store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'create') && <Button
               trimText={true}
               text={'Добавить'}
               action={() => navigate('/account/cars/create')}
@@ -47,7 +48,7 @@ const CarsPage = () => {
         background={PanelColor.glass}
         filter={true}
         search={true}
-        ar={['Статус', 'ФИО', 'Телефон', 'e-mail', 'Тип', 'Компания', 'Город']}
+        ar={['Статус', 'Марка', 'Модель', 'Тип', 'Гос-номер', 'Принадлежит', 'Город']}
         // @ts-ignore
         data={store.usersStore.users.map((item: { company: Company; group: number; employee: User }) => ({
           state: item.employee.is_active,

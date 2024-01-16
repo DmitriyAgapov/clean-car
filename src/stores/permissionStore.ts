@@ -1,11 +1,12 @@
-import { action, flow, IObservableArray, makeObservable, observable } from 'mobx'
+import { action, autorun, computed, flow, IObservableArray, makeAutoObservable, makeObservable, observable, set, toJS } from "mobx";
 import agent from 'utils/agent'
 import { Company } from 'stores/companyStore'
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
+import useAxios from 'axios-hooks'
 
 export enum PermissionName  {
-   'Компании' = 'companies',
+  'Компании' = 'companies',
   'Управление филиалами'  = 'filial',
   'Управление пользователями' = 'users',
   'Управление автомобилями' = 'cars',
@@ -14,6 +15,17 @@ export enum PermissionName  {
   'Управление лимитами' = 'limits',
   'Управление справочниками' = 'references',
   'Финансовый блок' = 'finance'
+}
+export enum PermissionNames  {
+  'Компании' = 'Компании',
+  'Управление филиалами' = 'Управление филиалами',
+  'Управление пользователями' = 'Управление пользователями',
+  'Управление автомобилями' = 'Управление автомобилями',
+  'Управление заявками' = 'Управление заявками',
+  'Управление прайс-листом' = 'Управление прайс-листом',
+  'Управление лимитами' = 'Управление лимитами',
+  'Управление справочниками' = 'Управление справочниками',
+  'Финансовый блок' = 'Финансовый блок',
 }
 
 export type AccountProps = {
@@ -41,92 +53,18 @@ export type GroupProps = {
 
 export class PermissionStore {
   constructor() {
-    makeObservable(this, {
-      permissions: observable,
-      companyPermissions: observable,
-      errors: observable,
-      loadingPermissions: observable,
-      loadPermissionAdmin: action,
-      getPermissionAdmin: action,
-      deletePermissionStore: action,
-      setPermissionStoreAdmin: action,
-      createPermissionStoreAdmin: action,
-      createPermission: action,
-      getAllPermissions: action,
-      loadCompanyPermissions: action,
-      getPermissions: action
-    })
+    makeAutoObservable(this, {
+      allPermissionsState: computed,
+      aPState: computed
+    }, {autoBind: true})
+
   }
 
   permissions: IObservableArray<Permissions> = observable.array([])
-  companyPermissions: IObservableArray<Permissions> = observable.array([], {
-    deep: true,
-  })
+  companyPermissions:IObservableArray<Permissions> = observable.array([])
   permissionsMap = observable.map()
   loadingPermissions: boolean = false
-  errors?: string
-  getUserPermissions = flow(function*(this: PermissionStore, company_id: number, id: number, group_id?: number) {
-    this.loadingPermissions = true
-    let userGroup;
-    try {
-      const { data } = yield agent.Permissions.getUserPermissions(company_id, id);
-      if (data) {
-        userGroup = data
-      }
-    } catch (error) {
-      this.errors = 'error'
-    } finally {
-      this.loadingPermissions = false
-    }
-    if(!userGroup?.id) {
-      try {
-        const { data } = yield agent.PermissionsAdmin.getAdminGroupIdPermission(userGroup.user?.group?.id)
-        if (data) {
-          userGroup = data
-        }
-      } catch (error) {
-        this.errors = 'error'
-      }
-      finally {
-        this.loadingPermissions = false
-      }
-    }
-    return userGroup
-  })
-  loadCompanyPermissions = flow(function*(this: PermissionStore, company_id?: number, group?: number) {
-    this.companyPermissions.clear()
-    group = group ? group : userStore.currentUser?.company?.id
-    try {
-      if(group && group !== 0 && company_id) {
-        // console.log('with group');
-        const permissions = yield agent.Permissions.getAllCompanyPermissions(company_id)
-        this.companyPermissions = permissions.data.results;
-        // console.log(permissions);
-        // @ts-ignore
-        if (permissions.data.results.length == 0 && group) {
-          this.companyPermissions = yield agent.PermissionsAdmin.getAdminGroupIdPermission(group)
-          // console.log(this.companyPermissions)
-          // console.log(permissions.data.results.length == 0);
-        }
-        if (permissions.status === 200) {
-          // @ts-ignore
-          this.companyPermissions = permissions.data.results
-        }
-      } else if(company_id) {
-        const {data, status} = yield agent.Permissions.getAllCompanyPermissions(company_id)
-        if (status === 200) {
-          // @ts-ignore
-          this.companyPermissions = data.results
-        }
-      }
-      // const permissions =
-    } catch (e) {
-      new Error('Create Company failed')
-    } finally {
-
-    }
-    return this.companyPermissions
-  })
+  errors: any
   getPermissionAdmin = flow(function*(this: PermissionStore, id: number) {
     this.loadingPermissions = true
     try {
@@ -140,7 +78,7 @@ export class PermissionStore {
     } finally {
       this.loadingPermissions = false
     }
-
+    this.loadingPermissions = false
   })
   getPermissionByGroupId = flow(function*(this: PermissionStore, id: number) {
     const company_id = userStore.currentUser?.company?.id
@@ -155,46 +93,15 @@ export class PermissionStore {
     } catch (error) {
       this.errors = 'error'
     }
-
-
-  })
-  getPermissions = flow(function *(this: PermissionStore) {
-    if(userStore.currentUser?.is_staff) {
-      // console.log('is admin', this.permissions);
-
-        const {data, status} = yield agent.PermissionsAdmin.getAllAdminPermissions()
-        if (status === 200) {
-          //@ts-ignore
-          const { results } = data
-          this.permissions = results
-          return results
-        }
-
-    }
-    if(userStore.currentUser && !userStore.currentUser.is_staff) {
-      // console.log('is not admin', 'company_id', userStore.currentUser?.company?.id);
-      if(userStore.currentUser?.company?.id) {
-
-        const {data, status} = yield agent.Permissions.getAllCompanyPermissions(userStore.currentUser?.company?.id)
-        if (status === 200) {
-          // console.log(data);
-          //@ts-ignore
-          const { results } = data
-          this.permissions = results
-          return results
-        }
-      }
-    }
-    return this.permissions
   })
   createPermission = flow(function*(this: PermissionStore, data: any) {
     this.loadingPermissions = true
     try {
       if(userStore.currentUser?.is_staff) {
-        yield agent.PermissionsAdmin.createAdminPermission(data)
+         agent.PermissionsAdmin.createAdminPermission(data)
       }
       if(!userStore.currentUser?.is_staff && userStore.currentUser?.company?.id) {
-        yield agent.Permissions.createPermission(userStore.currentUser?.company?.id, data)
+         agent.Permissions.createPermission(userStore.currentUser?.company?.id, data)
       }
 
     } catch (error) {
@@ -230,6 +137,7 @@ export class PermissionStore {
     } finally {
       this.loadingPermissions = false
     }
+    this.loadingPermissions = false
   })
   setPermissionStore = flow(function *(this: PermissionStore, id: number, data: any) {
     this.loadingPermissions = true
@@ -251,6 +159,7 @@ export class PermissionStore {
     } else {
       this.setPermissionStoreAdmin(id, data)
     }
+    this.loadingPermissions = false
   })
   deletePermissionStore = flow(function *(this: PermissionStore, id: number) {
     this.loadingPermissions = true
@@ -274,28 +183,133 @@ export class PermissionStore {
     }
     this.loadingPermissions = false
   })
+  getPermissionsFlow = flow(function*(this: PermissionStore) {
+    this.companyPermissions.clear()
+    this.permissions.length = 0
+    console.log(userStore.isAdmin);
+    if(userStore.currentUser.is_staff) {
+      this.loadingPermissions = true
+       const response = yield agent.PermissionsAdmin.getAllAdminPermissions()
+      console.log(response);
+      if(response.status === 200) {
+        this.permissions = response.data.results
+      }
+      this.loadingPermissions = false
 
-  async loadPermissionAdmin() {
+    } else if(userStore.myProfileData.company?.id && !userStore.isAdmin) {
+        this.loadingPermissions = false
+        yield agent.Permissions.getAllCompanyPermissions(userStore.myProfileData.company.id)
+        .then(action((response:any) => response.data))
+        .then(action((data:any) => this.permissions.push(data)))
+        .catch(action((error:any) => this.errors = error))
+        .finally(action(() => this.loadingPermissions = false))
+
+      }
+    return this.permissions
+  })
+
+  get allPermissionsState() {
+    return {
+      loading: this.loadingPermissions,
+      groups: this.permissions,
+      errors: this.errors
+    }
+  }
+
+  get aPState () {
+      const [{ data:getData, loading: getLoading, error: getError, response }, refetch] = useAxios(
+        "https://dev.server.clean-car.net/api/accounts/my_profile/"
+      );
+      return [getData, getLoading, getError, refetch]
+
+  }
+
+  getPermissions() {
+    this.companyPermissions.clear()
+    this.permissions.length = 0
+
+    if(userStore.currentUser.is_staff) {
+      this.loadingPermissions = false
+       agent.PermissionsAdmin.getAllAdminPermissions()
+        .then(action((response:any) => response.data))
+        .then(action((data:any) => {
+          set(this.permissions, data.results)
+      }))
+        .catch(action((error:any) => this.errors = error))
+        .finally(action(() => this.loadingPermissions = false))
+
+    } else if(userStore.myProfileData.company?.id && !userStore.isAdmin) {
+        agent.Permissions.getAllCompanyPermissions(userStore.myProfileData.company.id)
+        .then(action((response:any) => response.data))
+        .then(action((data:any) => this.permissions.push(data)))
+        .catch(action((error:any) => this.errors = error))
+        .finally(action(() => this.loadingPermissions = false))
+
+      }
+    return this.permissions
+  }
+
+  loadCompanyPermissions = flow(function*(this: PermissionStore,company_id: number) {
+    this.companyPermissions.clear()
+    this.loadingPermissions = true
+    let res;
+    const {status, data} = yield agent.Permissions.getAllCompanyPermissions(company_id)
+
+    if(status === 200) {
+      this.companyPermissions = data.results
+      return data.results
+    }
+    this.loadingPermissions = false
+
+
+    //   .then((response: any) => response.data)
+    //   .then(action((data: any) => {
+    //     this.companyPermissions.set(String(company_id), data.results)
+    //     return data.results
+    // })).catch(action((error: any) => this.errors = error)).finally(action(() => this.loadingPermissions = false))
+    //
+
+  })
+  getUserPermissions(company_id: number, id: number, group_id: number) {
+    this.loadingPermissions = true
+    if(userStore.isAdmin) {
+      agent.Permissions.getUserPermissions(company_id, id).then((response: any) => response.data).then((data: any) => {
+        this.permissions.push(data.group)
+        this.permissionsMap.set(data.group.id, data.group)
+      }).catch((errors: any) => this.errors = errors)
+    } else {
+      agent.PermissionsAdmin.getAdminGroupIdPermission(group_id)
+      .then((response:any) => response.data)
+      .then((data:any) => {
+        this.permissions.push(data.group)
+        this.permissionsMap.set(data.group.id, data.group)})
+      .catch((errors:any) => this.errors = errors)
+    }
+  }
+
+  loadPermissionAdmin = flow(function* (this: PermissionStore) {
     this.loadingPermissions = true
     this.permissions.clear()
     // @ts-ignore
     try {
-      const data = await agent.PermissionsAdmin.getAllAdminPermissions()
+      const data = yield agent.PermissionsAdmin.getAllAdminPermissions()
       if (data.status === 200) {
         //@ts-ignore
         const { results } = data.data
-        this.permissions = results
+        console.log(results);
+        set(this.permissions, results)
+        console.log(this.permissions);
       }
     } catch (error) {
       throw new Error('Fetch data companies failed')
     } finally {
       this.loadingPermissions = false
-
     }
-  }
+  })
 
   getAllPermissions() {
     this.loadPermissionAdmin()
+    console.log(this.permissions);
     return this.permissions
   }
 
@@ -321,5 +335,13 @@ export class PermissionStore {
 }
 
 const permissionStore = new PermissionStore()
-
+autorun(() => {
+    return console.log(permissionStore.permissions)
+  },
+  {name: 'permissions'}
+)
+autorun(() => {
+  console.log(permissionStore.permissions);
+  console.log(permissionStore.companyPermissions);
+})
 export default permissionStore

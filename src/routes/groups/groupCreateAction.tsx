@@ -8,6 +8,7 @@ import { Navigate, useLoaderData, useLocation, useNavigate } from 'react-router-
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { toJS } from 'mobx'
+import { PermissionNames } from "stores/permissionStore";
 
 export default function GroupPageCreateAction(props: any) {
   const store = useStore()
@@ -37,7 +38,7 @@ export default function GroupPageCreateAction(props: any) {
       permissions: newArray,
     }))
   }
-  if(!store.userStore.getUserCan('users', 'create')) return <Navigate to={'/account'}/>
+  if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create')) return <Navigate to={'/account'}/>
   return (
       <Section type={SectionType.default}>
           <Panel

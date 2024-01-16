@@ -117,19 +117,19 @@ export function CreateFormikInput({fieldName, placeHolder = "", onChange, label,
     if(fieldType == 'select') return <label
       className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
       htmlFor={fieldName}
-      data-form_error={errors[`${fieldName}`] && touched[fieldName] && 'error'}
+      data-form_error={(errors[`${fieldName}`] && touched[`${fieldName}`]) ? 'error' : null}
 
     >
       {label}
       <SelectCustom action={onChange} name={fieldName} options={fieldName == 'model' ? values.carModels : options} placeholder={placeHolder}/>
-      {errors[fieldName] && touched[fieldName] ? (
+      {(errors[`${fieldName}`] && touched[`${fieldName}`]) ? (
       <div className={'form-error'}>{errors[fieldName]}</div>
     ) : null}
   </label>
     if(fieldType == 'text') return <label
       className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
       htmlFor={fieldName}
-      data-form_error={errors[`${fieldName}`] && touched[fieldName] && 'error'}
+      data-form_error={(errors[`${fieldName}`] && touched[`${fieldName}`]) ? 'error' : null}
 
     >
       {label}<Field
@@ -138,11 +138,11 @@ export function CreateFormikInput({fieldName, placeHolder = "", onChange, label,
       name={fieldName}
       placeholder={placeHolder}
       type={fieldType}
-    />{errors[fieldName] && touched[fieldName] ? (
-      <div className={'form-error'}>{errors[fieldName]}</div>
+    />{(errors[`${fieldName}`] && touched[`${fieldName}`]) ? (
+      <div className={'form-error'}>{errors[`${fieldName}`]}</div>
     ) : null}
     </label>
-  }, [values.carModels])
+  }, [values.carModels, errors, touched])
   return <>{inputElement}</>
 
 }

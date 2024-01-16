@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import DList from 'components/common/ui/DList/DList'
 import { CompanyType } from "stores/companyStore";
+import { PermissionNames } from "stores/permissionStore";
 
 const UserPage = () => {
   const store = useStore()
@@ -74,7 +75,7 @@ const UserPage = () => {
                 color={HeadingColor.accent}
               />
             </div>
-            {store.userStore.getUserCan('users', 'update') && <Button
+            {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
               text={'Редактировать'}
               action={() => navigate(`${location.pathname}/edit`)}
               className={'inline-flex ml-auto'}
