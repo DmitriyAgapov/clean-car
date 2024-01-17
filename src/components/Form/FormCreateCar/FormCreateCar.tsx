@@ -16,6 +16,7 @@ import Progress from "components/common/ui/Progress/Progress";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import { observer, Observer } from "mobx-react-lite";
 import { Select } from "@mantine/core";
+import { UserTypeEnum } from "stores/userStore";
 
 type CarCreateUpdate = {
     car_type:	string
@@ -271,6 +272,9 @@ const FormCreateCar = ({ user, edit }: any) => {
          console.log(formDataSelectUsers);
     },[store.usersStore.companyUsers])
 
+
+    // @ts-ignore
+    // @ts-ignore
     return (
 
         <Formik
@@ -341,95 +345,102 @@ const FormCreateCar = ({ user, edit }: any) => {
                           header={<><Heading text={'Шаг 2. Добавьте сотрудников для автомобиля'} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>Вы можете добавить или выбрать сотрудника из списка зарегистрированных пользователей</div></>}
                           step={step} animate={animate} action={() => void null} action1={() => void null} stepIndex={2}>
                             <FormModalSelectUsers company_id={Number(values.company_id)} users={formDataSelectUsers}/>
-                            <Observer children={() => <div>Выбранный юзеры: {store.usersStore.companyUsersSelected.map((el:any) => <FormCard actions={<></>} title={el.first_name} titleColor={HeadingColor.accent} titleVariant={HeadingVariant.h5} />)}</div>}/>
-                            <FormCard title={'Добавить нового сотрудника'}
-                              titleColor={HeadingColor.accent}
-                              titleVariant={HeadingVariant.h4}
-                              actions={<Button text={'Добавить сотрудника'}
-                                size={ButtonSizeType.sm}
-                                variant={ButtonVariant.accent}
-                                directory={ButtonDirectory.directory}
-                                action={async () => {
-                                    store.appStore.setModal({
-                                        className: '!px-10 gap-4 !justify-stretch',
-                                        component: <FormModalAddUser />,
-                                        actions: [
-                                            <Button text={'Отменить'}
-                                              action={() => store.appStore.closeModal()}
-                                              variant={ButtonVariant["accent-outline"]}
-                                              className={'max-w-fit'} />,
-                                            <Button text={'Добавить сотрудника'}
-                                              action={async () => {
-                                                  store.formStore.getFormData('formCreateUser')
-                                              }}
-                                              // action={async () => {
-                                              //     store.
-                                              // }}
-                                              variant={ButtonVariant.accent} />,
-                                        ],
-                                        text: `Вы уверены, что хотите удалить ${'name'}`,
-                                        state: true,
-                                    })
-                                }} />} />
 
-                            <FormCard title={'Выбрать сотрудника из зарегистрированных пользователей'}
+                            <Observer children={():any =>
+                              //@ts-ignore
+                              <div className={'asd'}>Выбранный юзеры: {store.usersStore.companyUsersSelected.toJSON().map((el: any) => {
+                                  return <FormCard actions={null} title={el[1].employee.first_name}  children={<><div className={'text-xs -mt-2 uppercase text-gray-2'}>{el[1].group.name}</div><ul>
+                                      <li>{el[1].employee.phone}</li>
+                                      <li>{el[1].employee.email}</li>
+                                  </ul><div> {el[1].employee.is_active ? <span className={'text-accent  mt-5 block'}>Активен</span> : <span className={'text-red-500 mt-5 block'}>Не активен</span> }</div></>} titleColor={HeadingColor.accent}
+                              titleVariant={HeadingVariant.h5}  />})}</div>} />
+                            <Observer children={() => <FormCard title={"Добавить нового сотрудника"}
+                          titleColor={HeadingColor.accent}
+                          titleVariant={HeadingVariant.h4}
+                          actions={<Button text={"Добавить сотрудника"}
+                            size={ButtonSizeType.sm}
+                            variant={ButtonVariant.accent}
+                            directory={ButtonDirectory.directory}
+                            action={async () => {
+                                store.appStore.setModal({
+                                    className: "!px-10 gap-4 !justify-stretch",
+                                    component: <FormModalAddUser />,
+                                    actions: [
+                                        <Button text={"Отменить"}
+                                          action={() => store.appStore.closeModal()}
+                                          variant={ButtonVariant["accent-outline"]}
+                                          className={"max-w-fit"} />,
+                                        <Button text={"Добавить сотрудника"}
+                                          action={async () => {
+                                              store.formStore.getFormData("formCreateUser");
+                                          }}
+                                          // action={async () => {
+                                          //     store.
+                                          // }}
+                                          variant={ButtonVariant.accent} />
+                                    ],
+                                    text: `Вы уверены, что хотите удалить ${"name"}`,
+                                    state: true
+                                });
+                            }} />} />} />,
+
+                            <FormCard title={"Выбрать сотрудника из зарегистрированных пользователей"}
                               titleColor={HeadingColor.accent}
                               titleVariant={HeadingVariant.h4}
-                              actions={<Button text={'Выбрать сотрудника'}
+                              actions={<Button text={"Выбрать сотрудника"}
                                 size={ButtonSizeType.sm}
                                 variant={ButtonVariant.accent}
                                 directory={ButtonDirectory.directory}
                                 action={async () => {
                                     console.log(values);
                                     store.appStore.setModal({
-                                        className: '!px-10 gap-4 !justify-stretch grid-cols-1',
-                                        component: <FormModalSelectUsers company_id={Number(values.company_id)} users={formDataSelectUsers}/>,
+                                        className: "!px-10 gap-4 !justify-stretch grid-cols-1",
+                                        component: <FormModalSelectUsers company_id={Number(values.company_id)}
+                                          users={formDataSelectUsers} />,
                                         actions: [
-                                            <Button text={'Отменить'}
+                                            <Button text={"Отменить"}
                                               action={() => store.appStore.closeModal()}
                                               variant={ButtonVariant["accent-outline"]}
-                                              className={'max-w-fit'} />,
-                                            <Button text={'Добавить сотрудника'}
+                                              className={"max-w-fit"} />,
+                                            <Button text={"Добавить сотрудника"}
                                               action={async () => {
                                                   store.permissionStore.deletePermissionStore(12).then(() => {
-                                                      store.appStore.closeModal()
-                                                      navigate('/account/groups', { replace: false })
-                                                  })
+                                                      store.appStore.closeModal();
+                                                      navigate("/account/groups", { replace: false });
+                                                  });
                                               }}
-                                              variant={ButtonVariant.accent} />,
+                                              variant={ButtonVariant.accent} />
                                         ],
-                                        text: `Вы уверены, что хотите удалить ${'name'}`,
-                                        state: true,
-                                    })
-                                }} />} />
-                        </Step>
-
-                        <Step footer={<>
-                            <Button text={'Отменить'}
-                              action={() => navigate(-1)}
-                              className={'float-right lg:mb-0 mb-5'}
-                              variant={ButtonVariant['accent-outline']} />
-                            <Button text={'Дальше'}
-                              action={() => {
-                                  console.log(isValid);
-                                  changeStep()
-                              }}/* action={() => console.log(values)} */
-                              className={'float-right'}
-                              variant={ButtonVariant.accent} />
-                        </>}
-                          header={<>
-                              <Heading text={'Шаг 3. Автомобиль зарегистрирован'}
-                                color={HeadingColor.accent}
-                                variant={HeadingVariant.h2} />
-                              <div className={'text-base'}>Вы можете добавить лимиты для зарегистрированного автомобиля или добавить их позже в соответствующем разделе</div>
-                          </>}
-                          step={step}
-                          animate={animate}
-                          action={() => void null}
-                          action1={() => void null}
-                          stepIndex={3}>
-                            <CreateField title={'Создать прайс-лист'}/>
-                        </Step>
+                                        text: `Вы уверены, что хотите удалить ${"name"}`,
+                                        state: true
+                                    });
+                                }} />} />)
+                        </Step><Step footer={<>
+                        <Button text={"Отменить"}
+                          action={() => navigate(-1)}
+                          className={"float-right lg:mb-0 mb-5"}
+                          variant={ButtonVariant["accent-outline"]} />
+                        <Button text={"Дальше"}
+                          action={() => {
+                              console.log(isValid);
+                              changeStep();
+                          }} /* action={() => console.log(values)} */
+                          className={"float-right"}
+                          variant={ButtonVariant.accent} />
+                    </>}
+                      header={<>
+                          <Heading text={"Шаг 3. Автомобиль зарегистрирован"}
+                            color={HeadingColor.accent}
+                            variant={HeadingVariant.h2} />
+                          <div className={"text-base"}>Вы можете добавить лимиты для зарегистрированного автомобиля или добавить их позже в соответствующем разделе</div>
+                      </>}
+                      step={step}
+                      animate={animate}
+                      action={() => void null}
+                      action1={() => void null}
+                      stepIndex={3}>
+                        <CreateField title={"Создать прайс-лист"} />
+                    </Step>
 
                     </Form>
 

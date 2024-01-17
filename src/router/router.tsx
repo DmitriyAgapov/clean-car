@@ -11,8 +11,9 @@ import {
     filialLoader,
     filialsLoader,
     groupsCreatLoader,
-    groupsIdLoader, groupsLoader,
-    profileLoader,
+    groupsIdLoader,
+    groupsLoader,
+    profileLoader, referencesLoader,
     userLoader,
     usersLoader
 } from "routes/loaders/loaders";
@@ -40,6 +41,77 @@ import GroupPageCreateAction from 'routes/groups/groupCreateAction'
 import GroupPage from 'routes/groups/group'
 import GroupPageEditAction from 'routes/groups/groupEditAction'
 import React from 'react'
+import ReferencesPage from 'routes/reference/references'
+import ReferencePage from 'routes/reference/reference'
+import ReferencePageCreate from 'routes/reference/referencePageCreate'
+import ReferenceIndex from "routes/reference/referenceIndex";
+
+const reference = {
+    path: 'references',
+    element: <ReferencesPage />,
+    children: [
+        {
+            path: 'car_brands',
+            element: <ReferencePage />,
+            children: [
+                {
+                    path: ':id',
+                    element: <ReferencePage />,
+                    children: [
+                        {
+                            path: 'create',
+                            element: <ReferencePageCreate />,
+                        },
+                        {
+                            path: 'edit',
+                            element: <ReferencePageCreate />,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            path: 'cities',
+            element: <ReferencePage />,
+            children: [
+                {
+                    path: ':id',
+                    element: <ReferencePage />,
+                    children: [
+                        {
+                            path: 'create',
+                            element: <ReferencePageCreate />,
+                        },
+                        {
+                            path: 'edit',
+                            element: <ReferencePageCreate />,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            path: 'services',
+            element: <ReferencePage />,
+            children: [
+                {
+                    path: ':id',
+                    element: <ReferencePage />,
+                    children: [
+                        {
+                            path: 'create',
+                            element: <ReferencePageCreate />,
+                        },
+                        {
+                            path: 'edit',
+                            element: <ReferencePageCreate />,
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+}
 
 const router = createBrowserRouter([
     {
@@ -146,7 +218,7 @@ const router = createBrowserRouter([
             {
                 path: 'filials',
                 element: <FilialsPage />,
-                errorElement: <ErrorPage/>,
+                errorElement: <ErrorPage />,
                 loader: filialsLoader,
                 children: [
                     {
@@ -178,15 +250,84 @@ const router = createBrowserRouter([
                     {
                         path: ':company_type/:id',
                         element: <GroupPage />,
-                        loader: groupsIdLoader
+                        loader: groupsIdLoader,
                     },
                     {
                         path: ':company_type/:id/edit',
                         element: <GroupPageEditAction />,
-                        loader: groupsIdLoader
-                    }
-                ]
-            }
+                        loader: groupsIdLoader,
+                    },
+                ],
+            },
+            {
+                path: 'references',
+                element: <ReferenceIndex />,
+                children: [
+                    {
+                        path: 'car_brands',
+                        element: <ReferencesPage />,
+                        loader: referencesLoader,
+                        children: [
+                            {
+                                path: ':id',
+                                element: <ReferencePage />,
+                                children: [
+                                    {
+                                        path: 'create',
+                                        element: <ReferencePageCreate />,
+                                    },
+                                    {
+                                        path: 'edit',
+                                        element: <ReferencePageCreate />,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        path: 'cities',
+                        element: <ReferencesPage />,
+                        loader: referencesLoader,
+                        children: [
+                            {
+                                path: ':id',
+                                element: <ReferencePage />,
+                                children: [
+                                    {
+                                        path: 'create',
+                                        element: <ReferencePageCreate />,
+                                    },
+                                    {
+                                        path: 'edit',
+                                        element: <ReferencePageCreate />,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        path: 'services',
+                        element: <ReferencesPage />,
+                        loader: referencesLoader,
+                        children: [
+                            {
+                                path: ':id',
+                                element: <ReferencePage />,
+                                children: [
+                                    {
+                                        path: 'create',
+                                        element: <ReferencePageCreate />,
+                                    },
+                                    {
+                                        path: 'edit',
+                                        element: <ReferencePageCreate />,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
         ],
     },
 ])

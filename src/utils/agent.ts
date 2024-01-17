@@ -211,9 +211,10 @@ const Profile = {
     // 	requests.del(`/profiles/${username}/follow`)
 }
 const Catalog = {
-  getCities: () => requests.get('/catalog/cities/'),
-  getCarBrands: () => requests.get('/catalog/car_brands/'),
-  getCarBrandModels: (brand_id:number) => requests.get(`/catalog/${brand_id}/car_models/`),
+  getCities: (params?: PaginationProps) => requests.get('/catalog/cities/', {}, params),
+  getServices: (params?: PaginationProps) => requests.get('/catalog/cities/', {}, params),
+  getCarBrands: (params?: PaginationProps) => requests.get('/catalog/car_brands/', {}, params),
+  getCarBrandModels: (brand_id:number, params?: PaginationProps) => requests.get(`/catalog/${brand_id}/car_models/`),
 }
 const Cars = {
   getCompanyCars: (company_id: number, params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars/${company_id}/list/`, params),

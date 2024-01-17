@@ -1,7 +1,8 @@
 import { useLocalObservable } from 'mobx-react-lite'
 import React from 'react'
 import rootStore, { RootStore } from './index'
-
+import { configure } from "mobx";
+configure({ enforceActions: "always" })
 const storeContext = React.createContext<RootStore | null>(null)
 
 export const StoreProvider = ({ children }: { children: React.ReactNode }) => {

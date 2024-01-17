@@ -2,9 +2,9 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import React from 'react'
 import styles from './FormCards.module.scss'
 
-export const FormCard = ({title,titleVariant = HeadingVariant.h2, titleColor,children, className = '', actions}:{title:string, titleVariant?:HeadingVariant, titleColor?:HeadingColor, className?: string, children?: React.ReactNode, actions:React.ReactNode}) => {
+export const FormCard = ({title,titleVariant = HeadingVariant.h2, titleColor,children, navigate, className = '', actions}:{title:string, titleVariant?:HeadingVariant, titleColor?:HeadingColor, className?: string, children?: React.ReactNode, navigate?: () => void, actions?:React.ReactNode}) => {
   return (
-    <div className={styles.cardform_step + " " + className}>
+    <div className={styles.cardform_step + " " + className} onClick={navigate}>
       <header>
         <Heading color={titleColor} text={title} variant={titleVariant}/>
       </header>

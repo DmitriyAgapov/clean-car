@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import "yup-phone-lite";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { useStore } from "stores/store";
-import { Select } from "@mantine/core";
+import { MultiSelect, Select } from "@mantine/core";
 import logo from "components/common/layout/Logo/Logo";
 import { observer } from "mobx-react-lite";
 
@@ -150,7 +150,7 @@ export const FormModalSelectUsers = ({company_id, users}: {company_id: any, user
   console.log('users', users);
   console.log(usersStore.companyUsers);
   const initValues = {
-    users: '',
+    users: '' || [''],
   }
   const formData = [
     {
@@ -181,21 +181,22 @@ export const FormModalSelectUsers = ({company_id, users}: {company_id: any, user
         <Form style={{ display: 'grid', gap: '1rem', marginBottom: '2rem' }}>
             <Heading text={'Выбрать сотрудника из списка пользователей'} className={'!mb-0'} variant={HeadingVariant.h2} color={HeadingColor.accent}/>
             <p>Выберите пользователя</p>
-            <Select
+            <MultiSelect
               data={usersStore.companyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))}
               label={'Выберите сотрудника'}
+              multiple
               placeholder={'Выберите сотрудника'}
               value={values.users}
               onChange={(value) => {
-                setValues({users: value as string})
-                console.log(values);
                 // @ts-ignore
-
-                store.usersStore.companyUsersSelected.length = 0
+                setValues(  {users: value})
+                // console.log(values);
                 // @ts-ignore
-                store.usersStore.companyUsersSelected.push(store.usersStore.companyUsers.filter((el:any) => el.employee.id == value)[0].employee)
+                store.usersStore.setToCompanyUsersSelected(value)
+                // store.usersStore.companyUsersSelected.length = 0
                 // @ts-ignore
-                console.log(store.usersStore.companyUsers.filter((el:any) => el.employee.id == value)[0].employee)
+                // store.usersStore.addTocompanyUsersSelected(String(value), store.usersStore.companyUsers.filter((el:any) => el.employee.id == value)[0])
+                // @ts-ignore
               }}
               onSelect={(event: any) => {
                 console.log(event);

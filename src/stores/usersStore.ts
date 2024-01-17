@@ -43,7 +43,7 @@ export class UsersStore {
   loadingUsers: boolean = false
   loadingErrors: any = ''
   companyUsers: User[] = observable.array([])
-  companyUsersSelected: User[] = observable.array([])
+  companyUsersSelected =  observable.map({})
   get usersList() {
     return ({
       users: this.companyUsers,
@@ -114,6 +114,13 @@ export class UsersStore {
     }
     return result
   })
+  setToCompanyUsersSelected(ar: any) {
+    this.companyUsersSelected = observable.map(ar.map((el:any) => [el, this.companyUsers.filter((e: any) => e.employee.id == el)[0]]))
+  }
+  addTocompanyUsersSelected(id:number, data: any) {
+    // @ts-ignore
+    this.companyUsersSelected.set(id, data)
+  }
   async getUsers(company_id: any) {
     return await agent.Account.getCompanyUsers(Number(company_id))
       .then((resolve: any) => resolve)

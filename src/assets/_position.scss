@@ -106,3 +106,8 @@
 	position: relative;
   }
 }
+
+.subgrid {
+  display: grid;
+  grid-template-columns: subgrid;
+}

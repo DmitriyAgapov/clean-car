@@ -4,7 +4,8 @@ import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'co
 import { SvgChevron, SvgLoading, SvgSort } from 'components/common/ui/Icon'
 import Chips from 'components/common/ui/Chips/Chips'
 import { useLocation, useNavigate } from 'react-router-dom'
-import Pagination from 'components/common/Pagination/Pagination'
+// import Pagination from 'components/common/Pagination/Pagination'
+import {Pagination} from "@mantine/core";
 import DataFilter from 'components/common/layout/TableWithSort/DataFilter'
 import TableSearch from 'components/common/layout/TableWithSort/TableSearch'
 import { useDebouncedState } from '@mantine/hooks'
@@ -13,6 +14,7 @@ import { useWindowDimensions } from 'utils/utils'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { UserTypeEnum } from "stores/userStore";
 import { CompanyType } from "stores/companyStore";
+import { useStore } from "stores/store";
 
 type TableWithSortProps = {
     data: any[]
@@ -24,6 +26,7 @@ type TableWithSortProps = {
     search?: boolean
     initFilterParams?: {}
     filter?: boolean
+    pageSize?: number
     variant?: PanelVariant
 } & PanelProps
 
@@ -166,6 +169,8 @@ const TableWithSort = ({
     state,
     className,
     ar,
+    action,
+    pageSize = 10,
     background = PanelColor.default,
     style = PanelRouteStyle.default,
     initFilterParams,
@@ -175,12 +180,13 @@ const TableWithSort = ({
         index: 0,
         reversed: false,
     })
-
+    const store = useStore()
     const [dataSorted, setSortedData] = useState(data)
     const [currentPage, setCurrentPage] = useState(1)
     const handleCurrentPage = (value: any) => {
         // @ts-ignore
-        setCurrentPage(value)
+        setCurrentPage(value);
+        (dataSorted.length / pageSize - value) >= 3 && action
     }
 
     // Быстрый поиск
@@ -260,6 +266,7 @@ const TableWithSort = ({
     }
 
     if (state) return <SvgLoading className={'m-auto'} />
+    // @ts-ignore
     return (
         <Panel
             background={background ? background : PanelColor.glass}
@@ -275,11 +282,14 @@ const TableWithSort = ({
                 </>
             }
             footer={
-                <Pagination
-                    itemsLength={dataSorted.length}
-                    action={(event: any) => handleCurrentPage(event)}
-                    currenPage={currentPage}
-                />
+                dataSorted.length > 10 && <Pagination classNames={{ control: 'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent' }}
+                  total={dataSorted.length / pageSize} value={currentPage} onChange={(e ) => handleCurrentPage(e)}
+                  boundaries={2} defaultValue={10} />
+                // <Pagination
+                //     itemsLength={dataSorted.length}
+                //     action={(event: any) => handleCurrentPage(event)}
+                //     currenPage={currentPage}
+                // />
             }
             {...props}
         >
