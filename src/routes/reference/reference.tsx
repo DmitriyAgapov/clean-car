@@ -11,10 +11,14 @@ import { PermissionNames } from "stores/permissionStore";
 import DList from "components/common/ui/DList/DList";
 
 const ReferencePage = () => {
-  const store = useStore()
+
   const navigate = useNavigate()
   const location = useLocation()
+
+  const store = useStore()
   const { data, textData }: any = useLoaderData()
+  console.log(data);
+  if (location.pathname.includes('edit')) return <Outlet />
   const memoizedData = React.useMemo(() => {
       let itemsAr: any[] = []
       const items = function () {
@@ -38,7 +42,7 @@ const ReferencePage = () => {
       return itemsAr
   }, [data.results])
   // @ts-ignore
-  if (location.pathname.includes('edit')) return <Outlet />
+
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}

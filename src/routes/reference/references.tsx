@@ -17,7 +17,6 @@ const ReferencesPage = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const { data, page, pageRequest, textData }: any = useLoaderData()
-    console.log(data);
     if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
     if (location.pathname !== `/account/references/${textData.path}/`) return <Outlet />
     return (

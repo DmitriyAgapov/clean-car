@@ -274,10 +274,12 @@ const router = createBrowserRouter([
                             {
                                 path: ':id',
                                 element: <ReferencePage />,
+                                loader: referencesLoader,
                                 children: [
                                     {
                                         path: 'edit',
                                         element: <ReferencePageCreate />,
+                                        loader: referencesLoader,
                                     },
                                 ],
                             },

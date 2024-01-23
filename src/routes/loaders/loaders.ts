@@ -36,7 +36,6 @@ export const referencesLoader = async (props: any) => {
     const paramsPageSize = url.searchParams.get('page_size')
     const paramsOrdering = url.searchParams.get('ordering')
     const paramsSearchString = url.searchParams.get('searchString')
-    console.log('sp', paramsPage)
 
     const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('references') + 1]
     console.log('refUrlsRoot', refUrlsRoot)
@@ -52,10 +51,42 @@ export const referencesLoader = async (props: any) => {
         let dataMeta
         switch (refUrlsRoot) {
             case 'car_brands':
-                const {data:dataResults, status} =  await agent.Catalog.getCarBrandsWithModels({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
-                dataResults.results.forEach((e: any) => e.car_models.forEach((model:any) => data.push({                        id: model.id,                        name: e.name,                        model: model.name,                        car_type: model.car_type                    })))
-                dataMeta = dataResults
-                textData = { path: 'car_brands', title: 'Марки автомобилей', create: 'Добавить', referenceTitle: 'Марка автомобиля', createPage: 'Добавить марку автомобиля', tableHeaders: ['Бренд', 'Модель', 'Тип'], createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.', createPageForm: FormCreateCarBrand, createPageBack: 'Назад к списку марок автомобилей', }
+                if(props.params.id) {
+                    const { data: dataModel, status: statusDataModel } = await agent.Catalog.getCarModelWithBrand(props.params.id);
+
+                    if(statusDataModel === 200) data = {
+                        id: dataModel.id,
+                        brand: dataModel.brand.name,
+                        name: dataModel.name,
+                        car_type: dataModel.car_type
+                    }
+                    console.log(data);
+
+                } else {
+                    const { data: dataResults, status } = await agent.Catalog.getCarBrandsWithModels({
+                        page: paramsPage ?? 1,
+                        page_size: paramsPageSize ?? 10,
+                        name: paramsSearchString,
+                        ordering: paramsOrdering
+                    } as PaginationProps)
+                    dataResults.results.forEach((e: any) => e.car_models.forEach((model: any) => data.push({ id: model.id, name: e.name, model: model.name, car_type: model.car_type })))
+                    dataMeta = dataResults
+                }
+                textData = {
+                    path: 'car_brands',
+                    labelsForItem: ['Марка', 'Класс', 'Модель'],
+                    title: 'Марки автомобилей',
+                    create: 'Добавить',
+                    referenceTitle: 'Марка автомобиля',
+                    createPage: 'Добавить марку автомобиля',
+                    tableHeaders: ['Бренд', 'Модель', 'Тип'],
+                    createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
+                    createPageForm: FormCreateCarBrand.bind(props),
+                    createPageBack: 'Назад к списку марок автомобилей',
+                    createAction:  agent.Catalog.createCarBrandWithExistBrand,
+                    editAction:  agent.Catalog.editCity,
+                    editPageForm: FormCreateCarBrand.bind(data),
+                }
                 break
             case 'cities':
                 if(props.params.id) {const { data: dataCities, status: statusCities } = await agent.Catalog.getCity(props.params.id); if(statusCities === 200) data = Object.assign(dataCities,{timezone: 'Нет пояса'})}
@@ -134,6 +165,7 @@ export const referencesLoader = async (props: any) => {
             default:
                 return
         }
+
         return ({
             ...dataMeta,
             results: data,

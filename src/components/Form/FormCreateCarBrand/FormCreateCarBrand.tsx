@@ -57,6 +57,7 @@ const dataCreate =  {
 }
 const FormCreateCarBrand = () => {
   const { data, page, pageRequest, textData }: any = useLoaderData()
+  console.log(data);
   const store = useStore()
   const navigate = useNavigate()
   const editStatus = !!data.results.name

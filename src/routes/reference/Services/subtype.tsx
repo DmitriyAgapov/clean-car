@@ -19,7 +19,7 @@ const ServicesSubTypePage = () => {
     const location = useLocation()
     const params = useParams()
     const { data, page, pageRequest, textData }: any = useLoaderData()
-    const services:any = useRouteLoaderData(`service_id:id`);
+
     return (
         <Section type={SectionType.default}>
             <Panel
