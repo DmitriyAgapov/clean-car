@@ -49,7 +49,6 @@ const MyProfilePage = () => {
       return null
   }, [user])
 
-  if(user)
     return (
       <Section type={SectionType.default} >
         <Panel
@@ -101,7 +100,6 @@ const MyProfilePage = () => {
         </Panel>
     </Section>
   )
-  return <SvgLoading/>
 }
 
 export default observer(MyProfilePage)

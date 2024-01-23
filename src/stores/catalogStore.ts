@@ -91,7 +91,24 @@ export class CatalogStore {
             return this.cities
         }
     })
-
+    createCarBrand = flow(function* (this: CatalogStore, car_class: string, model: string, brandId?: number, brandName?: string) {
+        if(brandId) {
+            try {
+                const { data } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_class, model)
+                return data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        if(brandName) {
+            try {
+                const { data } = yield agent.Catalog.createCarBrandWithNewBrand(brandName, car_class, model)
+                return data
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    })
     get brandAndModels() {
         return this.carBrandModelsReference
     }

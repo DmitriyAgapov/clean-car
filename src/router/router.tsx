@@ -45,6 +45,9 @@ import ReferencesPage from 'routes/reference/references'
 import ReferencePage from 'routes/reference/reference'
 import ReferencePageCreate from 'routes/reference/referencePageCreate'
 import ReferenceIndex from "routes/reference/referenceIndex";
+import ServicesPage from "routes/reference/Services/references";
+import ServicePage from "routes/reference/Services/reference";
+import ServicesSubTypePage from "routes/reference/Services/subtype";
 
 const reference = {
     path: 'references',
@@ -273,15 +276,16 @@ const router = createBrowserRouter([
                                 element: <ReferencePage />,
                                 children: [
                                     {
-                                        path: 'create',
-                                        element: <ReferencePageCreate />,
-                                    },
-                                    {
                                         path: 'edit',
                                         element: <ReferencePageCreate />,
                                     },
                                 ],
                             },
+                            {
+                                path: 'create',
+                                element: <ReferencePageCreate />,
+                                loader: referencesLoader,
+                            }
                         ],
                     },
                     {
@@ -292,28 +296,40 @@ const router = createBrowserRouter([
                             {
                                 path: ':id',
                                 element: <ReferencePage />,
+                                loader: referencesLoader,
                                 children: [
                                     {
-                                        path: 'create',
-                                        element: <ReferencePageCreate />,
-                                    },
-                                    {
                                         path: 'edit',
-                                        element: <ReferencePageCreate />,
+                                        element: <ReferencePageCreate edit={true}/>,
+                                        loader: referencesLoader,
                                     },
                                 ],
+                            },
+                            {
+                                path: 'create',
+                                element: <ReferencePageCreate />,
+                                loader: referencesLoader
                             },
                         ],
                     },
                     {
                         path: 'services',
-                        element: <ReferencesPage />,
+
+                        element: <ServicesPage />,
+
                         loader: referencesLoader,
                         children: [
                             {
                                 path: ':id',
-                                element: <ReferencePage />,
+                                id: `service_id`,
+                                element: <ServicePage />,
+                                loader: referencesLoader,
                                 children: [
+                                    {
+                                        path: ':subtype_id',
+                                        element: <ServicesSubTypePage/>,
+                                        loader: referencesLoader,
+                                    },
                                     {
                                         path: 'create',
                                         element: <ReferencePageCreate />,

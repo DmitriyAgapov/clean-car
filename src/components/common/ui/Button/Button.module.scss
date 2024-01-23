@@ -117,9 +117,13 @@ user-select: none ;
 
 	position: relative;
 	padding: 1px;
-	-webkit-background-clip: text !important;
-	-webkit-text-fill-color: transparent !important;
-
+	//-webkit-background-clip: text !important;
+	//-webkit-text-fill-color: transparent !important;
+	&:hover, &:focus {
+	  background: var(--accentColor);
+	  border-color: var(--accentColor);
+	  color: black;
+	}
 	&:before {
 	  content: '';
 	  border-radius: 1.25rem;

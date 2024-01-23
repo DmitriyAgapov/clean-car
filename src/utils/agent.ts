@@ -7,7 +7,7 @@ import { User } from 'stores/userStore'
 import { toJS } from 'mobx'
 import { Company, CompanyType } from "stores/companyStore";
 
-export type PaginationProps = {name?: string, ordering?: string, page?: number, page_size?: number}
+export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
 interface FilterPropsCars {
   number?: number
@@ -41,7 +41,6 @@ const requests = {
     .then((response) => response.data)
     .catch(handleErrors),
   get: (url: string, body?: any, pagination?:PaginationProps) => {
-    console.log(pagination);
     return axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
@@ -211,10 +210,60 @@ const Profile = {
     // 	requests.del(`/profiles/${username}/follow`)
 }
 const Catalog = {
-  getCities: (params?: PaginationProps) => requests.get('/catalog/cities/', {}, params),
-  getServices: (params?: PaginationProps) => requests.get('/catalog/cities/', {}, params),
-  getCarBrands: (params?: PaginationProps) => requests.get('/catalog/car_brands/', {}, params),
-  getCarBrandModels: (brand_id:number, params?: PaginationProps) => requests.get(`/catalog/${brand_id}/car_models/`),
+    getCarBrands: (params?: PaginationProps) => requests.get('/catalog/car_brands', {}, params),
+    createCarBrandWithNewBrand: (brand_name: string, car_class: string, model: string) =>
+        requests.post('/catalog/car_models/create_with_new_brand/', {
+            name: model,
+            car_type: car_class,
+            brand_name: brand_name,
+        }),
+    createCarBrandWithExistBrand: (brand: number, car_class: string, model: string) =>
+        requests.post('/catalog/car_models/create_with_new_brand/', {
+            name: model,
+            car_type: car_class,
+            brand_name: brand,
+        }),
+    getCarBrandModels: (brand_id: number, params?: PaginationProps) =>
+        requests.get(`/catalog/car_brands/${brand_id}/car_models/list`, {}, params),
+    getCarBrandsWithModels: (params?: PaginationProps | undefined) =>
+        requests.get(`/catalog/car_brands_with_models`, {}, params),
+    getCities: (params?: PaginationProps) => requests.get('/catalog/cities/', {}, params),
+    getCity: (id: number) => requests.get(`/catalog/cities/${id}/retrieve/`),
+    createCity: (name: string, is_active: boolean) =>
+        requests.post('/catalog/cities/create/', { name: name, is_active: is_active }),
+    deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete`),
+    editCity: (id: number, name: string, is_active: boolean, timezone: string) =>
+        requests.patch(`/catalog/cities/${id}/update`, { name: name, id: id, is_active: is_active, timezone: timezone }),
+    getServices: (params?: PaginationProps) => requests.get('/catalog/services/', {}, params),
+    getService: (id: number) => requests.get(`/catalog/services/${id}/retrieve/`),
+    createSubtype: (id: number, name: string, is_active: boolean) =>
+        requests.post('/catalog/services/subypes/create/', { name: name, is_active: is_active, service_type: id }),
+    createOption: (id: number, name: string, is_active: boolean) =>
+        requests.post('/catalog/services/options/create/', { name: name, is_active: is_active, service_type: id }),
+    editSubtype: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) =>
+    {console.log('props', id, subtype_id, name, is_active)
+     return requests.patch(`/catalog/services/subypes/${id}/update/`, {
+            name: name,
+            is_active: is_active,
+            service_type: subtype_id,
+        })},
+    getServiceOption: (id: number) => requests.get(`/catalog/services/options/${id}/retrieve`),
+    editServiceOption: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.patch(`/catalog/services/options/${id}/update`, {
+      name: name,
+      is_active: is_active,
+      service_type: subtype_id
+    }),
+     createServiceOption: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.post(`/catalog/services/options/create/`, {
+      name: name,
+      is_active: is_active,
+       service_subtype: subtype_id
+    }),
+
+    getServiceSubtypes: (id: number) => requests.get(`/catalog/services/${id}/retrieve`),
+    getServiceSubtype: (subtype_id: number, params?: PaginationProps) =>
+        requests.get(`/catalog/services/subypes/${subtype_id}/retrieve`, {}, params),
+    getServiceSubtypesListByServiceId: (id: number, params?: PaginationProps) =>
+        requests.get(`/catalog/services/${id}/subypes/`, {}, params),
 }
 const Cars = {
   getCompanyCars: (company_id: number, params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars/${company_id}/list/`, params),
@@ -225,7 +274,7 @@ const Account = {
   getCompanyUsers: (company_id:number) => requests.get(`/accounts/${company_id}/users/list/`),
   getCompanyUser: (company_id: number, id: number) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
   createCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/users/create/`, data),
-  updateCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/profile/${data.id}/update/`, data),
+  updateCompanyUser: (company_id: number, data:any) => requests.put(`/accounts/${company_id}/profile/${data.id}/update/`, data),
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),

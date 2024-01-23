@@ -15,6 +15,7 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import { UserTypeEnum } from "stores/userStore";
 import { CompanyType } from "stores/companyStore";
 import { useStore } from "stores/store";
+import agent from "utils/agent";
 
 type TableWithSortProps = {
     data: any[]
@@ -113,22 +114,21 @@ const RowData = (props: any) => {
         if (props.query && props.query.rootRoute) {
             return navigate(props.query.rootRoute)
         }
-        const route = location.pathname + queryCompanyTypeUrl + queryUrl + `/${props.id}`
+        const route = location.pathname + queryCompanyTypeUrl + queryUrl + `${props.id}`
 
         props.id ? navigate(route) : void null
     }
 
     const propsRender = () => {
-
         const ar = []
         for (const key in props) {
             if (typeof props[key] !== 'object') {
-                if (props[key] === 'Активна') {
+                if (props[key] === 'Активна' || props[key] === true) {
                     ar.push(<td key={key}
                       className={styles.tableCell}>
                         <Chips state={true} />
                     </td>,)
-                } else if(props[key] === 'Неактивна') {
+                } else if(props[key] === 'Неактивна'  || props[key] === false) {
                     ar.push(<td key={key}
                       className={styles.tableCell}>
                         <Chips state={false} />
@@ -162,7 +162,7 @@ const RowData = (props: any) => {
 }
 
 
-const TableWithSort = ({
+const TableWithSortNew = ({
     variant,
     data,
     search = false,
@@ -182,59 +182,43 @@ const TableWithSort = ({
         index: 0,
         reversed: false,
     })
-    const store = useStore()
-    const navigate = useNavigate();
-    let [searchParams, setSearchParams] = useSearchParams();
-    const [dataSorted, setSortedData] = useState(data)
+    const {data:loaderData, textData}:any = useLoaderData()
+
+    let location = useLocation()
+    const navigate = useNavigate()
+    let [searchParams, setSearchParams] = useSearchParams()
+    // @ts-ignore
+    const [sortedField, setSortedField] = useState(textData.tableHeaders[0])
     const [currentPage, setCurrentPage] = useState(1)
-    const handleCurrentPage = (value: any) => {
-        // @ts-ignore
-        setCurrentPage(value);
-        (dataSorted.length / pageSize - value) >= 3 && action
-    }
+
+    const handleCurrentPage = React.useCallback((value: any) => {
+        setCurrentPage(value)
+        setSearchParams((prevstate) => ({...prevstate, page: value}));
+    }, [])
 
     // Быстрый поиск
-
     const [fastSearchString, setFastSearchString] = useDebouncedState('', 200)
 
-    const fastSearch = React.useCallback(() => {
-        const newAr: any[] = []
-        dataSorted.forEach(item => {
-            if(JSON.stringify(item).includes(fastSearchString)) {
-                newAr.push(item)
-            }
-        })
-        setSortedData(newAr)
+    const fastSearch = React.useCallback((event: React.BaseSyntheticEvent) => {
+        event.preventDefault()
+        setFastSearchString(event.target.value)
+
+        if(fastSearchString.length > 0 )  {
+            setSearchParams((prevstate) => ({...prevstate, searchString: event.target.value}));
+        } else {
+            setCurrentPage(1)
+        }
     }, [fastSearchString])
 
-    const handleFastSearch = React.useCallback((e: any) => {
-        setFastSearchString(e.target.value)
-        setSearchParams(prevState => ({...prevState, searchString: e.target.value}))
-
-        if(e.target.value.length === 0) {
-            setSearchParams()
-        }
-        // revalidator.revalidate();
-
-    }, [searchParams])
-
     //Сортировка результатов
-    const someData = React.useCallback(() => {
-        let sortData = Object.keys(dataSorted[0])[filterString.index]
-        const fData = dataSorted.sort((a, b) => {
-            if (a[sortData] < b[sortData]) {
-                return 1
-            }
-            if (a[sortData] > b[sortData]) {
-                return -1
-            }
-            return 0
-        })
-        if (!filterString.reversed) {
+    const someData = React.useCallback((event:  React.BaseSyntheticEvent) => {
+        event.preventDefault()
+        setFastSearchString(event.target.value)
 
-            setSortedData(fData.reverse())
+        if(fastSearchString.length > 0 )  {
+            setSearchParams((prevstate) => ({...prevstate, searchString: event.target.value}));
         } else {
-            setSortedData(fData)
+            setCurrentPage(1)
         }
     }, [filterString])
 
@@ -243,41 +227,24 @@ const TableWithSort = ({
 
     const filteredData = useMemo(() => {
         // @ts-ignore
-        function findUnique({ ar, key }) {
-            const tempAr: string | any[] = ['Все']
-            ar.forEach((item: any) => {
-                if (typeof item[key] === 'boolean') {
-                    item[key] === true ? (item[key] = 'Активна') : (item[key] = 'Неактивна')
-                }
-                if (!tempAr.includes(item[key])) {
-                    tempAr.push(item[key])
-                }
-            })
-            return tempAr
-        }
-        // @ts-ignore
-        if(filterParams) return filterParams.map((item: any) => ({
-            label: item.label,
-            options: findUnique({ ar: dataSorted, key: item.value }),
-        }))
+        return null
     }, [filterParams])
 
     const RowDataMemoized = React.useMemo(() => {
-        return dataSorted
-            .slice(currentPage == 1 ? currentPage - 1 : (currentPage - 1) * 10, currentPage * 10)
-            .map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
-    }, [filterString, currentPage, fastSearchString])
+        // @ts-ignore
+        return loaderData.results.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
+    }, [loaderData])
 
-    const handleHeaderAction = (props: any) => {
-        setFilterString({
-            index: props.index,
-            reversed: props.reversed,
-        })
-        someData()
-    }
+    const handleHeaderAction = React.useCallback((event: React.BaseSyntheticEvent) => {
+        // @ts-ignore
+        setSortedField(textData.tableHeaders[event.index])
+        // @ts-ignore
+        setSearchParams((prevstate) => ({...prevstate, ordering: sortedField}));
+        setCurrentPage(1)
+    }, [sortedField])
 
     if (state) return <SvgLoading className={'m-auto'} />
-    // @ts-ignore
+
     return (
         <Panel
             background={background ? background : PanelColor.glass}
@@ -288,29 +255,24 @@ const TableWithSort = ({
             headerClassName={''}
             header={
                 <>
-                    {search && <TableSearch action={handleFastSearch} />}
+                    {search && <TableSearch action={fastSearch} />}
                     {filter && <DataFilter filterData={filteredData} />}
                 </>
             }
             footer={
-                dataSorted.length > 10 && (
+             ( loaderData.count / pageSize) > 1 && (
                     <Pagination
                         classNames={{
                             control:
                                 'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
                         }}
-                        total={dataSorted.length / pageSize}
+                        total={loaderData.count / pageSize}
                         value={currentPage}
                         onChange={(e) => handleCurrentPage(e)}
                         boundaries={2}
                         defaultValue={10}
                     />
                 )
-                // <Pagination
-                //     itemsLength={dataSorted.length}
-                //     action={(event: any) => handleCurrentPage(event)}
-                //     currenPage={currentPage}
-                // />
             }
             {...props}
         >
@@ -322,4 +284,4 @@ const TableWithSort = ({
     )
 }
 
-export default TableWithSort;
+export default TableWithSortNew;

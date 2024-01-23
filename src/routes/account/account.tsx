@@ -10,11 +10,13 @@ import UserMenu from 'components/common/layout/UserMenu/UserMenu'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { ButtonVariant } from 'components/common/ui/Button/Button'
 import { observer } from 'mobx-react-lite'
+import { Loader } from "@mantine/core";
 
 const AccountPage = () => {
-
-    return (
+    const store = useStore()
+  return (
         <Layout
+
             className={'page-account'}
             headerContent={
                 <>
@@ -34,6 +36,7 @@ const AccountPage = () => {
             <SvgAccount className={styles.svg} />
         </Layout>
     )
+
 }
 
 export default observer(AccountPage)

@@ -48,7 +48,6 @@ const FilialsPage = () => {
         style={PanelRouteStyle.company}
         ar={['Статус', 'Название', 'Город', 'Тип', 'Принадлежит']}
         data={store.companyStore.filials.map((item: any) => {
-
           return ({
           status: item.is_active as boolean,
           company: item.name,
@@ -57,7 +56,7 @@ const FilialsPage = () => {
           parent: item.parent,
           id: item.id,
           query: {
-            company_id: item.parent
+            company_id: item.parent.id
           }
         })})}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}

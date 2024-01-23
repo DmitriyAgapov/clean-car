@@ -57,7 +57,6 @@ export class PermissionStore {
       allPermissionsState: computed,
       aPState: computed
     }, {autoBind: true})
-
   }
 
   permissions: IObservableArray<Permissions> = observable.array([])

@@ -47,6 +47,7 @@ const CarsPage = () => {
       <TableWithSort
         background={PanelColor.glass}
         filter={true}
+        total={10}
         search={true}
         ar={['Статус', 'Марка', 'Модель', 'Тип', 'Гос-номер', 'Принадлежит', 'Город']}
         // @ts-ignore

@@ -117,12 +117,12 @@ export class AppStore {
     this.appRouteName = routeName
   }
 
-  setModal({ state, text = '', component, actions ,className = '', header}: {component?: ReactNode, header?: string | ReactNode | ReactNode[]; state: boolean; className?: string, text?: string | ReactNode | ReactNode [] | undefined; actions: ReactNode }) {
+  setModal({ state, text = '', component, actions ,className = '', header}: {component?: ReactNode, header?: string | ReactNode | ReactNode[]; state: boolean; className?: string, text?: string | ReactNode | ReactNode [] | undefined; actions?: ReactNode }) {
     if(text) {
       this.modal = { state: state, text: text, className: className, actions: actions, header: header }
     }
     if(component) {
-      this.modal = { state: state, className: className, component: component, actions: actions, header: header }
+      this.modal = { state: state, className: className, component: component,  header: header, actions: actions, }
     }
   }
 

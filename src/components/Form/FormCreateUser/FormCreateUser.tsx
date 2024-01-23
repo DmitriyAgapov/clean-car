@@ -253,13 +253,13 @@ const FormCreateUser = ({ user, edit }: any) => {
             is_active: user.employee.is_active,
         }
     }
-    React.useEffect(() => {
-        if (companyid && id && company_type) {
-            const currentUser = store.usersStore.getUser(companyid, Number(id), company_type as any)
-            // console.log(companyid)
-            // console.log(currentUser)
-        }
-    }, [])
+    // React.useEffect(() => {
+    //     if (companyid && id && company_type) {
+    //         const currentUser = store.usersStore.getUser(companyid, Number(id), company_type as any)
+    //         // console.log(companyid)
+    //         // console.log(currentUser)
+    //     }
+    // }, [])
     const navigate = useNavigate()
     // @ts-ignore
     return (
@@ -267,7 +267,7 @@ const FormCreateUser = ({ user, edit }: any) => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values, FormikHelpers) => {
-
+                console.log(values.is_active);
                 let res: any
                 if(edit) {
                     const data = {

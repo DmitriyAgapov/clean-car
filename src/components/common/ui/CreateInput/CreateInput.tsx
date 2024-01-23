@@ -48,16 +48,24 @@ const CreateInput = ({
   //   action(event);
   //
   // }
+  const { values, submitForm, errors , setFieldValue, touched, setValues } = useFormikContext()
   switch (type) {
     case 'text':
 
       input = (
-        <label className={'account-form__input w-full flex-grow ' + className} htmlFor={name}>
+        <label className={'account-form__input w-full flex-grow ' + className} htmlFor={name}  data-form_error={
+          //@ts-ignore
+           errors[name] && touched[name]  && 'error'}>
           {text}
 
-          <input id={name} name={name} placeholder={placeholder} type={type}
+          <input id={name} name={name} placeholder={placeholder} type={type} onInput={(event) =>
+
+            setFieldValue(name, event.currentTarget.value, true)
+          }
             // @ts-ignore
             onChange={(e) => action(e)} value={value} {...props}/>
+          {//@ts-ignore
+            errors[name] && touched[name] ? (<div className={'form-error'}>{errors[name]}</div>) : null}
         </label>
       )
       break

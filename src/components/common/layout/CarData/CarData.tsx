@@ -33,6 +33,7 @@ const CarData =  ():React.ReactNode | JSX.Element => {
     pageSize={pageSize}
     variant={PanelVariant.dataPadding}
     search={true}
+		total={10}
     background={PanelColor.glass}
     action={() => nextPage()}
     className={'col-span-full table-groups'}

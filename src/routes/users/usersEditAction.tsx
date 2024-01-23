@@ -15,7 +15,6 @@ const UsersPageEditAction = () => {
   const store = useStore()
   const navigate = useNavigate()
   const { user }: any = useLoaderData()
-  console.log(user);
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>

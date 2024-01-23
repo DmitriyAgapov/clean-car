@@ -37,9 +37,7 @@ const FormInputs = observer(():JSX.Element => {
         store.catalogStore.clearBrandModels()
     }
     const[belongTo, setBelongTo] = useState('company')
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
+
     return (
       <>
           <>
@@ -291,12 +289,12 @@ const FormCreateCar = ({ user, edit }: any) => {
                     is_active: values.is_active,
                     brand: values.brand,
                     model: values.model,
-                    employees: values.employees[0]
+                    employees: values.employees
                 }
                 console.log(values);
-                store.formStore.setFormDataCreateCar( values)
+                store.formStore.setFormDataCreateCar(values)
                 changeStep(2)
-                // store.formStore.formSendDataUser('formCreateUser', data)
+                store.formStore.formSendDataUser('formCreateUser', data)
             }}
         >
             {({

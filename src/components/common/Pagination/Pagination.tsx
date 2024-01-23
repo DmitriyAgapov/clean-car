@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import styles from './Pagination.module.scss'
 import { SvgChevron } from '../ui/Icon'
+import { useParams, useSearchParams } from "react-router-dom";
 
 type PaginationProps = {
     itemsLength: number

@@ -320,6 +320,7 @@ export class CompanyStore {
         return this.filials
     })
     createFilial = flow(function* (this: CompanyStore, data: any, type: string, company_id: number) {
+        console.log(type, company_id, data);
         this.loadingCompanies = true
         try {
             const response = yield agent.Filials.createFilial(type, company_id, data)
