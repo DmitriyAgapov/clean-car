@@ -7,11 +7,9 @@ import { useStore } from "stores/store";
 import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { SvgBackArrow } from "components/common/ui/Icon";
 import { PermissionNames } from "stores/permissionStore";
-import DList from "components/common/ui/DList/DList";
 import { dateTransform } from "utils/utils";
 import { FormCard } from "components/Form/FormCards/FormCards";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import agent from "utils/agent";
 import AddType from "routes/reference/Services/addType";
 import AddOption from "routes/reference/Services/addOption";
 import { Pagination } from "@mantine/core";
@@ -22,15 +20,13 @@ const ServicePage = () => {
     const params = useParams()
     const navigate = useNavigate()
     const location = useLocation()
-    if (location.pathname.includes('edit')) return <Outlet />
-    if (location.pathname.split('/')[location.pathname.split('/').length - 1] === params.subtype_id) return <Outlet />
-    const { data, textData, pageRequest }: any = useLoaderData()
-    let [searchParams, setSearchParams] = useSearchParams()
-    const activePage = String(searchParams.get('page'))
-    console.log(location.pathname.split('/')[location.pathname.split('/').length - 1])
-    const memoizedData = React.useMemo(() => {
+   const { data, textData, pageRequest }: any = useLoaderData()
 
-        return data.results.subtypes.results.map((subtype: any) => (
+  let [searchParams, setSearchParams] = useSearchParams()
+
+
+    const memoizedData = React.useMemo(() => {
+        return data.results?.subtypes?.results?.map((subtype: any) => (
             <FormCard
                 title={subtype.name}
                 titleVariant={HeadingVariant.h4}
@@ -125,9 +121,11 @@ const ServicePage = () => {
                 </div>
             </FormCard>
         ))
-    }, [data.results])
+    }, [data])
     // @ts-ignore
 
+  if (location.pathname.includes('edit')) return <Outlet />
+  if (location.pathname.split('/')[location.pathname.split('/').length - 1] === params.subtype_id) return <Outlet />
 
     return (
         <Section type={SectionType.default}>
@@ -227,7 +225,7 @@ const ServicePage = () => {
                             }}
 
                           boundaries={1}
-                          value={Number(activePage)}
+                          value={Number(String(searchParams.get('page')))}
                           defaultValue={1}
                         />
                     )

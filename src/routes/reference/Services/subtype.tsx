@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
@@ -19,7 +19,9 @@ const ServicesSubTypePage = () => {
     const location = useLocation()
     const params = useParams()
     const { data, page, pageRequest, textData }: any = useLoaderData()
-
+    useEffect(() => {
+      console.log(data);
+    }, [data])
     return (
         <Section type={SectionType.default}>
             <Panel
