@@ -15,7 +15,6 @@ import AddOption from "routes/reference/Services/addOption";
 import { Pagination } from "@mantine/core";
 
 const ServicePage = () => {
-
     const store = useStore()
     const params = useParams()
     const navigate = useNavigate()

@@ -43,19 +43,43 @@ export class UserStore {
       properties: ['currentUser','permissionsVariants','myProfileData', 'currentUserPermissions'],
       storage: sessionStorage,
     });
-    reaction(() => this.currentUser.id,
+    reaction(() => this.currentUser,
        (currentUser) => {
-        if(currentUser !== 0) {
+        if(currentUser ) {
+
           console.log('Load my profile');
+
+          action(() => this.pullUser())
           action(() => this.loadMyProfile())
         }
       }
     )
+    reaction(() => this.myProfileState,
+      (user) => {
+      if(user.user == null) {
+       action(() => appStore.token = "")
+     appStore.token = ""
+        console.log('not logged in');
+      } else {
+        console.log('logged in');
+      }
+
+      }
+
+      )
+    reaction(() => this.loggedUser,
+      (loggedUser) => {
+        if(loggedUser) {
+          console.log('true');
+        } else {
+          console.log('false');
+        }
+      })
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
-        console.log(permissions, 'permissions');
+        // console.log(permissions, 'permissions');
         if(permissions.id && permissions.permissions.length > 0) {
-          console.log('load permissions');
+          // console.log('load permissions');
           this.loadUserPermissions()
         } else if(this.currentUser.id) {
           action(() => this.loadMyProfile())
@@ -79,20 +103,20 @@ export class UserStore {
     error:  null,
     roles: [] = []
   }
-
+  loggedUser: boolean = false
   get roles() {
     const roles = []
     if(this.isAdmin) {
       roles.push(UserTypeEnum.admin)
     }
-    // @ts-ignore
-    if(this.myProfileData.user.account_bindings?.filter(value => value.company.company_type == "Компания-Заказчик").length > 0) {
+    if(this.myProfileData.user) {
+    if(this.myProfileData.user.account_bindings?.filter((value:any) => value.company.company_type == "Компания-Заказчик").length > 0) {
       roles.push(UserTypeEnum.customer)
     }
-    // @ts-ignore
-    if(this.myProfileData.user?.account_bindings?.filter(value => value.company.company_type == "Компания-Исполнитель").length > 0) {
+
+    if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Компания-Исполнитель").length > 0) {
       roles.push(UserTypeEnum.performer)
-    }
+    }}
     return roles
   }
   loadMyProfile() {
@@ -171,11 +195,11 @@ export class UserStore {
 
   loadUserPermissions() {
     if(this.isAdmin) {
-      console.log('is admin');
+      // console.log('is admin');
       this.setCurrentPermissions(this.myProfileData.permissions.permissions.map((el: any) => [String(el.name), el]));
       appStore.setAppType(UserTypeEnum.admin)
     } else if (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings.length > 0) {
-      console.log('is not admin');
+      // console.log('is not admin');
       this.setCurrentPermissions(this.myProfileData.user.account_bindings[0].group.permissions.map((el: any) => [label(el.name), el]));
     }
   }
@@ -195,13 +219,17 @@ export class UserStore {
 
   pullUser() {
       this.loadingUser = true
-      return agent.Auth.current()
+      return  agent.Auth.current()
         .then((r: any) => {
           runInAction(() => {
             this.currentUser = r
           })
         })
-        .catch(action((error) => this.updatingUserErrors = error))
+        .catch(action((error) => {
+          this.updatingUserErrors = error
+        console.log('error');
+        console.log(error);
+      }))
         .finally(action(() => this.loadingUser = false))
   }
 
@@ -236,8 +264,9 @@ export class UserStore {
 
 const userStore = new UserStore()
 autorun(() => {
-  console.log(userStore);
-  console.log(userStore.currentUser.is_staff);
+  console.log(userStore.updatingUserErrors);
+  console.log(userStore.myProfileState);
+   console.log(userStore.currentUser.is_staff);
   console.log(userStore.isAdmin);
 })
 export default userStore

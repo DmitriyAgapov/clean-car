@@ -6,6 +6,7 @@ import  'utils/axiosConfig'
 import { User } from 'stores/userStore'
 import { toJS } from 'mobx'
 import { Company, CompanyType } from "stores/companyStore";
+import { errors } from "jose";
 
 export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
@@ -40,15 +41,15 @@ const requests = {
     })
     .then((response) => response.data)
     .catch(handleErrors),
-  get: (url: string, body?: any, pagination?:PaginationProps) => {
-    return axios({
+  get: (url: string, body?: any, pagination?:PaginationProps) =>
+     axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
       method: 'GET',
       params: pagination
-    })},
-  // .then((response) => response.data)
-  // .catch(handleErrors),
+    })
+  .then((response:any) => response)
+  .catch(handleErrors),
 
   put: (url: string, body: any) =>
     axios({
@@ -75,9 +76,9 @@ const requests = {
       // headers: tokenPlugin(),
       method: 'Post',
       data: body,
-    }),
-  // .then((response) => response)
-  // .catch(handleErrors),
+    })
+  .then((response) => response)
+  .catch(handleErrors),
   postSuggest: (query: string) =>
     axiosSuggest({
       url: 'http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
@@ -95,21 +96,26 @@ const requests = {
 const handleErrors = (err: AxiosError) => {
   if (err && err.response && err.response.status === 401) {
     if(appStore.tokenRefresh) {
-      // agent.Auth.tokenRefresh()
-      //   .then((resolve:any) => resolve.data)
-      //   .then((data) => {
-      //     appStore.setToken(null)
-      //     appStore.setToken(data.access)
-      // })
-      //   .catch((err) => {
-      //     appStore.setTokenError(err.response.data)
-      //     authStore.logout()
-      // })
+      agent.Auth.tokenRefresh()
+        .then((resolve:any) => resolve.data)
+        .then((data) => {
+          appStore.setToken(null)
+          appStore.setToken(data.access)
+      })
+        .catch((err) => {
+          appStore.setTokenError(err.response.data)
+          authStore.logout()
+      })
     }
   }
   return err
 }
-
+const Price = {
+  getAllPrice: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params)
+}
+const Bids = {
+  getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params)
+}
 const Utils = {
   suggest: ({ query }:{query: string}) => requests.postSuggest(query)
 }
@@ -131,7 +137,9 @@ const Auth = {
       }
     })
   },
-  tokenRefresh: () => requests.post('/token/refresh/', { refresh:  window.localStorage.getItem('jwt_refresh')}),
+  tokenRefresh: () => requests.post('/token/refresh/',{
+  "refresh": appStore.tokenRefresh
+  }),
   login: (email: string, password: string) => requests.post('/token/', { email: email, password: password }),
   register: (first_name: string, last_name: string, email: string, phone: string, password: string) =>
     requests.post('/accounts/register/', {
@@ -226,6 +234,8 @@ const Catalog = {
         }),
     getCarBrandModels: (brand_id: number, params?: PaginationProps) =>
         requests.get(`/catalog/car_brands/${brand_id}/car_models/list`, {}, params),
+    getCarModels: (params?: PaginationProps) =>
+        requests.get(`/catalog/car_models/list`, {}, params),
     getCarBrandsWithModels: (params?: PaginationProps | undefined) =>
         requests.get(`/catalog/car_brands_with_models`, {}, params),
     getCities: (params?: PaginationProps) => requests.get('/catalog/cities/', {}, params),
@@ -268,7 +278,9 @@ const Catalog = {
 }
 const Cars = {
   getCompanyCars: (company_id: number, params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars/${company_id}/list/`, params),
-  getAdminCars: ( params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars_admin/list/`, {...params, ...filter}),
+  getAdminCars: ( params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars_admin/list/`, {}, params),
+  getAdminCar: (id: number) => requests.get(`/cars_admin/${id}/retrieve/`),
+  getCompanyCar: (company_id: number , id: number)  => requests.get(`/cars/${company_id}/${id}/retrieve/`),
   createCompanyCar: (company_id: number, data: any) => requests.post(`/cars/${company_id}/create/`, data),
 }
 const Account = {
@@ -283,6 +295,8 @@ const Filials = {
   createFilial: (company_type: string, company_id: number, data: any) => requests.post(`/${company_type}_branches/${company_id}/create/`, data),
 }
 const agent = {
+  Price,
+  Bids,
   Utils,
   Cars,
   Auth,

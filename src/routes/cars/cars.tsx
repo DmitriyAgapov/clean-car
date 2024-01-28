@@ -4,19 +4,21 @@ import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { Company, CompanyType } from "stores/companyStore";
 import { User } from 'stores/usersStore'
 import { UserTypeEnum } from "stores/userStore";
 import { PermissionNames } from "stores/permissionStore";
+import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 
 const CarsPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  console.log(store.carStore)
+  const { data, page, pageRequest, textData }: any = useLoaderData()
+  console.log(data);
   if ('/account/cars' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -43,32 +45,20 @@ const CarsPage = () => {
             />}
           </>
         }
-      ></Panel>
-      <TableWithSort
-        background={PanelColor.glass}
-        filter={true}
-        total={10}
-        search={true}
-        ar={['Статус', 'Марка', 'Модель', 'Тип', 'Гос-номер', 'Принадлежит', 'Город']}
-        // @ts-ignore
-        data={store.usersStore.users.map((item: { company: Company; group: number; employee: User }) => ({
-          state: item.employee.is_active,
-          name: item.employee.first_name + ' ' + item.employee.last_name,
-          phone: item.employee.phone,
-          email: item.employee.email,
-          group: item.company.company_type,
-          company: item.company.name,
-          city: item.company.city.name,
-          id: item.employee.id,
-          query: {
-            type: item.company.company_type == 'Компания-заказчик' ? UserTypeEnum.customer : UserTypeEnum.performer,
-            company_id: item.company.id,
+      >
 
-          },
-        }))}
-        state={store.usersStore.loadingUsers}
-        initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]}
-      />
+      </Panel>
+      <TableWithSortNew total={data.count}
+        variant={PanelVariant.dataPadding}
+        search={true}
+        background={PanelColor.glass}
+        className={'col-span-full table-groups'}
+        filter={false}
+        data={data.results}
+        initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
+        state={false}
+        ar={textData.tableHeaders} />
+
     </Section>
   )
 }

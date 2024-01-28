@@ -39,9 +39,9 @@ const ReferencesPage = () => {
                 </p>
             </Panel>
           <Panel  bodyClassName={' subgrid  col-span-full'} className={'grid xl:grid-cols-12 md:grid-cols-8   grid-cols-4 gap-8 justify-items-stretch col-span-full !backdrop:filter-none !bg-transparent content-stretch items-stretch justify-items-stretch'} variant={PanelVariant.textPadding}>
-            <FormCard  title={'Марки автомобилей'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 h-full w-full !py-8 !px-4'} navigate={() => navigate(location.pathname + '/car_brands/')}/>
-            <FormCard title={'Города'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 h-full w-full !py-8 !px-4'}  actions={null} navigate={() => navigate(location.pathname + '/cities/')}/>
-            <FormCard title={'Услуги'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 w-full h-full !py-8 !px-4'}  actions={null} navigate={() => navigate(location.pathname + '/services/')}/>
+            <FormCard  title={'Марки автомобилей'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 h-full w-full !py-8 !px-4'} navigate={() => navigate(location.pathname + '/car_brands')}/>
+            <FormCard title={'Города'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 h-full w-full !py-8 !px-4'}  actions={null} navigate={() => navigate(location.pathname + '/cities')}/>
+            <FormCard title={'Услуги'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 w-full h-full !py-8 !px-4'}  actions={null} navigate={() => navigate(location.pathname + '/services')}/>
           </Panel>
 
           {/* {groups.length > 0 && <TableWithSort */}

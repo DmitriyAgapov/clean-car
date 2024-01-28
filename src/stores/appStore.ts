@@ -42,7 +42,7 @@ export class AppStore {
         let ar:any = new Map([]);
 
         if(appType === UserTypeEnum.admin) {
-          console.log('admin');
+          // console.log('admin');
           for (let permissionNameKey in PermissionName) {
             // @ts-ignore
             ar.set(PermissionName[permissionNameKey], {
@@ -189,7 +189,5 @@ export class AppStore {
 }
 
 const appStore = new AppStore()
-autorun(() => {
-  console.log(appStore)
-})
+
 export default appStore

@@ -6,12 +6,6 @@ import permissionStore, { PermissionName } from 'stores/permissionStore'
 import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
-import carStore from 'stores/carStore'
-import { action, runInAction, toJS } from "mobx";
-import data from 'utils/getData'
-import * as Yup from 'yup'
-import { useStore } from 'stores/store'
-import React from "react";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 
@@ -23,11 +17,6 @@ export const authUser = async () => {
     }
     return null
 }
-// const checkPermisssions = {
-//   edit: (path:string) =>  (path.includes('edit') && userStore.getUserCan(path, 'update')),
-//   create: (path:string) =>  (path.includes('create') && userStore.getUserCan(path, 'create')),
-//   read: (path:string) => userStore.getUserCan(path, 'read')
-// }
 export const referencesLoader = async (props: any) => {
     console.log(props);
     const url = new URL(props.request.url)
@@ -36,16 +25,13 @@ export const referencesLoader = async (props: any) => {
     const paramsPageSize = url.searchParams.get('page_size')
     const paramsOrdering = url.searchParams.get('ordering')
     const paramsSearchString = url.searchParams.get('searchString')
-
     const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('references') + 1]
-    console.log('refUrlsRoot', refUrlsRoot)
-    console.log(refUrlsRoot);
+
     let textData: any = {
         title: '',
         description: null,
         create: 'Добавить',
     }
-    // let dataModels: any[] = []
     async function fillData() {
         let data :any[] | any = []
         let dataMeta
@@ -57,19 +43,18 @@ export const referencesLoader = async (props: any) => {
                     if(statusDataModel === 200) data = {
                         id: dataModel.id,
                         brand: dataModel.brand.name,
-                        name: dataModel.name,
-                        car_type: dataModel.car_type
+                        car_type: dataModel.car_type,
+                        name: dataModel.name
                     }
-                    console.log(data);
 
                 } else {
-                    const { data: dataResults, status } = await agent.Catalog.getCarBrandsWithModels({
+                    const { data: dataResults, status } = await agent.Catalog.getCarModels({
                         page: paramsPage ?? 1,
                         page_size: paramsPageSize ?? 10,
                         name: paramsSearchString,
                         ordering: paramsOrdering
                     } as PaginationProps)
-                    dataResults.results.forEach((e: any) => e.car_models.forEach((model: any) => data.push({ id: model.id, name: e.name, model: model.name, car_type: model.car_type })))
+                    dataResults.results.forEach((e: any) => data.push({ id: e.id, name: e.brand.name, model: e.name, car_type: e.car_type }))
                     dataMeta = dataResults
                 }
                 textData = {
@@ -79,7 +64,7 @@ export const referencesLoader = async (props: any) => {
                     create: 'Добавить',
                     referenceTitle: 'Марка автомобиля',
                     createPage: 'Добавить марку автомобиля',
-                    tableHeaders: ['Бренд', 'Модель', 'Тип'],
+                    tableHeaders: [{label: 'Бренд', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_class'}],
                     createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
                     createPageForm: FormCreateCarBrand.bind(props),
                     createPageBack: 'Назад к списку марок автомобилей',
@@ -103,7 +88,7 @@ export const referencesLoader = async (props: any) => {
                     referenceTitle: 'Город',
                     createPage: 'Добавить город',
                     editPage: 'Редактировать город',
-                    tableHeaders: ['Статус', 'Город', 'Часовой пояс'],
+                    tableHeaders: [{label: 'Статус', name: 'is_active'}, {label: 'Город', name: "name"}, {label: 'Часовой пояс', name: 'timezone'}],
                     createPageDesc: 'Добавьте новый город',
                     editPageDesc: 'Вы можете изменить город или удалить его из системы',
                     createPageForm: FormCreateCity.bind(props),
@@ -150,7 +135,6 @@ export const referencesLoader = async (props: any) => {
                     referenceTitle: 'Услуга',
                     description: "Вы можете видеть активные и неактивные типы и подтипы услуг.  Редактировать их и менять статус у каждой услуги/типе услуги или подтипе. Это позволит вам настроить компанию и ее услуги до запуска.",
                     createPage: 'Добавить город',
-
                     editPage: 'Редактировать город',
                     tableHeaders: ['Статус', 'Город', 'Часовой пояс'],
                     createPageDesc: 'Вы можете видеть активные и неактивные типы и подтипы услуг.  Редактировать их и менять статус у каждой услуги/типе услуги или подтипе. Это позволит вам настроить компанию и ее услуги до запуска.',

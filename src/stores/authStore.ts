@@ -1,8 +1,9 @@
-import { action, flow, makeAutoObservable, makeObservable, observable, reaction } from "mobx";
+import { action, flow, makeAutoObservable, makeObservable, observable, reaction, runInAction } from "mobx";
 import { AxiosError } from 'axios'
 import agent from '../utils/agent'
 import userStore from './userStore'
 import appStore from './appStore'
+import data from "utils/getData";
 
 export class AuthStore {
   constructor() {
@@ -33,11 +34,12 @@ export class AuthStore {
     password: '',
   }
 
-  refreshToken() {
-     return agent.Auth.tokenRefresh()
-      .then(
-        action((resolve: any) => {
-          const {access} = resolve.data
+  async refreshToken() {
+     return await agent.Auth.tokenRefresh()
+      .then((resolve: any) => resolve.data)
+       .then((data) => runInAction(() => {
+          const {access} = data
+         console.log(access);
           appStore.setToken(access)
         },
           ),
@@ -138,7 +140,6 @@ export class AuthStore {
     appStore.setTokenRefresh(null)
     userStore.forgetUser()
     window.location.replace('/')
-    return Promise.resolve()
   }
 }
 

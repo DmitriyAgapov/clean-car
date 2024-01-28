@@ -10,6 +10,8 @@ import { SelectCreatable } from "components/common/ui/CreatableSelect/CreatableS
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import agent from "utils/agent";
+import { Observer } from "mobx-react-lite";
+import { CarType } from "stores/carStore";
 const dataCreate =  {
   initValues: {
     brand: '',
@@ -17,9 +19,9 @@ const dataCreate =  {
       car_class: '',
   },
   validateSchema: Yup.object().shape({
-    brand: Yup.string().required('Обязательное поле'),
-    model: Yup.string().required('Обязательное поле'),
-    car_class: Yup.string().required('Обязательное поле'),
+    brand: Yup.string(),
+    model: Yup.string(),
+    car_class: Yup.string(),
   }),
     submitAction: () => console.log('sumbit brands'),
     inputs: [
@@ -64,6 +66,14 @@ const FormCreateCarBrand = () => {
   const submitForm = (props:any) => {
     console.log(props);
   }
+  const result = (Object.keys(CarType) as (keyof typeof CarType)[]).map(
+    (key, index) => {
+      return {label: CarType[key],
+        value: CarType[key]
+      };
+    },
+  );
+  console.log(result);
   return (
     <Formik validationSchema={dataCreate.validateSchema} initialValues={dataCreate.initValues} onSubmit={submitForm} >
       {({ errors, touched, values, submitForm,isValid }) => (
@@ -122,14 +132,14 @@ const FormCreateCarBrand = () => {
               <p>{data.results.name ? textData.editPageDesc : textData.createPageDesc}</p>
             }
           >
-        <SelectCreatable label={dataCreate.inputs[0].label} createaction={() => console.log('create')} items={store.catalogStore.carBrands.map((item:any) => ({
+            <Observer children={() => <SelectCreatable  label={dataCreate.inputs[0].label} createaction={() => console.log('create')} items={store.catalogStore.carBrandsCurrent.map((item:any) => ({
           label: item.name,
           value: String(item.id)
-        }))}/>
+        }))}/>} />
         <CreateInput  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} text={dataCreate.inputs[1].placeholder} action={() => console.log('')}/>
-        <SelectCustom label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} options={store.catalogStore.carBrands.map((item:any) => ({
-          label: item.name,
-          value: String(item.id)
+        <SelectCustom label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} options={result.map((item) => ({
+          label: item.label,
+          value: String(item.value)
         }))}/>
           </Panel>
         </Form>

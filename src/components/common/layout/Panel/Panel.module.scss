@@ -1,6 +1,6 @@
 .Panel {
   border-radius: 1.5rem;
-  @apply col-span-full;
+
 
   header {
 	& > *:first-child {
@@ -22,6 +22,9 @@
 
   }
 
+  &[data-style="default"] {
+	@apply col-span-full;
+  }
   [data-panel="body"] {
 	& > *:first-child {
 	  margin-top: 0;

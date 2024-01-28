@@ -7,6 +7,7 @@ import usersStore, { UsersStore } from 'stores/usersStore'
 import catalogStore, { CatalogStore } from 'stores/catalogStore'
 import carStore, { CarStore } from "stores/carStore";
 import formStore, { FormStore } from "stores/formDataStore";
+import bidsStore, { BidsStore } from "stores/bidsStrore";
 
 export type RootStore = {
   authStore: AuthStore
@@ -18,9 +19,11 @@ export type RootStore = {
   catalogStore: CatalogStore
   carStore: CarStore
   formStore: FormStore
+  bidsStore: BidsStore
 }
 
 const rootStore: RootStore = {
+  bidsStore,
   authStore,
   appStore,
   usersStore,

@@ -40,7 +40,7 @@ const AddType = ({ id, subtype_id, edit = false, data }: { id: number,   edit?: 
 							{ label: "Неактивно", value: "false" }
 						]}
 						label={"Выберите статус"} />
-					<footer className={"pt-8"}>
+					<footer className={"pt-8 mt-auto"}>
 						<Button text={"Отменить"}
 							action={() => store.appStore.closeModal()}
 							variant={ButtonVariant.default} />

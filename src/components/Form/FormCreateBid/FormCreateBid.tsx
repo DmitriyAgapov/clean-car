@@ -15,7 +15,8 @@ import FormModalAddUser, { FormModalSelectUsers } from "components/Form/FormModa
 import Progress from "components/common/ui/Progress/Progress";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import { observer, Observer } from "mobx-react-lite";
-import { CloseButton, Select } from "@mantine/core";
+import { Select } from "@mantine/core";
+import { UserTypeEnum } from "stores/userStore";
 
 type CarCreateUpdate = {
     car_type:	string
@@ -30,13 +31,13 @@ type CarCreateUpdate = {
 }
 const FormInputs = observer(():JSX.Element => {
     const store = useStore()
-    const { values, errors, setFieldValue, setValues, getFieldHelpers, touched }:any = useFormikContext();
+    const { values, errors, setFieldValue, setValues, getFieldHelpers } = useFormikContext();
     const [companies, setCompanies] = useState(store.companyStore.companies)
     const handleChangeBrand = (e:any) => {
         store.catalogStore.clearBrandModels()
-        values.model = null;
     }
     const[belongTo, setBelongTo] = useState('company')
+
     return (
       <>
           <>
@@ -45,11 +46,9 @@ const FormInputs = observer(():JSX.Element => {
                 placeholder={'Выберите марку'} label={'Марка автомобиля'}
                 // @ts-ignore
                 value={values.brand} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={store.catalogStore.carBrands.map((item:any) => ({ label: item.name, value: String(item.id) }))}/>
-              <SelectCustom  name={'model'}  disabled={store.catalogStore.brandModelsCurrent.length == 0} placeholder={'Выберите модель'} label={'Модель'}
+              <SelectCustom  name={'model'} disabled={store.catalogStore.brandModels.length == 0} placeholder={'Выберите модель'} label={'Модель'}
                 // @ts-ignore
-                onLoadedData={(data) => console.log('data', data)}
-                value={String(values.model)} onOptionSubmit={(value: string) => setFieldValue('model', Number(value))}
-                 className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={store.catalogStore.brandModelsCurrent}/>
+                value={values.model} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={store.catalogStore.brandModels}/>
               <SelectCustom  name={'car_type'} placeholder={'Выберите тип'} options={Object.keys(CarType).map(item => ({label: item, value: item}))} label={'Тип автомобиля'}
                 // @ts-ignore
                 value={values.car_type} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} />
@@ -124,8 +123,10 @@ const SignupSchema = Yup.object().shape({
     radius: Yup.string().required('Обязательное поле'),
     city: Yup.string().required('Обязательное поле'),
 })
-const FormCreateCar = ({ user, edit }: any) => {
+const FormCreateBid = ({ user, edit }: any) => {
+    type carBrandModels = {
 
+    };
     let initValues:CarCreateUpdate & any = {
         brand: 0,
         car_type: '',
@@ -263,10 +264,15 @@ const FormCreateCar = ({ user, edit }: any) => {
     const navigate = useNavigate()
 
     const formDataSelectUsers = React.useMemo(() => {
-
-        return store.usersStore.usersList.users.map((item:any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))
+        return store.usersStore.companyUsers.map((item:any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))
+    },[store.usersStore.companyUsers])
+     React.useEffect(() => {
+         console.log(formDataSelectUsers);
     },[store.usersStore.companyUsers])
 
+
+    // @ts-ignore
+    // @ts-ignore
     return (
 
         <Formik
@@ -283,7 +289,7 @@ const FormCreateCar = ({ user, edit }: any) => {
                     is_active: values.is_active,
                     brand: values.brand,
                     model: values.model,
-                    employees: store.usersStore.selectedUsers.values(),
+                    employees: values.employees
                 }
                 console.log(values);
                 store.formStore.setFormDataCreateCar(values)
@@ -292,7 +298,6 @@ const FormCreateCar = ({ user, edit }: any) => {
             }}
         >
             {({
-
                 submitForm,
                 setSubmitting,
                 setFieldError,
@@ -310,8 +315,10 @@ const FormCreateCar = ({ user, edit }: any) => {
                     <Form style={{ display: 'flex', gridColumn: '1/-1', borderRadius: '1.5rem', overflow: 'hidden', position: 'relative' }}
                       className={'form_with_progress'}>
                         <Progress total={3} current={step}/>
-                        <Step
+                        <Step step={1} animate={animate} action={() => console.log('step 1')} action1={() => console.log('step 1')} stepIndex={1}>
 
+                        </Step>
+                        <Step
                           footer={<>
 
                               <Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
@@ -337,19 +344,16 @@ const FormCreateCar = ({ user, edit }: any) => {
                           }/* action={() => console.log(values)} *//* action={() => console.log(values)} */ className={'float-right'} variant={ButtonVariant.accent} /></>}
                           header={<><Heading text={'Шаг 2. Добавьте сотрудников для автомобиля'} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>Вы можете добавить или выбрать сотрудника из списка зарегистрированных пользователей</div></>}
                           step={step} animate={animate} action={() => void null} action1={() => void null} stepIndex={2}>
-
+                            <FormModalSelectUsers company_id={Number(values.company_id)} users={formDataSelectUsers}/>
 
                             <Observer children={():any =>
                               //@ts-ignore
-                              <div className={'asd order-2 flex-[1_100%]'}><Heading text={'Добавленные:'} variant={HeadingVariant.h4}/>  <div className={'grid grid-cols-3 gap-6'}>  {store.usersStore.selectedUsers.size > 0 && store.usersStore.selectedUsers.toJSON().map((el: any) => {
-                                  return <FormCard actions={null} className={'relative'} title={el[1].employee.first_name}  children={<><CloseButton style={{position: "absolute", right: '1rem', top: '1rem'}} onClick={() => {
-                                      console.log(el[1].employee.id);
-                                      store.usersStore.removeFromSelectedUsers(el[1].employee.id)
-                                  }}/><div className={'text-xs -mt-3 pb-4 uppercase text-gray-2'}>{el[1].group.name}</div><ul>
+                              <div className={'asd'}>Выбранный юзеры: {store.usersStore.companyUsersSelected.toJSON().map((el: any) => {
+                                  return <FormCard actions={null} title={el[1].employee.first_name}  children={<><div className={'text-xs -mt-2 uppercase text-gray-2'}>{el[1].group.name}</div><ul>
                                       <li>{el[1].employee.phone}</li>
                                       <li>{el[1].employee.email}</li>
                                   </ul><div> {el[1].employee.is_active ? <span className={'text-accent  mt-5 block'}>Активен</span> : <span className={'text-red-500 mt-5 block'}>Не активен</span> }</div></>} titleColor={HeadingColor.accent}
-                              titleVariant={HeadingVariant.h5}  />})}</div></div>} />
+                              titleVariant={HeadingVariant.h5}  />})}</div>} />
                             <Observer children={() => <FormCard title={"Добавить нового сотрудника"}
                           titleColor={HeadingColor.accent}
                           titleVariant={HeadingVariant.h4}
@@ -360,11 +364,25 @@ const FormCreateCar = ({ user, edit }: any) => {
                             action={async () => {
                                 store.appStore.setModal({
                                     className: "!px-10 gap-4 !justify-stretch",
-                                    component: <FormModalAddUser  group={await store.permissionStore.loadCompanyPermissions(Number(values.company_id))} company_id={Number(values.company_id)}/>,
+                                    // component: <FormModalAddUser />,
+                                    actions: [
+                                        <Button text={"Отменить"}
+                                          action={() => store.appStore.closeModal()}
+                                          variant={ButtonVariant["accent-outline"]}
+                                          className={"max-w-fit"} />,
+                                        <Button text={"Добавить сотрудника"}
+                                          action={async () => {
+                                              store.formStore.getFormData("formCreateUser");
+                                          }}
+                                          // action={async () => {
+                                          //     store.
+                                          // }}
+                                          variant={ButtonVariant.accent} />
+                                    ],
                                     text: `Вы уверены, что хотите удалить ${"name"}`,
                                     state: true
                                 });
-                            }} />} />} />
+                            }} />} />} />,
 
                             <FormCard title={"Выбрать сотрудника из зарегистрированных пользователей"}
                               titleColor={HeadingColor.accent}
@@ -373,21 +391,30 @@ const FormCreateCar = ({ user, edit }: any) => {
                                 size={ButtonSizeType.sm}
                                 variant={ButtonVariant.accent}
                                 directory={ButtonDirectory.directory}
-                                action={(values) => {
+                                action={async () => {
                                     console.log(values);
                                     store.appStore.setModal({
-                                        className: '!px-10 gap-4 !justify-stretch grid-cols-1',
-                                        component: (
-                                            <FormModalSelectUsers
-                                                company_id={Number(values.company_id)}
-                                                users={formDataSelectUsers}
-                                            />
-                                        ),
-
-                                        text: `Вы уверены, что хотите удалить ${'name'}`,
-                                        state: true,
-                                    })
-                                }} />} />
+                                        className: "!px-10 gap-4 !justify-stretch grid-cols-1",
+                                        component: <FormModalSelectUsers company_id={Number(values.company_id)}
+                                          users={formDataSelectUsers} />,
+                                        actions: [
+                                            <Button text={"Отменить"}
+                                              action={() => store.appStore.closeModal()}
+                                              variant={ButtonVariant["accent-outline"]}
+                                              className={"max-w-fit"} />,
+                                            <Button text={"Добавить сотрудника"}
+                                              action={async () => {
+                                                  store.permissionStore.deletePermissionStore(12).then(() => {
+                                                      store.appStore.closeModal();
+                                                      navigate("/account/groups", { replace: false });
+                                                  });
+                                              }}
+                                              variant={ButtonVariant.accent} />
+                                        ],
+                                        text: `Вы уверены, что хотите удалить ${"name"}`,
+                                        state: true
+                                    });
+                                }} />} />)
                         </Step><Step footer={<>
                         <Button text={"Отменить"}
                           action={() => navigate(-1)}
@@ -422,4 +449,4 @@ const FormCreateCar = ({ user, edit }: any) => {
     )
 }
 
-export default FormCreateCar
+export default FormCreateBid

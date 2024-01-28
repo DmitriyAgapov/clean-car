@@ -11,15 +11,15 @@ import CreateInput from 'components/common/ui/CreateInput/CreateInput'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { User } from 'stores/usersStore'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
-import TabsVariants, { TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
+import TabsVariants, { TabsVariantsCars,  TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import Logo from "components/common/layout/Logo/Logo";
 import company from "routes/company/company";
 
 
 export type TabsProps = {
-  data: any
+  data?: any
 }
-const Tabs = ({ data, panels }: TabsProps & {panels?: any}) => {
+const Tabs = ({ data, panels, items }: TabsProps & {panels?: any, items?: any}) => {
 
   const store = useStore()
     const [state, setState] = useState('Основная информация');
@@ -50,12 +50,18 @@ const Tabs = ({ data, panels }: TabsProps & {panels?: any}) => {
     }
     const TabPanels = ():any => {
     const result:any = []
-      if(panels) {
+      if(items) {
+        data.forEach((item: any) => {
+          result.push(<TabsVariantsCars state={state == item.label} data={item.data} label={item.label} props={items}/>)
+        })
+        return result
+      }
+        else if(panels) {
         panels.forEach((item: any) => {
           result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={panels[0].company_type} data={item.data} label={item.label} props={panels}/>)
         })
         return result
-      } else {
+      } else if(data){
         for(const key in data) {
           result.push(<TabsVariants companyId={data.company.data.id} content_type={data[key].label} label={data[key].label}
             data={data[key].data}
@@ -65,8 +71,6 @@ const Tabs = ({ data, panels }: TabsProps & {panels?: any}) => {
           />)
         }
       }
-
-
       return result
     }
 

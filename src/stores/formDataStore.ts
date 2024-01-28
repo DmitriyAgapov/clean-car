@@ -39,6 +39,9 @@ export class FormStore {
     this.formCreateCar = data
   }
 
+   get getFormDataCarCreate() {
+      return this.formCreateCar
+   }
   getFormData(form: string | number) {
     // @ts-ignore
     return this[form]

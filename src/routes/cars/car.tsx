@@ -1,48 +1,65 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
+import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import DList from 'components/common/ui/DList/DList'
-import { CompanyType } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
+import Tabs from 'components/common/layout/Tabs/Tabs'
+import { CompanyType } from 'stores/companyStore';
+import { dateTransform } from "utils/utils";
 
 const CarPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const { user }: any = useLoaderData()
-  // console.log(user);
+  const { data, page, pageRequest, textData }: any = useLoaderData()
+  console.log(data.results?.company?.updated);
+  const formated = React.useMemo(() => {
+    if(data.results) return [
+      {
+        label: 'Основная информация',
+        data: data.results,
+      },
+      {
+        label: 'Сотрудники',
+        data: data.results.employees,
+      },
+    ]
+  }, [data])
+
+const dataMap = new Map([])
   const userData = React.useMemo(() => {
     return (
         <>
-            <DList label={'Пользователь'} title={user.employee.first_name + ' ' + user.employee.last_name} />
-            <DList label={'Номер телефона'} title={user.employee.phone} />
-            <DList label={'E-mail'} title={user.employee.email} />
-            <DList
-                label={'Тип'}
-                title={user.company.company_type}
-                directory={user.company.company_type === CompanyType.customer ? 'customer' : 'performers'}
-            />
 
-            <DList label={'Группа'} title={user.group.name} />
-            <DList
+          {/*   <DList label={'Пользователь'} title={user.employee.first_name + ' ' + user.employee.last_name} /> */}
+          {/*   <DList label={'Номер телефона'} title={user.employee.phone} /> */}
+          {/*   <DList label={'E-mail'} title={user.employee.email} /> */}
+          {/*   <DList */}
+          {/*       label={'Тип'} */}
+          {/*       title={user.company.company_type} */}
+          {/*       directory={user.company.company_type === CompanyType.customer ? 'customer' : 'performers'} */}
+          {/*   /> */}
 
-                label={'Статус'}
-                title={
-                    <span className={user.employee.is_active ? 'text-active' : 'text-error'}>
-                        {user.employee.is_active ? 'Активный' : 'Не активный'}
-                    </span>
-                }
-            />
-            {user.company.id && <hr className={'mt-0 col-span-2'}/>}
-          {user.company.name && <DList label={'Компания'} title={user.company.name} />}
-          {user.company.city.name && <DList label={'Город'} title={user.company.city.name} />}
-          {user.company.city.name && <DList label={'Филиал'} title={user.company.city.name} />}
+          {/*   <DList label={'Группа'} title={user.group.name} /> */}
+          {/*   <DList */}
+
+          {/*       label={'Статус'} */}
+          {/*       title={ */}
+          {/*           <span className={user.employee.is_active ? 'text-active' : 'text-error'}> */}
+          {/*               {user.employee.is_active ? 'Активный' : 'Не активный'} */}
+          {/*           </span> */}
+          {/*       } */}
+          {/*   /> */}
+          {/*   {user.company.id && <hr className={'mt-0 col-span-2'}/>} */}
+          {/* {user.company.name && <DList label={'Компания'} title={user.company.name} />} */}
+          {/* {user.company.city.name && <DList label={'Город'} title={user.company.city.name} />} */}
+          {/* {user.company.city.name && <DList label={'Филиал'} title={user.company.city.name} />} */}
         </>
     )
   }, [])
@@ -61,7 +78,7 @@ const CarPage = () => {
                 text={
                   <>
                     <SvgBackArrow />
-                    Назад к списку пользователей{' '}
+                    Назад к списку автомобилей
                   </>
                 }
                 className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'}
@@ -69,18 +86,12 @@ const CarPage = () => {
                 variant={ButtonVariant.text}
               />
               <Heading
-                text={'Пользователь'}
+                text={'Автомобиль'}
                 variant={HeadingVariant.h1}
                 className={'!mb-0 inline-block flex-1'}
                 color={HeadingColor.accent}
               />
             </div>
-            {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
-              text={'Редактировать'}
-              action={() => navigate(`${location.pathname}/edit`)}
-              className={'inline-flex ml-auto'}
-
-            />}
           </>
         }
       />
@@ -89,25 +100,51 @@ const CarPage = () => {
         className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
-        bodyClassName={'!pl-44 grid grid-cols-2 items-start content-start gap-8'}
-        headerClassName={'flex gap-10'}
+        bodyClassName={''}
+
+        headerClassName={'border-bottom-none'}
         header={
-        <>
-          <div
-            className={'w-24 h-24 flex rounded-full mr-2'}
-            style={{ background: 'var(--gradient-directory)' }}
-            data-app-type={'admin'}
-          >
-            <span className={'text-black font-sans uppercase text-3xl leading-none m-auto'}>
-              {user.employee.first_name[0]}
-              {user.employee.last_name[0]}
-            </span>
-          </div>
-          <DList label={'Дата и время регистрации'} title={'08.10.23 07:14'} />
-        </>
+          <>
+            <Heading text={data.results.number} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+            <div className={'flex items-baseline justify-between'}>
+              <div className={'text-xs text-gray-2'}>
+                {/* Дата и время регистрации: <span>{dateTransform(data.results.company.updated).date}</span> */}
+              </div>
+              <div className={'flex flex-1 justify-around'}>
+                <Heading
+                  className={'!m-0'}
+                  text={data.results.is_active ? 'Активен' : 'Не активна'}
+                  color={data.results.is_active ? HeadingColor.active : HeadingColor.notActive}
+                  variant={HeadingVariant.h4}
+                />
+                <Heading
+                  className={'!m-0'}
+                  text={data.results.company.company_type == 'Компания-Заказчик'
+                    ? data.results.number
+                    : data.results.number}
+                  variant={HeadingVariant.h4}
+                  directory={
+                    data.results.company.company_type == 'Компания-Заказчик'
+                      ? HeadingDirectory.customer
+                      : HeadingDirectory.performer
+                  }
+                />
+                <Heading className={'!m-0'} text={data.results.company.city.name} variant={HeadingVariant.h4} />
+              </div>
+            </div>
+          </>
         }
       >
-        {userData}
+        <Tabs data={[
+          {
+            label: 'Основная информация',
+            data: data.results,
+          },
+          {
+            label: 'Сотрудники',
+            data: data.results,
+          },
+        ]} items={true} />
       </Panel>
     </Section>
   )

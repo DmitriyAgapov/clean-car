@@ -11,6 +11,7 @@ import Tabs, { TabsProps } from "../../../components/common/layout/Tabs/Tabs";
 import { useStore } from "stores/store";
 import CreateInput from "components/common/ui/CreateInput/CreateInput";
 import { useNavigate } from "react-router-dom";
+import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 
 type TabsVariantsProps = {
   label: string,
@@ -213,6 +214,73 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
       </Tabs.Panel>)
       break;
+    default:
+      return null;
+  }
+  return  result
+};
+export const TabsVariantsCars = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
+  const store = useStore()
+  let result
+
+  switch (label) {
+    case "Основная информация":
+      const navigate = useNavigate()
+
+
+      result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
+       <DList label={'Марка'} title={data.brand.name} />
+       <DList label={'Модель'} title={data.model.name} />
+       <DList label={'Тип'} title={data.model.car_type} />
+        {/* todo: Добавить высоту и радиус */}
+        <div className={'subgrid'}>
+          <DList label={'Компания'} title={data.company.name} />
+        {/* todo: Добавить филиал */}
+          {data.company.parent && <DList label={'Филиал'} title={data.company.parent} />}
+        </div>
+      </Tabs.Panel>)
+      break;
+
+    case 'Сотрудники':
+      // @ts-ignore
+      console.log(data);
+      // console.log(props[0].data && props[0].data?.company.name || '');
+      result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        {data.employees.length !== 0 ? <TableWithSort total={data.count}  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+          data={data.employees.map((item: any & {rootRoute?: string} ) => ({
+            state: item.is_active,
+            name: item.first_name + ' ' + item.last_name,
+            phone: item.phone,
+            email: item.email,
+
+            company: data.company.name,
+
+            city: data.company.city.name,
+            id: item.id,
+            query: {
+              company_id: data.company.id,
+              rootRoute: `/account/users/${data.company.company_type === "Компания-Заказчик" ? 'customer' : 'performer'}/${data.company.id}/${item.id}`,
+            },
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}
+          ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail',  'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
+      </Tabs.Panel>)
+      break;
+    // case 'Филиалы':
+    //   console.log(data);
+    //   result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+    //     {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+    //       data={data.map((item: any & {rootRoute?: string} ) => ({
+    //         state: item.is_active,
+    //         name: item.name,
+    //         city: item.city.name,
+    //         id: item.id,
+    //         query: {
+    //           company_id: companyId,
+    //           rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
+    //         },
+    //       }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
+    //   </Tabs.Panel>)
+    //   break;
     default:
       return null;
   }

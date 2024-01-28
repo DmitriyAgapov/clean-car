@@ -185,11 +185,11 @@ export class PermissionStore {
   getPermissionsFlow = flow(function*(this: PermissionStore) {
     this.companyPermissions.clear()
     this.permissions.length = 0
-    console.log(userStore.isAdmin);
+    // console.log(userStore.isAdmin);
     if(userStore.currentUser.is_staff) {
       this.loadingPermissions = true
        const response = yield agent.PermissionsAdmin.getAllAdminPermissions()
-      console.log(response);
+      // console.log(response);
       if(response.status === 200) {
         this.permissions = response.data.results
       }
@@ -295,9 +295,9 @@ export class PermissionStore {
       if (data.status === 200) {
         //@ts-ignore
         const { results } = data.data
-        console.log(results);
+        // console.log(results);
         set(this.permissions, results)
-        console.log(this.permissions);
+        // console.log(this.permissions);
       }
     } catch (error) {
       throw new Error('Fetch data companies failed')
@@ -308,7 +308,7 @@ export class PermissionStore {
 
   getAllPermissions() {
     this.loadPermissionAdmin()
-    console.log(this.permissions);
+    // console.log(this.permissions);
     return this.permissions
   }
 
@@ -334,13 +334,5 @@ export class PermissionStore {
 }
 
 const permissionStore = new PermissionStore()
-autorun(() => {
-    return console.log(permissionStore.permissions)
-  },
-  {name: 'permissions'}
-)
-autorun(() => {
-  console.log(permissionStore.permissions);
-  console.log(permissionStore.companyPermissions);
-})
+
 export default permissionStore

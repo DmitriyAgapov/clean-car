@@ -6,17 +6,18 @@ import RestorePasswordPage from 'routes/restore/restorePasswordPage'
 import RegisterSuccessPage from 'routes/register/registerSucces'
 import {
     authUser,
-    carsLoader,
     companyLoader,
     filialLoader,
     filialsLoader,
     groupsCreatLoader,
     groupsIdLoader,
     groupsLoader,
-    profileLoader, referencesLoader,
+    profileLoader,
+    referencesLoader,
     userLoader,
-    usersLoader
-} from "routes/loaders/loaders";
+    usersLoader,
+} from 'routes/loaders/loaders'
+import { carsLoader } from 'routes/loaders/carsLoader'
 import AccountPage from 'routes/account/account'
 import MyProfilePage from 'routes/account/myProfile'
 import DashboardPage from 'routes/dashboard/dashboard'
@@ -48,73 +49,10 @@ import ReferenceIndex from "routes/reference/referenceIndex";
 import ServicesPage from "routes/reference/Services/references";
 import ServicePage from "routes/reference/Services/reference";
 import ServicesSubTypePage from "routes/reference/Services/subtype";
-
-const reference = {
-    path: 'references',
-    element: <ReferencesPage />,
-    children: [
-        {
-            path: 'car_brands',
-            element: <ReferencePage />,
-            children: [
-                {
-                    path: ':id',
-                    element: <ReferencePage />,
-                    children: [
-                        {
-                            path: 'create',
-                            element: <ReferencePageCreate />,
-                        },
-                        {
-                            path: 'edit',
-                            element: <ReferencePageCreate />,
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            path: 'cities',
-            element: <ReferencePage />,
-            children: [
-                {
-                    path: ':id',
-                    element: <ReferencePage />,
-                    children: [
-                        {
-                            path: 'create',
-                            element: <ReferencePageCreate />,
-                        },
-                        {
-                            path: 'edit',
-                            element: <ReferencePageCreate />,
-                        },
-                    ],
-                },
-            ],
-        },
-        {
-            path: 'services',
-            element: <ReferencePage />,
-            children: [
-                {
-                    path: ':id',
-                    element: <ReferencePage />,
-                    children: [
-                        {
-                            path: 'create',
-                            element: <ReferencePageCreate />,
-                        },
-                        {
-                            path: 'edit',
-                            element: <ReferencePageCreate />,
-                        },
-                    ],
-                },
-            ],
-        },
-    ],
-}
+import BidsPage from "routes/bids/bids";
+import { bidsLoader } from "routes/loaders/bidsLoader";
+import BidsCreatePage from "routes/bids/BidsCreatePage";
+import PricesPage from "routes/price/prices";
 
 const router = createBrowserRouter([
     {
@@ -180,7 +118,7 @@ const router = createBrowserRouter([
                 loader: carsLoader,
                 children: [
                     {
-                        path: ':company_type/:company_id/:id',
+                        path: ':id',
                         element: <CarPage />,
                         loader: carsLoader,
                     },
@@ -194,6 +132,18 @@ const router = createBrowserRouter([
                         loader: carsLoader,
                     },
                 ],
+            },
+            {
+              path: 'bids',
+              element: <BidsPage/>,
+              loader: bidsLoader,
+              children: [
+                  {
+                      path: 'create',
+                      element: <BidsCreatePage/>,
+                      loader: bidsLoader,
+                  }
+              ]
             },
             {
                 path: 'companies',
@@ -278,7 +228,7 @@ const router = createBrowserRouter([
                                 children: [
                                     {
                                         path: 'edit',
-                                        element: <ReferencePageCreate />,
+                                        element: <ReferencePageCreate edit={true}/>,
                                         loader: referencesLoader,
                                     },
                                 ],
@@ -346,6 +296,8 @@ const router = createBrowserRouter([
                     },
                 ],
             },
+            {path: 'price',
+            element: <PricesPage/>},
         ],
     },
 ])

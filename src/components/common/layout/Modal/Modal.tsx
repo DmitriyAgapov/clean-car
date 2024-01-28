@@ -25,7 +25,7 @@ const Modal = (): JSX.Element | null => {
     return (
       <div className={styles.Modal}>
         <Panel
-          footer={actions}
+          footer={actions && actions}
           variant={PanelVariant.modal}
           background={PanelColor.glass}
           className={'relative z-[999]  gap-10' + " " + className }

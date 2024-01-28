@@ -20,43 +20,14 @@ export default function CarsPageCreateAction() {
       <Panel
         className={'col-span-full'}
         headerClassName={'flex justify-between flex-wrap'}
-        header={
-          <>
-            <LinkStyled
-              text={
-                <>
-                  <SvgBackArrow />
-                  Назад к списку автомобилей{' '}
-                </>
-              }
-              className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
-              to={'/account/cars'}
-              variant={ButtonVariant.text}
-            />
-            <Heading
-              text={'Добавить автомобиль'}
-              variant={HeadingVariant.h1}
-              className={'!mb-0 inline-block mr-auto flex-1'}
-              color={HeadingColor.accent}
-            />
-            <LinkStyled
-              text={'Скачать шаблон'}
-              variant={ButtonVariant["accent-outline"]}
-              to={'/account/cars/create'}
-              className={'inline-flex mr-5'}
-              size={ButtonSizeType.sm}
-            />
-            <LinkStyled
-              text={'Загрузить файл'}
-              to={'/account/cars/create'}
-              className={'inline-flex mr-5'}
-              directory={ButtonDirectory.directory}
-              size={ButtonSizeType.sm}
-            />
+        header={<>
+            <LinkStyled text={<><SvgBackArrow />Назад к списку автомобилей{' '}</>} className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} to={'/account/cars'} variant={ButtonVariant.text} />
+            <Heading text={'Добавить автомобиль'} variant={HeadingVariant.h1} className={'!mb-0 inline-block mr-auto flex-1'} color={HeadingColor.accent} />
+            <LinkStyled text={'Скачать шаблон'} variant={ButtonVariant["accent-outline"]} to={'/account/cars/create'} className={'inline-flex mr-5'} size={ButtonSizeType.sm} />
+            <LinkStyled text={'Загрузить файл'} to={'/account/cars/create'} className={'inline-flex mr-5'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
           </>
         }
       >
-
       </Panel>
 
       <FormCreateCar/>

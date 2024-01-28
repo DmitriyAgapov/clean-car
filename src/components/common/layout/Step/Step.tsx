@@ -37,15 +37,13 @@ export function Step(props: {
       background={PanelColor.glass}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       bodyClassName={!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'}
-      footer={
-        <div className={'accounts-group_header gap-4 text-[#606163] grid font-medium'}>
-          <div className={'lg:flex block justify-end gap-5 justify-self-end'}>
-            {props.footer}
-          </div>
+      footer={props.footer ? <div className={'accounts-group_header gap-4 text-[#606163] grid font-medium'}>
+        <div className={'lg:flex block justify-end gap-5 justify-self-end'}>
+          {props.footer}
         </div>
-      }
-      header={props.header}
-    >
+      </div> : null}
+
+      header={props.header}>
       <div className={'mt-10 flex flex-wrap gap-6'}>
         {props.children}
       </div>

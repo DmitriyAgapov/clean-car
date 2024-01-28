@@ -1,4 +1,4 @@
-import { flow, makeAutoObservable, get, set, observable, action, computed } from "mobx";
+import { flow, makeAutoObservable, get, set, observable, action, computed, runInAction } from "mobx";
 import agent from 'utils/agent'
 import companyStore, { CompanyType } from "stores/companyStore";
 import { makePersistable, hydrateStore  } from 'mobx-persist-store';
@@ -114,6 +114,16 @@ export class UsersStore {
     }
     return result
   })
+  get selectedUsers() {
+    return this.companyUsersSelected
+  }
+  addToSelectedUsers(id:number) {
+    this.companyUsersSelected.set(String(id), this.companyUsers.filter((e: any) => e.employee.id == Number(id))[0])
+  }
+  removeFromSelectedUsers(id:number) {
+    console.log(this.companyUsersSelected.get(String(id)));
+    this.companyUsersSelected.delete(String(id))
+  }
   setToCompanyUsersSelected(ar: any) {
     this.companyUsersSelected = observable.map(ar.map((el:any) => [el, this.companyUsers.filter((e: any) => e.employee.id == el)[0]]))
   }
@@ -125,8 +135,11 @@ export class UsersStore {
     return await agent.Account.getCompanyUsers(Number(company_id))
       .then((resolve: any) => resolve)
       .then((resolve: any) => resolve.data)
-      .then(action((data) => this.companyUsers = data.results))
+      .then((data) => runInAction(() => this.companyUsers = data.results))
       .catch((error) => console.log(error))
+  }
+  get currentCompanyUsers() {
+    return this.companyUsers
   }
   getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type: CompanyType) {
     let user: any = {}

@@ -1,4 +1,4 @@
-import { flow, makeAutoObservable, runInAction } from "mobx";
+import { action, flow, makeAutoObservable, observable, runInAction } from "mobx";
 import agent, { PaginationProps } from 'utils/agent'
 import { makePersistable } from 'mobx-persist-store'
 
@@ -19,11 +19,13 @@ export class CatalogStore {
 
     cities: City[] = []
     services: City[] = []
-    carBrands = []
-    brandModels = []
+    carBrands: any[] = []
+    brandModels = observable.array([])
     carBrandModels = []
     carBrandModelsReference: any[] = []
-
+    get brandModelsCurrent() {
+        return this.brandModels
+    }
     getServices = flow(function* (this: CatalogStore, params?: PaginationProps) {
         const { status, data } = yield agent.Catalog.getServices(params)
         if (status == 200) {
@@ -42,11 +44,11 @@ export class CatalogStore {
         }
     })
     getCarBrands = flow(function* (this: CatalogStore, params?: PaginationProps) {
-        let tempCarBrands
+        let tempCarBrands: any = []
         try {
             const { data }: any = yield agent.Catalog.getCarBrands(params)
             tempCarBrands = data.results
-            this.carBrands = tempCarBrands
+            action(() => this.carBrands = data.results)
         } catch (error) {
             console.log(error)
         } finally {
@@ -66,17 +68,18 @@ export class CatalogStore {
                 this.getCarBrandModels(el.id)
                     .then((r) => r)
                     .finally(() => {
-                    runInAction(() => {
-                        console.log(el)
-                        this.carBrandModels.forEach((e: any) => {
-                            this.carBrandModelsReference.push({
-                                id: e.id,
-                                name: el.name,
-                                model: e.name,
-                                car_class: e.car_class,
+                        runInAction(() => {
+                            console.log(el)
+                            this.carBrandModels.forEach((e: any) => {
+                                this.carBrandModelsReference.push({
+                                    id: e.id,
+                                    name: el.name,
+                                    model: e.name,
+                                    car_class: e.car_class,
+                                })
                             })
                         })
-                    })})
+                    })
             })
         }
     })
@@ -91,8 +94,14 @@ export class CatalogStore {
             return this.cities
         }
     })
-    createCarBrand = flow(function* (this: CatalogStore, car_class: string, model: string, brandId?: number, brandName?: string) {
-        if(brandId) {
+    createCarBrand = flow(function* (
+        this: CatalogStore,
+        car_class: string,
+        model: string,
+        brandId?: number,
+        brandName?: string,
+    ) {
+        if (brandId) {
             try {
                 const { data } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_class, model)
                 return data
@@ -100,7 +109,7 @@ export class CatalogStore {
                 console.log(error)
             }
         }
-        if(brandName) {
+        if (brandName) {
             try {
                 const { data } = yield agent.Catalog.createCarBrandWithNewBrand(brandName, car_class, model)
                 return data
@@ -109,11 +118,15 @@ export class CatalogStore {
             }
         }
     })
+    get carBrandsCurrent() {
+        this.getCarBrands()
+        return this.carBrands
+    }
     get brandAndModels() {
         return this.carBrandModelsReference
     }
     clearBrandModels() {
-        this.brandModels = []
+        this.brandModels.clear()
     }
 
     getCity(id: number) {

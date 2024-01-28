@@ -3,8 +3,7 @@ import styles from './TableWithSort.module.scss'
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import { SvgChevron, SvgLoading, SvgSort } from 'components/common/ui/Icon'
 import Chips from 'components/common/ui/Chips/Chips'
-import { useAsyncValue, useLoaderData, useLocation, useNavigate, useRevalidator, useSearchParams } from "react-router-dom";
-// import Pagination from 'components/common/Pagination/Pagination'
+import {  useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import {Pagination} from "@mantine/core";
 import DataFilter from 'components/common/layout/TableWithSort/DataFilter'
 import TableSearch from 'components/common/layout/TableWithSort/TableSearch'
@@ -12,17 +11,14 @@ import { useDebouncedState } from '@mantine/hooks'
 import label from 'utils/labels'
 import { useWindowDimensions } from 'utils/utils'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { UserTypeEnum } from "stores/userStore";
 import { CompanyType } from "stores/companyStore";
-import { useStore } from "stores/store";
-import agent from "utils/agent";
 
 type TableWithSortProps = {
     data: any[]
     state: boolean
     className?: string
     background?: PanelColor
-    ar: string[]
+    ar: string[] | { label: string, name: string }[]
     style?: PanelRouteStyle
     search?: boolean
     initFilterParams?: {}
@@ -67,7 +63,7 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
     return (
         <thead>
             <tr className={styles.tableheader + ' tableheader'}>
-                {ar.map((arItem: string, index: number) => {
+                {ar.map((arItem: { label: string, name: string }, index: number) => {
                     return (
                         <th
                             key={`rh-${index}`}
@@ -76,7 +72,10 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
                             data-sort-selected={index === count.index}
                             data-sort-reversed={index === count.index && count.reversed === true}
                         >
-                            <div style={{display: 'flex'}}><span>{arItem}</span><SvgSort /></div>
+                            <div style={{ display: 'flex' }}>
+                                <span>{arItem.label}</span>
+                                <SvgSort />
+                            </div>
                         </th>
                     )
                 })}
@@ -114,7 +113,7 @@ const RowData = (props: any) => {
         if (props.query && props.query.rootRoute) {
             return navigate(props.query.rootRoute)
         }
-        const route = location.pathname + queryCompanyTypeUrl + queryUrl + `${props.id}`
+        const route = location.pathname + queryCompanyTypeUrl + queryUrl + `/${props.id}`
 
         props.id ? navigate(route) : void null
     }
@@ -183,18 +182,18 @@ const TableWithSortNew = ({
         reversed: false,
     })
     const {data:loaderData, textData}:any = useLoaderData()
-
     let location = useLocation()
     const navigate = useNavigate()
     let [searchParams, setSearchParams] = useSearchParams()
     // @ts-ignore
-    const [sortedField, setSortedField] = useState(textData.tableHeaders[0])
+    const [sortedField, setSortedField] = useState(textData.tableHeaders[0].name)
     const [currentPage, setCurrentPage] = useState(1)
 
     const handleCurrentPage = React.useCallback((value: any) => {
+
+        setSearchParams((prev) => ({...prev, ordering: sortedField, page: value}));
         setCurrentPage(value)
-        setSearchParams((prevstate) => ({...prevstate, page: value}));
-    }, [])
+    }, [sortedField])
 
     // Быстрый поиск
     const [fastSearchString, setFastSearchString] = useDebouncedState('', 200)
@@ -231,18 +230,25 @@ const TableWithSortNew = ({
     }, [filterParams])
 
     const RowDataMemoized = React.useMemo(() => {
-        // @ts-ignore
-        return loaderData.results.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
-    }, [loaderData])
+       if(loaderData.results.length > 0) return loaderData.results.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
+    }, [loaderData.results])
 
-    const handleHeaderAction = React.useCallback((event: React.BaseSyntheticEvent) => {
+    const handleHeaderAction = React.useCallback((e: any) => {
+
+
         // @ts-ignore
-        setSortedField(textData.tableHeaders[event.index])
-        // @ts-ignore
-        setSearchParams((prevstate) => ({...prevstate, ordering: sortedField}));
-        setCurrentPage(1)
+        if(e.reversed) {
+            setSortedField(`-${textData.tableHeaders[e.index].name}`)
+        } else {
+            setSortedField(textData.tableHeaders[e.index].name)
+        }
+
     }, [sortedField])
 
+    React.useEffect(() => {
+        setSearchParams((prev) => ({...prev,  ordering: sortedField}));
+        setCurrentPage(1)
+    }, [sortedField])
     if (state) return <SvgLoading className={'m-auto'} />
 
     return (
@@ -260,7 +266,7 @@ const TableWithSortNew = ({
                 </>
             }
             footer={
-             ( loaderData.count / pageSize) > 1 && (
+             ( Math.ceil(loaderData.count / pageSize)) > 1 && (
                     <Pagination
                         classNames={{
                             control:
@@ -269,7 +275,7 @@ const TableWithSortNew = ({
                         total={loaderData.count / pageSize}
                         value={currentPage}
                         onChange={(e) => handleCurrentPage(e)}
-                        boundaries={2}
+                        // boundaries={2}
                         defaultValue={10}
                     />
                 )

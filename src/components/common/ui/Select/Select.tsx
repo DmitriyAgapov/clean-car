@@ -1,13 +1,10 @@
-import { MantineProvider,  createTheme, Select } from '@mantine/core';
+import { Select } from '@mantine/core';
 import type { SelectProps } from '@mantine/core';
 
 import { useFormikContext } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import labels from "utils/labels";
-const theme = createTheme({
-
-});
  const SelectCustom = (
      {
          label,
@@ -35,10 +32,15 @@ const theme = createTheme({
  ) => {
      const [tempValue, setValue] = useState(value)
      const ref = useRef<HTMLInputElement>(null)
-     const { values, submitForm, setValues } = useFormikContext()
+     const { getFieldProps, values, submitForm, setFieldValue, setValues, touched, setTouched } = useFormikContext()
+      //TODO Рефактирить надо выносить из компонента
+      useEffect(() => {
+        if(name === 'model') {
+          getFieldProps('model').value === null && setValue(null)
+        }
+      }, [touched, values, getFieldProps])
 
      const handleSelectChange = (event: any) => {
-
          action && action(event)
          setValue(event)
          // @ts-ignore
@@ -76,11 +78,13 @@ const theme = createTheme({
              }))
          }
          else {
+
              setValues(() => ({
                  // @ts-ignore
                  ...values,
                  [name]: event,
              }))
+
          }
      }
 
@@ -90,7 +94,7 @@ const theme = createTheme({
            searchable={searchable}
               disabled={disabled}
              ref={ref}
-           placeholder={placeholder}
+              placeholder={placeholder}
              withCheckIcon={false}
              classNames={{
                  root: className,

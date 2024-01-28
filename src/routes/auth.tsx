@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Layout from 'components/common/layout/Layout/Layout'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import FormAuth from 'components/Form/FormAuth/FormAuth'
 import { useStore } from 'stores/store'
@@ -10,7 +10,6 @@ import { observer } from 'mobx-react-lite'
 import { Navigate } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { values } from 'mobx'
 
 function AuthPage() {
   const store = useStore()
@@ -30,7 +29,7 @@ function AuthPage() {
       <Section type={SectionType.centered}>
         <Panel
 
-          className={'col-span-6 mb-12 tablet:col-span-full desktop:col-span-6'}
+          className={'!col-span-6 mb-12 !tablet:col-span-full !desktop:col-span-6'}
           header={
             <Heading
               text={'Вход в систему'}
@@ -51,7 +50,7 @@ function AuthPage() {
           <Panel
             bodyClassName={'!py-12'}
             className={
-              'col-span-6 desktop:col-start-9 desktop:col-span-6  tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-2xl'
+              '!col-span-6 !desktop:col-start-9 !desktop:col-span-6  !tablet:col-start-2 !tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-2xl'
             }
             variant={PanelVariant.textPadding}
             background={PanelColor.glass}

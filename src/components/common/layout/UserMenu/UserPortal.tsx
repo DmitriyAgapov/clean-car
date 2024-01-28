@@ -70,10 +70,10 @@ const UserCompanies = () => {
       <span className={`user__type-${item}`}>{label(item+'_k')}</span>Кабинет {label(item+'_name')}
     </Link>
   </li>)
-
-  return <StyledAccounts>
+  if(userLinks.length > 0) return <StyledAccounts>
     {userLinks}
   </StyledAccounts>
+  return null
 }
 const UserPortal = ({
   state,
