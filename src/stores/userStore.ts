@@ -219,7 +219,7 @@ export class UserStore {
 
   pullUser() {
       this.loadingUser = true
-      return  agent.Auth.current()
+      return agent.Auth.current()
         .then((r: any) => {
           runInAction(() => {
             this.currentUser = r
@@ -227,10 +227,8 @@ export class UserStore {
         })
         .catch(action((error) => {
           this.updatingUserErrors = error
-        console.log('error');
-        console.log(error);
       }))
-        .finally(action(() => this.loadingUser = false))
+        .finally(() => action(() => this.loadingUser = false))
   }
 
   getCurrentUserActiveAccount() {

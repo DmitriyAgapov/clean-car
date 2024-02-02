@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import "yup-phone-lite";
+import {values as val} from "mobx";
 import { useStore } from "stores/store";
 import { useNavigate } from "react-router-dom";
 import { CreateFormikInput } from "components/common/ui/CreateInput/CreateInput";
@@ -32,10 +33,10 @@ const FormInputs = observer(():JSX.Element => {
     const store = useStore()
     const { values, errors, setFieldValue, setValues, getFieldHelpers, touched }:any = useFormikContext();
     const [companies, setCompanies] = useState(store.companyStore.companies)
-    const handleChangeBrand = (e:any) => {
+    const handleChangeBrand = React.useCallback((e:any) => {
         store.catalogStore.clearBrandModels()
         values.model = null;
-    }
+    },[])
     const[belongTo, setBelongTo] = useState('company')
     return (
       <>
@@ -44,7 +45,7 @@ const FormInputs = observer(():JSX.Element => {
                 action={handleChangeBrand}
                 placeholder={'Выберите марку'} label={'Марка автомобиля'}
                 // @ts-ignore
-                value={values.brand} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={store.catalogStore.carBrands.map((item:any) => ({ label: item.name, value: String(item.id) }))}/>
+                value={values.brand} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={val(store.catalogStore.carBrands).map((item:any) => ({ label: item.name, value: String(item.id) }))}/>
               <SelectCustom  name={'model'}  disabled={store.catalogStore.brandModelsCurrent.length == 0} placeholder={'Выберите модель'} label={'Модель'}
                 // @ts-ignore
                 onLoadedData={(data) => console.log('data', data)}
@@ -70,7 +71,7 @@ const FormInputs = observer(():JSX.Element => {
               ]} placeHolder={'Выбрать статус'} name={'status'}/>
               <SelectCustom   label={'Город'}
                 // @ts-ignore
-                value={values.city} disabled={store.catalogStore.cities.length === 0} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'select'} options={store.catalogStore.cities.map((city:any) => ({label: city.name, value: String(city.id)}))} placeHolder={'Выбрать статус'} name={'city'}/>
+                value={values.city} disabled={store.catalogStore.cities.size === 0} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'select'} options={val(store.catalogStore.cities).map((city:any) => ({label: city.name, value: String(city.id)}))} placeHolder={'Выбрать статус'} name={'city'}/>
               <hr className={'col-span-full flex-[1_100%]'}/>
           </>
           <>
@@ -166,91 +167,91 @@ const FormCreateCar = ({ user, edit }: any) => {
 
     const [animate, setAnimate] = useState(false)
     const [model, setModel] = useState<any>([])
-    const formData = [
-        {
-            label: 'Тип автомобиля',
-            placeholder: 'Выберите тип',
-            name: 'car_type',
-            type: 'select',
-            value: '',
-            options: carTypes,
-            depend: false,
-        },
-        {
-            label: 'Гос. номер',
-            placeholder: 'Введите гос. номер',
-            name: 'number',
-            type: 'text',
-            value: '',
-            options: [],
-            depend: false,
-        },
-        {
-            label: 'Высота автомобиля, м',
-            placeholder: 'Введите высоту автомобиля',
-            name: 'height',
-            type: 'text',
-            value: '',
-            depend: false,
-        },
-        {
-            label: 'Радиус колес, дюймы',
-            placeholder: 'Введите высоту',
-            name: 'radius',
-            type: 'text',
-            value: '',
-            depend: false,
-        },
-        {
-            label: 'Статус',
-            placeholder: 'Выбрать статус',
-            name: 'status',
-            type: 'select',
-            options: [
-                { label: 'Активен', value: 'true' },
-                { label: 'Неактивен', value: 'false' },
-            ],
-            value: '',
-            depend: false,
-        },
-        {
-            label: 'Город',
-            placeholder: 'Выбрать город',
-            name: 'city',
-            type: 'select',
-            options: [{ label: 'Москва', value: '16254' }],
-            value: '',
-            depend: false,
-        },
-        {
-          type: 'divider'
-        },
-        {
-            label: 'Принадлежит',
-            placeholder: 'Выбрать компанию',
-            name: 'belong_to',
-            type: 'select',
-            options: [
-                { label: 'Филиалу', value: 'filial' },
-                { label: 'Компании', value: 'company' },
-            ],
-            value: '',
-            depend: false,
-        },
-        {
-            label: 'Филиал',
-            placeholder: 'Выбрать филиал',
-            name: 'status',
-            type: 'select',
-            options: [
-                { label: 'Филиал', value: '1625' },
-                { label: 'Филиал2', value: '16252' },
-            ],
-            value: '',
-            depend: true,
-        },
-    ]
-
+    // const formData = [
+    //     {
+    //         label: 'Тип автомобиля',
+    //         placeholder: 'Выберите тип',
+    //         name: 'car_type',
+    //         type: 'select',
+    //         value: '',
+    //         options: carTypes,
+    //         depend: false,
+    //     },
+    //     {
+    //         label: 'Гос. номер',
+    //         placeholder: 'Введите гос. номер',
+    //         name: 'number',
+    //         type: 'text',
+    //         value: '',
+    //         options: [],
+    //         depend: false,
+    //     },
+    //     {
+    //         label: 'Высота автомобиля, м',
+    //         placeholder: 'Введите высоту автомобиля',
+    //         name: 'height',
+    //         type: 'text',
+    //         value: '',
+    //         depend: false,
+    //     },
+    //     {
+    //         label: 'Радиус колес, дюймы',
+    //         placeholder: 'Введите высоту',
+    //         name: 'radius',
+    //         type: 'text',
+    //         value: '',
+    //         depend: false,
+    //     },
+    //     {
+    //         label: 'Статус',
+    //         placeholder: 'Выбрать статус',
+    //         name: 'status',
+    //         type: 'select',
+    //         options: [
+    //             { label: 'Активен', value: 'true' },
+    //             { label: 'Неактивен', value: 'false' },
+    //         ],
+    //         value: '',
+    //         depend: false,
+    //     },
+    //     {
+    //         label: 'Город',
+    //         placeholder: 'Выбрать город',
+    //         name: 'city',
+    //         type: 'select',
+    //         options: [{ label: 'Москва', value: '16254' }],
+    //         value: '',
+    //         depend: false,
+    //     },
+    //     {
+    //       type: 'divider'
+    //     },
+    //     {
+    //         label: 'Принадлежит',
+    //         placeholder: 'Выбрать компанию',
+    //         name: 'belong_to',
+    //         type: 'select',
+    //         options: [
+    //             { label: 'Филиалу', value: 'filial' },
+    //             { label: 'Компании', value: 'company' },
+    //         ],
+    //         value: '',
+    //         depend: false,
+    //     },
+    //     {
+    //         label: 'Филиал',
+    //         placeholder: 'Выбрать филиал',
+    //         name: 'status',
+    //         type: 'select',
+    //         options: [
+    //             { label: 'Филиал', value: '1625' },
+    //             { label: 'Филиал2', value: '16252' },
+    //         ],
+    //         value: '',
+    //         depend: true,
+    //     },
+    // ]
+    //
 
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
@@ -273,22 +274,25 @@ const FormCreateCar = ({ user, edit }: any) => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values, FormikHelpers) => {
+                console.log(val(store.usersStore.selectedUsers).map((item:any) => item.employee.id));
                 const data = {
                     car_type: values.car_type,
                     number: values.number,
-                    radius: values.radius,
+                    radius: Number(values.radius),
                     limit: values.limit,
-                    company_id: values.company_id,
+                    company_id: Number(values.company_id),
                     company_type: values.company_type,
                     is_active: values.is_active,
-                    brand: values.brand,
-                    model: values.model,
-                    employees: store.usersStore.selectedUsers.values(),
+                    brand: Number(values.brand),
+                    model: Number(values.model),
+                    employees: val(store.usersStore.selectedUsers).map((item:any) => item.employee.id),
                 }
-                console.log(values);
-                store.formStore.setFormDataCreateCar(values)
+
+
+                store.formStore.setFormDataCreateCar(data)
+                store.formStore.sendCarFormData()
                 changeStep(2)
-                store.formStore.formSendDataUser('formCreateUser', data)
+                // store.formStore.formSendDataUser('formCreateUser', data)
             }}
         >
             {({
@@ -343,7 +347,7 @@ const FormCreateCar = ({ user, edit }: any) => {
                               //@ts-ignore
                               <div className={'asd order-2 flex-[1_100%]'}><Heading text={'Добавленные:'} variant={HeadingVariant.h4}/>  <div className={'grid grid-cols-3 gap-6'}>  {store.usersStore.selectedUsers.size > 0 && store.usersStore.selectedUsers.toJSON().map((el: any) => {
                                   return <FormCard actions={null} className={'relative'} title={el[1].employee.first_name}  children={<><CloseButton style={{position: "absolute", right: '1rem', top: '1rem'}} onClick={() => {
-                                      console.log(el[1].employee.id);
+
                                       store.usersStore.removeFromSelectedUsers(el[1].employee.id)
                                   }}/><div className={'text-xs -mt-3 pb-4 uppercase text-gray-2'}>{el[1].group.name}</div><ul>
                                       <li>{el[1].employee.phone}</li>

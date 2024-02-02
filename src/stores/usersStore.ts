@@ -132,11 +132,10 @@ export class UsersStore {
     this.companyUsersSelected.set(id, data)
   }
   async getUsers(company_id: any) {
-    return await agent.Account.getCompanyUsers(Number(company_id))
-      .then((resolve: any) => resolve)
-      .then((resolve: any) => resolve.data)
-      .then((data) => runInAction(() => this.companyUsers = data.results))
-      .catch((error) => console.log(error))
+    const {data} = await agent.Account.getCompanyUsers(Number(company_id))
+    runInAction(() => this.companyUsers = data.results)
+    action(() => this.companyUsers = data.results)
+    return await data.results
   }
   get currentCompanyUsers() {
     return this.companyUsers

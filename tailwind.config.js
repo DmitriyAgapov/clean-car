@@ -54,5 +54,12 @@ module.exports = withMT({
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-children'),
+    function ({ addVariant }) {
+      addVariant('child', '& > *');
+      addVariant('child-hover', '& > *:hover');
+
+    }
+  ],
 })

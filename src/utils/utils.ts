@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import styles from "components/common/layout/DateComponent/DateComponent.module.scss";
 
 export const useOutsideClick = (callback: () => void) => {
   const ref = React.useRef(null)
@@ -11,7 +10,6 @@ export const useOutsideClick = (callback: () => void) => {
         callback()
       }
     }
-
     document.addEventListener('click', handleClick, true)
 
     return () => {
@@ -22,6 +20,21 @@ export const useOutsideClick = (callback: () => void) => {
   return ref
 }
 
+export const dateTransformShort = (date: string) => {
+  const value = !date ? new Date(Date.now()) : new Date(date)
+  const options = {
+    day: 'numeric', weekday: 'long', year: 'numeric', month: 'long', hour: 'numeric', minute: 'numeric',
+  }
+  const day = value.getDate().toLocaleString('ru', { compactDisplay: 'short' })
+  const month = value.toLocaleString('default', { month: '2-digit' })
+  const year = value.toLocaleString('ru', {year: '2-digit'})
+  const hours = value.getHours().toLocaleString('ru', { compactDisplay: 'long' })
+  const min = value.getMinutes().toLocaleString('ru', { compactDisplay: 'long' })
+
+  return {
+    date: `${day}.${month}.${year} ${hours}:${min}`
+  }
+}
 export const dateTransform = (date: string) => {
   const value = !date ? new Date(Date.now()) : new Date(date)
   const options = {

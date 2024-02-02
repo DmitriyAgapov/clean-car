@@ -1,17 +1,16 @@
-import React, { ReactNode } from "react";
-import DList from "components/common/ui/DList/DList";
-import CardSimple from "components/common/layout/Cards/CardSimple/CardSimple";
-import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import { PanelColor, PanelProps, PanelVariant } from "components/common/layout/Panel/Panel";
-import TableWithSort from "components/common/layout/TableWithSort/TableWithSort";
-import { User } from "stores/usersStore";
-import Tabs, { TabsProps } from "../../../components/common/layout/Tabs/Tabs";
-import { useStore } from "stores/store";
-import CreateInput from "components/common/ui/CreateInput/CreateInput";
-import { useNavigate } from "react-router-dom";
-import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
+import React, { ReactNode } from 'react'
+import DList from 'components/common/ui/DList/DList'
+import CardSimple from 'components/common/layout/Cards/CardSimple/CardSimple'
+import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
+import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
+import Panel, { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
+import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
+import { User } from 'stores/usersStore'
+import Tabs, { TabsProps } from '../../../components/common/layout/Tabs/Tabs'
+import { useStore } from 'stores/store'
+import CreateInput from 'components/common/ui/CreateInput/CreateInput'
+import { useNavigate } from 'react-router-dom'
 
 type TabsVariantsProps = {
   label: string,
@@ -238,6 +237,87 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
         {/* todo: Добавить филиал */}
           {data.company.parent && <DList label={'Филиал'} title={data.company.parent} />}
         </div>
+      </Tabs.Panel>)
+      break;
+
+    case 'Сотрудники':
+      // @ts-ignore
+      console.log(data);
+      // console.log(props[0].data && props[0].data?.company.name || '');
+      result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        {data.employees.length !== 0 ? <TableWithSort total={data.count}  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+          data={data.employees.map((item: any & {rootRoute?: string} ) => ({
+            state: item.is_active,
+            name: item.first_name + ' ' + item.last_name,
+            phone: item.phone,
+            email: item.email,
+
+            company: data.company.name,
+
+            city: data.company.city.name,
+            id: item.id,
+            query: {
+              company_id: data.company.id,
+              rootRoute: `/account/users/${data.company.company_type === "Компания-Заказчик" ? 'customer' : 'performer'}/${data.company.id}/${item.id}`,
+            },
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}
+          ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail',  'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
+      </Tabs.Panel>)
+      break;
+    // case 'Филиалы':
+    //   console.log(data);
+    //   result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+    //     {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+    //       data={data.map((item: any & {rootRoute?: string} ) => ({
+    //         state: item.is_active,
+    //         name: item.name,
+    //         city: item.city.name,
+    //         id: item.id,
+    //         query: {
+    //           company_id: companyId,
+    //           rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
+    //         },
+    //       }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
+    //   </Tabs.Panel>)
+    //   break;
+    default:
+      return null;
+  }
+  return  result
+};
+
+export const TabsVariantBids = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
+  const store = useStore()
+  let result
+  console.log(data);
+  console.log(label);
+  switch (label) {
+    case "Основная информация":
+      const navigate = useNavigate()
+
+
+      result = (<Tabs.Panel className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !py-8' + " " + className}    state={state} name={'bidInfo'}  company_type={company_type}>
+
+            <DList className={'child:dt:text-accent'}  label={'Заказчик'}  title={<Heading variant={HeadingVariant.h4} text={data.company.name}/>} />
+            <DList className={'child:dt:text-accent'}  label={'Город'}  title={<Heading variant={HeadingVariant.h4} text={data.company.city.name}/>} />
+            <DList className={'child:dt:text-accent'}  label={'Пользователь'}  title={<Heading variant={HeadingVariant.h4} text={`${data.author.first_name} ${data.author.last_name}`}/>} />
+            <DList className={'child:dt:text-accent'}  label={'Услуга'}  title={<Heading variant={HeadingVariant.h4} text={data.service_type.name} color={HeadingColor.active} />} />
+            <DList className={'child:dt:text-accent'}  label={'Номер телефона'}  title={<Heading variant={HeadingVariant.h4} text={data.phone}/>} />
+            <DList className={'child:dt:text-accent'}  label={'Марка автомобиля'}  title={<Heading variant={HeadingVariant.h4} text={data.car.brand.name + ' ' + data.car.model.name}/>} />
+            <DList className={'child:dt:text-accent'}  label={'Гос. номер'}  title={<Heading variant={HeadingVariant.h4} text={data.car.number}/>} />
+            <DList className={'child:dt:text-accent'}  label={'Тип'}  title={<Heading variant={HeadingVariant.h4} text={data.car.model.car_type}/>} />
+            <DList className={'child:dt:text-accent col-span-2 col-start-1 row-start-5'}  label={'Комментарий'}  title={<p>{data.customer_comment}</p>} />
+        <Panel variant={PanelVariant.withPaddingSmWithBody} background={PanelColor.glass} className={'!col-start-3 row-span-5'}>
+          <DList className={'child:dt:text-accent'}  label={'Партнер'}  title={<Heading variant={HeadingVariant.h4} text={data.performer.name}/>} />
+          <DList className={'child:dt:text-accent'}  label={'Адрес'}  title={<Heading variant={HeadingVariant.h4} text={data.performer.name}/>} />
+        </Panel>
+            {/* /!* //todo: address *!/ */}
+            {/* <DList className={'child:dt:text-accent'}  label={'Адрес выезда'}  title={data.address} /> */}
+            {/* <DList className={'child:dt:text-accent'}  label={'Важность'}  title={store.bidsStore.formResultsAll.important.label} /> */}
+            {/* <DList className={'child:dt:text-accent'}  label={'Время'}  title={store.bidsStore.formResultsAll.time.value} /> */}
+            {/* <DList className={'child:dt:text-accent'}  label={'Дополнительные данные'}  title={<><ul><li>{store.bidsStore.formResultsAll.secretKey.label}</li><li>{store.bidsStore.formResultsAll.parking.label}</li></ul></>} /> */}
+            {/* <DList className={'child:dt:text-accent'}  label={'Дополнительные опции'}  title={<><ul>{store.bidsStore.currentBid.service_option.map((i:any) => <li key={i.id}>{i.name}</li>)}</ul></>} /> */}
+
       </Tabs.Panel>)
       break;
 

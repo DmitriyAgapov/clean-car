@@ -23,7 +23,6 @@ const ServicePage = () => {
 
   let [searchParams, setSearchParams] = useSearchParams()
 
-
     const memoizedData = React.useMemo(() => {
         return data.results?.subtypes?.results?.map((subtype: any) => (
             <FormCard
@@ -46,7 +45,7 @@ const ServicePage = () => {
                                         />
                                     ),
                                     text: `Вы уверены, что хотите удалить ${data.results.name}`,
-                                    component: <AddOption id={subtype.id} />,
+                                    component: <AddOption subtype_id={subtype.id} id={Number(params.id)} />,
                                     state: true,
                                 })
                             }}

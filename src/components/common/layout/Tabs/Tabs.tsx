@@ -11,16 +11,22 @@ import CreateInput from 'components/common/ui/CreateInput/CreateInput'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { User } from 'stores/usersStore'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
-import TabsVariants, { TabsVariantsCars,  TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
+import TabsVariants, { TabsVariantBids, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import Logo from "components/common/layout/Logo/Logo";
 import company from "routes/company/company";
 
-
+export enum TabsType {
+  bid = 'bid',
+  company = 'company',
+  user = 'user',
+}
 export type TabsProps = {
   data?: any
+  className?: string
+  type?: TabsType
 }
-const Tabs = ({ data, panels, items }: TabsProps & {panels?: any, items?: any}) => {
-
+const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: any, items?: any}) => {
+  console.log(data);
   const store = useStore()
     const [state, setState] = useState('Основная информация');
 
@@ -50,6 +56,12 @@ const Tabs = ({ data, panels, items }: TabsProps & {panels?: any, items?: any}) 
     }
     const TabPanels = ():any => {
     const result:any = []
+      if(type == TabsType.bid) {
+        data.forEach((item: any) => {
+          result.push(<TabsVariantBids state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>)
+        })
+        return result
+      }
       if(items) {
         data.forEach((item: any) => {
           result.push(<TabsVariantsCars state={state == item.label} data={item.data} label={item.label} props={items}/>)
@@ -83,7 +95,7 @@ const Tabs = ({ data, panels, items }: TabsProps & {panels?: any, items?: any}) 
       return  result
     }
     return (
-        <div className={styles.Tabs}>
+        <div className={styles.Tabs + ' ' + className}>
             <Tabs.TabHeaderContainer>
               <HeadersTabs/>
             </Tabs.TabHeaderContainer>

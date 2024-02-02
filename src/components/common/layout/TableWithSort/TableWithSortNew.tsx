@@ -12,9 +12,11 @@ import label from 'utils/labels'
 import { useWindowDimensions } from 'utils/utils'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { CompanyType } from "stores/companyStore";
+import Status from "components/common/ui/Status/Status";
+import { useStore } from "stores/store";
 
 type TableWithSortProps = {
-    data: any[]
+    data?: any[]
     state: boolean
     className?: string
     background?: PanelColor
@@ -90,6 +92,7 @@ const RowData = (props: any) => {
     const querys = React.useCallback(() => {
         let queryString = ''
         if (props.query) {
+            console.log(props.query);
             for (const key in props.query) {
                 queryString = queryString + `/${props.query[key]}`
             }
@@ -131,6 +134,11 @@ const RowData = (props: any) => {
                     ar.push(<td key={key}
                       className={styles.tableCell}>
                         <Chips state={false} />
+                    </td>,)
+                } else if(key === 'status') {
+                    ar.push(<td key={key}
+                      className={styles.tableCell}>
+                        <Status variant={props[key]} />
                     </td>,)
                 } else {
                     if (key !== 'id' && key !== 'companyId') {
@@ -182,6 +190,7 @@ const TableWithSortNew = ({
         reversed: false,
     })
     const {data:loaderData, textData}:any = useLoaderData()
+    const store = useStore()
     let location = useLocation()
     const navigate = useNavigate()
     let [searchParams, setSearchParams] = useSearchParams()

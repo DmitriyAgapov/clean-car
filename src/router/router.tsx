@@ -50,9 +50,10 @@ import ServicesPage from "routes/reference/Services/references";
 import ServicePage from "routes/reference/Services/reference";
 import ServicesSubTypePage from "routes/reference/Services/subtype";
 import BidsPage from "routes/bids/bids";
-import { bidsLoader } from "routes/loaders/bidsLoader";
+import { bidLoader, bidsLoader } from "routes/loaders/bidsLoader";
 import BidsCreatePage from "routes/bids/BidsCreatePage";
 import PricesPage from "routes/price/prices";
+import BidPage from "routes/bids/bid";
 
 const router = createBrowserRouter([
     {
@@ -138,6 +139,11 @@ const router = createBrowserRouter([
               element: <BidsPage/>,
               loader: bidsLoader,
               children: [
+                  {
+                      path: ':company_id/:id',
+                      element: <BidPage/>,
+                      loader: bidLoader,
+                  },
                   {
                       path: 'create',
                       element: <BidsCreatePage/>,

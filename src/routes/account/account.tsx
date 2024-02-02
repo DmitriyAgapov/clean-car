@@ -14,6 +14,7 @@ import { Loader } from "@mantine/core";
 
 const AccountPage = () => {
     const store = useStore()
+  console.log(store);
   return (
         <Layout
 

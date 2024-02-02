@@ -46,13 +46,14 @@ export function InputAutocomplete(props:any) {
   React.useEffect(() => {
     setData(null)
     tempAdress !== values.city ? values.address = '' : void null
-
+    console.log(store.catalogStore.getCity(values.city));
     if (values.city && !values.address) {
-      const cityName = store.catalogStore.getCity(values.city)
+      const cityName = store.catalogStore.getCity(values.city).name
       cityName && setValue(cityName + ', ')
 
       if (ref && ref.current && cityName) {
-        const cityNameLength = cityName.length
+        // @ts-ignore
+        const cityNameLength = cityName.size
         // @ts-ignore
         ref.current.focus();
         // @ts-ignore

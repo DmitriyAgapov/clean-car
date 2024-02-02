@@ -3,7 +3,6 @@ import { AxiosError } from 'axios'
 import agent from '../utils/agent'
 import userStore from './userStore'
 import appStore from './appStore'
-import data from "utils/getData";
 
 export class AuthStore {
   constructor() {
@@ -34,24 +33,25 @@ export class AuthStore {
     password: '',
   }
 
-  async refreshToken() {
-     return await agent.Auth.tokenRefresh()
-      .then((resolve: any) => resolve.data)
-       .then((data) => runInAction(() => {
-          const {access} = data
-         console.log(access);
-          appStore.setToken(access)
-        },
-          ),
-      )
-      .catch(
-        action((err: AxiosError) => {
-          this.errors = err.response && err.response.data
-          throw err
-        }),
-      )
-  }
-
+   refreshToken() {
+     if (appStore.tokenRefresh) {
+       return agent.Auth.tokenRefresh(appStore.tokenRefresh).then((resolve: any) => resolve).then((data) => {
+           console.log(data);
+           runInAction(() => {
+             const { access } = data
+             console.log(access);
+             appStore.setToken(access)
+           })
+         },
+       ).catch(
+         action((err: AxiosError) => {
+           this.errors = err.response && err.response.data
+           throw err
+         }),
+       )
+     }
+     return null
+   }
   setFirstname(first_name: string) {
     this.values.first_name = first_name
   }

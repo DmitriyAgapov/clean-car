@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from 'components/common/layout/Layout/Layout'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelColor,  PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import FormAuth from 'components/Form/FormAuth/FormAuth'
 import { useStore } from 'stores/store'

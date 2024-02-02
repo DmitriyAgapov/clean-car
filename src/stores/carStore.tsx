@@ -1,4 +1,4 @@
-import { flow, makeAutoObservable } from "mobx";
+import { action, flow, makeAutoObservable, runInAction } from "mobx";
 import { makePersistable } from "mobx-persist-store";
 import agent from "utils/agent";
 import appStore from "stores/appStore";
@@ -74,6 +74,26 @@ export class CarStore {
     }
     return this.cars
   })
+  async getCarsByCompony(company_id:number) {
+    this.loadingCars = true
+    try {
+
+        const { data } = await agent.Cars.getCompanyCars(company_id)
+        runInAction(() => this.cars = data)
+
+
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.loadingCars = false
+    }
+  }
+  get getCompanyCars() {
+    // console.log(this.cars);
+    return ({
+      cars: this.cars
+    })
+  }
   createCar = flow(function* (this: CarStore, company_id: number, car: Car) {
     this.loadingCars = true
     try {

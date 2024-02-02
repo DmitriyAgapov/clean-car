@@ -6,7 +6,9 @@ import  'utils/axiosConfig'
 import { User } from 'stores/userStore'
 import { toJS } from 'mobx'
 import { Company, CompanyType } from "stores/companyStore";
-import { errors } from "jose";
+import { number } from "yup";
+import company from "routes/company/company";
+import { notifications } from "@mantine/notifications";
 
 export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
@@ -74,7 +76,7 @@ const requests = {
     axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
-      method: 'Post',
+      method: 'POST',
       data: body,
     })
   .then((response) => response)
@@ -87,34 +89,78 @@ const requests = {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      method: 'Post',
+      method: 'POST',
       data: JSON.stringify({ query: query }) ,
     }),
 }
 
 //Обработка ошибок
 const handleErrors = (err: AxiosError) => {
-  if (err && err.response && err.response.status === 401) {
-    if(appStore.tokenRefresh) {
-      agent.Auth.tokenRefresh()
-        .then((resolve:any) => resolve.data)
-        .then((data) => {
-          appStore.setToken(null)
-          appStore.setToken(data.access)
-      })
-        .catch((err) => {
-          appStore.setTokenError(err.response.data)
-          authStore.logout()
-      })
+    if (err && err.response && err.response.status === 401) {
+        const refr = localStorage.getItem('jwt_refresh')
+              if (refr) {
+            agent.Auth.tokenRefresh(refr)
+                .then((resolve: any) => resolve.data)
+                .then((data) => {
+                    appStore.setToken(null)
+                    appStore.setToken(data.access)
+                })
+                .catch((err) => {
+                    appStore.setTokenError(err.response.data)
+                    authStore.logout()
+                })
+        }
     }
-  }
-  return err
+    console.log(err)
+    // if(err && err.response && err.response.data) {
+    //
+    // for(const key in err.response.data) {
+    //   // @ts-ignore
+    //   console.log(err.response.data[key]);
+    //   setTimeout(() => {
+    //     notifications.show({
+    //       id: key,
+    //       withCloseButton: true,
+    //       onClose: () => console.log('unmounted'),
+    //       onOpen: () => console.log('mounted'),
+    //       autoClose: 6000,
+    //       title: key,
+    //       // @ts-ignore
+    //
+    //       message: err.code,
+    //       color: 'red',
+    //       // icon: <SvgClose />,
+    //       className: 'my-notification-class',
+    //       // style: { backgroundColor: 'red' },
+    //       loading: false,
+    //     });
+    //
+    //   }, 200 * 1);
+    //
+    // }}
+    return err
 }
 const Price = {
-  getAllPrice: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params)
+    getAllPrice: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),
 }
+
+export interface CreateBidData {
+  phone: string,
+  performer: number,
+  company: number,
+  conductor: number,
+  car: number,
+  service_type: number,
+  service_subtype: number,
+  service_option: number[],
+  customer_comment?: string
+}
+
 const Bids = {
-  getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params)
+  getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),
+  getAvailablePerformers: (customer_id:number, service_subtype_id: number) => requests.get(`/bids/${customer_id}/${service_subtype_id}/performers/`),
+  createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
+  getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`)
 }
 const Utils = {
   suggest: ({ query }:{query: string}) => requests.postSuggest(query)
@@ -137,8 +183,8 @@ const Auth = {
       }
     })
   },
-  tokenRefresh: () => requests.post('/token/refresh/',{
-  "refresh": appStore.tokenRefresh
+  tokenRefresh: (refresh: string) => requests.post('/token/refresh/',{
+      refresh: refresh
   }),
   login: (email: string, password: string) => requests.post('/token/', { email: email, password: password }),
   register: (first_name: string, last_name: string, email: string, phone: string, password: string) =>
@@ -153,8 +199,7 @@ const Auth = {
 }
 const Users = {
     getAllUsers: () => requests.get('/accounts/all_users/', {}),
-    getUser: ({ company_id, id }: { company_id: number; id: number }) =>
-        requests.get(`/accounts/${company_id}/users/${id}/retrieve/`)
+    getUser: ({ company_id, id }: { company_id: number; id: number }) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`)
 
 }
 const Companies = {
@@ -251,13 +296,11 @@ const Catalog = {
         requests.post('/catalog/services/subypes/create/', { name: name, is_active: is_active, service_type: id }),
     createOption: (id: number, name: string, is_active: boolean) =>
         requests.post('/catalog/services/options/create/', { name: name, is_active: is_active, service_type: id }),
-    editSubtype: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) =>
-    {console.log('props', id, subtype_id, name, is_active)
-     return requests.patch(`/catalog/services/subypes/${id}/update/`, {
-            name: name,
-            is_active: is_active,
-            service_type: subtype_id,
-        })},
+    editSubtype: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.patch(`/catalog/services/subypes/${id}/update/`, {
+      name: name,
+      is_active: is_active,
+      service_type: subtype_id,
+    }),
     getServiceOption: (id: number) => requests.get(`/catalog/services/options/${id}/retrieve`),
     editServiceOption: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.patch(`/catalog/services/options/${id}/update`, {
       name: name,
@@ -269,12 +312,12 @@ const Catalog = {
       is_active: is_active,
        service_subtype: subtype_id
     }),
-
+    getServiceSubtypeOptions: (subtype_id: number) => requests.get(`/catalog/services/${subtype_id}/options`),
     getServiceSubtypes: (id: number) => requests.get(`/catalog/services/${id}/retrieve`),
     getServiceSubtype: (subtype_id: number, params?: PaginationProps) =>
         requests.get(`/catalog/services/subypes/${subtype_id}/retrieve`, {}, params),
     getServiceSubtypesListByServiceId: (id: number, params?: PaginationProps) =>
-        requests.get(`/catalog/services/${id}/subypes/`, {}, params),
+        requests.get(`/catalog/services/${id}/subypes/`, {}, params)
 }
 const Cars = {
   getCompanyCars: (company_id: number, params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars/${company_id}/list/`, params),

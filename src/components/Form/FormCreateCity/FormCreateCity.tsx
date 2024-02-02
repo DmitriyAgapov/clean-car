@@ -70,7 +70,7 @@ const FormCreateCity = () => {
           timezone: data.results.timezone,
           status: String(data.results.is_active),
   }
-  console.log(editInitValues);
+
   return (
       <Formik initialValues={data.results.name ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
         onSubmit={(values, isValid) => {

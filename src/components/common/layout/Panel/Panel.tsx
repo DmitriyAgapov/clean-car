@@ -35,7 +35,7 @@ export type PanelProps = {
     background?: PanelColor
     className?: string
     headerClassName?: string
-    bodyClassName?: string
+    bodyClassName?: string | ''
     footerClassName?: string
     state?: boolean
     ref?: any

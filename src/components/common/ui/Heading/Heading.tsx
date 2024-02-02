@@ -71,7 +71,7 @@ const Heading = ({
         </h5>
       )
     case 'h6':
-      return <h6>{text}</h6>
+      return <h6  className={styles.Heading + ' ' + className} data-directory={directory} color={color}>{text}</h6>
     default:
       return <div>{text}</div>
   }

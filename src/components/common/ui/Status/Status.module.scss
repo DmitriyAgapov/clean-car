@@ -1,0 +1,42 @@
+.Status {
+	width: 61px;
+  	display: flex;
+  color: black;
+  height: 1rem;
+  line-height: 1 !important;
+	font-size: .5rem;
+  font-style: normal;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  text-transform: lowercase;
+  align-items: center;
+  justify-content: center;
+  border-radius: .5rem;
+  &[data-variant='Новая'] {
+	background: #FBFF4A;
+  }
+  &[data-variant='в обработке'] {
+	background: rgba(182, 193, 190, 1);
+  }
+  &[data-variant='разбор'] {
+	background: rgba(3, 134, 93, 1);
+  }
+  &[data-variant='выполнена'] {
+	background: rgba(19, 255, 113, 1);
+  }
+  &[data-variant='завершена'] {
+	background: rgba(244, 86, 95, 1);
+  }
+  &[data-variant='ожидает'] {
+	background: rgba(182, 193, 190, 1);
+  }
+
+
+  &[data-size='base'] {
+	padding: 5px .625rem 6px;
+	height: 2rem;
+	width: initial;
+	font-size: 1rem;
+  }
+
+}

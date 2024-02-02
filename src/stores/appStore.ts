@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import userStore, { UserTypeEnum } from "./userStore";
 import { PermissionName, Permissions } from "stores/permissionStore";
 import { makePersistable } from 'mobx-persist-store'
+import catalogStore from "stores/catalogStore";
 
 export class AppStore {
   constructor() {
@@ -21,6 +22,7 @@ export class AppStore {
           window.localStorage.setItem('jwt', token)
           userStore.pullUser()
           userStore.loadMyProfile()
+          catalogStore.getAllCities()
         } else {
           window.localStorage.removeItem('jwt')
           sessionStorage.clear()

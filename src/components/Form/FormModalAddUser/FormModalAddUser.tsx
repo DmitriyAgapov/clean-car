@@ -9,7 +9,7 @@ import { MultiSelect, Select } from "@mantine/core";
 import logo from "components/common/layout/Logo/Logo";
 import { Observer, observer } from "mobx-react-lite";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
-import { action } from "mobx";
+import { action, runInAction } from "mobx";
 
 const SignupSchema = Yup.object().shape({
   first_name: Yup.string()
@@ -37,14 +37,14 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
     if(ar.length > 0) return ar.map((item: any) => ({label: item.name, value: String(item.id)}))
     return null
     // @ts-ignore
-  }, [store.usersStore.companyUsers[0].company.id])
+  }, [company_id])
   // @ts-ignore
-  const {data}:any = store.permissionStore.loadCompanyPermissions(store.usersStore.companyUsers[0].company.id)
+  const {data}:any = store.permissionStore.loadCompanyPermissions(company_id)
   console.log(memData);
   // @ts-ignore
   console.log(data?.results);
   // @ts-ignore
-  console.log(store.usersStore.companyUsers[0].company.id);
+  console.log(company_id);
     const initValues = {
         first_name: '',
         last_name: '',
@@ -151,11 +151,17 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                         variant={ButtonVariant["accent-outline"]}
                         className={"max-w-fit"} />
                       <Button text={"Добавить сотрудника"}
-                        action={async () => {
-                          const {data, status} = await store.usersStore.createUser(company_id, values)
-                          console.log(data, status);
-                          action(() => store.usersStore.getUsers(company_id))
-                          action(() => store.appStore.closeModal())
+                        action={() => {
+                          store.usersStore.createUser(company_id, values)
+
+                          .then((res) => res)
+                          .then((res) =>  runInAction(() => {
+                            store.usersStore.getUsers(company_id)
+                            console.log(res.status)
+
+                          })).finally(() => store.appStore.closeModal())
+
+
                         }}
                         // action={async () => {
                         //     store.
@@ -189,6 +195,7 @@ export const FormModalSelectUsers = ({company_id, users}: {company_id: any, user
   const store = useStore()
 
   console.log(store.usersStore.getUsers(store.formStore.getFormDataCarCreate.company_id));
+  console.log();
   const initValues = {
     users: '',
   }
@@ -202,9 +209,9 @@ export const FormModalSelectUsers = ({company_id, users}: {company_id: any, user
   //     options: usersStore.companyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))
   //   }
   // ]
-  const memoizedData = React.useMemo( () => {
-    store.usersStore.getUsers(store.formStore.getFormDataCarCreate.company_id)
-   return  store.usersStore.currentCompanyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}));
+  const memoizedData = React.useMemo( async () => {
+    await store.usersStore.getUsers(store.formStore.getFormDataCarCreate.company_id)
+   return store.usersStore.currentCompanyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}));
 
   }, [store.formStore.formCreateCar.company_id])
   console.log();
@@ -232,7 +239,7 @@ export const FormModalSelectUsers = ({company_id, users}: {company_id: any, user
           <Select
 
             // @ts-ignore
-            data={memoizedData}
+            data={store.usersStore.currentCompanyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))}
             label={"Выберите сотрудника"}
             multiple
             placeholder={"Выберите сотрудника"}
@@ -252,7 +259,7 @@ export const FormModalSelectUsers = ({company_id, users}: {company_id: any, user
               variant={ButtonVariant["accent-outline"]}
               className={"max-w-fit"} />
             <Button text={"Добавить сотрудника"}
-              action={() => {
+              action={async () => {
                 store.usersStore.addToSelectedUsers(Number(values.users))
                 store.appStore.closeModal()
               }}

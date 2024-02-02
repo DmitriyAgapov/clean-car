@@ -233,6 +233,12 @@
 	width:  .625rem;
 	height: .625rem;
   }
+  [data-label="status"] {
+	p {
+	  display: inline-flex;
+
+	}
+  }
 }
 
 .tableheader {
@@ -244,6 +250,7 @@
 
 .TableWithSortPanel {
   overflow: hidden;
+
 
   header {
 	+ * {
@@ -258,6 +265,12 @@
 	display: flex;
 	align-items: center;
 	background: #090909;
+  }
+  &.table-bids {
+	background-color: red !important;
+	th:first-child {
+	  width: 4rem;
+	}
   }
 }
 

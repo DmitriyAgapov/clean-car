@@ -56,6 +56,21 @@ user-select: none ;
 	}
   }
 
+  &[data-size="xs"] {
+	padding: 0 1rem;
+	height: 2rem;
+	font-weight: 500 !important;
+	font-family: Montserrat, sans-serif !important;
+	text-transform: initial !important;
+	color: black;
+	@screen lg-max {
+	  padding: 0 1rem;
+	  font-size: .75rem;
+	  height: 2rem;
+	}
+  }
+
+
   &[data-variant="accent"] {
 	background: var(--accentColor);
 	color: var(--colorBlack);

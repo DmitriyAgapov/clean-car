@@ -6,7 +6,8 @@ import { Field, useFormik, useFormikContext } from 'formik'
 import React, { useEffect } from 'react'
 import { CompanyType } from "stores/companyStore";
 import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
-
+import InputAutocompleteComponent from "components/common/ui/InputAutocompleteComponent/InputAutocompleteComponent";
+import { values as val } from "mobx";
 export function FormStep1(props: {
   step: any
   animate: any
@@ -20,7 +21,9 @@ export function FormStep1(props: {
   prop8: (o: any) => { label: any; value: string }
 }) {
   const { values, touched,  errors, isValidating, isValid }:any = useFormikContext();
-  // console.log(values);
+  // console.log(props.store.catalogStore.cities.forEach((values: any) => console.log(values)))
+  console.log(val(props.store.catalogStore.cities))
+  console.log(props.store.catalogStore.cities.values())
    return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -91,10 +94,11 @@ export function FormStep1(props: {
         <React.Suspense>
           <SelectCustom
             label={'Город'}
+            searchable={true}
             value={props.values.city}
             name={'city'}
             className={' w-fit'}
-            options={props.store.catalogStore.cities.map(props.prop8)}
+            options={val(props.store.catalogStore.cities).map(props.prop8)}
           />
           <InputAutocomplete />
         </React.Suspense>

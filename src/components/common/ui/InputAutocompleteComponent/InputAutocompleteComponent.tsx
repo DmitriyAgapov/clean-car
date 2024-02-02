@@ -52,7 +52,8 @@ export function InputAutocompleteComponent(props:any) {
       cityName && setValue(cityName + ', ')
 
       if (ref && ref.current && cityName) {
-        const cityNameLength = cityName.length
+        // @ts-ignore
+        const cityNameLength = cityName.size
         // @ts-ignore
         ref.current.focus();
         // @ts-ignore

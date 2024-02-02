@@ -11,14 +11,11 @@ import { PermissionNames } from "stores/permissionStore";
 import DList from "components/common/ui/DList/DList";
 
 const ReferencePage = () => {
-
   const navigate = useNavigate()
   const location = useLocation()
-
   const store = useStore()
   const { data, textData }: any = useLoaderData()
-  console.log(data);
-  if (location.pathname.includes('edit')) return <Outlet />
+
   const memoizedData = React.useMemo(() => {
       let itemsAr: any[] = []
       const items = function () {
@@ -41,17 +38,17 @@ const ReferencePage = () => {
       items()
       return itemsAr
   }, [data.results])
-  // @ts-ignore
-
+  if (location.pathname.includes('edit')) return <Outlet />
+  if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
   return (
     <Section type={SectionType.default}>
-      <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
-        header={<>
-          <div>
-            <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
-            <Heading text={textData.referenceTitle} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
-          </div>
-        </>}></Panel>
+      {/* <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false} */}
+      {/*   header={<> */}
+      {/*     <div> */}
+      {/*       <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} /> */}
+      {/*       <Heading text={textData.referenceTitle} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /> */}
+      {/*     </div> */}
+      {/*   </>}></Panel> */}
       <Panel
         state={store.usersStore.loadingUsers}
         className={'col-span-full grid grid-rows-[auto_1fr_auto]'}

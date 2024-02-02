@@ -1,121 +1,27 @@
-import React, { useState } from "react";
-import { Form, Formik, useFormikContext } from "formik";
-import * as Yup from "yup";
-import "yup-phone-lite";
-import { useStore } from "stores/store";
-import { useNavigate } from "react-router-dom";
-import { CreateFormikInput } from "components/common/ui/CreateInput/CreateInput";
-import SelectCustom from "components/common/ui/Select/Select";
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { CarType } from "stores/carStore";
-import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import { Step } from "components/common/layout/Step/Step";
-import { FormCard } from "components/Form/FormCards/FormCards";
-import FormModalAddUser, { FormModalSelectUsers } from "components/Form/FormModalAddUser/FormModalAddUser";
-import Progress from "components/common/ui/Progress/Progress";
-import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
-import { observer, Observer } from "mobx-react-lite";
-import { Select } from "@mantine/core";
-import { UserTypeEnum } from "stores/userStore";
+import React, { useState } from 'react'
+import { Form, Formik } from 'formik'
+import * as Yup from 'yup'
+import 'yup-phone-lite'
+import { useStore } from 'stores/store'
+import { useNavigate } from 'react-router-dom'
+import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
+import { Step } from 'components/common/layout/Step/StepPure'
+import Progress from 'components/common/ui/Progress/Progress'
+import { TimeInput } from '@mantine/dates'
+import { Observer } from 'mobx-react-lite'
+import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, Select, Textarea } from '@mantine/core'
+import { action, values as val } from 'mobx'
+import { IMaskInput } from 'react-imask'
+import { InputAutocompleteWithCity } from 'components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency'
+import MapWithDots from 'components/common/Map/Map'
+import DList from 'components/common/ui/DList/DList'
+import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
+import AddOption from "routes/reference/Services/addOption";
+import agent from "utils/agent";
+import { notifications } from "@mantine/notifications";
+import { SvgClose } from "components/common/ui/Icon";
 
-type CarCreateUpdate = {
-    car_type:	string
-    number: string
-    height:number
-    radius:	number
-    limit:string
-    is_active:boolean
-    brand: number
-    model: number
-    employees: number[]
-}
-const FormInputs = observer(():JSX.Element => {
-    const store = useStore()
-    const { values, errors, setFieldValue, setValues, getFieldHelpers } = useFormikContext();
-    const [companies, setCompanies] = useState(store.companyStore.companies)
-    const handleChangeBrand = (e:any) => {
-        store.catalogStore.clearBrandModels()
-    }
-    const[belongTo, setBelongTo] = useState('company')
-
-    return (
-      <>
-          <>
-              <SelectCustom name={'brand'}
-                action={handleChangeBrand}
-                placeholder={'Выберите марку'} label={'Марка автомобиля'}
-                // @ts-ignore
-                value={values.brand} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={store.catalogStore.carBrands.map((item:any) => ({ label: item.name, value: String(item.id) }))}/>
-              <SelectCustom  name={'model'} disabled={store.catalogStore.brandModels.length == 0} placeholder={'Выберите модель'} label={'Модель'}
-                // @ts-ignore
-                value={values.model} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={store.catalogStore.brandModels}/>
-              <SelectCustom  name={'car_type'} placeholder={'Выберите тип'} options={Object.keys(CarType).map(item => ({label: item, value: item}))} label={'Тип автомобиля'}
-                // @ts-ignore
-                value={values.car_type} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} />
-              <CreateFormikInput  fieldName={'number'}  label={'Гос. номер'}
-                // @ts-ignore
-                value={values.number} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}  fieldType={'text'} placeHolder={'Введите Гос. номер'}/>
-              <CreateFormikInput  fieldName={'height'}  label={'Высота автомобиля, м'}
-                // @ts-ignore
-                value={values.height} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'text'} placeHolder={'Введите высоту'}/>
-              <CreateFormikInput  fieldName={'radius'}  label={'Радиус колес, дюймы'}
-                // @ts-ignore
-                value={values.radius} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'text'} placeHolder={'Радиус колес, дюймы'}/>
-              <SelectCustom   label={'Статус'}
-                // @ts-ignore
-                value={values.status} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'select'} options={[
-                  { label: 'Активен', value: 'true' },
-                  { label: 'Неактивен', value: 'false' },
-              ]} placeHolder={'Выбрать статус'} name={'status'}/>
-              <SelectCustom   label={'Город'}
-                // @ts-ignore
-                value={values.city} disabled={store.catalogStore.cities.length === 0} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'select'} options={store.catalogStore.cities.map((city:any) => ({label: city.name, value: String(city.id)}))} placeHolder={'Выбрать статус'} name={'city'}/>
-              <hr className={'col-span-full flex-[1_100%]'}/>
-          </>
-          <>
-              <React.Suspense>
-                  <SelectCustom
-                    action={(e:any) => {
-                        setBelongTo(e)
-                        store.companyStore.getAllCompanies()
-                        if(e === 'company') {
-                            console.log('company');
-                            // @ts-ignore
-                            setCompanies(store.companyStore.companies.filter(item => item.parent === null))
-                        } else {
-                            // @ts-ignore
-                            setCompanies(store.companyStore.companies.filter(item => item.parent !== null))
-                        }
-                    }}
-                    // @ts-ignore
-                    value={values.belongs_to}  label={'Принадлежит'} defaultValue={'company'} name={'belong_to'}  className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'select'} options={[
-                      { label: 'Филиал', value: 'filial' },
-                      { label: 'Компания', value: 'company' },
-                  ]} />
-                  <Select
-                    className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}
-                    name={'company_id'}
-                    // @ts-ignore
-                    onChange={(e:any) => setValues({...values, company_id: e, company_type: companies.filter((item:any) => item.id == e).company_type})}
-                    // @ts-ignore
-                    onOptionSubmit={(e:any) => {
-                        // @ts-ignore
-                        setValues({...values, company_id: e.value, company_type: companies.filter((item:any) => item.id == e).company_type, company_data: companies.filter((item:any) => item.id == e)})
-                    }}
-                    // @ts-ignore
-                    value={values.company_id}
-                    disabled={companies && companies.length === 0}
-                    label={belongTo == 'filial' ? 'Филиал' : 'Компания'}
-                    placeholder={belongTo == 'filial' ? 'Выберите филиал' : 'Выберите компанию'}
-                    // @ts-ignore
-                    data={companies && companies.map((item:any) => ({label: item.name, value: String(item.id), prop: item.company_type}))}
-                    searchable
-                  />
-              </React.Suspense>
-          </>
-      </>
-    )
-})
 const SignupSchema = Yup.object().shape({
     brand: Yup.string().required('Обязательное поле'),
     model: Yup.string().required('Обязательное поле'),
@@ -124,329 +30,618 @@ const SignupSchema = Yup.object().shape({
     city: Yup.string().required('Обязательное поле'),
 })
 const FormCreateBid = ({ user, edit }: any) => {
-    type carBrandModels = {
-
-    };
-    let initValues:CarCreateUpdate & any = {
-        brand: 0,
-        car_type: '',
-        employees: [],
-        height: 0,
-        is_active: false,
-        limit: '',
-        model: 0,
-        number: '',
-        radius: 0,
-        carModels: [],
-        company_id: '',
-        company_type: '',
-        company_filials: '',
-    }
-
     const store = useStore()
-    if(store.formStore.formCreateCar.brand !== "0") {
-        initValues = {
-            ...initValues,
-            city: store.formStore.formCreateCar.city,
-            brand: store.formStore.formCreateCar.brand,
-            model: store.formStore.formCreateCar.model,
-            car_type: store.formStore.formCreateCar.car_type,
-            number: store.formStore.formCreateCar.number,
-            height: store.formStore.formCreateCar.height,
-            radius: store.formStore.formCreateCar.radius,
-            status: store.formStore.formCreateCar.status,
-            is_active: store.formStore.formCreateCar.is_active,
-            limit: store.formStore.formCreateCar.limit,
-            company_id: store.formStore.formCreateCar.company_id,
-            company_type: store.formStore.formCreateCar.company_type,
-            employees: store.formStore.formCreateCar.employees,
-        }
-    }
     const [step, setStep] = useState(1)
-    const carTypes = Object.keys(CarType).map((item:any) => ({ label: item, value: item }))
-
     const [animate, setAnimate] = useState(false)
-    const [model, setModel] = useState<any>([])
-    const formData = [
-        {
-            label: 'Тип автомобиля',
-            placeholder: 'Выберите тип',
-            name: 'car_type',
-            type: 'select',
-            value: '',
-            options: carTypes,
-            depend: false,
-        },
-        {
-            label: 'Гос. номер',
-            placeholder: 'Введите гос. номер',
-            name: 'number',
-            type: 'text',
-            value: '',
-            options: [],
-            depend: false,
-        },
-        {
-            label: 'Высота автомобиля, м',
-            placeholder: 'Введите высоту автомобиля',
-            name: 'height',
-            type: 'text',
-            value: '',
-            depend: false,
-        },
-        {
-            label: 'Радиус колес, дюймы',
-            placeholder: 'Введите высоту',
-            name: 'radius',
-            type: 'text',
-            value: '',
-            depend: false,
-        },
-        {
-            label: 'Статус',
-            placeholder: 'Выбрать статус',
-            name: 'status',
-            type: 'select',
-            options: [
-                { label: 'Активен', value: 'true' },
-                { label: 'Неактивен', value: 'false' },
-            ],
-            value: '',
-            depend: false,
-        },
-        {
-            label: 'Город',
-            placeholder: 'Выбрать город',
-            name: 'city',
-            type: 'select',
-            options: [{ label: 'Москва', value: '16254' }],
-            value: '',
-            depend: false,
-        },
-        {
-          type: 'divider'
-        },
-        {
-            label: 'Принадлежит',
-            placeholder: 'Выбрать компанию',
-            name: 'belong_to',
-            type: 'select',
-            options: [
-                { label: 'Филиалу', value: 'filial' },
-                { label: 'Компании', value: 'company' },
-            ],
-            value: '',
-            depend: false,
-        },
-        {
-            label: 'Филиал',
-            placeholder: 'Выбрать филиал',
-            name: 'status',
-            type: 'select',
-            options: [
-                { label: 'Филиал', value: '1625' },
-                { label: 'Филиал2', value: '16252' },
-            ],
-            value: '',
-            depend: true,
-        },
-    ]
+  const bid = store.bidsStore.CurrentBid
+  const navigate = useNavigate()
+    const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
 
-
+    const availablePerformers = store.bidsStore.AvailablePerformers
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
         setTimeout(() => {
             setAnimate(false)
-            setStep((prevState) => step ? step : prevState += 1)
+            setStep((prevState) => (step ? step : (prevState += 1)))
         }, 1200)
     }
+    const memoFileUpload = React.useMemo(() => {
+      return <Observer
+        children={() => (<div className={'grid grid-cols-3  gap-4 col-span-full'}>
+          <InputLabel className={'col-span-2'}>Фотографии До</InputLabel>
 
-    const navigate = useNavigate()
+          <div className={'flex col-span-2  gap-3 items-center justify-items-center'}>
+            {store.bidsStore.photo.photosPreviewAr.map(
+              (item: any, index: number) => (
+                <div className={'group max-w-[6rem] relative'}>
+                  <CloseIcon
+                    onClick={() => store.bidsStore.removeFile(index)}
+                    className={
+                      'bg-white cursor-pointer group-hover:text-white group-hover:bg-accent  border-1 text-gray-2 absolute right-0 top-0 block rounded-full !w-4 !h-4'
+                    }
+                  />
+                  <Image src={item} alt={String(index)} />
+                </div>
+              ),
+            )}
+          </div>
 
-    const formDataSelectUsers = React.useMemo(() => {
-        return store.usersStore.companyUsers.map((item:any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))
-    },[store.usersStore.companyUsers])
-     React.useEffect(() => {
-         console.log(formDataSelectUsers);
-    },[store.usersStore.companyUsers])
 
+          <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>
 
-    // @ts-ignore
-    // @ts-ignore
+          <FileButton onChange={handleChangeFile} multiple accept='image/png,image/jpeg'>
+            {(props) => (
+              <Button
+                className={'col-span-1'}
+                variant={ButtonVariant['accent-outline']}
+                size={ButtonSizeType.sm}
+                {...props}
+                text={'Добавить фото'}
+              ></Button>
+            )}
+          </FileButton>
+        </div>)}   />
+    }, [])
+    const handleChangeFile = React.useCallback((e: any) => {
+        store.bidsStore.addFile(e)
+    }, [])
     return (
-
+      <>
         <Formik
-            initialValues={initValues}
+            initialValues={{
+                car_type: '',
+                number: '',
+                height: '',
+                radius: '',
+                limit: '',
+                is_active: false,
+                brand: '',
+                model: '',
+                employees: [],
+                city: '',
+                customer: '',
+                user: '',
+                service: '',
+                subtype: '',
+            }}
             validationSchema={SignupSchema}
             onSubmit={(values, FormikHelpers) => {
-                const data = {
-                    car_type: values.car_type,
-                    number: values.number,
-                    radius: values.radius,
-                    limit: values.limit,
-                    company_id: values.company_id,
-                    company_type: values.company_type,
-                    is_active: values.is_active,
-                    brand: values.brand,
-                    model: values.model,
-                    employees: values.employees
-                }
-                console.log(values);
-                store.formStore.setFormDataCreateCar(values)
+
                 changeStep(2)
-                store.formStore.formSendDataUser('formCreateUser', data)
+                // store.formStore.formSendDataUser('formCreateUser', data)
             }}
         >
-            {({
-                submitForm,
-                setSubmitting,
-                setFieldError,
-                handleChange,
-                isSubmitting,
-                errors,
-                setValues,
-                touched,
-                values,
-                status,
-                isValid,
-                isValidating,
+            {({ errors, setValues, touched, values, status, isValid, isValidating,
             }) => (
+                <Form
+                    style={{
+                        display: 'flex',
+                        gridColumn: '1/-1',
+                        borderRadius: '1.5rem',
+                        overflow: 'hidden',
+                        position: 'relative',
+                    }}
+                    className={'form_with_progress '}
+                >
+                    <Progress total={5} current={step} />
+                    <Step
+                        step={step}
+                        animate={animate}
+                        action={() => console.log('step 1')}
+                        action1={() => console.log('step 1')}
+                        stepIndex={1}
+                        bodyClassName={'grid grid-cols-3 gap-4'}
+                        footer={<><Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} /><Button type={Object.keys(errors).length > 0 ? 'button' : 'text'} disabled={Object.keys(errors).length > 0} text={'Дальше'} action={() => {/* store.formStore.setFormDataCreateCar(values) */changeStep()}}/* action={() => console.log(values)} */ className={'float-right'} variant={ButtonVariant.accent} /></>}
+                        header={<><Heading text={step1.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step1.description}</div></>}
+                    >
+                        <>
+                            <Observer
+                                children={() => (
+                                    <Select
+                                        required
+                                        clearable
 
-                    <Form style={{ display: 'flex', gridColumn: '1/-1', borderRadius: '1.5rem', overflow: 'hidden', position: 'relative' }}
-                      className={'form_with_progress'}>
-                        <Progress total={3} current={step}/>
-                        <Step step={1} animate={animate} action={() => console.log('step 1')} action1={() => console.log('step 1')} stepIndex={1}>
+                                        label={step1.fields[0].label}
+                                        searchable
+                                        value={store.bidsStore.formResult.city !== 0 ? String(store.bidsStore.formResult.city) : null}
+                                        data={val(store.catalogStore.cities).map((i: any) => ({
+                                            label: i.name,
+                                            value: String(i.id),
+                                        }))}
+                                    />
+                                )}
+                            />
+                            <hr className={'col-span-full border-transparent my-2'} />
+                            {/* //todo: map not admin values to select */}
+                            <Observer
+                                children={() => (
+                                    <Select
+                                        clearable value={store.bidsStore.formResult.company !== 0 ? String(store.bidsStore.formResult.company) : ""}
+                                        label={step1.fields[1].label}
+                                        onChange={(e) => {
+                                          if(e === null) {
+                                            store.bidsStore.formResultSet({company: 0})
+                                            console.log(e, '0')
+                                          }
+                                        }}
+                                        onOptionSubmit={(value:any) => {
+                                          if(value !== 0) {
+                                          store.bidsStore.formResultSet({ company: Number(value) })
+                                        } else {
+                                            store.bidsStore.formResultSet({ company: 0 })
+                                          }
+                                        }}
+                                        searchable
+                                        data={store.userStore.isAdmin ? store.companyStore.companies
+                                                      .filter((c: any) => c.company_type === 'Компания-Заказчик')
+                                                      .map((c: any) => ({
+                                                          label: c.name,
+                                                          value: String(c.id),
+                                                      }))
+                                                : store.companyStore.myCompany.company
+                                        }
+                                    />
+                                )}
+                            />
+                            <Observer
+                                children={() => (
+                                    <Select
+                                        required
+                                        label={step1.fields[2].label}
+                                        searchable
+                                      value={store.bidsStore.formResult.conductor !== 0 ? String(store.bidsStore.formResult.conductor) : null}
+                                        onChange={(value) => store.bidsStore.formResultSet({ conductor: Number(value) })}
+                                        disabled={
+                                            store.bidsStore.formResult.company === 0 ||
+                                            store.usersStore.currentCompanyUsers.length === 0
+                                        }
+                                        data={store.usersStore.currentCompanyUsers.map((c: any) => ({
+                                            label: c.employee.first_name,
+                                            value: String(c.employee.id),
+                                        }))}
+                                    />
+                                )}
+                            />
+                            <InputBase
+                              value={(store.bidsStore.formResultsAll.phone !== "")  ? store.bidsStore.formResultsAll.phone : ''}
+                              onAccept={(value:any, mask:any) => {
+                                store.bidsStore.formResultSet({ phone: value })
+                              }}
+                                label={step1.fields[3].label}
+                                component={IMaskInput}
+                                mask='+70000000000'
+                                placeholder='+70000000000'
 
-                        </Step>
-                        <Step
-                          footer={<>
 
-                              <Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
-                              <Button type={(Object.keys(errors).length > 0)   ? 'button' : 'text'} disabled={Object.keys(errors).length > 0}  text={'Дальше'}
+                            />
+                            <Observer
+                                children={() => <Select
+                                              value={store.bidsStore.formResult.car ? String(store.bidsStore.formResult.car) : null}
+                                              onChange={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
+                                                /* @ts-ignore */
+                                                disabled={store.carStore.getCompanyCars.cars.count === 0} label={step1.fields[4].label} searchable data={store.carStore.cars.length !== 0 ? store.carStore.getCompanyCars.cars.results.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']} />
 
-                                action={() => {
-                                    console.log(values);
-                                    store.formStore.setFormDataCreateCar(values)
-                                    changeStep()
-                                }}/* action={() => console.log(values)} */ className={'float-right'} variant={ButtonVariant.accent} /></>}
-                          header={<><Heading text={'Шаг 1. Основная информация'} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>Укажите основную информацию о компании для добавления ее в список</div></>}
-                          step={step} animate={animate}
-                          action={(e:any) => setModel(e)} action1={() => void null} stepIndex={1}>
-                            <FormInputs />
-                        </Step>
-                        <Step footer={<>
-                            <Button text={'Назад'} action={() =>  changeStep(1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
-                            <Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
-                            <Button type={'submit'} disabled={!isValid} text={'Дальше'}
-                          action={() => submitForm()
-                          .then((r:any) => console.log('result', r))
-                          .catch(errors => console.log('errors', errors))
-                          }/* action={() => console.log(values)} *//* action={() => console.log(values)} */ className={'float-right'} variant={ButtonVariant.accent} /></>}
-                          header={<><Heading text={'Шаг 2. Добавьте сотрудников для автомобиля'} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>Вы можете добавить или выбрать сотрудника из списка зарегистрированных пользователей</div></>}
-                          step={step} animate={animate} action={() => void null} action1={() => void null} stepIndex={2}>
-                            <FormModalSelectUsers company_id={Number(values.company_id)} users={formDataSelectUsers}/>
-
-                            <Observer children={():any =>
-                              //@ts-ignore
-                              <div className={'asd'}>Выбранный юзеры: {store.usersStore.companyUsersSelected.toJSON().map((el: any) => {
-                                  return <FormCard actions={null} title={el[1].employee.first_name}  children={<><div className={'text-xs -mt-2 uppercase text-gray-2'}>{el[1].group.name}</div><ul>
-                                      <li>{el[1].employee.phone}</li>
-                                      <li>{el[1].employee.email}</li>
-                                  </ul><div> {el[1].employee.is_active ? <span className={'text-accent  mt-5 block'}>Активен</span> : <span className={'text-red-500 mt-5 block'}>Не активен</span> }</div></>} titleColor={HeadingColor.accent}
-                              titleVariant={HeadingVariant.h5}  />})}</div>} />
-                            <Observer children={() => <FormCard title={"Добавить нового сотрудника"}
-                          titleColor={HeadingColor.accent}
-                          titleVariant={HeadingVariant.h4}
-                          actions={<Button text={"Добавить сотрудника"}
-                            size={ButtonSizeType.sm}
-                            variant={ButtonVariant.accent}
-                            directory={ButtonDirectory.directory}
-                            action={async () => {
-                                store.appStore.setModal({
-                                    className: "!px-10 gap-4 !justify-stretch",
-                                    // component: <FormModalAddUser />,
-                                    actions: [
-                                        <Button text={"Отменить"}
-                                          action={() => store.appStore.closeModal()}
-                                          variant={ButtonVariant["accent-outline"]}
-                                          className={"max-w-fit"} />,
-                                        <Button text={"Добавить сотрудника"}
-                                          action={async () => {
-                                              store.formStore.getFormData("formCreateUser");
-                                          }}
-                                          // action={async () => {
-                                          //     store.
-                                          // }}
-                                          variant={ButtonVariant.accent} />
-                                    ],
-                                    text: `Вы уверены, что хотите удалить ${"name"}`,
-                                    state: true
-                                });
-                            }} />} />} />,
-
-                            <FormCard title={"Выбрать сотрудника из зарегистрированных пользователей"}
-                              titleColor={HeadingColor.accent}
-                              titleVariant={HeadingVariant.h4}
-                              actions={<Button text={"Выбрать сотрудника"}
-                                size={ButtonSizeType.sm}
-                                variant={ButtonVariant.accent}
-                                directory={ButtonDirectory.directory}
-                                action={async () => {
-                                    console.log(values);
-                                    store.appStore.setModal({
-                                        className: "!px-10 gap-4 !justify-stretch grid-cols-1",
-                                        component: <FormModalSelectUsers company_id={Number(values.company_id)}
-                                          users={formDataSelectUsers} />,
-                                        actions: [
-                                            <Button text={"Отменить"}
-                                              action={() => store.appStore.closeModal()}
-                                              variant={ButtonVariant["accent-outline"]}
-                                              className={"max-w-fit"} />,
-                                            <Button text={"Добавить сотрудника"}
-                                              action={async () => {
-                                                  store.permissionStore.deletePermissionStore(12).then(() => {
-                                                      store.appStore.closeModal();
-                                                      navigate("/account/groups", { replace: false });
-                                                  });
-                                              }}
-                                              variant={ButtonVariant.accent} />
-                                        ],
-                                        text: `Вы уверены, что хотите удалить ${"name"}`,
-                                        state: true
-                                    });
-                                }} />} />)
-                        </Step><Step footer={<>
-                        <Button text={"Отменить"}
-                          action={() => navigate(-1)}
-                          className={"float-right lg:mb-0 mb-5"}
-                          variant={ButtonVariant["accent-outline"]} />
-                        <Button text={"Дальше"}
-                          action={() => {
-                              console.log(isValid);
-                              changeStep();
-                          }} /* action={() => console.log(values)} */
-                          className={"float-right"}
-                          variant={ButtonVariant.accent} />
-                    </>}
-                      header={<>
-                          <Heading text={"Шаг 3. Автомобиль зарегистрирован"}
-                            color={HeadingColor.accent}
-                            variant={HeadingVariant.h2} />
-                          <div className={"text-base"}>Вы можете добавить лимиты для зарегистрированного автомобиля или добавить их позже в соответствующем разделе</div>
-                      </>}
-                      step={step}
-                      animate={animate}
-                      action={() => void null}
-                      action1={() => void null}
-                      stepIndex={3}>
-                        <CreateField title={"Создать прайс-лист"} />
+                                }
+                            />
+                            <hr className={'col-span-full border-transparent my-2'} />
+                          {memoFileUpload}
+                        </>
                     </Step>
+                    <Step
+                        step={step}
+                        animate={animate}
+                        action={() => console.log('step 1')}
+                        action1={() => console.log('step 1')}
+                        stepIndex={2}
+                        bodyClassName={'grid grid-cols-3 gap-4 content-start'}
+                        footerClassName={'flex-1 w-full justify-stretch'}
+                        header={
+                            <>
+                                <Heading text={step2.title} color={HeadingColor.accent} variant={HeadingVariant.h2} />
+                                <div className={'text-base'}>{step2.description}</div>
+                            </>
+                        }
+                        footer={
+                            <>
+                                <Button
+                                    text={'Назад'}
+                                    action={() => setStep((prevState: number) => prevState - 1)}
+                                    className={'lg:mb-0 mr-auto'}
+                                    variant={ButtonVariant['accent-outline']}
+                                />
+                                <Button
+                                    text={'Отменить'}
+                                    action={() => navigate(-1)}
+                                    className={'float-right lg:mb-0 mb-5'}
+                                    variant={ButtonVariant['accent-outline']}
+                                />
+                                <Button
+                                    type={Object.keys(errors).length > 0 ? 'button' : 'text'}
+                                    disabled={Object.keys(errors).length > 0}
+                                    text={'Дальше'}
+                                    action={() => {
+                                        /* store.formStore.setFormDataCreateCar(values) */ changeStep()
+                                    }}
+                                    /* action={() => console.log(values)} */ className={'float-right'}
+                                    variant={ButtonVariant.accent}
+                                />
+                            </>
+                        }
+                    >
+                        <>
+                            <Observer
+                                children={() => (
+                                    <Select
+                                        required
+                                        label={step2.fields[0].label}
+                                        searchable
+                                      value={String(store.bidsStore.formResult.service_type)}
+                                        disabled={store.catalogStore.services.size === 0}
+                                        name={step2.fields[0].name}
+                                        onChange={(value) => {
+                                            action(() => (store.catalogStore.currentService = Number(value)))
+                                            store.bidsStore.formResultSet({ service_type: Number(value) })
+                                        }}
+                                        data={val(store.catalogStore.services).map((i: any) => ({
+                                            label: i.name,
+                                            value: String(i.id),
+                                        }))}
+                                    />
+                                )}
+                            />
+                            <Observer
+                                children={() => {
+                                    return (
+                                        <Select
+                                            required
+                                            label={step2.fields[1].label}
+                                            searchable
+                                            disabled={store.bidsStore.formResult.service_type === 0}
+                                            value={
+                                                store.bidsStore.formResult.service_subtype !== 0
+                                                    ? String(store.bidsStore.formResult.service_subtype)
+                                                    : String(
+                                                          store.catalogStore.getSubtypeByServiceId(
+                                                              store.catalogStore.currentService,
+                                                          ).id,
+                                                      )
+                                            }
+                                            onChange={(value) => {
+                                                store.bidsStore.formResultSet({ service_subtype: Number(value) })
+                                            }}
+                                            name={step2.fields[1].name}
+                                            data={
+                                                store.catalogStore.currentService !== 0
+                                                    ? val(store.catalogStore.currentServiceSubtypes).map((i: any) => ({
+                                                          label: i.name,
+                                                          value: String(i.id),
+                                                      }))
+                                                    : ['']
+                                            }
+                                        />
+                                    )
+                                }}
+                            />
+                          <Observer
+                            children={() => <Checkbox.Group
+                                className={'col-span-2'}
+                                // value={store.bidsStore.formResult.options.map((i:any) => String(i))}
+                                classNames={{
+                                    label: 'text-accent label mb-4',
+                                }}
+                              value={store.bidsStore.formResult.service_option.map((o:number) => String(o))}
+                              onChange={(values) =>
+                                store.bidsStore.formResultSet({service_option: values.map(e => Number(e))})
+                                }
+                                label='Выберите дополнительные опции (при необходимости)'
+                            >
 
-                    </Form>
+                                <Group mt='xs' >
+                                {store.catalogStore.currentServiceSubtypesOptions.size !== 0 && val(store.catalogStore.currentServiceSubtypesOptions).map((i:any) => <Checkbox value={String(i.id)}   onClick={(values:any) => console.log(values.target.checked)}  label={i.name} />)}
+                                </Group>
+                            </Checkbox.Group>}/>
+                            <Textarea
+                                className={'col-span-2'}
+                                minRows={3}
 
+                              onInput={(values: any) =>
+                                store.bidsStore.formResultSet({customer_comment: values.currentTarget.value})
+                              }
+                              defaultValue={store.bidsStore.formResult.customer_comment ?? ''}
+                                label={'Комментарий'}
+                                placeholder={'Дополнительная информация, которая может помочь в выполнении заявки'}
+                            />
+                            <Heading
+                                variant={HeadingVariant.h4}
+                                text={'Факт/лимит 35/100'}
+                                color={HeadingColor.accent}
+                                className={'col-span-2 mt-6'}
+                            />
+                        </>
+                    </Step>
+                    <Step
+                        step={step}
+                        animate={animate}
+                        action={() => console.log('step 1')}
+                        action1={() => console.log('step 1')}
+                        stepIndex={3}
+                        bodyClassName={'grid grid-cols-3 gap-4 content-start'}
+                        footerClassName={'flex-1 w-full justify-stretch'}
+                        header={
+                            <>
+                                <Heading text={step3.title} color={HeadingColor.accent} variant={HeadingVariant.h2} />
+                                <div className={'text-base'}>{step3.description}</div>
+                            </>
+                        }
+                        footer={
+                            <>
+                                <Button
+                                    text={'Назад'}
+                                    action={() => setStep((prevState: number) => prevState - 1)}
+                                    className={'lg:mb-0 mr-auto'}
+                                    variant={ButtonVariant['accent-outline']}
+                                />
+                                <Button
+                                    text={'Отменить'}
+                                    action={() => navigate(-1)}
+                                    className={'float-right lg:mb-0 mb-5'}
+                                    variant={ButtonVariant['accent-outline']}
+                                />
+                                <Button
+                                    type={Object.keys(errors).length > 0 ? 'button' : 'text'}
+                                    disabled={Object.keys(errors).length > 0}
+                                    text={'Дальше'}
+                                    action={() => {
+                                        /* store.formStore.setFormDataCreateCar(values) */ changeStep()
+                                    }}
+                                    /* action={() => console.log(values)} */ className={'float-right'}
+                                    variant={ButtonVariant.accent}
+                                />
+                            </>
+                        }
+                    >
+                        <>
+                            <InputAutocompleteWithCity  action={(val:any) => {
+                              console.log(values);
+                              store.bidsStore.formResultSet({address: val})
+                            }} city={store.bidsStore.formResult.city} />
+                            <hr className={'col-span-full border-transparent my-2'} />
+                            <Select
+                              onChange={(values) =>
+                                store.bidsStore.formResultSet({parking: {label: step3?.fields[1]?.options?.filter(item => item.value == values)[0].label, value: values}})
+                              }
+                                label={step3.fields[1].label}
+                                defaultValue={step3.fields[1].defaultValue}
+                                data={step3.fields[1].options}
+                            />
+                            <Select
+                              onChange={(values) => {
+                                console.log(values);
+                                store.bidsStore.formResultSet({secretKey: {label: step3?.fields[2]?.options?.filter(item => item.value == values)[0].label, value: values}})
+                              }}
+                                label={step3.fields[2].label}
+                                defaultValue={step3.fields[2].defaultValue}
+                                data={step3.fields[2].options}
+                            />
+                            <hr className={'col-span-full border-transparent my-2'} />
+                          <Select
+                            onChange={(values) => {
+                              console.log(values);
+                              store.bidsStore.formResultSet({ important: {label: step3?.fields[3]?.options?.filter(item => item.value == values)[0].label, value: values}})
+                            }}
+                            // value={store.bidsStore.formResult.important}
+                            label={step3.fields[3].label}
+                            defaultValue={step3.fields[3].defaultValue}
+                            data={step3.fields[3].options}
+                          />
+                          <TimeInput
+                            onChange={(values) =>
+                              store.bidsStore.formResultSet({time: {label: step3.fields[4].label, value: values.target.value}})
+                            }
+                            classNames={{
+                              section: 'mr-1 text-sm',
+                              input: 'pl-7'
+                            }}
+                            leftSection={<span>C</span>}
+                            label={step3.fields[4].label}
+                          />
+                        </>
+                    </Step>
+                  <Step
+                    step={step}
+                    animate={animate}
+                    action={() => console.log('step 1')}
+                    action1={() => console.log('step 1')}
+                    stepIndex={4}
+
+                    bodyClassName={'grid grid-cols-4 grid-rows-[auto_1fr] gap-y-8  gap-x-12 content-start'}
+                    footerClassName={'flex-1 w-full justify-stretch'}
+                    header={
+                      <>
+                        <Heading text={step4.title} color={HeadingColor.accent} variant={HeadingVariant.h2} />
+                        <div className={'text-base'}>{step4.description}</div>
+                      </>
+                    }
+                    footer={
+                      <>
+                        <Button
+                          text={'Назад'}
+                          action={() => setStep((prevState: number) => prevState - 1)}
+                          className={'lg:mb-0 mr-auto'}
+                          variant={ButtonVariant['accent-outline']}
+                        />
+                        <Button
+                          text={'Отменить'}
+                          action={() => navigate(-1)}
+                          className={'float-right lg:mb-0 mb-5'}
+                          variant={ButtonVariant['accent-outline']}
+                        />
+                        <Button
+                          type={Object.keys(errors).length > 0 ? 'button' : 'text'}
+                          disabled={Object.keys(errors).length > 0}
+                          text={'Дальше'}
+                          action={async () => {
+                            console.log(store.bidsStore.formResult);
+                          store.bidsStore.formCreateBid().then((res) => {
+                            if(res.status !== 201) {
+
+                              notifications.show({
+                                id: 'car-created',
+                                withCloseButton: true,
+                                onClose: () => console.log('unmounted'),
+                                onOpen: () => console.log('mounted'),
+                                autoClose: 15000,
+                                title: "You've been compromised",
+                                message: 'Leave the building immediately',
+                                color: 'red',
+                                icon: <SvgClose />,
+                                className: 'my-notification-class z-[9999] absolute top-12 right-12',
+                                style: { backgroundColor: 'red' },
+                                loading: false,
+                              });
+                              changeStep()
+                            } else {
+                              notifications.show({
+                                id: 'car-created',
+                                withCloseButton: true,
+                                onClose: () => console.log('unmounted'),
+                                onOpen: () => console.log('mounted'),
+                                autoClose: 5000,
+                                title: "Автомобиль создан",
+                                message: 'Успешное создание',
+                                // color: 'red',
+                                className: 'my-notification-class z-[9999]',
+                                // style: { backgroundColor: 'red' },
+                                loading: false,
+                              });
+                              changeStep()
+                            }
+                          })
+                            // /* store.formStore.setFormDataCreateCar(values) */
+                          }}
+                          /* action={() => console.log(values)} */ className={'float-right'}
+                          variant={ButtonVariant.accent}
+                        />
+                      </>
+                    }
+                  >
+                    <>
+                      <Observer
+
+                        children={() => (
+                          <Select
+                            className={'col-span-2'}
+                            required
+                            label={step4.fields[0].label}
+                            searchable
+                            value={String(store.bidsStore.formResult.city)}
+                            data={val(store.catalogStore.cities).map((i: any) => ({
+                              label: i.name,
+                              value: String(i.id),
+                            }))}
+                          />
+                        )}
+                      />
+                      <Observer
+                        children={() => (
+                          <Select
+                            className={'col-span-2'}
+                            required
+                            label={step4.fields[1].label}
+                            searchable
+                            value={String(store.bidsStore.formResult.performer)}
+                            onChange={(val: any) => store.bidsStore.formResultSet({performer: Number(val)})}
+                            data={val(store.bidsStore.currentPerformers).map((i: any) => ({
+                              label: i.name,
+                              value: String(i.id),
+                            }))}
+                          />
+                        )}
+                      />
+
+
+                    <MapWithDots />
+                    </>
+                  </Step>
+                  <Step
+                    step={step}
+                    animate={animate}
+                    action={() => console.log('step 1')}
+                    action1={() => console.log('step 1')}
+                    stepIndex={5}
+
+                    bodyClassName={''}
+                    footerClassName={'flex-1 w-full justify-stretch'}
+                    header={
+                      <>
+                        <Heading text={step5.title} color={HeadingColor.accent} variant={HeadingVariant.h2} />
+                        <div className={'text-base'}>{step5.description}</div>
+                      </>
+                    }
+                    footer={
+                      <>
+                        <Button
+                          text={'Назад'}
+                          action={() => setStep((prevState: number) => prevState - 1)}
+                          className={'lg:mb-0 mr-auto'}
+                          variant={ButtonVariant['accent-outline']}
+                        />
+                        <Button
+                          text={'Отменить'}
+                          action={() => navigate(-1)}
+                          className={'float-right lg:mb-0 mb-5'}
+                          variant={ButtonVariant['accent-outline']}
+                        />
+                        <Button
+                          type={Object.keys(errors).length > 0 ? 'button' : 'text'}
+                          disabled={Object.keys(errors).length > 0}
+                          text={'Оплатить'}
+                          action={async () => {
+                            store.appStore.setModal({
+                              header: (
+                                <Heading
+                                  text={`Оплата услуги`}
+                                  color={HeadingColor.accent}
+                                  variant={HeadingVariant.h3}
+                                />
+                              ),
+                              text: `Сформирована заявка на сумму 10 000 Р.
+Пожалуйста, подтвердите оплату.`,
+                              actions: [
+                                <Button text={'Отменить'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
+                                <Button
+                                  text={'Оплатить'}
+                                  action={async () => {console.log('Оплапть'); }}
+                                  variant={ButtonVariant.accent}
+
+                                />,
+                              ],
+                              state: true,
+                            })
+                          }}
+                          /* action={() => console.log(values)} */ className={'float-right'}
+                          variant={ButtonVariant.accent}
+                        />
+                      </>
+                    }
+                  >
+                    {store.bidsStore.currentBid.id && (<Panel className={' !border-active !border-1'} bodyClassName={'grid grid-cols-2  gap-y-5  gap-x-12 content-start !py-8'} variant={PanelVariant.withPaddingSmWithBody} background={PanelColor.glass}>
+                    <DList className={'child:dt:text-accent'}  label={'Услуга'}  title={<Heading variant={HeadingVariant.h2} text={store.bidsStore.currentBid.service_type.name} color={HeadingColor.active}/>} />
+                    <DList className={'child:dt:text-accent'}  label={'Тип услуги'}  title={<Heading variant={HeadingVariant.h4} text={store.bidsStore.currentBid.service_subtype.name}/>} />
+                    {/* //todo: address */}
+                    <DList className={'child:dt:text-accent'}  label={'Адрес выезда'}  title={store.bidsStore.formResultsAll.address} />
+                    <DList className={'child:dt:text-accent'}  label={'Важность'}  title={store.bidsStore.formResultsAll.important.label} />
+                    <DList className={'child:dt:text-accent'}  label={'Время'}  title={store.bidsStore.formResultsAll.time.value} />
+                    <DList className={'child:dt:text-accent'}  label={'Дополнительные данные'}  title={<><ul><li>{store.bidsStore.formResultsAll.secretKey.label}</li><li>{store.bidsStore.formResultsAll.parking.label}</li></ul></>} />
+                    <DList className={'child:dt:text-accent'}  label={'Дополнительные опции'}  title={<><ul>{store.bidsStore.currentBid.service_option.map((i:any) => <li key={i.id}>{i.name}</li>)}</ul></>} />
+                      </Panel>
+                  )}
+                  </Step>
+                </Form>
             )}
+
         </Formik>
-    )
+     </>)
 }
 
 export default FormCreateBid

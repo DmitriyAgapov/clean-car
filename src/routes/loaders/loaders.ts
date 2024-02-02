@@ -6,7 +6,6 @@ import permissionStore, { PermissionName } from 'stores/permissionStore'
 import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
-import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 
 export const authUser = async () => {
@@ -66,11 +65,11 @@ export const referencesLoader = async (props: any) => {
                     createPage: 'Добавить марку автомобиля',
                     tableHeaders: [{label: 'Бренд', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_class'}],
                     createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
-                    createPageForm: FormCreateCarBrand.bind(props),
+                    // createPageForm: FormCreateCarBrand.bind(props),
                     createPageBack: 'Назад к списку марок автомобилей',
-                    createAction:  agent.Catalog.createCarBrandWithExistBrand,
-                    editAction:  agent.Catalog.editCity,
-                    editPageForm: FormCreateCarBrand.bind(data),
+                    // createAction:  agent.Catalog.createCarBrandWithExistBrand,
+                    // editAction:  agent.Catalog.editCity,
+                    // editPageForm: FormCreateCarBrand.bind(data),
                 }
                 break
             case 'cities':
@@ -171,7 +170,7 @@ export const companyLoader = async ({ params: { id, company_type, action, compan
     const company = await companyStore.loadCompanyWithTypeAndId(company_type, id)
 
     await companyStore.loadCompanies()
-    await catalogStore.getCities()
+    // await catalogStore.getAllCities()
     return { id: id, type: company_type, data: company }
 }
 export const filialsLoader = async () => {
@@ -179,12 +178,12 @@ export const filialsLoader = async () => {
     // await companyStore.getAllCompanies()
     await companyStore.loadCompanies()
     await companyStore.getFilials()
-    await catalogStore.getCities()
+    // await catalogStore.getAllCities()
     return null
 }
 export const carsLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     await catalogStore.getCarBrands()
-    await catalogStore.getCities()
+    // await catalogStore.getAllCities()
     return null
 }
 export const filialLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {

@@ -21,6 +21,7 @@ export enum ButtonDirectory {
 
 export enum ButtonSizeType {
   sm = 'sm',
+  xs = 'xs',
   base = 'base',
   lg = 'accent',
 }

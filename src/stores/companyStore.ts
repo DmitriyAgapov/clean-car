@@ -1,10 +1,11 @@
-import { action, autorun, computed, flow, get, IObservableArray, makeAutoObservable, observable, reaction, set } from "mobx";
+import { action, autorun, computed, flow, get, has, IObservableArray, makeAutoObservable, observable, reaction, runInAction, set } from "mobx";
 import { hydrateStore, makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import appStore from 'stores/appStore'
 import userStore, { UserTypeEnum } from 'stores/userStore'
 import { AxiosError, AxiosResponse } from 'axios'
 import { PermissionNames } from 'stores/permissionStore'
+import bidsStore from "stores/bidsStrore";
 
 export enum Payment {
     postoplata = 'Постоплата',
@@ -74,10 +75,15 @@ export class CompanyStore {
         }, { autoBind: true })
         makePersistable(this, {
             name: 'companyStore',
-            properties: ['fullCompanyData', 'companies', 'filials'],
+            properties: ['fullCompanyData', 'companies', 'filials', "customersCompany"],
             storage: window.sessionStorage,
 
         }, { fireImmediately: true})
+        reaction(() => this.currentCustomersCompany, (currentCustomer: any) => {
+            if(currentCustomer) {
+                this.getCustomerCompanyData(currentCustomer)
+            }
+        })
         reaction(
             () => this.companies,
             (companies: any) => {
@@ -95,6 +101,8 @@ export class CompanyStore {
     filials: IObservableArray<Companies> = [] as any
     companiesCustomer:IObservableArray<Companies> = [] as any
     companiesPerformers:IObservableArray<Companies> = [] as any
+    customersCompany = new Map([])
+    currentCustomersCompany = 0
     loadingCompanies: boolean = false
     errors: any
     fullCompanyData = new Map([])
@@ -118,6 +126,25 @@ export class CompanyStore {
             },
         }
     })
+    getCustomerCompanyById(company_id: number) {
+        console.log(has(this.customersCompany, `${company_id.toString()}`));
+        if(has(this.customersCompany, `${company_id.toString()}`)) return get(this.customersCompany, `${String(company_id)}`)
+    }
+    async getCustomerCompanyData(company_id: number) {
+        this.currentCustomersCompany = company_id
+        try {
+            const {data} = await agent.Companies.getCompanyData('customer', company_id)
+            runInAction(() => {
+                bidsStore.formResult.city = data.city.id
+                set(this.customersCompany, { [company_id]: data })
+            })
+        } catch (e) {
+            action(() => this.errors = e)
+        }
+    }
+    get currentCompany() {
+        return this.customersCompany.get(String(this.currentCustomersCompany))
+    }
     loadCompanyWithTypeAndId = flow(function* (this: CompanyStore, type?: string, company_id?: number) {
         // if(id && type) {
         console.log('netu')

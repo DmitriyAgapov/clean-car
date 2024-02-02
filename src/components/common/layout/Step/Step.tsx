@@ -22,7 +22,7 @@ export function Step(props: {
   const store = useStore()
   React.useEffect(() => {
     // @ts-ignore
-    const models = store.catalogStore.getCarBrandModels(values.brand).then(r => r)
+    const models = store.catalogStore.getCarBrandModels(values.brand)
     // @ts-ignore
     console.log(models);
     setValues({...values, carModels: models })

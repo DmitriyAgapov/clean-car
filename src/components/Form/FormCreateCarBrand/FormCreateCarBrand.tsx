@@ -1,8 +1,7 @@
 import { Form, Formik } from 'formik'
 import React from 'react'
-import { Await, useLoaderData, useNavigate } from "react-router-dom";
+import { Await, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
-import catalogStore from "stores/catalogStore";
 import SelectCustom from "components/common/ui/Select/Select";
 import { useStore } from "stores/store";
 import CreateInput from "components/common/ui/CreateInput/CreateInput";
@@ -10,28 +9,31 @@ import { SelectCreatable } from "components/common/ui/CreatableSelect/CreatableS
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import agent from "utils/agent";
-import { Observer } from "mobx-react-lite";
+import { observer, Observer } from "mobx-react-lite";
 import { CarType } from "stores/carStore";
-const dataCreate =  {
+
+import { values as val } from 'mobx'
+import { Select, TextInput } from '@mantine/core'
+import ComboboxCustom from 'components/common/ui/Combobox/Combobox';
+const dataCreate = {
   initValues: {
-    brand: '',
-      model: '',
-      car_class: '',
+    brand: 0,
+    model: '',
+    car_class: '',
   },
   validateSchema: Yup.object().shape({
     brand: Yup.string(),
     model: Yup.string(),
     car_class: Yup.string(),
   }),
-    submitAction: () => console.log('sumbit brands'),
-    inputs: [
+  submitAction: () => console.log('sumbit brands'),
+  inputs: [
     {
       label: 'Марка',
       placeholder: 'Выберите марку',
       fieldName: 'brand',
       type: 'select',
-      options: catalogStore.getCarBrands,
-      createOption: catalogStore.createCarBrand,
+      options: [],
     },
     {
       label: 'Модель',
@@ -44,7 +46,7 @@ const dataCreate =  {
       placeholder: 'Выберите тип',
       fieldName: 'car_class',
       type: 'text',
-      optione: [
+      options: [
         {
           label: 'B',
           value: '2',
@@ -57,15 +59,20 @@ const dataCreate =  {
     },
   ],
 }
-const FormCreateCarBrand = () => {
-  const { data, page, pageRequest, textData }: any = useLoaderData()
-  console.log(data);
+const FormCreateCarBrand = ({ edit = false }:{edit?: boolean|undefined}) => {
   const store = useStore()
+
+  const params = useParams()
+  const brand = store.catalogStore.getCurrentCarModelWithBrand
   const navigate = useNavigate()
-  const editStatus = !!data.results.name
-  const submitForm = (props:any) => {
-    console.log(props);
-  }
+  React.useEffect(() => {
+    store.catalogStore.getCarModelWithBrand(Number(params.id)).then(r => console.log(r))
+  }, [])
+  const submitForm = React.useCallback((props:any) => {
+    store.catalogStore.createCarBrand({car_class: props.car_class, model: props.model, brandId: (typeof props.brand === "number") ? props.brand : null, brandName: (typeof props.brand === "string") ? props.brand : null})
+    .then(r => r)
+    .then((r) => navigate(`/account/references/car_brands/${r.id}`))    //
+  }, [])
   const result = (Object.keys(CarType) as (keyof typeof CarType)[]).map(
     (key, index) => {
       return {label: CarType[key],
@@ -73,13 +80,13 @@ const FormCreateCarBrand = () => {
       };
     },
   );
-  console.log(result);
+  console.log(val(store.catalogStore.carBrands))
+  // @ts-ignore
   return (
     <Formik validationSchema={dataCreate.validateSchema} initialValues={dataCreate.initValues} onSubmit={submitForm} >
-      {({ errors, touched, values, submitForm,isValid }) => (
+      {({ errors, touched, setFieldValue, values, submitForm,isValid }) => (
         <Form  style={{display: 'contents'}}>
           <Panel
-            state={false}
             className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
             variant={PanelVariant.textPadding}
             background={PanelColor.glass}
@@ -87,7 +94,7 @@ const FormCreateCarBrand = () => {
             footer={              <>
 
                 <div className={'flex justify-end gap-5 w-full'}>
-                  {editStatus && <Button
+                  {edit && <Button
                     text={'Удалить'}
                     action={async () => {
                       store.appStore.setModal({
@@ -96,15 +103,16 @@ const FormCreateCarBrand = () => {
                           <Button
                             text={'Да, удалять'}
                             action={async () => {
-                              agent.Catalog.deleteCity(data.results.id).then(() => {
-                                navigate('/account/references/cities/', { replace: false })
-                              })
-                              .finally(          () => store.appStore.closeModal())
+                            //   agent.Catalog.(data.results.id).then(() => {
+                            //     navigate('/account/references/cities/', { replace: false })
+                            //   })
+                            //   .finally(          () => store.appStore.closeModal())
                             }}
                             variant={ButtonVariant['accent-outline']}
                           />,
                         ],
-                        text: `Вы уверены, что хотите удалить ${data.results.name}`,
+                        //@ts-ignore
+                        text: `Вы уверены, что хотите удалить ${brand.name}`,
                         state: true,
                       })
                     }}
@@ -120,6 +128,7 @@ const FormCreateCarBrand = () => {
                     text={'Сохранить'}
                     type={'submit'}
                     className={'float-right'}
+                    action={(e) => console.log(e)}
                     disabled={!isValid}
                     variant={ButtonVariant.accent}
                   />
@@ -129,22 +138,32 @@ const FormCreateCarBrand = () => {
             headerClassName={'flex gap-10'}
 
             header={
-              <p>{data.results.name ? textData.editPageDesc : textData.createPageDesc}</p>
+            <Await resolve={brand}>
+              {/* // @ts-ignore */}
+              <p>{
+          // @ts-ignore
+                store.catalogStore.getCurrentCarModelWithBrand && store.catalogStore.getCurrentCarModelWithBrand.name ? store.catalogStore.textData.editPageDesc : store.catalogStore.textData.createPageDesc}</p>
+            </Await>
             }
           >
-            <Observer children={() => <SelectCreatable  label={dataCreate.inputs[0].label} createaction={() => console.log('create')} items={store.catalogStore.carBrandsCurrent.map((item:any) => ({
-          label: item.name,
-          value: String(item.id)
-        }))}/>} />
-        <CreateInput  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} text={dataCreate.inputs[1].placeholder} action={() => console.log('')}/>
-        <SelectCustom label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} options={result.map((item) => ({
+            <ComboboxCustom items={val(store.catalogStore.carBrands).map((item:any)=> item.name)}/>
+          {/*   <Observer children={() => <SelectCreatable defaultValue={store.catalogStore.getCurrentCarModelWithBrand.brand?.name} label={dataCreate.inputs[0].label} createAction={(e) => { */}
+
+          {/*     console.log(store.catalogStore.getCurrentCarModelWithBrand.brand.name) */}
+          {/*     // setFieldValue('brand', {e?.value && setFieldValue('brand', Number(e.value)) */}
+          {/*   } } items={val(store.catalogStore.carBrandsCurrent).map((item:any) => ({ */}
+          {/* label: item.name, */}
+          {/* value: String(item.id) */}
+          {/*   }))}/>}/> */}
+          <TextInput defaultValue={store.catalogStore.getCurrentCarModelWithBrand.name}  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder} onChange={(e:any) => console.log('1223', e.target.value)}/>
+        <Select defaultValue={store.catalogStore.getCurrentCarModelWithBrand.car_type} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
           label: item.label,
           value: String(item.value)
-        }))}/>
+            }))}/>
           </Panel>
         </Form>
       )}
     </Formik>
   )
 }
-export default FormCreateCarBrand
+export default observer(FormCreateCarBrand)
