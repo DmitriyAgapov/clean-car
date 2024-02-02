@@ -14,7 +14,11 @@ function ReferencePageCreate(props: any) {
   const location = useLocation()
   const navigate = useNavigate()
 
-  if(!location.pathname.includes('edit')) return <FormCreateCarBrand />
+  const memVariants = React.useMemo(() => {
+   if(!location.pathname.includes('edit')) return <FormCreateCarBrand />
+   return <FormCreateCarBrand  edit={true}/>
+  },[])
+
   if(!store.userStore.getUserCan(PermissionNames["Управление справочниками"], 'create')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
@@ -26,7 +30,7 @@ function ReferencePageCreate(props: any) {
           <Heading text={!props.edit ? store.catalogStore.textData.createPage : store.catalogStore.textData.editPageHeader} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /></div></>}>
       </Panel>
 
-      <FormCreateCarBrand edit={true}/>
+      {memVariants}
 
     </Section>
   )

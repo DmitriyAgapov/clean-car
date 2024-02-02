@@ -44,11 +44,11 @@ export class CatalogStore {
                 }
             }
         )
-        reaction(() => this.getAllCities(),
+        reaction(() => this.cities,
             async (cities) => {
-                if (this.cities.size === 0) {
+                if (cities.size === 0) {
                     try {
-                        await cities
+                        await this.getAllCities()
                     } catch (e) {
                         console.log(e)
                     }
