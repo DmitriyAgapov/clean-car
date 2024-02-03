@@ -98,7 +98,7 @@ const UserPortal = ({
       <Panel
         className={
           className +
-          ` scale-in-ver-top absolute shadow-1 !m-0 right-0 max-w-xss w-full top-14 p-5 z-50 !bg-[#18191F]`
+          ` scale-in-ver-top !absolute shadow-1 !m-0 right-0 max-w-xss w-full top-14 p-5 z-50 !bg-[#18191F]`
         }
         {...props}
         footer={
