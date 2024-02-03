@@ -4,6 +4,7 @@ import { hydrateStore, makePersistable } from "mobx-persist-store";
 import { errors } from "jose";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 import paramsStore from "stores/paramStore";
+import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 
 type City = {
     id: number
@@ -91,6 +92,7 @@ export class CatalogStore {
         reaction(
             () => this.services,
             async (services) => {
+                console.log('Нет сервисов - грузить');
                 if (services.size === 0) {
                     await this.getServices()
                 }
@@ -98,19 +100,57 @@ export class CatalogStore {
         )
     }
     targetModelId = 0
-    textData = {
-        path: 'car_brands',
-        labelsForItem: ['Марка', 'Класс', 'Модель'],
-        title: 'Марки автомобилей',
-        create: 'Добавить',
-        referenceTitle: 'Марка автомобиля',
-        createPage: 'Добавить марку автомобиля',
-        tableHeaders: [{label: 'Бренд', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_class'}],
-        createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
-        createPageBack: 'Назад к списку марок автомобилей',
-        editPageHeader: 'Редактировать марку автомобиля',
-        editPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
-    }
+    // textData = {
+    //     car_brands: {
+    //         path: 'car_brands',
+    //         labelsForItem: ['Марка', 'Класс', 'Модель'],
+    //         title: 'Марки автомобилей',
+    //         create: 'Добавить',
+    //         referenceTitle: 'Марка автомобиля',
+    //         createPage: 'Добавить марку автомобиля',
+    //         tableHeaders: [{ label: 'Бренд', name: 'brand' }, { label: 'Модель', name: 'name' }, { label: 'Тип', name: 'car_class' }],
+    //         createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
+    //         createPageBack: 'Назад к списку марок автомобилей',
+    //         editPageHeader: 'Редактировать марку автомобиля',
+    //         editPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
+    //     },
+    //     cities: {
+    //         path: 'cities',
+    //         title: 'Города',
+    //         create: 'Добавить',
+    //         labelsForItem: ['Город', 'Часовой пояс', 'Статус'],
+    //         referenceTitle: 'Город',
+    //         createPage: 'Добавить город',
+    //         editPage: 'Редактировать город',
+    //         tableHeaders: [{label: 'Статус', name: 'is_active'}, {label: 'Город', name: "name"}, {label: 'Часовой пояс', name: 'timezone'}],
+    //         createPageDesc: 'Добавьте новый город',
+    //         editPageDesc: 'Вы можете изменить город или удалить его из системы',
+    //         // createPageForm: FormCreateCity.bind(props),
+    //         createPageBack: 'Назад к списку городов',
+    //         // createAction:  agent.Catalog.createCity,
+    //         // editAction:  agent.Catalog.editCity,
+    //         // editPageForm: FormCreateCity.bind(data),
+    //     },
+    //     services: {
+    //         path: 'services',
+    //         title: 'Услуги',
+    //         create: 'Добавить',
+    //         labelsForItem: ['Город', 'Часовой пояс', 'Статус'],
+    //         referenceTitle: 'Услуга',
+    //         description: "Вы можете видеть активные и неактивные типы и подтипы услуг.  Редактировать их и менять статус у каждой услуги/типе услуги или подтипе. Это позволит вам настроить компанию и ее услуги до запуска.",
+    //         createPage: 'Добавить город',
+    //         editPage: 'Редактировать город',
+    //         tableHeaders: ['Статус', 'Город', 'Часовой пояс'],
+    //         createPageDesc: 'Вы можете видеть активные и неактивные типы и подтипы услуг.  Редактировать их и менять статус у каждой услуги/типе услуги или подтипе. Это позволит вам настроить компанию и ее услуги до запуска.',
+    //         editPageDesc: 'Вы можете изменить город или удалить его из системы',
+    //         // createPageForm: FormCreateCity.bind(props),
+    //         createPageBack: 'Назад к списку услуг',
+    //         createAction:  agent.Catalog.createCity,
+    //         editAction:  agent.Catalog.editCity,
+    //         // editPageForm: FormCreateCity.bind(data),
+    //     }
+    //
+    // }
     cities: Map<any, any> = observable.map([])
     services: Map<any, any> = observable.map([])
     currentService = 0

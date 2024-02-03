@@ -61,7 +61,7 @@ const dataCreate = {
 }
 const FormCreateCarBrand = ({ edit = false }:{edit?: boolean|undefined}) => {
   const store = useStore()
-
+  const { textData }: any = useLoaderData()
   const params = useParams()
   const brand = store.catalogStore.getCurrentCarModelWithBrand
   const navigate = useNavigate()
@@ -142,7 +142,7 @@ const FormCreateCarBrand = ({ edit = false }:{edit?: boolean|undefined}) => {
               {/* // @ts-ignore */}
               <p>{
           // @ts-ignore
-                store.catalogStore.getCurrentCarModelWithBrand && store.catalogStore.getCurrentCarModelWithBrand.name ? store.catalogStore.textData.editPageDesc : store.catalogStore.textData.createPageDesc}</p>
+                store.catalogStore.getCurrentCarModelWithBrand && store.catalogStore.getCurrentCarModelWithBrand.name ? textData.editPageDesc : textData.createPageDesc}</p>
             </Await>
             }
           >

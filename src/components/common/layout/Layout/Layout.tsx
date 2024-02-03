@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useEffect } from "react";
 import styles from './Layout.module.scss'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
@@ -10,6 +10,9 @@ import '../../../../assets/styles.scss'
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
 import { useWindowDimensions } from "utils/utils";
+import { useNavigation } from "react-router-dom";
+import { LoadingOverlay } from "@mantine/core";
+import { SvgCleanCarLoader } from "components/common/ui/Icon";
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -43,17 +46,24 @@ interface ChildrenProps {
 
 const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent }) => {
   const store = useStore()
-  const {width} = useWindowDimensions()
 
+  const navigation = useNavigation();
+  const {width} = useWindowDimensions()
+  useEffect(() => {
+    console.log(navigation);
+  }, [navigation.state]);
   const { appStore, userStore, authStore } = store;
   return (
-    <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
+    <div className={styles.Layout + ' ' + className } data-theme={appStore.appTheme} data-app-type={appStore.appType}>
       <Header>
         {(width  && width > 960) && <Logo className={' logo-header'}/>}
         {headerContent}
         <Burger className={'lg:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
       </Header>
       <MobileMenu items={sidebarMenu} />
+      <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }} classNames={{
+        overlay: 'bg-black/80 backdrop-blur-xl'
+      }} visible={navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true } loaderProps={{ children: <SvgCleanCarLoader/> }} />
       <main className={'!contents'}>{children}</main>
       <Footer>
         {footerContent}

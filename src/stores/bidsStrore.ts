@@ -501,10 +501,11 @@ export class BidsStore {
         await hydrateStore('bidsStore')
     }
     async loadCurrentPerformers(customer_id: number, service_subtype_id: number) {
+        this.currentPerformers.clear()
         const { data, status } = await agent.Bids.getAvailablePerformers(customer_id, service_subtype_id)
         if (status === 200) {
             console.log(data, status)
-            this.currentPerformers.clear()
+
             data.results.forEach((i: any) => runInAction(() => this.currentPerformers.set(String(i.id), i)))
         }
     }

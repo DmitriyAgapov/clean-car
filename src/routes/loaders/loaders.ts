@@ -65,6 +65,7 @@ export const referencesLoader = async (props: any) => {
                     createPage: 'Добавить марку автомобиля',
                     tableHeaders: [{label: 'Бренд', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_class'}],
                     createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
+                    editPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
                     // createPageForm: FormCreateCarBrand.bind(props),
                     createPageBack: 'Назад к списку марок автомобилей',
                     // createAction:  agent.Catalog.createCarBrandWithExistBrand,

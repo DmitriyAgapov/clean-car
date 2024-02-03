@@ -1,6 +1,7 @@
 .Panel {
   border-radius: 1.5rem;
-
+  position: relative;
+  //overflow: hidden;
 
   header {
 	& > *:first-child {
