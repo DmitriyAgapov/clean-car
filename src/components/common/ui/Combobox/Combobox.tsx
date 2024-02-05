@@ -20,7 +20,7 @@ function ComboboxCustom({className, items, name, action}:{items: any,className?:
 	.filter((item:any) => item.name.toLowerCase().includes(search.toLowerCase().trim()))
 	.map((item:any) => (
 		<Combobox.Option value={item.name} key={item.name} onClick={(e:any) => {
-			action(item.id)
+			action(item)
 			}}>
 			{item.name}
 		</Combobox.Option>

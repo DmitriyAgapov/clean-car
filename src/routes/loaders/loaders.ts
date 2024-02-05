@@ -1,4 +1,4 @@
-import { defer, redirect } from 'react-router-dom'
+import { defer, redirect, useLoaderData } from "react-router-dom";
 import appStore from 'stores/appStore'
 import userStore from 'stores/userStore'
 import companyStore from 'stores/companyStore'
@@ -8,6 +8,7 @@ import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
+import { object } from "yup";
 
 export const authUser = async () => {
     if (!appStore.token) {
@@ -18,7 +19,6 @@ export const authUser = async () => {
     return null
 }
 export const referencesLoader = async (props: any) => {
-    console.log(props);
     const url = new URL(props.request.url)
     const searchParams = url.searchParams
     const paramsPage = url.searchParams.get('page')
@@ -39,12 +39,11 @@ export const referencesLoader = async (props: any) => {
             case 'car_brands':
                 if(props.params.id) {
                     const { data: dataModel, status: statusDataModel } = await agent.Catalog.getCarModelWithBrand(props.params.id);
-
                     if(statusDataModel === 200) data = {
                         id: dataModel.id,
                         brand: dataModel.brand.name,
                         car_type: dataModel.car_type,
-                        name: dataModel.name
+                        modelName: dataModel.name
                     }
 
                 } else {
@@ -64,6 +63,7 @@ export const referencesLoader = async (props: any) => {
                     create: 'Добавить',
                     referenceTitle: 'Марка автомобиля',
                     createPage: 'Добавить марку автомобиля',
+                    editPage: 'Редактировать марку автомобиля',
                     tableHeaders: [{label: 'Бренд', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_type'}],
                     createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
                     editPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
@@ -170,6 +170,65 @@ export const referencesLoader = async (props: any) => {
         pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
         page: refUrlsRoot,
         textData: textData,
+        // dataModels: dataModels
+    })
+}
+export const priceLoader = async (props: any) => {
+
+    const url = new URL(props.request.url)
+    const searchParams = url.searchParams
+    const paramsPage = url.searchParams.get('page')
+    const paramsPageSize = url.searchParams.get('page_size')
+    const paramsOrdering = url.searchParams.get('ordering')
+    const paramsSearchString = url.searchParams.get('searchString')
+    async function fillData() {
+        let data: any[] | any = []
+        if (props.params.id) {
+            const { data: dataModel, status: statusDataModel } = await agent.Catalog.getCarModelWithBrand(props.params.id);
+            if (statusDataModel === 200) data = {
+                id: dataModel.id,
+                brand: dataModel.brand.name,
+                car_type: dataModel.car_type,
+                modelName: dataModel.name
+            }
+        } else {
+            const { data: dataResults, status } = await agent.Price.getAllPrice({
+                page: paramsPage ?? 1,
+                page_size: paramsPageSize ?? 10,
+                name: paramsSearchString,
+                ordering: paramsOrdering
+            } as PaginationProps)
+
+            if(status === 200) {
+                data = {...dataResults, results: dataResults.results.map((i: any) => {
+                        let obj:any;
+                        for(const key in i) {
+                            if(i[key] === null) {
+
+                                obj = {
+                                    ...obj,
+                                    [key]: '-'
+                                }
+                            } else {
+                                obj = {
+                                    ...obj,
+                                    [key]: i[key]
+                                }
+                            }
+                        }
+                        return obj;
+                    })}
+            }
+            // dataResults.results.forEach((e: any) => data.push({ id: e.id, name: e.brand.name, model: e.name, car_type: e.car_type }))
+
+        }
+        return data
+    }
+    return defer({
+        data: await fillData(),
+        pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
+        // page: refUrlsRoot,
+        // textData: textData,
         // dataModels: dataModels
     })
 }

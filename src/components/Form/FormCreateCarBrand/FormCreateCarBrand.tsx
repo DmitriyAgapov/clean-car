@@ -17,14 +17,15 @@ import { Select, TextInput } from '@mantine/core'
 import ComboboxCustom from 'components/common/ui/Combobox/Combobox';
 const dataCreate = {
   initValues: {
-    brand: 0,
-    model: '',
-    car_class: '',
+    brandId: 0,
+    brand: '',
+    modelName: '',
+    car_type: '',
   },
   validateSchema: Yup.object().shape({
     brand: Yup.string(),
-    model: Yup.string(),
-    car_class: Yup.string(),
+    modelName: Yup.string(),
+    car_type: Yup.string(),
   }),
   submitAction: () => console.log('sumbit brands'),
   inputs: [
@@ -38,13 +39,13 @@ const dataCreate = {
     {
       label: 'Модель',
       placeholder: 'Выберите модель',
-      fieldName: 'model',
+      fieldName: 'modelName',
       type: 'text',
     },
     {
       label: 'Тип автомобиля',
       placeholder: 'Выберите тип',
-      fieldName: 'car_class',
+      fieldName: 'car_type',
       type: 'text',
       options: [
         {
@@ -66,25 +67,25 @@ const FormCreateCarBrand = (props: any) => {
   const brand = store.catalogStore.getCurrentCarModelWithBrand
   const navigate = useNavigate()
   const edit = props?.edit ?? false
-  // React.useEffect(() => {
-  //   store.catalogStore.getCarModelWithBrand(Number(params.id)).then(r => console.log(r))
-  // }, [])
-  const submitForms = React.useCallback((data:any) => {
-    console.log(data);
 
-  }, [])
   const result = (Object.keys(CarType) as (keyof typeof CarType)[]).map(
     (key, index) => {
-      return {label: CarType[key],
+      return {
+        label: CarType[key],
         value: CarType[key]
       };
     },
   );
   // @ts-ignore
   return (
-    <Formik validationSchema={dataCreate.validateSchema} initialValues={dataCreate.initValues} onSubmit={(props) => {
+    <Formik validationSchema={dataCreate.validateSchema} initialValues={props?.edit ? {
+      car_type: props.car_type,
+      modelName: props.modelName,
+      brand: props.brand
 
-      store.catalogStore.createCarBrand({car_class: props.car_class, model: props.model, brandId: (typeof props.brand === "number") ? props.brand : null, brandName: (typeof props.brand === "string") ? props.brand : null})
+    } : dataCreate.initValues} onSubmit={(props) => {
+
+      store.catalogStore.createCarBrand({ car_type: props.car_type, model: props.modelName, brandId: (typeof props.brand === "number") ? props.brand : null, brandName: (typeof props.brand === "string") ? props.brand : null})
       .then(r => {
         console.log(r)
         return r
@@ -110,10 +111,14 @@ const FormCreateCarBrand = (props: any) => {
                           <Button
                             text={'Да, удалять'}
                             action={async () => {
-                            //   agent.Catalog.(data.results.id).then(() => {
-                            //     navigate('/account/references/cities/', { replace: false })
-                            //   })
-                            //   .finally(          () => store.appStore.closeModal())
+                              agent.Catalog.deleteCarModel(props.id)
+                              .then((r) => {
+                                console.log(r)
+                              })
+                              .finally(() => {
+                                navigate('/account/references/car_brands', { replace: false })
+                                store.appStore.closeModal()
+                              })
                             }}
                             variant={ButtonVariant['accent-outline']}
                           />,
@@ -153,9 +158,9 @@ const FormCreateCarBrand = (props: any) => {
             </Await>
             }
           >
-          <ComboboxCustom action={(e) =>  setFieldValue('brand', e)} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
-          <TextInput  onChange={(e) => values.model = e.target.value} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.name}  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
-          <Select  required onChange={(e) =>  setFieldValue('car_class', e)} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.car_type} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
+          <ComboboxCustom action={(e) =>  setFieldValue('brandId', Number(e.id))} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
+          <TextInput  onChange={(e) => values.modelName = e.target.value} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.modelName}  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
+          <Select  withCheckIcon={false}   required onChange={(e) =>  setFieldValue('car_type', e)} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.car_type} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
           label: item.label,
           value: String(item.value)
             }))}/>

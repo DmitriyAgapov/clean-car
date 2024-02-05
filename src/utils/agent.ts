@@ -103,37 +103,10 @@ const handleErrors = (err: AxiosError) => {
                   })
         }
     }
-    console.log(err)
-    // if(err && err.response && err.response.data) {
-    //
-    // for(const key in err.response.data) {
-    //   // @ts-ignore
-    //   console.log(err.response.data[key]);
-    //   setTimeout(() => {
-    //     notifications.show({
-    //       id: key,
-    //       withCloseButton: true,
-    //       onClose: () => console.log('unmounted'),
-    //       onOpen: () => console.log('mounted'),
-    //       autoClose: 6000,
-    //       title: key,
-    //       // @ts-ignore
-    //
-    //       message: err.code,
-    //       color: 'red',
-    //       // icon: <SvgClose />,
-    //       className: 'my-notification-class',
-    //       // style: { backgroundColor: 'red' },
-    //       loading: false,
-    //     });
-    //
-    //   }, 200 * 1);
-    //
-    // }}
     return err
 }
 const Price = {
-    getAllPrice: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),
+    getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list/', {}, pagination),
 }
 
 export interface CreateBidData {
@@ -280,6 +253,7 @@ const Catalog = {
     createCity: (name: string, is_active: boolean) =>
         requests.post('/catalog/cities/create/', { name: name, is_active: is_active }),
     deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete`),
+    deleteCarModel: (id: number) => requests.delete(`/catalog/car_models/${id}/delete`),
     editCity: (id: number, name: string, is_active: boolean, timezone: string) =>
         requests.put(`/catalog/cities/${id}/update`, { name: name, id: id, is_active: is_active, timezone: timezone }),
     getServices: (params?: PaginationProps) => requests.get('/catalog/services/', {}, params),
