@@ -22,14 +22,6 @@ const axiosSuggest = axios.create({})
 //Константа для запросов
 export const API_ROOT = 'https://dev.server.clean-car.net/api'
 
-//Params для запросов
-const encode = encodeURIComponent
-const limit = (count: any, p: any) => `limit=${count}&offset=${p ? p * count : 0}`
-const omitSlug = (article: any) => Object.assign({}, article, { slug: undefined })
-const tokenPlugin = () => {
-  console.log(appStore.token);
-  if (appStore.token) return { Authorization: `Bearer ${appStore.token}` }
-}
 
 //Объект запросов
 const requests = {
