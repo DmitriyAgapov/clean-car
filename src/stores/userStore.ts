@@ -263,10 +263,5 @@ export class UserStore {
 }
 
 const userStore = new UserStore()
-autorun(() => {
-  console.log(userStore.updatingUserErrors);
-  console.log(userStore.myProfileState);
-   console.log(userStore.currentUser.is_staff);
-  console.log(userStore.isAdmin);
-})
+
 export default userStore

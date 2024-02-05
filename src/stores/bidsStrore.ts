@@ -434,7 +434,7 @@ export class BidsStore {
         reaction(
             () => this.formResult.company,
             (customer, oldCustomer) => {
-                console.log(oldCustomer, customer)
+
                 this.formResultsClear()
                 if (customer !== 0 && customer !== null) {
                     runInAction(async () => {
@@ -530,7 +530,6 @@ export class BidsStore {
         file.forEach((item: any) => {
             fd.push(readFileAsText(item))
         })
-        console.log(fd)
         Promise.all(fd).then((res: any) => runInAction(() => (this.photo.photosPreviewAr = res)))
     }
     uploadPhotos(ar:any) {
@@ -579,7 +578,7 @@ export class BidsStore {
                 service_type: this.formResult.service_type,
                 service_subtype: this.formResult.service_subtype
             })
-            console.log(res);
+
             if(res.status) {
                 //@ts-ignore
                 runInAction(() => this.justCreatedBid = res.data)

@@ -19,6 +19,9 @@ const label = (key:string|unknown) => {
     company: "Компания",
     city: "Город",
     is_active: "Статус",
+    brand: "Марка",
+    car_type: "Класс",
+    modelName: "Модель",
     timezone: "Часовой пояс"
   }
   //@ts-ignore

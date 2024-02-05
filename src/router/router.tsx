@@ -11,12 +11,12 @@ import {
     filialsLoader,
     groupsCreatLoader,
     groupsIdLoader,
-    groupsLoader,
+    groupsLoader, priceLoader,
     profileLoader,
     referencesLoader,
     userLoader,
-    usersLoader,
-} from 'routes/loaders/loaders'
+    usersLoader
+} from "routes/loaders/loaders";
 import { carsLoader } from 'routes/loaders/carsLoader'
 import AccountPage from 'routes/account/account'
 import MyProfilePage from 'routes/account/myProfile'
@@ -302,8 +302,11 @@ const router = createBrowserRouter([
                     },
                 ],
             },
-            {path: 'price',
-            element: <PricesPage/>},
+            {
+                path: 'price',
+                element: <PricesPage/>,
+                loader: priceLoader
+            },
         ],
     },
 ])

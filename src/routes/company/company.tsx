@@ -20,7 +20,7 @@ const CompanyPage = () => {
   const navigate = useNavigate()
   const  companyData = store.companyStore.getCompanyFullData(id);
   const { company, users, address, application_type,   company_type, contacts, created,inn, legal_address, ogrn, service_percent, updated } = companyData
-  // console.log(company.data.updated);
+
   return (
       <Section type={SectionType.default}>
           <Panel

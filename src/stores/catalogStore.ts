@@ -1,15 +1,6 @@
-import { action, autorun, flow, makeAutoObservable, observable, ObservableMap, reaction, runInAction, values } from "mobx";
+import {  flow, makeAutoObservable, observable, ObservableMap, reaction, runInAction, values } from "mobx";
 import agent, { PaginationProps } from 'utils/agent'
 import { hydrateStore, makePersistable } from "mobx-persist-store";
-import { errors } from "jose";
-import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
-import paramsStore from "stores/paramStore";
-import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
-
-type City = {
-    id: number
-    name: string
-}
 
 export class CatalogStore {
     constructor() {
@@ -135,11 +126,11 @@ export class CatalogStore {
         }
     }
     get getSubtypesBySID() {
-        console.log(this.subtypesByService.get(String(this.currentService)))
+
         if (!this.subtypesByService.has(this.currentService)) {
             this.subtypesByService.get(this.currentService)
         }
-        console.log(this.subtypesByService.get(String(this.currentService)))
+
         return this.services.get(String(this.currentService))
     }
     getSubtypeByServiceId(service_id: number) {
@@ -151,7 +142,7 @@ export class CatalogStore {
     async getCarBrandModels(id: number, params?: PaginationProps) {
         if (id) {
             const { data, status } = await agent.Catalog.getCarBrandModels(id, params)
-            console.log(data)
+
             if (status === 200) {
                 runInAction(() => {
                     this.brandModels = data.results.map((item: any) => ({ value: String(item.id), label: item.name }))
@@ -191,11 +182,10 @@ export class CatalogStore {
         })
     }
     async loadCarBrandModelsReference(params: PaginationProps) {
-        let models: any[] = []
+
         try {
             const { data, status }: any = await this.getCarBrands(params)
             if (status === 200) {
-                console.log(data)
                 values(data).forEach((el: any) => {
                     this.getCarBrandModels(el.id)
                         .then((r) => r)
@@ -220,7 +210,6 @@ export class CatalogStore {
         }
     }
     async getCarModelWithBrand(brandId: number) {
-        console.log(brandId)
         const { data, status }: any = await agent.Catalog.getCarModelWithBrand(Number(brandId))
         if (status === 200) {
             runInAction(() => (this.currentCarModelWithBrand = data))
@@ -245,34 +234,30 @@ export class CatalogStore {
         }
     })
     async getAllCities(params?: PaginationProps) {
+        const { data, status, error } = await agent.Catalog.getCities({ page_size: 1000 })
 
-            const { data, status, error } = await agent.Catalog.getCities({ page_size: 1000 })
-        console.log(data);
-            if (status === 200) {
-
-                data.results.forEach((i: any) =>     runInAction(() => { this.cities.set(String(i.id), i)}))
-
-            }
-
+        if (status === 200) {
+            data.results.forEach((i: any) =>     runInAction(() => { this.cities.set(String(i.id), i)}))
+        }
     }
     createCarBrand = flow(function* (
         this: CatalogStore,
         {
-            car_class,
+            car_type,
             model,
             brandId,
             brandName,
         }: {
-            car_class: string
+            car_type: string
             model: string
             brandId?: number | undefined | null
             brandName?: string | undefined | null
         },
     ) {
-        console.log(car_class, brandName, brandId, car_class);
+        console.log(car_type, brandName, brandId, model);
         if (brandId) {
             try {
-                const { data, status } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_class, model)
+                const { data, status } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_type, model)
                 return { data, status }
             } catch (error) {
                 console.log(error)
@@ -280,7 +265,7 @@ export class CatalogStore {
         }
         if (brandName) {
             try {
-                const { data, status }  = yield agent.Catalog.createCarBrandWithNewBrand(brandName, car_class, model)
+                const { data, status }  = yield agent.Catalog.createCarBrandWithNewBrand(brandName, car_type, model)
                 return { data, status }
             } catch (error) {
                 console.log(error)

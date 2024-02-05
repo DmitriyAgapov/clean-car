@@ -133,7 +133,7 @@ const handleErrors = (err: AxiosError) => {
     return err
 }
 const Price = {
-    getAllPrice: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),
+    getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list/', {}, pagination),
 }
 
 export interface CreateBidData {
@@ -279,7 +279,8 @@ const Catalog = {
     getCity: (id: number) => requests.get(`/catalog/cities/${id}/retrieve/`),
     createCity: (name: string, is_active: boolean) =>
         requests.post('/catalog/cities/create/', { name: name, is_active: is_active }),
-    deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete/`),
+		deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete/`),
+    deleteCarModel: (id: number) => requests.delete(`/catalog/car_models/${id}/delete`),
     editCity: (id: number, name: string, is_active: boolean, timezone: string) =>
         requests.put(`/catalog/cities/${id}/update/`, { name: name, id: id, is_active: is_active, timezone: timezone }),
     getServices: (params?: PaginationProps) => requests.get('/catalog/services/', {}, params),

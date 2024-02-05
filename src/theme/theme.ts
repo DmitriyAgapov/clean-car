@@ -10,7 +10,7 @@ const themeOverride = createTheme({
         Select: Select.extend({
             classNames: {
                 input: 'bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
-                dropdown: 'bg-white rounded-[0.625rem]',
+                dropdown: '!bg-white rounded-[0.625rem]',
                 option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent data-[checked=true]:text-accent focus:!bg-transparent focus:!text-accent',
             }
         }),
@@ -18,7 +18,7 @@ const themeOverride = createTheme({
             classNames: {
                 header: 'text-gray-3',
                 search: 'bg-white focus:filter-none',
-                dropdown: 'bg-white rounded-[0.625rem]',
+                dropdown: '!bg-white rounded-[0.625rem]',
                 footer: 'text-gray-2 border-0',
                 option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent focus:!bg-transparent focus:!text-accent',
             }
@@ -58,4 +58,5 @@ const themeOverride = createTheme({
 
 });
 const newTheme = mergeMantineTheme({ ...DEFAULT_THEME }, { ...themeOverride });
+// const newTheme = themeOverride;
 export default newTheme;

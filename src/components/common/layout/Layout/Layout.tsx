@@ -49,9 +49,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
 
   const navigation = useNavigation();
   const {width} = useWindowDimensions()
-  useEffect(() => {
-    console.log(navigation);
-  }, [navigation.state]);
+
   const { appStore, userStore, authStore } = store;
   return (
     <div className={styles.Layout + ' ' + className } data-theme={appStore.appTheme} data-app-type={appStore.appType}>

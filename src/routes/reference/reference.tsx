@@ -74,8 +74,9 @@ const ReferencePage = ():JSX.Element => {
               data-app-type={'admin'}
             >
               <span className={'text-black font-sans uppercase text-3xl leading-none m-auto'}>
-                {data.results.name[0]}
-                {data.results.name[1]}
+                {data.results.name ? data.results.name[0] : data.results.modelName[0]}
+                {data.results.name ? data.results.name[1] : data.results.modelName[1]}
+
               </span>
             </div>
 

@@ -1,16 +1,16 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import agent from "utils/agent";
 import paramsStore from "stores/paramStore";
+import { boolean, string } from "yup";
 
 axios.interceptors.request
 	.use(
 		async (config, ) => {
 			config.params && paramsStore.setParams(config.params)
-			console.log(config)
 			if (localStorage.getItem('jwt')) {
 				// @ts-ignore
 				config.headers = {
-					authorization: `Bearer ${localStorage.getItem('jwt')}`
+					Authorization: `Bearer ${localStorage.getItem('jwt')}`
 				};
 			}
 			return config;

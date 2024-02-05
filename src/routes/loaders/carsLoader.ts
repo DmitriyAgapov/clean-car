@@ -67,13 +67,14 @@ export const carsLoader = async (props: any) => {
 			create: 'Добавить',
 			referenceTitle: 'Марка автомобиля',
 			createPage: 'Добавить марку автомобиля',
+			editPage: 'Редактировать1 марку автомобиля',
 			tableHeaders: [{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_class'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'city'}],
 			createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
-			// createPageForm: FormCreateCarBrand.bind(props),
+			createPageForm: FormCreateCarBrand.bind(props),
 			createPageBack: 'Назад к списку марок автомобилей',
-			// createAction:  agent.Catalog.createCarBrandWithExistBrand,
-			// editAction:  agent.Catalog.editCity,
-			// editPageForm: FormCreateCarBrand.bind(data),
+			createAction:  agent.Catalog.createCarBrandWithExistBrand,
+			editAction:  agent.Catalog.editCity,
+			editPageForm: FormCreateCarBrand.bind(props, { ...data, edit:true }),
 		}
 
 
