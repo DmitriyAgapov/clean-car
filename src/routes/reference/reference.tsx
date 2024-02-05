@@ -4,40 +4,50 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate, useRevalidator } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import Checkbox from 'components/common/ui/Checkbox/Checkbox'
 import { PermissionNames } from "stores/permissionStore";
 import DList from "components/common/ui/DList/DList";
+import label from "utils/labels";
 
-const ReferencePage = () => {
+const ReferencePage = ():JSX.Element => {
   const navigate = useNavigate()
   const location = useLocation()
   const store = useStore()
   const { data, textData }: any = useLoaderData()
+  const Items = () => {
+    let itemsAr: JSX.Element[] = []
+    const items = function () {
+        let counter = 0
+        for (let key in data.results) {
+            if (key !== 'id') {
 
-  const memoizedData = React.useMemo(() => {
-      let itemsAr: any[] = []
-      const items = function () {
-          let counter = 0
-          for (let key in data.results) {
-              if(key !== 'id')  {
-                if(typeof data.results[key] === "boolean") {
-                  itemsAr.push(<DList key={key} label={textData.labelsForItem[counter]}
-                    title={data.results[key] ? <span className={'text-accent'}>Активен</span> : <span className={'text-red-500'}>Неактивен</span>} />)
+                if (typeof data.results[key] === 'boolean') {
+                    itemsAr.push(
+                        <DList
+                            key={key}
+                            label={label(key)}
+                            title={
+                                data.results[key] ? (
+                                    <span className={'text-accent'}>Активен</span>
+                                ) : (
+                                    <span className={'text-red-500'}>Неактивен</span>
+                                )
+                            }
+                        />,
+                    )
                     counter++
                 } else {
-                  itemsAr.push(<DList  key={key} label={textData.labelsForItem[counter]}
-                    title={data.results[key]} />)
-                  counter++
+                    itemsAr.push(<DList key={key}    label={label(key)} title={data.results[key]} />)
+                    counter++
                 }
-              }
+            }
+        }
+    }
+    items()
+    return <>{itemsAr}</>
+  }
 
-          }
-      }
-      items()
-      return itemsAr
-  }, [data.results])
   if (location.pathname.includes('edit')) return <Outlet />
   if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
   return (
@@ -78,7 +88,7 @@ const ReferencePage = () => {
           </>
         }
       >
-        {memoizedData}
+       <Items/>
       </Panel>
 
     </Section>

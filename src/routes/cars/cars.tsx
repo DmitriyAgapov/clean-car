@@ -48,7 +48,8 @@ const CarsPage = () => {
       >
 
       </Panel>
-      <TableWithSortNew total={data.count}
+      <TableWithSortNew
+        total={data.count}
         variant={PanelVariant.dataPadding}
         search={true}
         background={PanelColor.glass}

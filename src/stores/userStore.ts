@@ -23,7 +23,7 @@ export type User = {
   last_name: string
   password?: string
   password2?: string
-  is_superuser?: boolean
+  is_superuser?: boolean | null
   is_staff: boolean | null
   staff_group?: GroupProps
   is_active?: boolean
@@ -87,7 +87,7 @@ export class UserStore {
     })
   }
 
-  currentUser: User = {id: 0, email: '', first_name: '', last_name: '', is_staff: null};
+  currentUser: User = {id: 0, email: '', first_name: '', last_name: '', is_staff: null, is_superuser: null};
   currentUserPermissions = observable.map([]);
   permissionsVariants = observable.map([]);
   permissionsVariantss = observable.object({});
@@ -127,6 +127,8 @@ export class UserStore {
       runInAction(() => {
         this.myProfileData.user = data
         this.currentUser.is_staff = data.is_staff
+        this.currentUser.is_superuser = data.is_superuser
+
         this.myProfileData.permissions = data.staff_group
 	      this.createUserPermissions()
       })

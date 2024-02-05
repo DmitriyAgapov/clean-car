@@ -2,8 +2,8 @@ import { Combobox, Input, InputBase, Menu, ScrollArea, TextInput, useCombobox } 
 import React, { useState } from "react";
 import Label = Menu.Label;
 
-function ComboboxCustom({className, items}:{items: any,className?: string}) {
-	console.log(items);
+function ComboboxCustom({className, items, name, action}:{items: any,className?: string, name: string, action: (props:any) => void}) {
+
 	const [search, setSearch] = useState('');
 	const [value, setValue] = useState<string | null>(null);
 	const [selectedItem, setSelectedItem] = useState<string | null>(null);
@@ -17,10 +17,12 @@ function ComboboxCustom({className, items}:{items: any,className?: string}) {
 			combobox.focusSearchInput();
 		}, });
 	const options = items
-	.filter((item:any) => item.toLowerCase().includes(search.toLowerCase().trim()))
+	.filter((item:any) => item.name.toLowerCase().includes(search.toLowerCase().trim()))
 	.map((item:any) => (
-		<Combobox.Option  value={item} key={item}>
-			{item}
+		<Combobox.Option value={item.name} key={item.name} onClick={(e:any) => {
+			action(item.id)
+			}}>
+			{item.name}
 		</Combobox.Option>
 	));
 	return (
@@ -29,11 +31,13 @@ function ComboboxCustom({className, items}:{items: any,className?: string}) {
 			Марка
 			<Combobox store={combobox}
 				onOptionSubmit={(val) => {
+					console.log(val);
 					setSelectedItem(val);
 					combobox.closeDropdown();
 				}}>
 				<Combobox.Target>
 					<InputBase
+						name={name}
 						component="button"
 						type="button"
 						pointer
@@ -60,7 +64,20 @@ function ComboboxCustom({className, items}:{items: any,className?: string}) {
 
 
 					</Combobox.Options>
+					{/* <Combobox.Footer> */}
+					{/* 	<Input */}
+					{/* 		component="button" */}
+					{/* 		type="button" */}
+					{/* 		pointer */}
+					{/* 		rightSection={<Combobox.Chevron />} */}
+					{/* 		rightSectionPointerEvents="none" */}
+					{/* 		onClick={() => { */}
 
+					{/* 		}} */}
+					{/* 	/> */}
+
+					{/* 	 */}
+					{/* </Combobox.Footer> */}
 				</Combobox.Dropdown>
 			</Combobox>
 		</label>

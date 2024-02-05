@@ -2,13 +2,10 @@ import axios, { AxiosError } from "axios";
 import appStore from 'stores/appStore'
 import authStore from 'stores/authStore'
 import  { decodeToken } from 'utils/getData'
-import  'utils/axiosConfig'
+// import  'utils/axiosConfig'
 import { User } from 'stores/userStore'
-import { toJS } from 'mobx'
+import { runInAction, toJS } from "mobx";
 import { Company, CompanyType } from "stores/companyStore";
-import { number } from "yup";
-import company from "routes/company/company";
-import { notifications } from "@mantine/notifications";
 
 export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
@@ -38,7 +35,7 @@ const requests = {
   delete: (url: string) =>
     axios({
       url: `${API_ROOT}${url}`,
-      // headers: tokenPlugin(),
+      headers: tokenPlugin(),
       method: 'DELETE',
     })
     .then((response) => response.data)
@@ -46,7 +43,7 @@ const requests = {
   get: (url: string, body?: any, pagination?:PaginationProps) =>
      axios({
       url: `${API_ROOT}${url}`,
-      // headers: tokenPlugin(),
+      headers: tokenPlugin(),
       method: 'GET',
       params: pagination
     })
@@ -56,7 +53,7 @@ const requests = {
   put: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
-      // headers: tokenPlugin(),
+      headers: tokenPlugin(),
       method: 'PUT',
       data: body,
     }),
@@ -65,7 +62,7 @@ const requests = {
   patch: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
-      // headers: tokenPlugin(),
+      headers: tokenPlugin(),
       method: 'PATCH',
       data: body,
     }),
@@ -75,7 +72,7 @@ const requests = {
   post: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
-      // headers: tokenPlugin(),
+      headers: tokenPlugin(),
       method: 'POST',
       data: body,
     })
@@ -99,16 +96,18 @@ const handleErrors = (err: AxiosError) => {
     if (err && err.response && err.response.status === 401) {
         const refr = localStorage.getItem('jwt_refresh')
               if (refr) {
-            agent.Auth.tokenRefresh(refr)
-                .then((resolve: any) => resolve.data)
-                .then((data) => {
-                    appStore.setToken(null)
-                    appStore.setToken(data.access)
-                })
-                .catch((err) => {
-                    appStore.setTokenError(err.response.data)
-                    authStore.logout()
-                })
+              agent.Auth.tokenRefresh(refr)
+                  .then((resolve: any) => resolve.data)
+                  .then((data) => {
+                      runInAction(() => {
+                        appStore.setToken(null)
+                        appStore.setToken(data.access)
+                      })
+                  })
+                  .catch((err) => {
+                      appStore.setTokenError(err.response.data)
+                      authStore.logout()
+                  })
         }
     }
     console.log(err)
@@ -289,7 +288,7 @@ const Catalog = {
         requests.post('/catalog/cities/create/', { name: name, is_active: is_active }),
     deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete`),
     editCity: (id: number, name: string, is_active: boolean, timezone: string) =>
-        requests.patch(`/catalog/cities/${id}/update`, { name: name, id: id, is_active: is_active, timezone: timezone }),
+        requests.put(`/catalog/cities/${id}/update`, { name: name, id: id, is_active: is_active, timezone: timezone }),
     getServices: (params?: PaginationProps) => requests.get('/catalog/services/', {}, params),
     getService: (id: number) => requests.get(`/catalog/services/${id}/retrieve/`),
     createSubtype: (id: number, name: string, is_active: boolean) =>

@@ -26,8 +26,38 @@ export class CatalogStore {
                 'subtypesByService',
                 'currentService',
                 'currentServiceSubtypes',
+                'loadingState'
             ],
             storage: window.sessionStorage,
+        })
+
+        reaction(() => this.loadingState.brands,
+          (brands) => {
+              if (!brands) {
+                this.getCarBrands().then(r => runInAction(() => {
+                    console.log('loadded brands')
+                    this.loadingState.brands = true
+                }))
+              }}
+        )
+        reaction(() => this.loadingState.services,
+          (services) => {
+              if (!services) {
+                  this.getServices().then(r => runInAction(() => {
+                      console.log('loadded services')
+                      this.loadingState.services = true
+                  }))
+              }}
+        )
+        reaction(() => this.loadingState.cities,
+          (cities) => {
+              if (!cities) {
+                this.getAllCities().then(r => runInAction(() => {
+                    console.log('loadded cities')
+                    this.loadingState.cities  = true
+                }))
+
+            }
         })
         reaction(
             () => this.currentService,
@@ -38,119 +68,37 @@ export class CatalogStore {
             },
         )
         reaction(
-            () => this.carBrandModels,(carBrandModels) => {
-
-                if (carBrandModels.size !== 0) {
-                     this.getCarBrandsModels()
-                }
-            }
-        )
-        reaction(() => this.cities,
-            async (cities) => {
-                if (cities.size === 0) {
+            () => this.targetModelId,
+            async (targetModelId) => {
+                if (targetModelId !== 0) {
                     try {
-                        await this.getAllCities()
+                        await this.getCarModelWithBrand(targetModelId)
                     } catch (e) {
                         console.log(e)
                     }
-                }
-            },
-        )
-        reaction(
-            () => this.carBrandModels,
-            async (carBrandModels) => {
-                if (carBrandModels.size === 0) {
-                    try {
-                        await this.getCarBrandsModels()
-                    } catch (e) {
-                        console.log(e)
-                    }
-                }
-            },
-        )
-        reaction(
-            () => this.carBrands,
-            async (carBrands) => {
-                if (carBrands.size === 0) {
-                    try {
-                        await this.getCarBrands()
-                    } catch (e) {
-                        console.log(e)
-                    }
-                }
-            },
-        )
-        reaction(() => this.targetModelId, async (targetModelId) => {
-            if (targetModelId !== 0) {
-                try {
-                    await this.getCarModelWithBrand(targetModelId)
-                } catch (e) {
-                    console.log(e)
-                }
-            }
-        })
-        reaction(
-            () => this.services,
-            async (services) => {
-                console.log('Нет сервисов - грузить');
-                if (services.size === 0) {
-                    await this.getServices()
                 }
             },
         )
     }
+    loadingState = {
+        cities: true,
+        brands: true,
+        models: true,
+        services: true,
+        types: true,
+        subtypes: true,
+    }
+    setLoadingStateFalse() {
+        this.loadingState = {
+            cities: false,
+            brands: false,
+            models: false,
+            services: false,
+            types: false,
+            subtypes: false,
+        }
+    }
     targetModelId = 0
-    // textData = {
-    //     car_brands: {
-    //         path: 'car_brands',
-    //         labelsForItem: ['Марка', 'Класс', 'Модель'],
-    //         title: 'Марки автомобилей',
-    //         create: 'Добавить',
-    //         referenceTitle: 'Марка автомобиля',
-    //         createPage: 'Добавить марку автомобиля',
-    //         tableHeaders: [{ label: 'Бренд', name: 'brand' }, { label: 'Модель', name: 'name' }, { label: 'Тип', name: 'car_class' }],
-    //         createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
-    //         createPageBack: 'Назад к списку марок автомобилей',
-    //         editPageHeader: 'Редактировать марку автомобиля',
-    //         editPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
-    //     },
-    //     cities: {
-    //         path: 'cities',
-    //         title: 'Города',
-    //         create: 'Добавить',
-    //         labelsForItem: ['Город', 'Часовой пояс', 'Статус'],
-    //         referenceTitle: 'Город',
-    //         createPage: 'Добавить город',
-    //         editPage: 'Редактировать город',
-    //         tableHeaders: [{label: 'Статус', name: 'is_active'}, {label: 'Город', name: "name"}, {label: 'Часовой пояс', name: 'timezone'}],
-    //         createPageDesc: 'Добавьте новый город',
-    //         editPageDesc: 'Вы можете изменить город или удалить его из системы',
-    //         // createPageForm: FormCreateCity.bind(props),
-    //         createPageBack: 'Назад к списку городов',
-    //         // createAction:  agent.Catalog.createCity,
-    //         // editAction:  agent.Catalog.editCity,
-    //         // editPageForm: FormCreateCity.bind(data),
-    //     },
-    //     services: {
-    //         path: 'services',
-    //         title: 'Услуги',
-    //         create: 'Добавить',
-    //         labelsForItem: ['Город', 'Часовой пояс', 'Статус'],
-    //         referenceTitle: 'Услуга',
-    //         description: "Вы можете видеть активные и неактивные типы и подтипы услуг.  Редактировать их и менять статус у каждой услуги/типе услуги или подтипе. Это позволит вам настроить компанию и ее услуги до запуска.",
-    //         createPage: 'Добавить город',
-    //         editPage: 'Редактировать город',
-    //         tableHeaders: ['Статус', 'Город', 'Часовой пояс'],
-    //         createPageDesc: 'Вы можете видеть активные и неактивные типы и подтипы услуг.  Редактировать их и менять статус у каждой услуги/типе услуги или подтипе. Это позволит вам настроить компанию и ее услуги до запуска.',
-    //         editPageDesc: 'Вы можете изменить город или удалить его из системы',
-    //         // createPageForm: FormCreateCity.bind(props),
-    //         createPageBack: 'Назад к списку услуг',
-    //         createAction:  agent.Catalog.createCity,
-    //         editAction:  agent.Catalog.editCity,
-    //         // editPageForm: FormCreateCity.bind(data),
-    //     }
-    //
-    // }
     cities: Map<any, any> = observable.map([])
     services: Map<any, any> = observable.map([])
     currentService = 0
@@ -161,7 +109,7 @@ export class CatalogStore {
     currentServiceSubtypesOptions = new Map([])
     carBrandModels: Map<any, any> = observable.map([])
     carBrandModelsCount = 0
-    currentCarModelWithBrand:any = {}
+    currentCarModelWithBrand: any = {}
     carBrandModelsReference: any[] = []
     get brandModelsCurrent() {
         return this.brandModels
@@ -218,27 +166,23 @@ export class CatalogStore {
         }
     }
     async getCarBrandsModels() {
-        let carBrandPage = 1;
-        let carBrandLength = 0;
-        let continueLoad:boolean = true ;
+        let carBrandPage = 1
+        let carBrandLength = 0
+        let continueLoad: boolean = true
         const cMap = new Map([])
         const getAll = async () => {
             const { data, status, error } = await agent.Catalog.getCarModels({ page: carBrandPage })
             if (status === 200) {
-                console.log()
+                console.log('get cities ')
                 carBrandLength = data.count
                 data.results.forEach((i: any) =>  cMap.set(String(i.id), i))
                 carBrandPage = carBrandPage + 1;
                 (carBrandLength != cMap.size) ? continueLoad = true : continueLoad = false
             }
-            console.log(carBrandLength != cMap.size)
-            console.log(carBrandLength)
-            console.log(continueLoad)
-
         }
         await getAll().finally(() => {
             if (continueLoad) {
-                 getAll()
+                getAll()
             } else {
                 runInAction(() => {
                     this.carBrandModels = cMap
@@ -254,20 +198,20 @@ export class CatalogStore {
                 console.log(data)
                 values(data).forEach((el: any) => {
                     this.getCarBrandModels(el.id)
-                    .then((r) => r)
-                    .finally(() => {
-                        runInAction(() => {
-                            console.log(el)
-                            this.carBrandModels.forEach((e: any) => {
-                                this.carBrandModelsReference.push({
-                                    id: e.id,
-                                    name: el.name,
-                                    model: e.name,
-                                    car_class: e.car_class,
+                        .then((r) => r)
+                        .finally(() => {
+                            runInAction(() => {
+                                console.log(el)
+                                this.carBrandModels.forEach((e: any) => {
+                                    this.carBrandModelsReference.push({
+                                        id: e.id,
+                                        name: el.name,
+                                        model: e.name,
+                                        car_class: e.car_class,
+                                    })
                                 })
                             })
                         })
-                    })
                 })
             }
         } catch (e) {
@@ -276,14 +220,17 @@ export class CatalogStore {
         }
     }
     async getCarModelWithBrand(brandId: number) {
-        console.log(brandId);
-        const {data, status}:any = await agent.Catalog.getCarModelWithBrand(Number(brandId))
-        if(status === 200) {
-          runInAction(() => this.currentCarModelWithBrand = data)
+        console.log(brandId)
+        const { data, status }: any = await agent.Catalog.getCarModelWithBrand(Number(brandId))
+        if (status === 200) {
+            runInAction(() => (this.currentCarModelWithBrand = data))
         }
         return await data
     }
     get getCurrentCarModelWithBrand() {
+        if (this.carBrands.size === 0) {
+            this.getCarBrands()
+        }
         return this.currentCarModelWithBrand
     }
     getCities = flow(function* (this: CatalogStore, params?: PaginationProps) {
@@ -298,59 +245,43 @@ export class CatalogStore {
         }
     })
     async getAllCities(params?: PaginationProps) {
-        let cities: any = []
 
-        let citiesPage = 1
-        let citiesLength = 0
-        const cMap = new Map([])
-        const getAll = async () => {
-            const { data, status, error } = await agent.Catalog.getCities({ page: citiesPage })
+            const { data, status, error } = await agent.Catalog.getCities({ page_size: 1000 })
+        console.log(data);
             if (status === 200) {
-                console.log()
-                citiesLength = data.count
-                data.results.forEach((i: any) => cMap.set(String(i.id), i))
-                citiesPage = citiesPage + 1
+
+                data.results.forEach((i: any) =>     runInAction(() => { this.cities.set(String(i.id), i)}))
+
             }
-            console.log(citiesLength != cMap.size)
-            console.log(citiesLength)
-            console.log(cMap.size)
-            if (citiesLength !== cMap.size) {
-                await getAll()
-            } else {
-                runInAction(() => {
-                    this.cities = cMap
-                })
-            }
-        }
-        await getAll()
+
     }
-    createCarBrand = flow(function* (   this: CatalogStore,
-      {
-
-          car_class,
-          model,
-          brandId,
-          brandName
-      }
-    :{
-
-        car_class: string
-        model: string
-        brandId?: number
-        brandName?: string
-    }) {
+    createCarBrand = flow(function* (
+        this: CatalogStore,
+        {
+            car_class,
+            model,
+            brandId,
+            brandName,
+        }: {
+            car_class: string
+            model: string
+            brandId?: number | undefined | null
+            brandName?: string | undefined | null
+        },
+    ) {
+        console.log(car_class, brandName, brandId, car_class);
         if (brandId) {
             try {
-                const { data } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_class, model)
-                return data
+                const { data, status } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_class, model)
+                return { data, status }
             } catch (error) {
                 console.log(error)
             }
         }
         if (brandName) {
             try {
-                const { data } = yield agent.Catalog.createCarBrandWithNewBrand(brandName, car_class, model)
-                return data
+                const { data, status }  = yield agent.Catalog.createCarBrandWithNewBrand(brandName, car_class, model)
+                return { data, status }
             } catch (error) {
                 console.log(error)
             }

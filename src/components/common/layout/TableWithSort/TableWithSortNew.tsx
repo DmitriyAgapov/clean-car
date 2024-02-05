@@ -1,19 +1,20 @@
-import React, { useMemo, useState } from 'react'
-import styles from './TableWithSort.module.scss'
-import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
-import { SvgChevron, SvgLoading, SvgSort } from 'components/common/ui/Icon'
-import Chips from 'components/common/ui/Chips/Chips'
-import {  useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import {Pagination} from "@mantine/core";
-import DataFilter from 'components/common/layout/TableWithSort/DataFilter'
-import TableSearch from 'components/common/layout/TableWithSort/TableSearch'
-import { useDebouncedState } from '@mantine/hooks'
-import label from 'utils/labels'
-import { useWindowDimensions } from 'utils/utils'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import React, { useMemo, useState } from "react";
+import styles from "./TableWithSort.module.scss";
+import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
+import { SvgChevron, SvgLoading, SvgSort } from "components/common/ui/Icon";
+import Chips from "components/common/ui/Chips/Chips";
+import { useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Pagination } from "@mantine/core";
+import DataFilter from "components/common/layout/TableWithSort/DataFilter";
+import TableSearch from "components/common/layout/TableWithSort/TableSearch";
+import { useDebouncedState } from "@mantine/hooks";
+import label from "utils/labels";
+import { useWindowDimensions } from "utils/utils";
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { CompanyType } from "stores/companyStore";
 import Status from "components/common/ui/Status/Status";
 import { useStore } from "stores/store";
+import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 
 type TableWithSortProps = {
     data?: any[]
@@ -190,12 +191,14 @@ const TableWithSortNew = ({
         reversed: false,
     })
     const {data:loaderData, textData}:any = useLoaderData()
+    console.log(data);
+    const initCount = total || 0
     const store = useStore()
     let location = useLocation()
     const navigate = useNavigate()
     let [searchParams, setSearchParams] = useSearchParams()
     // @ts-ignore
-    const [sortedField, setSortedField] = useState(textData.tableHeaders[0].name)
+    const [sortedField, setSortedField] = useState(ar[0].name)
     const [currentPage, setCurrentPage] = useState(1)
 
     const handleCurrentPage = React.useCallback((value: any) => {
@@ -239,8 +242,8 @@ const TableWithSortNew = ({
     }, [filterParams])
 
     const RowDataMemoized = React.useMemo(() => {
-       if(loaderData.results.length > 0) return loaderData.results.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
-    }, [loaderData.results])
+       if(data && data.length > 0) return data.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
+    }, [data])
 
     const handleHeaderAction = React.useCallback((e: any) => {
 
@@ -275,7 +278,7 @@ const TableWithSortNew = ({
                 </>
             }
             footer={
-             ( Math.ceil(loaderData.count / pageSize)) > 1 && (
+             ( Math.ceil(initCount / pageSize)) > 1 && (
                     <Pagination
                         classNames={{
                             control:
@@ -290,11 +293,12 @@ const TableWithSortNew = ({
                 )
             }
             {...props}
-        >
-            <table className={styles.TableWithSort} data-style={style}>
+        >       {(initCount === 0) ? <Heading className={'min-h-[40vh] flex items-center justify-center'} text={'Нет данных'} variant={HeadingVariant.h3} />:
+          <table className={styles.TableWithSort} data-style={style}>
+
                 <RowHeading action={handleHeaderAction} total={total} ar={ar} />
                 <tbody>{RowDataMemoized}</tbody>
-            </table>
+            </table>}
         </Panel>
     )
 }

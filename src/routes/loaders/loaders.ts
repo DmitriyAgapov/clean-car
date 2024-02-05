@@ -7,6 +7,7 @@ import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
+import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 
 export const authUser = async () => {
     if (!appStore.token) {
@@ -63,23 +64,27 @@ export const referencesLoader = async (props: any) => {
                     create: 'Добавить',
                     referenceTitle: 'Марка автомобиля',
                     createPage: 'Добавить марку автомобиля',
-                    tableHeaders: [{label: 'Бренд', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_class'}],
+                    tableHeaders: [{label: 'Бренд', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_type'}],
                     createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
                     editPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
-                    // createPageForm: FormCreateCarBrand.bind(props),
+                    createPageForm: FormCreateCarBrand.bind(props),
                     createPageBack: 'Назад к списку марок автомобилей',
-                    // createAction:  agent.Catalog.createCarBrandWithExistBrand,
-                    // editAction:  agent.Catalog.editCity,
-                    // editPageForm: FormCreateCarBrand.bind(data),
+                    createAction:  agent.Catalog.createCarBrandWithExistBrand,
+                    editAction:  agent.Catalog.editCity,
+                    editPageForm: FormCreateCarBrand.bind(props, { ...data, edit:true }),
                 }
                 break
             case 'cities':
-                if(props.params.id) {const { data: dataCities, status: statusCities } = await agent.Catalog.getCity(props.params.id); if(statusCities === 200) data = Object.assign(dataCities,{timezone: 'Нет пояса'})}
+                if(props.params.id) {
+                    const { data: dataCities, status: statusCities } = await agent.Catalog.getCity(props.params.id);
+                    if(statusCities === 200) data = dataCities
+                }
                 else {
                     const { data: dataCities, status: statusCities } = await agent.Catalog.getCities({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
                     data = dataCities.results.map((item:any) => ({id: item.id, status: item.is_active, name: item.name, timezone: item.timezone ?? ''}))
                     dataMeta = dataCities
                 }
+
                 textData = {
                     path: 'cities',
                     title: 'Города',
@@ -88,14 +93,18 @@ export const referencesLoader = async (props: any) => {
                     referenceTitle: 'Город',
                     createPage: 'Добавить город',
                     editPage: 'Редактировать город',
-                    tableHeaders: [{label: 'Статус', name: 'is_active'}, {label: 'Город', name: "name"}, {label: 'Часовой пояс', name: 'timezone'}],
+                    tableHeaders: [
+                        { label: 'Статус', name: 'is_active' },
+                        { label: 'Город', name: 'name' },
+                        { label: 'Часовой пояс', name: 'timezone' },
+                    ],
                     createPageDesc: 'Добавьте новый город',
                     editPageDesc: 'Вы можете изменить город или удалить его из системы',
                     createPageForm: FormCreateCity.bind(props),
                     createPageBack: 'Назад к списку городов',
-                    createAction:  agent.Catalog.createCity,
-                    editAction:  agent.Catalog.editCity,
-                    editPageForm: FormCreateCity.bind(data),
+                    createAction: agent.Catalog.createCity,
+                    editAction: agent.Catalog.editCity,
+                    editPageForm: FormCreateCity.bind(props, { ...data, edit:true }),
                 }
                 break;
             case 'services':

@@ -13,13 +13,8 @@ function ReferencePageCreate(props: any) {
 
   const store = useStore()
   const location = useLocation()
-
   const navigate = useNavigate()
   const { textData }: any = useLoaderData()
-  const memVariants = React.useMemo(() => {
-   if(!location.pathname.includes('edit')) return <FormCreateCarBrand />
-   return <FormCreateCarBrand  edit={true}/>
-  },[])
 
   if(!store.userStore.getUserCan(PermissionNames["Управление справочниками"], 'create')) return <Navigate to={'/account'}/>
   return (
@@ -29,10 +24,9 @@ function ReferencePageCreate(props: any) {
         header={<><div>
           <Button text={<>
           <SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
-          <Heading text={!props.edit ? textData.createPage : textData.editPageHeader} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /></div></>}>
+          <Heading text={!props.edit ? textData.createPage : textData.editPage} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /></div></>}>
       </Panel>
-
-      {memVariants}
+      {!location.pathname.includes('edit') ? textData.createPageForm() : textData.editPageForm(props)}
 
     </Section>
   )

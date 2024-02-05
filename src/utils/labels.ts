@@ -17,7 +17,9 @@ const label = (key:string|unknown) => {
     type: "Тип",
     group: "Тип",
     company: "Компания",
-    city: "Город"
+    city: "Город",
+    is_active: "Статус",
+    timezone: "Часовой пояс"
   }
   //@ts-ignore
   if(values[`${key}`]) return values[`${key}`]

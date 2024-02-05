@@ -1,6 +1,6 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import React from 'react'
-import { Await, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Await, useLoaderData, useLocation, useNavigate, useRevalidator } from "react-router-dom";
 import * as Yup from "yup";
 import catalogStore from "stores/catalogStore";
 import SelectCustom from "components/common/ui/Select/Select";
@@ -57,29 +57,44 @@ const dataCreate = {
         },
     ],
 }
-const FormCreateCity = () => {
-
+const FormCreateCity = (props: any) => {
+  console.log(props);
   const { data, page, pageRequest, textData }: any = useLoaderData()
   const location = useLocation()
   const navigate = useNavigate()
   const store = useStore()
-  const editStatus = !!data.results.name
+  const editStatus = props?.edit ?? false
+  console.log(data);
   const  editInitValues = {
           id: data.results.id,
           city: data.results.name,
           timezone: data.results.timezone,
           status: String(data.results.is_active),
   }
+  let revalidator = useRevalidator();
 
+  console.log(editInitValues);
   return (
-      <Formik initialValues={data.results.name ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
-        onSubmit={(values, isValid) => {
+      <Formik initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
+        onSubmit={(values, isSubmitting) => {
             console.log('submit form', location.pathname.includes('edit'))
-          if(location.pathname.includes('edit')) {
-            textData.editAction(values.id, values.city, values.status === "true", values.timezone).then((r: any) => console.log('r', r)).catch((e: any) => console.log('e'))
-          } else {
-            textData.createAction(values.city, values.status === "true").then((r: any) => console.log('r', r)).catch((e: any) => console.log('e'))
-          }
+            if(location.pathname.includes('edit')) {
+              textData.editAction(values.id, values.city, values.status === "true", values.timezone)
+              .then((r: any) => {
+                if(r.status === 200) {
+                  revalidator.revalidate()
+                  navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`, {replace: false})
+                }
+              })
+            } else {
+              textData.createAction(values.city, values.status === "true")
+              .then((r: any) => {
+                if(r.status === 201) {
+                  revalidator.revalidate()
+                  navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`, {replace: false})
+                }
+              })
+            }
         }}>
         {({ errors, touched,isSubmitting, values, submitForm,isValid }) => (
           <Form  style={{display: 'contents'}}>
@@ -92,7 +107,7 @@ const FormCreateCity = () => {
             footer={
               <>
 
-                <div className={'flex justify-self-start gap-5 w-full'}>
+                <div className={'flex gap-5'}>
                   {editStatus && <Button
                     text={'Удалить'}
                     action={async () => {
@@ -103,7 +118,7 @@ const FormCreateCity = () => {
                             text={'Да, удалять'}
                             action={async () => {
                               agent.Catalog.deleteCity(data.results.id).then(() => {
-                                navigate('/account/references/cities/', { replace: false })
+                                navigate('/account/references/cities', { replace: false })
                               })
                                 .finally(          () => store.appStore.closeModal())
                             }}
@@ -113,23 +128,21 @@ const FormCreateCity = () => {
                         text: `Вы уверены, что хотите удалить ${data.results.name}`,
                         state: true,
                       })
+
                     }}
                     className={'justify-self-start mr-auto'}
                   />}
                   <Button
                     text={'Отменить'}
                     action={() => navigate(-1)}
-                    className={'float-right'}
+                    className={'justify-self-end float-right'}
                     variant={ButtonVariant['accent-outline']}
                   />
                   <Button
                     text={'Сохранить'}
                     type={'submit'}
-                    action={
-                    async () =>
-                      !isSubmitting &&
-                      navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`)}
-                    className={'float-right'}
+                    action={() => ''}
+                    className={'justify-self-end float-right'}
                     disabled={!isValid}
                     variant={ButtonVariant.accent}
                   />
@@ -144,7 +157,7 @@ const FormCreateCity = () => {
           >
 
               <CreateInput
-
+                  value={values.city}
                   name={dataCreate.inputs[0].fieldName}
                   action={() => console.log()}
                   text={dataCreate.inputs[0].label}
@@ -162,9 +175,7 @@ const FormCreateCity = () => {
                   action={() => console.log('')}
               />
               <SelectCustom
-                value={
-                  // @ts-ignore
-                  values[dataCreate.inputs[2].fieldName]}
+                value={values.status}
                   label={dataCreate.inputs[2].label}
                   placeholder={dataCreate.inputs[2].placeholder}
                   name={dataCreate.inputs[2].fieldName}

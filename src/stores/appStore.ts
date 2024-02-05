@@ -22,7 +22,7 @@ export class AppStore {
           window.localStorage.setItem('jwt', token)
           userStore.pullUser()
           userStore.loadMyProfile()
-          catalogStore.getAllCities()
+
         } else {
           window.localStorage.removeItem('jwt')
           sessionStorage.clear()
@@ -32,7 +32,6 @@ export class AppStore {
     reaction(() => this.tokenRefresh,
       (tokenRefresh) => {
         if (tokenRefresh) {
-          console.log('tokenRefresh', tokenRefresh);
           window.localStorage.setItem('jwt_refresh', tokenRefresh)
         } else {
           window.localStorage.removeItem('jwt_refresh')
@@ -44,7 +43,6 @@ export class AppStore {
         let ar:any = new Map([]);
 
         if(appType === UserTypeEnum.admin) {
-          // console.log('admin');
           for (let permissionNameKey in PermissionName) {
             // @ts-ignore
             ar.set(PermissionName[permissionNameKey], {
@@ -68,7 +66,11 @@ export class AppStore {
           })
         }
         userStore.setPermissionsVariants(ar)
-        // userStore.setCurrentPermissions(observable.map(ar));
+        if(appType !== "") {
+
+          catalogStore.setLoadingStateFalse()
+        }
+
       })
     )
   }

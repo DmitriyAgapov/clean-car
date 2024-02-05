@@ -8,6 +8,7 @@ import { observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { PermissionNames } from "stores/permissionStore";
+import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 
 const CompaniesPage = () => {
   const store = useStore()
@@ -42,6 +43,25 @@ const CompaniesPage = () => {
           </>
         }
       />
+      <TableWithSortNew
+        total={companies.length}
+        variant={PanelVariant.dataPadding}
+        search={true}
+        background={PanelColor.glass}
+        className={'col-span-full table-groups'}
+        filter={false}
+        data={companies.map((item: any) => ({
+          status: item.is_active as boolean,
+          company: item.name,
+          type: item.company_type,
+          city: item.city.name,
+          id: item.id
+        }))}
+        initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
+        state={false}
+        ar={[{ label: 'Статус', name: 'status' }, {label: 'Компания', name: 'company'}, {label: 'Тип', name: 'type'},{ label: 'Город', name: 'city' }]}
+      />
+
       <TableWithSort
         filter={true}
         search={true}
@@ -56,7 +76,8 @@ const CompaniesPage = () => {
           id: item.id
         }))}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
-        state={store.companyStore.loadingCompanies}
+        state={store.companyStore.loadingCompanies
+      }
       />
     </Section>
   )

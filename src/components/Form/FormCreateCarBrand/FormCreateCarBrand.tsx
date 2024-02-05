@@ -59,19 +59,19 @@ const dataCreate = {
     },
   ],
 }
-const FormCreateCarBrand = ({ edit = false }:{edit?: boolean|undefined}) => {
+const FormCreateCarBrand = (props: any) => {
   const store = useStore()
   const { textData }: any = useLoaderData()
   const params = useParams()
   const brand = store.catalogStore.getCurrentCarModelWithBrand
   const navigate = useNavigate()
-  React.useEffect(() => {
-    store.catalogStore.getCarModelWithBrand(Number(params.id)).then(r => console.log(r))
-  }, [])
-  const submitForm = React.useCallback((props:any) => {
-    store.catalogStore.createCarBrand({car_class: props.car_class, model: props.model, brandId: (typeof props.brand === "number") ? props.brand : null, brandName: (typeof props.brand === "string") ? props.brand : null})
-    .then(r => r)
-    .then((r) => navigate(`/account/references/car_brands/${r.id}`))    //
+  const edit = props?.edit ?? false
+  // React.useEffect(() => {
+  //   store.catalogStore.getCarModelWithBrand(Number(params.id)).then(r => console.log(r))
+  // }, [])
+  const submitForms = React.useCallback((data:any) => {
+    console.log(data);
+
   }, [])
   const result = (Object.keys(CarType) as (keyof typeof CarType)[]).map(
     (key, index) => {
@@ -80,10 +80,17 @@ const FormCreateCarBrand = ({ edit = false }:{edit?: boolean|undefined}) => {
       };
     },
   );
-  console.log(val(store.catalogStore.carBrands))
   // @ts-ignore
   return (
-    <Formik validationSchema={dataCreate.validateSchema} initialValues={dataCreate.initValues} onSubmit={submitForm} >
+    <Formik validationSchema={dataCreate.validateSchema} initialValues={dataCreate.initValues} onSubmit={(props) => {
+
+      store.catalogStore.createCarBrand({car_class: props.car_class, model: props.model, brandId: (typeof props.brand === "number") ? props.brand : null, brandName: (typeof props.brand === "string") ? props.brand : null})
+      .then(r => {
+        console.log(r)
+        return r
+      })
+      // .then((r) => navigate(`/account/references/car_brands/${r?.data.id}`))    //
+    }} >
       {({ errors, touched, setFieldValue, values, submitForm,isValid }) => (
         <Form  style={{display: 'contents'}}>
           <Panel
@@ -128,7 +135,8 @@ const FormCreateCarBrand = ({ edit = false }:{edit?: boolean|undefined}) => {
                     text={'Сохранить'}
                     type={'submit'}
                     className={'float-right'}
-                    action={(e) => console.log(e)}
+
+                    // action={(e) => console.log(e)}
                     disabled={!isValid}
                     variant={ButtonVariant.accent}
                   />
@@ -139,24 +147,15 @@ const FormCreateCarBrand = ({ edit = false }:{edit?: boolean|undefined}) => {
 
             header={
             <Await resolve={brand}>
-              {/* // @ts-ignore */}
               <p>{
           // @ts-ignore
                 store.catalogStore.getCurrentCarModelWithBrand && store.catalogStore.getCurrentCarModelWithBrand.name ? textData.editPageDesc : textData.createPageDesc}</p>
             </Await>
             }
           >
-            <ComboboxCustom items={val(store.catalogStore.carBrands).map((item:any)=> item.name)}/>
-          {/*   <Observer children={() => <SelectCreatable defaultValue={store.catalogStore.getCurrentCarModelWithBrand.brand?.name} label={dataCreate.inputs[0].label} createAction={(e) => { */}
-
-          {/*     console.log(store.catalogStore.getCurrentCarModelWithBrand.brand.name) */}
-          {/*     // setFieldValue('brand', {e?.value && setFieldValue('brand', Number(e.value)) */}
-          {/*   } } items={val(store.catalogStore.carBrandsCurrent).map((item:any) => ({ */}
-          {/* label: item.name, */}
-          {/* value: String(item.id) */}
-          {/*   }))}/>}/> */}
-          <TextInput defaultValue={store.catalogStore.getCurrentCarModelWithBrand.name}  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder} onChange={(e:any) => console.log('1223', e.target.value)}/>
-        <Select defaultValue={store.catalogStore.getCurrentCarModelWithBrand.car_type} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
+          <ComboboxCustom action={(e) =>  setFieldValue('brand', e)} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
+          <TextInput  onChange={(e) => values.model = e.target.value} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.name}  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
+          <Select  required onChange={(e) =>  setFieldValue('car_class', e)} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.car_type} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
           label: item.label,
           value: String(item.value)
             }))}/>
@@ -166,4 +165,4 @@ const FormCreateCarBrand = ({ edit = false }:{edit?: boolean|undefined}) => {
     </Formik>
   )
 }
-export default observer(FormCreateCarBrand)
+export default FormCreateCarBrand
