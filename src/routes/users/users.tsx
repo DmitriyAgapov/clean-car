@@ -4,19 +4,23 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { Company } from 'stores/companyStore'
 import { User } from 'stores/usersStore'
 import { UserTypeEnum } from 'stores/userStore'
 import { PermissionNames } from "stores/permissionStore";
+import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
+import data from "utils/getData";
+import { values } from "mobx";
 
 const UsersPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-
+  const {data}:any = useLoaderData()
+  console.log(data);
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -45,13 +49,14 @@ const UsersPage = () => {
           </>
         }
       ></Panel>
-      <TableWithSort
+      <TableWithSortNew
+        total={store.usersStore.allUsers.size}
         background={PanelColor.glass}
         filter={true}
         search={true}
-        ar={['Статус', 'ФИО', 'Телефон', 'e-mail', 'Тип', 'Компания', 'Город']}
+        ar={[{label: 'Статус', name: 'state'},{label: 'ФИО', name: 'name'}, {label: 'Телефон', name: 'phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'group'}, {label: 'Компания',name: 'company'}, {label:  'Город', name: 'city'}]}
         // @ts-ignore
-        data={store.usersStore.users.map((item: { company: Company; group: number; employee: User }) => ({
+        data={data.results.map((item: { company: Company; group: number; employee: User }) => ({
           state: item.employee.is_active,
           name: item.employee.first_name + ' ' + item.employee.last_name,
           phone: item.employee.phone,

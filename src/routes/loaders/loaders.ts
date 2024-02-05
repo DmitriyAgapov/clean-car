@@ -202,8 +202,14 @@ export const filialLoader = async ({ params: { id, company_type, action, company
     return { id: id, company_id: company_id, type: company_type, parent: parent, data: { ...filial } }
 }
 export const usersLoader = async () => {
-    await usersStore.getAllUser()
-    return null
+    const { data, status } = await agent.Users.getAllUsers()
+
+
+
+    return {
+        data: data,
+        status: status
+    }
 }
 export const userLoader = async ({ params: { company_type, id, company_id } }: any) => {
     const user = await usersStore.getUser(company_id, id, company_type)

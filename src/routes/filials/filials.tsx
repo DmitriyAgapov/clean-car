@@ -4,10 +4,11 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import {  observer } from 'mobx-react-lite'
+import { Observer, observer } from "mobx-react-lite";
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 
 const FilialsPage = () => {
   const store = useStore()
@@ -41,30 +42,31 @@ const FilialsPage = () => {
           </>
         }
       />
-    <TableWithSort
+    <Observer children={()=> <TableWithSortNew
+        total={store.companyStore.AllFilials.length}
         filter={true}
         search={true}
         background={PanelColor.glass}
         style={PanelRouteStyle.company}
-        ar={['Статус', 'Название', 'Город', 'Тип', 'Принадлежит']}
-        data={store.companyStore.filials.map((item: any) => {
-          return ({
+      ar={[{ label: 'Статус', name: 'status' }, {label: 'Компания', name: 'company'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'type'},{ label: 'Принадлежит', name: 'parent'}]}
+
+        data={store.companyStore.AllFilials.map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           city: item.city.name,
           type: item.company_type,
-          parent: item.parent,
+          parent: item.parent.name,
           id: item.id,
           query: {
             company_id: item.parent.id
           }
-        })})}
+        }))}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
         state={store.companyStore.loadingCompanies}
-      />
+      />}/>
 
     </Section>
   )
 }
 
-export default observer(FilialsPage)
+export default FilialsPage

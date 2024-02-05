@@ -11,7 +11,7 @@ import { Combobox, Input, InputBase, ScrollArea, useCombobox } from '@mantine/co
 import { Select } from '@mantine/core'
 import { UserTypeEnum } from "stores/userStore";
 import label from "utils/labels";
-
+import {values as val } from 'mobx'
 export function FormStep1(props: {
   step: any
   animate: any
@@ -29,6 +29,7 @@ export function FormStep1(props: {
     const {values, setValues, errors} = useFormikContext<any>();
     const [companies, setCompanies] = useState<any>([]);
     console.log(errors);
+    console.log(values);
     const combobox = useCombobox(
       {
         onDropdownClose: () => combobox.resetSelectedOption()
@@ -139,7 +140,7 @@ export function FormStep1(props: {
     )
   }
   const { values, touched,  errors, isValidating, isValid, setValues }:any = useFormikContext();
-
+  const store = useStore()
    return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -215,7 +216,7 @@ export function FormStep1(props: {
             value={props.values.city}
             name={'city'}
             className={' w-fit'}
-            options={props.store.catalogStore.cities.map(props.prop8)} />
+            options={store.catalogStore.allCities.map(props.prop8)} />
           <InputAutocomplete className={'w-full flex-1'}/>
         </React.Suspense>
         <label className={'account-form__input w-full flex-grow'}
@@ -232,8 +233,8 @@ export function FormStep1(props: {
               { label: 'Неактивный', value: 'inactive' },
             ]}
           />
-          {errors.filial_name && touched.filial_name ? (
-            <div className={'form-error'}>{errors.filial_name}</div>
+          {errors.status && touched.status ? (
+            <div className={'form-error'}>{errors.status}</div>
           ) : null}
         </label>
         <Select

@@ -61,24 +61,6 @@ const CompaniesPage = () => {
         state={false}
         ar={[{ label: 'Статус', name: 'status' }, {label: 'Компания', name: 'company'}, {label: 'Тип', name: 'type'},{ label: 'Город', name: 'city' }]}
       />
-
-      <TableWithSort
-        filter={true}
-        search={true}
-        background={PanelColor.glass}
-        style={PanelRouteStyle.company}
-        ar={['Статус', 'Компания', 'Тип', 'Город']}
-        data={companies.map((item: any) => ({
-          status: item.is_active as boolean,
-          company: item.name,
-          type: item.company_type,
-          city: item.city.name,
-          id: item.id
-        }))}
-        initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
-        state={store.companyStore.loadingCompanies
-      }
-      />
     </Section>
   )
 }

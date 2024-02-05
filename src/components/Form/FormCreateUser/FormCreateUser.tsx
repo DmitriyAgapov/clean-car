@@ -3,7 +3,7 @@ import { Form, Formik, useFormikContext, FormikHelpers } from 'formik'
 import * as Yup from 'yup'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useRevalidator } from 'react-router-dom'
 import { CreateFormikInput } from 'components/common/ui/CreateInput/CreateInput'
 import SelectCustom from 'components/common/ui/Select/Select'
 import { UserTypeEnum } from 'stores/userStore'
@@ -33,7 +33,7 @@ let initValues = {
 const SelectCompanyFilials = observer(() => {
     const store = useStore()
     const { values, setValues } = useFormikContext<any>()
-    console.log(values);
+
 
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
@@ -41,11 +41,8 @@ const SelectCompanyFilials = observer(() => {
     const [searchString, setSearchString] = useState<string>('')
     const [companies, setCompanies] = useState<any>([])
     useEffect(() => {
-        console.log(searchString);
         const getCompany =  async () => {
             const data =  await store.companyStore.getAllCompanies({ name: searchString })
-            console.log(data);
-            console.log(store.companyStore.allCompanies);
             setCompanies(store.companyStore.companies)
         }
         getCompany()
@@ -253,13 +250,7 @@ const FormCreateUser = ({ user, edit }: any) => {
             is_active: user.employee.is_active,
         }
     }
-    // React.useEffect(() => {
-    //     if (companyid && id && company_type) {
-    //         const currentUser = store.usersStore.getUser(companyid, Number(id), company_type as any)
-    //         // console.log(companyid)
-    //         // console.log(currentUser)
-    //     }
-    // }, [])
+    let revalidator = useRevalidator();
     const navigate = useNavigate()
     // @ts-ignore
     return (
@@ -284,10 +275,12 @@ const FormCreateUser = ({ user, edit }: any) => {
                         .then((r: any) => {
                             res = r
                             if (res && res.data.id)
+                                revalidator.revalidate()
                                 navigate(`/account/users/${values.type}/${values.company_id}/${res.data.id}`)
                         })
                         .catch((error) => {
-                            throw new Error(error)
+                        console.log(error);
+                            // throw new Error(error)
                         })
                         .finally(() => {
                             FormikHelpers.setSubmitting(false)

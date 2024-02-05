@@ -1,4 +1,4 @@
-import { action, autorun, computed, flow, get, has, IObservableArray, makeAutoObservable, observable, reaction, runInAction, set } from "mobx";
+import { action, autorun, computed, flow, get, has, IObservableArray, makeAutoObservable, observable, reaction, runInAction, set, values } from "mobx";
 import { hydrateStore, makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import appStore from 'stores/appStore'
@@ -45,7 +45,7 @@ export interface CustomerProfile {
         application_type?: string
         overdraft?: boolean
         overdraft_sum?: number
-        performer_company: any[]
+        performer_company?: any[]
     }
 }
 export interface PerformerProfile {
@@ -126,6 +126,9 @@ export class CompanyStore {
             },
         }
     })
+    get AllFilials() {
+        return values(this.filials)
+    }
     getCustomerCompanyById(company_id: number) {
         console.log(has(this.customersCompany, `${company_id.toString()}`));
         if(has(this.customersCompany, `${company_id.toString()}`)) return get(this.customersCompany, `${String(company_id)}`)

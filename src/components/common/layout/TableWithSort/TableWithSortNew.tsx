@@ -21,11 +21,11 @@ type TableWithSortProps = {
     state: boolean
     className?: string
     background?: PanelColor
-    ar: string[] | { label: string, name: string }[]
+    ar: { label: string, name: string }[]
     style?: PanelRouteStyle
     search?: boolean
     initFilterParams?: {}
-    total?: number
+    total: number
     filter?: boolean
     pageSize?: number
     variant?: PanelVariant
@@ -190,8 +190,7 @@ const TableWithSortNew = ({
         index: 0,
         reversed: false,
     })
-    const {data:loaderData, textData}:any = useLoaderData()
-    console.log(data);
+
     const initCount = total || 0
     const store = useStore()
     let location = useLocation()
@@ -250,9 +249,9 @@ const TableWithSortNew = ({
 
         // @ts-ignore
         if(e.reversed) {
-            setSortedField(`-${textData.tableHeaders[e.index].name}`)
+            setSortedField(`-${ar[e.index].name}`)
         } else {
-            setSortedField(textData.tableHeaders[e.index].name)
+            setSortedField(ar[e.index].name)
         }
 
     }, [sortedField])
@@ -284,7 +283,7 @@ const TableWithSortNew = ({
                             control:
                                 'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
                         }}
-                        total={loaderData.count / pageSize}
+                        total={total / pageSize}
                         value={currentPage}
                         onChange={(e) => handleCurrentPage(e)}
                         // boundaries={2}

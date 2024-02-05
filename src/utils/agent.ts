@@ -2,7 +2,7 @@ import axios, { AxiosError } from "axios";
 import appStore from 'stores/appStore'
 import authStore from 'stores/authStore'
 import  { decodeToken } from 'utils/getData'
-// import  'utils/axiosConfig'
+import  'utils/axiosConfig'
 import { User } from 'stores/userStore'
 import { runInAction, toJS } from "mobx";
 import { Company, CompanyType } from "stores/companyStore";
@@ -27,6 +27,7 @@ const encode = encodeURIComponent
 const limit = (count: any, p: any) => `limit=${count}&offset=${p ? p * count : 0}`
 const omitSlug = (article: any) => Object.assign({}, article, { slug: undefined })
 const tokenPlugin = () => {
+  console.log(appStore.token);
   if (appStore.token) return { Authorization: `Bearer ${appStore.token}` }
 }
 
@@ -35,7 +36,7 @@ const requests = {
   delete: (url: string) =>
     axios({
       url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
+      // headers: tokenPlugin(),
       method: 'DELETE',
     })
     .then((response) => response.data)
@@ -43,7 +44,7 @@ const requests = {
   get: (url: string, body?: any, pagination?:PaginationProps) =>
      axios({
       url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
+      // headers: tokenPlugin(),
       method: 'GET',
       params: pagination
     })
@@ -53,7 +54,7 @@ const requests = {
   put: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
+      // headers: tokenPlugin(),
       method: 'PUT',
       data: body,
     }),
@@ -62,7 +63,7 @@ const requests = {
   patch: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
+      // headers: tokenPlugin(),
       method: 'PATCH',
       data: body,
     }),
@@ -72,7 +73,7 @@ const requests = {
   post: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
-      headers: tokenPlugin(),
+      // headers: tokenPlugin(),
       method: 'POST',
       data: body,
     })
@@ -215,7 +216,7 @@ const Companies = {
     getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', {}, pagination),
 }
 const Permissions = {
-  getAllCompanyPermissions: (company_id:number) => requests.get(`/permissions/${company_id}/groups/list/`),
+  getAllCompanyPermissions: (company_id:number) => requests.get(`/permissions/${company_id}/groups/list/`, {}),
   getUserPermissions: (company_id: number, id:number ) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve`),
   createPermission: (company_id: number, data: any) => requests.post(`/permissions/${company_id}/groups/create/`, data),
   getPermissionById: (company_id: number, id: number) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve/`, {}),

@@ -124,6 +124,10 @@ export class UsersStore {
     console.log(this.companyUsersSelected.get(String(id)));
     this.companyUsersSelected.delete(String(id))
   }
+  get allUsers() {
+    console.log(this.usersMap);
+    return this.usersMap
+  }
   setToCompanyUsersSelected(ar: any) {
     this.companyUsersSelected = observable.map(ar.map((el:any) => [el, this.companyUsers.filter((e: any) => e.employee.id == el)[0]]))
   }

@@ -293,6 +293,11 @@ export class CatalogStore {
     get brandAndModels() {
         return this.carBrandModelsReference
     }
+
+
+    get allCities() {
+        return values(this.cities)
+    }
     get carBrandsModels() {
         return values(this.carBrandModels)
     }

@@ -3,7 +3,7 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useRevalidator } from "react-router-dom";
 import { FormStep1 } from 'components/Form/FormCreateFilials/Steps/StepOne'
 import { type Company, CompanyType } from 'stores/companyStore'
 import { UserTypeEnum } from 'stores/userStore'
@@ -11,8 +11,8 @@ import { observer } from 'mobx-react-lite'
 
 const SignupSchema = Yup.object().shape({
     filial_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-    address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
-    city: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+    address: Yup.string(),
+    city: Yup.string(),
     status: Yup.boolean()
 
 })
@@ -76,7 +76,7 @@ const FormCreateFilials = () => {
         }, 1200)
     }
     const navigate = useNavigate()
-
+    const revalidate = useRevalidator()
     return (
         <Formik
             initialValues={initValues}
@@ -87,7 +87,7 @@ const FormCreateFilials = () => {
                     const data:Company<CompanyType.performer> = {
                         city:  Number(values.city),
                         is_active: true,
-                        name: values.company_name,
+                        name: values.filial_name,
                         performerprofile:  {
                             address: values.address,
                             lat: Number(values.lat),
@@ -97,23 +97,26 @@ const FormCreateFilials = () => {
                     }
                     store.companyStore.createFilial(data,'performer',  values.company_id).then((r) => {
                         values.id = r.id
+                        revalidate.revalidate()
+                        navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
                     })
                 }
                 if (values.application_type == CompanyType.customer) {
-                    // console.log(values);
+                    console.log(values);
                     const data:Company<CompanyType.customer> = {
-                        name: values.company_name,
+                        name: values.filial_name,
                         is_active: true,
                         city: Number(values.city),
                         customerprofile: {
                             address: values.address,
-                            lat: values.lat,
-                            lon: values.lon,
-                            performer_company: []
+                            lat: Number(values.lat),
+                            lon: Number(values.lon)
                         }
                     }
                     store.companyStore.createFilial(data, 'customer', values.company_id).then((r) => {
                         values.id = r.id
+                        revalidate.revalidate()
+                        navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
                     })
                 }
             }}
