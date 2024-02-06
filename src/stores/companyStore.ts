@@ -72,21 +72,31 @@ export class CompanyStore {
         makeAutoObservable(this, {
             stateMyCompany: computed,
             allCompanies: computed,
-        }, { autoBind: true })
+        })
         makePersistable(this, {
             name: 'companyStore',
-            properties: ['fullCompanyData', 'companies', 'filials', "customersCompany"],
+            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany"],
             storage: window.sessionStorage,
 
-        }, { fireImmediately: true})
+        }, { fireImmediately: true }).then(
+          action((persistStore) => {
+              console.log(persistStore.isHydrated);
+             this.canLoad = true
+          }))
         reaction(() => this.currentCustomersCompany, (currentCustomer: any) => {
             if(currentCustomer) {
                 this.getCustomerCompanyData(currentCustomer)
             }
         })
+        autorun(() => {
+            console.log(this.canLoad, 'canload')
+        })
         reaction(
             () => this.companies,
             (companies: any) => {
+                if(companies.length === 0) {
+                    this.getAllCompanies()
+                }
                 if (companies.length > 0) {
                     this.filials.length = 0
                     const filials = companies.filter((el: any) => el.parent !== null)
@@ -96,8 +106,9 @@ export class CompanyStore {
             },
         )
     }
-
+    canLoad = false
     companies: IObservableArray<Companies> = [] as any
+    companiesMap: IObservableArray<Companies> = [] as any
     filials: IObservableArray<Companies> = [] as any
     companiesCustomer:IObservableArray<Companies> = [] as any
     companiesPerformers:IObservableArray<Companies> = [] as any
@@ -105,6 +116,8 @@ export class CompanyStore {
     currentCustomersCompany = 0
     loadingCompanies: boolean = false
     errors: any
+    targetCompanyId:null | number = null
+    targetCompany = {}
     fullCompanyData = new Map([])
     loadFilialWithTypeAndId = flow(function* (this: CompanyStore, type: string, company_id: number, id: number) {
         return {
@@ -126,6 +139,19 @@ export class CompanyStore {
             },
         }
     })
+    async hydrateStoreFull() {
+        await hydrateStore(this);
+    }
+
+    getCompanyById(id:number) {
+        let company:any;
+        company = this.allCompanies.companies.filter((company: any) => company.id == id)[0]
+        action(() => this.targetCompany  = company)
+        return company
+    }
+    get companyData() {
+        return this.targetCompany
+    }
     get AllFilials() {
         return values(this.filials)
     }
@@ -293,6 +319,7 @@ export class CompanyStore {
         }
         return this.companies as any
     })
+
     hydrateStore = flow(function* (this: CompanyStore) {
         yield hydrateStore(this)
     })
@@ -444,7 +471,7 @@ export class CompanyStore {
     }
     loadMyCompany(id: number) {
         this.myCompany.loading = true
-        agent.Profile.getMyCompany()
+        return agent.Profile.getMyCompany()
             .then(action((response:AxiosResponse) => response ))
             .then(action((data:any) => this.myCompany.company = data.results))
             .catch(action((error:AxiosError) => this.myCompany.error = error))
@@ -470,6 +497,10 @@ export class CompanyStore {
     getCompanies() {
         return this.companies
     }
+    get getCompaniesAll() {
+        return this.companies
+    }
+
 
     getCompanyFullData(id: number) {
         return get(this.fullCompanyData, `${id}`)

@@ -93,7 +93,6 @@ const RowData = (props: any) => {
     const querys = React.useCallback(() => {
         let queryString = ''
         if (props.query) {
-            console.log(props.query);
             for (const key in props.query) {
                 queryString = queryString + `/${props.query[key]}`
             }

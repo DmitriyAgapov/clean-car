@@ -18,7 +18,7 @@ const PricesPage = () => {
 	const { textData }:any = store.priceStore.allPrices
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
-	// if (location.pathname !== `/account/references/${textData.path}/`) return <Outlet />
+	if (location.pathname !== `/account/price`) return <Outlet />
 	return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}

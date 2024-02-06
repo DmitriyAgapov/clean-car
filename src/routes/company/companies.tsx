@@ -15,7 +15,6 @@ const CompaniesPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { loading,companies, error } = store.companyStore.allCompanies;
-  console.log({ loading,companies, error });
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
