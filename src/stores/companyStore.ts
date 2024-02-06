@@ -91,18 +91,25 @@ export class CompanyStore {
         autorun(() => {
             console.log(this.canLoad, 'canload')
         })
+        reaction(() => this.filials,
+          (filials) => {
+            if(filials.length === 0) {
+                this.getAllFilials()
+            }
+          }
+        )
         reaction(
             () => this.companies,
             (companies: any) => {
                 if(companies.length === 0) {
                     this.getAllCompanies()
                 }
-                if (companies.length > 0) {
-                    this.filials.length = 0
-                    const filials = companies.filter((el: any) => el.parent !== null)
-                    // @ts-ignore
-                    this.setFilials(filials)
-                }
+                // if (companies.length > 0) {
+                //     this.filials.length = 0
+                //     const filials = companies.filter((el: any) => el.parent !== null)
+                //     // @ts-ignore
+                //     this.setFilials(filials)
+                // }
             },
         )
     }
@@ -145,8 +152,18 @@ export class CompanyStore {
 
     getCompanyById(id:number) {
         let company:any;
-        company = this.allCompanies.companies.filter((company: any) => company.id == id)[0]
-        action(() => this.targetCompany  = company)
+        if(this.companies.length !== 0) {
+            company = this.allCompanies.companies.filter((company: any) => company.id == id)[0]
+            action(() => this.targetCompany  = company)
+        } else {
+            this.getAllCompanies()
+            action(( ) => {
+                company = this.allCompanies.companies.filter((company: any) => company.id == id)[0]
+                this.targetCompany  = company
+            })
+        }
+
+
         return company
     }
     get companyData() {

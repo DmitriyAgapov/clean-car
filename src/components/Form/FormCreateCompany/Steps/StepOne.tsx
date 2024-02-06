@@ -143,6 +143,7 @@ export function FormStep1(props: {
         </label>
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         <SelectCustom
+          allowDeselect={false}
           label={'Тип'}
           disabled={props.values.application_type.readOnly}
           defaultValue={props.values.application_type || props.values.application_type.value}

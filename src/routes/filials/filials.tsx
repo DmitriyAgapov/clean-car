@@ -62,7 +62,7 @@ const FilialsPage = () => {
           }
         }))}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
-        state={store.companyStore.loadingCompanies}
+        state={false}
       />}/>
 
     </Section>

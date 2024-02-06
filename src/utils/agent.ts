@@ -222,13 +222,7 @@ const PermissionsAdmin = {
 }
 const Profile = {
     getMyAccount: () => requests.get('/accounts/my_profile/', {}),
-    getMyCompany: () => requests.get('/companies/my_companies/list/', {}),
-    // follow: (username: string) =>
-    // 	requests.post(`/profiles/${username}/follow`, {}),
-    // get: (username: string) =>
-    // 	requests.get(`/profiles/${username}`),
-    // unfollow: (username: string) =>
-    // 	requests.del(`/profiles/${username}/follow`)
+    getMyCompany: () => requests.get('/companies/my_companies/list/', {})
 }
 const Catalog = {
     getCarBrands: (params?: PaginationProps) => requests.get('/catalog/car_brands', {}, params),
