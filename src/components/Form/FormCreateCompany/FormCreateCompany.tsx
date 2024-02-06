@@ -32,7 +32,7 @@ const initValues = {
     lat: 0,
     lon: 0,
     service_percent: 0,
-    overdraft_sum: 123,
+    overdraft_sum: 0,
     payment: Payment.postoplata,
     overdraft: 'Да',
     performers_list: 'Да',

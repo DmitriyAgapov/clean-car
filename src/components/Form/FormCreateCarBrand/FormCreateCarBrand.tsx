@@ -154,8 +154,8 @@ const FormCreateCarBrand = (props: any) => {
             }
           >
           <ComboboxCustom action={(e) =>  setFieldValue('brand', e)} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
-          <TextInput  onChange={(e) => values.model = e.target.value} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.name}  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
-          <Select  required onChange={(e) =>  setFieldValue('car_class', e)} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.car_type} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
+          <TextInput onChange={(e) => values.model = e.target.value} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.name}  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
+          <Select required onChange={(e) =>  setFieldValue('car_class', e)} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.car_type} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
           label: item.label,
           value: String(item.value)
             }))}/>

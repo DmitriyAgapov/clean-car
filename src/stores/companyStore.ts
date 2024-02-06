@@ -13,7 +13,7 @@ export enum Payment {
 }
 export enum CompanyType {
   customer = "Компания-Заказчик",
-  performer = "Компания-Исполнитель"
+  performer = "Компания-Партнер"
 }
 export type City = {
     name?: string

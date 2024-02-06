@@ -151,7 +151,7 @@ export function FormStep1(props: {
           className={' w-fit'}
           options={[
             { label: 'Заказчик', value: CompanyType.customer },
-            { label: 'Исполнитель', value: CompanyType.performer },
+            { label: 'Партнер', value: CompanyType.performer },
           ]}
         />
         {(values.application_type == CompanyType.performer || values.application_type.value == CompanyType.performer) && (

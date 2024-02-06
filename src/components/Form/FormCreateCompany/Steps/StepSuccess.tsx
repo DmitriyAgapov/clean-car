@@ -57,12 +57,12 @@ export function FormStepSuccess(props: {
 
       </div>}
       header={<>
-        <Heading text={`Шаг ${values.application_type == 'Исполнитель' && '2'|| props.title }. Компания создана `}
+        <Heading text={`Шаг ${values.application_type == 'Компания-Партнер' && '2'|| props.title }. Компания создана `}
           color={HeadingColor.accent}
           variant={HeadingVariant.h2}
          />
         <div className={'text-base'}>
-          Укажите информацию о счета компании и предпочтительных исполнителей, если такие есть
+            Вы можете добавить Прайсы и Лимиты для компании или добавить их позже в соответствующем разделе
         </div>
       </>}>
       <div className={'mt-10 flex flex-wrap gap-6'}>

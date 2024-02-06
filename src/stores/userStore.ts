@@ -114,7 +114,7 @@ export class UserStore {
       roles.push(UserTypeEnum.customer)
     }
 
-    if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Компания-Исполнитель").length > 0) {
+    if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Компания-Партнер").length > 0) {
       roles.push(UserTypeEnum.performer)
     }}
     return roles

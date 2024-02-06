@@ -23,7 +23,7 @@ const dataCreate = {
     validateSchema: Yup.object().shape({
         city: Yup.string().required('Обязательное поле'),
         timezone: Yup.string().required('Обязательное поле'),
-        status: Yup.string(),
+        status: Yup.string().required('Обязательное поле'),
     }),
     submitAction: () => console.log('sumbit brands'),
     inputs: [
@@ -37,7 +37,7 @@ const dataCreate = {
             label: 'Часовой пояс',
             placeholder: 'Введите часовой пояс',
             fieldName: 'timezone',
-            type: 'text',
+            type: 'select',
         },
         {
             label: 'Статус',
@@ -155,7 +155,6 @@ const FormCreateCity = (props: any) => {
               <p>{data.results.name ? textData.editPageDesc : textData.createPageDesc}</p>
             }
           >
-
               <CreateInput
                   value={values.city}
                   name={dataCreate.inputs[0].fieldName}
@@ -164,15 +163,58 @@ const FormCreateCity = (props: any) => {
                   placeholder={dataCreate.inputs[0].placeholder}
                   type={dataCreate.inputs[0].type}
               />
-              <CreateInput
-                value={
-                  // @ts-ignore
-                  values[dataCreate.inputs[1].fieldName]}
+              <SelectCustom
+                  value={values.timezone}
+                  label={dataCreate.inputs[1].label}
                   placeholder={dataCreate.inputs[1].placeholder}
                   name={dataCreate.inputs[1].fieldName}
-                  type={'text'}
-                  text={dataCreate.inputs[1].placeholder}
-                  action={() => console.log('')}
+                  // defaultValue={"true"}
+                  options={[
+                      {
+                          label: 'UTC+2 (Калининград)',
+                          value: 'UTC+2',
+                      },
+                      {
+                          label: 'UTC+3 (Москва)',
+                          value: 'UTC+3',
+                      },
+                      {
+                          label: 'UTC+4 (Самара)',
+                          value: 'UTC+4',
+                      },
+                      {
+                          label: 'UTC+5 (Екатеринбург)',
+                          value: 'UTC+5',
+                      },
+                      {
+                          label: 'UTC+6 (Омск)',
+                          value: 'UTC+6',
+                      },
+                      {
+                          label: 'UTC+7 (Красноярск)',
+                          value: 'UTC+7',
+                      },
+                      {
+                          label: 'UTC+8 (Иркутск)',
+                          value: 'UTC+8',
+                      },
+                      {
+                          label: 'UTC+9 (Якутск)',
+                          value: 'UTC+9',
+                      },
+                      {
+                          label: 'UTC+10 (Владивосток)',
+                          value: 'UTC+10',
+                      },
+                      {
+                          label: 'UTC+11 (Магадан)',
+                          value: 'UTC+11',
+                      },
+                      {
+                          label: 'UTC+12 (Камчатск)',
+                          value: 'UTC+12',
+                      },
+                  ]}
               />
               <SelectCustom
                 value={values.status}

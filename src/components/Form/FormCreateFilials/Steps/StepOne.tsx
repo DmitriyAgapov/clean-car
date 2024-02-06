@@ -276,7 +276,7 @@ export function FormStep1(props: {
           className={' w-fit'}
           options={[
             { label: 'Заказчик', value: CompanyType.customer },
-            { label: 'Исполнитель', value: CompanyType.performer },
+            { label: 'Партнер', value: CompanyType.performer },
           ]}
         />
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
@@ -289,7 +289,7 @@ export function FormStep1(props: {
         {/*   className={' w-fit'} */}
         {/*   options={[ */}
         {/*     { label: 'Заказчик', value: CompanyType.customer }, */}
-        {/*     { label: 'Исполнитель', value: CompanyType.performer }, */}
+        {/*     { label: 'Партнер', value: CompanyType.performer }, */}
         {/*   ]} */}
         {/* /> */}
         <SelectCompanyFilials />

@@ -279,22 +279,22 @@ const Catalog = {
     getCity: (id: number) => requests.get(`/catalog/cities/${id}/retrieve/`),
     createCity: (name: string, is_active: boolean) =>
         requests.post('/catalog/cities/create/', { name: name, is_active: is_active }),
-    deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete`),
+    deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete/`),
     editCity: (id: number, name: string, is_active: boolean, timezone: string) =>
-        requests.put(`/catalog/cities/${id}/update`, { name: name, id: id, is_active: is_active, timezone: timezone }),
+        requests.put(`/catalog/cities/${id}/update/`, { name: name, id: id, is_active: is_active, timezone: timezone }),
     getServices: (params?: PaginationProps) => requests.get('/catalog/services/', {}, params),
     getService: (id: number) => requests.get(`/catalog/services/${id}/retrieve/`),
     createSubtype: (id: number, name: string, is_active: boolean) =>
         requests.post('/catalog/services/subypes/create/', { name: name, is_active: is_active, service_type: id }),
     createOption: (id: number, name: string, is_active: boolean) =>
         requests.post('/catalog/services/options/create/', { name: name, is_active: is_active, service_type: id }),
-    editSubtype: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.patch(`/catalog/services/subypes/${id}/update/`, {
+    editSubtype: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.put(`/catalog/services/subypes/${id}/update/`, {
       name: name,
       is_active: is_active,
       service_type: subtype_id,
     }),
     getServiceOption: (id: number) => requests.get(`/catalog/services/options/${id}/retrieve`),
-    editServiceOption: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.patch(`/catalog/services/options/${id}/update`, {
+    editServiceOption: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.put(`/catalog/services/options/${id}/update/`, {
       name: name,
       is_active: is_active,
       service_type: subtype_id

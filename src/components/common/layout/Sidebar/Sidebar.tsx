@@ -58,36 +58,36 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       url: 'cars',
       urlMap: 'Управление автомобилями',
     },
-    {
-      icon: <img src={'/icons/zayavki.png'} alt={''} />,
-      title: 'Заявки',
-      url: 'bids',
-      urlMap: 'Управление заявками',
-    },
+    // {
+    //   icon: <img src={'/icons/zayavki.png'} alt={''} />,
+    //   title: 'Заявки',
+    //   url: 'bids',
+    //   urlMap: 'Управление заявками',
+    // },
     {
       icon: <img src={'/icons/price-list.png'} alt={''} />,
       title: 'Прайс-лист',
       url: 'price',
       urlMap: 'Управление прайс-листом',
     },
-    {
-      icon: <img src={'/icons/limits.png'} alt={''} />,
-      title: 'Лимиты',
-      url: 'limits',
-      urlMap: 'Управление лимитами',
-    },
-    {
-      icon: <img src={'/icons/budget.png'} alt={''} />,
-      title: 'Бюджет',
-      url: 'finance',
-      urlMap: 'Финансовый блок',
-    },
-    {
-      icon: <img src={'/icons/zp.png'} alt={''} />,
-      title: 'Зарплата',
-      url: 'calculate',
-      urlMap: 'Финансовый блок',
-    },
+    // {
+    //   icon: <img src={'/icons/limits.png'} alt={''} />,
+    //   title: 'Лимиты',
+    //   url: 'limits',
+    //   urlMap: 'Управление лимитами',
+    // },
+    // {
+    //   icon: <img src={'/icons/budget.png'} alt={''} />,
+    //   title: 'Бюджет',
+    //   url: 'finance',
+    //   urlMap: 'Финансовый блок',
+    // },
+    // {
+    //   icon: <img src={'/icons/zp.png'} alt={''} />,
+    //   title: 'Зарплата',
+    //   url: 'calculate',
+    //   urlMap: 'Финансовый блок',
+    // },
     {
       icon: <img src={'/icons/spravochnik.png'} alt={''} />,
       title: 'Справочник',
@@ -101,9 +101,9 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   React.useEffect(() => {
 
     const routeWithPermissions: any[] = [  {
-      icon: <img src={'/icons/home.png'} alt={''} />,
-      title: 'Дашборд',
-      url: 'dashboard',
+      icon: <img src={'/icons/zayavki.png'} alt={''} />,
+      title: 'Заявки',
+      url: 'bids',
     }]
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
