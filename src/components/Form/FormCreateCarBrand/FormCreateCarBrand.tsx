@@ -90,11 +90,10 @@ const FormCreateCarBrand = (props: any) => {
       brand: props.brand,
       brandId: props.brandId
     } : dataCreate.initValues} onSubmit={(props) => {
-      console.log(props);
-      console.log(typeof props.brand + ":" + props.brand);
+
       store.catalogStore.createCarBrand({ car_type: props.car_type, model: props.modelName, brandId: props.brandId, brandName: typeof props.brand === "string" ? props.brand : null})
       .then(r => {
-        console.log(r)
+
         return r
       })
       .then((r) => navigate(`/account/references/car_brands/${r?.data.id}`))    //
