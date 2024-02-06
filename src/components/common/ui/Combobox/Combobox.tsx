@@ -2,10 +2,10 @@ import { Combobox, Input, InputBase, Menu, ScrollArea, TextInput, useCombobox } 
 import React, { useState } from "react";
 import Label = Menu.Label;
 
-function ComboboxCustom({className, items, name, action}:{items: any,className?: string, name: string, action: (props:any) => void}) {
+function ComboboxCustom({className, items, name, action, defaultValue}:{items: any,className?: string,defaultValue?: string, name: string, action: (props:any) => void}) {
 
 	const [search, setSearch] = useState('');
-	const [value, setValue] = useState<string | null>(null);
+	const [value, setValue] = useState<string | null>(defaultValue || null);
 	const [selectedItem, setSelectedItem] = useState<string | null>(null);
 	const combobox = useCombobox({ onDropdownClose: () => {
 			combobox.resetSelectedOption();

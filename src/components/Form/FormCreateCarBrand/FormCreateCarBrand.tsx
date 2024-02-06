@@ -18,12 +18,11 @@ import ComboboxCustom from 'components/common/ui/Combobox/Combobox';
 const dataCreate = {
   initValues: {
     brandId: 0,
-    brand: '',
+    brand: null,
     modelName: '',
     car_type: '',
   },
   validateSchema: Yup.object().shape({
-    brand: Yup.string(),
     modelName: Yup.string(),
     car_type: Yup.string(),
   }),
@@ -61,6 +60,7 @@ const dataCreate = {
   ],
 }
 const FormCreateCarBrand = (props: any) => {
+  console.log(props);
   const store = useStore()
   const { textData }: any = useLoaderData()
   const params = useParams()
@@ -87,16 +87,17 @@ const FormCreateCarBrand = (props: any) => {
     <Formik validationSchema={dataCreate.validateSchema} initialValues={props?.edit ? {
       car_type: props.car_type,
       modelName: props.modelName,
-      brand: props.brand
-
+      brand: props.brand,
+      brandId: props.brandId
     } : dataCreate.initValues} onSubmit={(props) => {
-
-      store.catalogStore.createCarBrand({ car_type: props.car_type, model: props.modelName, brandId: (typeof props.brand === "number") ? props.brand : null, brandName: (typeof props.brand === "string") ? props.brand : null})
+      console.log(props);
+      console.log(typeof props.brand + ":" + props.brand);
+      store.catalogStore.createCarBrand({ car_type: props.car_type, model: props.modelName, brandId: props.brandId, brandName: typeof props.brand === "string" ? props.brand : null})
       .then(r => {
         console.log(r)
         return r
       })
-      // .then((r) => navigate(`/account/references/car_brands/${r?.data.id}`))    //
+      .then((r) => navigate(`/account/references/car_brands/${r?.data.id}`))    //
     }} >
       {({ errors, touched, setFieldValue, values, submitForm,isValid }) => (
         <Form  style={{display: 'contents'}}>
@@ -130,7 +131,7 @@ const FormCreateCarBrand = (props: any) => {
                           />,
                         ],
                         //@ts-ignore
-                        text: `Вы уверены, что хотите удалить ${brand.name}`,
+                        text: `Вы уверены, что хотите удалить ${props.brand} ${props.modelName}`,
                         state: true,
                       })
                     }}
@@ -164,9 +165,9 @@ const FormCreateCarBrand = (props: any) => {
             </Await>
             }
           >
-          <ComboboxCustom action={(e) =>  setFieldValue('brandId', Number(e.id))} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
-          <TextInput  onChange={(e) => values.modelName = e.target.value} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.modelName}  placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
-          <Select  withCheckIcon={false}   required onChange={(e) =>  setFieldValue('car_type', e)} defaultValue={store.catalogStore.getCurrentCarModelWithBrand.car_type} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
+          <ComboboxCustom defaultValue={props.brand ? props.brand : null} action={(e) => setFieldValue('brandId', Number(e.id))} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
+          <TextInput  onChange={(e) => values.modelName = e.target.value} defaultValue={props.modelName ? props.modelName : null} placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
+          <Select  withCheckIcon={false}   required onChange={(e) =>  setFieldValue('car_type', e)} defaultValue={props.car_type ? props.car_type : null} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
           label: item.label,
           value: String(item.value)
             }))}/>
