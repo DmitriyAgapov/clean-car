@@ -18,7 +18,7 @@ const CarsPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { data, page, pageRequest, textData }: any = useLoaderData()
-  console.log(data);
+
   if ('/account/cars' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>

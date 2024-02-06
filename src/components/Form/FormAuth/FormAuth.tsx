@@ -11,7 +11,7 @@ const SignupSchema = Yup.object().shape({
   pwd: Yup.string().min(5, 'Пароль короткий').required('Укажите пароль'),
 })
 
-const InnerForm = ({ message }: { message: string }) => {
+const FormAuth = () => {
   const store = useStore()
   return (
     <Formik
@@ -30,14 +30,14 @@ const InnerForm = ({ message }: { message: string }) => {
     >
       {({ submitForm, errors, touched }) => (
         <Form className={styles.FormAuth}>
-          <div className={styles.inputGroup} data-form_error={errors.cleanm && touched.cleanm ? 'error' : null}>
+          <div className={styles.inputGroup} data-form_error={(errors.cleanm && touched.cleanm) ? 'error' : ''}>
             <label htmlFor='email'>Ваш email</label>
             <Field autoComplete='off' id='cleanm' name='cleanm' type='email' />
-            {errors.cleanm && touched.cleanm ? <div className={'form-error'}>{errors.cleanm}</div> : null}
+            {(errors.cleanm && touched.cleanm) ? <div className={'form-error'}>{errors.cleanm}</div> : ''}
           </div>
-          <div className={styles.inputGroup} data-form_error={errors.pwd && touched.pwd ? 'error' : null}>
+          <div className={styles.inputGroup} data-form_error={errors.pwd && touched.pwd ? 'error' : ''}>
             <label htmlFor='pswd'>Пароль</label>
-            <Field a autoComplete='off' id='pwd' name='pwd' type='password' />
+            <Field autoComplete='off' id='pwd' name='pwd' type='password' />
             {errors.pwd && touched.pwd ? <div className={'form-error'}>{errors.cleanm}</div> : null}
           </div>
           <div className={styles.actionGroup}>
@@ -49,7 +49,7 @@ const InnerForm = ({ message }: { message: string }) => {
                 submitForm()
               }}
             />
-            <LinkStyled to={'/restore'} text={'Не помню пароль'} variant={ButtonVariant['accent-outline']} />
+            {/* <LinkStyled to={'/restore'} text={'Не помню пароль'} variant={ButtonVariant['accent-outline']} /> */}
           </div>
         </Form>
       )}
@@ -57,8 +57,5 @@ const InnerForm = ({ message }: { message: string }) => {
   )
 }
 
-const FormAuth = () => {
-  return <InnerForm message='Sign up' />
-}
 
 export default FormAuth

@@ -9,7 +9,22 @@ import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 import { object } from "yup";
-
+export const paginationParams = (request: Request) => {
+    const url = new URL(request.url)
+    const searchParams = url.searchParams
+    const paramsPage = url.searchParams.get('page')
+    const paramsPageSize = url.searchParams.get('page_size')
+    const paramsOrdering = url.searchParams.get('ordering')
+    const paramsSearchString = url.searchParams.get('searchString')
+    return ({
+        url:url,
+        searchParams:searchParams,
+        paramsPage:paramsPage,
+        paramsPageSize:paramsPageSize,
+        paramsOrdering:paramsOrdering,
+        paramsSearchString:paramsSearchString
+    })
+}
 export const authUser = async () => {
     if (!appStore.token) {
         return redirect('/')
@@ -174,31 +189,20 @@ export const referencesLoader = async (props: any) => {
     })
 }
 export const priceLoader = async (props: any) => {
-
-    const url = new URL(props.request.url)
-    const searchParams = url.searchParams
-    const paramsPage = url.searchParams.get('page')
-    const paramsPageSize = url.searchParams.get('page_size')
-    const paramsOrdering = url.searchParams.get('ordering')
-    const paramsSearchString = url.searchParams.get('searchString')
+    const paginationData = paginationParams(props.request)
     async function fillData() {
         let data: any[] | any = []
         if (props.params.id) {
-            const { data: dataModel, status: statusDataModel } = await agent.Catalog.getCarModelWithBrand(props.params.id);
-            if (statusDataModel === 200) data = {
-                id: dataModel.id,
-                brand: dataModel.brand.name,
-                car_type: dataModel.car_type,
-                modelName: dataModel.name
-            }
-        } else {
-            const { data: dataResults, status } = await agent.Price.getAllPrice({
-                page: paramsPage ?? 1,
-                page_size: paramsPageSize ?? 10,
-                name: paramsSearchString,
-                ordering: paramsOrdering
-            } as PaginationProps)
 
+            const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
+            const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
+            const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
+            data = {
+                tabs: await Promise.all([{label: 'Мойка', data: dataWash}, {label: 'Эвакуация', data: dataEvac}, {label: 'Шиномонтаж', data: dataTire}])
+            }
+
+        } else {
+            const { data: dataResults, status } = await agent.Price.getAllPrice(paginationData as PaginationProps)
             if(status === 200) {
                 data = {...dataResults, results: dataResults.results.map((i: any) => {
                         let obj:any;
@@ -219,14 +223,12 @@ export const priceLoader = async (props: any) => {
                         return obj;
                     })}
             }
-            // dataResults.results.forEach((e: any) => data.push({ id: e.id, name: e.brand.name, model: e.name, car_type: e.car_type }))
-
         }
         return data
     }
     return defer({
         data: await fillData(),
-        pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
+        pageRequest: {page: paginationData.paramsPage ?? 1, page_size: paginationData.paramsPageSize ?? 10, searchString: paginationData.paramsSearchString},
         // page: refUrlsRoot,
         // textData: textData,
         // dataModels: dataModels

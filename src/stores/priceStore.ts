@@ -1,8 +1,6 @@
-import { action, flow, makeAutoObservable, observable, runInAction, values } from "mobx";
+import { makeAutoObservable, observable} from "mobx";
 import { makePersistable } from "mobx-persist-store";
 import agent, { PaginationProps } from "utils/agent";
-import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
-import { defer } from "react-router-dom";
 import paramsStore from "stores/paramStore";
 
 export class PriceStore {
@@ -30,10 +28,13 @@ export class PriceStore {
 		createPageDesc: 'Добавьте новый город',
 		editPageDesc: 'Вы можете изменить город или удалить его из системы',
 		// createPageForm: FormCreateCity.bind(props),
-		createPageBack: 'Назад к списку городов',
+		createPageBack: 'Назад к списку прайс-листов',
 		createAction: agent.Catalog.createCity,
 		editAction: agent.Catalog.editCity,
 		// editPageForm: FormCreateCity.bind(props, { ...data, edit:true }),
+	}
+	get TextData() {
+		return this.textData
 	}
 	get allPrices() {
 		return ({

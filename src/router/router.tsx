@@ -54,6 +54,7 @@ import { bidLoader, bidsLoader } from "routes/loaders/bidsLoader";
 import BidsCreatePage from "routes/bids/BidsCreatePage";
 import PricesPage from "routes/price/prices";
 import BidPage from "routes/bids/bid";
+import PricePage from "routes/price/price";
 
 const router = createBrowserRouter([
     {
@@ -305,7 +306,14 @@ const router = createBrowserRouter([
             {
                 path: 'price',
                 element: <PricesPage/>,
-                loader: priceLoader
+                loader: priceLoader,
+                children: [
+                    {
+                        path: ':id',
+                        loader: priceLoader,
+                        element: <PricePage/>
+                    }
+                ]
             },
         ],
     },

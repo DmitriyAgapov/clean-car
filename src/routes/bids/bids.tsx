@@ -18,11 +18,8 @@ const BidsPage = () => {
 	const params = useParams()
 	const location = useLocation()
 	const { data:loaderData }:any = useLoaderData()
-	const { data:storeData, loading, error }:any = store.bidsStore.bidsAll
+	const { data:storeData }:any = store.bidsStore.bidsAll
 	const textData = store.bidsStore.text
-
-	console.log(loaderData);
-	console.log(storeData);
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
 	return (

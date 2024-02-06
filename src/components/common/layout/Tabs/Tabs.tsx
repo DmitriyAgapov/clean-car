@@ -19,6 +19,7 @@ export enum TabsType {
   bid = 'bid',
   company = 'company',
   user = 'user',
+  price = 'price',
 }
 export type TabsProps = {
   data?: any
@@ -59,6 +60,15 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
       if(type == TabsType.bid) {
         data.forEach((item: any) => {
           result.push(<TabsVariantBids state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>)
+        })
+        return result
+      }
+      if(type == TabsType.price) {
+        data.forEach((item: any, index: number) => {
+          result.push(
+            <span>{index}</span>
+            // <TabsVariantBids state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>
+          )
         })
         return result
       }

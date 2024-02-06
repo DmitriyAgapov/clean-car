@@ -220,7 +220,7 @@ export class UserStore {
   }
 
   pullUser() {
-      this.loadingUser = true
+    action(() => this.loadingUser = true)
       return agent.Auth.current()
         .then((r: any) => {
           runInAction(() => {

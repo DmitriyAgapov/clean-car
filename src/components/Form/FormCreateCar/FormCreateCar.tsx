@@ -42,11 +42,15 @@ const FormInputs = observer(():JSX.Element => {
       <>
           <>
               <SelectCustom name={'brand'}
+                searchable={true}
+                clearable={true}
                 action={handleChangeBrand}
                 placeholder={'Выберите марку'} label={'Марка автомобиля'}
                 // @ts-ignore
                 value={values.brand} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={val(store.catalogStore.carBrands).map((item:any) => ({ label: item.name, value: String(item.id) }))}/>
               <SelectCustom  name={'model'}  disabled={store.catalogStore.brandModelsCurrent.length == 0} placeholder={'Выберите модель'} label={'Модель'}
+                searchable={true}
+                clearable={true}
                 // @ts-ignore
                 onLoadedData={(data) => console.log('data', data)}
                 value={String(values.model)} onOptionSubmit={(value: string) => setFieldValue('model', Number(value))}
@@ -189,24 +193,22 @@ const FormCreateCar = ({ user, edit }: any) => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values, FormikHelpers) => {
+                console.log(values);
                 console.log(val(store.usersStore.selectedUsers).map((item:any) => item.employee.id));
                 const data = {
-                    car_type: values.car_type,
                     number: values.number,
+                    height: values.height,
                     radius: Number(values.radius),
-                    limit: values.limit,
                     company_id: Number(values.company_id),
-                    company_type: values.company_type,
-                    is_active: values.is_active,
+                    is_active: values.status === "true",
                     brand: Number(values.brand),
                     model: Number(values.model),
                     employees: val(store.usersStore.selectedUsers).map((item:any) => item.employee.id),
                 }
-
-
+                console.log(data);
                 store.formStore.setFormDataCreateCar(data)
                 store.formStore.sendCarFormData()
-                changeStep(2)
+                changeStep(3)
                 // store.formStore.formSendDataUser('formCreateUser', data)
             }}
         >
@@ -307,15 +309,15 @@ const FormCreateCar = ({ user, edit }: any) => {
                                         state: true,
                                     })
                                 }} />} />
-                        </Step><Step footer={<>
+                        </Step>
+                        <Step footer={<>
                         <Button text={"Отменить"}
                           action={() => navigate(-1)}
                           className={"float-right lg:mb-0 mb-5"}
                           variant={ButtonVariant["accent-outline"]} />
-                        <Button text={"Дальше"}
+                        <Button text={"Завершить"}
                           action={() => {
-                              console.log(isValid);
-                              changeStep();
+                              navigate('/account/cars')
                           }} /* action={() => console.log(values)} */
                           className={"float-right"}
                           variant={ButtonVariant.accent} />
