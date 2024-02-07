@@ -76,7 +76,7 @@ const requests = {
     axiosSuggest({
       url: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_SUGGEST_URL : process.env.REACT_APP__SUGGEST_URL,
       headers: {
-        "Authorization": `Token ${process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_SUGGEST  : process.env.REACT_APP__SUGGEST}`,
+        "Authorization": `Token ${process.env.NODE_ENV === 'production' ? process.env.REACT_APP__SUGGEST  : process.env.REACT_APP__SUGGEST}`,
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
