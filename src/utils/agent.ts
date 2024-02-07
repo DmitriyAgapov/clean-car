@@ -7,6 +7,7 @@ import { User } from 'stores/userStore'
 import { runInAction, toJS } from "mobx";
 import { Company, CompanyType } from "stores/companyStore";
 
+
 export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
 interface FilterPropsCars {
@@ -73,9 +74,9 @@ const requests = {
   .catch(handleErrors),
   postSuggest: (query: string) =>
     axiosSuggest({
-      url: 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+      url: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_SUGGEST_URL : process.env.REACT_APP__SUGGEST_URL,
       headers: {
-        "Authorization": `Token ${process.env.NEXT_PUBLIC_SUGGEST}`,
+        "Authorization": `Token ${process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_SUGGEST  : process.env.REACT_APP__SUGGEST}`,
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
