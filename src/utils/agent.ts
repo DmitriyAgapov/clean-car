@@ -73,7 +73,7 @@ const requests = {
   .catch(handleErrors),
   postSuggest: (query: string) =>
     axiosSuggest({
-      url: 'http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
+      url: 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
       headers: {
         "Authorization": `Token ${process.env.NEXT_PUBLIC_SUGGEST}`,
         "Content-Type": "application/json",
