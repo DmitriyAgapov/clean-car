@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -7,11 +7,12 @@ import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
-import Tabs from 'components/common/layout/Tabs/Tabs'
+import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import { CompanyType } from "stores/companyStore";
-import { PermissionNames } from "stores/permissionStore";
+import { CompanyType } from 'stores/companyStore'
+import { PermissionNames } from 'stores/permissionStore'
+import { values } from 'mobx'
 
 const CompanyPage = () => {
   const store = useStore()
@@ -20,7 +21,7 @@ const CompanyPage = () => {
   const navigate = useNavigate()
   const  companyData = store.companyStore.getCompanyFullData(id);
   const { company, users, address, application_type,   company_type, contacts, created,inn, legal_address, ogrn, service_percent, updated } = companyData
-
+  console.log(values(companyData));
   return (
       <Section type={SectionType.default}>
           <Panel
@@ -70,7 +71,7 @@ const CompanyPage = () => {
                   </>
               }
           >
-              <Tabs data={companyData} />
+              <Tabs data={values(companyData)} type={TabsType.company}/>
           </Panel>
       </Section>
 

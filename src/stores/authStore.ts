@@ -85,8 +85,7 @@ export class AuthStore {
     this.errors = undefined
 
     return agent.Auth.login(this.values.email, this.values.password)
-      .then(
-        action((resolve: any) => {
+      .then((resolve: any) => runInAction(() => {
           const { access, refresh } = resolve.data
           appStore.setToken(access)
           appStore.setTokenRefresh(refresh)

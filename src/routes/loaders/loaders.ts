@@ -8,7 +8,10 @@ import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
-import { object } from "yup";
+import { observable, values } from "mobx";
+import { useLocalObservable } from "mobx-react-lite";
+import { CAR_RADIUSTEXT } from "stores/priceStore";
+
 export const paginationParams = (request: Request) => {
     const url = new URL(request.url)
     const searchParams = url.searchParams
@@ -188,17 +191,45 @@ export const referencesLoader = async (props: any) => {
         // dataModels: dataModels
     })
 }
+const mapEd = (ar:[], compareField:string) => {
+    let newMap = new Map([])
+    if(ar.length > 0) {
+        ar.forEach((item: any) => {
+            newMap.set(item[compareField].name, ar.filter((i:any) => i[compareField].name == item[compareField].name))
+        })}
+    let result:any[] = []
+
+    newMap.forEach((value:any, key) => {
+
+        return result.push(Object.assign({service_option: key}, ...value.map((i:any, index:number) => ({[`service_subtype_${index}`]: i.price}))))
+    })
+    return result
+}
+
+function parseData(ar: any[]) {
+    const resultMap = new Map([]    )
+    if(ar.length > 0) {
+        ar.forEach((item: any) => {
+            resultMap.set(item.car_type, ar.filter((i:any) => i.car_type == item.car_type))
+        })}
+    resultMap.forEach((value:any, key) => {
+
+    })
+
+    return resultMap;
+}
+
 export const priceLoader = async (props: any) => {
     const paginationData = paginationParams(props.request)
     async function fillData() {
         let data: any[] | any = []
         if (props.params.id) {
-
             const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
             const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
             const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
+
             data = {
-                tabs: await Promise.all([{label: 'Мойка', data: dataWash}, {label: 'Эвакуация', data: dataEvac}, {label: 'Шиномонтаж', data: dataTire}])
+                tabs: await Promise.all([{label: 'Мойка', data: dataWash}, {label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option')}, {label: 'Шиномонтаж', data: dataTire}])
             }
 
         } else {
@@ -228,7 +259,7 @@ export const priceLoader = async (props: any) => {
     }
     return defer({
         data: await fillData(),
-        pageRequest: {page: paginationData.paramsPage ?? 1, page_size: paginationData.paramsPageSize ?? 10, searchString: paginationData.paramsSearchString},
+        // pageRequest: { page: paginationData.paramsPage ?? 1, page_size: paginationData.paramsPageSize ?? 10, searchString: paginationData.paramsSearchString},
         // page: refUrlsRoot,
         // textData: textData,
         // dataModels: dataModels

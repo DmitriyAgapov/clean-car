@@ -13,8 +13,8 @@ import { useWindowDimensions } from "utils/utils";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { CompanyType } from "stores/companyStore";
 import Status from "components/common/ui/Status/Status";
-import { useStore } from "stores/store";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
+import { useStore } from "stores/store";
 
 type TableWithSortProps = {
     data?: any[]
@@ -38,7 +38,7 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
         count: total ?? 0,
     })
     const handleSortKey = (index: number) => {
-        // console.log('click');
+
         let newVal = {
             index: index,
             reversed: false,
@@ -167,7 +167,6 @@ const RowData = (props: any) => {
         </tr>
     )
 }
-
 
 const TableWithSortNew = ({
     variant,

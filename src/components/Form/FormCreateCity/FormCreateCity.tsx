@@ -64,7 +64,7 @@ const FormCreateCity = (props: any) => {
   const navigate = useNavigate()
   const store = useStore()
   const editStatus = props?.edit ?? false
-  console.log(data);
+
   const  editInitValues = {
           id: data.results.id,
           city: data.results.name,
@@ -73,11 +73,10 @@ const FormCreateCity = (props: any) => {
   }
   let revalidator = useRevalidator();
 
-  console.log(editInitValues);
   return (
       <Formik initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
         onSubmit={(values, isSubmitting) => {
-            console.log('submit form', location.pathname.includes('edit'))
+          console.log(values);
             if(location.pathname.includes('edit')) {
               textData.editAction(values.id, values.city, values.status === "true", values.timezone)
               .then((r: any) => {
@@ -87,7 +86,7 @@ const FormCreateCity = (props: any) => {
                 }
               })
             } else {
-              textData.createAction(values.city, values.status === "true")
+              textData.createAction(values.city, values.status === "true", values.timezone)
               .then((r: any) => {
                 if(r.status === 201) {
                   revalidator.revalidate()
@@ -141,7 +140,7 @@ const FormCreateCity = (props: any) => {
                   <Button
                     text={'Сохранить'}
                     type={'submit'}
-                    action={() => ''}
+
                     className={'justify-self-end float-right'}
                     disabled={!isValid}
                     variant={ButtonVariant.accent}

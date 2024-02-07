@@ -11,9 +11,12 @@ import Tabs, { TabsProps } from '../../../components/common/layout/Tabs/Tabs'
 import { useStore } from 'stores/store'
 import CreateInput from 'components/common/ui/CreateInput/CreateInput'
 import { useNavigate } from 'react-router-dom'
+import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
+import { tires } from "utils/utils";
+import { CAR_RADIUS } from "stores/priceStore";
 
 type TabsVariantsProps = {
-  label: string,
+  label: string
   data: any
   companyId?: number
   company_type?: string
@@ -286,85 +289,404 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
   return  result
 };
 
-export const TabsVariantBids = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
-  const store = useStore()
-  let result
-  console.log(data);
-  console.log(label);
-  switch (label) {
-    case "Основная информация":
-      const navigate = useNavigate()
+export const TabsVariantBids = ({
+    label,
+    content_type,
+    data,
+    state,
+    name,
+    className,
+    companyId,
+    company_type,
+    ...props
+}: TabsVariantsProps) => {
+    const store = useStore()
+    let result
+    console.log(data)
+    console.log(label)
+    switch (label) {
+        case 'Основная информация':
+            const navigate = useNavigate()
 
+            result = (
+                <Tabs.Panel
+                    className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !py-8' + ' ' + className}
+                    state={state}
+                    name={'bidInfo'}
+                    company_type={company_type}
+                >
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Заказчик'}
+                        title={<Heading variant={HeadingVariant.h4} text={data.company.name} />}
+                    />
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Город'}
+                        title={<Heading variant={HeadingVariant.h4} text={data.company.city.name} />}
+                    />
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Пользователь'}
+                        title={
+                            <Heading
+                                variant={HeadingVariant.h4}
+                                text={`${data.author.first_name} ${data.author.last_name}`}
+                            />
+                        }
+                    />
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Услуга'}
+                        title={
+                            <Heading
+                                variant={HeadingVariant.h4}
+                                text={data.service_type.name}
+                                color={HeadingColor.active}
+                            />
+                        }
+                    />
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Номер телефона'}
+                        title={<Heading variant={HeadingVariant.h4} text={data.phone} />}
+                    />
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Марка автомобиля'}
+                        title={
+                            <Heading
+                                variant={HeadingVariant.h4}
+                                text={data.car.brand.name + ' ' + data.car.model.name}
+                            />
+                        }
+                    />
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Гос. номер'}
+                        title={<Heading variant={HeadingVariant.h4} text={data.car.number} />}
+                    />
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Тип'}
+                        title={<Heading variant={HeadingVariant.h4} text={data.car.model.car_type} />}
+                    />
+                    <DList
+                        className={'child:dt:text-accent col-span-2 col-start-1 row-start-5'}
+                        label={'Комментарий'}
+                        title={<p>{data.customer_comment}</p>}
+                    />
+                    <Panel
+                        variant={PanelVariant.withPaddingSmWithBody}
+                        background={PanelColor.glass}
+                        className={'!col-start-3 row-span-5'}
+                    >
+                        <DList
+                            className={'child:dt:text-accent'}
+                            label={'Партнер'}
+                            title={<Heading variant={HeadingVariant.h4} text={data.performer.name} />}
+                        />
+                        <DList
+                            className={'child:dt:text-accent'}
+                            label={'Адрес'}
+                            title={<Heading variant={HeadingVariant.h4} text={data.performer.name} />}
+                        />
+                    </Panel>
+                    {/* /!* //todo: address *!/ */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Адрес выезда'}  title={data.address} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Важность'}  title={store.bidsStore.formResultsAll.important.label} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Время'}  title={store.bidsStore.formResultsAll.time.value} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Дополнительные данные'}  title={<><ul><li>{store.bidsStore.formResultsAll.secretKey.label}</li><li>{store.bidsStore.formResultsAll.parking.label}</li></ul></>} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Дополнительные опции'}  title={<><ul>{store.bidsStore.currentBid.service_option.map((i:any) => <li key={i.id}>{i.name}</li>)}</ul></>} /> */}
+                </Tabs.Panel>
+            )
+            break
 
-      result = (<Tabs.Panel className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !py-8' + " " + className}    state={state} name={'bidInfo'}  company_type={company_type}>
+        case 'Сотрудники':
+            // @ts-ignore
+            console.log(data)
+            // console.log(props[0].data && props[0].data?.company.name || '');
+            result = (
+                <Tabs.Panel
+                    state={state}
+                    name={'users'}
+                    variant={PanelVariant.dataPadding}
+                    background={PanelColor.default}
+                    className={'!bg-none !border-0'}
+                    bodyClassName={'!bg-transparent'}
+                >
+                    {data.employees.length !== 0 ? (
+                        <TableWithSort
+                            total={data.count}
+                            className={'!rounded-none  !bg-none overflow-visible !border-0'}
+                            bodyClassName={'!bg-none !rounded-none !bg-transparent'}
+                            background={PanelColor.default}
+                            search={true}
+                            filter={true}
+                            data={data.employees.map((item: any & { rootRoute?: string }) => ({
+                                state: item.is_active,
+                                name: item.first_name + ' ' + item.last_name,
+                                phone: item.phone,
+                                email: item.email,
 
-            <DList className={'child:dt:text-accent'}  label={'Заказчик'}  title={<Heading variant={HeadingVariant.h4} text={data.company.name}/>} />
-            <DList className={'child:dt:text-accent'}  label={'Город'}  title={<Heading variant={HeadingVariant.h4} text={data.company.city.name}/>} />
-            <DList className={'child:dt:text-accent'}  label={'Пользователь'}  title={<Heading variant={HeadingVariant.h4} text={`${data.author.first_name} ${data.author.last_name}`}/>} />
-            <DList className={'child:dt:text-accent'}  label={'Услуга'}  title={<Heading variant={HeadingVariant.h4} text={data.service_type.name} color={HeadingColor.active} />} />
-            <DList className={'child:dt:text-accent'}  label={'Номер телефона'}  title={<Heading variant={HeadingVariant.h4} text={data.phone}/>} />
-            <DList className={'child:dt:text-accent'}  label={'Марка автомобиля'}  title={<Heading variant={HeadingVariant.h4} text={data.car.brand.name + ' ' + data.car.model.name}/>} />
-            <DList className={'child:dt:text-accent'}  label={'Гос. номер'}  title={<Heading variant={HeadingVariant.h4} text={data.car.number}/>} />
-            <DList className={'child:dt:text-accent'}  label={'Тип'}  title={<Heading variant={HeadingVariant.h4} text={data.car.model.car_type}/>} />
-            <DList className={'child:dt:text-accent col-span-2 col-start-1 row-start-5'}  label={'Комментарий'}  title={<p>{data.customer_comment}</p>} />
-        <Panel variant={PanelVariant.withPaddingSmWithBody} background={PanelColor.glass} className={'!col-start-3 row-span-5'}>
-          <DList className={'child:dt:text-accent'}  label={'Партнер'}  title={<Heading variant={HeadingVariant.h4} text={data.performer.name}/>} />
-          <DList className={'child:dt:text-accent'}  label={'Адрес'}  title={<Heading variant={HeadingVariant.h4} text={data.performer.name}/>} />
-        </Panel>
-            {/* /!* //todo: address *!/ */}
-            {/* <DList className={'child:dt:text-accent'}  label={'Адрес выезда'}  title={data.address} /> */}
-            {/* <DList className={'child:dt:text-accent'}  label={'Важность'}  title={store.bidsStore.formResultsAll.important.label} /> */}
-            {/* <DList className={'child:dt:text-accent'}  label={'Время'}  title={store.bidsStore.formResultsAll.time.value} /> */}
-            {/* <DList className={'child:dt:text-accent'}  label={'Дополнительные данные'}  title={<><ul><li>{store.bidsStore.formResultsAll.secretKey.label}</li><li>{store.bidsStore.formResultsAll.parking.label}</li></ul></>} /> */}
-            {/* <DList className={'child:dt:text-accent'}  label={'Дополнительные опции'}  title={<><ul>{store.bidsStore.currentBid.service_option.map((i:any) => <li key={i.id}>{i.name}</li>)}</ul></>} /> */}
+                                company: data.company.name,
 
-      </Tabs.Panel>)
-      break;
-
-    case 'Сотрудники':
-      // @ts-ignore
-      console.log(data);
-      // console.log(props[0].data && props[0].data?.company.name || '');
-      result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
-        {data.employees.length !== 0 ? <TableWithSort total={data.count}  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
-          data={data.employees.map((item: any & {rootRoute?: string} ) => ({
-            state: item.is_active,
-            name: item.first_name + ' ' + item.last_name,
-            phone: item.phone,
-            email: item.email,
-
-            company: data.company.name,
-
-            city: data.company.city.name,
-            id: item.id,
-            query: {
-              company_id: data.company.id,
-              rootRoute: `/account/users/${data.company.company_type === "Компания-Заказчик" ? 'customer' : 'performer'}/${data.company.id}/${item.id}`,
-            },
-          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}
-          ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail',  'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
-      </Tabs.Panel>)
-      break;
-    // case 'Филиалы':
-    //   console.log(data);
-    //   result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
-    //     {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
-    //       data={data.map((item: any & {rootRoute?: string} ) => ({
-    //         state: item.is_active,
-    //         name: item.name,
-    //         city: item.city.name,
-    //         id: item.id,
-    //         query: {
-    //           company_id: companyId,
-    //           rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
-    //         },
-    //       }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
-    //   </Tabs.Panel>)
-    //   break;
-    default:
-      return null;
-  }
-  return  result
+                                city: data.company.city.name,
+                                id: item.id,
+                                query: {
+                                    company_id: data.company.id,
+                                    rootRoute: `/account/users/${data.company.company_type === 'Компания-Заказчик' ? 'customer' : 'performer'}/${data.company.id}/${item.id}`,
+                                },
+                            }))}
+                            initFilterParams={[
+                                { label: 'Статус', value: 'state' },
+                                { label: 'Город', value: 'city' },
+                            ]}
+                            state={false}
+                            variant={PanelVariant.default}
+                            footer={false}
+                            ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Компания', 'Город']}
+                        />
+                    ) : (
+                        <Heading variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'} />
+                    )}
+                </Tabs.Panel>
+            )
+            break
+        // case 'Филиалы':
+        //   console.log(data);
+        //   result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        //     {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+        //       data={data.map((item: any & {rootRoute?: string} ) => ({
+        //         state: item.is_active,
+        //         name: item.name,
+        //         city: item.city.name,
+        //         id: item.id,
+        //         query: {
+        //           company_id: companyId,
+        //           rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
+        //         },
+        //       }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
+        //   </Tabs.Panel>)
+        //   break;
+        default:
+            return null
+    }
+    return result
+}
+export type CAR_RADIUS_KEYS = {
+  [K in keyof typeof CAR_RADIUS]: string | number;
 };
+export type  ParsedResultTiresSubtype = {
+  label: string
+  items: CAR_RADIUS_KEYS
+}
 
+export type ParsedResultTires = {
+  label: string
+  items: ParsedResultTiresSubtype[]
+}
+export const TabsVariantPrice = ({
+    label,
+    content_type,
+    data,
+    state,
+    name,
+    className,
+    companyId,
+    company_type,
+    ...props
+}:any) => {
+    const store = useStore()
+    let result
+  const mapEdTire = (ar: any[], compareField: any) => React.useMemo(() => {
+    let meta ={
+      car_type: [],
+      service_subtype: []
+
+    }
+    function innerData(ar: any[], propKey: string, propValue: any) {
+      let at = ar.filter((i: any) => i[propKey].name == propValue)
+      meta = {
+        ...meta,
+        [propKey]: at
+      }
+      return at
+    }
+
+    let newMap:any = new Map(ar.map((item: any) => [item.service_subtype.name,  innerData(ar, 'service_subtype', item.service_subtype.name)]))
+    newMap.forEach((value:any, key: any) => {
+      const newAr = new Map([])
+      const  curVal = value;
+
+      value.forEach((value:any, key: any) => {
+          const filtered = curVal.filter((i: any) => i.car_type == value.car_type)
+          const newArFC = new Map([])
+
+          filtered.forEach((value:any, key: any) => {
+            const filteredS = filtered.filter((i: any) => i.service_option.name == value.service_option.name)
+            const newArF = new Map([])
+
+            filteredS.forEach((value:any, key: any) => {
+              newArF.set(value.radius, value)
+            })
+            newArFC.set(value.service_option.name, newArF)
+          })
+          newAr.set(value.car_type, newArFC)
+        }
+      )
+      newMap.set(key, newAr)
+    })
+
+    let result:any[] = []
+
+    newMap.forEach((value:any, key: any) => {
+      let resultInner:any[] = []
+      value.forEach((value:any, key: any) => {
+        let resultInnerAr:any[] = []
+        value.forEach((value:any, key: any) => {
+          let resultInnerCartypes:any[] = []
+          value.forEach((value:any, key: any) => {
+            let resultInnerOptions:any[] = []
+            // value.forEach((value:any, key: any) => {
+            //   resultInnerOptions.push
+            // })
+            resultInnerCartypes.push({label: key, data: value.amount})
+          })
+          resultInnerAr.push({label: key, data: resultInnerCartypes })
+        })
+        resultInner.push({label: key, data: resultInnerAr})
+      })
+      result.push({ label: key, data: resultInner })
+    })
+
+    return result.map((item: any) => (
+      <div className={''}>
+        <Heading text={item.label} variant={HeadingVariant.h6} />
+        {item.data.map((item: any) => (
+          <div>
+            <Heading text={item.label} variant={HeadingVariant.h2} />
+          </div>
+        ))}
+      </div>
+    ))
+  }, [])
+    switch (label) {
+        case 'Мойка':
+            const navigate = useNavigate()
+
+            result = (
+                <Tabs.PanelPure
+                    className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !py-8' + ' ' + className}
+                    state={state}
+                    name={'wash'}
+                >
+                    <span>Мойка</span>
+                    {/* <DList className={'child:dt:text-accent'}  label={'Заказчик'}  title={<Heading variant={HeadingVariant.h4} text={data.company.name}/>} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Город'}  title={<Heading variant={HeadingVariant.h4} text={data.company.city.name}/>} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Пользователь'}  title={<Heading variant={HeadingVariant.h4} text={`${data.author.first_name} ${data.author.last_name}`}/>} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Услуга'}  title={<Heading variant={HeadingVariant.h4} text={data.service_type.name} color={HeadingColor.active} />} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Номер телефона'}  title={<Heading variant={HeadingVariant.h4} text={data.phone}/>} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Марка автомобиля'}  title={<Heading variant={HeadingVariant.h4} text={data.car.brand.name + ' ' + data.car.model.name}/>} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Гос. номер'}  title={<Heading variant={HeadingVariant.h4} text={data.car.number}/>} /> */}
+                    {/* <DList className={'child:dt:text-accent'}  label={'Тип'}  title={<Heading variant={HeadingVariant.h4} text={data.car.model.car_type}/>} /> */}
+                    {/* <DList className={'child:dt:text-accent col-span-2 col-start-1 row-start-5'}  label={'Комментарий'}  title={<p>{data.customer_comment}</p>} /> */}
+                    {/* <Panel variant={PanelVariant.withPaddingSmWithBody} background={PanelColor.glass} className={'!col-start-3 row-span-5'}> */}
+                    {/*   <DList className={'child:dt:text-accent'}  label={'Партнер'}  title={<Heading variant={HeadingVariant.h4} text={data.performer.name}/>} /> */}
+                    {/*   <DList className={'child:dt:text-accent'}  label={'Адрес'}  title={<Heading variant={HeadingVariant.h4} text={data.performer.name}/>} /> */}
+                    {/* </Panel> */}
+                    {/* /!* /!* //todo: address *!/ *!/ */}
+                    {/* /!* <DList className={'child:dt:text-accent'}  label={'Адрес выезда'}  title={data.address} /> *!/ */}
+                    {/* /!* <DList className={'child:dt:text-accent'}  label={'Важность'}  title={store.bidsStore.formResultsAll.important.label} /> *!/ */}
+                    {/* /!* <DList className={'child:dt:text-accent'}  label={'Время'}  title={store.bidsStore.formResultsAll.time.value} /> *!/ */}
+                    {/* /!* <DList className={'child:dt:text-accent'}  label={'Дополнительные данные'}  title={<><ul><li>{store.bidsStore.formResultsAll.secretKey.label}</li><li>{store.bidsStore.formResultsAll.parking.label}</li></ul></>} /> *!/ */}
+                    {/* /!* <DList className={'child:dt:text-accent'}  label={'Дополнительные опции'}  title={<><ul>{store.bidsStore.currentBid.service_option.map((i:any) => <li key={i.id}>{i.name}</li>)}</ul></>} /> *!/ */}
+                </Tabs.PanelPure>
+            )
+            break
+
+        case 'Шиномонтаж':
+
+
+          console.log(data);
+            // console.log(props[0].data && props[0].data?.company.name || '');
+            result = (
+              <Tabs.PanelPure
+                state={state}
+                name={'tire'}
+                variant={PanelVariant.default}
+                background={PanelColor.default}
+                className={'mt-3 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
+                bodyClassName={'!bg-transparent'}
+              >
+
+                  {mapEdTire(tires.tire_positions, 'car_type')}
+                    <span>Шиномонтаж</span>
+                    {/* {data.employees.length !== 0 ? <TableWithSort total={data.count}  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true} */}
+                    {/*   data={data.employees.map((item: any & {rootRoute?: string} ) => ({ */}
+                    {/*     state: item.is_active, */}
+                    {/*     name: item.first_name + ' ' + item.last_name, */}
+                    {/*     phone: item.phone, */}
+                    {/*     email: item.email, */}
+
+                    {/*     company: data.company.name, */}
+
+                    {/*     city: data.company.city.name, */}
+                    {/*     id: item.id, */}
+                    {/*     query: { */}
+                    {/*       company_id: data.company.id, */}
+                    {/*       rootRoute: `/account/users/${data.company.company_type === "Компания-Заказчик" ? 'customer' : 'performer'}/${data.company.id}/${item.id}`, */}
+                    {/*     }, */}
+                    {/*   }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false} */}
+                    {/*   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail',  'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>} */}
+                </Tabs.PanelPure>
+            )
+            break;
+        case 'Эвакуация':
+          console.log(data);
+            result = (
+                <Tabs.PanelPure
+                    state={state}
+                    name={'evacuation'}
+                    variant={PanelVariant.default}
+                    background={PanelColor.default}
+                    className={'mt-3 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
+                    bodyClassName={'!bg-transparent'}
+                >
+                  <TableWithSortNewPure
+                    total={data.length}
+                    variant={PanelVariant.default}
+                    search={false}
+                    background={PanelColor.default}
+                    className={'col-span-full table-groups'}
+                    filter={false}
+                    data={data}
+                    initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
+                    state={false}
+                    ar={[{ label: 'Тип услуги', name: 'service_option' }, {label: 'До 2 тонн', name: 'service_option'}, { label: 'от 2 тонн', name: 'service_option_1' }]}
+                  />
+                </Tabs.PanelPure>
+            )
+            break;
+        // case 'Филиалы':
+        //   console.log(data);
+        //   result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        //     {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+        //       data={data.map((item: any & {rootRoute?: string} ) => ({
+        //         state: item.is_active,
+        //         name: item.name,
+        //         city: item.city.name,
+        //         id: item.id,
+        //         query: {
+        //           company_id: companyId,
+        //           rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
+        //         },
+        //       }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
+        //   </Tabs.Panel>)
+        //   break;
+        default:
+            return null
+    }
+    return result
+}
 export default TabsVariants;

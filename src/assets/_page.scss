@@ -71,3 +71,14 @@
 	width: 4.5rem !important;
   }
 }
+.page-price {
+  ul {
+	@apply justify-start gap-8;
+  }
+
+
+
+}
+.table-price {
+  background: linear-gradient(182.19deg, #090909 2.89%, rgba(9, 9, 9, 0.28) 101.32%);
+}

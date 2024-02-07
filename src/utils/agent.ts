@@ -247,8 +247,8 @@ const Catalog = {
         requests.get(`/catalog/car_brands_with_models`, {}, params),
     getCities: (params?: PaginationProps) => requests.get('/catalog/cities/', {}, params),
     getCity: (id: number) => requests.get(`/catalog/cities/${id}/retrieve/`),
-    createCity: (name: string, is_active: boolean) =>
-        requests.post('/catalog/cities/create/', { name: name, is_active: is_active }),
+    createCity: (name: string, is_active: boolean, timezone: string)  =>
+        requests.post('/catalog/cities/create/', { name: name, is_active: is_active, timezone: timezone}),
     deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete`),
     deleteCarModel: (id: number) => requests.delete(`/catalog/car_models/${id}/delete`),
     editCity: (id: number, name: string, is_active: boolean, timezone: string) =>

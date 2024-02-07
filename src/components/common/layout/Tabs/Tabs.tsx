@@ -11,7 +11,7 @@ import CreateInput from 'components/common/ui/CreateInput/CreateInput'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { User } from 'stores/usersStore'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
-import TabsVariants, { TabsVariantBids, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
+import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import Logo from "components/common/layout/Logo/Logo";
 import company from "routes/company/company";
 
@@ -27,9 +27,9 @@ export type TabsProps = {
   type?: TabsType
 }
 const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: any, items?: any}) => {
-  console.log(data);
+
   const store = useStore()
-    const [state, setState] = useState('Основная информация');
+  const [state, setState] = useState(data[2].label);
 
   const navigate = useNavigate()
   // const fundBill = {
@@ -66,8 +66,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
       if(type == TabsType.price) {
         data.forEach((item: any, index: number) => {
           result.push(
-            <span>{index}</span>
-            // <TabsVariantBids state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>
+            <TabsVariantPrice state={state == item.label} data={item.dataTable} label={item.label} props={items} className={'!pb-0'}/>
           )
         })
         return result
@@ -83,7 +82,18 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
           result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={panels[0].company_type} data={item.data} label={item.label} props={panels}/>)
         })
         return result
-      } else if(data){
+      }
+      if(type == TabsType.company) {
+        data.forEach((item: any, index: number) => {
+          result.push(
+            <TabsVariants   key={`var-${item.label}`}
+              company_type={item.company_type}
+              companyId={data[0].data.id} content_type={item.label} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>
+          )
+        })
+        return result
+      }
+        else if(data) {
         for(const key in data) {
           result.push(<TabsVariants companyId={data.company.data.id} content_type={data[key].label} label={data[key].label}
             data={data[key].data}
@@ -126,6 +136,15 @@ Tabs.Panel = ({ children, state, name, className = " ", company_type, ...props }
 
  if(state) return (
     <div data-company-type={company_type}  className={styles.tabPanel + " " + className} data-state={state} data-name={name}>
+      {children}
+    </div>
+  )
+  return null
+}
+Tabs.PanelPure = ({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
+
+ if(state) return (
+    <div data-company-type={company_type}  className={styles.tabPanelPure + " " + className} data-state={state} data-name={name}>
       {children}
     </div>
   )
