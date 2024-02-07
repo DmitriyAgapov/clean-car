@@ -18,12 +18,13 @@ export class FormStore {
         permissionStore.loadCompanyPermissions(company_id)
       }
     })
-    reaction(() => this.formCreateCar.employee, async (employee) => {
-      if (employee.length !== 0) {
-        await carStore.createCar(this.formCreateCar.company_id, this.formCreateCar)
-      }
-    }
-  )}
+  //   reaction(() => this.formCreateCar.employee, async (employee) => {
+  //     if (employee.length !== 0) {
+  //       await carStore.createCar(this.formCreateCar.company_id, this.formCreateCar)
+  //     }
+  //   }
+  // )
+  }
 
   loading = false
   company_id: number = 0

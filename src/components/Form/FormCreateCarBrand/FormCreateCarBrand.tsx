@@ -70,10 +70,7 @@ const FormCreateCarBrand = (props: any) => {
   // React.useEffect(() => {
   //   store.catalogStore.getCarModelWithBrand(Number(params.id)).then(r => console.log(r))
   // }, [])
-  const submitForms = React.useCallback((data:any) => {
-    console.log(data);
-
-  }, [])
+  console.log(store.catalogStore.carBrandsCurrent);
   const result = (Object.keys(CarType) as (keyof typeof CarType)[]).map(
     (key, index) => {
       return {
@@ -164,9 +161,9 @@ const FormCreateCarBrand = (props: any) => {
             </Await>
             }
           >
-          <ComboboxCustom defaultValue={props.brand ? props.brand : null} action={(e) => setFieldValue('brandId', Number(e.id))} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
-          <TextInput  onChange={(e) => values.modelName = e.target.value} defaultValue={props.modelName ? props.modelName : null} placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
-          <Select  withCheckIcon={false}   required onChange={(e) =>  setFieldValue('car_type', e)} defaultValue={props.car_type ? props.car_type : null} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
+          <ComboboxCustom defaultValue={props?.edit ? props.brand : null} action={(e) => setFieldValue('brandId', Number(e.id))} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
+          <TextInput  onChange={(e) => values.modelName = e.target.value} defaultValue={props?.edit ? props.modelName : null} placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
+          <Select  withCheckIcon={false}   required onChange={(e) =>  setFieldValue('car_type', e)} defaultValue={props?.edit ? props.car_type : null} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
           label: item.label,
           value: String(item.value)
             }))}/>

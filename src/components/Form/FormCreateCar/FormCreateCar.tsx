@@ -252,10 +252,11 @@ const FormCreateCar = ({ user, edit }: any) => {
                             <Button text={'Назад'} action={() =>  changeStep(1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
                             <Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
                             <Button type={'submit'} disabled={!isValid} text={'Дальше'}
-                          action={() => submitForm()
-                          .then((r:any) => console.log('result', r))
-                          .catch(errors => console.log('errors', errors))
-                          }/* action={() => console.log(values)} *//* action={() => console.log(values)} */ className={'float-right'} variant={ButtonVariant.accent} /></>}
+                          // action={() => submitForm()
+                          // .then((r:any) => console.log('result', r))
+                          // .catch(errors => console.log('errors', errors))
+                          // }/* action={() => console.log(values)} *//* action={() => console.log(values)} */
+                              className={'float-right'} variant={ButtonVariant.accent} /></>}
                           header={<><Heading text={'Шаг 2. Добавьте сотрудников для автомобиля'} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>Вы можете добавить или выбрать сотрудника из списка зарегистрированных пользователей</div></>}
                           step={step} animate={animate} action={() => void null} action1={() => void null} stepIndex={2}>
 

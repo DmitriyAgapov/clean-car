@@ -13,7 +13,7 @@ import { PermissionNames } from "stores/permissionStore";
 export default function FilialsPageEditAction(props: any) {
   const store = useStore()
   const location = useLocation()
-
+  console.log('editttttttttttttt');
   const navigate = useNavigate()
   // @ts-ignore
   const [changes, setChanges] = useState({})

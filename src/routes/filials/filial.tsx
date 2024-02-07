@@ -6,7 +6,7 @@ import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import Tabs from 'components/common/layout/Tabs/Tabs'
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
@@ -21,7 +21,8 @@ const FilialPage = () => {
   const { data, type, company_id, parent } = useLoaderData()
   const { company, cars, users, limits } = data
   const arData = [{ ...company, parent: parent, company_id:company_id, company_type: type}, cars, users, limits]
-
+  console.log(arData);
+  if (location.pathname.includes('edit')) return <Outlet />
   return (
       <Section type={SectionType.default}>
           <Panel
@@ -71,7 +72,7 @@ const FilialPage = () => {
                   </>
               }
           >
-              <Tabs data={data} panels={arData}/>
+              <Tabs data={arData} panels={arData}/>
           </Panel>
       </Section>
 

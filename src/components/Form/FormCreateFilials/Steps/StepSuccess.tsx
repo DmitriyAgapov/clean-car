@@ -10,16 +10,16 @@ import { useNavigate } from "react-router-dom";
 import { CompanyType } from "stores/companyStore";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
-const CreateField = ({ title }: {title:string}) => (
-    <div className={styles.createField}>
-        <SvgPlus />
-        <Heading text={title} variant={HeadingVariant.h3} color={HeadingColor.accent} />
-    </div>
+export const CreateField = ({ title }: {title:string}) => (
+  <div className={styles.createField}>
+    <SvgPlus />
+    <Heading text={title} variant={HeadingVariant.h3} color={HeadingColor.accent} />
+  </div>
 )
 export function FormStepSuccess(props: {
   step: any
   animate: any
-  title: string
+  title?: string
   action?: () => any
   values?: any
   errors?: any
@@ -34,7 +34,7 @@ export function FormStepSuccess(props: {
 
   return (
     <Panel variant={PanelVariant.textPadding}
-      state={props.step !== 3}
+      state={props.step !== 2}
       className={'grid grid-rows-[auto_1fr_auto] overflow-x-hidden'}
       background={PanelColor.glass}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
@@ -43,31 +43,33 @@ export function FormStepSuccess(props: {
 
 
 
-          <LinkStyled text={'перейти к компании'}
-            // action={async () => {
-            //   // @ts-ignore
-            //   await store.permissionStore.createPermissionStoreAdmin(changes)
-            //   setTimeout(() => navigate('/account/groups'), 500)
-            //   // navigate('/account/groups')
-            // }}
-            to={`/account/companies/${values.application_type == CompanyType.performer ? 'performer': 'customer'}/${values.id}`}
-            type={'submit'}
-            className={'float-right col-start-2 justify-self-end'}
-            variant={ButtonVariant.accent} />
+        <LinkStyled text={'перейти к филиалу'}
+          // action={async () => {
+          //   // @ts-ignore
+          //   await store.permissionStore.createPermissionStoreAdmin(changes)
+          //   setTimeout(() => navigate('/account/groups'), 500)
+          //   // navigate('/account/groups')
+          // }}
+
+          to={`/account/filials/${values.application_type == CompanyType.performer ? 'performer': 'customer'}/${values.company_id}/${values.id}`}
+          type={'submit'}
+          className={'float-right col-start-2 justify-self-end'}
+          variant={ButtonVariant.accent} />
 
       </div>}
       header={<>
-        <Heading text={`Шаг ${values.application_type == 'Компания-Партнер' && '2'|| props.title }. Компания создана `}
+        <Heading text={`Шаг 2.  Филиал создан `}
           color={HeadingColor.accent}
           variant={HeadingVariant.h2}
-         />
+        />
         <div className={'text-base'}>
-          Укажите информацию о счета компании и предпочтительных исполнителей, если такие есть
+          Вы можете добавить Отдел Сотрудников и Лимиты для компании или добавить их позже в соответствующем разделе
         </div>
       </>}>
       <div className={'mt-10 flex flex-wrap gap-6'}>
-          <CreateField title={'Создать прайс-лист'}/>
-          <CreateField title={'Создать лимиты'}/>
+        <CreateField title={'Создать прайс-лист'}/>
+        <CreateField title={'Создать лимиты'}/>
+        <CreateField title={'Добавить автомобили'}/>
       </div>
     </Panel>
   )

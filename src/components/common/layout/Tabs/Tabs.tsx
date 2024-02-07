@@ -27,9 +27,9 @@ export type TabsProps = {
   type?: TabsType
 }
 const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: any, items?: any}) => {
-
+  console.log(data[0].label, 'data');
   const store = useStore()
-  const [state, setState] = useState(data[2].label);
+  const [state, setState] = useState(data[0].label);
 
   const navigate = useNavigate()
   // const fundBill = {

@@ -17,7 +17,7 @@ export function FormStep1(props: {
   animate: any
   action: () => any
   values: any
-  action1: () => void
+  action1: () => any
   errors: any
   isValid?: boolean
   touched: any
@@ -36,35 +36,35 @@ export function FormStep1(props: {
       });
     const [ searchString, setSearchString] = useState<string>('')
 
-    useEffect(() => {
-      const type = values.application_type === CompanyType.customer ? UserTypeEnum.customer : UserTypeEnum.performer
-      const getCompany = async () => {
-        if(type === UserTypeEnum.customer) {
-          if (values.company_filials == 'company') {
-            await store.companyStore.getCustomerCompany({name: searchString})
-          }
-          if(values.company_filials == 'filials') {
-            await store.companyStore.getPerformersCompany({name: searchString})
-          }
-          setCompanies(store.companyStore.companiesCustomer)
-        } else if(type === UserTypeEnum.performer) {
-          if (values.company_filials == 'company') {
-            await store.companyStore.getCustomerCompany({name: searchString})
-          }
-          if(values.company_filials == 'filials') {
-            await store.companyStore.getPerformersCompany({name: searchString})
-          }
-          setCompanies(store.companyStore.companiesPerformers)
-        }
-      }
-      getCompany()
-
-    }, [searchString, values.company_filials, values.type]);
+    // useEffect(() => {
+    //   const type = values.application_type === CompanyType.customer ? UserTypeEnum.customer : UserTypeEnum.performer
+    //   const getCompany = async () => {
+    //     if(type === UserTypeEnum.customer) {
+    //       if (values.company_filials == 'company') {
+    //         await store.companyStore.getCustomerCompany({name: searchString})
+    //       }
+    //       if(values.company_filials == 'filials') {
+    //         await store.companyStore.getPerformersCompany({name: searchString})
+    //       }
+    //       setCompanies(store.companyStore.companiesCustomer)
+    //     } else if(type === UserTypeEnum.performer) {
+    //       if (values.company_filials == 'company') {
+    //         await store.companyStore.getCustomerCompany({name: searchString})
+    //       }
+    //       if(values.company_filials == 'filials') {
+    //         await store.companyStore.getPerformersCompany({name: searchString})
+    //       }
+    //       setCompanies(store.companyStore.companiesPerformers)
+    //     }
+    //   }
+    //   getCompany()
+    //
+    // }, [searchString, values.company_filials, values.type]);
     const handleChangeSearch = React.useCallback((e:any) => {
       setSearchString(e.currentTarget.value);
     }, [])
     const options = React.useMemo(() => {
-      console.log(companies);
+
       if(companies.length !== 0) return companies.map((item:any) => (
         <Combobox.Option value={item.id} onClick={() => setValues({...values, company_name: item.name, company_id: item.id, type: item.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : UserTypeEnum.performer})}
           key={item.id}>
@@ -83,7 +83,7 @@ export function FormStep1(props: {
         <SelectCustom
           value={values.company_filials}
           defaultValue={values.company_filials}
-
+          allowDeselect={false}
           name={'company_filials'}
           label={'Принадлежит'}
           options={[
@@ -158,25 +158,20 @@ export function FormStep1(props: {
               className={'float-right lg:mb-0 mb-5'}
               variant={ButtonVariant['accent-outline']}
             />
-            <Button
-              type={'submit'}
-              disabled={!isValid}
-              text={'Сохранить'}
-              className={'float-right'}
-              variant={ButtonVariant.accent}
-            />
+
             {values.application_type == CompanyType.customer || values.application_type.value == CompanyType.customer ? (
               <Button
                 type={'submit'}
                 disabled={!isValid}
                 text={'Дальше'}
-
+                action={props.action1}
                 className={'float-right'}
                 variant={ButtonVariant.accent}
               />
             ) : (
               <Button
                 type={'submit'}
+                action={props.action1}
                 disabled={!isValid}
                 text={'Сохранить'}
                 className={'float-right'}
@@ -227,7 +222,6 @@ export function FormStep1(props: {
             name='status'
             value={values.status ? 'active' : 'inactive'}
             defaultValue={values.status ? 'active' : 'inactive'}
-
             options={[
               { label: 'Активный', value: 'active' },
               { label: 'Неактивный', value: 'inactive' },
@@ -273,6 +267,7 @@ export function FormStep1(props: {
           defaultValue={props.values.application_type || props.values.application_type.value}
           value={props.values.application_type.value || props.values.application_type.value}
           name={'application_type'}
+          allowDeselect={false}
           className={' w-fit'}
           options={[
             { label: 'Заказчик', value: CompanyType.customer },

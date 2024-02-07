@@ -7,13 +7,14 @@ import { useStore } from 'stores/store'
 import { Observer, observer } from "mobx-react-lite";
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 
 const FilialsPage = () => {
   const store = useStore()
   const location = useLocation()
-
+  const {data}:any = useLoaderData()
+  console.log(data);
   const navigate = useNavigate()
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
@@ -42,15 +43,15 @@ const FilialsPage = () => {
           </>
         }
       />
-    <Observer children={()=> <TableWithSortNew
-        total={store.companyStore.AllFilials.length}
+   <TableWithSortNew
+        total={data.length}
         filter={true}
         search={true}
         background={PanelColor.glass}
         style={PanelRouteStyle.company}
       ar={[{ label: 'Статус', name: 'status' }, {label: 'Компания', name: 'company'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'type'},{ label: 'Принадлежит', name: 'parent'}]}
 
-        data={store.companyStore.AllFilials.map((item: any) => ({
+        data={data.map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           city: item.city.name,
@@ -63,7 +64,7 @@ const FilialsPage = () => {
         }))}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
         state={false}
-      />}/>
+      />
 
     </Section>
   )

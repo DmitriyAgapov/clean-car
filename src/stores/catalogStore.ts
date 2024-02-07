@@ -1,4 +1,4 @@
-import {  flow, makeAutoObservable, observable, ObservableMap, reaction, runInAction, values } from "mobx";
+import { autorun, flow, get, makeAutoObservable, observable, ObservableMap, reaction, runInAction, set, values } from "mobx";
 import agent, { PaginationProps } from 'utils/agent'
 import { hydrateStore, makePersistable } from "mobx-persist-store";
 
@@ -20,7 +20,7 @@ export class CatalogStore {
                 'loadingState'
             ],
             storage: window.sessionStorage,
-        })
+        }, {fireImmediately: true})
 
         reaction(() => this.loadingState.brands,
           (brands) => {
@@ -50,6 +50,7 @@ export class CatalogStore {
 
             }
         })
+
         reaction(
             () => this.currentService,
             (service) => {
@@ -224,20 +225,20 @@ export class CatalogStore {
     }
     getCities = flow(function* (this: CatalogStore, params?: PaginationProps) {
         let cities
-        if (this.cities.size === 0) {
+        // if (this.cities.size === 0) {
             try {
                 const { data } = yield agent.Catalog.getCities(params)
                 cities = data.results
                 this.cities = cities
             } catch (error) {}
-            return this.cities
+            return this.allCities
         }
-    })
+    )
     async getAllCities(params?: PaginationProps) {
         const { data, status, error } = await agent.Catalog.getCities({ page_size: 1000 })
-
+        this.cities.clear()
         if (status === 200) {
-            data.results.forEach((i: any) =>     runInAction(() => { this.cities.set(String(i.id), i)}))
+            data.results.forEach((i: any) => runInAction(() => { set(this.cities, String(i.id), i)}))
         }
     }
     createCarBrand = flow(function* (
@@ -273,7 +274,7 @@ export class CatalogStore {
         }
     })
     get carBrandsCurrent() {
-        return this.carBrands
+        return values(this.carBrands)
     }
     get brandAndModels() {
         return this.carBrandModelsReference
@@ -294,7 +295,7 @@ export class CatalogStore {
     }
 
     getCity(id: number) {
-        return this.cities.get(id)
+        return get(this.cities, String(id))
     }
 }
 

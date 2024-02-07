@@ -551,7 +551,7 @@ export const TabsVariantPrice = ({
             // value.forEach((value:any, key: any) => {
             //   resultInnerOptions.push
             // })
-            resultInnerCartypes.push({label: key, data: value.amount})
+            resultInnerCartypes.push({ label: key, data: value.amount })
           })
           resultInnerAr.push({label: key, data: resultInnerCartypes })
         })
@@ -559,15 +559,62 @@ export const TabsVariantPrice = ({
       })
       result.push({ label: key, data: resultInner })
     })
-
+    console.log(result);
     return result.map((item: any) => (
-      <div className={''}>
-        <Heading text={item.label} variant={HeadingVariant.h6} />
-        {item.data.map((item: any) => (
-          <div>
-            <Heading text={item.label} variant={HeadingVariant.h2} />
-          </div>
-        ))}
+      <div className={'col-span-full'}>
+        <Heading text={item.label} variant={HeadingVariant.h6} className={'text-xs uppercase !mb-0 py-2 pt-4 px-6  border-b border-gray-4/70'}/>
+        {item.data.map((item: any) => {
+
+
+          console.log(item.data[0].data.filter((i: any) => i.label == 'R14'));
+
+          return (<div>
+            <Heading text={item.label} variant={HeadingVariant.h6} className={'text-xs capitalize  !mb-0 py-2  px-6  border-b border-gray-4/70'}/>
+            <TableWithSortNewPure total={item.data.length}  variant={PanelVariant.default}
+              search={false}
+              background={PanelColor.default}
+              className={'col-span-full table-groups'}
+              filter={false}
+              data={item.data.map((it: any) => ({
+                [it.label]: it.label ? it.label : '-',
+                r14: it.data.filter((i: any) => i.label == 'R14').length > 0 ? it.data.filter((i: any) => i.label == 'R14')[0].data : '-',
+                r15: it.data.filter((i: any) => i.label == 'R15').length > 0 ? it.data.filter((i: any) => i.label == 'R15')[0].data : '-',
+                r16: it.data.filter((i: any) => i.label == 'R16').length > 0 ? it.data.filter((i: any) => i.label == 'R16')[0].data : '-',
+                r17: it.data.filter((i: any) => i.label == 'R17').length > 0 ? it.data.filter((i: any) => i.label == 'R17')[0].data : '-',
+                r18: it.data.filter((i: any) => i.label == 'R18').length > 0 ? it.data.filter((i: any) => i.label == 'R18')[0].data : '-',
+                r19: it.data.filter((i: any) => i.label == 'R19').length > 0 ? it.data.filter((i: any) => i.label == 'R19')[0].data : '-',
+                r20: it.data.filter((i: any) => i.label == 'R20').length > 0 ? it.data.filter((i: any) => i.label == 'R20')[0].data : '-',
+                r2123: it.data.filter((i: any) => i.label == 'R20-23').length > 0 ? it.data.filter((i: any) => i.label == 'R20-23')[0].data : '-',
+                r15C: it.data.filter((i: any) => i.label == 'R15C').length > 0 ? it.data.filter((i: any) => i.label == 'R15C')[0].data : '-',
+                r16C: it.data.filter((i: any) => i.label == 'R16C').length > 0 ? it.data.filter((i: any) => i.label == 'R16C')[0].data : '-'
+
+              }) as any)}
+              // data={item.data.map((it: any) => {
+              //   const ad = it.data.map((i: any) => ({
+              //     [i.label]: i.data
+              //   }))
+              //   ad.push({service: item.label})
+              //   console.log(ad);
+              //   return ad
+              //   })}
+              initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
+              state={false}
+              ar={[{ label: 'Тип услуги', name: 'service_option' },
+                  {label: 'R14', name: 'R14}'},
+                  {label: 'R15', name: 'R15'},
+                  {label: 'R16', name: 'R16'},
+                  {label: 'R17', name: 'R17'},
+                  {label: 'R18', name: 'R18'},
+                  {label: 'R19', name: 'R19'},
+                  {label: 'R20', name: 'R20'},
+                  {label: 'R20-23', name: 'R20-23'},
+                  {label: 'R15C', name: 'R15C'},
+                  {label: 'R16C', name: 'R16C'}
+
+              ]}
+            />
+          </div>)})}
+
       </div>
     ))
   }, [])
@@ -621,7 +668,7 @@ export const TabsVariantPrice = ({
               >
 
                   {mapEdTire(tires.tire_positions, 'car_type')}
-                    <span>Шиномонтаж</span>
+
                     {/* {data.employees.length !== 0 ? <TableWithSort total={data.count}  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true} */}
                     {/*   data={data.employees.map((item: any & {rootRoute?: string} ) => ({ */}
                     {/*     state: item.is_active, */}

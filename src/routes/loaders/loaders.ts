@@ -8,9 +8,6 @@ import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
-import { observable, values } from "mobx";
-import { useLocalObservable } from "mobx-react-lite";
-import { CAR_RADIUSTEXT } from "stores/priceStore";
 
 export const paginationParams = (request: Request) => {
     const url = new URL(request.url)
@@ -277,11 +274,13 @@ export const companyLoader = async ({ params: { id, company_type, action, compan
 }
 export const filialsLoader = async () => {
     const company = await companyStore.loadCompanyWithTypeAndId()
+    const filials = await companyStore.getAllFilials()
+    console.log(filials);
     // await companyStore.getAllCompanies()
     await companyStore.loadCompanies()
     await companyStore.getFilials()
-    // await catalogStore.getAllCities()
-    return null
+    await catalogStore.getAllCities()
+    return { data: filials }
 }
 export const carsLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     await catalogStore.getCarBrands()
@@ -291,6 +290,7 @@ export const carsLoader = async ({ params: { id, company_type, action, company_i
 export const filialLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     const filial = await companyStore.loadFilialWithTypeAndId(company_type, company_id, id)
     const parent = await agent.Companies.getCompanyData(company_type, company_id)
+    console.log(filial);
     return { id: id, company_id: company_id, type: company_type, parent: parent, data: { ...filial } }
 }
 export const usersLoader = async () => {

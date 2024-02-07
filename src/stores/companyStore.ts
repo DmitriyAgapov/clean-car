@@ -104,12 +104,12 @@ export class CompanyStore {
                 if(companies.length === 0) {
                     this.getAllCompanies()
                 }
-                // if (companies.length > 0) {
-                //     this.filials.length = 0
-                //     const filials = companies.filter((el: any) => el.parent !== null)
-                //     // @ts-ignore
-                //     this.setFilials(filials)
-                // }
+                if (companies.length > 0) {
+                    this.filials.length = 0
+                    const filials = companies.filter((el: any) => el.parent !== null)
+                    // @ts-ignore
+                    this.setFilials(filials)
+                }
             },
         )
     }

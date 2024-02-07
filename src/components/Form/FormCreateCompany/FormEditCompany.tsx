@@ -8,6 +8,7 @@ import { FormStep1 } from "components/Form/FormCreateCompany/Steps/StepOne";
 import { FormStepTwo } from "components/Form/FormCreateCompany/Steps/StepTwoThree";
 import { FormStepSuccess } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import { Company, CompanyType } from "stores/companyStore";
+import { observer } from "mobx-react-lite";
 
 const SignupSchema = Yup.object().shape({
     company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
@@ -31,7 +32,9 @@ const FormEditCompany = ({data}:any) => {
             setStep(step ? step : 2)
         }, 1200)
     }
-    const companyData:any = store.companyStore.fullCompanyData.get(`${id}`)
+    const params = useParams()
+
+    const companyData:any = store.companyStore.loadFilialWithTypeAndId(params.company_type as string, Number(params.company_id), Number(params.id))
 
     // @ts-ignore
     const {company} = companyData;
@@ -39,7 +42,7 @@ const FormEditCompany = ({data}:any) => {
     // console.log(companyData);
     const initValues = {
         id: id,
-        company_name: company.data.name,
+        company_name: companyData.company.data?.name,
         address: company.data[`${company.company_type}profile`].address ? company.data[`${company.company_type}profile`].address : "Нет адреса",
         city: String(company.data.city.id),
         inn: company.data[`${company.company_type}profile`].inn,
@@ -153,4 +156,4 @@ const FormEditCompany = ({data}:any) => {
     )
 }
 
-export default FormEditCompany;
+export default observer(FormEditCompany);

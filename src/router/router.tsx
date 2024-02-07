@@ -185,11 +185,13 @@ const router = createBrowserRouter([
                         path: ':company_type/:company_id/:id',
                         element: <FilialPage />,
                         loader: filialLoader,
-                    },
-                    {
-                        path: ':companytype/:id/edit',
-                        element: <FilialsPageEditAction />,
-                        loader: companyLoader,
+                        children: [
+                            {
+                                path: 'edit',
+                                element: <FilialsPageEditAction />,
+                                loader: filialLoader,
+                            },
+                        ]
                     },
                     {
                         path: 'create',

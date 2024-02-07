@@ -45,6 +45,7 @@ const RowHeadingPure = ({ ar,total }: any) => {
 }
 
 const RowDataPure = (props: any) => {
+    console.log(props);
     const {width} = useWindowDimensions()
     const [open, setOpen] = useState(false);
     const propsRender = () => {
@@ -82,8 +83,9 @@ export const TableForPrice = (props: any) => {
 }
 export const TableWithSortNewPure = ({ variant, data, search = false, filter = false, state, className, total, ar, action, pageSize = 10, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props }: TableWithSortProps) => {
     const initCount = total || 0
+    console.log(data);
     const RowDataMemoized = React.useMemo(() => {
-        if(data && data.length > 0) return data.map((item: any, index: number) => <RowDataPure {...item} key={item.id + '_00' + index} />)
+        if(data && data.length > 0) return data.map((item: any, index: number) => <RowDataPure {...item} key={'_00' + index} />)
     }, [data])
     return (
       <Panel

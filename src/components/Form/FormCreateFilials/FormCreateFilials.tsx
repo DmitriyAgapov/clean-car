@@ -8,12 +8,14 @@ import { FormStep1 } from 'components/Form/FormCreateFilials/Steps/StepOne'
 import { type Company, CompanyType } from 'stores/companyStore'
 import { UserTypeEnum } from 'stores/userStore'
 import { observer } from 'mobx-react-lite'
+import { FormStepTwo } from "components/Form/FormCreateFilials/Steps/StepTwoThree";
+import { FormStepSuccess } from "components/Form/FormCreateFilials/Steps/StepSuccess";
 
 const SignupSchema = Yup.object().shape({
     filial_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
     address: Yup.string(),
     city: Yup.string(),
-    status: Yup.boolean()
+    status: Yup.string()
 
 })
 
@@ -81,9 +83,10 @@ const FormCreateFilials = () => {
         <Formik
             initialValues={initValues}
             validationSchema={SignupSchema}
-
             onSubmit={(values) => {
+                console.log(values);
                 if (values.application_type == CompanyType.performer) {
+                    console.log(values, values.application_type == CompanyType.performer);
                     const data:Company<CompanyType.performer> = {
                         city:  Number(values.city),
                         is_active: true,
@@ -95,6 +98,7 @@ const FormCreateFilials = () => {
                             service_percent: values.service_percent ?? 1,
                         }
                     }
+                    console.log(data,'performer',  values.company_id);
                     store.companyStore.createFilial(data,'performer',  values.company_id).then((r) => {
                         values.id = r.id
                         revalidate.revalidate()
@@ -113,6 +117,7 @@ const FormCreateFilials = () => {
                             lon: Number(values.lon)
                         }
                     }
+                    console.log(data, 'customer', values.company_id);
                     store.companyStore.createFilial(data, 'customer', values.company_id).then((r) => {
                         values.id = r.id
                         revalidate.revalidate()
@@ -127,21 +132,22 @@ const FormCreateFilials = () => {
                     animate={animate}
                     action={() => navigate(-1)}
                     values={values}
-                    action1={() => changeStep()}
+                    action1={() => changeStep(2)}
                     errors={errors}
                     touched={touched}
                     store={store}
                     prop8={(o: any) => ({
                       label: o.name, value: String(o.id)
                     })} />
-                  {/* <FormStepTwo step={step} animate={animate} */}
-                  {/*   action={() => changeStep(1)} */}
-                  {/*   values={values} */}
-                  {/*   action1={() => changeStep()} errors={errors} */}
-                  {/*   touched={touched} */}
-                  {/*   store={store}  prop8={(o: any) => ({ */}
-                  {/*   label: o.name, value: String(o.id) */}
-                  {/* })}/> */}
+                  <FormStepSuccess step={step} animate={animate}
+                    action={() => changeStep(1)}
+                    values={values}
+                    errors={errors}
+
+                    touched={touched}
+                    store={store}
+
+                  />
                   {/*  <FormStepSuccess step={step} animate={animate} */}
 
                   {/*   values={values} */}
