@@ -75,7 +75,7 @@ const requests = {
     axiosSuggest({
       url: 'http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address',
       headers: {
-        "Authorization": 'Token 194bded3651f373f0b44b56130a40aa5544e0e90',
+        "Authorization": `Token ${process.env.SUGGEST_API}`,
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
