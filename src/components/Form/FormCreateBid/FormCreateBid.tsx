@@ -260,7 +260,8 @@ const FormCreateBid = ({ user, edit }: any) => {
                                     disabled={Object.keys(errors).length > 0}
                                     text={'Дальше'}
                                     action={() => {
-                                        /* store.formStore.setFormDataCreateCar(values) */ changeStep()
+                                      console.log(values);
+                                        // /* store.formStore.setFormDataCreateCar(values) */ changeStep()
                                     }}
                                     /* action={() => console.log(values)} */ className={'float-right'}
                                     variant={ButtonVariant.accent}

@@ -36,30 +36,30 @@ export function FormStep1(props: {
       });
     const [ searchString, setSearchString] = useState<string>('')
 
-    // useEffect(() => {
-    //   const type = values.application_type === CompanyType.customer ? UserTypeEnum.customer : UserTypeEnum.performer
-    //   const getCompany = async () => {
-    //     if(type === UserTypeEnum.customer) {
-    //       if (values.company_filials == 'company') {
-    //         await store.companyStore.getCustomerCompany({name: searchString})
-    //       }
-    //       if(values.company_filials == 'filials') {
-    //         await store.companyStore.getPerformersCompany({name: searchString})
-    //       }
-    //       setCompanies(store.companyStore.companiesCustomer)
-    //     } else if(type === UserTypeEnum.performer) {
-    //       if (values.company_filials == 'company') {
-    //         await store.companyStore.getCustomerCompany({name: searchString})
-    //       }
-    //       if(values.company_filials == 'filials') {
-    //         await store.companyStore.getPerformersCompany({name: searchString})
-    //       }
-    //       setCompanies(store.companyStore.companiesPerformers)
-    //     }
-    //   }
-    //   getCompany()
-    //
-    // }, [searchString, values.company_filials, values.type]);
+    useEffect(() => {
+      const type = values.application_type === CompanyType.customer ? UserTypeEnum.customer : UserTypeEnum.performer
+      const getCompany = async () => {
+        if(type === UserTypeEnum.customer) {
+          if (values.company_filials == 'company') {
+            await store.companyStore.getCustomerCompany({name: searchString})
+          }
+          if(values.company_filials == 'filials') {
+            await store.companyStore.getPerformersCompany({name: searchString})
+          }
+          setCompanies(store.companyStore.companiesCustomer)
+        } else if(type === UserTypeEnum.performer) {
+          if (values.company_filials == 'company') {
+            await store.companyStore.getCustomerCompany({name: searchString})
+          }
+          if(values.company_filials == 'filials') {
+            await store.companyStore.getPerformersCompany({name: searchString})
+          }
+          setCompanies(store.companyStore.companiesPerformers)
+        }
+      }
+      getCompany()
+
+    }, [searchString, values.company_filials, values.type]);
     const handleChangeSearch = React.useCallback((e:any) => {
       setSearchString(e.currentTarget.value);
     }, [])
@@ -95,7 +95,6 @@ export function FormStep1(props: {
 
         <Combobox store={combobox}
           disabled={values.company_filials == 'company' && values.company_id === store.userStore.currentUser?.company?.id}
-
           onOptionSubmit={(val) => {
             const addProps = values.company_filials == 'company' ? ({company_id: Number(val)}) : ({filial_id: Number(val)})
             setValues(() => Object.assign(values, addProps))
