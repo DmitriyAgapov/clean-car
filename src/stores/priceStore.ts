@@ -3,7 +3,6 @@ import { makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import paramsStore from 'stores/paramStore'
 
-enum PriceTiresRadius {}
 export enum CAR_TP {'легковой', 'внедорожный', 'коммерческий'}
 export enum CAR_RADIUS {
     'R14',
@@ -148,7 +147,7 @@ export class PriceStore {
     async updatePriceTire() {
         const values = this.parseEntries().tire
         if(values)  {
-            const {data, status}:any = await agent.Price.updatePriceWash(values.company_id, values.price_id, values.data)
+            const {data, status}:any = await agent.Price.updatePriceTire(values.company_id, values.price_id, values.data)
             return {data, status}
         }
 
@@ -157,7 +156,7 @@ export class PriceStore {
     async updatePriceEvac() {
         const values = this.parseEntries().evac
         if(values)  {
-            const {data, status}:any = await agent.Price.updatePriceWash(values.company_id, values.price_id, values.data)
+            const {data, status}:any = await agent.Price.updatePriceEvac(values.company_id, values.price_id, values.data)
             return {data, status}
         }
         return {data: null, status: 400}

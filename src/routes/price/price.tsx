@@ -7,17 +7,11 @@ import { useStore } from 'stores/store'
 import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { PermissionNames } from 'stores/permissionStore'
-import { dateTransform, dateTransformShort } from "utils/utils";
+import {  dateTransformShort } from "utils/utils";
 import { CompanyType } from 'stores/companyStore'
 import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { ScrollArea } from '@mantine/core'
 
-const test = [
-  {
-    label: ''
-  }
-]
 const PricePage = ():JSX.Element => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -36,12 +30,7 @@ const PricePage = ():JSX.Element => {
             <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
             <Heading text={company.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
           </div>
-          {/* {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <Button */}
-          {/*   text={'Редактировать'} */}
-          {/*   action={() => navigate(location.pathname + '/edit')} */}
-          {/*   className={'justify-self-end'} */}
-          {/*   variant={ButtonVariant.default} */}
-          {/* />} */}
+
         </>}>
 
       </Panel>

@@ -183,11 +183,10 @@ const FormCreateBid = ({ user, edit }: any) => {
     const store = useStore()
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
-    const bid = store.bidsStore.CurrentBid
+
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
 
-    const availablePerformers = store.bidsStore.AvailablePerformers
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
         setTimeout(() => {
@@ -236,13 +235,7 @@ const FormCreateBid = ({ user, edit }: any) => {
     const handleChangeFile = React.useCallback((e: any) => {
         store.bidsStore.addFile(e)
     }, [])
-    const handleChangeCompany = React.useCallback(     (value:any) => {
-            if(value !== 0) {
-                store.bidsStore.formResultSet({ company: Number(value) })
-            } else {
-                store.bidsStore.formResultSet({ company: 0 })
-            }
-    },[])
+
     return (
       <>
         <Formik
