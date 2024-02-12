@@ -35,7 +35,7 @@ const UsersPageEditAction = () => {
               variant={ButtonVariant.text}
             />
             <Heading
-              text={'Добавить пользователя'}
+              text={'Редактировать пользователя'}
               variant={HeadingVariant.h1}
               className={'!mb-0 inline-block mr-auto flex-1'}
               color={HeadingColor.accent}

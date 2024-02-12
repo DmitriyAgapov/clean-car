@@ -8,22 +8,23 @@ import { CompanyType } from "stores/companyStore";
 import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
 import InputAutocompleteComponent from "components/common/ui/InputAutocompleteComponent/InputAutocompleteComponent";
 import { values as val } from "mobx";
+import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
 export function FormStep1(props: {
   step: any
   animate: any
   action: () => any
   values: any
-  action1: () => void
+  action1: () => any
   errors: any
   isValid?: boolean
   touched: any
   store: any
   prop8: (o: any) => { label: any; value: string }
 }) {
-  const { values, touched,  errors, isValidating, isValid }:any = useFormikContext();
+  const { values, touched,  errors, setFieldValue, isValidating, isValid }:any = useFormikContext();
   // console.log(props.store.catalogStore.cities.forEach((values: any) => console.log(values)))
-  console.log(val(props.store.catalogStore.cities))
-  console.log(props.store.catalogStore.cities.values())
+
+
    return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -45,7 +46,13 @@ export function FormStep1(props: {
             {values.application_type == CompanyType.customer || values.application_type.value == CompanyType.customer ? (
               <Button
                 text={'Дальше'}
-                action={() => (Object.keys(errors).length == 0) && props.action1()}
+                action={() => {
+                  console.log('click');
+                  console.log(Object.keys(errors).length == 0);
+                  (Object.keys(errors).length == 0)
+                 ? props.action1 : void null
+                }}
+                type={'button'}
                 // action={() => console.log(values)}
                 className={'float-right'}
                 variant={ButtonVariant.accent}
@@ -76,7 +83,7 @@ export function FormStep1(props: {
     >
       <div className={'mt-10 flex flex-wrap gap-6'}>
         <label
-          className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}
+          className={'account-form__input  flex-grow  !flex-[1_0_20rem]'}
           htmlFor={'company_name'}
           data-form_error={errors.company_name && touched.company_name && 'error'}
         >
@@ -92,13 +99,13 @@ export function FormStep1(props: {
           ) : null}
         </label>
         <React.Suspense>
-          <SelectCustom
+          <SelectMantine
             label={'Город'}
             searchable={true}
             value={props.values.city}
             name={'city'}
-            className={' w-fit'}
-            options={val(props.store.catalogStore.cities).map(props.prop8)}
+            className={'!flex-auto'}
+            data={val(props.store.catalogStore.cities).map(props.prop8)}
           />
           <InputAutocomplete />
         </React.Suspense>
@@ -142,15 +149,20 @@ export function FormStep1(props: {
           ) : null}
         </label>
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
-        <SelectCustom
+        <SelectMantine
           allowDeselect={false}
           label={'Тип'}
-          disabled={props.values.application_type.readOnly}
-          defaultValue={props.values.application_type || props.values.application_type.value}
-          value={props.values.application_type.value || props.values.application_type.value}
+          onChange={(value) => setFieldValue('application_type', {
+            ...values,
+            value: value
+          })}
+
+          // disabled={props.values.application_type.readOnly}
+          defaultValue={props.values.application_type.value}
+          value={values.application_type.value}
           name={'application_type'}
-          className={' w-fit'}
-          options={[
+          className={'!flex-initial'}
+          data={[
             { label: 'Заказчик', value: CompanyType.customer },
             { label: 'Партнер', value: CompanyType.performer },
           ]}

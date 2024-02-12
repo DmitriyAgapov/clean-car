@@ -8,23 +8,11 @@ import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
+import React from "react";
+import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
+import TableWithSortNewPure from "components/common/layout/TableWithSort/TableWithSortNewPure";
+import { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 
-export const paginationParams = (request: Request) => {
-    const url = new URL(request.url)
-    const searchParams = url.searchParams
-    const paramsPage = url.searchParams.get('page')
-    const paramsPageSize = url.searchParams.get('page_size')
-    const paramsOrdering = url.searchParams.get('ordering')
-    const paramsSearchString = url.searchParams.get('searchString')
-    return ({
-        url:url,
-        searchParams:searchParams,
-        paramsPage:paramsPage,
-        paramsPageSize:paramsPageSize,
-        paramsOrdering:paramsOrdering,
-        paramsSearchString:paramsSearchString
-    })
-}
 export const authUser = async () => {
     if (!appStore.token) {
         return redirect('/')
@@ -197,36 +185,43 @@ const mapEd = (ar:[], compareField:string) => {
     let result:any[] = []
 
     newMap.forEach((value:any, key) => {
-
-        return result.push(Object.assign({service_option: key}, ...value.map((i:any, index:number) => ({[`service_subtype_${index}`]: i.price}))))
+        return result.push(Object.assign({service_option: key}, ...value.map((i:any, index:number) => ({[`service_subtype_${index}`]: i.amount}))))
     })
     return result
 }
 
-function parseData(ar: any[]) {
-    const resultMap = new Map([]    )
-    if(ar.length > 0) {
-        ar.forEach((item: any) => {
-            resultMap.set(item.car_type, ar.filter((i:any) => i.car_type == item.car_type))
-        })}
-    resultMap.forEach((value:any, key) => {
 
+
+export const paginationParams = (urlData:string) => {
+
+    const url = new URL(urlData);
+    const searchParams = url.searchParams;
+    const paramsPage = searchParams.get('page')
+    const paramsPageSize = searchParams.get('page_size')
+    const paramsOrdering = searchParams.get('ordering')
+    const paramsSearchString = searchParams.get('searchString')
+
+    return ({
+        page: paramsPage ?? 1,
+        page_size:paramsPageSize ?? 10,
+        ordering:paramsOrdering,
+        searchString:paramsSearchString
     })
-
-    return resultMap;
 }
-
 export const priceLoader = async (props: any) => {
-    const paginationData = paginationParams(props.request)
+    const paginationData = paginationParams(props.request.url as string)
+
     async function fillData() {
         let data: any[] | any = []
         if (props.params.id) {
             const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
             const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
             const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
-
+            console.log(dataWash);
             data = {
-                tabs: await Promise.all([{label: 'Мойка', data: dataWash}, {label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option')}, {label: 'Шиномонтаж', data: dataTire}])
+                tabs: await Promise.all([{label: 'Мойка', data: dataWash,
+                    dataTable: dataWash
+                }, {label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option')}, {label: 'Шиномонтаж', data: dataTire, dataTable: dataTire}])
             }
 
         } else {
@@ -254,9 +249,10 @@ export const priceLoader = async (props: any) => {
         }
         return data
     }
+
     return defer({
         data: await fillData(),
-        // pageRequest: { page: paginationData.paramsPage ?? 1, page_size: paginationData.paramsPageSize ?? 10, searchString: paginationData.paramsSearchString},
+        pageRequest: { page: paginationData.page ?? 1, page_size: paginationData.page_size ?? 10, searchString: paginationData.searchString},
         // page: refUrlsRoot,
         // textData: textData,
         // dataModels: dataModels
@@ -266,21 +262,47 @@ export const companyLoader = async ({ params: { id, company_type, action, compan
     // const pathAr = props.request.url.split('/');
     // const actionName:string = pathAr[pathAr.length - 1] || 'read'
 
-    const company = await companyStore.loadCompanyWithTypeAndId(company_type, id)
 
     await companyStore.loadCompanies()
     // await catalogStore.getAllCities()
-    return { id: id, type: company_type, data: company }
+    return defer({ id: id, type: company_type, data: await companyStore.loadCompanyWithTypeAndId(company_type, id) })
 }
-export const filialsLoader = async () => {
-    const company = await companyStore.loadCompanyWithTypeAndId()
-    const filials = await companyStore.getAllFilials()
-    console.log(filials);
-    // await companyStore.getAllCompanies()
-    await companyStore.loadCompanies()
-    await companyStore.getFilials()
-    await catalogStore.getAllCities()
-    return { data: filials }
+
+export const filialsLoader = async (props: any) => {
+    const url = new URL(props.request.url)
+    const searchParams = url.searchParams
+    const paramsPage = url.searchParams.get('page')
+    const paramsPageSize = url.searchParams.get('page_size')
+    const paramsOrdering = url.searchParams.get('ordering')
+    const paramsSearchString = url.searchParams.get('searchString')
+    const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
+
+    async function fillData() {
+        let data :any[] | any = []
+        let dataMeta
+
+        const { data: dataCars, status } = await agent.Companies.getAllCompanies({
+            page: paramsPage ?? 1,
+            page_size: paramsPageSize ?? 10,
+            ordering: paramsOrdering
+        } as PaginationProps)
+
+        if (status === 200) {
+            const filials = dataCars.results.filter((f:any) => f.parent !== null)
+            data = filials
+        }
+        return ({
+            count: data.length,
+            results: data,
+        })
+    }
+
+    return defer({
+        data: await fillData(),
+        pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
+        page: refUrlsRoot,
+        // dataModels: dataModels
+    })
 }
 export const carsLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     await catalogStore.getCarBrands()
@@ -290,7 +312,7 @@ export const carsLoader = async ({ params: { id, company_type, action, company_i
 export const filialLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     const filial = await companyStore.loadFilialWithTypeAndId(company_type, company_id, id)
     const parent = await agent.Companies.getCompanyData(company_type, company_id)
-    console.log(filial);
+
     return { id: id, company_id: company_id, type: company_type, parent: parent, data: { ...filial } }
 }
 export const usersLoader = async () => {

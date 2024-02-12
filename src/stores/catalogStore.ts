@@ -1,16 +1,19 @@
-import { autorun, flow, get, makeAutoObservable, observable, ObservableMap, reaction, runInAction, set, values } from "mobx";
+import { autorun, computed, flow, get, makeAutoObservable, observable, ObservableMap, reaction, runInAction, set, values } from "mobx";
 import agent, { PaginationProps } from 'utils/agent'
 import { hydrateStore, makePersistable } from "mobx-persist-store";
 
 export class CatalogStore {
     constructor() {
-        makeAutoObservable(this, {}, { autoBind: true })
+        makeAutoObservable(this, {
+
+        })
         makePersistable(this, {
             name: 'catalogStore',
             properties: [
                 'cities',
                 'currentServiceSubtypesOptions',
                 'carBrands',
+                'targetModelId',
                 'brandModels',
                 'carBrandModels',
                 'services',
@@ -45,8 +48,19 @@ export class CatalogStore {
               if (!cities) {
                 this.getAllCities().then(r => runInAction(() => {
                     console.log('loadded cities')
+                    console.log(r);
                     this.loadingState.cities  = true
                 }))
+
+            }
+        })
+        reaction(() => this.cities,
+                  (cities) => {
+                      if (cities.size == 0) {
+                        this.getAllCities().then(r => runInAction(() => {
+                            console.log('loadded cities')
+                            this.loadingState.cities  = true
+                        }))
 
             }
         })
@@ -106,6 +120,7 @@ export class CatalogStore {
     get brandModelsCurrent() {
         return this.brandModels
     }
+
     set clearOptions(val: any) {
         this.currentServiceSubtypesOptions.clear()
     }

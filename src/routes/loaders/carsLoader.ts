@@ -4,6 +4,7 @@ import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import { defer } from "react-router-dom";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
+import company from "routes/company/company";
 
 export const carsLoader = async (props: any) => {
 
@@ -19,16 +20,33 @@ export const carsLoader = async (props: any) => {
 		description: null,
 		create: 'Добавить',
 	}
+	console.log({
+		page: paramsPage ?? 1,
+		page_size: paramsPageSize ?? 10,
+		ordering: paramsOrdering
+	} as PaginationProps);
+	async function getCompanyType() {
+		let company_type = '';
+		if (props.params.id) {
+			const { data: dataCars, status } = await agent.Cars.getAdminCar(props.params.id)
+			if (status === 200) {
+				company_type = dataCars.company.company_type
+				// console.log(dataCars.company.company_type);
+			}
+		}
+		return company_type
+	}
+
 	async function fillData() {
 		let data :any[] | any = []
 		let dataMeta
 
-		if (appStore.appType === 'admin') {
+		// if (appStore.appType === 'admin') {
 			if (props.params.id) {
 				const { data: dataCars, status } = await agent.Cars.getAdminCar(props.params.id)
 				if (status === 200) {
 					data = dataCars
-					console.log(dataCars);
+					// console.log(dataCars);
 				}
 			} else {
 				const { data: dataCars, status } = await agent.Cars.getAdminCars({
@@ -50,15 +68,16 @@ export const carsLoader = async (props: any) => {
 					}))
 					dataMeta = dataCars
 				}
-			}}
-		else
-			{
-				// const { data: dataCars, status } = await agent.Cars.getCompanyCars(, {
-				// 	page: paramsPage ?? 1,
-				// 	page_size: paramsPageSize ?? 10,
-				// 	ordering: paramsOrdering
-				// } as PaginationProps)
 			}
+		// }
+		// else
+		// 	{
+		// 		// const { data: dataCars, status } = await agent.Cars.getCompanyCars(, {
+		// 		// 	page: paramsPage ?? 1,
+		// 		// 	page_size: paramsPageSize ?? 10,
+		// 		// 	ordering: paramsOrdering
+		// 		// } as PaginationProps)
+		// 	}
 
 		textData = {
 			path: 'car_brands',
@@ -67,7 +86,7 @@ export const carsLoader = async (props: any) => {
 			create: 'Добавить',
 			referenceTitle: 'Марка автомобиля',
 			createPage: 'Добавить марку автомобиля',
-			editPage: 'Редактировать1 марку автомобиля',
+			editPage: 'Редактировать марку автомобиля',
 			tableHeaders: [{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_class'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'city'}],
 			createPageDesc: 'Укажите основную информацию о марке автомобиля, для добавления в справочник.',
 			createPageForm: FormCreateCarBrand.bind(props),
@@ -76,9 +95,6 @@ export const carsLoader = async (props: any) => {
 			editAction:  agent.Catalog.editCity,
 			editPageForm: FormCreateCarBrand.bind(props, { ...data, edit:true }),
 		}
-
-
-
 		return ({
 			...dataMeta,
 			results: data,
@@ -87,6 +103,7 @@ export const carsLoader = async (props: any) => {
 
 	return defer({
 		data: await fillData(),
+		company_type: await getCompanyType(),
 		pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
 		textData: textData,
 		page: refUrlsRoot,

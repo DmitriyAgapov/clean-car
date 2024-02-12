@@ -53,6 +53,11 @@ const themeOverride = createTheme({
                 icon: 'hidden',
             }
         }),
+        NumberInput: Input.extend({
+            classNames: {
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+            }
+        }),
     },
     fontFamily: 'Montserrat',
 

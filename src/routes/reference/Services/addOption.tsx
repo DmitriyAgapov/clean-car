@@ -32,7 +32,7 @@ const AddOption = ({ id, subtype_id, edit = false, data }: { id: number,  edit?:
 			{({ errors, touched, values, submitForm, isValid }) => (
 				<Form className={"grid gap-4"}>
 					<CreateFormikInput fieldName={"subtypeName"}
-						placeHolder={"Введите название"}
+						placeholder={"Введите название"}
 						fieldType={"text"}
 						label={"Название опции"} />
 					<SelectCustom value={values.status} name={"status"}

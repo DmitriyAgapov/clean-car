@@ -117,6 +117,9 @@ export class UsersStore {
   get selectedUsers() {
     return this.companyUsersSelected
   }
+  clearSelectedUsers() {
+    this.companyUsersSelected.clear()
+  }
   addToSelectedUsers(id:number) {
     this.companyUsersSelected.set(String(id), this.companyUsers.filter((e: any) => e.employee.id == Number(id))[0])
   }

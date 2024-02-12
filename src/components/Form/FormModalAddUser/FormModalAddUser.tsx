@@ -118,7 +118,7 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                 options={item.options}
                 fieldName={item.name}
                 label={item.label}
-                placeHolder={item.placeholder}
+                placeholder={item.placeholder}
                 fieldType={item.type}
                 className={''}
             />
@@ -185,7 +185,7 @@ const FormInputs = (): JSX.Element => {
             options={item.options}
             fieldName={item.name}
             label={item.label}
-            placeHolder={item.placeholder}
+            placeholder={item.placeholder}
             fieldType={item.type}
             className={''}
         />

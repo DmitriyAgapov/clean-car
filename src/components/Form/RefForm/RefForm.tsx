@@ -6,7 +6,7 @@ import { CreateFormikInput } from "components/common/ui/CreateInput/CreateInput"
 const RefForm = (data:any) => {
 	return <Formik initialValues={data.initValues} onSubmit={data.onSubmit}>
 		<Form>
-			<CreateFormikInput label={'asd'} fieldName={'asd'} fieldType={'text'} placeHolder={'asd'}/>
+			<CreateFormikInput label={'asd'} fieldName={'asd'} fieldType={'text'} placeholder={'asd'}/>
 		</Form>
 	</Formik>
 }

@@ -451,7 +451,10 @@
     color: #ffffff;
   }
   &:first-child {
-    padding-top: .375rem;
+    td {
+      padding-top: 1rem;
+    }
+
   }
 }
 
@@ -483,7 +486,9 @@
   &:last-child {
     padding-right: 1.625rem;
   }
-
+  &[data-label="amount"] {
+    width: 10rem;
+  }
 }
 
 .mobileIcon {
@@ -520,7 +525,7 @@
 
     &:first-child {
       padding-left: 2rem;
-
+      width: 12rem;
     }
 
     &:last-child {

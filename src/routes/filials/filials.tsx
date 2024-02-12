@@ -4,17 +4,18 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Observer, observer } from "mobx-react-lite";
-import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
+import companyStore from "stores/companyStore";
+import { observer } from "mobx-react-lite";
 
 const FilialsPage = () => {
   const store = useStore()
   const location = useLocation()
   const {data}:any = useLoaderData()
-  console.log(data);
+  const all = store.companyStore.getFillialsData
+  console.log(all);
   const navigate = useNavigate()
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
@@ -44,14 +45,15 @@ const FilialsPage = () => {
         }
       />
    <TableWithSortNew
-        total={data.length}
+        total={all.length}
         filter={true}
         search={true}
+        withOutLoader={true}
         background={PanelColor.glass}
         style={PanelRouteStyle.company}
       ar={[{ label: 'Статус', name: 'status' }, {label: 'Компания', name: 'company'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'type'},{ label: 'Принадлежит', name: 'parent'}]}
 
-        data={data.map((item: any) => ({
+        data={all.map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           city: item.city.name,
@@ -70,4 +72,4 @@ const FilialsPage = () => {
   )
 }
 
-export default FilialsPage
+export default observer(FilialsPage)

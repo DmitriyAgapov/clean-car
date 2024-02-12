@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable } from 'mobx'
+import { makeAutoObservable, observable, reaction, toJS, values } from "mobx";
 import { makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import paramsStore from 'stores/paramStore'
@@ -62,7 +62,15 @@ export const CAR_TYPES = {
 export class PriceStore {
     constructor() {
         makeAutoObservable(this, {}, { autoBind: true })
-        makePersistable(this, { name: 'priceStore', storage: window.sessionStorage, properties: ['prices'] })
+        makePersistable(this, { name: 'priceStore', storage: window.sessionStorage, properties: ['prices', 'priceOnChange'] }, {fireImmediately: true})
+        reaction(() => this.priceOnChange,
+          (priceOnChange, previous) => {
+
+            if(priceOnChange.size !== 0) {
+                console.log(previous, priceOnChange);
+              console.log(priceOnChange);
+              }
+          })
     }
 
     prices: { count: number; next: string | null; previous: string | null; results: any[] } = observable.object({
@@ -81,8 +89,8 @@ export class PriceStore {
         editPage: 'Редактировать город',
         tableHeaders: [
             { label: 'Компания', name: 'name' },
-            { label: 'Филиал', name: 'root_company' },
             { label: 'Тип', name: 'company_type' },
+            { label: 'Филиал', name: 'root_company' }
         ],
         createPageDesc: 'Добавьте новый город',
         editPageDesc: 'Вы можете изменить город или удалить его из системы',
@@ -92,11 +100,78 @@ export class PriceStore {
         editAction: agent.Catalog.editCity,
         // editPageForm: FormCreateCity.bind(props, { ...data, edit:true }),
     }
-
+    priceOnChange  = observable.map([])
     async loadPrices(params?: PaginationProps) {
         return await agent.Price.getAllPrice(paramsStore.params)
     }
 
+    parseEntries() {
+        console.log('Click');
+        const result = (ar:any[]) => ar.reduce((acc, item) => {
+            acc[item.id] = item.amount;
+            return acc;
+        }, {});
+        const data = values(this.priceOnChange)
+        const resWash = data.filter((i) => i.label === 'Мойка')
+        const resEvac = data.filter((i) => i.label === 'Эвакуация')
+        const resTire = data.filter((i) => i.label === 'Шиномонтаж')
+
+        return ({
+            wash: resWash.length > 0 ? {
+                company_id: resWash[0]?.company_id,
+                price_id: resWash[0]?.price_id,
+                data: result(resWash)
+            } : null,
+            evac: resEvac.length > 0 ? {
+                company_id: resEvac[0]?.company_id,
+                price_id: resEvac[0]?.price_id,
+                data: result(resEvac)
+            } : null,
+            tire: resTire.length > 0 ? {
+                company_id: resTire[0]?.company_id,
+                price_id: resTire[0]?.price_id,
+                data: result(resTire)
+            } : null,
+        })
+    }
+    clearPriceOnChange() {
+        this.priceOnChange.clear()
+    }
+    async updatePriceWash() {
+        const values = this.parseEntries().wash
+        if(values)  {
+            const {data, status}:any = await agent.Price.updatePriceWash(values.company_id, values.price_id, values.data)
+            return {data, status}
+        }
+        return {data: null, status: 400}
+    }
+    async updatePriceTire() {
+        const values = this.parseEntries().tire
+        if(values)  {
+            const {data, status}:any = await agent.Price.updatePriceWash(values.company_id, values.price_id, values.data)
+            return {data, status}
+        }
+
+        return {data: null, status: 400}
+    }
+    async updatePriceEvac() {
+        const values = this.parseEntries().evac
+        if(values)  {
+            const {data, status}:any = await agent.Price.updatePriceWash(values.company_id, values.price_id, values.data)
+            return {data, status}
+        }
+        return {data: null, status: 400}
+    }
+    async updatePrices() {
+        return Promise.all([this.updatePriceWash(), this.updatePriceTire(), this.updatePriceEvac()])
+    }
+
+    // @ts-ignore
+    handleChangeAmount({label, price_id, company_id,amount, id}) {
+
+        // @ts-ignore
+        this.priceOnChange.set(id.toString(), {amount: amount, label: label, price_id: price_id, company_id, id: id})
+    }
     get TextData() {
         return this.textData
     }

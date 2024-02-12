@@ -6,6 +6,7 @@ import userStore, { UserTypeEnum } from 'stores/userStore'
 import { AxiosError, AxiosResponse } from 'axios'
 import { PermissionNames } from 'stores/permissionStore'
 import bidsStore from "stores/bidsStrore";
+import company from "routes/company/company";
 
 export enum Payment {
     postoplata = 'Постоплата',
@@ -63,8 +64,15 @@ export interface PerformerProfile {
     }
 }
 export interface Companies {
+    company_type: CompanyType;
     id: number
-    companies: Company<CompanyType>[]
+    // companies: Company<CompanyType>[]
+    parent?: null | {
+        id: number
+        name: string
+        city: number
+        is_active: boolean
+    }
 }
 
 export class CompanyStore {
@@ -72,6 +80,7 @@ export class CompanyStore {
         makeAutoObservable(this, {
             stateMyCompany: computed,
             allCompanies: computed,
+            getFillialsData: computed,
         })
         makePersistable(this, {
             name: 'companyStore',
@@ -90,6 +99,10 @@ export class CompanyStore {
         })
         autorun(() => {
             console.log(this.canLoad, 'canload')
+            if(this.companies.length === 0) {
+                console.log('Loadding Companies');
+                this.getAllCompanies()
+            }
         })
         reaction(() => this.filials,
           (filials) => {
@@ -101,6 +114,7 @@ export class CompanyStore {
         reaction(
             () => this.companies,
             (companies: any) => {
+                console.log(companies.length === 0);
                 if(companies.length === 0) {
                     this.getAllCompanies()
                 }
@@ -126,6 +140,13 @@ export class CompanyStore {
     targetCompanyId:null | number = null
     targetCompany = {}
     fullCompanyData = new Map([])
+    get getCompaniesPerformers() {
+        return this.companiesPerformers
+    }
+    get getCompaniesCustomer() {
+        return this.companiesCustomer
+    }
+
     loadFilialWithTypeAndId = flow(function* (this: CompanyStore, type: string, company_id: number, id: number) {
         return {
             company: {
@@ -162,8 +183,6 @@ export class CompanyStore {
                 this.targetCompany  = company
             })
         }
-
-
         return company
     }
     get companyData() {
@@ -173,7 +192,6 @@ export class CompanyStore {
         return values(this.filials)
     }
     getCustomerCompanyById(company_id: number) {
-        console.log(has(this.customersCompany, `${company_id.toString()}`));
         if(has(this.customersCompany, `${company_id.toString()}`)) return get(this.customersCompany, `${String(company_id)}`)
     }
     async getCustomerCompanyData(company_id: number) {
@@ -292,7 +310,7 @@ export class CompanyStore {
         filials: []
     })
     getAllFilials = flow(function* (this: CompanyStore, params?: PaginationProps) {
-        yield agent.Filials.getFilials
+
         let result
         try {
             if (
@@ -300,6 +318,7 @@ export class CompanyStore {
                 userStore.currentUser.company?.id &&
                 userStore.currentUser.company.company_type
             ) {
+                console.log('start');
                 const { data, status } = yield agent.Filials.getFilials(
                     userStore.currentUser.company.company_type,
                     userStore.currentUser.company.id,
@@ -317,6 +336,7 @@ export class CompanyStore {
         }
         return this.filials
     })
+
     loadCompanies = flow(function* (this: CompanyStore) {
         this.loadingCompanies = true
         this.companies.clear()
@@ -340,6 +360,7 @@ export class CompanyStore {
     hydrateStore = flow(function* (this: CompanyStore) {
         yield hydrateStore(this)
     })
+
     addCompany = flow(function* (this: CompanyStore, data: any, type: CompanyType) {
         this.loadingCompanies = true
         try {
@@ -372,6 +393,7 @@ export class CompanyStore {
         }
         this.hydrateStore()
     })
+
     getFilials = flow(function* (this: CompanyStore) {
         this.loadingCompanies = true
         let company_id = userStore.myProfileData.company?.id
@@ -393,6 +415,13 @@ export class CompanyStore {
         this.loadingCompanies = false
         return this.filials
     })
+    get getFillialsData() {
+        let filials: any[] = []
+        if(this.companies.length !== 0) {
+            filials = this.companies.filter((company:any) => company.parent !== null)
+        }
+        return filials
+    }
     createFilial = flow(function* (this: CompanyStore, data: any, type: string, company_id: number) {
         console.log(type, company_id, data);
         this.loadingCompanies = true
@@ -412,6 +441,7 @@ export class CompanyStore {
             this.loadingCompanies = false
         }
     })
+
     get allCompanies() {
         return {
             loading: this.loadingCompanies,
@@ -419,6 +449,7 @@ export class CompanyStore {
             companies: this.companies
         }
     }
+
     get stateMyCompany() {
         return {
             loading: this.myCompany.loading,
@@ -428,6 +459,7 @@ export class CompanyStore {
             filials: this.myCompany.filials,
         }
     }
+
     getCustomerCompany (params?: PaginationProps) {
         this.companiesCustomer.clear()
         return agent.Companies.getListCompanyCustomer(params)
@@ -438,6 +470,7 @@ export class CompanyStore {
         }))
         .catch((errors:any) => this.errors = errors)
     }
+
     getPerformersCompany (params?: PaginationProps) {
         this.companiesPerformers.clear()
         return agent.Companies.getListCompanyPerformer(params)
@@ -450,16 +483,15 @@ export class CompanyStore {
         .catch((errors:any) => this.errors = errors)
     }
 
-
     getAllCompanies (params?: PaginationProps) {
         this.loadingCompanies = true
-        console.log(userStore.getUserCan(PermissionNames["Управление пользователями"], "read"))
+        console.log(userStore.getUserCan(PermissionNames["Компании"], "read"), 'Пермммм');
         if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
                  agent.Companies.getAllCompanies(params)
                     .then((response:any) => response)
                     .then((response:any) => response.data)
-                    .then(action((data:any) => {
+                    .then((data:any) => runInAction(() => {
                         this.companies = data.results
                      }))
                     .catch((errors:any) => this.errors = errors)

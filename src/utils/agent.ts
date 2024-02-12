@@ -7,9 +7,9 @@ import { User } from 'stores/userStore'
 import { runInAction, toJS } from "mobx";
 import { Company, CompanyType } from "stores/companyStore";
 
-
 export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
+
 interface FilterPropsCars {
   number?: number
   car_type?: string
@@ -18,7 +18,14 @@ interface FilterPropsCars {
   company__name?: string
 }
 //Подсказки адресов, config axios
-const axiosSuggest = axios.create({})
+const axiosSuggest = axios.create({
+  headers: {
+    "Authorization": `Token ${process.env.NODE_ENV === 'production' ? process.env.REACT_APP__SUGGEST  : process.env.REACT_APP__SUGGEST}`,
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+  }
+  }
+)
 
 //Константа для запросов
 export const API_ROOT = 'https://dev.server.clean-car.net/api'
@@ -111,6 +118,9 @@ const Price = {
     getCurentCompanyPriceEvac: (company_id: number) => requests.get(`/price/${company_id}/active_evacuation`, {}),
     getCurentCompanyPriceTire: (company_id: number) => requests.get(`/price/${company_id}/active_tire`, {}),
     getCurentCompanyPriceWash: (company_id: number) => requests.get(`/price/${company_id}/active_wash`, {}),
+    updatePriceWash: (company_id: number, price_id: number, data: any) => requests.post(`/price/${company_id}/${price_id}/new_wash/`, {positions: data}),
+    updatePriceEvac: (company_id: number, price_id: number, data: any) => requests.post(`/price/${company_id}/${price_id}/new_evacuation/`, {positions: data}),
+    updatePriceTire: (company_id: number, price_id: number, data: any) => requests.post(`/price/${company_id}/${price_id}/new_tire/`, {positions: data}),
 }
 
 export interface CreateBidData {
@@ -127,7 +137,7 @@ export interface CreateBidData {
 
 const Bids = {
   getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),
-  getAvailablePerformers: (customer_id:number, service_subtype_id: number) => requests.get(`/bids/${customer_id}/${service_subtype_id}/performers/`),
+  getAvailablePerformers: (company_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/bid_performers/`, data),
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`)
 }
@@ -289,6 +299,7 @@ const Cars = {
   getAdminCar: (id: number) => requests.get(`/cars_admin/${id}/retrieve/`),
   getCompanyCar: (company_id: number , id: number)  => requests.get(`/cars/${company_id}/${id}/retrieve/`),
   createCompanyCar: (company_id: number, data: any) => requests.post(`/cars/${company_id}/create/`, data),
+  editCompanyCar: (company_id: number, id: number, data: any) => requests.put(`/cars/${company_id}/${id}/update/`, data),
 }
 const Account = {
   getCompanyUsers: (company_id:number) => requests.get(`/accounts/${company_id}/users/list/`),

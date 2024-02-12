@@ -7,7 +7,6 @@ import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-do
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import { observer, Observer } from "mobx-react-lite";
 import FormModalCreatePrice from "components/Form/FormModalCreatePrice/FormModalCreatePrice";
 
 const PricesPage = () => {
@@ -39,11 +38,12 @@ const PricesPage = () => {
 					</>)}</>}>
 			</Panel>
 		<Panel variant={PanelVariant.withGapOnly} className={'!mt-0'}>
-				<TableWithSortNew total={data.count}
+				<TableWithSortNew
+					total={data.count}
 					variant={PanelVariant.dataPadding}
 					search={true}
 					background={PanelColor.glass}
-					className={'col-span-full table-groups'}
+					className={'col-span-full table-groups h-full'}
 					filter={false}
 					data={data.results}
 					initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}

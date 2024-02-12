@@ -26,6 +26,7 @@ type TableWithSortProps = {
     search?: boolean
     initFilterParams?: {}
     total: number
+    withOutLoader?: boolean
     filter?: boolean
     pageSize?: number
     variant?: PanelVariant
@@ -170,6 +171,7 @@ const RowData = (props: any) => {
 
 const TableWithSortNew = ({
     variant,
+    withOutLoader,
     data,
     search = false,
     filter = false,
@@ -190,6 +192,7 @@ const TableWithSortNew = ({
     })
 
     const initCount = total || 0
+    // console.log(Math.ceil(initCount / pageSize));
     const store = useStore()
     let location = useLocation()
     const navigate = useNavigate()
@@ -199,8 +202,11 @@ const TableWithSortNew = ({
     const [currentPage, setCurrentPage] = useState(1)
 
     const handleCurrentPage = React.useCallback((value: any) => {
-
-        setSearchParams((prev) => ({...prev, ordering: sortedField, page: value}));
+        if(withOutLoader) {
+            setSearchParams((prev) => ({...prev, ordering: sortedField, page: value}));
+        } else  {
+            setSearchParams((prev) => ({...prev, ordering: sortedField, page: value}));
+        }
         setCurrentPage(value)
     }, [sortedField])
 
@@ -239,8 +245,13 @@ const TableWithSortNew = ({
     }, [filterParams])
 
     const RowDataMemoized = React.useMemo(() => {
-       if(data && data.length > 0) return data.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
-    }, [data])
+        if(withOutLoader) {
+            let initPage = (currentPage === 1) ? currentPage - 1 : (currentPage - 1) * pageSize
+            // console.log(initPage);
+            if (data && data.length > 0) return data.slice(initPage, initPage + pageSize).map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
+        }
+        if(data && data.length > 0) return data.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
+    }, [data, currentPage])
 
     const handleHeaderAction = React.useCallback((e: any) => {
 
@@ -281,7 +292,7 @@ const TableWithSortNew = ({
                             control:
                                 'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
                         }}
-                        total={total / pageSize}
+                        total={Math.ceil(initCount / pageSize)}
                         value={currentPage}
                         onChange={(e) => handleCurrentPage(e)}
                         // boundaries={2}

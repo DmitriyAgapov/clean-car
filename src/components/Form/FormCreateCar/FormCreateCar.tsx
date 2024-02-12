@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import "yup-phone-lite";
@@ -15,14 +15,16 @@ import { FormCard } from "components/Form/FormCards/FormCards";
 import FormModalAddUser, { FormModalSelectUsers } from "components/Form/FormModalAddUser/FormModalAddUser";
 import Progress from "components/common/ui/Progress/Progress";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
-import { observer, Observer } from "mobx-react-lite";
+import { observer, Observer, useAsObservableSource, useLocalObservable } from "mobx-react-lite";
 import { CloseButton, Select } from "@mantine/core";
+import { CAR_RADIUS, CAR_RADIUSTEXT } from "stores/priceStore";
+import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
 
 type CarCreateUpdate = {
     car_type:	string
     number: string
     height:number
-    radius:	number
+    radius:	CAR_RADIUS
     limit:string
     is_active:boolean
     brand: number
@@ -31,89 +33,135 @@ type CarCreateUpdate = {
 }
 const FormInputs = observer(():JSX.Element => {
     const store = useStore()
-    const { values, errors, setFieldValue, setValues, getFieldHelpers, touched }:any = useFormikContext();
-    const [companies, setCompanies] = useState(store.companyStore.companies)
-    const handleChangeBrand = React.useCallback((e:any) => {
-        store.catalogStore.clearBrandModels()
-        values.model = null;
+    const { values, getFieldProps, errors, setFieldValue, setValues,  getFieldHelpers,setFieldTouched, touched }:any = useFormikContext();
+  //TODO Рефактирить надо выносить из компонента
+
+    const [companies, setCompanies] = useState(store.companyStore.companies.filter(item => item.parent === null))
+    const handleChangeSubmitBrand = React.useCallback((e:any) => {
+      setFieldValue('models', null, false)
+      setFieldTouched('models', false, false)
+      e && store.carStore.setBrand(Number(e))
     },[])
+
+    const handleChangeBrand = React.useCallback((e:any) => {
+      // setFieldValue('models', null, true)
+    },[])
+
+    const handleChangeCompany = React.useCallback((e:any) => {
+
+      if(e) {
+        setBelongTo(e)
+        setFieldValue('company_ids', null, false)
+        store.companyStore.getAllCompanies()
+        if(e === 'company') {
+          setCompanies(store.companyStore.companies.filter(item => item.parent === null))
+        } else {
+          setCompanies(store.companyStore.companies.filter(item => item.parent !== null))
+        }
+      }
+    },[])
+
+    const handleChangeCompanyId = React.useCallback((value:any) => {
+      let company = store.companyStore.getCompaniesAll.filter((item:any) => item.id == Number(value))[0];
+      setFieldValue('company_type', '', false);
+      if(value) {
+        values.company_type = company.company_type
+        values.company_ids = company.id
+      }
+
+    },[])
+
     const[belongTo, setBelongTo] = useState('company')
+    React.useEffect(() => console.log(errors), [errors])
     return (
       <>
           <>
-              <SelectCustom name={'brand'}
-                searchable={true}
-                clearable={true}
-                action={handleChangeBrand}
+
+              <SelectMantine
+                name={'brand'}
+                onOptionSubmit={handleChangeSubmitBrand}
+                onChange={handleChangeBrand}
                 placeholder={'Выберите марку'} label={'Марка автомобиля'}
                 // @ts-ignore
-                value={values.brand} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={val(store.catalogStore.carBrands).map((item:any) => ({ label: item.name, value: String(item.id) }))}/>
-              <SelectCustom  name={'model'}  disabled={store.catalogStore.brandModelsCurrent.length == 0} placeholder={'Выберите модель'} label={'Модель'}
+                value={values.brand}
+                className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}
+                data={val(store.catalogStore.carBrands).map((item:any) => ({ label: item.name, value: String(item.id) }))}
                 searchable={true}
                 clearable={true}
-                // @ts-ignore
-                onLoadedData={(data) => console.log('data', data)}
-                value={String(values.model)} onOptionSubmit={(value: string) => setFieldValue('model', Number(value))}
-                 className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={store.catalogStore.brandModelsCurrent}/>
-              <SelectCustom  name={'car_type'} placeholder={'Выберите тип'} options={Object.keys(CarType).map(item => ({label: item, value: item}))} label={'Тип автомобиля'}
+              />
+              {/* <SelectCustom  name={'model'} */}
+              {/*   error={errors.model} */}
+              {/*   disabled={!values.brand} */}
+              {/*   placeholder={'Выберите модель'} label={'Модель'} */}
+              {/*   searchable={true} */}
+              {/*   clearable={true} */}
+              {/*   // @ts-ignore */}
+
+              {/*   value={values.model ? String(values.model) : null} onOptionSubmit={(value: string) => { */}
+              {/*       setFieldValue('model', Number(value)) */}
+
+              {/* }} */}
+              {/*    className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} options={store.catalogStore.brandModelsCurrent} */}
+              {/* /> */}
+              <SelectMantine
+                name={'models'}
+                disabled={!values.brand}
+                placeholder={'Выберите модель'} label={'Модель'}
+                searchable={true}
+
+                clearable={true}
+
+                onChange={(value) => {
+                    setFieldTouched('models', false, false)
+                    setFieldValue('models', value, false)
+                }}
+                 className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}
+                data={store.carStore.getBrandModels}
+              />
+
+
+
+
+              <SelectMantine  name={'car_type'} placeholder={'Выберите тип'} data={Object.keys(CarType).map(item => ({label: item, value: item}))} label={'Тип автомобиля'}
                 // @ts-ignore
                 value={values.car_type} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} />
               <CreateFormikInput  fieldName={'number'}  label={'Гос. номер'}
                 // @ts-ignore
-                value={values.number} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}  fieldType={'text'} placeHolder={'Введите Гос. номер'}/>
+                value={values.number} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}  fieldType={'text'} placeholder={'Введите Гос. номер'}/>
               <CreateFormikInput  fieldName={'height'}  label={'Высота автомобиля, м'}
                 // @ts-ignore
-                value={values.height} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'text'} placeHolder={'Введите высоту'}/>
-              <CreateFormikInput  fieldName={'radius'}  label={'Радиус колес, дюймы'}
-                // @ts-ignore
-                value={values.radius} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'text'} placeHolder={'Радиус колес, дюймы'}/>
-              <SelectCustom   label={'Статус'}
-                // @ts-ignore
-                value={values.status} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'select'} options={[
+                value={values.height} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'text'}  placeholder={'Введите высоту'}/>
+              <SelectMantine  name={'radius'}   label={'Радиус колес, дюймы'}
+                value={values.radius}   className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} data={Array.from(Object.keys(CAR_RADIUSTEXT))}  placeholder={'Радиус колес, дюймы'}/>
+              <SelectMantine   label={'Статус'}
+
+                value={values.is_active}
+                className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}  data={[
                   { label: 'Активен', value: 'true' },
                   { label: 'Неактивен', value: 'false' },
-              ]} placeHolder={'Выбрать статус'} name={'status'}/>
-              <SelectCustom   label={'Город'}
-                // @ts-ignore
-                value={values.city} disabled={store.catalogStore.cities.size === 0} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'select'} options={val(store.catalogStore.cities).map((city:any) => ({label: city.name, value: String(city.id)}))} placeHolder={'Выбрать статус'} name={'city'}/>
+              ]} placeholder={'Выбрать статус'} name={'is_active'}/>
+              <SelectMantine   label={'Город'} allowDeselect={false}
+
+                value={values.city} disabled={store.catalogStore.cities.size === 0} className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} data={val(store.catalogStore.cities).map((city:any) => ({label: city.name, value: String(city.id)}))} placeholder={'Выбрать город'} name={'city'}/>
               <hr className={'col-span-full flex-[1_100%]'}/>
           </>
           <>
               <React.Suspense>
-                  <SelectCustom
-                    action={(e:any) => {
-                        setBelongTo(e)
-                        store.companyStore.getAllCompanies()
-                        if(e === 'company') {
-                            console.log('company');
-                            // @ts-ignore
-                            setCompanies(store.companyStore.companies.filter(item => item.parent === null))
-                        } else {
-                            // @ts-ignore
-                            setCompanies(store.companyStore.companies.filter(item => item.parent !== null))
-                        }
-                    }}
-                    // @ts-ignore
-                    value={values.belongs_to}  label={'Принадлежит'} defaultValue={'company'} name={'belong_to'}  className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'} fieldType={'select'} options={[
+                  <SelectMantine
+                    onOptionSubmit={handleChangeCompany}
+
+                    value={values.belongs_to}  label={'Принадлежит'} defaultValue={'company'} name={'belong_to'}  className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}  data={[
                       { label: 'Филиал', value: 'filial' },
                       { label: 'Компания', value: 'company' },
                   ]} />
-                  <Select
+                  <SelectMantine
                     className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}
-                    name={'company_id'}
-                    // @ts-ignore
-                    onChange={(e:any) => setValues({...values, company_id: e, company_type: companies.filter((item:any) => item.id == e).company_type})}
-                    // @ts-ignore
-                    onOptionSubmit={(e:any) => {
-                        // @ts-ignore
-                        setValues({...values, company_id: e.value, company_type: companies.filter((item:any) => item.id == e).company_type, company_data: companies.filter((item:any) => item.id == e)})
-                    }}
-                    // @ts-ignore
-                    value={values.company_id}
+                    name={'company_ids'}
+                    onOptionSubmit={handleChangeCompanyId}
+                    value={(values.company_ids && typeof values.company_ids !== undefined) ? String(values.company_ids) : null}
                     disabled={companies && companies.length === 0}
                     label={belongTo == 'filial' ? 'Филиал' : 'Компания'}
                     placeholder={belongTo == 'filial' ? 'Выберите филиал' : 'Выберите компанию'}
-                    // @ts-ignore
                     data={companies && companies.map((item:any) => ({label: item.name, value: String(item.id), prop: item.company_type}))}
                     searchable
                   />
@@ -124,53 +172,82 @@ const FormInputs = observer(():JSX.Element => {
 })
 const SignupSchema = Yup.object().shape({
     brand: Yup.string().required('Обязательное поле'),
-    model: Yup.string().required('Обязательное поле'),
+    car_type: Yup.string().required('Обязательное поле'),
+    models: Yup.string().required('Обязательное поле'),
+    is_active: Yup.string().required('Обязательное поле'),
     number: Yup.string().required('Обязательное поле'),
+    company_ids: Yup.string().required('Обязательное поле'),
     radius: Yup.string().required('Обязательное поле'),
-    city: Yup.string().required('Обязательное поле'),
+    height: Yup.number().min(1).required('Обязательное поле'),
+    city: Yup.string().min(1).required('Обязательное поле'),
+    employees: Yup.array(),
 })
-const FormCreateCar = ({ user, edit }: any) => {
+const FormCreateCar = ({ car, edit }: any) => {
 
-    let initValues:CarCreateUpdate & any = {
-        brand: 0,
-        car_type: '',
-        employees: [],
-        height: 0,
-        is_active: false,
-        limit: '',
-        model: 0,
-        number: '',
-        radius: 0,
-        carModels: [],
-        company_id: '',
-        company_type: '',
-        company_filials: '',
-    }
 
     const store = useStore()
-    if(store.formStore.formCreateCar.brand !== "0") {
+    const memoizedInitValues = React.useMemo(() => {
+      let initValues:CarCreateUpdate & any = {
+        brand: '',
+        car_type: '',
+        city: '',
+        employees: [],
+        height: 0,
+        is_active: 'true',
+        limit: '',
+        models: '',
+        number: '',
+        radius: '',
+        company_ids: '',
+        company_type: '',
+        company_filials: '',
+      }
+      if(edit) {
+        store.formStore.setFormDataCreateCar({
+          id: car.id,
+          number: car.number,
+          height: car.height,
+          radius: car.radius,
+          city: car.city,
+          company_id: car.company_id,
+          company_type: car.company_type,
+          is_active: car.is_active,
+          brand: car.brand,
+          model: car.model,
+          car_type: car.car_type,
+          employees: car.employees,
+        })
         initValues = {
-            ...initValues,
-            city: store.formStore.formCreateCar.city,
-            brand: store.formStore.formCreateCar.brand,
-            model: store.formStore.formCreateCar.model,
-            car_type: store.formStore.formCreateCar.car_type,
-            number: store.formStore.formCreateCar.number,
-            height: store.formStore.formCreateCar.height,
-            radius: store.formStore.formCreateCar.radius,
-            status: store.formStore.formCreateCar.status,
-            is_active: store.formStore.formCreateCar.is_active,
-            limit: store.formStore.formCreateCar.limit,
-            company_id: store.formStore.formCreateCar.company_id,
-            company_type: store.formStore.formCreateCar.company_type,
-            employees: store.formStore.formCreateCar.employees,
+          ...initValues,
+          id: car.id
         }
-    }
+      }
+      if(store.formStore.formCreateCar.brand !== "0") {
+        initValues = {
+          ...initValues,
+          city: store.formStore.formCreateCar.city,
+          brand: store.formStore.formCreateCar.brand,
+          models: store.formStore.formCreateCar.model,
+          car_type: store.formStore.formCreateCar.car_type,
+          number: store.formStore.formCreateCar.number,
+          height: store.formStore.formCreateCar.height,
+          radius: store.formStore.formCreateCar.radius,
+          is_active: store.formStore.formCreateCar.is_active,
+          limit: store.formStore.formCreateCar.limit,
+          company_ids: store.formStore.formCreateCar.company_id,
+          company_type: store.formStore.formCreateCar.company_type,
+          employees: store.formStore.formCreateCar.employees,
+        }
+      }
+
+      return initValues
+    }, [])
+
     const [step, setStep] = useState(1)
     const carTypes = Object.keys(CarType).map((item:any) => ({ label: item, value: item }))
 
     const [animate, setAnimate] = useState(false)
-    const [model, setModel] = useState<any>([])
+
 
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
@@ -183,31 +260,38 @@ const FormCreateCar = ({ user, edit }: any) => {
     const navigate = useNavigate()
 
     const formDataSelectUsers = React.useMemo(() => {
-
         return store.usersStore.usersList.users.map((item:any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))
     },[store.usersStore.companyUsers])
 
     return (
 
         <Formik
-            initialValues={initValues}
+            initialValues={memoizedInitValues}
             validationSchema={SignupSchema}
+
             onSubmit={(values, FormikHelpers) => {
-                console.log(values);
-                console.log(val(store.usersStore.selectedUsers).map((item:any) => item.employee.id));
+                // console.log(values);
+                // console.log(val(store.usersStore.selectedUsers).map((item:any) => item.employee.id));
                 const data = {
+                    id: values.id,
                     number: values.number,
                     height: values.height,
-                    radius: Number(values.radius),
-                    company_id: Number(values.company_id),
-                    is_active: values.status === "true",
+                    radius: values.radius,
+                    company_id: Number(values.company_ids),
+                    company_type: values.company_type,
+                    is_active: values.is_active === "true",
                     brand: Number(values.brand),
-                    model: Number(values.model),
+                    model: Number(values.models),
                     employees: val(store.usersStore.selectedUsers).map((item:any) => item.employee.id),
                 }
-                console.log(data);
-                store.formStore.setFormDataCreateCar(data)
-                store.formStore.sendCarFormData()
+                if(edit) {
+                  store.formStore.setFormDataCreateCar(data)
+                  store.formStore.sendCarFormDataEdit()
+                } else {
+                  store.formStore.setFormDataCreateCar(data)
+                  store.formStore.sendCarFormData()
+                }
+
                 changeStep(3)
                 // store.formStore.formSendDataUser('formCreateUser', data)
             }}
@@ -229,34 +313,41 @@ const FormCreateCar = ({ user, edit }: any) => {
             }) => (
 
                     <Form style={{ display: 'flex', gridColumn: '1/-1', borderRadius: '1.5rem', overflow: 'hidden', position: 'relative' }}
+
+
                       className={'form_with_progress'}>
                         <Progress total={3} current={step}/>
-                        <Step
+                        <Step footer={<><Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
+                          <Button type={(Object.keys(errors).length > 0)   ? 'button' : 'text'} disabled={Object.keys(errors).length > 0}  text={'Дальше'} action={() => {
+                            store.formStore.setFormDataCreateCar({
+                              id: store.formStore.formCreateCar.id,
+                              number: values.number,
+                              height: values.height,
+                              radius: values.radius,
+                              company_id: Number(values.company_ids),
+                              company_type: values.company_type,
+                              is_active: values.is_active === "true",
+                              brand: Number(values.brand),
+                              model: Number(values.models),
+                              employees: val(store.usersStore.selectedUsers).map((item:any) => item.employee.id),
+                            });
 
-                          footer={<>
-
-                              <Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
-                              <Button type={(Object.keys(errors).length > 0)   ? 'button' : 'text'} disabled={Object.keys(errors).length > 0}  text={'Дальше'}
-
-                                action={() => {
-                                    console.log(values);
-                                    store.formStore.setFormDataCreateCar(values)
-                                    changeStep()
-                                }}/* action={() => console.log(values)} */ className={'float-right'} variant={ButtonVariant.accent} /></>}
+                            changeStep();
+                        }} className={'float-right'} variant={ButtonVariant.accent} /></>}
                           header={<><Heading text={'Шаг 1. Основная информация'} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>Укажите основную информацию о компании для добавления ее в список</div></>}
                           step={step} animate={animate}
-                          action={(e:any) => setModel(e)} action1={() => void null} stepIndex={1}>
+                          action1={() => void null} stepIndex={1}>
                             <FormInputs />
                         </Step>
                         <Step footer={<>
                             <Button text={'Назад'} action={() =>  changeStep(1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
                             <Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
-                            <Button type={'submit'} disabled={!isValid} text={'Дальше'}
-                          // action={() => submitForm()
+                            <Observer children={() => <Button type={'submit'} disabled={!isValid || store.usersStore.selectedUsers.size === 0} text={'Дальше'}
+
                           // .then((r:any) => console.log('result', r))
                           // .catch(errors => console.log('errors', errors))
                           // }/* action={() => console.log(values)} *//* action={() => console.log(values)} */
-                              className={'float-right'} variant={ButtonVariant.accent} /></>}
+                              className={'float-right'} variant={ButtonVariant.accent} />}/></>}
                           header={<><Heading text={'Шаг 2. Добавьте сотрудников для автомобиля'} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>Вы можете добавить или выбрать сотрудника из списка зарегистрированных пользователей</div></>}
                           step={step} animate={animate} action={() => void null} action1={() => void null} stepIndex={2}>
 
@@ -282,7 +373,7 @@ const FormCreateCar = ({ user, edit }: any) => {
                             action={async () => {
                                 store.appStore.setModal({
                                     className: "!px-10 gap-4 !justify-stretch",
-                                    component: <FormModalAddUser  group={await store.permissionStore.loadCompanyPermissions(Number(values.company_id))} company_id={Number(values.company_id)}/>,
+                                    component: <FormModalAddUser  group={await store.permissionStore.loadCompanyPermissions(Number(values.company_ids))} company_id={Number(values.company_ids)}/>,
                                     text: `Вы уверены, что хотите удалить ${"name"}`,
                                     state: true
                                 });
@@ -301,7 +392,7 @@ const FormCreateCar = ({ user, edit }: any) => {
                                         className: '!px-10 gap-4 !justify-stretch grid-cols-1',
                                         component: (
                                             <FormModalSelectUsers
-                                                company_id={Number(values.company_id)}
+                                                company_id={Number(values.company_ids)}
                                                 users={formDataSelectUsers}
                                             />
                                         ),

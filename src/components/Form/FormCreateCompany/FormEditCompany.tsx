@@ -3,12 +3,13 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { FormStep1 } from "components/Form/FormCreateCompany/Steps/StepOne";
 import { FormStepTwo } from "components/Form/FormCreateCompany/Steps/StepTwoThree";
 import { FormStepSuccess } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import { Company, CompanyType } from "stores/companyStore";
 import { observer } from "mobx-react-lite";
+import { string } from "yup";
 
 const SignupSchema = Yup.object().shape({
     company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
@@ -18,7 +19,6 @@ const SignupSchema = Yup.object().shape({
     ogrn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
     contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
 })
-type FormCreateCompanyProps = {}
 
 const FormEditCompany = ({data}:any) => {
     const store = useStore()
@@ -32,36 +32,30 @@ const FormEditCompany = ({data}:any) => {
             setStep(step ? step : 2)
         }, 1200)
     }
-    const params = useParams()
+    const {data:loaderData, type}:any = useLoaderData()
 
-    const companyData:any = store.companyStore.loadFilialWithTypeAndId(params.company_type as string, Number(params.company_id), Number(params.id))
-
-    // @ts-ignore
-    const {company} = companyData;
     const navigate = useNavigate()
-    // console.log(companyData);
+
+
     const initValues = {
         id: id,
-        company_name: companyData.company.data?.name,
-        address: company.data[`${company.company_type}profile`].address ? company.data[`${company.company_type}profile`].address : "Нет адреса",
-        city: String(company.data.city.id),
-        inn: company.data[`${company.company_type}profile`].inn,
-        ogrn: company.data[`${company.company_type}profile`].ogrn,
-        legal_address: company.data[`${company.company_type}profile`].legal_address,
-        application_type: {
-            readOnly: true,
-            // @ts-ignore
-            value: CompanyType[company.company_type]
-        },
+        company_name: loaderData.company.data?.name,
+        address: loaderData.company.data[`${type}profile`].address ? loaderData.company.data[`${type}profile`].address : "Нет адреса",
+        city: String(loaderData.company.data.city.id),
+        inn: Number(loaderData.company.data[`${type}profile`].inn),
+        ogrn: Number(loaderData.company.data[`${type}profile`].ogrn),
+        legal_address: loaderData.company.data[`${type}profile`].legal_address,
+        // @ts-ignore
+        application_type: CompanyType[type],
         lat: 0,
         lon: 0,
-        contacts: company.data[`${company.company_type}profile`].contacts,
-        service_percent: company.data[`${company.company_type}profile`].service_percent | 0,
-        overdraft_sum: company.data[`${company.company_type}profile`].overdraft_sum,
-        payment: company.data[`${company.company_type}profile`].payment,
-        overdraft: company.data[`${company.company_type}profile`].overdraft ? "1" : "2",
+        contacts: loaderData.company.data[`${type}profile`].contacts,
+        service_percent: loaderData.company.data[`${type}profile`].service_percent | 0,
+        overdraft_sum: loaderData.company.data[`${type}profile`].overdraft_sum,
+        payment: loaderData.company.data[`${type}profile`].payment,
+        overdraft: loaderData.company.data[`${type}profile`].overdraft ? "1" : "2",
         performers_list: 'Да',
-        bill: company.data[`${company.company_type}profile`].bill,
+        bill: loaderData.company.data[`${type}profile`].bill,
     }
 
     return (
@@ -69,10 +63,9 @@ const FormEditCompany = ({data}:any) => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
-                // @ts-ignore
-                // console.log(values.application_type.value);
-                // @ts-ignore
-                if (values.application_type.value === CompanyType.performer) {
+                console.log('Submit', values);
+                console.log('Submit application_type', values.application_type === CompanyType.performer);
+                if (values.application_type === CompanyType.performer) {
                     const data:Company<CompanyType.performer> = {
                         city:  Number(values.city),
                         is_active: true,
@@ -84,17 +77,20 @@ const FormEditCompany = ({data}:any) => {
                             legal_address: values.legal_address,
                             contacts: values.contacts,
                             application_type: values.application_type.value,
-                            lat: values.lat,
-                            lon: values.lon,
+                            lat: Number(values.lat),
+                            lon: Number(values.lon),
                             service_percent: values.service_percent,
                             working_time: ''
                         }
                     }
+                    console.log('data', data);
                     store.companyStore.editCompany(data, CompanyType.performer, values.id).then((r) => {
+                        console.log(r);
                         !r.status ? navigate(`/account/companies/performer/${values.id}`) : 'Ошибка'
                     })
                 }
                 if (values.application_type.value === CompanyType.customer) {
+
                         const data:Company<CompanyType.customer> = {
 
                             name: values.company_name,
@@ -110,11 +106,12 @@ const FormEditCompany = ({data}:any) => {
                                 bill: String(values.bill),
                                 overdraft: values.overdraft === '1',
                                 overdraft_sum: values.overdraft_sum,
-                                lat: values.lat,
-                                lon: values.lon,
+                                lat: Number(values.lat),
+                                lon: Number(values.lon),
                                 performer_company: [4]
                             }
                         }
+                    console.log(data);
                     // console.log(data);
                         store.companyStore.editCompany(data, CompanyType.customer, values.id).then((r) => {
                             !r.status ? navigate(`/account/companies/customer/${values.id}`) : 'Ошибка'
@@ -128,7 +125,10 @@ const FormEditCompany = ({data}:any) => {
                     animate={animate}
                     action={() => navigate(-1)}
                     values={values}
-                    action1={() => changeStep()}
+                    action1={() => {
+                        changeStep(2)
+                        console.log('step 1');
+                    }}
                     errors={errors}
                     touched={touched}
                     store={store}

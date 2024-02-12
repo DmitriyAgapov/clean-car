@@ -12,18 +12,9 @@ import { PermissionNames } from "stores/permissionStore";
 
 export default function FilialsPageEditAction(props: any) {
   const store = useStore()
-  const location = useLocation()
-  console.log('editttttttttttttt');
-  const navigate = useNavigate()
-  // @ts-ignore
-  const [changes, setChanges] = useState({})
 
-  const handleChangeName = (event: any) => {
-    setChanges((prevState: any) => ({
-      ...prevState,
-      name: event.target.value,
-    }))
-  }
+  const navigate = useNavigate()
+
   // @ts-ignore
   const {data} = useLoaderData()
   if(!store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'update')) return <Navigate to={'/account'}/>

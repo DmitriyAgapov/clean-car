@@ -1,6 +1,6 @@
-import { action, flow, makeAutoObservable, runInAction } from "mobx";
+import { action, flow, IObservableValue, makeAutoObservable, observable, reaction, runInAction, values } from "mobx";
 import { makePersistable } from "mobx-persist-store";
-import agent from "utils/agent";
+import agent, { PaginationProps } from "utils/agent";
 import appStore from "stores/appStore";
 import { UserTypeEnum } from "stores/userStore";
 
@@ -55,15 +55,47 @@ export class CarStore {
     makeAutoObservable(this, {}, { autoBind: true })
     makePersistable(this, {
       name: 'carStore',
-      properties: ['cars'],
+      properties: ['cars', "brandModels", "currentBrand"],
       storage: sessionStorage,
     }, {
       fireImmediately: true,
     })
+    reaction(() => this.currentBrand,
+      (currentBrand) => {
+          if(currentBrand) {
+            this.getCarBrandModels(currentBrand)
+          }
+        })
   }
   loadingCars = false
   cars: Car[] = []
+  currentBrand:null | number = null
+  brandModels  = observable.array([])
+  get getBrandModels() {
+    return this.brandModels
+  }
+  get getCurrentBrand() {
+    return values(this.currentBrand)
+  }
+  setBrand(id: number) {
+    this.currentBrand = id
+  }
+  clearBrandModels() {
+    this.brandModels = observable.array([])
+    this.brandModels.clear()
+  }
+  async getCarBrandModels(id: number, params?: PaginationProps) {
+    console.log(id);
+    if (id) {
+      const { data, status } = await agent.Catalog.getCarBrandModels(id, params)
 
+      if (status === 200) {
+        runInAction(() => {
+          this.brandModels = data.results.map((item: any) =>  ({ value: String(item.id), label: item.name }))
+        })
+      }
+    }
+  }
   getCars = flow(function* (this: CarStore, company_id:number) {
     this.loadingCars = true
     try {
@@ -112,6 +144,15 @@ export class CarStore {
     }
     this.loadingCars = false
   })
+  editCar = flow(function* (this: CarStore, company_id: number, id:number, car: Car) {
+      this.loadingCars = true
+      try {
+        yield agent.Cars.editCompanyCar(company_id, id, car)
+      } catch (error) {
+        console.error(error)
+      }
+      this.loadingCars = false
+    })
 
 }
 

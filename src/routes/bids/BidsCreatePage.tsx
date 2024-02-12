@@ -30,7 +30,6 @@ const BidsCreatePage = (props:any) => {
 			</>}>
 			</Panel>
 			<FormCreateBid />
-			{/* {!props.edit ? textData.createPageForm.call() : textData.editPageForm.call()} */}
 
 		</Section>
 	)

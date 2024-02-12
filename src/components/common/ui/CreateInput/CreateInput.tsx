@@ -1,8 +1,12 @@
 // import { Option, Select } from '@material-tailwind/react'
-import React from 'react'
+import React, { useEffect } from "react";
 import SelectCustom from 'components/common/ui/Select/Select'
-import { Field, useFormik, useFormikContext } from 'formik'
+import { Field, useField, useFormik, useFormikContext } from "formik";
 import Select from "components/common/ui/Select/Select";
+import { SelectProps } from "@mantine/core";
+import { Observer } from "mobx-react-lite";
+import { useStore } from "stores/store";
+import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
 
 export type CreateInputProps = {
     text: string
@@ -107,18 +111,22 @@ const CreateInput = ({
   return <>{input}</>
 }
 
-interface CreateFormikInputProps {
+type CreateFormikInputProps<props> =  Partial<SelectProps> &  {
   fieldName: string
-  placeHolder: string
+  placeholder?: string
   fieldType: string
   label: string
   className?: string
-  options?: []
+  defaultValue?: string
+  options?: any[]
+  disabled?: boolean
   onChange?: (e: React.ChangeEvent<any>) => void
 }
 
-export function CreateFormikInput({fieldName, placeHolder = "", onChange, label, options, fieldType, className }:CreateFormikInputProps):React.ReactElement {
+export function CreateFormikInput({fieldName, placeholder = "", onChange, defaultValue,  disabled = false, label, options, fieldType, className, ...props }:CreateFormikInputProps<any>):React.ReactElement {
   const {errors, touched, values, set}:any = useFormikContext()
+
+  const store = useStore()
 
   const inputElement = React.useMemo(() => {
     if(fieldType == 'divider') return <hr className={'col-span-full flex-[1_100%]'}/>
@@ -129,10 +137,12 @@ export function CreateFormikInput({fieldName, placeHolder = "", onChange, label,
 
     >
       {label}
-      <SelectCustom action={onChange} name={fieldName} options={fieldName == 'model' ? values.carModels : options} placeholder={placeHolder}/>
+      <Observer children={() => <SelectCustom {...props} onChange={onChange} defaultValue={defaultValue} name={fieldName}   disabled={disabled} options={fieldName == 'model' ? values.carModels : fieldName == 'models' ? store.carStore.getBrandModels : options} searchable={props.searchable}  placeholder={placeholder}  />}/>
       {(errors[`${fieldName}`] && touched[`${fieldName}`]) ? (
       <div className={'form-error'}>{errors[fieldName]}</div>
     ) : null}
+
+
   </label>
     if(fieldType == 'text') return <label
       className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
@@ -144,13 +154,13 @@ export function CreateFormikInput({fieldName, placeHolder = "", onChange, label,
 
       id={fieldName}
       name={fieldName}
-      placeholder={placeHolder}
+      placeholder={placeholder}
       type={fieldType}
     />{(errors[`${fieldName}`] && touched[`${fieldName}`]) ? (
       <div className={'form-error'}>{errors[`${fieldName}`]}</div>
     ) : null}
     </label>
-  }, [values.carModels, errors, touched])
+  }, [values, errors, touched])
   return <>{inputElement}</>
 
 }

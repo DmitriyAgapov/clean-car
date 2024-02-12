@@ -127,6 +127,20 @@ button {
 	line-height: 1.125rem;
 
   }
+  &[data-error="true"] {
+	position: relative;
+	outline: red 3px solid;
+	& {
+	  @apply text-error;
+	}
+	& ~ p  {
+	  position: absolute;
+	  bottom: -1.5rem;
+	  left: .375rem;
+	  color: var(--errorColor);
+	}
+
+  }
 }
 
 .account-form__input {

@@ -62,8 +62,7 @@ export class FormStore {
     // @ts-ignore
     return this[form]
   }
-   sendCarFormData() {
-
+  sendCarFormData() {
       carStore.createCar(this.formCreateCar.company_id, this.formCreateCar)
       .then((res) => res)
       .then((res:any) => runInAction(() => {
@@ -72,8 +71,20 @@ export class FormStore {
           this.formCreateCar = {}
         }
       }))
-
+        .finally(() => formStore.formClear('formCreateCar'))
   }
+  sendCarFormDataEdit() {
+      carStore.editCar(this.formCreateCar.company_id, this.formCreateCar.id, this.formCreateCar)
+      .then((res) => res)
+      .then((res:any) => runInAction(() => {
+        if(res && res.status > 199 && res.status < 300) {
+          console.log(res);
+          this.formCreateCar = {}
+        }
+      }))
+        .finally(() => formStore.formClear('formCreateCar'))
+  }
+
   formClear(form: string | number) {
     // @ts-ignore
     this[form] = {}

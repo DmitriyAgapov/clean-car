@@ -55,6 +55,8 @@ import BidsCreatePage from "routes/bids/BidsCreatePage";
 import PricesPage from "routes/price/prices";
 import BidPage from "routes/bids/bid";
 import PricePage from "routes/price/price";
+import { companiesLoader } from "routes/loaders/companiesLoader";
+import PriceEditPage from "routes/price/priceEdit";
 
 const router = createBrowserRouter([
     {
@@ -122,14 +124,14 @@ const router = createBrowserRouter([
                     {
                         path: ':id',
                         element: <CarPage />,
-                        loader: carsLoader,
+                        loader: carsLoader
                     },
                     {
                         path: 'create',
                         element: <CarsPageCreateAction />,
                     },
                     {
-                        path: ':company_type/:company_id/:id/edit',
+                        path: ':id/edit',
                         element: <CarsPageEditAction />,
                         loader: carsLoader,
                     },
@@ -155,7 +157,7 @@ const router = createBrowserRouter([
             {
                 path: 'companies',
                 element: <CompaniesPage />,
-                loader: companyLoader,
+                loader: companiesLoader,
                 // errorElement: <Navigate to='/account' replace={true} />,
                 // errorElement: <ErrorPage />,
                 children: [
@@ -313,7 +315,14 @@ const router = createBrowserRouter([
                     {
                         path: ':id',
                         loader: priceLoader,
-                        element: <PricePage/>
+                        element: <PricePage/>,
+                        children: [
+                            {
+                                path: 'edit',
+                                loader: priceLoader,
+                                element: <PriceEditPage />
+                            }
+                        ]
                     }
                 ]
             },

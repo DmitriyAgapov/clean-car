@@ -7,11 +7,12 @@ import React, { useEffect, useState } from 'react'
 import { CompanyType } from "stores/companyStore";
 import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
 import { useStore } from 'stores/store'
-import { Combobox, Input, InputBase, ScrollArea, useCombobox } from '@mantine/core'
+import { Combobox, Input, InputBase, ScrollArea, TextInput, useCombobox } from "@mantine/core";
 import { Select } from '@mantine/core'
 import { UserTypeEnum } from "stores/userStore";
 import label from "utils/labels";
 import {values as val } from 'mobx'
+import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
 export function FormStep1(props: {
   step: any
   animate: any
@@ -28,8 +29,7 @@ export function FormStep1(props: {
     const store = useStore()
     const {values, setValues, errors} = useFormikContext<any>();
     const [companies, setCompanies] = useState<any>([]);
-    console.log(errors);
-    console.log(values);
+
     const combobox = useCombobox(
       {
         onDropdownClose: () => combobox.resetSelectedOption()
@@ -77,7 +77,7 @@ export function FormStep1(props: {
         </Combobox.Option>])
 
     }, [companies]);
-
+    console.log(values);
     return (
       <>
         <SelectCustom
@@ -92,6 +92,8 @@ export function FormStep1(props: {
           ]}
           className={'col-span-3'}
         />
+
+
 
         <Combobox store={combobox}
           disabled={values.company_filials == 'company' && values.company_id === store.userStore.currentUser?.company?.id}
@@ -193,7 +195,7 @@ export function FormStep1(props: {
       }
     >
       <div className={'mt-10 flex flex-wrap gap-6'}>
-        <label className={'account-form__input w-full flex-grow'}
+        <label className={'account-form__input w-full flex-grow flex-[1_100%]'}
           htmlFor={'filial_name'}
           data-form_error={errors.filial_name && touched.filial_name && 'error'}>
           {'Название филиала'}
@@ -206,31 +208,13 @@ export function FormStep1(props: {
           ) : null}
         </label>
         <React.Suspense>
-          <SelectCustom label={'Город'}
+          <SelectMantine label={'Город'}
             value={props.values.city}
             name={'city'}
-            className={' w-fit'}
-            options={store.catalogStore.allCities.map(props.prop8)} />
+            data={store.catalogStore.allCities.map(props.prop8)} />
           <InputAutocomplete className={'w-full flex-1'}/>
         </React.Suspense>
-        <label className={'account-form__input w-full flex-grow'}
-          htmlFor={'status'}
-          data-form_error={errors.status && touched.status && 'error'}>
-          {'Статус'}
-          <SelectCustom id={'status'}
-            name='status'
-            value={values.status ? 'active' : 'inactive'}
-            defaultValue={values.status ? 'active' : 'inactive'}
-            options={[
-              { label: 'Активный', value: 'active' },
-              { label: 'Неактивный', value: 'inactive' },
-            ]}
-          />
-          {errors.status && touched.status ? (
-            <div className={'form-error'}>{errors.status}</div>
-          ) : null}
-        </label>
-        <Select
+        <SelectMantine
           value={String(values.status)}
           withCheckIcon={false}
           name={'status'}
@@ -240,8 +224,9 @@ export function FormStep1(props: {
             { label: 'Активен', value: 'true' },
             { label: 'Неактивен', value: 'false' },
           ]}
-          className={'col-span-2'}
+          className={'!flex-[1_0_10rem]'}
         />
+
         {/* <label className={'account-form__input w-fit flex-grow-0'} */}
         {/*   htmlFor={'status'} */}
         {/*   data-form_error={errors.status && touched.status && 'error'}> */}
@@ -260,19 +245,20 @@ export function FormStep1(props: {
         {/*     <div className={'form-error'}>{errors.filial_name}</div> */}
         {/*   ) : null} */}
         {/* </label> */}
-        <SelectCustom
+        <SelectMantine
           label={'Тип'}
           disabled={props.values.application_type.readOnly}
           defaultValue={props.values.application_type || props.values.application_type.value}
           value={props.values.application_type.value || props.values.application_type.value}
           name={'application_type'}
           allowDeselect={false}
-          className={' w-fit'}
-          options={[
+          className={'!flex-[1_0_10rem]'}
+          data={[
             { label: 'Заказчик', value: CompanyType.customer },
             { label: 'Партнер', value: CompanyType.performer },
           ]}
         />
+        <TextInput label={'Время работы'} name={'timework'}         className={'!flex-[1_0_10rem]'}/>
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         {/* <SelectCustom */}
         {/*   label={'Тип'} */}

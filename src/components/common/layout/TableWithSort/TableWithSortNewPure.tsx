@@ -8,6 +8,10 @@ import { useWindowDimensions } from "utils/utils";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import Status from "components/common/ui/Status/Status";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
+import { NumberInput, Table } from "@mantine/core";
+import { number } from "yup";
+import { useStore } from "stores/store";
+import { observer } from "mobx-react-lite";
 type TableWithSortProps = {
     data?: any[]
     state: boolean
@@ -19,57 +23,92 @@ type TableWithSortProps = {
     initFilterParams?: {}
     total: number
     filter?: boolean
+    offsetSticky?: number
     pageSize?: number
     variant?: PanelVariant
+    edit?: boolean
+    meta?: {
+      company_id: string | number
+      price_id: string | number
+      label: string
+    }
 } & PanelProps
 
 const RowHeadingPure = ({ ar,total }: any) => {
     return (
-      <thead>
-          <tr className={styles.tableRowPure + ' tableheader'}>
+      <Table.Thead>
+          <Table.Tr className={styles.tableRowPure + ' tableheader'}>
               {ar.map((arItem: { label: string, name: string }, index: number) => {
                   return (
-                    <th
+                    <Table.Th
                       key={`rh-${index}`}
                       className={styles.tableheadingPure}
                     >
                         <div style={{ display: 'flex' }}>
                             <span>{arItem.label}</span>
                         </div>
-                    </th>
+                    </Table.Th>
                   )
               })}
-          </tr>
-      </thead>
+          </Table.Tr>
+      </Table.Thead>
     )
 }
 
-const RowDataPure = (props: any) => {
-    console.log(props);
+const RowDataPure = observer(({edit, meta, ...props}: any) => {
+
+    const store = useStore()
     const {width} = useWindowDimensions()
     const [open, setOpen] = useState(false);
     const propsRender = () => {
         const ar = []
         for (const key in props) {
-            ar.push(<td key={key}
-              className={styles.tableCellPure} data-label={label(key)}>
-                {' '}
-                <p className={'m-0'}>{props[key]}{' '}</p>
-            </td>,)
+           const priceValue = typeof props[key] === 'number'
+
+          if(key !== 'id') {
+            ar.push(
+                <Table.Td key={key} className={styles.tableCellPure + ' ' + `${priceValue  ? '!pl-0 !pr-1' : ''}`} style={priceValue ? {width: 'calc(5rem * var(--mantine-scale))'} : {}} data-pricevalue={priceValue} data-label={label(key)}>
+                    {edit && typeof props[key] === 'number' ? (
+                        <NumberInput
+                          data-id={props.id}
+                          w={72}
+                          thousandSeparator=" "
+                          hideControls
+                          classNames={{
+                          input: 'h-4 min-h-8 px-1.5 text-xs ',
+                            root: ''
+                        }}
+
+                          onChange={(value) => store.priceStore.handleChangeAmount({amount: value, id: props.id, ...meta})}
+                          suffix=" ₽"
+                          // decimalScale={2}
+                          // fixedDecimalScale
+                          value={store.priceStore.priceOnChange.get(`${props.id}`)?.amount ? store.priceStore.priceOnChange.get(`${props.id}`).amount : props[key]}
+                            placeholder='Input placeholder'
+                        />
+                    ) : (
+                        <p className={`m-0 ${priceValue && 'text-accent'} `}>
+                            {props[key]}
+                            {typeof props[key] === 'number' && ' ₽'}
+                        </p>
+                    )}
+                </Table.Td>,
+            )
+          }
         }
-        return ar
+      return ar;
     }
 
-    return (
-      <tr className={styles.tableRowPure} onClick={(width && width > 961) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={open}>
+  return (
+    <Table.Tr className={styles.tableRowPure} onClick={(width && width > 961) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={open}>
           {propsRender()}
           {(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
               <SvgChevron/>
           </td>}
           {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm}/></td>}
-      </tr>
+      </Table.Tr>
     )
-}
+})
 
 export const TableForPrice = (props: any) => {
     const Component = props.component
@@ -81,11 +120,13 @@ export const TableForPrice = (props: any) => {
       </Panel>
     )
 }
-export const TableWithSortNewPure = ({ variant, data, search = false, filter = false, state, className, total, ar, action, pageSize = 10, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props }: TableWithSortProps) => {
+export const TableWithSortNewPure = ({ meta, edit, variant, offsetSticky = 33, data, search = false, filter = false, state, className, total, ar, action, pageSize = 10, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props }: TableWithSortProps) => {
     const initCount = total || 0
-    console.log(data);
+
     const RowDataMemoized = React.useMemo(() => {
-        if(data && data.length > 0) return data.map((item: any, index: number) => <RowDataPure {...item} key={'_00' + index} />)
+        if(data && data.length > 0) return data.map((item: any, index: number) => <RowDataPure {...item} key={'_00' + index} edit={edit} meta={meta}
+          // meta={{company_id: props.company, price_id: props.id}}
+        />)
     }, [data])
     return (
       <Panel
@@ -96,14 +137,14 @@ export const TableWithSortNewPure = ({ variant, data, search = false, filter = f
         variant={variant ? variant : PanelVariant.dataPadding}
         footerClassName={'px-6 pt-2 pb-6 flex  justify-end'}
         headerClassName={''}
-
         {...props}
       >       {(initCount === 0) ? <Heading className={'min-h-[40vh] flex items-center justify-center'} text={'Нет данных'} variant={HeadingVariant.h3} />:
-        <table className={styles.TableWithSortPure} data-style={style}>
 
+        <Table stickyHeader stickyHeaderOffset={offsetSticky} withRowBorders={false} className={styles.TableWithSortPure} data-style={style}>
             <RowHeadingPure total={total} ar={ar} />
-            <tbody>{RowDataMemoized}</tbody>
-        </table>}
+            <Table.Tbody>{RowDataMemoized}</Table.Tbody>
+        </Table>
+        }
       </Panel>
     )
 }

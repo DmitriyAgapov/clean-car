@@ -16,19 +16,7 @@ import { CompanyType } from 'stores/companyStore'
 import { observer, Observer } from "mobx-react-lite";
 import useAxios from "axios-hooks";
 import { API_ROOT } from "utils/agent";
-let initValues = {
-    id: 0,
-    company_id: 0,
-    company_name: '',
-    company_filials: 'company',
-    first_name: '',
-    last_name: '',
-    phone: '',
-    email: '',
-    type: '',
-    group: null,
-    is_active: true,
-}
+import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
 
 const SelectCompanyFilials = observer(() => {
     const store = useStore()
@@ -48,23 +36,22 @@ const SelectCompanyFilials = observer(() => {
         getCompany()
     }, [searchString])
     const handleChangeSearch = React.useCallback((e: any) => {
-        console.log(e);
+
 
         // console.log(e.currentTarget.value);
     }, [searchString])
 
 
-    console.log(store.companyStore.companies);
 
     return (
         <>
             <hr className={'col-span-full'} />
-            <SelectCustom
-                value={'company'}
+            <SelectMantine
+
                 defaultValue={values.company_filials}
                 name={'company_filials'}
                 label={'Относится к'}
-                options={[
+                data={[
                     { label: 'Компании', value: 'company' },
                     { label: 'Филиалы', value: 'filials' },
                 ]}
@@ -234,6 +221,19 @@ const FormCreateUser = ({ user, edit }: any) => {
         company_id: Yup.number().min(1),
     })
     const { company_type, companyid, id } = useParams<any>()
+    let initValues = {
+        id: 0,
+        company_id: 0,
+        company_name: '',
+        company_filials: 'company',
+        first_name: '',
+        last_name: '',
+        phone: '',
+        email: '',
+        type: '',
+        group: null,
+        is_active: true,
+    }
 
     if (edit) {
         initValues = {
@@ -365,7 +365,7 @@ const FormCreateUser = ({ user, edit }: any) => {
                         <CreateFormikInput
                             fieldName={'first_name'}
                             label={'Имя'}
-                            placeHolder={''}
+                          placeholder={''}
                             fieldType={'text'}
 
                             className={'col-span-3'}
@@ -373,38 +373,37 @@ const FormCreateUser = ({ user, edit }: any) => {
                         <CreateFormikInput
                             fieldName={'last_name'}
                             label={'Фамилия'}
-                            placeHolder={''}
+                          placeholder={''}
                             fieldType={'text'}
                             className={'col-span-3'}
                         />
                         <CreateFormikInput
                             fieldName={'phone'}
                             label={'Номер телефона'}
-                            placeHolder={''}
+                          placeholder={''}
                             fieldType={'text'}
                             className={'col-span-3'}
                         />
                         <CreateFormikInput
                             fieldName={'email'}
                             label={'E-mail'}
-                            placeHolder={''}
+                          placeholder={''}
                             fieldType={'text'}
                             className={'col-span-3'}
                         />
-                        <SelectCustom
-                            value={values.type}
+                        <SelectMantine
                             name={'type'}
                             label={'Тип'}
                             defaultValue={values.type}
-                            options={Object.entries(UserTypeEnum).map((item: any) => ({
+                            data={Object.entries(UserTypeEnum).map((item: any) => ({
                                 label: label(item[0]),
                                 value: item[1],
                             }))}
                             className={'col-span-2'}
                         />
                         <UserGroupSelect />
-                        <Select
-                            value={String(values.is_active)}
+                        <SelectMantine
+
                             withCheckIcon={false}
                             name={'is_active'}
                             onChange={(value) => setValues({ ...values, is_active: value === 'true' })}

@@ -25,12 +25,12 @@ const ReferencesPage = () => {
                   {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (<Button text={textData.create} action={() => navigate('create')} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />)}</>}>
 
             </Panel>
-          <Panel variant={PanelVariant.withGapOnly} className={'!mt-0'}>
+          <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
                 <TableWithSortNew total={data.count}
                   variant={PanelVariant.dataPadding}
                   search={true}
                   background={PanelColor.glass}
-                  className={'col-span-full table-groups'}
+                  className={'col-span-full table-groups  h-full'}
                   filter={false}
                   data={data.results}
                   initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}

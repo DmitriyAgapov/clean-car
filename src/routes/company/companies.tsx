@@ -6,7 +6,7 @@ import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Bu
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 
@@ -14,7 +14,9 @@ const CompaniesPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
+  const { data, page, pageRequest, textData }: any = useLoaderData()
   const { loading,companies, error } = store.companyStore.allCompanies;
+  console.log(data);
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -43,13 +45,13 @@ const CompaniesPage = () => {
         }
       />
       <TableWithSortNew
-        total={companies.length}
+        total={data.count}
         variant={PanelVariant.dataPadding}
         search={true}
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
         filter={false}
-        data={companies.map((item: any) => ({
+        data={data.results.map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           type: item.company_type,

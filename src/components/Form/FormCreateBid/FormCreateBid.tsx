@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Formik } from 'formik'
+import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from 'yup'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
@@ -9,7 +9,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import { Step } from 'components/common/layout/Step/StepPure'
 import Progress from 'components/common/ui/Progress/Progress'
 import { TimeInput } from '@mantine/dates'
-import { Observer } from 'mobx-react-lite'
+import { observer, Observer } from "mobx-react-lite";
 import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, Select, Textarea } from '@mantine/core'
 import { action, values as val } from 'mobx'
 import { IMaskInput } from 'react-imask'
@@ -17,24 +17,174 @@ import { InputAutocompleteWithCity } from 'components/common/ui/InputAutocomplet
 import MapWithDots from 'components/common/Map/Map'
 import DList from 'components/common/ui/DList/DList'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import AddOption from "routes/reference/Services/addOption";
-import agent from "utils/agent";
 import { notifications } from "@mantine/notifications";
 import { SvgClose } from "components/common/ui/Icon";
+import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
 
+export const initialResults = {
+  address: '',
+  company: '0',
+  conductor: '0',
+  car: '0',
+  important: {
+    label: '',
+    value: '',
+  },
+  secretKey: {
+    label: '',
+    value: 'true',
+  },
+  phone: '+7',
+  customer_comment: '',
+  service_type: '0',
+  parking: {
+    label: '',
+    value: 'true',
+  },
+  service_option: [],
+  service_subtype: '0',
+  city: 0,
+  time: {
+    label: '',
+    value: '',
+  },
+  performer: '0',
+}
+
+const Step1Inputs = observer(({step1}:any) => {
+    const store = useStore()
+    const { values, getFieldProps, errors, initialValues, setFieldValue, setValues,  getFieldHelpers,setFieldTouched, touched }:any = useFormikContext();
+
+    const handleChangeCompany = React.useCallback((e:any) => {
+        if(e === null) {
+            store.bidsStore.formResultSet({company: 0})
+        }
+        if(e !== 0) {
+            store.bidsStore.formResultSet({ company: Number(e) })
+        } else {
+            store.bidsStore.formResultSet({ company: 0 })
+        }
+    },[])
+
+  React.useEffect(() => {
+      if(values.company === null) {
+
+        setValues(initialValues, true)
+        setFieldValue('city', null, false)
+        setFieldTouched('city', false, true)
+        store.bidsStore.formResultsClear()
+
+      } else  {
+        setTimeout(() => {
+          setFieldValue('city', String(store.bidsStore.formResultsAll.city), false)
+          setFieldTouched('city', true, true)
+        }, 500);
+
+        values.phone = String(store.bidsStore.formResultsAll.phone);
+        values.car = String(store.bidsStore.formResultsAll.car);
+        values.conductor = String(store.bidsStore.formResultsAll.conductor);
+      }
+      console.log(errors);
+    }, [store.bidsStore.formResultsAll])
+    return (<>
+      <Observer
+        children={() => (
+          <SelectMantine
+            required
+            name={'city'}
+            clearable
+            label={step1.fields[0].label}
+            searchable
+            value={values.city}
+            data={val(store.catalogStore.cities).map((i: any) => ({
+                label: i.name,
+                value: String(i.id),
+            }))}
+          />
+        )}
+      />
+    <hr className={'col-span-full border-transparent my-2'} />
+    {/* //todo: map not admin values to select */}
+
+        <Observer
+          children={() => (
+            <SelectMantine
+              name={'company'}
+              clearable
+              value={values.company}
+              label={step1.fields[1].label}
+              onChange={handleChangeCompany}
+              searchable
+              data={store.userStore.isAdmin ? store.companyStore.companies
+                .filter((c: any) => c.company_type === 'Компания-Заказчик')
+                .map((c: any) => ({
+                    label: c.name,
+                    value: String(c.id),
+                }))
+                : store.companyStore.myCompany.company
+              }
+            />
+          )}
+        />
+
+    <Observer
+      children={() => (
+        <SelectMantine
+          required
+          label={step1.fields[2].label}
+          searchable
+          name={'conductor'}
+          value={String(values.conductor)}
+          onChange={(value) => store.bidsStore.formResultSet({ conductor: Number(value) })}
+          disabled={
+            store.bidsStore.formResult.company === 0 ||
+            store.usersStore.currentCompanyUsers.length === 0
+          }
+          data={store.usersStore.currentCompanyUsers.map((c: any) => ({
+              label: c.employee.first_name,
+              value: String(c.employee.id),
+          }))}
+        />
+      )}
+    />
+    <Observer
+      children={() =>  <InputBase
+        defaultValue={'+7' + values.phone}
+        unmask={"typed"}
+        onAccept={(value:any, mask:any) => {
+            store.bidsStore.formResultSet({ phone: value })
+        }}
+        label={step1.fields[3].label}
+        component={IMaskInput}
+        mask='+70000000000'
+        placeholder='+70000000000'
+      />  }
+    />
+    <Observer
+      children={() => <Select
+        value={store.bidsStore.formResultsAll.car ? String(store.bidsStore.formResultsAll.car) : null}
+        onChange={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
+        //@ts-ignore
+        disabled={store.carStore.getCompanyCars.cars.count === 0} label={step1.fields[4].label} searchable data={store.carStore.cars.length !== 0 ? store.carStore.getCompanyCars.cars.results.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']}
+      />
+      }
+    />
+    </>
+    )
+})
 const SignupSchema = Yup.object().shape({
-    brand: Yup.string().required('Обязательное поле'),
-    model: Yup.string().required('Обязательное поле'),
-    number: Yup.string().required('Обязательное поле'),
-    radius: Yup.string().required('Обязательное поле'),
     city: Yup.string().required('Обязательное поле'),
+    company: Yup.string().required('Обязательное поле'),
+    conductor: Yup.string().required('Обязательное поле'),
+    car: Yup.string().required('Обязательное поле'),
+    phone: Yup.string().required('Обязательное поле'),
 })
 const FormCreateBid = ({ user, edit }: any) => {
     const store = useStore()
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
-  const bid = store.bidsStore.CurrentBid
-  const navigate = useNavigate()
+    const bid = store.bidsStore.CurrentBid
+    const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
 
     const availablePerformers = store.bidsStore.AvailablePerformers
@@ -45,6 +195,7 @@ const FormCreateBid = ({ user, edit }: any) => {
             setStep((prevState) => (step ? step : (prevState += 1)))
         }, 1200)
     }
+
     const memoFileUpload = React.useMemo(() => {
       return <Observer
         children={() => (<div className={'grid grid-cols-3  gap-4 col-span-full'}>
@@ -85,25 +236,18 @@ const FormCreateBid = ({ user, edit }: any) => {
     const handleChangeFile = React.useCallback((e: any) => {
         store.bidsStore.addFile(e)
     }, [])
+    const handleChangeCompany = React.useCallback(     (value:any) => {
+            if(value !== 0) {
+                store.bidsStore.formResultSet({ company: Number(value) })
+            } else {
+                store.bidsStore.formResultSet({ company: 0 })
+            }
+    },[])
     return (
       <>
         <Formik
-            initialValues={{
-                car_type: '',
-                number: '',
-                height: '',
-                radius: '',
-                limit: '',
-                is_active: false,
-                brand: '',
-                model: '',
-                employees: [],
-                city: '',
-                customer: '',
-                user: '',
-                service: '',
-                subtype: '',
-            }}
+            initialValues = {initialResults}
+
             validationSchema={SignupSchema}
             onSubmit={(values, FormikHelpers) => {
 
@@ -111,7 +255,7 @@ const FormCreateBid = ({ user, edit }: any) => {
                 // store.formStore.formSendDataUser('formCreateUser', data)
             }}
         >
-            {({ errors, setValues, touched, values, status, isValid, isValidating,
+            {({ errors, setFieldValue, setFieldTouched, setValues, touched, values, status, isValid, isValidating,
             }) => (
                 <Form
                     style={{
@@ -135,103 +279,14 @@ const FormCreateBid = ({ user, edit }: any) => {
                         header={<><Heading text={step1.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step1.description}</div></>}
                     >
                         <>
-                            <Observer
-                                children={() => (
-                                    <Select
-                                        required
-                                        clearable
-
-                                        label={step1.fields[0].label}
-                                        searchable
-                                        value={store.bidsStore.formResult.city !== 0 ? String(store.bidsStore.formResult.city) : null}
-                                        data={val(store.catalogStore.cities).map((i: any) => ({
-                                            label: i.name,
-                                            value: String(i.id),
-                                        }))}
-                                    />
-                                )}
-                            />
+                            <Step1Inputs step1={step1}/>
                             <hr className={'col-span-full border-transparent my-2'} />
-                            {/* //todo: map not admin values to select */}
-                            <Observer
-                                children={() => (
-                                    <Select
-                                        clearable value={store.bidsStore.formResult.company !== 0 ? String(store.bidsStore.formResult.company) : ""}
-                                        label={step1.fields[1].label}
-                                        onChange={(e) => {
-                                          if(e === null) {
-                                            store.bidsStore.formResultSet({company: 0})
-                                            console.log(e, '0')
-                                          }
-                                        }}
-                                        onOptionSubmit={(value:any) => {
-                                          if(value !== 0) {
-                                          store.bidsStore.formResultSet({ company: Number(value) })
-                                        } else {
-                                            store.bidsStore.formResultSet({ company: 0 })
-                                          }
-                                        }}
-                                        searchable
-                                        data={store.userStore.isAdmin ? store.companyStore.companies
-                                                      .filter((c: any) => c.company_type === 'Компания-Заказчик')
-                                                      .map((c: any) => ({
-                                                          label: c.name,
-                                                          value: String(c.id),
-                                                      }))
-                                                : store.companyStore.myCompany.company
-                                        }
-                                    />
-                                )}
-                            />
-                            <Observer
-                                children={() => (
-                                    <Select
-                                        required
-                                        label={step1.fields[2].label}
-                                        searchable
-                                      value={store.bidsStore.formResult.conductor !== 0 ? String(store.bidsStore.formResult.conductor) : null}
-                                        onChange={(value) => store.bidsStore.formResultSet({ conductor: Number(value) })}
-                                        disabled={
-                                            store.bidsStore.formResult.company === 0 ||
-                                            store.usersStore.currentCompanyUsers.length === 0
-                                        }
-                                        data={store.usersStore.currentCompanyUsers.map((c: any) => ({
-                                            label: c.employee.first_name,
-                                            value: String(c.employee.id),
-                                        }))}
-                                    />
-                                )}
-                            />
-                            <InputBase
-                              value={(store.bidsStore.formResultsAll.phone !== "")  ? store.bidsStore.formResultsAll.phone : ''}
-                              onAccept={(value:any, mask:any) => {
-                                store.bidsStore.formResultSet({ phone: value })
-                              }}
-                                label={step1.fields[3].label}
-                                component={IMaskInput}
-                                mask='+70000000000'
-                                placeholder='+70000000000'
-
-
-                            />
-                            <Observer
-                                children={() => <Select
-                                              value={store.bidsStore.formResult.car ? String(store.bidsStore.formResult.car) : null}
-                                              onChange={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
-                                                /* @ts-ignore */
-                                                disabled={store.carStore.getCompanyCars.cars.count === 0} label={step1.fields[4].label} searchable data={store.carStore.cars.length !== 0 ? store.carStore.getCompanyCars.cars.results.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']} />
-
-                                }
-                            />
-                            <hr className={'col-span-full border-transparent my-2'} />
-                          {memoFileUpload}
+                            {memoFileUpload}
                         </>
                     </Step>
                     <Step
                         step={step}
                         animate={animate}
-                        action={() => console.log('step 1')}
-                        action1={() => console.log('step 1')}
                         stepIndex={2}
                         bodyClassName={'grid grid-cols-3 gap-4 content-start'}
                         footerClassName={'flex-1 w-full justify-stretch'}
@@ -261,7 +316,9 @@ const FormCreateBid = ({ user, edit }: any) => {
                                     text={'Дальше'}
                                     action={() => {
                                       console.log(values);
-                                        // /* store.formStore.setFormDataCreateCar(values) */ changeStep()
+                                      console.log(store.formStore.getFormData(''));
+                                        // /* store.formStore.setFormDataCreateCar(values) */
+                                      changeStep()
                                     }}
                                     /* action={() => console.log(values)} */ className={'float-right'}
                                     variant={ButtonVariant.accent}
@@ -272,16 +329,23 @@ const FormCreateBid = ({ user, edit }: any) => {
                         <>
                             <Observer
                                 children={() => (
-                                    <Select
+                                    <SelectMantine
                                         required
                                         label={step2.fields[0].label}
-                                        searchable
-                                      value={String(store.bidsStore.formResult.service_type)}
                                         disabled={store.catalogStore.services.size === 0}
                                         name={step2.fields[0].name}
                                         onChange={(value) => {
-                                            action(() => (store.catalogStore.currentService = Number(value)))
+                                          setFieldValue('service_subtype', null).then(() => setFieldTouched('service_subtype', true, true))
+                                          if(value === null) {
+                                            setFieldValue(step2.fields[1].name, "0", false);
+                                            setFieldValue(step2.fields[0].name, "0", false);
+                                          } else {
+                                            action(() => {
+                                              store.catalogStore.currentService = Number(value)
+                                              store.catalogStore.currentServiceSubtypesOptions = new Map([])
+                                            })
                                             store.bidsStore.formResultSet({ service_type: Number(value) })
+                                          }
                                         }}
                                         data={val(store.catalogStore.services).map((i: any) => ({
                                             label: i.name,
@@ -293,21 +357,32 @@ const FormCreateBid = ({ user, edit }: any) => {
                             <Observer
                                 children={() => {
                                     return (
-                                        <Select
+                                        <SelectMantine
                                             required
                                             label={step2.fields[1].label}
-                                            searchable
                                             disabled={store.bidsStore.formResult.service_type === 0}
-                                            value={
-                                                store.bidsStore.formResult.service_subtype !== 0
-                                                    ? String(store.bidsStore.formResult.service_subtype)
-                                                    : String(
-                                                          store.catalogStore.getSubtypeByServiceId(
-                                                              store.catalogStore.currentService,
-                                                          ).id,
-                                                      )
-                                            }
+                                            // value={
+                                            //     store.bidsStore.formResult.service_subtype !== 0
+                                            //         ? String(store.bidsStore.formResult.service_subtype)
+                                            //         : String(
+                                            //               store.catalogStore.getSubtypeByServiceId(
+                                            //                   store.catalogStore.currentService,
+                                            //               ).id,
+                                            //           )
+                                            // }
                                             onChange={(value) => {
+
+                                              if(value === null) {
+                                                store.bidsStore.formResultSet({ service_subtype: 0 })
+                                                setFieldValue(step2.fields[1].name, "0", false)
+                                                setFieldTouched(step2.fields[1].name, true, false);
+                                              } else {
+                                                setFieldValue('service_subtype', value)
+                                                store.bidsStore.formResultSet({ service_subtype: Number(value) })
+
+                                              }
+                                            }}
+                                            onOptionSubmit={(value) => {
                                                 store.bidsStore.formResultSet({ service_subtype: Number(value) })
                                             }}
                                             name={step2.fields[1].name}
@@ -323,16 +398,21 @@ const FormCreateBid = ({ user, edit }: any) => {
                                     )
                                 }}
                             />
-                          <Observer
+                          {(values.service_subtype && values.service_subtype !== "0" && values.service_subtype && values.service_subtype !== "0") && <Observer
                             children={() => <Checkbox.Group
                                 className={'col-span-2'}
+
                                 // value={store.bidsStore.formResult.options.map((i:any) => String(i))}
                                 classNames={{
                                     label: 'text-accent label mb-4',
                                 }}
                               value={store.bidsStore.formResult.service_option.map((o:number) => String(o))}
-                              onChange={(values) =>
-                                store.bidsStore.formResultSet({service_option: values.map(e => Number(e))})
+                              onChange={(vals) => {
+                                store.bidsStore.formResultSet({ service_option: vals.map(e => Number(e)) })
+                                // @ts-ignore
+                                values.service_option = val(store.bidsStore.formResultsAll.service_option)
+                                console.log(values);
+                              }
                                 }
                                 label='Выберите дополнительные опции (при необходимости)'
                             >
@@ -340,14 +420,15 @@ const FormCreateBid = ({ user, edit }: any) => {
                                 <Group mt='xs' >
                                 {store.catalogStore.currentServiceSubtypesOptions.size !== 0 && val(store.catalogStore.currentServiceSubtypesOptions).map((i:any) => <Checkbox value={String(i.id)}   onClick={(values:any) => console.log(values.target.checked)}  label={i.name} />)}
                                 </Group>
-                            </Checkbox.Group>}/>
+                            </Checkbox.Group>}/>}
                             <Textarea
                                 className={'col-span-2'}
                                 minRows={3}
 
-                              onInput={(values: any) =>
+                              onInput={(values: any) => {
                                 store.bidsStore.formResultSet({customer_comment: values.currentTarget.value})
-                              }
+                                setFieldValue('customer_comment', values.currentTarget.value, false);
+                              }}
                               defaultValue={store.bidsStore.formResult.customer_comment ?? ''}
                                 label={'Комментарий'}
                                 placeholder={'Дополнительная информация, которая может помочь в выполнении заявки'}
@@ -363,8 +444,6 @@ const FormCreateBid = ({ user, edit }: any) => {
                     <Step
                         step={step}
                         animate={animate}
-                        action={() => console.log('step 1')}
-                        action1={() => console.log('step 1')}
                         stepIndex={3}
                         bodyClassName={'grid grid-cols-3 gap-4 content-start'}
                         footerClassName={'flex-1 w-full justify-stretch'}
@@ -402,37 +481,32 @@ const FormCreateBid = ({ user, edit }: any) => {
                         }
                     >
                         <>
-                            <InputAutocompleteWithCity  action={(val:any) => {
-                              console.log(values);
+                            <InputAutocompleteWithCity action={(val:any) => {
                               store.bidsStore.formResultSet({address: val})
-                            }} city={store.bidsStore.formResult.city} />
+                            }} city={store.bidsStore.formResult.city !== 0  ? store.catalogStore.cities.get(store.bidsStore.formResult.city.toString()).name : ''} />
                             <hr className={'col-span-full border-transparent my-2'} />
                             <Select
                               onChange={(values) =>
                                 store.bidsStore.formResultSet({parking: {label: step3?.fields[1]?.options?.filter(item => item.value == values)[0].label, value: values}})
                               }
                                 label={step3.fields[1].label}
-                                defaultValue={step3.fields[1].defaultValue}
                                 data={step3.fields[1].options}
                             />
                             <Select
                               onChange={(values) => {
-                                console.log(values);
+
                                 store.bidsStore.formResultSet({secretKey: {label: step3?.fields[2]?.options?.filter(item => item.value == values)[0].label, value: values}})
                               }}
                                 label={step3.fields[2].label}
-                                defaultValue={step3.fields[2].defaultValue}
                                 data={step3.fields[2].options}
                             />
                             <hr className={'col-span-full border-transparent my-2'} />
                           <Select
                             onChange={(values) => {
-                              console.log(values);
                               store.bidsStore.formResultSet({ important: {label: step3?.fields[3]?.options?.filter(item => item.value == values)[0].label, value: values}})
                             }}
                             // value={store.bidsStore.formResult.important}
                             label={step3.fields[3].label}
-                            defaultValue={step3.fields[3].defaultValue}
                             data={step3.fields[3].options}
                           />
                           <TimeInput
@@ -482,10 +556,9 @@ const FormCreateBid = ({ user, edit }: any) => {
                           disabled={Object.keys(errors).length > 0}
                           text={'Дальше'}
                           action={async () => {
-                            console.log(store.bidsStore.formResult);
+
                           store.bidsStore.formCreateBid().then((res) => {
                             if(res.status !== 201) {
-
                               notifications.show({
                                 id: 'car-created',
                                 withCloseButton: true,
@@ -518,9 +591,8 @@ const FormCreateBid = ({ user, edit }: any) => {
                               changeStep()
                             }
                           })
-                            // /* store.formStore.setFormDataCreateCar(values) */
                           }}
-                          /* action={() => console.log(values)} */ className={'float-right'}
+                          className={'float-right'}
                           variant={ButtonVariant.accent}
                         />
                       </>
@@ -559,8 +631,6 @@ const FormCreateBid = ({ user, edit }: any) => {
                           />
                         )}
                       />
-
-
                     <MapWithDots />
                     </>
                   </Step>

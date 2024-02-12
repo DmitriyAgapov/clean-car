@@ -5,20 +5,21 @@ import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'compone
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { SvgBackArrow } from 'components/common/ui/Icon'
+import { SvgBackArrow, SvgClose } from "components/common/ui/Icon";
 import { PermissionNames } from 'stores/permissionStore'
 import { dateTransform, dateTransformShort } from "utils/utils";
 import { CompanyType } from 'stores/companyStore'
 import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { ScrollArea } from '@mantine/core'
+import { notifications } from "@mantine/notifications";
 
 const test = [
   {
     label: ''
   }
 ]
-const PricePage = ():JSX.Element => {
+const PriceEditPage = ():JSX.Element => {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
@@ -27,7 +28,6 @@ const PricePage = ():JSX.Element => {
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
 
-  if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
@@ -57,9 +57,48 @@ const PricePage = ():JSX.Element => {
           <>
             <div className={'flex w-full  col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
-              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <><LinkStyled to={'history'} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-              <LinkStyled to={'history'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-              <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>}
+              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <Button text={'Сохранить'}  action={() => {
+                 store.priceStore.updatePrices().then((r) => {
+                   console.log('success', r)
+                   r.forEach((r: any) => {
+                     setTimeout(() => {
+                   if(r.status === 201) {
+                     notifications.show({
+                       id: 'car-created',
+                       withCloseButton: true,
+                       onClose: () => console.log('unmounted'),
+                       onOpen: () => console.log('mounted'),
+                       autoClose: 5000,
+                       title: "Прайс обновлен",
+                       message: 'Возвращаемся на страницу прайса',
+                       icon: <SvgClose />,
+                       className: 'my-notification-class z-[9999] absolute top-12 right-12',
+
+                       loading: false,
+                     });
+                      setTimeout(() => {
+                        store.priceStore.clearPriceOnChange()
+                        navigate(location.pathname.split('/edit')[0])
+                      }, 1000)
+                   } else {
+                     notifications.show({
+                       id: 'car-created',
+                       withCloseButton: true,
+                       onClose: () => console.log('unmounted'),
+                       onOpen: () => console.log('mounted'),
+                       autoClose: 5000,
+                       title: "Ошибка",
+                       message: 'Прайс не удалось обновить',
+                       color: 'red',
+                       className: 'my-notification-class z-[9999]',
+                       style: { backgroundColor: 'red' },
+                       loading: false,
+                     });
+                   }}, 2000)})
+
+              })}} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>
+
+              }
             </div>
             <div className={'flex items-baseline  gap-6'}>
               <div className={'text-xs text-gray-2'}>
@@ -90,9 +129,9 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-        <Tabs data={data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>
+        <Tabs data={data.tabs} type={TabsType.priceEdit} className={'page-price flex-[1_auto]'}/>
       </Panel>
     </Section>
   )
 }
-export default PricePage
+export default PriceEditPage

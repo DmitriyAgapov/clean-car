@@ -15,6 +15,9 @@ export default function CarsPageCreateAction() {
   const store = useStore()
   const navigate = useNavigate()
   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
+  store.usersStore.clearSelectedUsers()
+  store.formStore.formClear('formCreateCar')
+
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -29,9 +32,7 @@ export default function CarsPageCreateAction() {
         }
       >
       </Panel>
-
       <FormCreateCar/>
-
     </Section>
   )
 }

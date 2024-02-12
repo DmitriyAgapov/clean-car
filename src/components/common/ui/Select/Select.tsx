@@ -1,7 +1,7 @@
 import { Select } from '@mantine/core';
 import type { SelectProps } from '@mantine/core';
 
-import { useFormikContext } from 'formik'
+import { useField, useFormikContext } from "formik";
 import React, { useEffect, useState } from 'react'
 import { useRef } from 'react'
 import labels from "utils/labels";
@@ -17,7 +17,7 @@ import labels from "utils/labels";
          defaultValue,
        searchable,
       disabled = false,
-       ...props
+      ...props
      }: {
          label?: string
          placeholder?: string
@@ -27,19 +27,37 @@ import labels from "utils/labels";
          options: any[] | any
 			 		defaultValue?: any
          action?: (event: any) => void
-     } & SelectProps,
+     } & SelectProps
 
  ) => {
-     const [tempValue, setValue] = useState(value)
+
+   // console.log(name);
      const ref = useRef<HTMLInputElement>(null)
-     const { getFieldProps, values, submitForm, setFieldValue, setValues, touched, setTouched } = useFormikContext()
+   const [field, meta, helpers] = useField(name);
+   console.log(field);
+   const [tempValue, setValue] = useState(field.value)
+     const { getFieldProps, values, submitForm,errors, setFieldValue, setValues, touched, setTouched } = useFormikContext()
       //TODO Рефактирить надо выносить из компонента
       useEffect(() => {
         if(name === 'model') {
+          setValue(null)
           getFieldProps('model').value === null && setValue(null)
         }
       }, [touched, values, getFieldProps])
+   useEffect(() => {
+     // @ts-ignore
+     // console.log(values.brand === undefined);
+     // @ts-ignore
+     if(values.brand === undefined) {
+       setValue(null)
+     }
+   }, [values]);
 
+   // useEffect(() => {
+   //   console.log(field);
+   //   console.log(helpers);
+   //   console.log(meta);
+   // }, [field, meta]);
      const handleSelectChange = (event: any) => {
          action && action(event)
          setValue(event)
@@ -79,21 +97,37 @@ import labels from "utils/labels";
          }
          else {
 
-             setValues(() => ({
-                 // @ts-ignore
-                 ...values,
-                 [name]: event,
-             }))
+           setValues(() => ({
+               // @ts-ignore
+               ...values,
+               [name]: event,
+           }))
+
 
          }
+
+         if(event) {
+           helpers.setValue(event, false)
+           helpers.setTouched(true, false)
+         } else {
+
+           helpers.setValue(undefined, false)
+           helpers.setTouched(true, false)
+
+         }
+
      }
 
-     return (
+
+   return (
          <Select
+           {...field}
             {...props}
-           searchable={searchable}
+            searchable={searchable}
               disabled={disabled}
              ref={ref}
+
+
               placeholder={placeholder}
              withCheckIcon={false}
              classNames={{

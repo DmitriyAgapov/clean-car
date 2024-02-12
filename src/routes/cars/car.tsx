@@ -1,37 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
+import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { useLoaderData, useLocation, useNavigate, useNavigation } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
-import { SvgBackArrow } from 'components/common/ui/Icon'
-import DList from 'components/common/ui/DList/DList'
-import { PermissionNames } from "stores/permissionStore";
+import { SvgBackArrow, SvgCleanCarLoader } from "components/common/ui/Icon";
+import { PermissionNames } from 'stores/permissionStore'
 import Tabs from 'components/common/layout/Tabs/Tabs'
-import { CompanyType } from 'stores/companyStore';
-import { dateTransform } from "utils/utils";
+import { Loader } from "@mantine/core";
+import { CompanyType } from "stores/companyStore";
 
 const CarPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const { data, page, pageRequest, textData }: any = useLoaderData()
-  console.log(data.results?.company?.updated);
-  const formated = React.useMemo(() => {
-    if(data.results) return [
-      {
-        label: 'Основная информация',
-        data: data.results,
-      },
-      {
-        label: 'Сотрудники',
-        data: data.results.employees,
-      },
-    ]
-  }, [data])
+  const { data, page, pageRequest, textData, company_type }: any = useLoaderData()
+  const navigation = useNavigation();
+  console.log(company_type);
 
+  const [state, setState] = useState(navigation.state)
+  useEffect(() => {
+    console.log(state, 'state');
+    console.log(navigation, 'navigation');
+    console.log(data.results, 'data.results.length');
+
+  }, [state, navigation])
 const dataMap = new Map([])
   const userData = React.useMemo(() => {
     return (
@@ -63,6 +58,7 @@ const dataMap = new Map([])
         </>
     )
   }, [])
+  if(navigation.state === 'loading') return <SvgCleanCarLoader/>
   return (
     <Section
       type={SectionType.default}
@@ -92,6 +88,13 @@ const dataMap = new Map([])
                 color={HeadingColor.accent}
               />
             </div>
+            {store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update') && <Button
+              trimText={true}
+              text={'Редактировать'}
+              action={() => navigate(`/account/cars/${data.results.id}/edit`)}
+              // className={'inline-flex'}
+
+            />}
           </>
         }
       />
@@ -119,12 +122,12 @@ const dataMap = new Map([])
                 />
                 <Heading
                   className={'!m-0'}
-                  text={data.results.company.company_type == 'Компания-Заказчик'
+                  text={company_type == 'Компания-Заказчик'
                     ? data.results.number
                     : data.results.number}
                   variant={HeadingVariant.h4}
                   directory={
-                    data.results.company.company_type == 'Компания-Заказчик'
+                    company_type == 'Компания-Заказчик'
                       ? HeadingDirectory.customer
                       : HeadingDirectory.performer
                   }

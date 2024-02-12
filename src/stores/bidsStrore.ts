@@ -52,7 +52,7 @@ export interface ResultsProps
 
 export const initialResult: ResultsProps = {
     address: '',
-    company: 0,
+    company: null,
     conductor: 0,
     car: 0,
     important: {
@@ -63,7 +63,7 @@ export const initialResult: ResultsProps = {
         label: '',
         value: 'true',
     },
-    phone: '',
+    phone: '+7',
     customer_comment: '',
     service_type: 0,
     parking: {
@@ -78,6 +78,36 @@ export const initialResult: ResultsProps = {
         value: '',
     },
     performer: 0,
+}
+export class InitialResult {
+    constructor() {}
+    address = ''
+    company = 0
+    conductor = 0
+    car = 0
+    important = {
+        label : '',
+        value : ''
+    }
+    secretKey =  {
+        label: '',
+        value: 'true',
+    }
+    phone = '+7'
+    customer_comment = ''
+    service_type = 0
+    parking = {
+        label: '',
+        value: 'true',
+    }
+    service_option = []
+    service_subtype = 0
+    city = 0
+    time = {
+        label: '',
+        value: '',
+    }
+    performer = 0
 }
 
 interface PhotosProps {
@@ -117,7 +147,7 @@ export class BidsStore {
     }
     cities = catalogStore.cities
     currentPerformers = new Map([])
-    formResult: ResultsProps = observable.object(initialResult)
+    formResult: any = observable.object(initialResult)
     formData = {
         step1: {
             title: 'Шаг 1. Основная информация',
@@ -174,7 +204,7 @@ export class BidsStore {
             fields: [
                 {
                     label: 'Услуга',
-                    name: 'service',
+                    name: 'service_type',
                     type: 'select',
                     value: 0,
                     required: true,
@@ -183,7 +213,7 @@ export class BidsStore {
                 },
                 {
                     label: 'Тип услуги',
-                    name: 'subtype',
+                    name: 'service_subtype',
                     type: 'select',
                     value: 0,
                     required: true,
@@ -416,9 +446,9 @@ export class BidsStore {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, {
             name: 'bidsStore',
-            properties: ['formResult', 'currentPerformers', 'justCreatedBid', 'currentBid'],
+            properties: ['formResult', 'bids', 'currentPerformers', 'justCreatedBid', 'currentBid'],
             storage: window.sessionStorage,
-        })
+        }, {fireImmediately: true})
         when(() => this.formResultsAll.company === 0,
           () => {
               console.log('clear');
@@ -435,7 +465,6 @@ export class BidsStore {
             () => this.formResult.company,
             (customer, oldCustomer) => {
 
-                this.formResultsClear()
                 if (customer !== 0 && customer !== null) {
                     runInAction(async () => {
                         await usersStore.getUsers(customer)
@@ -443,16 +472,27 @@ export class BidsStore {
                         await companyStore.getCustomerCompanyData(customer)
                     })
                 }
+                if(customer === 0) {
+                    this.formResult = observable.object(initialResult)
+                }
             },
         )
 
         reaction(
             () => this.formResult.service_subtype,
             async (subtype) => {
-                if (subtype !== 0 && subtype && this.formResult.company) {
+                if (subtype !== 0 && subtype && this.formResult.company && this.formResult.car !== 0 && this.formResult.service_option) {
                     console.log('changed')
                     await this.loadServiceSubtypeOptions(subtype)
-                    await this.loadCurrentPerformers(this.formResult.company, subtype)
+                    await this.loadCurrentPerformers(Number(this.formResult.company), {
+                        car_id: this.formResult.car,
+                        subtype_id: this.formResult.service_subtype,
+                        options_idx: this.formResult.service_option
+                    })
+                }
+                console.log(subtype === 0, subtype);
+                if(subtype === 0) {
+                    action(() => catalogStore.currentServiceSubtypesOptions  = new Map([]))
                 }
             },
         )
@@ -473,6 +513,11 @@ export class BidsStore {
                 }
             },
         )
+        autorun(() => {
+            if(this.formResult) {
+                console.log(this.formResult);
+            }
+        })
     }
     async loadBidByCompanyAndBidId(company_id?: number, bid_id?: number) {
         const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id)
@@ -500,13 +545,15 @@ export class BidsStore {
     async hydrate() {
         await hydrateStore('bidsStore')
     }
-    async loadCurrentPerformers(customer_id: number, service_subtype_id: number) {
+    async loadCurrentPerformers(customer_id: number, data: { car_id: number, subtype_id: number, options_idx: number[] }) {
         this.currentPerformers.clear()
-        const { data, status } = await agent.Bids.getAvailablePerformers(customer_id, service_subtype_id)
+        const { data:performers, status }:any = await agent.Bids.getAvailablePerformers(customer_id, {
+            car_id: this.formResult.car,
+            subtype_id: this.formResult.service_subtype,
+            options_idx: this.formResult.service_option
+        })
         if (status === 200) {
-            console.log(data, status)
-
-            data.results.forEach((i: any) => runInAction(() => this.currentPerformers.set(String(i.id), i)))
+            performers.results.length > 0 && performers.results.forEach((i: any) => runInAction(() => this.currentPerformers.set(String(i.id), i)))
         }
     }
     get AvailablePerformers() {
@@ -554,6 +601,7 @@ export class BidsStore {
         try {
             action(() => (this.loading = true))
             const { data, status } = await agent.Bids.getAllBids(params)
+            console.log(data, status);
             if (status === 200) {
                 runInAction(() => {
                     this.bids = data
@@ -572,7 +620,7 @@ export class BidsStore {
                 car: this.formResult.car,
                 customer_comment: this.formResult.customer_comment,
                 conductor: this.formResult.conductor,
-                phone: this.formResult.phone,
+                phone: '+7' + this.formResult.phone,
                 performer: this.formResult.performer,
                 service_option: this.formResult.service_option,
                 service_type: this.formResult.service_type,
@@ -597,21 +645,9 @@ export class BidsStore {
         return this.textData
     }
     formResultsClear() {
-
-            this.formResultSet({
-            user: 0,
-            car: 0,
-            phone: '',
-            comment: '',
-            service: 0,
-            options: [],
-            subtype: 0,
-            city: 0,
-            performer: 0,
-            photos: null,
-            photosPreview: null,
-            photosPreviewAr: []})
-
+        console.log('cleared results');
+        this.currentPerformers.clear()
+        this.currentPerformers = new Map([])
     }
     formResultSet(value: any) {
         this.formResult = {

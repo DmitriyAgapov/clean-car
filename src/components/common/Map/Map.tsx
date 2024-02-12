@@ -13,9 +13,9 @@ const ElMapPanel = (item:any) => {
     const store = useStore()
     return <div className={'bg-black/80 rounded-sm border border-accent px-2 py-4'}>
         <Heading text={item.name} className={'text-white font-normal font-sans'} variant={HeadingVariant.h6}/>
-        <p className={'text-white'}>{item.performerprofile.address}</p>
+        <p className={'text-white'}>{item.address}</p>
         <hr className={'border-gray-2'}/>
-        <DList className={'uppercase !text-white text-xs'} label={'Время работы'}  title={item.performerprofile.working_time} />
+        <DList className={'uppercase !text-white text-xs'} label={'Время работы'}  title={item.working_time} />
         <Button text={'Выбрать'} variant={ButtonVariant.accent} className={'!rounded-md !text-xs'} action={() => store.bidsStore.formResultSet({performer: item.id})} size={ButtonSizeType.xs}/>
     </div>
 }
@@ -26,7 +26,7 @@ const ElMap = (item: any) => {
         <Marker
 
             icon={new DivIcon({ className: styles.marker, html: `<i class="block rounded-full w-3 h-3 bg-accent"/>` })}
-            position={[item.performerprofile.lat, item.performerprofile.lon]}
+            position={[item.lat, item.lon]}
         >
             <Popup className={'border-none child:contents'} >
                 <ElMapPanel {...item}/>
@@ -40,11 +40,11 @@ const MapWithDots = () => {
     const [map, setMap] = useState(null)
     const performersAr = store.bidsStore.AvailablePerformers
     const performers = values(performersAr)
-    console.log(performersAr);
-    const arY = performers.map((item: any) => Number.parseFloat(item.performerprofile.lat))
-    const arX = performers.map((item: any) => Number.parseFloat(item.performerprofile.lon))
-    const fitB = performers.map((item: any) => ([Number.parseFloat(item.performerprofile.lat), Number.parseFloat(item.performerprofile.lon)]))
-    const bounds = performers.map((item: any) => [Number.parseFloat(item.performerprofile.lon), Number.parseFloat(item.performerprofile.lat)])
+    console.log(performers);
+    const arY = performers.map((item: any) => Number.parseFloat(item.lat))
+    const arX = performers.map((item: any) => Number.parseFloat(item.lon))
+    const fitB = performers.map((item: any) => ([Number.parseFloat(item.lat), Number.parseFloat(item.lon)]))
+    const bounds = performers.map((item: any) => [Number.parseFloat(item.lon), Number.parseFloat(item.lat)])
 
     const centerLat = (Math.min(...arY) + Math.max(...arY)) / 2
     const centerLon = (Math.min(...arX) + Math.max(...arX)) / 2

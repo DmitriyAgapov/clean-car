@@ -7,18 +7,24 @@ import React, { useEffect } from 'react'
 import { CompanyType } from "stores/companyStore";
 import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
 import { useStore } from "stores/store";
+import { observer } from "mobx-react-lite";
 
-export function Step(props: {
+export const Step = observer((props: {
   step: any
   animate: any
-  action: (event:  any) => void
-  action1: () => void
+  action?: (event:  any) => void
+  action1?: () => void
   children: React.ReactNode
   stepIndex: number
   footer?: React.ReactNode
   header?: React.ReactNode
-} & PanelProps) {
-  console.log();
+} & PanelProps) => {
+
+  const {values} = useFormikContext()
+  const store = useStore()
+  React.useEffect(() => {
+    console.log(values);
+  }, [values])
   return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -39,4 +45,4 @@ export function Step(props: {
       </div>
     </Panel>
   )
-}
+})

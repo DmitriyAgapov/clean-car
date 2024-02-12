@@ -11,8 +11,8 @@ import { useStore } from "stores/store";
 export function Step(props: {
   step: any
   animate: any
-  action: (event:  any) => void
-  action1: () => void
+  action?: (event:  any) => void
+  action1?: () => void
   children: React.ReactNode
   stepIndex: number
   footer?: React.ReactNode
@@ -24,11 +24,14 @@ export function Step(props: {
     // @ts-ignore
     const models = store.catalogStore.getCarBrandModels(values.brand)
     // @ts-ignore
-    console.log(models);
+
     setValues({...values, carModels: models })
 
-    console.log(values.carModels);
   }, [values.brand])
+  // React.useEffect(() => {
+  //   console.log(errors)
+  // }, [errors])
+
   return (
     <Panel
       variant={PanelVariant.textPadding}

@@ -50,7 +50,7 @@ const UsersPage = () => {
         }
       ></Panel>
       <TableWithSortNew
-        total={store.usersStore.allUsers.size}
+        total={data.results.length}
         background={PanelColor.glass}
         filter={true}
         search={true}

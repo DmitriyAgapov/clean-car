@@ -7,7 +7,7 @@ import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from "reac
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import { Observer } from "mobx-react-lite";
+import { observer, Observer } from "mobx-react-lite";
 import catalogStore from "stores/catalogStore";
 import { entries, values } from "mobx";
 import { UserTypeEnum } from "stores/userStore";
@@ -19,6 +19,7 @@ const BidsPage = () => {
 	const location = useLocation()
 	const { data:loaderData }:any = useLoaderData()
 	const { data:storeData }:any = store.bidsStore.bidsAll
+
 	const textData = store.bidsStore.text
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
@@ -42,13 +43,7 @@ const BidsPage = () => {
 					background={PanelColor.glass}
 					className={'col-span-full table-groups table-bids'}
 					filter={false}
-					// data={storeData.results.map((r:any) => ({
-					// 	...r,
-					// 	id: r.id,
-					// 	query: {
-					// 		company_id: r.company.id,
-					// 	},
-					// }))}
+					data={loaderData.results}
 					initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
 					state={false}
 					ar={textData.tableHeaders} />}></Observer>
@@ -56,4 +51,4 @@ const BidsPage = () => {
 		</Section>
 	)
 }
-export default BidsPage
+export default observer(BidsPage)
