@@ -97,13 +97,13 @@ export class CompanyStore {
                 this.getCustomerCompanyData(currentCustomer)
             }
         })
-        autorun(() => {
-            console.log(this.canLoad, 'canload')
-            if(this.companies.length === 0) {
-                console.log('Loadding Companies');
-                this.getAllCompanies()
-            }
-        })
+        // autorun(() => {
+        //     console.log(this.canLoad, 'canload')
+        //     if(this.companies.length === 0) {
+        //         console.log('Loadding Companies');
+        //         this.getAllCompanies()
+        //     }
+        // })
         reaction(() => this.filials,
           (filials) => {
             if(filials.length === 0) {
