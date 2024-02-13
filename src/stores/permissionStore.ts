@@ -81,7 +81,7 @@ export class PermissionStore {
   })
   getPermissionByGroupId = flow(function*(this: PermissionStore, id: number) {
     const company_id = userStore.currentUser?.company?.id
-    // console.log(company_id);
+    
     try {
       if(company_id) {
         const { data, status } = yield agent.Permissions.getPermissionById(company_id, id)
@@ -112,7 +112,7 @@ export class PermissionStore {
   getPermissionById = flow(function*(this: PermissionStore, permission_id: number ) {
     this.loadingPermissions = true
     let company_id = userStore.currentUser?.company?.id
-    // console.log(company_id);
+    
     try {
       if(userStore.currentUser?.is_staff) {
         const {data, status} = yield agent.PermissionsAdmin.getAdminGroupIdPermission(permission_id)
@@ -185,11 +185,11 @@ export class PermissionStore {
   getPermissionsFlow = flow(function*(this: PermissionStore) {
     this.companyPermissions.clear()
     this.permissions.length = 0
-    // console.log(userStore.isAdmin);
+    
     if(userStore.currentUser.is_staff) {
       this.loadingPermissions = true
        const response = yield agent.PermissionsAdmin.getAllAdminPermissions()
-      // console.log(response);
+      
       if(response.status === 200) {
         this.permissions = response.data.results
       }
@@ -295,9 +295,9 @@ export class PermissionStore {
       if (data.status === 200) {
         //@ts-ignore
         const { results } = data.data
-        // console.log(results);
+        
         set(this.permissions, results)
-        // console.log(this.permissions);
+        
       }
     } catch (error) {
       throw new Error('Fetch data companies failed')
@@ -308,7 +308,7 @@ export class PermissionStore {
 
   getAllPermissions() {
     this.loadPermissionAdmin()
-    // console.log(this.permissions);
+    
     return this.permissions
   }
 

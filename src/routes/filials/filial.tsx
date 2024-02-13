@@ -21,7 +21,7 @@ const FilialPage = () => {
   const { data, type, company_id, parent } = useLoaderData()
   const { company, cars, users, limits } = data
   const arData = [{ ...company, parent: parent, company_id:company_id, company_type: type}, cars, users, limits]
-  console.log(arData);
+
   if (location.pathname.includes('edit')) return <Outlet />
   return (
       <Section type={SectionType.default}>

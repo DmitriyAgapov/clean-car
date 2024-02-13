@@ -26,7 +26,7 @@ const AddType = ({ id, subtype_id, edit = false, data }: { id: number,   edit?: 
 	return (
 		<Formik initialValues={(edit && init) ? data : initValues}
 			onSubmit={(values, submitForm) => {
-				console.log(values);
+
 			}}>
 			{({ errors, touched, values, submitForm, isValid }) => (
 				<Form className={"grid gap-4"}>

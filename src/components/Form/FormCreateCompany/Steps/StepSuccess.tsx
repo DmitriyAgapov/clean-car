@@ -28,7 +28,7 @@ export function FormStepSuccess(props: {
   prop8?: (o: any) => { label: any; value: string }
 }) {
   const { values, touched, errors }:any = useFormikContext();
-  // console.log(values.id);
+
   const navigate = useNavigate()
   const store = useStore()
 

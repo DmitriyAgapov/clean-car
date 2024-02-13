@@ -15,7 +15,7 @@ export function InputAutocompleteWithCity(props:any) {
   const store= useStore()
   const { step1, step2 ,step3} = store.bidsStore.formDataAll
   const { values, touched,  errors, isValidating }:any = useFormikContext();
-  console.log(values.address);
+
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
@@ -50,7 +50,7 @@ export function InputAutocompleteWithCity(props:any) {
 
     if (values.city && (!values.address || values.address === '')) {
       const cityName = store.catalogStore.getCity(values.city)
-      console.log(cityName.name);
+
       cityName && setValue(cityName.name + ', ')
 
       if (ref && ref.current && cityName) {
@@ -125,7 +125,7 @@ export function InputAutocompleteWithCity(props:any) {
           value={value}
 
           onChange={(event: { currentTarget: { value: React.SetStateAction<string> } }) => {
-            console.log(value);
+
             setValue(event.currentTarget.value)
             values.address = event.currentTarget.value;
             // @ts-ignore

@@ -68,7 +68,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
       break;
 
     case 'Сотрудники':
-      console.log(data);
+
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={props[2].data.map((item: User & any & {rootRoute?: string} ) => ({
@@ -90,7 +90,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
       </Tabs.Panel>)
       break;
       case 'Автомобили':
-      console.log(data);
+
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.length !== 0 ? <TableWithSort  className={'rounded-none !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={props[2].data.map((item: User & any & {rootRoute?: string} ) => ({
@@ -180,7 +180,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
       break;
 
     case 'Сотрудники':
-      console.log(data);
+
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={data.map((item: any & {rootRoute?: string} ) => ({
@@ -202,7 +202,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
       </Tabs.Panel>)
       break;
     case 'Филиалы':
-      console.log(data);
+
       result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={data.map((item: any & {rootRoute?: string} ) => ({
@@ -246,8 +246,8 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
 
     case 'Сотрудники':
       // @ts-ignore
-      console.log(data);
-      // console.log(props[0].data && props[0].data?.company.name || '');
+
+
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.employees.length !== 0 ? <TableWithSort total={data.count}  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={data.employees.map((item: any & {rootRoute?: string} ) => ({
@@ -303,8 +303,6 @@ export const TabsVariantBids = ({
 }: TabsVariantsProps) => {
     const store = useStore()
     let result
-    console.log(data)
-    console.log(label)
     switch (label) {
         case 'Основная информация':
             const navigate = useNavigate()
@@ -406,7 +404,7 @@ export const TabsVariantBids = ({
         case 'Сотрудники':
             // @ts-ignore
             console.log(data)
-            // console.log(props[0].data && props[0].data?.company.name || '');
+
             result = (
                 <Tabs.Panel
                     state={state}
@@ -744,7 +742,7 @@ export const TabsVariantPrice = ({
   switch (label) {
 
       case 'Мойка':
-        console.log(label);
+
           result = (
               <Tabs.PanelPure
                   state={state}
@@ -779,7 +777,7 @@ export const TabsVariantPrice = ({
           break
 
       case 'Шиномонтаж':
-        console.log(data);
+
           result = (
             <Tabs.PanelPure
               state={state}

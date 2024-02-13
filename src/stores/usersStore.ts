@@ -128,7 +128,7 @@ export class UsersStore {
     this.companyUsersSelected.delete(String(id))
   }
   get allUsers() {
-    console.log(this.usersMap);
+
     return this.usersMap
   }
   setToCompanyUsersSelected(ar: any) {
@@ -160,7 +160,7 @@ export class UsersStore {
       try {
         if(company_type) {
           const data  = yield companyStore.loadCompanyWithTypeAndId(company_type, Number(companyid));
-          // console.log(data);
+
           user = {
             ...user,
             company: {company_type: label(data.company.company_type), ...data.company.data}

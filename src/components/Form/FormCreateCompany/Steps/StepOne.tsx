@@ -14,7 +14,7 @@ export function FormStep1(props: {
   animate: any
   action: () => any
   values: any
-  action1: () => any
+  action1: (e:any) => any
   errors: any
   isValid?: boolean
   touched: any
@@ -22,9 +22,9 @@ export function FormStep1(props: {
   prop8: (o: any) => { label: any; value: string }
 }) {
   const { values, touched,  errors, setFieldValue, isValidating, isValid }:any = useFormikContext();
-  // console.log(props.store.catalogStore.cities.forEach((values: any) => console.log(values)))
-
-
+    useEffect(() => {
+      console.log(errors);
+    }, [errors])
    return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -47,13 +47,10 @@ export function FormStep1(props: {
               <Button
                 text={'Дальше'}
                 action={() => {
-                  console.log('click');
-                  console.log(Object.keys(errors).length == 0);
                   (Object.keys(errors).length == 0)
                  ? props.action1 : void null
                 }}
-                type={'button'}
-                // action={() => console.log(values)}
+                type={'submit'}
                 className={'float-right'}
                 variant={ButtonVariant.accent}
               />
@@ -148,6 +145,23 @@ export function FormStep1(props: {
             <div className={'form-error'}>{errors.legal_address}</div>
           ) : null}
         </label>
+        {values.application_type === CompanyType.performer && <label
+          className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]'}
+          htmlFor={'legal_address'}
+          data-form_error={errors.working_time && touched.working_time && 'error'}
+        >
+          {'Часы работы'}
+          <Field
+            id={'working_time'}
+            name='working_time'
+            placeholder={'Введите время работы компании'}
+            type={'text'}
+          />
+          {errors.working_time && touched.working_time ? (
+            <div className={'form-error'}>{errors.working_time}</div>
+          ) : null}
+        </label>}
+
         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
         <SelectMantine
           allowDeselect={false}

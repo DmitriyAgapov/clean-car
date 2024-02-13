@@ -27,7 +27,7 @@ const AddOption = ({ id, subtype_id, edit = false, data }: { id: number,  edit?:
 	return (
 		<Formik initialValues={(edit && init) ? data : initValues}
 			onSubmit={(values, submitForm) => {
-				console.log(values);
+
 			}}>
 			{({ errors, touched, values, submitForm, isValid }) => (
 				<Form className={"grid gap-4"}>
@@ -53,7 +53,7 @@ const AddOption = ({ id, subtype_id, edit = false, data }: { id: number,  edit?:
 										revalidator.revalidate();
 									}).finally(() => store.appStore.closeModal());
 								} else {
-									console.log(id);
+
 									await agent.Catalog.createServiceOption({id: id, subtype_id: Number(values.service_type),  name: values.subtypeName, is_active: values.status === "true"}).then(() => {
 										revalidator.revalidate();
 										// navigate(`/account/references/services/${id}/${values.service_type}`, { replace: true })

@@ -23,7 +23,7 @@ const {setFieldError, setErrors, errors} = useFormikContext();
 			if(ar.length > 0) setErrorsComp(ar)
 		}
 		React.useEffect(() => {
-			// console.log('store.usersStore.loadingErrors', store.usersStore.loadingErrors);
+			
 			handleCheckErrors(store.usersStore.loadingErrors)
 		},[store.usersStore.loadingErrors])
 

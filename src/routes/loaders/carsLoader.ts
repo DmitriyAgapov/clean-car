@@ -20,18 +20,14 @@ export const carsLoader = async (props: any) => {
 		description: null,
 		create: 'Добавить',
 	}
-	console.log({
-		page: paramsPage ?? 1,
-		page_size: paramsPageSize ?? 10,
-		ordering: paramsOrdering
-	} as PaginationProps);
+
 	async function getCompanyType() {
 		let company_type = '';
 		if (props.params.id) {
 			const { data: dataCars, status } = await agent.Cars.getAdminCar(props.params.id)
 			if (status === 200) {
 				company_type = dataCars.company.company_type
-				// console.log(dataCars.company.company_type);
+
 			}
 		}
 		return company_type
@@ -46,7 +42,7 @@ export const carsLoader = async (props: any) => {
 				const { data: dataCars, status } = await agent.Cars.getAdminCar(props.params.id)
 				if (status === 200) {
 					data = dataCars
-					// console.log(dataCars);
+
 				}
 			} else {
 				const { data: dataCars, status } = await agent.Cars.getAdminCars({

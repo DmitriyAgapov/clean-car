@@ -77,7 +77,7 @@ export function FormStep1(props: {
         </Combobox.Option>])
 
     }, [companies]);
-    console.log(values);
+
     return (
       <>
         <SelectCustom

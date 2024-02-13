@@ -6,6 +6,6 @@ const fetchToken = async () => {
     method: 'POST',
     body: JSON.stringify({email: "prweb2012@gmail.com",password: "lKC7S8iP"})
   })
-  // console.log(response);
+  
 }
 export default fetchToken

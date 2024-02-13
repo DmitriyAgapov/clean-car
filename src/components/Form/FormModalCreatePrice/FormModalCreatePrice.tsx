@@ -85,7 +85,7 @@ const FormModalCreatePrice =  () => {
                       <Button text={"Сохранить"}
                         type={'submit'}
                         action={() => {
-                          console.log(values);
+
 
                         }}
                         // action={async () => {

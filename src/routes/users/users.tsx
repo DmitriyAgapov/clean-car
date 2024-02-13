@@ -3,7 +3,6 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
-import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
@@ -12,15 +11,14 @@ import { User } from 'stores/usersStore'
 import { UserTypeEnum } from 'stores/userStore'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import data from "utils/getData";
-import { values } from "mobx";
+
 
 const UsersPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
   const {data}:any = useLoaderData()
-  console.log(data);
+
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>

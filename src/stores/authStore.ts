@@ -36,10 +36,10 @@ export class AuthStore {
    refreshToken() {
      if (appStore.tokenRefresh) {
        return agent.Auth.tokenRefresh(appStore.tokenRefresh).then((resolve: any) => resolve).then((data) => {
-           console.log(data);
+
            runInAction(() => {
              const { access } = data
-             console.log(access);
+
              appStore.setToken(access)
            })
          },

@@ -26,13 +26,13 @@ const SignupSchema = Yup.object().shape({
 })
 const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]}) => {
     const store = useStore()
-  console.log(group);
+
     // @ts-ignore
   const memData = React.useMemo(  ():any => {
     // @ts-ignore
     const ar = group
     // @ts-ignore
-    console.log(ar);
+
     // @ts-ignore
     if(ar.length > 0) return ar.map((item: any) => ({label: item.name, value: String(item.id)}))
     return null
@@ -40,11 +40,11 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
   }, [company_id])
   // @ts-ignore
   const {data}:any = store.permissionStore.loadCompanyPermissions(company_id)
-  console.log(memData);
+
   // @ts-ignore
-  console.log(data?.results);
+
   // @ts-ignore
-  console.log(company_id);
+
     const initValues = {
         first_name: '',
         last_name: '',
@@ -195,7 +195,7 @@ export const FormModalSelectUsers = ({company_id, users}: {company_id: any, user
   const store = useStore()
 
   console.log(store.usersStore.getUsers(store.formStore.getFormDataCarCreate.company_id));
-  console.log();
+
   const initValues = {
     users: '',
   }
@@ -214,13 +214,13 @@ export const FormModalSelectUsers = ({company_id, users}: {company_id: any, user
    return store.usersStore.currentCompanyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}));
 
   }, [store.formStore.formCreateCar.company_id])
-  console.log();
+
   return (
     <Formik
       initialValues={initValues}
       validationSchema={SignupSchema}
       onSubmit={(values, FormikHelpers) => {
-        console.log(values);
+
         store.usersStore.addToSelectedUsers(Number(values.users))
 
       }}

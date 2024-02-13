@@ -18,15 +18,10 @@ const CarPage = () => {
   const navigate = useNavigate()
   const { data, page, pageRequest, textData, company_type }: any = useLoaderData()
   const navigation = useNavigation();
-  console.log(company_type);
+
 
   const [state, setState] = useState(navigation.state)
-  useEffect(() => {
-    console.log(state, 'state');
-    console.log(navigation, 'navigation');
-    console.log(data.results, 'data.results.length');
 
-  }, [state, navigation])
 const dataMap = new Map([])
   const userData = React.useMemo(() => {
     return (

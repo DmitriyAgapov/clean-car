@@ -26,7 +26,7 @@ export default function CompanyPageEditAction(props: any) {
   }
   // @ts-ignore
   const {data} = useLoaderData()
-  console.log(data);
+
   if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>

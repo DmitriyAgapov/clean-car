@@ -18,8 +18,8 @@ export default function CarsPageEditAction() {
   const navigate = useNavigate()
   const { data, page, pageRequest, textData, company_type }: any = useLoaderData()
   const values = data.results
-  console.log(data, 'edit page car');
-  console.log(values.id, 'edit  car');
+
+
   React.useEffect(() => {
     store.catalogStore.getAllCities()
     store.usersStore.clearSelectedUsers()

@@ -15,7 +15,7 @@ const FilialsPage = () => {
   const location = useLocation()
   const {data}:any = useLoaderData()
   const all = store.companyStore.getFillialsData
-  console.log(all);
+
   const navigate = useNavigate()
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />

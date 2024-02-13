@@ -38,7 +38,7 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
         count: total ?? 0,
     })
     const handleSortKey = (index: number) => {
-        // console.log('click');
+        
         let newVal = {
             index: index,
             reversed: false,

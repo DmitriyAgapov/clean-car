@@ -47,7 +47,7 @@ export class UserStore {
        (currentUser) => {
         if(currentUser ) {
 
-          console.log('Load my profile');
+
 
           action(() => this.pullUser())
           action(() => this.loadMyProfile())
@@ -59,9 +59,9 @@ export class UserStore {
       if(user.user == null) {
        action(() => appStore.token = "")
      appStore.token = ""
-        console.log('not logged in');
+
       } else {
-        console.log('logged in');
+
       }
 
       }
@@ -70,16 +70,16 @@ export class UserStore {
     reaction(() => this.loggedUser,
       (loggedUser) => {
         if(loggedUser) {
-          console.log('true');
+
         } else {
-          console.log('false');
+
         }
       })
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
-        // console.log(permissions, 'permissions');
+
         if(permissions.id && permissions.permissions.length > 0) {
-          // console.log('load permissions');
+
           this.loadUserPermissions()
         } else if(this.currentUser.id) {
           action(() => this.loadMyProfile())
@@ -146,7 +146,7 @@ export class UserStore {
   createUserPermissions() {
     let ar:any = new Map([]);
     if(this.isAdmin) {
-      // console.log('admin');
+
       action(() => {
         appStore.setAppType(UserTypeEnum.admin)
         this.myProfileData.permissions = this.myProfileData.user.staff_group
@@ -168,7 +168,7 @@ export class UserStore {
 
       const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
       this.myProfileData.company = perm[0].company;
-      // console.log(perm);
+
       perm[0].group.permissions.forEach((item:any) => {
         const exepctions = ['Компании', 'Расчетный блок', 'Финансовый блок', 'Индивидуальный расчет']
         if(exepctions.indexOf(item.name) == -1) {
@@ -197,11 +197,11 @@ export class UserStore {
 
   loadUserPermissions() {
     if(this.isAdmin) {
-      // console.log('is admin');
+
       this.setCurrentPermissions(this.myProfileData.permissions.permissions.map((el: any) => [String(el.name), el]));
       appStore.setAppType(UserTypeEnum.admin)
     } else if (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings.length > 0) {
-      // console.log('is not admin');
+
       this.setCurrentPermissions(this.myProfileData.user.account_bindings[0].group.permissions.map((el: any) => [label(el.name), el]));
     }
   }

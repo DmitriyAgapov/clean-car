@@ -25,7 +25,10 @@ const BidsCreatePage = (props:any) => {
 					<Heading text={!props.edit ? textData.createPage : textData.editPage} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
 				</div>
 				{store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<>
-					<Button text={textData.fillTemplate} action={() => navigate('create')} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
+					<Button text={textData.fillTemplate} action={() => {
+						store.bidsStore.formResultsClear()
+						navigate('create')
+					}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 				</>)}
 			</>}>
 			</Panel>

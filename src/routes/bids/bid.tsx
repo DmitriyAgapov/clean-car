@@ -20,11 +20,7 @@ const BidPage = () => {
 	const dataL:any = useLoaderData()
 	const bid = bidsStore.CurrentBid
 	const textData = store.bidsStore.text
-	console.log(dataL);
-	React.useEffect(() => {
-		console.log(bid);
-		console.log(params);
-	}, [bid])
+
 	const tabedData = [
 		{ label: 'Основная информация', data: bid },
 		{ label: 'Услуги', data: bid },
@@ -81,17 +77,9 @@ const BidPage = () => {
 								size={ButtonSizeType.sm}
 
 								action={async () => {
-									// store.appStore.setModal({
-									// 	header: (
-									// 		<Heading
-									// 			text={`Добавить новый тип услуги ${data.results.name}`}
-									// 			variant={HeadingVariant.h3}
-									// 		/>
-									// 	),
-									// 	text: `Вы уверены, что хотите удалить ${data.results.name}`,
-									// 	component: <AddType id={Number(params.id)} />,
-									// 	state: true,
-									// })
+									if(params.company_id && params.id) {
+										await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus["Отмена"])
+									}
 								}}
 								className={'justify-self-end ml-auto row-start-1 col-start-3'}
 								variant={ButtonVariant['accent']}

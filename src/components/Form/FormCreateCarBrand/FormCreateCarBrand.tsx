@@ -60,7 +60,7 @@ const dataCreate = {
   ],
 }
 const FormCreateCarBrand = (props: any) => {
-  console.log(props);
+
   const store = useStore()
   const { textData }: any = useLoaderData()
   const params = useParams()
@@ -70,7 +70,7 @@ const FormCreateCarBrand = (props: any) => {
   // React.useEffect(() => {
   //   store.catalogStore.getCarModelWithBrand(Number(params.id)).then(r => console.log(r))
   // }, [])
-  console.log(store.catalogStore.carBrandsCurrent);
+
   const result = (Object.keys(CarType) as (keyof typeof CarType)[]).map(
     (key, index) => {
       return {

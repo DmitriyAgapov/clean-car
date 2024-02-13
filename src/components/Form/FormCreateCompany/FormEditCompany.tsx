@@ -49,6 +49,7 @@ const FormEditCompany = ({data}:any) => {
         application_type: CompanyType[type],
         lat: 0,
         lon: 0,
+        working_time: loaderData.company.data[`${type}profile`].working_time,
         contacts: loaderData.company.data[`${type}profile`].contacts,
         service_percent: loaderData.company.data[`${type}profile`].service_percent | 0,
         overdraft_sum: loaderData.company.data[`${type}profile`].overdraft_sum,
@@ -63,8 +64,7 @@ const FormEditCompany = ({data}:any) => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
-                console.log('Submit', values);
-                console.log('Submit application_type', values.application_type === CompanyType.performer);
+
                 if (values.application_type === CompanyType.performer) {
                     const data:Company<CompanyType.performer> = {
                         city:  Number(values.city),
@@ -80,12 +80,11 @@ const FormEditCompany = ({data}:any) => {
                             lat: Number(values.lat),
                             lon: Number(values.lon),
                             service_percent: values.service_percent,
-                            working_time: ''
+                            working_time: values.working_time
                         }
                     }
-                    console.log('data', data);
+
                     store.companyStore.editCompany(data, CompanyType.performer, values.id).then((r) => {
-                        console.log(r);
                         !r.status ? navigate(`/account/companies/performer/${values.id}`) : 'Ошибка'
                     })
                 }
@@ -111,8 +110,8 @@ const FormEditCompany = ({data}:any) => {
                                 performer_company: [4]
                             }
                         }
-                    console.log(data);
-                    // console.log(data);
+
+
                         store.companyStore.editCompany(data, CompanyType.customer, values.id).then((r) => {
                             !r.status ? navigate(`/account/companies/customer/${values.id}`) : 'Ошибка'
                         })
@@ -127,7 +126,7 @@ const FormEditCompany = ({data}:any) => {
                     values={values}
                     action1={() => {
                         changeStep(2)
-                        console.log('step 1');
+
                     }}
                     errors={errors}
                     touched={touched}

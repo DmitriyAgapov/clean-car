@@ -20,7 +20,7 @@ export function FormStep1(props: {
   prop8: (o: any) => { label: any; value: string }
 }) {
   const { values, touched,  errors, isValidating, isValid }:any = useFormikContext();
-  // console.log(values);
+  
    return (
     <Panel
       variant={PanelVariant.textPadding}

@@ -38,7 +38,7 @@ const SelectCompanyFilials = observer(() => {
     const handleChangeSearch = React.useCallback((e: any) => {
 
 
-        // console.log(e.currentTarget.value);
+
     }, [searchString])
 
 
@@ -136,7 +136,7 @@ const  UserGroupSelect = observer(()=> {
     useEffect(() => {
 
         const getGroups = async () => {
-            console.log(data);
+
             if (values.type == null) {
                 values.company_id = 0
                 setPermissions([])
@@ -258,7 +258,7 @@ const FormCreateUser = ({ user, edit }: any) => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values, FormikHelpers) => {
-                console.log(values.is_active);
+
                 let res: any
                 if(edit) {
                     const data = {
@@ -279,7 +279,7 @@ const FormCreateUser = ({ user, edit }: any) => {
                                 navigate(`/account/users/${values.type}/${values.company_id}/${res.data.id}`)
                         })
                         .catch((error) => {
-                        console.log(error);
+
                             // throw new Error(error)
                         })
                         .finally(() => {

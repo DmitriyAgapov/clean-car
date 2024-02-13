@@ -48,7 +48,7 @@ export class CatalogStore {
               if (!cities) {
                 this.getAllCities().then(r => runInAction(() => {
                     console.log('loadded cities')
-                    console.log(r);
+
                     this.loadingState.cities  = true
                 }))
 
@@ -270,7 +270,7 @@ export class CatalogStore {
             brandName?: string | undefined | null
         },
     ) {
-        console.log(car_type, brandName, brandId, model);
+
         if (brandId) {
             try {
                 const { data, status } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_type, model)

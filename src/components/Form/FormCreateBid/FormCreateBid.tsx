@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Form, Formik, useFormikContext } from "formik";
+import { Form, Formik, useFormik, useFormikContext } from "formik";
 import * as Yup from 'yup'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
@@ -20,7 +20,13 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import { notifications } from "@mantine/notifications";
 import { SvgClose } from "components/common/ui/Icon";
 import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
-
+const SignupSchema = Yup.object().shape({
+  city: Yup.string().required('Обязательное поле'),
+  company: Yup.string().required('Обязательное поле'),
+  conductor: Yup.string().required('Обязательное поле'),
+  car: Yup.string().required('Обязательное поле'),
+  phone: Yup.string().required('Обязательное поле'),
+})
 export const initialResults = {
   address: '',
   company: '0',
@@ -34,7 +40,7 @@ export const initialResults = {
     label: '',
     value: 'true',
   },
-  phone: '+7',
+  phone: '',
   customer_comment: '',
   service_type: '0',
   parking: {
@@ -43,7 +49,7 @@ export const initialResults = {
   },
   service_option: [],
   service_subtype: '0',
-  city: 0,
+  city: '0',
   time: {
     label: '',
     value: '',
@@ -51,13 +57,24 @@ export const initialResults = {
   performer: '0',
 }
 
+
 const Step1Inputs = observer(({step1}:any) => {
     const store = useStore()
-    const { values, getFieldProps, errors, initialValues, setFieldValue, setValues,  getFieldHelpers,setFieldTouched, touched }:any = useFormikContext();
+    const { values, getFieldProps, errors, initialValues, resetForm, setFieldValue, setValues,  getFieldHelpers,setFieldTouched, touched }:any = useFormikContext();
+  const formikReset = useFormik({
+    enableReinitialize: true,
+    initialValues: initialResults,
+    validationSchema: SignupSchema,
+    onSubmit: values => {
+      console.log('Click')
+    }
+  });
 
     const handleChangeCompany = React.useCallback((e:any) => {
         if(e === null) {
+            values.company = '0'
             store.bidsStore.formResultSet({company: 0})
+
         }
         if(e !== 0) {
             store.bidsStore.formResultSet({ company: Number(e) })
@@ -65,13 +82,17 @@ const Step1Inputs = observer(({step1}:any) => {
             store.bidsStore.formResultSet({ company: 0 })
         }
     },[])
+  React.useEffect(() => {
+    console.log(errors);
+  }, [errors])
 
   React.useEffect(() => {
-      if(values.company === null) {
 
-        setValues(initialValues, true)
+      if(values.company === null) {
+        // setValues(initialValues, true)
         setFieldValue('city', null, false)
         setFieldTouched('city', false, true)
+        formikReset.resetForm()
         store.bidsStore.formResultsClear()
 
       } else  {
@@ -84,11 +105,9 @@ const Step1Inputs = observer(({step1}:any) => {
         values.car = String(store.bidsStore.formResultsAll.car);
         values.conductor = String(store.bidsStore.formResultsAll.conductor);
       }
-      console.log(errors);
-    }, [store.bidsStore.formResultsAll])
+    }, [store.bidsStore.formResultsAll.company, values.company])
     return (<>
-      <Observer
-        children={() => (
+
           <SelectMantine
             required
             name={'city'}
@@ -101,17 +120,14 @@ const Step1Inputs = observer(({step1}:any) => {
                 value: String(i.id),
             }))}
           />
-        )}
-      />
-    <hr className={'col-span-full border-transparent my-2'} />
-    {/* //todo: map not admin values to select */}
 
-        <Observer
-          children={() => (
+        <hr className={'col-span-full border-transparent my-2'} />
+        {/* //todo: map not admin values to select */}
+
             <SelectMantine
               name={'company'}
               clearable
-              value={values.company}
+              value={values.company ? values.company : '0'}
               label={step1.fields[1].label}
               onChange={handleChangeCompany}
               searchable
@@ -124,11 +140,7 @@ const Step1Inputs = observer(({step1}:any) => {
                 : store.companyStore.myCompany.company
               }
             />
-          )}
-        />
 
-    <Observer
-      children={() => (
         <SelectMantine
           required
           label={step1.fields[2].label}
@@ -145,39 +157,26 @@ const Step1Inputs = observer(({step1}:any) => {
               value: String(c.employee.id),
           }))}
         />
-      )}
-    />
-    <Observer
-      children={() =>  <InputBase
-        defaultValue={'+7' + values.phone}
+        <InputBase
+        defaultValue={values.phone}
         unmask={"typed"}
         onAccept={(value:any, mask:any) => {
             store.bidsStore.formResultSet({ phone: value })
         }}
+        required={true}
         label={step1.fields[3].label}
         component={IMaskInput}
         mask='+70000000000'
         placeholder='+70000000000'
-      />  }
-    />
-    <Observer
-      children={() => <Select
+      />
+        <Select
         value={store.bidsStore.formResultsAll.car ? String(store.bidsStore.formResultsAll.car) : null}
         onChange={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
         //@ts-ignore
         disabled={store.carStore.getCompanyCars.cars.count === 0} label={step1.fields[4].label} searchable data={store.carStore.cars.length !== 0 ? store.carStore.getCompanyCars.cars.results.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']}
       />
-      }
-    />
     </>
     )
-})
-const SignupSchema = Yup.object().shape({
-    city: Yup.string().required('Обязательное поле'),
-    company: Yup.string().required('Обязательное поле'),
-    conductor: Yup.string().required('Обязательное поле'),
-    car: Yup.string().required('Обязательное поле'),
-    phone: Yup.string().required('Обязательное поле'),
 })
 const FormCreateBid = ({ user, edit }: any) => {
     const store = useStore()
@@ -215,10 +214,7 @@ const FormCreateBid = ({ user, edit }: any) => {
               ),
             )}
           </div>
-
-
           <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>
-
           <FileButton onChange={handleChangeFile} multiple accept='image/png,image/jpeg'>
             {(props) => (
               <Button
@@ -240,12 +236,11 @@ const FormCreateBid = ({ user, edit }: any) => {
       <>
         <Formik
             initialValues = {initialResults}
+            enableReinitialize={true}
 
             validationSchema={SignupSchema}
             onSubmit={(values, FormikHelpers) => {
-
                 changeStep(2)
-                // store.formStore.formSendDataUser('formCreateUser', data)
             }}
         >
             {({ errors, setFieldValue, setFieldTouched, setValues, touched, values, status, isValid, isValidating,
@@ -264,11 +259,12 @@ const FormCreateBid = ({ user, edit }: any) => {
                     <Step
                         step={step}
                         animate={animate}
-                        action={() => console.log('step 1')}
-                        action1={() => console.log('step 1')}
                         stepIndex={1}
                         bodyClassName={'grid grid-cols-3 gap-4'}
-                        footer={<><Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} /><Button type={Object.keys(errors).length > 0 ? 'button' : 'text'} disabled={Object.keys(errors).length > 0} text={'Дальше'} action={() => {/* store.formStore.setFormDataCreateCar(values) */changeStep()}}/* action={() => console.log(values)} */ className={'float-right'} variant={ButtonVariant.accent} /></>}
+                        footer={<><Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} /><Button type={Object.keys(errors).length > 0 ? 'button' : 'text'} disabled={Object.keys(errors).length > 0} text={'Дальше'} action={() => {
+                          changeStep()
+                          console.log('click')
+                        }}/* action={() => console.log(values)} */ className={'float-right'} variant={ButtonVariant.accent} /></>}
                         header={<><Heading text={step1.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step1.description}</div></>}
                     >
                         <>
@@ -308,12 +304,9 @@ const FormCreateBid = ({ user, edit }: any) => {
                                     disabled={Object.keys(errors).length > 0}
                                     text={'Дальше'}
                                     action={() => {
-                                      console.log(values);
-                                      console.log(store.formStore.getFormData(''));
-                                        // /* store.formStore.setFormDataCreateCar(values) */
                                       changeStep()
                                     }}
-                                    /* action={() => console.log(values)} */ className={'float-right'}
+                                    className={'float-right'}
                                     variant={ButtonVariant.accent}
                                 />
                             </>
@@ -354,15 +347,6 @@ const FormCreateBid = ({ user, edit }: any) => {
                                             required
                                             label={step2.fields[1].label}
                                             disabled={store.bidsStore.formResult.service_type === 0}
-                                            // value={
-                                            //     store.bidsStore.formResult.service_subtype !== 0
-                                            //         ? String(store.bidsStore.formResult.service_subtype)
-                                            //         : String(
-                                            //               store.catalogStore.getSubtypeByServiceId(
-                                            //                   store.catalogStore.currentService,
-                                            //               ).id,
-                                            //           )
-                                            // }
                                             onChange={(value) => {
 
                                               if(value === null) {
@@ -394,8 +378,6 @@ const FormCreateBid = ({ user, edit }: any) => {
                           {(values.service_subtype && values.service_subtype !== "0" && values.service_subtype && values.service_subtype !== "0") && <Observer
                             children={() => <Checkbox.Group
                                 className={'col-span-2'}
-
-                                // value={store.bidsStore.formResult.options.map((i:any) => String(i))}
                                 classNames={{
                                     label: 'text-accent label mb-4',
                                 }}
@@ -404,7 +386,6 @@ const FormCreateBid = ({ user, edit }: any) => {
                                 store.bidsStore.formResultSet({ service_option: vals.map(e => Number(e)) })
                                 // @ts-ignore
                                 values.service_option = val(store.bidsStore.formResultsAll.service_option)
-                                console.log(values);
                               }
                                 }
                                 label='Выберите дополнительные опции (при необходимости)'
@@ -675,7 +656,7 @@ const FormCreateBid = ({ user, edit }: any) => {
                                 <Button text={'Отменить'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
                                 <Button
                                   text={'Оплатить'}
-                                  action={async () => {console.log('Оплапть'); }}
+                                  action={async () => { }}
                                   variant={ButtonVariant.accent}
 
                                 />,

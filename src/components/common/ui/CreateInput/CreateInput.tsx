@@ -39,7 +39,7 @@ const CreateInput = ({
 }: CreateInputProps) => {
   let input: React.ReactNode | React.JSX.Element
   // const handleChange = (event: React.ChangeEvent<unknown>) => {
-  //   console.log(event.target);
+
   //
   //   if(!event.target) {
   //     if (getValue) {

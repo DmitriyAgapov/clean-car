@@ -58,7 +58,7 @@ const dataCreate = {
     ],
 }
 const FormCreateCity = (props: any) => {
-  console.log(props);
+
   const { data, page, pageRequest, textData }: any = useLoaderData()
   const location = useLocation()
   const navigate = useNavigate()
@@ -76,7 +76,7 @@ const FormCreateCity = (props: any) => {
   return (
       <Formik initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
         onSubmit={(values, isSubmitting) => {
-          console.log(values);
+
             if(location.pathname.includes('edit')) {
               textData.editAction(values.id, values.city, values.status === "true", values.timezone)
               .then((r: any) => {

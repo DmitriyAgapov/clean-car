@@ -3,7 +3,7 @@ import { Combobox, InputBase, useCombobox } from '@mantine/core';
 import { useFormikContext } from "formik";
 
 export function SelectCreatable({ items, createAction, defaultValue,  label }:{items: any[], defaultValue?: any, createAction: (e:any) => void, label: string}) {
-	console.log(defaultValue);
+
 	const combobox = useCombobox({
 		onDropdownClose: () => combobox.resetSelectedOption(),
 	});
@@ -34,7 +34,7 @@ export function SelectCreatable({ items, createAction, defaultValue,  label }:{i
 			store={combobox}
 			withinPortal={false}
 			onOptionSubmit={(val) => {
-				console.log(val);
+
 				setFieldValue('brand', Number(val));
 				if (val === '$create') {
 					createAction(data.filter((e:any) => value === e.label)[0])

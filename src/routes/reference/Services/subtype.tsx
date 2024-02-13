@@ -20,7 +20,7 @@ const ServicesSubTypePage = () => {
     const params = useParams()
     const { data, page, pageRequest, textData }: any = useLoaderData()
     useEffect(() => {
-      console.log(data);
+
     }, [data])
     return (
         <Section type={SectionType.default}>

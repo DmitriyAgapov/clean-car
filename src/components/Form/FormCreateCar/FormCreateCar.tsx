@@ -72,7 +72,7 @@ const FormInputs = observer(():JSX.Element => {
     },[])
 
     const[belongTo, setBelongTo] = useState('company')
-    React.useEffect(() => console.log(errors), [errors])
+
     return (
       <>
           <>
@@ -270,7 +270,7 @@ const FormCreateCar = ({ car, edit }: any) => {
             validationSchema={SignupSchema}
 
             onSubmit={(values, FormikHelpers) => {
-                // console.log(values);
+
                 // console.log(val(store.usersStore.selectedUsers).map((item:any) => item.employee.id));
                 const data = {
                     id: values.id,
@@ -387,7 +387,7 @@ const FormCreateCar = ({ car, edit }: any) => {
                                 variant={ButtonVariant.accent}
                                 directory={ButtonDirectory.directory}
                                 action={(values) => {
-                                    console.log(values);
+
                                     store.appStore.setModal({
                                         className: '!px-10 gap-4 !justify-stretch grid-cols-1',
                                         component: (

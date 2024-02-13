@@ -31,6 +31,7 @@ const initValues = {
     contacts: '',
     lat: 0,
     lon: 0,
+    working_time:'',
     service_percent: 0,
     overdraft_sum: 0,
     payment: Payment.postoplata,
@@ -63,11 +64,11 @@ const FormCreateCompany = () => {
             validationSchema={SignupSchema}
             onSubmit={(values) => {
                 if (values.application_type === CompanyType.performer) {
-                    const data:Company<CompanyType.performer> = {
-                        city:  Number(values.city),
+                    const data: Company<CompanyType.performer> = {
+                        city: Number(values.city),
                         is_active: true,
                         name: values.company_name,
-                        performerprofile:  {
+                        performerprofile: {
                             address: values.address,
                             inn: values.inn,
                             ogrn: values.ogrn,
@@ -77,8 +78,8 @@ const FormCreateCompany = () => {
                             lat: values.lat,
                             lon: values.lon,
                             service_percent: values.service_percent,
-                            working_time: ''
-                        }
+                            working_time: values.working_time,
+                        },
                     }
                     store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
                         values.id = r.id
@@ -86,27 +87,26 @@ const FormCreateCompany = () => {
                     })
                 }
                 if (values.application_type === CompanyType.customer) {
-                    const data:Company<CompanyType.customer> = {
-
+                    const data: Company<CompanyType.customer> = {
                         company_type: values.application_type,
 
                         name: values.company_name,
-                            is_active: true,
-                            city: Number(values.city),
+                        is_active: true,
+                        city: Number(values.city),
                         customerprofile: {
-                             address: values.address,
-                                payment: values.payment,
-                             inn: String(values.inn),
-                             ogrn: String(values.ogrn),
-                             legal_address: values.legal_address,
-                             contacts: values.contacts,
+                            address: values.address,
+                            payment: values.payment,
+                            inn: String(values.inn),
+                            ogrn: String(values.ogrn),
+                            legal_address: values.legal_address,
+                            contacts: values.contacts,
                             bill: String(values.bill),
-                             overdraft: values.overdraft === '1',
-                             overdraft_sum: values.overdraft_sum,
+                            overdraft: values.overdraft === '1',
+                            overdraft_sum: values.overdraft_sum,
                             lat: values.lat,
                             lon: values.lon,
-                            performer_company: []
-                        }
+                            performer_company: [],
+                        },
                     }
                     store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
                         values.id = r.id
@@ -117,33 +117,49 @@ const FormCreateCompany = () => {
         >
             {({ errors, touched, values, isValid }) => (
                 <Form style={{ display: 'contents' }}>
-                  <FormStep1 step={step}
-                    animate={animate}
-                    action={() => navigate(-1)}
-                    values={values}
-                    action1={() => changeStep()}
-                    errors={errors}
-                    touched={touched}
-                    store={store}
-                    prop8={(o: any) => ({
-                      label: o.name, value: String(o.id)
-                    })} />
-                  <FormStepTwo step={step} animate={animate}
-                    action={() => changeStep(1)}
-                    values={values}
-                    action1={() => changeStep()} errors={errors}
-                    touched={touched}
-                    store={store}  prop8={(o: any) => ({
-                    label: o.name, value: String(o.id)
-                  })}/>
-                   <FormStepSuccess step={step} animate={animate}
-
-                    values={values}
-                    touched={touched}
-                    store={store}  prop8={(o: any) => ({
-                    label: o.name, value: String(o.id)
-                  })} title={step == 3 ? '3' : '2'}/>
-
+                    <FormStep1
+                        step={step}
+                        animate={animate}
+                        action={() => navigate(-1)}
+                        values={values}
+                        action1={(e: any) => {
+                            console.log(e, 'asdasd')
+                            changeStep()
+                        }}
+                        errors={errors}
+                        touched={touched}
+                        store={store}
+                        prop8={(o: any) => ({
+                            label: o.name,
+                            value: String(o.id),
+                        })}
+                    />
+                    <FormStepTwo
+                        step={step}
+                        animate={animate}
+                        action={() => changeStep(1)}
+                        values={values}
+                        action1={() => changeStep()}
+                        errors={errors}
+                        touched={touched}
+                        store={store}
+                        prop8={(o: any) => ({
+                            label: o.name,
+                            value: String(o.id),
+                        })}
+                    />
+                    <FormStepSuccess
+                        step={step}
+                        animate={animate}
+                        values={values}
+                        touched={touched}
+                        store={store}
+                        prop8={(o: any) => ({
+                            label: o.name,
+                            value: String(o.id),
+                        })}
+                        title={step == 3 ? '3' : '2'}
+                    />
                 </Form>
             )}
         </Formik>

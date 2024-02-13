@@ -85,7 +85,7 @@ export class CarStore {
     this.brandModels.clear()
   }
   async getCarBrandModels(id: number, params?: PaginationProps) {
-    console.log(id);
+
     if (id) {
       const { data, status } = await agent.Catalog.getCarBrandModels(id, params)
 
@@ -130,7 +130,7 @@ export class CarStore {
     }
   }
   get getCompanyCars() {
-    // console.log(this.cars);
+
     return ({
       cars: this.cars
     })

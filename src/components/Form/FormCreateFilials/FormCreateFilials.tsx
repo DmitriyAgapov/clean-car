@@ -84,9 +84,9 @@ const FormCreateFilials = () => {
             initialValues={initValues}
             validationSchema={SignupSchema}
             onSubmit={(values) => {
-                console.log(values);
+
                 if (values.application_type == CompanyType.performer) {
-                    console.log(values, values.application_type == CompanyType.performer);
+
                     const data:Company<CompanyType.performer> = {
                         city:  Number(values.city),
                         is_active: true,
@@ -98,7 +98,7 @@ const FormCreateFilials = () => {
                             service_percent: values.service_percent ?? 1,
                         }
                     }
-                    console.log(data,'performer',  values.company_id);
+
                     store.companyStore.createFilial(data,'performer',  values.company_id).then((r) => {
                         values.id = r.id
                         revalidate.revalidate()
@@ -106,7 +106,7 @@ const FormCreateFilials = () => {
                     })
                 }
                 if (values.application_type == CompanyType.customer) {
-                    console.log(values);
+
                     const data:Company<CompanyType.customer> = {
                         name: values.filial_name,
                         is_active: true,
@@ -117,7 +117,7 @@ const FormCreateFilials = () => {
                             lon: Number(values.lon)
                         }
                     }
-                    console.log(data, 'customer', values.company_id);
+
                     store.companyStore.createFilial(data, 'customer', values.company_id).then((r) => {
                         values.id = r.id
                         revalidate.revalidate()

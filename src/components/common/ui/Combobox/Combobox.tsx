@@ -31,7 +31,7 @@ function ComboboxCustom({className, items, name, action, defaultValue}:{items: a
 			Марка
 			<Combobox store={combobox}
 				onOptionSubmit={(val) => {
-					console.log(val);
+
 					setSelectedItem(val);
 					combobox.closeDropdown();
 				}}>

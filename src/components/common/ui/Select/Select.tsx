@@ -31,10 +31,10 @@ import labels from "utils/labels";
 
  ) => {
 
-   // console.log(name);
+
      const ref = useRef<HTMLInputElement>(null)
    const [field, meta, helpers] = useField(name);
-   console.log(field);
+
    const [tempValue, setValue] = useState(field.value)
      const { getFieldProps, values, submitForm,errors, setFieldValue, setValues, touched, setTouched } = useFormikContext()
       //TODO Рефактирить надо выносить из компонента
@@ -46,18 +46,13 @@ import labels from "utils/labels";
       }, [touched, values, getFieldProps])
    useEffect(() => {
      // @ts-ignore
-     // console.log(values.brand === undefined);
+
      // @ts-ignore
      if(values.brand === undefined) {
        setValue(null)
      }
    }, [values]);
 
-   // useEffect(() => {
-   //   console.log(field);
-   //   console.log(helpers);
-   //   console.log(meta);
-   // }, [field, meta]);
      const handleSelectChange = (event: any) => {
          action && action(event)
          setValue(event)

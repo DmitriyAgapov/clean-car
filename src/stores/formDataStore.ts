@@ -32,10 +32,10 @@ export class FormStore {
   formCreateUser:any = {}
   formCreateCar: any = {}
   formSendDataUser = flow(function* ( this: FormStore, form: string | number, data?: any) {
-    console.log(data);
+
     this.loading = true
     const response = yield agent.Account.createCompanyUser(Number(data.company_id), data || this.formCreateUser)
-    console.log(response);
+
 
     this.loading = false
   })
@@ -67,7 +67,7 @@ export class FormStore {
       .then((res) => res)
       .then((res:any) => runInAction(() => {
         if(res && res.status > 199 && res.status < 300) {
-          console.log(res);
+
           this.formCreateCar = {}
         }
       }))
@@ -78,7 +78,7 @@ export class FormStore {
       .then((res) => res)
       .then((res:any) => runInAction(() => {
         if(res && res.status > 199 && res.status < 300) {
-          console.log(res);
+
           this.formCreateCar = {}
         }
       }))

@@ -66,8 +66,8 @@ export class PriceStore {
           (priceOnChange, previous) => {
 
             if(priceOnChange.size !== 0) {
-                console.log(previous, priceOnChange);
-              console.log(priceOnChange);
+
+
               }
           })
     }
@@ -105,7 +105,7 @@ export class PriceStore {
     }
 
     parseEntries() {
-        console.log('Click');
+
         const result = (ar:any[]) => ar.reduce((acc, item) => {
             acc[item.id] = item.amount;
             return acc;

@@ -217,7 +217,7 @@ export const priceLoader = async (props: any) => {
             const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
             const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
             const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
-            console.log(dataWash);
+
             data = {
                 tabs: await Promise.all([{label: 'Мойка', data: dataWash,
                     dataTable: dataWash
@@ -340,7 +340,7 @@ export const groupsIdLoader = async ({ params: { company_type, id } }: any) => {
         } else {
             currentGroup = await permissionStore.getPermissionByGroupId(id)
         }
-        // console.log(currentGroup);
+
         if (currentGroup) return { group: currentGroup }
 
         return redirect('/account/groups')

@@ -63,7 +63,7 @@ export const initialResult: ResultsProps = {
         label: '',
         value: 'true',
     },
-    phone: '+7',
+    phone: '',
     customer_comment: '',
     service_type: 0,
     parking: {
@@ -93,7 +93,7 @@ export class InitialResult {
         label: '',
         value: 'true',
     }
-    phone = '+7'
+    phone = ''
     customer_comment = ''
     service_type = 0
     parking = {
@@ -449,13 +449,7 @@ export class BidsStore {
             properties: ['formResult', 'bids', 'currentPerformers', 'justCreatedBid', 'currentBid'],
             storage: window.sessionStorage,
         }, {fireImmediately: true})
-        when(() => this.formResultsAll.company === 0,
-          () => {
-              console.log('clear');
 
-
-
-          })
         reaction(() => this.justCreatedBid.id, (id) => {
             if(id) {
                 runInAction(() => this.loadBidByCompanyAndBidId())
@@ -490,7 +484,7 @@ export class BidsStore {
                         options_idx: this.formResult.service_option
                     })
                 }
-                console.log(subtype === 0, subtype);
+
                 if(subtype === 0) {
                     action(() => catalogStore.currentServiceSubtypesOptions  = new Map([]))
                 }
@@ -513,11 +507,7 @@ export class BidsStore {
                 }
             },
         )
-        autorun(() => {
-            if(this.formResult) {
-                console.log(this.formResult);
-            }
-        })
+
     }
     async loadBidByCompanyAndBidId(company_id?: number, bid_id?: number) {
         const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id)
@@ -542,9 +532,6 @@ export class BidsStore {
             )
         }
     }
-    async hydrate() {
-        await hydrateStore('bidsStore')
-    }
     async loadCurrentPerformers(customer_id: number, data: { car_id: number, subtype_id: number, options_idx: number[] }) {
         this.currentPerformers.clear()
         const { data:performers, status }:any = await agent.Bids.getAvailablePerformers(customer_id, {
@@ -554,6 +541,14 @@ export class BidsStore {
         })
         if (status === 200) {
             performers.results.length > 0 && performers.results.forEach((i: any) => runInAction(() => this.currentPerformers.set(String(i.id), i)))
+        }
+    }
+    async updateBitStatus(company_id:number|string, bid_id:number|string, bidStatus: BidsStatus) {
+        const { data:dataStatus, status }:any = await agent.Bids.updateBidStatus(company_id, bid_id, bidStatus)
+        if (status === 200) {
+            return ({
+                data: dataStatus.status
+            })
         }
     }
     get AvailablePerformers() {
@@ -601,7 +596,7 @@ export class BidsStore {
         try {
             action(() => (this.loading = true))
             const { data, status } = await agent.Bids.getAllBids(params)
-            console.log(data, status);
+
             if (status === 200) {
                 runInAction(() => {
                     this.bids = data
@@ -645,7 +640,7 @@ export class BidsStore {
         return this.textData
     }
     formResultsClear() {
-        console.log('cleared results');
+        this.formResult = observable.object(initialResult);
         this.currentPerformers.clear()
         this.currentPerformers = new Map([])
     }

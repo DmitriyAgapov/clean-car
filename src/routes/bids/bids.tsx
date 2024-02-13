@@ -7,10 +7,7 @@ import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from "reac
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import { observer, Observer } from "mobx-react-lite";
-import catalogStore from "stores/catalogStore";
-import { entries, values } from "mobx";
-import { UserTypeEnum } from "stores/userStore";
+import { observer } from "mobx-react-lite";
 
 const BidsPage = () => {
 	const store = useStore()
@@ -36,8 +33,7 @@ const BidsPage = () => {
 						<Button text={textData.create} action={() => navigate('create')} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
-			<Panel variant={PanelVariant.withGapOnly} className={'!mt-0'}>
-				<Observer children={()=> <TableWithSortNew total={storeData.count}
+				<TableWithSortNew total={storeData.count}
 					variant={PanelVariant.dataPadding}
 					search={true}
 					background={PanelColor.glass}
@@ -46,8 +42,8 @@ const BidsPage = () => {
 					data={loaderData.results}
 					initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
 					state={false}
-					ar={textData.tableHeaders} />}></Observer>
-			</Panel>
+					ar={textData.tableHeaders} />
+
 		</Section>
 	)
 }

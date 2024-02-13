@@ -37,7 +37,6 @@ const PricesPage = () => {
 						}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
-		<Panel variant={PanelVariant.withGapOnly} className={'!mt-0'}>
 				<TableWithSortNew
 					total={data.count}
 					variant={PanelVariant.dataPadding}
@@ -50,7 +49,6 @@ const PricesPage = () => {
 					state={false}
 					ar={store.priceStore.allPrices.textData.tableHeaders}
 				/>
-			</Panel>
 		</Section>
 	)
 }

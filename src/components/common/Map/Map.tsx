@@ -40,7 +40,7 @@ const MapWithDots = () => {
     const [map, setMap] = useState(null)
     const performersAr = store.bidsStore.AvailablePerformers
     const performers = values(performersAr)
-    console.log(performers);
+
     const arY = performers.map((item: any) => Number.parseFloat(item.lat))
     const arX = performers.map((item: any) => Number.parseFloat(item.lon))
     const fitB = performers.map((item: any) => ([Number.parseFloat(item.lat), Number.parseFloat(item.lon)]))

@@ -10,7 +10,7 @@ const SelectMantine = ({ label, required, onChange,...props }:SelectProps & {onC
 	// @ts-ignore
 	const [field, meta,helpers ] = useField(props);
 	// @ts-ignore
-	// console.log('Имя:', field.name, 'Ошибка:', meta.error, 'touched:', meta.touched);
+	
 	return (
         <label
             className={'account-form__input  flex-grow  !flex-[1_0_20rem]' + ' ' + props.className}

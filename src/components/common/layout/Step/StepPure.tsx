@@ -23,7 +23,7 @@ export const Step = observer((props: {
   const {values} = useFormikContext()
   const store = useStore()
   React.useEffect(() => {
-    console.log(values);
+
   }, [values])
   return (
     <Panel

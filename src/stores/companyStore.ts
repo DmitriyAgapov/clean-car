@@ -111,6 +111,7 @@ export class CompanyStore {
             }
           }
         )
+
         reaction(
             () => this.companies,
             (companies: any) => {
@@ -127,6 +128,7 @@ export class CompanyStore {
             },
         )
     }
+
     canLoad = false
     companies: IObservableArray<Companies> = [] as any
     companiesMap: IObservableArray<Companies> = [] as any
@@ -260,15 +262,11 @@ export class CompanyStore {
                 set(this.fullCompanyData, { [data.company.data.id]: data })
             }
         } catch (e) {
-            this.errors = e
+            action(() => this.errors = e)
             new Error('Create Company failed')
         } finally {
             this.loadingCompanies = false
         }
-        // } else {
-        // console.log('est');
-        // }
-
         return get(this.fullCompanyData, `${newid}`)
     })
     editCompany = flow(function* (this: CompanyStore, data: any, type: CompanyType, id) {
@@ -346,7 +344,7 @@ export class CompanyStore {
             if (data.status === 200) {
                 //@ts-ignore
                 const { results } = data.data
-                // console.log(results);
+
                 set(this.companies, results)
             }
         } catch (error) {
@@ -401,14 +399,14 @@ export class CompanyStore {
             try {
                 this.loadingCompanies = true
                 const { data, status } = yield agent.Filials.getFilials(appStore.appType, company_id)
-                // console.log(data);
+
                 if (status === 200) {
                     this.filials = data.results
                 }
             } catch (error) {
                 throw new Error('Fetch data companies failed')
             } finally {
-                // console.log('finally');
+
                 this.loadingCompanies = false
             }
         }
@@ -428,7 +426,7 @@ export class CompanyStore {
         try {
             const response = yield agent.Filials.createFilial(type, company_id, data)
             if (response.status > 199 && response.status < 299) {
-                // console.log(response.data);
+
                 return response.data
             }
             return response.response
@@ -485,7 +483,6 @@ export class CompanyStore {
 
     getAllCompanies (params?: PaginationProps) {
         this.loadingCompanies = true
-        console.log(userStore.getUserCan(PermissionNames["Компании"], "read"), 'Пермммм');
         if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
                  agent.Companies.getAllCompanies(params)

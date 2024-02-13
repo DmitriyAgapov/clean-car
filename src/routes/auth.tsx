@@ -13,7 +13,7 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 
 function AuthPage() {
   const store = useStore()
-  // console.log(store.appStore);
+  
   return (
     <Layout
       className={'page-intro'}
