@@ -115,7 +115,7 @@ export function InputAutocompleteWithCity(props:any) {
         <label className={`account-form__input w-full flex-grow  !flex-[1_0_20rem] col-span-2`}
           htmlFor={'address'}
           data-form_error={errors.address && touched.address && 'error'}>
-          {step3.fields[0].label}
+          {props.label ? props.label : step3.fields[0].label}
         <TextInput
           leftSection={<SvgSearch  className={'absolute'}/>}
           ref={ref}

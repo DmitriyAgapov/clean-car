@@ -609,6 +609,7 @@ export class BidsStore {
         }
     }
     async formCreateBid() {
+        this.justCreatedBid = {}
         if(this.formResult.company) {
             const res:any = await agent.Bids.createBid(this.formResult.company, {
                 company: this.formResult.company,
@@ -622,8 +623,9 @@ export class BidsStore {
                 service_subtype: this.formResult.service_subtype
             })
 
-            if(res.status) {
+            if(res.status === 200) {
                 //@ts-ignore
+
                 runInAction(() => this.justCreatedBid = res.data)
             }
             return res
@@ -640,6 +642,7 @@ export class BidsStore {
         return this.textData
     }
     formResultsClear() {
+        this.currentBid  = observable.object<CurrentBidProps>({} as CurrentBidProps)
         this.formResult = observable.object(initialResult);
         this.currentPerformers.clear()
         this.currentPerformers = new Map([])

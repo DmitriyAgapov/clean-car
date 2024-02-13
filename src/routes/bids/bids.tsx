@@ -30,7 +30,11 @@ const BidsPage = () => {
 					</div>
 					{store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<>
 						<Button text={textData.loadExcel} action={() => navigate('create')} trimText={true} className={'inline-flex'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} />
-						<Button text={textData.create} action={() => navigate('create')} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
+						<Button text={textData.create} action={() => {
+							store.bidsStore.justCreatedBid = {}
+							store.bidsStore.formResultsClear()
+							navigate('create')
+						}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
 				<TableWithSortNew total={storeData.count}
