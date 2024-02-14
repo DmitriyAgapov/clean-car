@@ -13616,6 +13616,9 @@ export const  tires  = {
     }
   ]
 }
+
+
+export const backToUrlLevel = location.pathname.split('/').slice(0, -1).join('/')
 export const useOutsideClick = (callback: () => void) => {
   const ref = React.useRef(null)
 

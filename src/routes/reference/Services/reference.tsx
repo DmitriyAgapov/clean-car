@@ -7,7 +7,7 @@ import { useStore } from "stores/store";
 import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { SvgBackArrow } from "components/common/ui/Icon";
 import { PermissionNames } from "stores/permissionStore";
-import { dateTransform } from "utils/utils";
+import {  dateTransform } from "utils/utils";
 import { FormCard } from "components/Form/FormCards/FormCards";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import AddType from "routes/reference/Services/addType";
@@ -19,10 +19,10 @@ const ServicePage = () => {
     const params = useParams()
     const navigate = useNavigate()
     const location = useLocation()
-   const { data, textData, pageRequest }: any = useLoaderData()
+    const { data, textData, pageRequest }: any = useLoaderData()
 
-  let [searchParams, setSearchParams] = useSearchParams()
-
+    let [searchParams, setSearchParams] = useSearchParams()
+    const backToUrlLevel = location.pathname.split('/').slice(0, -1).join('/')
     const memoizedData = React.useMemo(() => {
         return data.results?.subtypes?.results?.map((subtype: any) => (
             <FormCard
@@ -44,7 +44,6 @@ const ServicePage = () => {
                                             variant={HeadingVariant.h3}
                                         />
                                     ),
-                                    text: `Вы уверены, что хотите удалить ${data.results.name}`,
                                     component: <AddOption subtype_id={subtype.id} id={Number(params.id)} />,
                                     state: true,
                                 })
@@ -63,7 +62,6 @@ const ServicePage = () => {
                                             variant={HeadingVariant.h3}
                                         />
                                     ),
-                                    text: `Вы уверены, что хотите удалить ${data.results.name}`,
                                     component: (
                                         <AddType
                                             edit={true}
@@ -119,7 +117,7 @@ const ServicePage = () => {
                 </div>
             </FormCard>
         ))
-    }, [data])
+    }, [data.results])
     // @ts-ignore
 
   if (location.pathname.includes('edit')) return <Outlet />
@@ -144,7 +142,7 @@ const ServicePage = () => {
                                 className={
                                     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                                 }
-                                action={() => navigate(-1)}
+                                action={() => navigate(backToUrlLevel)}
                                 variant={ButtonVariant.text}
                             />
                             <Heading
@@ -158,7 +156,6 @@ const ServicePage = () => {
                 }
             ></Panel>
             <Panel
-                state={false}
                 className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
                 variant={PanelVariant.textPadding}
                 background={PanelColor.glass}
@@ -210,13 +207,13 @@ const ServicePage = () => {
                     </>
                 }
                 footer={
-                  data.results.subtypes.count / pageRequest.page_size > 1 && (
+                  data.results?.subtypes?.count / pageRequest.page_size > 1 && (
                         <Pagination
                             classNames={{
                                 control:
                                     'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
                             }}
-                            total={Math.ceil(data.results.subtypes.count / 9)}
+                            total={Math.ceil(data.results?.subtypes?.count / 9)}
                             onChange={(value:any) => {
 
                                 setSearchParams((prevState: any) => ({...prevState, page: value}))
@@ -229,7 +226,100 @@ const ServicePage = () => {
                     )
                 }
             >
-                {memoizedData}
+              {data.results.subtypes?.results?.map((subtype: any) => (
+              <FormCard
+                title={subtype.name}
+                titleVariant={HeadingVariant.h4}
+                className={'group relative w-full overflow-hidden'}
+                actions={
+                  <div
+                    className={
+                      'absolute  group-hover:opacity-100 opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5  gap-2 px-8 flex items-center justify-center flex-col bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2'
+                    }
+                  >
+                    <Button
+                      action={async () => {
+                        store.appStore.setModal({
+                          header: (
+                            <Heading
+                              text={`Добавить новую опцию услуги  ${subtype.name}`}
+                              variant={HeadingVariant.h3}
+                            />
+                          ),
+                          component: <AddOption subtype_id={subtype.id} id={Number(params.id)} />,
+                          state: true,
+                        })
+                      }}
+                      className={'!text-xs text-accent uppercase w-full'}
+                      variant={ButtonVariant['accent-outline']}
+                      size={ButtonSizeType.sm}
+                      text={'Добавить опцию'}
+                    />
+                    <Button
+                      action={async () => {
+                        store.appStore.setModal({
+                          header: (
+                            <Heading
+                              text={`Редактировать тип услуги  ${subtype.name}`}
+                              variant={HeadingVariant.h3}
+                            />
+                          ),
+                          component: (
+                            <AddType
+                              edit={true}
+                              data={{
+                                service_type: data.results.id,
+                                subtypeName: subtype.name,
+                                status: subtype.is_active ? 'true' : 'false',
+                              }}
+                              subtype_id={subtype.id}
+                              id={data.results.id}
+                            />
+                          ),
+                          state: true,
+                        })
+                      }}
+                      className={'!text-xs uppercase w-full [-webkit-text-fill-color=initial]'}
+                      variant={ButtonVariant['outline']}
+                      size={ButtonSizeType.sm}
+                      text={'Редактировать'}
+                    />
+                    {subtype.options.length > 0 && (
+                      <LinkStyled
+                        to={String(subtype.id)}
+                        className={'!text-xs text-accent uppercase w-full'}
+                        variant={ButtonVariant['outline']}
+                        size={ButtonSizeType.sm}
+                        text={'Подробнее'}
+                      />
+                    )}
+                  </div>
+                }
+              >
+                <div
+                  className={`absolute w-4 h-4 right-3 top-3 rounded-full ${
+                    subtype.is_active ? 'bg-active' : 'bg-red-500'
+                  }`}
+                />
+                <div>
+                  {subtype.options.length > 0 ? (
+                    <>
+                      <span className={'text-base text-accent'}>{subtype.options.length}</span>
+                      <span className={'text-sm text-gray-2 uppercase font-medium ml-2'}>
+                                {' '}
+                        дополнительных опций
+                            </span>
+                    </>
+                  ) : (
+                    <span className={'text-sm text-gray-2 uppercase font-medium ml-2'}>
+                            {' '}
+                      нет дополнительных опций
+                        </span>
+                  )}
+                </div>
+              </FormCard>
+              ))}
+                {/* {memoizedData} */}
             </Panel>
         </Section>
     )

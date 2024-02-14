@@ -9,7 +9,6 @@ import { SelectCreatable } from "components/common/ui/CreatableSelect/CreatableS
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import agent from "utils/agent";
-import { observer, Observer } from "mobx-react-lite";
 import { CarType } from "stores/carStore";
 
 import { values as val } from 'mobx'
@@ -59,18 +58,15 @@ const dataCreate = {
     },
   ],
 }
+
+
 const FormCreateCarBrand = (props: any) => {
 
   const store = useStore()
   const { textData }: any = useLoaderData()
-  const params = useParams()
   const brand = store.catalogStore.getCurrentCarModelWithBrand
   const navigate = useNavigate()
   const edit = props?.edit ?? false
-  // React.useEffect(() => {
-  //   store.catalogStore.getCarModelWithBrand(Number(params.id)).then(r => console.log(r))
-  // }, [])
-
   const result = (Object.keys(CarType) as (keyof typeof CarType)[]).map(
     (key, index) => {
       return {
@@ -79,20 +75,18 @@ const FormCreateCarBrand = (props: any) => {
       };
     },
   );
+  console.log(props);
   // @ts-ignore
   return (
-    <Formik validationSchema={dataCreate.validateSchema} initialValues={props?.edit ? {
+    <Formik  validationSchema={dataCreate.validateSchema} initialValues={props?.edit ? {
       car_type: props.car_type,
       modelName: props.modelName,
       brand: props.brand,
       brandId: props.brandId
     } : dataCreate.initValues} onSubmit={(props) => {
-
+      console.log(props);
       store.catalogStore.createCarBrand({ car_type: props.car_type, model: props.modelName, brandId: props.brandId, brandName: typeof props.brand === "string" ? props.brand : null})
-      .then(r => {
-
-        return r
-      })
+      .then(r => r)
       .then((r) => navigate(`/account/references/car_brands/${r?.data.id}`))    //
     }} >
       {({ errors, touched, setFieldValue, values, submitForm,isValid }) => (
@@ -142,9 +136,8 @@ const FormCreateCarBrand = (props: any) => {
                   <Button
                     text={'Сохранить'}
                     type={'submit'}
+                    // action={submitForm}
                     className={'float-right'}
-
-                    // action={(e) => console.log(e)}
                     disabled={!isValid}
                     variant={ButtonVariant.accent}
                   />
@@ -161,8 +154,9 @@ const FormCreateCarBrand = (props: any) => {
             </Await>
             }
           >
-          <ComboboxCustom defaultValue={props?.edit ? props.brand : null} action={(e) => setFieldValue('brandId', Number(e.id))} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/>
-          <TextInput  onChange={(e) => values.modelName = e.target.value} defaultValue={props?.edit ? props.modelName : null} placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
+          <SelectCreatable defaultValue={props?.edit ? props.brand : null} items={val(store.catalogStore.carBrands).map((item:any)=> ({label: item.name, value: String(item.id)}))} createAction={(e) => setFieldValue('brandId', Number(e.id))} label={values.brand !== null ? 'Создать бренд' : 'Бренд'}/>
+          {/* <ComboboxCustom defaultValue={props?.edit ? props.brand : null} action={(e) => setFieldValue('brandId', Number(e.id))} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/> */}
+          <TextInput withAsterisk  onChange={(e) => values.modelName = e.target.value} defaultValue={props?.edit ? props.modelName : null} placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
           <Select  withCheckIcon={false}   required onChange={(e) =>  setFieldValue('car_type', e)} defaultValue={props?.edit ? props.car_type : null} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
           label: item.label,
           value: String(item.value)

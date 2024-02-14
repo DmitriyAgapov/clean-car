@@ -13,6 +13,7 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import FormActions from "routes/reference/FormActions/FormActions";
 import agent from "utils/agent";
 import { observer } from "mobx-react-lite";
+import { Select } from "@mantine/core";
 const dataCreate = {
     initValues: {
       id: 0,
@@ -95,7 +96,7 @@ const FormCreateCity = (props: any) => {
               })
             }
         }}>
-        {({ errors, touched,isSubmitting, values, submitForm,isValid }) => (
+        {({ errors, setFieldValue, touched,isSubmitting, values, submitForm,isValid }) => (
           <Form  style={{display: 'contents'}}>
           <Panel
             state={false}
@@ -106,7 +107,7 @@ const FormCreateCity = (props: any) => {
             footer={
               <>
 
-                <div className={'flex gap-5'}>
+                <div className={'flex gap-5 flex-1'}>
                   {editStatus && <Button
                     text={'Удалить'}
                     action={async () => {
@@ -162,13 +163,14 @@ const FormCreateCity = (props: any) => {
                   placeholder={dataCreate.inputs[0].placeholder}
                   type={dataCreate.inputs[0].type}
               />
-              <SelectCustom
-                  value={values.timezone}
+              <Select
+                  // value={values.timezone}
                   label={dataCreate.inputs[1].label}
                   placeholder={dataCreate.inputs[1].placeholder}
                   name={dataCreate.inputs[1].fieldName}
-                  // defaultValue={"true"}
-                  options={[
+                  onOptionSubmit={(value) => setFieldValue(dataCreate.inputs[1].fieldName, value)}
+                  defaultValue={values.timezone}
+                  data={[
                       {
                           label: 'UTC+2 (Калининград)',
                           value: 'UTC+2',
@@ -215,13 +217,17 @@ const FormCreateCity = (props: any) => {
                       },
                   ]}
               />
-              <SelectCustom
-                value={values.status}
+              <Select
+                  // value={values.status}
+                  onOptionSubmit={(value) => {
+                    console.log(values);
+                    setFieldValue(dataCreate.inputs[2].fieldName, value === "true")
+                  }}
                   label={dataCreate.inputs[2].label}
                   placeholder={dataCreate.inputs[2].placeholder}
                   name={dataCreate.inputs[2].fieldName}
-                defaultValue={"true"}
-                  options={[
+                  defaultValue={values.status}
+                  data={[
                       {
                           label: 'Активно',
                           value: 'true',

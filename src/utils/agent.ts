@@ -58,9 +58,9 @@ const requests = {
       // headers: tokenPlugin(),
       method: 'PUT',
       data: body,
-    }),
-  // .then((response) => response)
-  // .catch(handleErrors),
+    })
+    .then((response:any) => response)
+  .catch(handleErrors),
   patch: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
@@ -95,6 +95,7 @@ const requests = {
 
 //Обработка ошибок
 const handleErrors = (err: AxiosError) => {
+
     if (err && err.response && err.response.status === 401) {
         const refr = window.sessionStorage.getItem('jwt_refresh')
               if (refr) {
@@ -247,10 +248,10 @@ const Catalog = {
             brand_name: brand_name,
         }),
     createCarBrandWithExistBrand: (brand: number, car_class: string, model: string) =>
-        requests.post('/catalog/car_models/create_with_new_brand/', {
+        requests.post('/catalog/car_models/create_with_exist_brand/', {
             name: model,
             car_type: car_class,
-            brand_name: brand,
+            brand: brand,
         }),
     getCarBrandModels: (brand_id: number, params?: PaginationProps) =>
         requests.get(`/catalog/car_brands/${brand_id}/car_models/list`, {}, params),
@@ -272,16 +273,16 @@ const Catalog = {
         requests.post('/catalog/services/subypes/create/', { name: name, is_active: is_active, service_type: id }),
     createOption: (id: number, name: string, is_active: boolean) =>
         requests.post('/catalog/services/options/create/', { name: name, is_active: is_active, service_type: id }),
-    editSubtype: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.put(`/catalog/services/subypes/${id}/update/`, {
+    editSubtype: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.put(`/catalog/services/subypes/${subtype_id}/update/`, {
       name: name,
       is_active: is_active,
-      service_type: subtype_id,
+      service_type: id,
     }),
     getServiceOption: (id: number) => requests.get(`/catalog/services/options/${id}/retrieve`),
     editServiceOption: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.put(`/catalog/services/options/${id}/update/`, {
       name: name,
       is_active: is_active,
-      service_type: subtype_id
+      service_subtype: subtype_id
     }),
      createServiceOption: ({ id, subtype_id, name, is_active }:{ id: number, subtype_id: number, name: string, is_active: boolean }) => requests.post(`/catalog/services/options/create/`, {
       name: name,

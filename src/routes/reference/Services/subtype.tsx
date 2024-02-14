@@ -20,14 +20,14 @@ const ServicesSubTypePage = () => {
     const params = useParams()
     const { data, page, pageRequest, textData }: any = useLoaderData()
     useEffect(() => {
-
+      console.log(data.results.options);
     }, [data])
     return (
         <Section type={SectionType.default}>
             <Panel
                 variant={PanelVariant.withGapOnly}
                 headerClassName={'flex justify-between'}
-                state={store.permissionStore.loadingPermissions}
+
                 header={
                     <>
                         <div>
@@ -41,7 +41,7 @@ const ServicesSubTypePage = () => {
                                 className={
                                     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                                 }
-                                action={() => navigate(-1)}
+                                action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))}
                                 variant={ButtonVariant.text}
                             />
                             <Heading
@@ -133,7 +133,7 @@ const ServicesSubTypePage = () => {
                                 status: card.is_active ? 'true' : 'false',
                               }}
                               subtype_id={Number(params.subtype_id)}
-                              id={Number(params.id) as number}
+                              id={Number(card.id) as number}
                             />
                           ),
                           state: true,
@@ -148,10 +148,7 @@ const ServicesSubTypePage = () => {
                   </div>
                 }>
                   <div className={`absolute w-4 h-4 right-3 top-3 rounded-full ${card.is_active ? 'bg-active' : 'bg-red-500'}`}/>
-                  {/* <div> */}
-                  {/*   <span className={'text-base text-accent'}>{card.subtypes.length}</span> */}
-                  {/*   <span className={'text-sm text-gray-2 uppercase font-medium ml-2'}> основных услуг</span> */}
-                  {/* </div> */}
+
                   </FormCard>)}
 
             </Panel>

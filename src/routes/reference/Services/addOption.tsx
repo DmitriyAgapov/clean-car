@@ -6,6 +6,7 @@ import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import agent from "utils/agent";
 import { useStore } from "stores/store";
 import { useNavigate, useRevalidator } from "react-router-dom";
+import { Select } from "@mantine/core";
 
 
 const AddOption = ({ id, subtype_id, edit = false, data }: { id: number,  edit?: boolean, data?: any ,subtype_id?: number}) => {
@@ -22,21 +23,22 @@ const AddOption = ({ id, subtype_id, edit = false, data }: { id: number,  edit?:
 	const initValues = {
 		subtypeName: edit ? data.subtypeName : "",
 		status: edit ? data.status : "",
-		service_type: subtype_id
+		subtype_id: subtype_id
 	};
+	console.log(id, subtype_id);
 	return (
 		<Formik initialValues={(edit && init) ? data : initValues}
 			onSubmit={(values, submitForm) => {
 
 			}}>
-			{({ errors, touched, values, submitForm, isValid }) => (
+			{({ errors, touched,setFieldValue, values, submitForm, isValid }) => (
 				<Form className={"grid gap-4"}>
 					<CreateFormikInput fieldName={"subtypeName"}
 						placeholder={"Введите название"}
 						fieldType={"text"}
 						label={"Название опции"} />
-					<SelectCustom value={values.status} name={"status"}
-						options={[
+					<Select onOptionSubmit={(e) => setFieldValue('status', e)} defaultValue={values.status}  name={"status"}
+						data={[
 							{ label: "Активно", value: "true" },
 							{ label: "Неактивно", value: "false" }
 						]}
@@ -49,12 +51,12 @@ const AddOption = ({ id, subtype_id, edit = false, data }: { id: number,  edit?:
 							action={async () => {
 								//@ts-ignore
 								if (edit) {
-									await agent.Catalog.editServiceOption({id: id, subtype_id: Number(values.service_type),  name: values.subtypeName, is_active: values.status === "true"}).then(() => {
+									await agent.Catalog.editServiceOption({id: id, subtype_id: Number(values.subtype_id),  name: values.subtypeName, is_active: values.status === "true"}).then(() => {
 										revalidator.revalidate();
 									}).finally(() => store.appStore.closeModal());
 								} else {
 
-									await agent.Catalog.createServiceOption({id: id, subtype_id: Number(values.service_type),  name: values.subtypeName, is_active: values.status === "true"}).then(() => {
+									await agent.Catalog.createServiceOption({id: id, subtype_id: Number(values.subtype_id),  name: values.subtypeName, is_active: values.status === "true"}).then(() => {
 										revalidator.revalidate();
 										// navigate(`/account/references/services/${id}/${values.service_type}`, { replace: true })
 									}).finally(() =>

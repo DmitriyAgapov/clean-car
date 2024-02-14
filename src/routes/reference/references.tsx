@@ -1,30 +1,56 @@
-import React, { useEffect } from "react";
-import {values} from "mobx";
+import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useNavigation } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
+import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
+import { carHelperTable } from 'stores/carStore'
+import CarHelper from "components/common/layout/CarHelper/CarHelper";
+
 
 const ReferencesPage = () => {
     const store = useStore()
     const navigate = useNavigate()
     const location = useLocation()
-    const { data, textData }: any = useLoaderData()
-
+    const { data, page, textData }: any = useLoaderData()
+  console.log(page);
     if (location.pathname !== `/account/references/${textData.path}`) return <Outlet />
     return (
         <Section type={SectionType.default}>
+
             <Panel variant={PanelVariant.withGapOnly} state={false} headerClassName={'flex justify-between'}
               header={<><div><Button text={<><SvgBackArrow />Назад к справочнику{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
                   <Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /></div>
-                  {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (<Button text={textData.create} action={() => navigate('create')} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />)}</>}>
+                  <div className={'flex gap-6'}>
+                    {page === 'car_brands' && <Button
+                      text={'Классификация автомобилей'}
+                      action={async () => {
+                        store.appStore.setModal({
+                          header: (
+                            <Heading
+                              text={`Классификация автомобилей`}
+                              variant={HeadingVariant.h2}
+                              className={'pb-12'}
+                            />
+                          ),
+                          className: '!flex-[0_1_45.5rem] !block',
+                          component: <CarHelper/>,
+                          state: true,
+                        })
+                      }}
+                      trimText={true}
+                      /* action={() => store.companyStore.addCompany()} */ className={'inline-flex'}
+                      variant={ButtonVariant["accent-outline"]}
+                      size={ButtonSizeType.sm}
+                    />}
+                    {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (<Button text={textData.create} action={() => navigate('create')} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />)}
+                  </div>
+              </>}/>
 
-            </Panel>
           <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
                 <TableWithSortNew total={data.count}
                   variant={PanelVariant.dataPadding}

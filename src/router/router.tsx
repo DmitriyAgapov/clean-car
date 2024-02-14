@@ -277,9 +277,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: 'services',
-
                         element: <ServicesPage />,
-
                         loader: referencesLoader,
                         children: [
                             {
