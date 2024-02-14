@@ -11,7 +11,7 @@ export class FormStore {
     makePersistable(this, {
       name: 'formStore',
       properties: ['formCreateUser', 'formCreateCar'],
-      storage: sessionStorage,
+      storage: localStorage,
     })
     reaction(() => this.formCreateCar.company_id, (company_id) => {
       if (company_id !== 0) {

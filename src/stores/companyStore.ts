@@ -66,6 +66,7 @@ export interface PerformerProfile {
 export interface Companies {
     company_type: CompanyType;
     id: number
+    name: string
     // companies: Company<CompanyType>[]
     parent?: null | {
         id: number
@@ -85,7 +86,7 @@ export class CompanyStore {
         makePersistable(this, {
             name: 'companyStore',
             properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany"],
-            storage: window.sessionStorage,
+            storage: window.localStorage,
 
         }, { fireImmediately: true }).then(
           action((persistStore) => {
@@ -544,9 +545,20 @@ export class CompanyStore {
         return this.companies
     }
     get getCompaniesAll() {
-        return this.companies
+        return this.companies as any[]
+    }
+    get getFilialsAll() {
+        return this.filials as any[]
     }
 
+    getCompanyOrFilials(type:string) {
+       const _isCompany =  type === 'Компания'
+       if(_isCompany) {
+           return this.companies
+       } else {
+           return  this.filials
+       }
+    }
 
     getCompanyFullData(id: number) {
         return get(this.fullCompanyData, `${id}`)

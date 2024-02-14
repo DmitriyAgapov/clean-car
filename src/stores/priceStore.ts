@@ -2,6 +2,9 @@ import { makeAutoObservable, observable, reaction, toJS, values } from "mobx";
 import { makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import paramsStore from 'stores/paramStore'
+import { notifications } from "@mantine/notifications";
+import { SvgClose } from "components/common/ui/Icon";
+import React from "react";
 
 export enum CAR_TP {'легковой', 'внедорожный', 'коммерческий'}
 export enum CAR_RADIUS {
@@ -61,7 +64,7 @@ export const CAR_TYPES = {
 export class PriceStore {
     constructor() {
         makeAutoObservable(this, {}, { autoBind: true })
-        makePersistable(this, { name: 'priceStore', storage: window.sessionStorage, properties: ['prices', 'priceOnChange'] }, {fireImmediately: true})
+        makePersistable(this, { name: 'priceStore', storage: window.localStorage, properties: ['prices', 'priceOnChange'] }, {fireImmediately: true})
         reaction(() => this.priceOnChange,
           (priceOnChange, previous) => {
 
@@ -138,6 +141,7 @@ export class PriceStore {
     }
     async updatePriceWash() {
         const values = this.parseEntries().wash
+        console.log('va0', values);
         if(values)  {
             const {data, status}:any = await agent.Price.updatePriceWash(values.company_id, values.price_id, values.data)
             return {data, status}
@@ -164,12 +168,51 @@ export class PriceStore {
     async updatePrices() {
         return Promise.all([this.updatePriceWash(), this.updatePriceTire(), this.updatePriceEvac()])
     }
+    async handleSavePrice() {
+        this.updatePrices()
+        .then((r) => {
+            console.log('success', r)
+            r.forEach((r: any) => {
+                setTimeout(() => {
+                    if(r.status === 201) {
+                        notifications.show({
+                            id: 'car-created',
+                            withCloseButton: true,
+                            autoClose: 5000,
+                            title: "Прайс обновлен",
+                            message: 'Возвращаемся на страницу прайса',
+                            className: 'my-notification-class z-[9999] absolute top-12 right-12',
+                            loading: false,
+                        });
+                        this.clearPriceOnChange()
+                    } else {
+                        notifications.show({
+                            id: 'car-created',
+                            withCloseButton: true,
+                            onClose: () => console.log('unmounted'),
+                            onOpen: () => console.log('mounted'),
+                            autoClose: 5000,
+                            title: "Ошибка",
+                            message: 'Прайс не удалось обновить',
+                            color: 'red',
+                            className: 'my-notification-class z-[9999]',
+                            style: { backgroundColor: 'red' },
+                            loading: false,
+                        });
+                    }}, 2000)})
 
+        })}
     // @ts-ignore
-    handleChangeAmount({label, price_id, company_id,amount, id}) {
+    handleChangeAmount({label, price_id, company_id, initValue, amount, id}) {
+        console.log(amount);
+        console.log(initValue);
+        if(!initValue) {
+            // @ts-ignore
+            this.priceOnChange.set(id.toString(), {amount: amount, label: label, price_id: price_id, company_id, id: id})
+        } else {
+            this.priceOnChange.delete(id.toString())
+        }
 
-        // @ts-ignore
-        this.priceOnChange.set(id.toString(), {amount: amount, label: label, price_id: price_id, company_id, id: id})
     }
     get TextData() {
         return this.textData

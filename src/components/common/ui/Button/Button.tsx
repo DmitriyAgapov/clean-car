@@ -59,7 +59,7 @@ const Button = ({
     disabled={disabled}
     data-variant={variant}
     data-size={size}> {text}</button>
-  if(type === 'button') return  <Btn type={'button'} className={styles.Button + ' ' + className}
+  if(type === 'button') return  <Btn type={'button'} onClick={action} className={styles.Button + ' ' + className}
     data-disabled={disabled}
     data-directory={directory}
     component="a"

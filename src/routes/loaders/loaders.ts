@@ -315,9 +315,10 @@ export const filialLoader = async ({ params: { id, company_type, action, company
 
     return { id: id, company_id: company_id, type: company_type, parent: parent, data: { ...filial } }
 }
-export const usersLoader = async () => {
-    const { data, status } = await agent.Users.getAllUsers()
-
+export const usersLoader =  async (props: any) => {
+    const paginationData = paginationParams(props.request.url as string)
+    const { data, status } = await agent.Users.getAllUsers(paginationData as PaginationProps)
+    console.log(paginationData);
 
 
     return {

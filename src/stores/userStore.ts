@@ -41,7 +41,7 @@ export class UserStore {
     makePersistable(this, {
       name: 'userStore',
       properties: ['currentUser','permissionsVariants','myProfileData', 'currentUserPermissions'],
-      storage: sessionStorage,
+      storage: window.localStorage,
     });
     reaction(() => this.currentUser,
        (currentUser) => {
@@ -60,10 +60,7 @@ export class UserStore {
        action(() => appStore.token = "")
      appStore.token = ""
 
-      } else {
-
       }
-
       }
 
       )
@@ -77,14 +74,18 @@ export class UserStore {
       })
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
-
         if(permissions.id && permissions.permissions.length > 0) {
-
           this.loadUserPermissions()
         } else if(this.currentUser.id) {
           action(() => this.loadMyProfile())
         }
     })
+    reaction(() => this.currentUserPermissions.size,
+      (size) => {
+          if(size === 0) {
+            this.createUserPermissions()
+          }
+      })
   }
 
   currentUser: User = {id: 0, email: '', first_name: '', last_name: '', is_staff: null, is_superuser: null};
@@ -146,7 +147,6 @@ export class UserStore {
   createUserPermissions() {
     let ar:any = new Map([]);
     if(this.isAdmin) {
-
       action(() => {
         appStore.setAppType(UserTypeEnum.admin)
         this.myProfileData.permissions = this.myProfileData.user.staff_group

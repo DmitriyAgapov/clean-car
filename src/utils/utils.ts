@@ -13635,7 +13635,20 @@ export const useOutsideClick = (callback: () => void) => {
 
   return ref
 }
-
+export function useIsValid(ar: string[], formContext: any)  {
+  const [isNotValid, setIsNotValid] = useState(true);
+  useEffect(() => {
+    let counter = 0;
+    ar.forEach((fieldName) => {
+      if(!formContext.isValid(fieldName)) {
+        formContext.isDirty(fieldName) && formContext.setFieldError(fieldName, 'Обязательное поле');
+        counter ++
+      }
+    })
+    setIsNotValid(counter !== 0)
+  }, [formContext.values]);
+  return isNotValid;
+}
 export const dateTransformShort = (date: string) => {
   const value = !date ? new Date(Date.now()) : new Date(date)
   const options = {

@@ -199,7 +199,7 @@ const FormCreateBid = ({ user, edit }: any) => {
         setAnimate((prevState) => !prevState)
         setTimeout(() => {
             setAnimate(false)
-            setStep((prevState) => (step ? step : (prevState += 1)))
+            setStep((prevState) => (step ? step : prevState + 1))
         }, 1200)
     }
 
@@ -793,7 +793,7 @@ const FormCreateBid = ({ user, edit }: any) => {
                                                         style: { backgroundColor: 'red' },
                                                         loading: false,
                                                     })
-                                                    changeStep()
+
                                                 } else {
                                                     notifications.show({
                                                         id: 'bid-created',
@@ -808,7 +808,7 @@ const FormCreateBid = ({ user, edit }: any) => {
                                                         // style: { backgroundColor: 'red' },
                                                         loading: false,
                                                     })
-
+                                                  changeStep()
                                                 }
                                             })
                                         }}

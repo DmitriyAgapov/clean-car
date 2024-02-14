@@ -86,7 +86,7 @@ export class UsersStore {
       }
       return result
     } catch (error) {
-      new Error('create User failed')
+      // new Error('create User failed')
     }
     finally {
       this.loadingUsers = false
@@ -106,7 +106,7 @@ export class UsersStore {
       }
       return result
     } catch (error) {
-      new Error('create User failed')
+      // new Error('create User failed')
     }
     finally {
       this.loadingUsers = false
@@ -183,6 +183,34 @@ export class UsersStore {
     }
     return user
   })
+  async createNewUser( edit:boolean, values:any) {
+    let res: any
+    if(edit) {
+      const data = {
+        id: values.id,
+        phone: values.phone.replace(/\s+/g, ''),
+        email: values.email,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        group: Number(values.group),
+        is_active: values.is_active === "true",
+      }
+      console.log(data);
+      console.log(values);
+      return this.updateUser(values.company_id, data);
+
+    } else {
+      const data = {
+        phone: values.phone.replace(/\s+/g, ''),
+        email: values.email,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        group: Number(values.group),
+        is_active: values.is_active === "true",
+      }
+      return this.createUser(values.company_id, data)
+    }
+  }
   setLoadingErrors = (error: any) => {
     this.loadingErrors = error
   }

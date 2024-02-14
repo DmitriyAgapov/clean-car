@@ -13,9 +13,9 @@ root.render(
     <MantineProvider theme={newTheme} defaultColorScheme={'dark'}>
     {/* <ThemeProvider value={theme}> */}
       <Notifications  position="top-right" zIndex={1000}/>
-      <React.StrictMode>
+      {/* <React.StrictMode> */}
         <RouterProvider router={router} />
-      </React.StrictMode>
+      {/* </React.StrictMode> */}
     {/* </ThemeProvider> */}
 
     </MantineProvider>

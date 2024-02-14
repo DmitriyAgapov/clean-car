@@ -1,7 +1,24 @@
-import { createTheme, Input, Combobox, Select, DEFAULT_THEME, mergeMantineTheme, Checkbox, Textarea } from "@mantine/core";
+import {
+    createTheme,
+    Input,
+    InputLabel,
+    Combobox,
+    Select,
+    DEFAULT_THEME,
+    mergeMantineTheme,
+    Checkbox,
+    Textarea,
+    TextInput, InputBase
+} from "@mantine/core";
 
+// @ts-ignore
 const themeOverride = createTheme({
     components: {
+        InputLabel: InputLabel.extend({
+            classNames: {
+                label: 'font-semibold',
+            }
+        }),
         Input: Input.extend({
             classNames: {
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3',
@@ -9,7 +26,10 @@ const themeOverride = createTheme({
         }),
         Select: Select.extend({
             classNames: {
-                input: 'bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                label: 'font-semibold',
+                error: 'absolute -bottom-3',
+                root: '*:data-[error=true]:text-error relative',
+                input: 'mb-2 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
                 dropdown: '!bg-white rounded-[0.625rem]',
                 option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent data-[checked=true]:text-accent focus:!bg-transparent focus:!text-accent',
             }
@@ -23,18 +43,26 @@ const themeOverride = createTheme({
                 option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent focus:!bg-transparent focus:!text-accent',
             }
         }),
-        TextInput: Input.extend({
+        TextInput: TextInput.extend({
             classNames: {
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                label: 'font-semibold',
+                error: 'absolute -bottom-3',
+                root: '*:data-[error=true]:text-error relative',
+                input: 'mb-2 text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
             }
         }),
-        InputBase: Input.extend({
+
+        InputBase: InputBase.extend({
             classNames: {
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                label: 'font-semibold',
+                error: 'absolute -bottom-3',
+                root: '*:data-[error=true]:text-error relative',
+                input: 'mb-2  text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
             }
         }),
         Textarea: Textarea.extend({
             classNames: {
+                label: 'font-semibold',
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] h-full min-h-[6rem] overflow-hidden border-color-[var(--formBorder)] h-10',
             }
         }),
@@ -47,7 +75,7 @@ const themeOverride = createTheme({
             classNames: {
                 body: 'flex items-center relative z-10 ',
                 root: 'relative cursor-pointer',
-                label: 'relative cursor-pointer mb-0 font-base font-normal ',
+                label: 'relative cursor-pointer mb-0 font-base font-normal  font-semibold',
                 inner: 'w-4 h-4 rounded-none relative  outline outline-offset-4 !border-0 outline-1 outline-gray-3  flex items-center justify-center border border-gray-3',
                 input: 'w-3.5 h-3.5 rounded-none absolute bg-accent cursor-pointer opacity-0 !border-0 checked:scale-100 checked:!opacity-100 transition-all duration-500 ease-in-out',
                 icon: 'hidden',
@@ -60,6 +88,7 @@ const themeOverride = createTheme({
         }),
     },
     fontFamily: 'Montserrat',
+
 
 });
 const newTheme = mergeMantineTheme({ ...DEFAULT_THEME }, { ...themeOverride });

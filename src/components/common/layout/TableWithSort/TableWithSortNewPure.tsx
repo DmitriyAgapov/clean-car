@@ -78,8 +78,8 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
                           input: 'h-4 min-h-8 px-1.5 text-xs ',
                             root: ''
                         }}
-
-                          onChange={(value) => store.priceStore.handleChangeAmount({amount: value, id: props.id, ...meta})}
+                          
+                          onChange={(value) => store.priceStore.handleChangeAmount({amount: value, id: props.id, initValue: props[key] === value, ...meta})}
                           suffix=" ₽"
                           // decimalScale={2}
                           // fixedDecimalScale

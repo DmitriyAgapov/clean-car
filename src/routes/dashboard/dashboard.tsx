@@ -6,9 +6,11 @@ import SearchBar from "components/common/layout/SearchBar/SearchBar";
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import CreateInput from "components/common/ui/CreateInput/CreateInput";
 import agent from "utils/agent";
-import { Combobox,Loader, TextInput, useCombobox } from '@mantine/core'
+// import { Combobox,Loader, TextInput, useCombobox } from '@mantine/core'
 import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
-
+import { TextInput, Checkbox, Group, Box } from '@mantine/core';
+import { useForm } from '@mantine/form';
+import TestForm, { createUserFormActions, useFormContext } from "components/Form/TestForm/TestForm";
 
 
 
@@ -75,7 +77,16 @@ const sidebarMenu: { icon: React.ReactNode; title: string; url: string }[] = [
   },
 ]
 export default function DashboardPage() {
+  const form = useForm({
+    initialValues: {
+      email: '',
+      termsOfService: false,
+    },
 
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+    },
+  });
   return (
     <>
     <Section type={SectionType.default}>
@@ -89,76 +100,8 @@ export default function DashboardPage() {
           </>
         }
       />
-      <Panel className={'col-span-full'} variant={PanelVariant.textPadding} background={PanelColor.glass}>
-        <div>
-          <Heading text={'Buttons'} variant={HeadingVariant.h1} color={HeadingColor.accent}/>
-          <div>
-            <Button text={'Сохранить'} variant={ButtonVariant.accent} />
-            <Button text={'Сохранить'} variant={ButtonVariant['accent-outline']} />
-            <Button text={'Сохранить'} />
-            <Button text={'Сохранить'} />
-          </div>
-          <div>
-            <Heading text={'Small'} variant={HeadingVariant.h3} className={'mt-8'}/>
-            <Button text={'Сохранить'} variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm} />
-            <Button text={'Сохранить'} variant={ButtonVariant.accent} size={ButtonSizeType.sm} />
-            <Button text={'Сохранить'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
-            <Button text={'Сохранить'} directory={ButtonDirectory.admin} size={ButtonSizeType.sm} />
-            <Button text={'Сохранить'} directory={ButtonDirectory.performer} size={ButtonSizeType.sm} />
-            <Button text={'Сохранить'} directory={ButtonDirectory.customer} size={ButtonSizeType.sm} />
-          </div>
-        </div>
-        <p>
-
-          Мы рады, что вы выбрали нас.
-          <br />
-          Пожалуйста, заполните данные для регистрации{' '}
-        </p>
-      </Panel>
+      <TestForm />
     </Section>
-
-
-  <Section type={SectionType.default}>
-    <Panel
-      search={true}
-      header={
-        <>
-          <Heading text={'Дашборд'} variant={HeadingVariant.h1}  color={HeadingColor.accent} />
-          <SearchBar />
-        </>
-      }
-    />
-    <Panel
-      variant={PanelVariant.textPadding} background={PanelColor.glass} header={
-      <>
-        <Heading text={'HEADER'}
-          variant={HeadingVariant.h1} color={HeadingColor.accent} />
-    </>}>
-      <div>
-        <Heading text={'Buttons'} variant={HeadingVariant.h1} color={HeadingColor.accent}/>
-        <div>
-          <Button text={'Сохранить'} variant={ButtonVariant.accent} />
-          <Button text={'Сохранить'} variant={ButtonVariant['accent-outline']} />
-          <Button text={'Сохранить'} />
-          <Button text={'Сохранить'} />
-        </div>
-        <div>
-          <Heading text={'Small'} variant={HeadingVariant.h3} className={'mt-8'}/>
-          <Button text={'Сохранить'} variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm} />
-          <Button text={'Сохранить'} variant={ButtonVariant.accent} size={ButtonSizeType.sm} />
-          <Button text={'Сохранить'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
-          <Button text={'Сохранить'} directory={ButtonDirectory.admin} size={ButtonSizeType.sm} />
-          <Button text={'Сохранить'} directory={ButtonDirectory.performer} size={ButtonSizeType.sm} />
-          <Button text={'Сохранить'} directory={ButtonDirectory.customer} size={ButtonSizeType.sm} />
-        </div>
-      </div>
-      <p>
-        Мы рады, что вы выбрали нас.
-        <br />
-        Пожалуйста, заполните данные для регистрации{' '}
-      </p>
-    </Panel>
-  </Section>
     </>
   )
 }

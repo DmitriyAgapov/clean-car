@@ -11,7 +11,7 @@ export class AppStore {
     makePersistable(this, {
       name: 'appStore',
       properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions', 'token'],
-      storage: sessionStorage,
+      storage: localStorage,
     }, {
       fireImmediately: true,
     })
@@ -19,12 +19,12 @@ export class AppStore {
       () => this.token,
       (token) => {
         if (token) {
-          window.localStorage.setItem('jwt', token)
+          window.sessionStorage.setItem('jwt', token)
           userStore.pullUser()
           userStore.loadMyProfile()
 
         } else {
-          window.localStorage.removeItem('jwt')
+          window.sessionStorage.removeItem('jwt')
           sessionStorage.clear()
         }
       },
@@ -32,9 +32,9 @@ export class AppStore {
     reaction(() => this.tokenRefresh,
       (tokenRefresh) => {
         if (tokenRefresh) {
-          window.localStorage.setItem('jwt_refresh', tokenRefresh)
+          window.sessionStorage.setItem('jwt_refresh', tokenRefresh)
         } else {
-          window.localStorage.removeItem('jwt_refresh')
+          window.sessionStorage.removeItem('jwt_refresh')
         }
       },
     )
@@ -78,8 +78,8 @@ export class AppStore {
   appName = 'CleanCar'
   appRouteName = '.авторизация'
   appTheme = 'dark'
-  token = window.localStorage.getItem('jwt')
-  tokenRefresh = window.localStorage.getItem('jwt_refresh')
+  token = window.sessionStorage.getItem('jwt')
+  tokenRefresh = window.sessionStorage.getItem('jwt_refresh')
   appPermissions?: Permissions[]
   tokerError: string | null = null
   tokenFull: {} | null = null

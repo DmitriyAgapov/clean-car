@@ -48,11 +48,11 @@ const UsersPage = () => {
         }
       ></Panel>
       <TableWithSortNew
-        total={data.results.length}
+        total={data.count}
         background={PanelColor.glass}
         filter={true}
         search={true}
-        ar={[{label: 'Статус', name: 'state'},{label: 'ФИО', name: 'name'}, {label: 'Телефон', name: 'phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'group'}, {label: 'Компания',name: 'company'}, {label:  'Город', name: 'city'}]}
+        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee__first_name'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city'}]}
         // @ts-ignore
         data={data.results.map((item: { company: Company; group: number; employee: User }) => ({
           state: item.employee.is_active,
@@ -71,7 +71,7 @@ const UsersPage = () => {
         }))}
         state={store.usersStore.loadingUsers}
         style={PanelRouteStyle.users}
-        initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]}
+        initFilterParams={[{label: 'Статус', value: 'is_active'}, {label: 'Город', value:  'city'}]}
       />
     </Section>
   )

@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { SvgBackArrow, SvgClose } from "components/common/ui/Icon";
 import { PermissionNames } from 'stores/permissionStore'
 import { dateTransform, dateTransformShort } from "utils/utils";
@@ -13,6 +13,7 @@ import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { ScrollArea } from '@mantine/core'
 import { notifications } from "@mantine/notifications";
+import { observer } from "mobx-react-lite";
 
 const test = [
   {
@@ -27,7 +28,7 @@ const PriceEditPage = ():JSX.Element => {
   const { data, dataTable }: any = useLoaderData()
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
-
+  const revalidator = useRevalidator()
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
@@ -57,46 +58,13 @@ const PriceEditPage = ():JSX.Element => {
           <>
             <div className={'flex w-full  col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
-              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <Button text={'Сохранить'}  action={() => {
-                 store.priceStore.updatePrices().then((r) => {
-                   console.log('success', r)
-                   r.forEach((r: any) => {
-                     setTimeout(() => {
-                   if(r.status === 201) {
-                     notifications.show({
-                       id: 'car-created',
-                       withCloseButton: true,
-                       onClose: () => console.log('unmounted'),
-                       onOpen: () => console.log('mounted'),
-                       autoClose: 5000,
-                       title: "Прайс обновлен",
-                       message: 'Возвращаемся на страницу прайса',
-                       icon: <SvgClose />,
-                       className: 'my-notification-class z-[9999] absolute top-12 right-12',
-
-                       loading: false,
-                     });
-                      setTimeout(() => {
-                        store.priceStore.clearPriceOnChange()
-                        navigate(location.pathname.split('/edit')[0])
-                      }, 1000)
-                   } else {
-                     notifications.show({
-                       id: 'car-created',
-                       withCloseButton: true,
-                       onClose: () => console.log('unmounted'),
-                       onOpen: () => console.log('mounted'),
-                       autoClose: 5000,
-                       title: "Ошибка",
-                       message: 'Прайс не удалось обновить',
-                       color: 'red',
-                       className: 'my-notification-class z-[9999]',
-                       style: { backgroundColor: 'red' },
-                       loading: false,
-                     });
-                   }}, 2000)})
-
-              })}} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>
+              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={() => {
+                store.priceStore.handleSavePrice()
+                .then(() => {
+                  navigate(location.pathname.split('/edit')[0])
+                })
+                revalidator.revalidate()
+              }} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>
 
               }
             </div>
@@ -134,4 +102,4 @@ const PriceEditPage = ():JSX.Element => {
     </Section>
   )
 }
-export default PriceEditPage
+export default observer(PriceEditPage)

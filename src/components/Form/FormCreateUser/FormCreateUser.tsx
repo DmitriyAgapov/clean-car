@@ -218,7 +218,7 @@ const FormCreateUser = ({ user, edit }: any) => {
         .phone('RU', 'Введите правильный номер').required('Обязательное поле'),
         email: Yup.string().email('Неверный email').required('Обязательное поле'),
         group: Yup.number().min(1).required('Обязательное поле'),
-        company_id: Yup.number().min(1),
+        // company_id: Yup.number().min(1),
     })
     const { company_type, companyid, id } = useParams<any>()
     let initValues = {
@@ -300,7 +300,7 @@ const FormCreateUser = ({ user, edit }: any) => {
                         if (res && res.data.id)
                             navigate(`/account/users/${values.type}/${values.company_id}/${res.data.id}`)
                     }).catch((error) => {
-                        throw new Error(error)
+                        // throw new Error(error)
                     }).finally(() => {
                         FormikHelpers.setSubmitting(false)
                     })
@@ -355,6 +355,21 @@ const FormCreateUser = ({ user, edit }: any) => {
                                     className={'float-right'}
                                     variant={ButtonVariant.accent}
                                 />
+                                <Button
+                                    type={'submit'}
+                                    // disabled={!isValid}
+                                    text={'Сохранить'}
+                                    action={() => {
+                                        console.log(`clicked`, errors)
+
+                                        // // submitForm
+                                        // submitForm()
+                                        // setSubmitting(false)
+                                    }}
+                                    className={'float-right'}
+                                    variant={ButtonVariant.accent}
+                                />
+
                                 <RequestErrors />
                             </div>
                         </div>

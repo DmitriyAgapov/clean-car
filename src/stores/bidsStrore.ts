@@ -447,7 +447,7 @@ export class BidsStore {
         makePersistable(this, {
             name: 'bidsStore',
             properties: ['formResult', 'bids', 'currentPerformers', 'justCreatedBid', 'currentBid'],
-            storage: window.sessionStorage,
+            storage: window.localStorage,
         }, {fireImmediately: true})
 
         reaction(() => this.justCreatedBid.id, (id) => {
@@ -544,7 +544,7 @@ export class BidsStore {
         }
     }
     async updateBitStatus(company_id:number|string, bid_id:number|string, bidStatus: BidsStatus) {
-        const { data:dataStatus, status }:any = await agent.Bids.updateBidStatus(company_id, bid_id, bidStatus)
+        const { data:dataStatus, status }:any = await agent.Bids.updateBidStatus(Number(company_id), Number(bid_id), bidStatus)
         if (status === 200) {
             return ({
                 data: dataStatus.status

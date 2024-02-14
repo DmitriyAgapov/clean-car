@@ -5,10 +5,9 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { Navigate, useNavigate } from 'react-router-dom'
-import 'yup-phone-lite'
-import FormCreateUser from 'components/Form/FormCreateUser/FormCreateUser'
 import { useStore } from "stores/store";
 import { PermissionNames } from "stores/permissionStore";
+import TestForm from "components/Form/TestForm/TestForm";
 
 export default function UsersPageCreateAction() {
   const store = useStore()
@@ -56,7 +55,7 @@ export default function UsersPageCreateAction() {
         }
       ></Panel>
 
-      <FormCreateUser/>
+      <TestForm/>
 
     </Section>
   )

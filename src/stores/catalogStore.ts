@@ -22,7 +22,7 @@ export class CatalogStore {
                 'currentServiceSubtypes',
                 'loadingState'
             ],
-            storage: window.sessionStorage,
+            storage: window.localStorage,
         }, {fireImmediately: true})
 
         reaction(() => this.loadingState.brands,

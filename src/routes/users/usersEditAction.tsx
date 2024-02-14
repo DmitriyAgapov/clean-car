@@ -4,17 +4,20 @@ import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { Navigate, useLoaderData, useNavigate } from 'react-router-dom'
+import { Navigate, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import 'yup-phone-lite'
 import FormCreateUser from 'components/Form/FormCreateUser/FormCreateUser'
 import { useStore } from "stores/store";
 import { observer } from "mobx-react-lite";
 import { PermissionNames } from "stores/permissionStore";
+import TestForm from "components/Form/TestForm/TestForm";
 
 const UsersPageEditAction = () => {
   const store = useStore()
   const navigate = useNavigate()
+  const location = useLocation()
   const { user }: any = useLoaderData()
+  console.log(location);
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
@@ -31,7 +34,7 @@ const UsersPageEditAction = () => {
                 </>
               }
               className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
-              action={() => navigate(-1)}
+              action={() => navigate('/account/users')}
               variant={ButtonVariant.text}
             />
             <Heading
@@ -58,7 +61,7 @@ const UsersPageEditAction = () => {
         }
       ></Panel>
 
-      <FormCreateUser user={user} edit={true}/>
+      <TestForm user={user} edit={true}/>
 
     </Section>
   )

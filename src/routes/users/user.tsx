@@ -16,7 +16,7 @@ const UserPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { user }: any = useLoaderData()
-  
+
   const userData = React.useMemo(() => {
     return (
         <>
@@ -65,7 +65,7 @@ const UserPage = () => {
                   </>
                 }
                 className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'}
-                action={() => navigate(-1)}
+                action={() => navigate('/account/users')}
                 variant={ButtonVariant.text}
               />
               <Heading

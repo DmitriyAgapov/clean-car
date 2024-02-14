@@ -7,10 +7,10 @@ axios.interceptors.request
 	.use(
 		async (config, ) => {
 			config.params && paramsStore.setParams(config.params)
-			if (localStorage.getItem('jwt')) {
+			if (window.sessionStorage.getItem('jwt')) {
 				// @ts-ignore
 				config.headers = {
-					Authorization: `Bearer ${localStorage.getItem('jwt')}`
+					Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`
 				};
 			}
 			return config;

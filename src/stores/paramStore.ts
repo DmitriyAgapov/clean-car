@@ -12,7 +12,7 @@ export type ParamsProps = {
 export class ParamStore {
 	constructor() {
 		makeAutoObservable(this, {}, { autoBind: true })
-		makePersistable(this, { storage: sessionStorage, name: 'paramStore', properties: ['params']} )
+		makePersistable(this, { storage: localStorage, name: 'paramStore', properties: ['params']} )
 	}
 	params = {
 		page: 1,
