@@ -194,9 +194,10 @@ export class UserStore {
   }
 
   getUserCan(key: string, action: keyof CRUD) {
+    console.log('userIsLoggedIn : getUserCan -------', authStore.userIsLoggedIn, 'Ключ--', key);
     if(authStore.userIsLoggedIn) {
       if(this.currentUserPermissions && this.currentUserPermissions.has(key)) {
-        console.log('Все ок с  правами')
+        console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
         return this.currentUserPermissions.get(key)[action]
       } else {
         console.log('Нет прав, создаем')
@@ -246,6 +247,7 @@ export class UserStore {
     }
     this.currentUser = {id: 0, email: '', first_name: '', last_name: '', is_staff: false}
     this.currentUserPermissions.clear()
+    window.localStorage.clear()
     appStore.setAppType('')
     appStore.setAppRouteName('.авторизация')
     sessionStorage.clear()

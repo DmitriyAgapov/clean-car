@@ -246,7 +246,7 @@ export class PermissionStore {
       this.loadingPermissions = false
        agent.PermissionsAdmin.getAllAdminPermissions()
         .then(action((response:any) => response.data))
-        .then(action((data:any) => {
+        .then(((data:any) => {
           set(this.permissions, data.results)
       }))
         .catch(action((error:any) => this.errors = error))
@@ -360,9 +360,12 @@ export class PermissionStore {
     this.loadingPermissions = false
   }
   get getCompanyPermissions() {
-    return this.companyPermissions as any
+    return this.companyPermissions
   }
   get getAdminPermissions() {
+    if(this.permissions.length === 0) {
+      this.loadPermissionAdmin()
+    }
    return this.permissions
   }
   createPermissionStoreAdmin(data: any) {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { yupResolver } from 'mantine-form-yup-resolver';
 import { CreateUserSchema } from "utils/validationSchemas";
 import { InputBase, Select, TextInput } from "@mantine/core";
@@ -82,7 +82,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
         }
 				if(payload.field === 'group') {
 					return ({
-						disabled: payload.form.values.company_id === null || payload.form.values.type === null || payload.form.values.company_id === "0" || payload.form.values.depend_on === null ,
+						disabled: payload.form.values.company_id === null && payload.form.values.type !== 'admin',
 						className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-2'
 					})
         }
@@ -105,18 +105,10 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	let revalidator = useRevalidator();
 	const navigate = useNavigate()
 
-	const groupVar = React.useMemo(() => {
-		if(form.values.type === UserTypeEnum.admin) {
-			return store.permissionStore.getAdminPermissions
-		} else  {
-			return store.permissionStore.getCompanyPermissions
-		}
-	}, [form.values.company_id, store.permissionStore.permissions, store.permissionStore.companyPermissions])
-
 	// @ts-ignore
 	const companyVar = React.useMemo(() => form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll.filter((c) => c.company_type === CompanyType[form.values.type]),
 		[form.values.depend_on, form.values.type])
-
+	console.log(store.permissionStore.getCompanyPermissions);
 	return (
 
         <FormProvider form={form}>
@@ -168,6 +160,10 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     <TextInput withAsterisk label={'E-mail'} {...form.getInputProps('email')} />
                     <Select
                         withAsterisk
+		                    onOptionSubmit={(e) => {
+			                    console.log('Группа', e)
+			                    // store.permissionStore.loadCompanyPermissionsResults(Number(e))
+		                    }}
                         label={'Тип'}
 	                      clearButtonProps={{
 													onClick: () => form.setValues(initValues)
@@ -183,8 +179,12 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         withAsterisk
                         clearable
                         label={'Группа'}
+		                    onOptionSubmit={(e) => {
+			                    console.log('Группа', e)
+			                    // store.permissionStore.loadCompanyPermissionsResults(Number(e))
+		                    }}
                         {...form.getInputProps('group', { dependOn: 'company_id' })}
-                        data={groupVar.map((p: any) => ({
+                        data={(form.values.type !== UserTypeEnum.admin ? store.permissionStore.getCompanyPermissions : store.permissionStore.getAdminPermissions).map((p: any) => ({
                             label: p.name,
                             value: String(p.id),
                         }))}

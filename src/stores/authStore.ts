@@ -3,6 +3,7 @@ import { AxiosError } from 'axios'
 import agent from '../utils/agent'
 import userStore from './userStore'
 import appStore from './appStore'
+import { makePersistable } from "mobx-persist-store";
 
 export class AuthStore {
   constructor() {
@@ -20,7 +21,15 @@ export class AuthStore {
       register: action,
       logout: action,
     })
+    makePersistable(this, {
+      name: 'authStore',
+      properties: ['userIsLoggedIn', 'inProgress','values'],
+      storage: window.localStorage,
+    }, {
+      fireImmediately: true,
+    })
   }
+
 
   userIsLoggedIn: boolean = false
   inProgress = false
@@ -83,7 +92,6 @@ export class AuthStore {
   login() {
     this.inProgress = true
     this.errors = undefined
-
     return agent.Auth.login(this.values.email, this.values.password)
       .then((resolve: any) => runInAction(() => {
           const { access, refresh } = resolve.data

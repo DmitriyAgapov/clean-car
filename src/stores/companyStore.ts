@@ -497,7 +497,7 @@ export class CompanyStore {
                     // .catch((errors:any) => this.errors = errors)
 
                 }
-            } else {
+           else {
                 agent.Companies.getMyCompanies(params)
                     .then((response:any) => response.data)
                     .then((data:any) => this.myCompany.company = data.results)
@@ -505,7 +505,7 @@ export class CompanyStore {
 
                  return this.stateMyCompany.company
             }
-
+        }
     }
     loadCompanyData(company_type: string, id: number) {
         this.loadingCompanies = true
@@ -547,6 +547,9 @@ export class CompanyStore {
         return this.companies
     }
     get getCompaniesAll() {
+        if(this.companies.length === 0) {
+            this.getAllCompanies()
+        }
         return this.companies as any[]
     }
     get getFilialsAll() {
