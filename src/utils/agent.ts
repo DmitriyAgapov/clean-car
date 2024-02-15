@@ -7,6 +7,9 @@ import { User } from 'stores/userStore'
 import { runInAction, toJS } from "mobx";
 import { Company, CompanyType } from "stores/companyStore";
 import { BidsStatus } from "stores/bidsStrore";
+import { notifications } from "@mantine/notifications";
+import { SvgClose } from "components/common/ui/Icon";
+import React from "react";
 
 export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
@@ -95,22 +98,45 @@ const requests = {
 
 //Обработка ошибок
 const handleErrors = (err: AxiosError) => {
+    console.log(err && err.response && (err.response.status === 400 || err.response.status === 405));
 
+    //create notification
+
+    if(err && err.response && (err.response.status === 400 || err.response.status === 405)) {
+
+      // @ts-ignore
+      const errMsg = typeof err.response.data === "string" ? err.response.data : err.response.data.error_message
+      notifications.show({
+        id: 'bid-created',
+        withCloseButton: true,
+        onClose: () => console.log('unmounted'),
+        onOpen: () => console.log('mounted'),
+        autoClose: 4000,
+        // title: "Ошибка",
+        message: errMsg,
+        // color: 'red',
+        // icon: <SvgClose />,
+        className:
+          'my-notification-class z-[9999] absolute top-12 right-12 notification_cleancar',
+        // style: { backgroundColor: 'red' },
+        loading: false,
+      })
+    }
     if (err && err.response && err.response.status === 401) {
         const refr = window.sessionStorage.getItem('jwt_refresh')
-              if (refr) {
-              agent.Auth.tokenRefresh(refr)
-                  .then((resolve: any) => resolve.data)
-                  .then((data) => {
-                      runInAction(() => {
-                        appStore.setToken(null)
-                        appStore.setToken(data.access)
-                      })
-                  })
-                  .catch((err) => {
-                      appStore.setTokenError(err.response.data)
-                      authStore.logout()
-                  })
+        if (refr) {
+        agent.Auth.tokenRefresh(refr)
+            .then((resolve: any) => resolve.data)
+            .then((data) => {
+                runInAction(() => {
+                  appStore.setToken(null)
+                  appStore.setToken(data.access)
+                })
+            })
+            .catch((err) => {
+                appStore.setTokenError(err.response.data)
+                authStore.logout()
+            })
         }
     }
     return err

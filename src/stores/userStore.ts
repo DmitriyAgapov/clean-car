@@ -6,6 +6,7 @@ import appStore from 'stores/appStore'
 import  { Company, CompanyType } from 'stores/companyStore'
 import { makePersistable, clearPersistedStore } from 'mobx-persist-store';
 import label from 'utils/labels';
+import authStore from "stores/authStore";
 
 
 export enum UserTypeEnum {
@@ -46,22 +47,20 @@ export class UserStore {
     reaction(() => this.currentUser,
        (currentUser) => {
          console.log('currentUser', currentUser);
-        if(currentUser.id) {
-          action(() => this.pullUser())
-          action(() => this.loadMyProfile())
+        if(authStore.userIsLoggedIn && currentUser.id === 0 && appStore.token !== '') {
+          this.pullUser()
+          this.loadMyProfile()
         }
       }
     )
     reaction(() => this.myProfileState,
       (user) => {
-      if(user.user == null) {
-       action(() => appStore.token = "")
-     appStore.token = ""
-
+              if(user.user == null) {
+                action(() => appStore.token = "")
+                appStore.token = ""
+              }
       }
-      }
-
-      )
+    )
     reaction(() => this.loggedUser,
       (loggedUser) => {
         if(loggedUser) {
@@ -75,12 +74,12 @@ export class UserStore {
         if(permissions.id && permissions.permissions.length > 0) {
           this.loadUserPermissions()
         } else if(this.currentUser.id) {
-          action(() => this.loadMyProfile())
+          this.loadMyProfile()
         }
     })
     reaction(() => this.currentUserPermissions,
       (currentUserPermissions) => {
-          if(currentUserPermissions.size === 0) {
+          if(authStore.userIsLoggedIn && currentUserPermissions.size === 0) {
             this.createUserPermissions()
           }
       })
@@ -127,25 +126,21 @@ export class UserStore {
         this.myProfileData.user = data
         this.currentUser.is_staff = data.is_staff
         this.currentUser.is_superuser = data.is_superuser
-
         this.myProfileData.permissions = data.staff_group
 	      this.createUserPermissions()
       })
     }))
-    .catch(((error:any) => this.myProfileData.error = error))
+    .catch((error:any) => runInAction(() =>this.myProfileData.error = error))
     .finally(() => {
-      action(()=> {
-
-      })
-      action(() => {
+      runInAction(() => {
         this.loadingUser = false
         this.myProfileData.loading = false
       })
     })}
   createUserPermissions() {
     let ar:any = new Map([]);
-    console.log(this.isAdmin);
-    if(this.isAdmin) {
+    console.log(this.currentUser);
+    if(this.currentUser.is_staff) {
       action(() => {
         appStore.setAppType(UserTypeEnum.admin)
         this.myProfileData.permissions = this.myProfileData.user.staff_group
@@ -162,7 +157,7 @@ export class UserStore {
         }})
 
     } else {
-      const type = this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer ? UserTypeEnum.performer : UserTypeEnum.customer ;
+      const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
       appStore.setAppType(type)
 
       const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
@@ -218,6 +213,14 @@ export class UserStore {
       this.createUserPermissions()
       return this.currentUserPermissions.get(key)[action]
     }
+    // if(this.myProfileData.permissions && this.myProfileData.permissions.permissions.has(key)) {
+    //   console.log('Все ок с  правами')
+    //   return this.myProfileData.permissions.permissions.get(key)[action]
+    // } else {
+    //   console.log('Нет прав, создаем')
+    //   this.createUserPermissions()
+    //   return this.currentUserPermissions.get(key)[action]
+    // }
   }
   setCurrentPermissions(ar:ObservableMap<any, any>, companyid?: number) {
     this.currentUserPermissions = observable.map(ar)

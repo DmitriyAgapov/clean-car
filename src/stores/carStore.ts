@@ -3,6 +3,7 @@ import { makePersistable } from "mobx-persist-store";
 import agent, { PaginationProps } from "utils/agent";
 import appStore from "stores/appStore";
 import { UserTypeEnum } from "stores/userStore";
+import authStore from "stores/authStore";
 export const carHelperTable = [
 ['А','Легковой', '1 класс', 'До 2 тонн'],
 ['B','Легковой', '1 класс', 'До 2 тонн'],
@@ -78,12 +79,15 @@ export class CarStore {
     }, {
       fireImmediately: true,
     })
+
     reaction(() => this.currentBrand,
       (currentBrand) => {
+        if(authStore.userIsLoggedIn) {
           if(currentBrand) {
             this.getCarBrandModels(currentBrand)
           }
-        })
+        }  })
+
   }
   loadingCars = false
   cars: Car[] = []

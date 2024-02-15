@@ -87,3 +87,13 @@
   border: 1px solid #00FFAE;
 
 }
+
+.notification_cleancar {
+  border: 2px solid var(--mantine-color-red-filled) !important;
+  border-radius: 8px;
+  background: black;
+  padding: 1rem 1.5rem;
+  &:before {
+	content: none !important;
+  }
+}

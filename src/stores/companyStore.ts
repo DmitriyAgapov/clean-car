@@ -485,6 +485,7 @@ export class CompanyStore {
     getAllCompanies (params?: PaginationProps) {
         this.loadingCompanies = true
         console.log(userStore);
+        console.log('Может загружать', userStore.getUserCan(PermissionNames["Управление пользователями"], "read"));
         if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
                  agent.Companies.getAllCompanies(params)

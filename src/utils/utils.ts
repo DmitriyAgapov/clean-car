@@ -13619,6 +13619,7 @@ export const  tires  = {
 
 
 export const backToUrlLevel = location.pathname.split('/').slice(0, -1).join('/')
+
 export const useOutsideClick = (callback: () => void) => {
   const ref = React.useRef(null)
 
@@ -13638,6 +13639,7 @@ export const useOutsideClick = (callback: () => void) => {
 
   return ref
 }
+
 export function useIsValid(ar: string[], formContext: any)  {
   const [isNotValid, setIsNotValid] = useState(true);
   useEffect(() => {
@@ -13652,6 +13654,7 @@ export function useIsValid(ar: string[], formContext: any)  {
   }, [formContext.values]);
   return isNotValid;
 }
+
 export const dateTransformShort = (date: string) => {
   const value = !date ? new Date(Date.now()) : new Date(date)
   const options = {

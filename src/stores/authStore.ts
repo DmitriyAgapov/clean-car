@@ -33,25 +33,25 @@ export class AuthStore {
     password: '',
   }
 
-   refreshToken() {
-     if (appStore.tokenRefresh) {
-       return agent.Auth.tokenRefresh(appStore.tokenRefresh).then((resolve: any) => resolve).then((data) => {
+ refreshToken() {
+   if (appStore.tokenRefresh) {
+     return agent.Auth.tokenRefresh(appStore.tokenRefresh).then((resolve: any) => resolve).then((data) => {
 
-           runInAction(() => {
-             const { access } = data
+         runInAction(() => {
+           const { access } = data
 
-             appStore.setToken(access)
-           })
-         },
-       ).catch(
-         action((err: AxiosError) => {
-           this.errors = err.response && err.response.data
-           throw err
-         }),
-       )
-     }
-     return null
+           appStore.setToken(access)
+         })
+       },
+     ).catch(
+       action((err: AxiosError) => {
+         this.errors = err.response && err.response.data
+         throw err
+       }),
+     )
    }
+   return null
+ }
   setFirstname(first_name: string) {
     this.values.first_name = first_name
   }
@@ -87,6 +87,7 @@ export class AuthStore {
     return agent.Auth.login(this.values.email, this.values.password)
       .then((resolve: any) => runInAction(() => {
           const { access, refresh } = resolve.data
+          this.userIsLoggedIn = true
           appStore.setToken(access)
           appStore.setTokenRefresh(refresh)
         }),
@@ -138,6 +139,7 @@ export class AuthStore {
     appStore.setToken(null)
     appStore.setTokenRefresh(null)
     userStore.forgetUser()
+    action(() => this.userIsLoggedIn = false)
     window.location.replace('/')
   }
 }

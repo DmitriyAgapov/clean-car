@@ -112,6 +112,7 @@ const FormCreateCarBrand = (props: any) => {
                               .then((r) => {
                                 console.log(r)
                               })
+                              .catch((errors) => console.log(errors))
                               .finally(() => {
                                 navigate('/account/references/car_brands', { replace: false })
                                 store.appStore.closeModal()
