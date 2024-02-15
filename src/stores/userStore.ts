@@ -54,21 +54,13 @@ export class UserStore {
       }
     )
     reaction(() => this.myProfileState,
-      (user) => {
-              if(user.user == null) {
-                action(() => appStore.token = "")
-                appStore.token = ""
-              }
+  (user) => {
+        if(user.user == null) {
+          action(() => appStore.token = "")
+          appStore.token = ""
+        }
       }
     )
-    reaction(() => this.loggedUser,
-      (loggedUser) => {
-        if(loggedUser) {
-
-        } else {
-
-        }
-      })
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
         if(permissions.id && permissions.permissions.length > 0) {
@@ -101,7 +93,6 @@ export class UserStore {
     error:  null,
     roles: [] = []
   }
-  loggedUser: boolean = false
   get roles() {
     const roles = []
     if(this.isAdmin) {
