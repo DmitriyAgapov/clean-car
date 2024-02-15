@@ -7,7 +7,7 @@ import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'componen
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useStore } from "stores/store";
 import { PermissionNames } from "stores/permissionStore";
-import TestForm from "components/Form/TestForm/TestForm";
+import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCreateUpdateUsers";
 
 export default function UsersPageCreateAction() {
   const store = useStore()
@@ -53,9 +53,9 @@ export default function UsersPageCreateAction() {
             />
           </>
         }
-      ></Panel>
+      />
 
-      <TestForm/>
+      <FormCreateUpdateUsers/>
 
     </Section>
   )

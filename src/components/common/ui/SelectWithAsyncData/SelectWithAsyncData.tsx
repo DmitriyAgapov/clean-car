@@ -3,8 +3,6 @@ import styles from "./SelectWithAsyncData.module.scss";
 import { Combobox, Input, InputBase, Loader, useCombobox } from '@mantine/core'
 import { useFormContext } from "components/Form/FormCreateUpdateUsers/FormCreateUpdateUsers";
 
-type SelectWithAsyncDataProps = {}
-
 export default function SelectWithAsyncData() {
 	const [value, setValue] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);

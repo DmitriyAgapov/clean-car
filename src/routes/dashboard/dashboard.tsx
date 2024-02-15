@@ -1,18 +1,10 @@
-import React, {  useRef, useState } from 'react'
+import React from 'react'
 import Section, { SectionType } from "components/common/layout/Section/Section";
-import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import SearchBar from "components/common/layout/SearchBar/SearchBar";
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import CreateInput from "components/common/ui/CreateInput/CreateInput";
-import agent from "utils/agent";
-// import { Combobox,Loader, TextInput, useCombobox } from '@mantine/core'
-import InputAutocomplete from "components/common/ui/InputAutocomplete/InputAutocomplete";
-import { TextInput, Checkbox, Group, Box } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import TestForm, { createUserFormActions, useFormContext } from "components/Form/TestForm/TestForm";
-
-
+import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCreateUpdateUsers";
 
 const sidebarMenu: { icon: React.ReactNode; title: string; url: string }[] = [
   {
@@ -100,7 +92,7 @@ export default function DashboardPage() {
           </>
         }
       />
-      <TestForm />
+      <FormCreateUpdateUsers />
     </Section>
     </>
   )
