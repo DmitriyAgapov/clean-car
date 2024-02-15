@@ -1,6 +1,6 @@
-import { action, autorun, computed, IObservable, IObservableValue, makeAutoObservable, observable, ObservableMap, reaction, runInAction } from "mobx";
+import { action, computed, makeAutoObservable, observable, ObservableMap, reaction, runInAction } from "mobx";
 import agent from 'utils/agent'
-import { AccountProps, CRUD, PermissionName, PermissionNames } from "stores/permissionStore";
+import { AccountProps, CRUD,  PermissionNames } from "stores/permissionStore";
 import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'
 import  { Company, CompanyType } from 'stores/companyStore'
@@ -80,10 +80,10 @@ export class UserStore {
   currentUser: User = {id: 0, email: '', first_name: '', last_name: '', is_staff: null, is_superuser: null};
   currentUserPermissions = observable.map([]);
   permissionsVariants = observable.map([]);
-  permissionsVariantss = observable.object({});
-  currentUserActiveAccount?: UserTypeEnum
+  // permissionsVariantss = observable.object({});
+  // currentUserActiveAccount?: UserTypeEnum
   loadingUser: boolean = false
-  updatingUser: boolean = false
+  // updatingUser: boolean = false
   updatingUserErrors: any = ''
   myProfileData = {
     loading: false,
@@ -131,6 +131,7 @@ export class UserStore {
   createUserPermissions() {
     let ar:any = new Map([]);
     console.log(this.currentUser);
+    if(authStore.userIsLoggedIn) {
     if(this.currentUser.is_staff) {
       action(() => {
         appStore.setAppType(UserTypeEnum.admin)
@@ -164,6 +165,7 @@ export class UserStore {
 
       this.myProfileData.permissions = perm[0].group.permissions
     }
+    }
     this.setCurrentPermissions(ar)
   }
   get myProfileState() {
@@ -189,9 +191,6 @@ export class UserStore {
 
       this.setCurrentPermissions(this.myProfileData.user.account_bindings[0].group.permissions.map((el: any) => [label(el.name), el]));
     }
-  }
-  clearStore() {
-    return clearPersistedStore(this)
   }
 
   getUserCan(key: string, action: keyof CRUD) {
@@ -233,17 +232,6 @@ export class UserStore {
       }))
         .finally(() => action(() => this.loadingUser = false))
   }
-
-  getCurrentUserActiveAccount() {
-    return appStore.appType
-  }
-
-  // updateUser(newUser: User) {
-  // 	this.updatingUser = true;
-  // 	return agent.Auth.save(newUser)
-  // 	.then(action(({ user }: { user: User }) => { this.currentUser = user; }))
-  // 	.finally(action(() => { this.updatingUser = false; }))
-  // }
 
   forgetUser() {
     clearPersistedStore('userStore').then((r) => console.log(r))
