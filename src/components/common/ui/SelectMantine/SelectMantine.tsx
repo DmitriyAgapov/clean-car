@@ -10,7 +10,7 @@ const SelectMantine = ({ label, required, onChange,...props }:SelectProps & {onC
 	// @ts-ignore
 	const [field, meta,helpers ] = useField(props);
 	// @ts-ignore
-	
+
 	return (
         <label
             className={'account-form__input  flex-grow  !flex-[1_0_20rem]' + ' ' + props.className}
@@ -30,10 +30,10 @@ const SelectMantine = ({ label, required, onChange,...props }:SelectProps & {onC
 
                 }}
                 classNames={{
-                    dropdown: 'rounded-[0.625rem] border-color-[var(--formBorder)] hover:border-accent',
-                    wrapper: `rounded-[0.625rem]`,
-                    input: `rounded-[0.625rem] border-color-[var(--formBorder)] h-10`,
-                    option: 'font-body text-gray-2 hover:bg-transparent hover:text-accent !font-medium data-[checked=true]:text-accent py-1.5 px-2',
+                    // dropdown: 'rounded-[0.625rem] border-color-[var(--formBorder)] hover:border-accent',
+                    // wrapper: `rounded-[0.625rem]`,
+                    // input: `rounded-[0.625rem] border-color-[var(--formBorder)] h-10`,
+                    // option: 'font-body text-gray-2 hover:bg-transparent hover:text-accent !font-medium data-[checked=true]:text-accent py-1.5 px-2',
                 }}
             />
             {meta.touched && meta.error ? <div className={'form-error'}>{meta.error}</div> : null}

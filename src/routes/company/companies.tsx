@@ -15,7 +15,7 @@ const CompaniesPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { data, page, pageRequest, textData }: any = useLoaderData()
-  const { loading,companies, error } = store.companyStore.allCompanies;
+  // const { loading,companies, error } = store.companyStore.allCompanies;
   ;
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
@@ -45,13 +45,13 @@ const CompaniesPage = () => {
         }
       />
       <TableWithSortNew
-        total={data.count}
+        total={data.results.filter((item:any) => item.parent === null).length}
         variant={PanelVariant.dataPadding}
         search={true}
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
         filter={false}
-        data={data.results.map((item: any) => ({
+        data={data.results.filter((item:any) => item.parent === null).map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           type: item.company_type,

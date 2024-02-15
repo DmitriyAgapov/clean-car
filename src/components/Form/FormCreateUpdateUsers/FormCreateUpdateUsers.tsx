@@ -12,7 +12,6 @@ import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import { useNavigate, useRevalidator } from "react-router-dom";
 import { CompanyType } from "stores/companyStore";
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
-import company from "routes/company/company";
 
 interface InitValues {
 	id: string | number
@@ -60,8 +59,8 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			group: String(user.group.id),
 			is_active: user.employee.is_active ? "true" : "false",
 		}
-		console.log(initValues, 'initValues');
 	}
+
 	const form = useForm({
 			name: 'createUserForm',
       initialValues: initValues,
@@ -106,7 +105,14 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	let revalidator = useRevalidator();
 	const navigate = useNavigate()
 
-	const groupVar = form.values.type === UserTypeEnum.admin ? store.permissionStore.getAdminPermissions : store.permissionStore.getCompanyPermissions
+	const groupVar = React.useMemo(() => {
+		if(form.values.type === UserTypeEnum.admin && form.values.company_id) {
+			return store.permissionStore.getAdminPermissions
+		} else  {
+			return store.permissionStore.getCompanyPermissions
+		}
+	}, [form.values.company_id, store.permissionStore.permissions, store.permissionStore.companyPermissions])
+
 	// @ts-ignore
 	const companyVar = React.useMemo(() => form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll.filter((c) => c.company_type === CompanyType[form.values.type]),
 		[form.values.depend_on, form.values.type])
@@ -184,6 +190,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         }))}
                     />
                     <Select
+	                      withAsterisk
                         label={'Статус'}
                         {...form.getInputProps('is_active')}
                         data={[
@@ -202,7 +209,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                                 {...form.getInputProps('depend_on', { dependOn: 'type' })}
                                 onOptionSubmit={(e) => {
                                     console.log(e)
-                                    store.permissionStore.loadCompanyPermissionsResults(Number(e))
+                                    // store.permissionStore.loadCompanyPermissionsResults(Number(e))
                                 }}
                                 data={[
                                     { label: 'Компании', value: 'company' },
@@ -215,9 +222,10 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                                 withAsterisk
                                 label={'Компании'}
                                 {...form.getInputProps('company_id', { dependOn: 'type' })}
-                                onOptionSubmit={(e) =>
-                                    console.log(store.permissionStore.loadCompanyPermissionsResults(Number(e)))
-                                }
+                                onOptionSubmit={(e) => {
+	                                console.log(e)
+	                                store.permissionStore.loadCompanyPermissionsResults(Number(e))
+                                }}
                                 data={companyVar.map((item) => ({ label: item.name, value: String(item.id) }))}
                             />
                         </>
