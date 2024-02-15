@@ -212,6 +212,7 @@ export class UserStore {
   getUserCan(key: string, action: keyof CRUD) {
 
     if(this.currentUserPermissions && this.currentUserPermissions.has(key)) {
+      console.log('Все ок с  правами')
       return this.currentUserPermissions.get(key)[action]
     } else {
       console.log('Нет прав, создаем')
