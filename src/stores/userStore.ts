@@ -210,7 +210,14 @@ export class UserStore {
   }
 
   getUserCan(key: string, action: keyof CRUD) {
-    return this.currentUserPermissions.get(key)[action]
+
+    if(this.currentUserPermissions && this.currentUserPermissions.has(key)) {
+      return this.currentUserPermissions.get(key)[action]
+    } else {
+      console.log('Нет прав, создаем')
+      this.createUserPermissions()
+      return this.currentUserPermissions.get(key)[action]
+    }
   }
   setCurrentPermissions(ar:ObservableMap<any, any>, companyid?: number) {
     this.currentUserPermissions = observable.map(ar)
