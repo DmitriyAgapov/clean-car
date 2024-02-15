@@ -194,14 +194,15 @@ export class UserStore {
   }
 
   getUserCan(key: string, action: keyof CRUD) {
-
-    if(this.currentUserPermissions && this.currentUserPermissions.has(key)) {
-      console.log('Все ок с  правами')
-      return this.currentUserPermissions.get(key)[action]
-    } else {
-      console.log('Нет прав, создаем')
-      this.createUserPermissions()
-      return this.currentUserPermissions.get(key)[action]
+    if(authStore.userIsLoggedIn) {
+      if(this.currentUserPermissions && this.currentUserPermissions.has(key)) {
+        console.log('Все ок с  правами')
+        return this.currentUserPermissions.get(key)[action]
+      } else {
+        console.log('Нет прав, создаем')
+        this.createUserPermissions()
+        return this.currentUserPermissions.get(key)[action]
+      }
     }
     // if(this.myProfileData.permissions && this.myProfileData.permissions.permissions.has(key)) {
     //   console.log('Все ок с  правами')
