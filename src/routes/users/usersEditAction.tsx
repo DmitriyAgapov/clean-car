@@ -10,7 +10,7 @@ import FormCreateUser from 'components/Form/FormCreateUser/FormCreateUser'
 import { useStore } from "stores/store";
 import { observer } from "mobx-react-lite";
 import { PermissionNames } from "stores/permissionStore";
-import TestForm from "components/Form/TestForm/TestForm";
+import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCreateUpdateUsers";
 
 const UsersPageEditAction = () => {
   const store = useStore()
@@ -61,7 +61,7 @@ const UsersPageEditAction = () => {
         }
       ></Panel>
 
-      <TestForm user={user} edit={true}/>
+      <FormCreateUpdateUsers user={user} edit={true}/>
 
     </Section>
   )
