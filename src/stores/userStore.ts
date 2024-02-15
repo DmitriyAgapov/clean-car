@@ -80,9 +80,9 @@ export class UserStore {
           action(() => this.loadMyProfile())
         }
     })
-    reaction(() => this.currentUserPermissions.size,
-      (size) => {
-          if(size === 0) {
+    reaction(() => this.currentUserPermissions,
+      (currentUserPermissions) => {
+          if(currentUserPermissions.size === 0) {
             this.createUserPermissions()
           }
       })
