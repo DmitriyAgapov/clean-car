@@ -106,7 +106,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	const navigate = useNavigate()
 
 	const groupVar = React.useMemo(() => {
-		if(form.values.type === UserTypeEnum.admin && form.values.company_id) {
+		if(form.values.type === UserTypeEnum.admin) {
 			return store.permissionStore.getAdminPermissions
 		} else  {
 			return store.permissionStore.getCompanyPermissions
