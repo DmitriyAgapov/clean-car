@@ -45,10 +45,8 @@ export class UserStore {
     });
     reaction(() => this.currentUser,
        (currentUser) => {
-        if(currentUser ) {
-
-
-
+         console.log('currentUser', currentUser);
+        if(currentUser.id) {
           action(() => this.pullUser())
           action(() => this.loadMyProfile())
         }
@@ -146,6 +144,7 @@ export class UserStore {
     })}
   createUserPermissions() {
     let ar:any = new Map([]);
+    console.log(this.isAdmin);
     if(this.isAdmin) {
       action(() => {
         appStore.setAppType(UserTypeEnum.admin)
@@ -235,8 +234,8 @@ export class UserStore {
             this.currentUser = r
           })
         })
-        .catch(action((error) => {
-          this.updatingUserErrors = error
+        .catch(((error) => {
+        action(() => this.updatingUserErrors = error)
       }))
         .finally(() => action(() => this.loadingUser = false))
   }

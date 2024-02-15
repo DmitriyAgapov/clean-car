@@ -484,6 +484,7 @@ export class CompanyStore {
 
     getAllCompanies (params?: PaginationProps) {
         this.loadingCompanies = true
+        console.log(userStore);
         if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
                  agent.Companies.getAllCompanies(params)
@@ -492,14 +493,14 @@ export class CompanyStore {
                     .then((data:any) => runInAction(() => {
                         this.companies = data.results
                      }))
-                    .catch((errors:any) => this.errors = errors)
+                    // .catch((errors:any) => this.errors = errors)
 
                 }
             } else {
                 agent.Companies.getMyCompanies(params)
                     .then((response:any) => response.data)
                     .then((data:any) => this.myCompany.company = data.results)
-                    .catch((errors:any) => this.errors = errors)
+                    // .catch((errors:any) => this.errors = errors)
 
                  return this.stateMyCompany.company
             }
