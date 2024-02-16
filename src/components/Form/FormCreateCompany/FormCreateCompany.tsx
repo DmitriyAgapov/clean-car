@@ -14,9 +14,9 @@ const SignupSchema = Yup.object().shape({
     company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
     address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
     legal_address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
-    inn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-    ogrn: Yup.string().min(2, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-    contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле')
+    inn: Yup.string().length(10, 'Длина ИНН должна быть 10 символов').required('Обязательное поле'),
+    ogrn: Yup.string().length(13, 'Длина ОГРН должна быть 13 символов').required('Обязательное поле'),
+    contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
     // service_percent: Yup.number().min(0, 'Минимум').max(100, 'Максимум')
 })
 const initValues = {
@@ -62,6 +62,7 @@ const FormCreateCompany = () => {
         <Formik
             initialValues={initValues}
             validationSchema={SignupSchema}
+            validateOnBlur={true}
             onSubmit={(values) => {
                 if (values.application_type === CompanyType.performer) {
                     const data: Company<CompanyType.performer> = {
@@ -122,9 +123,8 @@ const FormCreateCompany = () => {
                         animate={animate}
                         action={() => navigate(-1)}
                         values={values}
-                        action1={(e: any) => {
-                            console.log(e, 'asdasd')
-                            changeStep()
+                        action1={() => {
+                            changeStep(2)
                         }}
                         errors={errors}
                         touched={touched}

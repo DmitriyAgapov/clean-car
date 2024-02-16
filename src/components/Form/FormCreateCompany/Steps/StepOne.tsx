@@ -1,5 +1,6 @@
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
+import { Input, InputBase, NumberInput } from "@mantine/core";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import SelectCustom from 'components/common/ui/Select/Select'
 import { Field, useFormik, useFormikContext } from 'formik'
@@ -13,19 +14,18 @@ export function FormStep1(props: {
   step: any
   animate: any
   action: () => any
-  values: any
-  action1: (e:any) => any
+  values?: any
+  action1: () => any
   errors: any
   isValid?: boolean
   touched: any
   store: any
   prop8: (o: any) => { label: any; value: string }
 }) {
-  const { values, touched,  errors, setFieldValue, isValidating, isValid }:any = useFormikContext();
-    useEffect(() => {
-      console.log(errors);
-    }, [errors])
-   return (
+  const { values, touched,  errors,  validateForm, setFieldValue, validate,  setSubmitting,  getFieldProps, isValidating, isValid }:any = useFormikContext();
+  console.log(values);
+   // @ts-ignore
+  return (
     <Panel
       variant={PanelVariant.textPadding}
       state={props.step !== 1}
@@ -45,12 +45,22 @@ export function FormStep1(props: {
 
             {values.application_type == CompanyType.customer || values.application_type.value == CompanyType.customer ? (
               <Button
+                //@ts-ignore
+                onLoad={() => isValidating}
+                disabled={!isValid}
                 text={'Дальше'}
                 action={() => {
-                  (Object.keys(errors).length == 0)
-                 ? props.action1 : void null
+                  validateForm(values)
+                  setSubmitting()
+
+                  if(touched.inn && Object.keys(errors).length == 0) {
+                    props.action1()
+                  }  else {
+
+                    void null
+                  }
                 }}
-                type={'submit'}
+                type={'button'}
                 className={'float-right'}
                 variant={ButtonVariant.accent}
               />
@@ -86,6 +96,7 @@ export function FormStep1(props: {
         >
           {'Название компании'}
           <Field
+            required
             id={'company_name'}
             name='company_name'
             placeholder={'Введите название компании'}
@@ -99,7 +110,7 @@ export function FormStep1(props: {
           <SelectMantine
             label={'Город'}
             searchable={true}
-            value={props.values.city}
+            value={values.city}
             name={'city'}
             className={'!flex-auto'}
             data={val(props.store.catalogStore.cities).map(props.prop8)}
@@ -113,7 +124,7 @@ export function FormStep1(props: {
           data-form_error={errors.inn && touched.inn && 'error'}
         >
           {'ИНН'}
-          <Field id={'inn'} name='inn' placeholder={'Введите название компании'} type={'number'} />
+          <NumberInput id={'inn'} type={'text'} onBlur={getFieldProps('inn').onBlur}  onChange={(value) => setFieldValue('inn', value, true)} hideControls maxLength={10} name={'inn'}  placeholder={'Введите ИНН'}/>
           {errors.inn && touched.inn ? (
             <div className={'form-error'}>{errors.inn}</div>
           ) : null}
@@ -124,7 +135,8 @@ export function FormStep1(props: {
           data-form_error={errors.ogrn && touched.ogrn && 'error'}
         >
           {'ОГРН'}
-          <Field id={'ogrn'} name='ogrn' placeholder={'Введите название компании'} type={'number'} />
+          <NumberInput id={'ogrn'} type={'text'} onBlur={getFieldProps('ogrn').onBlur}  onChange={(value) => setFieldValue('ogrn', value, true)} hideControls maxLength={13} name={'ogrn'}  placeholder={'Введите ОГРН'}/>
+
           {errors.ogrn && touched.ogrn ? (
             <div className={'form-error'}>{errors.ogrn}</div>
           ) : null}
@@ -172,7 +184,7 @@ export function FormStep1(props: {
           })}
 
           // disabled={props.values.application_type.readOnly}
-          defaultValue={props.values.application_type.value}
+          defaultValue={values.application_type.value}
           value={values.application_type.value}
           name={'application_type'}
           className={'!flex-initial'}
@@ -193,6 +205,7 @@ export function FormStep1(props: {
               name='service_percent'
               placeholder={'Введите название компании'}
               type={'number'}
+              {...getFieldProps('service_percent')}
             />
             {errors.service_percent && touched.service_percent ? (
               <div className={'form-error'}>{errors.service_percent}</div>

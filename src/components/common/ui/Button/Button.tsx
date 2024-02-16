@@ -53,18 +53,18 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const {width} = useWindowDimensions()
-
+  console.log();
   if(type === 'submit') return  <button type={'submit'} onClick={action} className={styles.Button + ' ' + className}
     data-directory={directory}
     disabled={disabled}
     data-variant={variant}
     data-size={size}> {text}</button>
-  if(type === 'button') return  <Btn type={'button'} onClick={action} className={styles.Button + ' ' + className}
+  if(type === 'button') return  <Btn type={'button'} onClick={event => action && action(event)} className={styles.Button + ' ' + className}
     data-disabled={disabled}
     data-directory={directory}
-    component="a"
+
     data-variant={variant}
-    data-size={size}>{text}</Btn>
+    data-size={size} {...props}>{text}</Btn>
 
   // @ts-ignore
   return (

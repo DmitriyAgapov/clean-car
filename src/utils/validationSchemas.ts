@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { CompanyType } from "stores/companyStore";
 
 export const CreateUserSchema = Yup.object().shape({
 	first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
@@ -9,4 +10,26 @@ export const CreateUserSchema = Yup.object().shape({
 	company_id: Yup.number().required('Обязательное поле'),
 	depend_on: Yup.string().required('Введите тип'),
 	is_active: Yup.string()
+})
+
+export const CreateCompanySchema = Yup.object().shape({
+	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	legal_address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	inn: Yup.string().length(10, 'Длина ИНН должна быть 10 символов').required('Обязательное поле'),
+	ogrn: Yup.string().length(13, 'Длина ОГРН должна быть 13 символов').required('Обязательное поле'),
+	contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	city: Yup.string().required('Обязательное поле'),
+	type: Yup.string(),
+	service_percent: Yup.number().when('type', (type, schema) => {
+		if(type[0] === CompanyType.performer)
+			return schema.min(1, 'Минимум 1%').max(100, 'Максимум').required("Обязательное поле")
+		return schema
+	}),
+	working_time: Yup.string().when('type', (type, schema) => {
+
+		if(type[0] === CompanyType.performer)
+			return schema.min(16, 'Укажите время работы правильно').max(16, 'Укажите время работы правильно').required("Обязательное поле")
+		return schema
+	})
 })

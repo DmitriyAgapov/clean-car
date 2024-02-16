@@ -222,6 +222,7 @@ const Companies = {
     getListCompanyCustomer: (pagination?: PaginationProps) => requests.get('/companies/customer/list/', {}, pagination),
     getListCompanyPerformer: (pagination?: PaginationProps) => requests.get('/companies/performer/list/', {}, pagination),
     getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', {}, pagination),
+    getOnlyAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_companies/list/', {}, pagination),
 }
 const Permissions = {
   getAllCompanyPermissions: (company_id:number) => requests.get(`/permissions/${company_id}/groups/list/`, {}),

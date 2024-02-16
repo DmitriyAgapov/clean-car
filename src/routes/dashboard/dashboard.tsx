@@ -5,6 +5,7 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import SearchBar from "components/common/layout/SearchBar/SearchBar";
 import { useForm } from '@mantine/form';
 import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCreateUpdateUsers";
+import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
 
 export default function DashboardPage() {
   const form = useForm({
@@ -30,7 +31,7 @@ export default function DashboardPage() {
           </>
         }
       />
-      <FormCreateUpdateUsers />
+      <FormCreateUpdateCompany />
     </Section>
     </>
   )

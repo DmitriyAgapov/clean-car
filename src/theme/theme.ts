@@ -8,8 +8,11 @@ import {
     mergeMantineTheme,
     Checkbox,
     Textarea,
-    TextInput, InputBase
-} from "@mantine/core";
+    TextInput,
+    InputBase,
+    NumberInput,
+} from '@mantine/core'
+import { TimeInput } from '@mantine/dates';
 
 // @ts-ignore
 const themeOverride = createTheme({
@@ -25,11 +28,15 @@ const themeOverride = createTheme({
             },
         }),
         Select: Select.extend({
+            defaultProps: {
+                withCheckIcon: false
+            },
             classNames: {
                 label: 'font-semibold',
-                error: 'absolute -bottom-3',
-                root: '*:data-[error=true]:text-error relative',
-                input: 'mb-2 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                error: 'form-error block',
+                root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
+                wrapper: ' !mb-0 ',
+                input: ' bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
                 dropdown: '!bg-white rounded-[0.625rem]',
                 option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent data-[checked=true]:text-accent focus:!bg-transparent focus:!text-accent',
             }
@@ -46,18 +53,20 @@ const themeOverride = createTheme({
         TextInput: TextInput.extend({
             classNames: {
                 label: 'font-semibold',
-                error: 'absolute -bottom-3',
-                root: '*:data-[error=true]:text-error relative',
-                input: 'mb-2 text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                error: 'form-error block',
+                root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
+                wrapper: ' !mb-0 ',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
             }
         }),
 
         InputBase: InputBase.extend({
             classNames: {
                 label: 'font-semibold',
-                error: 'absolute -bottom-3',
-                root: '*:data-[error=true]:text-error relative',
-                input: 'mb-2  text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                error: 'form-error block',
+                root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
+                wrapper: ' !mb-0 ',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
             }
         }),
         Textarea: Textarea.extend({
@@ -66,8 +75,9 @@ const themeOverride = createTheme({
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] h-full min-h-[6rem] overflow-hidden border-color-[var(--formBorder)] h-10',
             }
         }),
-        TimeInput: Input.extend({
+        TimeInput: TimeInput.extend({
             classNames: {
+
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
             }
         }),
@@ -81,8 +91,12 @@ const themeOverride = createTheme({
                 icon: 'hidden',
             }
         }),
-        NumberInput: Input.extend({
+        NumberInput: InputBase.extend({
             classNames: {
+                label: 'font-semibold',
+                error: 'form-error block',
+                root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
+                wrapper: ' !mb-0 ',
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
             }
         }),

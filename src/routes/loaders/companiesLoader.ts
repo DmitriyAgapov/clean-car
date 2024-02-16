@@ -21,13 +21,11 @@ export const companiesLoader = async (props: any) => {
 		create: 'Добавить',
 	}
 
-
-
 	async function fillData() {
 		let data :any[] | any = []
 		let dataMeta
 
-		const { data: dataCars, status } = await agent.Companies.getAllCompanies({
+		const { data: dataCars, status } = await agent.Companies.getOnlyAllCompanies({
 			page: paramsPage ?? 1,
 			page_size: paramsPageSize ?? 10,
 			ordering: paramsOrdering

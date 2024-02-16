@@ -215,6 +215,7 @@ const TableWithSortNew = ({
 
     const fastSearch = React.useCallback((event: React.BaseSyntheticEvent) => {
         event.preventDefault()
+        console.log(event);
         setFastSearchString(event.target.value)
 
         if(fastSearchString.length > 0 )  {
@@ -247,7 +248,7 @@ const TableWithSortNew = ({
     const RowDataMemoized = React.useMemo(() => {
         if(withOutLoader) {
             let initPage = (currentPage === 1) ? currentPage - 1 : (currentPage - 1) * pageSize
-            
+
             if (data && data.length > 0) return data.slice(initPage, initPage + pageSize).map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
         }
         if(data && data.length > 0) return data.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)

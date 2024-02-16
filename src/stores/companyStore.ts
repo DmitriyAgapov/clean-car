@@ -144,6 +144,9 @@ export class CompanyStore {
     targetCompany = {}
     fullCompanyData = new Map([])
     get getCompaniesPerformers() {
+        if(this.companiesPerformers.length === 0) {
+            this.getPerformersCompany()
+        }
         return this.companiesPerformers
     }
     get getCompaniesCustomer() {
@@ -416,6 +419,9 @@ export class CompanyStore {
     })
     get getFillialsData() {
         let filials: any[] = []
+        if(this.companies.length === 0) {
+            this.loadCompanies()
+        }
         if(this.companies.length !== 0) {
             filials = this.companies.filter((company:any) => company.parent !== null)
         }
@@ -475,8 +481,8 @@ export class CompanyStore {
         return agent.Companies.getListCompanyPerformer(params)
         .then((response:any) => response)
         .then((response:any) => response.data)
-        .then(action((data:any) => {
-            console.log(data);
+        .then((data:any) => runInAction(() =>{
+
             this.companiesPerformers = data.results
         }))
         .catch((errors:any) => this.errors = errors)

@@ -108,7 +108,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	// @ts-ignore
 	const companyVar = React.useMemo(() => form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll.filter((c) => c.company_type === CompanyType[form.values.type]),
 		[form.values.depend_on, form.values.type])
-	console.log(store.permissionStore.getCompanyPermissions);
+
 	return (
 
         <FormProvider form={form}>

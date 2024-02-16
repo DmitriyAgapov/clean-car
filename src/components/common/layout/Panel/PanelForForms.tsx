@@ -6,6 +6,7 @@ import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
 import label from "utils/labels";
 import Panel from "components/common/layout/Panel/Panel";
+import Progress from "components/common/ui/Progress/Progress";
 
 export enum PanelVariant {
     default = 'default',
@@ -32,6 +33,8 @@ export enum PanelRouteStyle {
 }
 
 export type PanelProps = {
+    animate?: any
+    step?: any
     search?: boolean
     children?: ReactNode | ReactNode[]
     header?: ReactNode | ReactNode[]
@@ -48,29 +51,28 @@ export type PanelProps = {
     action?: (event: any) => void | any
 }
 
-const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props }:{actionBack?: JSX.Element, actionCancel?: JSX.Element, actionNext?: JSX.Element, children: React.ReactNode}) => {
+const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props }:{actionBack?: JSX.Element, actionCancel?: JSX.Element, actionNext?: JSX.Element, children: React.ReactNode} & PanelProps) => {
 
     return <Panel
       {...props}
-      className={'col-span-full  grid grid-rows-[1fr_auto] items-start'}
-      bodyClassName={'grid  grid-cols-9 items-start gap-4 gap-y-8'}
-      variant={PanelVariant.textPadding}
 
-      footer={
-          <div
-            className={
-                'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'
-            }
-          >
+      className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto] items-start  overflow-x-hidden'}
+      bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} grid  grid-cols-9 items-start gap-4 gap-y-6`}
+      variant={props.variant ?? PanelVariant.textPadding}
+      headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
+      footerClassName={props.footerClassName}
+      footer={(actionBack || actionCancel || actionNext) &&
+          // <div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
               <div className={'flex col-start-2 justify-end gap-5 flex-wrap'}>
                   {actionBack}
                   {actionCancel}
                   {actionNext}
               </div>
-          </div>
+          // </div>
       }
-      background={PanelColor.glass}
+      background={props.background ?? PanelColor.glass}
     >
+
         {children}
     </Panel>
 }
