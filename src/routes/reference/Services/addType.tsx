@@ -22,7 +22,7 @@ const AddType = ({ id, subtype_id, edit = false, data }: { id: number,   edit?: 
 	const navigate = useNavigate();
 	const initValues = {
 		subtypeName: edit ? data.subtypeName : "",
-		status: edit ? data.status : "",
+		status: edit ? data.status : "true",
 		service_type: id,
 		subtype_id: subtype_id
 	};

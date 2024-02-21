@@ -3,7 +3,7 @@ import styles from "./TableWithSort.module.scss";
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import { SvgChevron, SvgLoading, SvgSort } from "components/common/ui/Icon";
 import Chips from "components/common/ui/Chips/Chips";
-import { useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Pagination } from "@mantine/core";
 import DataFilter from "components/common/layout/TableWithSort/DataFilter";
 import TableSearch from "components/common/layout/TableWithSort/TableSearch";
@@ -205,7 +205,7 @@ const TableWithSortNew = ({
         if(withOutLoader) {
             setSearchParams((prev) => ({...prev, ordering: sortedField, page: value}));
         } else  {
-            setSearchParams((prev) => ({...prev, ordering: sortedField, page: value}));
+            setSearchParams((prev) => ({...prev,  ...(searchParams.has('searchString') ? {searchString: searchParams.get('searchString')} : {}), ordering: sortedField, page: value}));
         }
         setCurrentPage(value)
     }, [sortedField])
@@ -220,7 +220,7 @@ const TableWithSortNew = ({
 
         setFastSearchString(event.target.value)
         if(fastSearchString.length > 0 )  {
-            setSearchParams((prevstate) => ({...prevstate, page: pageParams ?? 1, ordering: orderingParams, searchString: event.target.value}));
+            setSearchParams((prevstate) => ({...prevstate, page:  1, ordering: orderingParams, searchString: event.target.value}));
         } else {
             setCurrentPage(1)
         }
@@ -249,10 +249,10 @@ const TableWithSortNew = ({
     const RowDataMemoized = React.useMemo(() => {
         if(withOutLoader) {
             let initPage = (currentPage === 1) ? currentPage - 1 : (currentPage - 1) * pageSize
-
             if (data && data.length > 0) return data.slice(initPage, initPage + pageSize).map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
         }
         if(data && data.length > 0) return data.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
+
     }, [data, currentPage])
 
     const handleHeaderAction = React.useCallback((e: any) => {

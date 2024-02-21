@@ -23,6 +23,7 @@ export enum PanelRouteStyle {
     company = 'company',
     users = 'users',
     groups = 'groups',
+    refcars = 'refcars',
 }
 
 export type PanelProps = {

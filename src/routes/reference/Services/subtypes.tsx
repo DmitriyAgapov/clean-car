@@ -27,7 +27,7 @@ const ServicesSubTypesPage = () => {
                 header={
                     <>
                         <div>
-                            <Button
+                            <LinkStyled
                                 text={
                                     <>
                                         <SvgBackArrow />
@@ -37,7 +37,7 @@ const ServicesSubTypesPage = () => {
                                 className={
                                     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                                 }
-                                action={() => navigate(-1)}
+                              to={location.pathname.split('/').slice(0, -1).join('/')}
                                 variant={ButtonVariant.text}
                             />
                             <Heading
@@ -61,7 +61,7 @@ const ServicesSubTypesPage = () => {
                 }
             ></Panel>
           <Panel variant={PanelVariant.textPadding} className={'!mt-0'} background={PanelColor.glass} bodyClassName={'grid grid-cols-3 gap-6'} header={<p>{textData.description}</p>}>
-              {data.results.map((card:any) => <FormCard title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full '}
+              {data && data.results && data.results.length > 0 && data.results.map((card:any) => <FormCard title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full '}
                   actions={<LinkStyled to={String(card.id)} className={'!text-xs text-accent uppercase'}  variant={ButtonVariant.text} text={'Подробнее'} />}>
                   <div className={`absolute w-4 h-4 right-3 top-3 rounded-full ${card.is_active ? 'bg-active' : 'bg-red-500'}`}/>
                   <div>

@@ -381,7 +381,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             ]}
                         />
                         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
-                        {formData.values.performers_list === '1' && <TransferList />}
+                        {/* {formData.values.performers_list === '1' && <TransferList />} */}
                     </PanelForForms>
                 </form>
             </PanelForForms>

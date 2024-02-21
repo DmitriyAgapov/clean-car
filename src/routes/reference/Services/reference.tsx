@@ -132,7 +132,7 @@ const ServicePage = () => {
                 header={
                     <>
                         <div>
-                            <Button
+                            <LinkStyled
                                 text={
                                     <>
                                         <SvgBackArrow />
@@ -142,7 +142,7 @@ const ServicePage = () => {
                                 className={
                                     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                                 }
-                                action={() => navigate(backToUrlLevel)}
+                              to={location.pathname.split('/').slice(0, -1).join('/')}
                                 variant={ButtonVariant.text}
                             />
                             <Heading

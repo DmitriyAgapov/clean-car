@@ -22,10 +22,10 @@ const AddOption = ({ id, subtype_id, edit = false, data }: { id: number,  edit?:
 	const navigate = useNavigate();
 	const initValues = {
 		subtypeName: edit ? data.subtypeName : "",
-		status: edit ? data.status : "",
+		status: edit ? data.status : "true",
 		subtype_id: subtype_id
 	};
-	console.log(id, subtype_id);
+
 	return (
 		<Formik initialValues={(edit && init) ? data : initValues}
 			onSubmit={(values, submitForm) => {
@@ -53,15 +53,19 @@ const AddOption = ({ id, subtype_id, edit = false, data }: { id: number,  edit?:
 								if (edit) {
 									await agent.Catalog.editServiceOption({id: id, subtype_id: Number(values.subtype_id),  name: values.subtypeName, is_active: values.status === "true"}).then(() => {
 										revalidator.revalidate();
-									}).finally(() => store.appStore.closeModal());
+									}).finally(() => {
+										revalidator.revalidate();
+										store.appStore.closeModal()
+									});
 								} else {
 
 									await agent.Catalog.createServiceOption({id: id, subtype_id: Number(values.subtype_id),  name: values.subtypeName, is_active: values.status === "true"}).then(() => {
 										revalidator.revalidate();
 										// navigate(`/account/references/services/${id}/${values.service_type}`, { replace: true })
-									}).finally(() =>
+									}).finally(() => {
+										revalidator.revalidate();
 										store.appStore.closeModal()
-									);
+									});
 								}
 							}
 							}

@@ -222,6 +222,19 @@
     }
   }
 
+  &[data-style="refcars"] {
+    @screen lg {
+      th:nth-child(1), td:nth-child(1), {
+          width: 14rem;
+      }
+      th:nth-child(2), td:nth-child(2), {
+        width: 14rem;
+      }
+      th:nth-child(3), td:nth-child(3), {
+          width: auto;
+      }
+    }
+  }
   &[data-style="company"] {
     th:first-child, td:first-child, {
       @screen lg {
@@ -231,27 +244,22 @@
 
     th:nth-child(2), td:nth-child(2), {
       @screen lg {
-        min-width: 10rem;
-      }
-    }
-
-    th:nth-child(2), td:nth-child(2), {
-      @screen lg {
         width: auto;
-        max-width: fit-content;
       }
     }
 
-    //th:nth-child(3), td:nth-child(3), {
-    //  @screen lg {
-    //	width:  calc(20ch + 20px);
-    //  }
-    //}
-    //th:nth-child(4), td:nth-child(4), {
-    //  @screen lg {
-    //	width:  calc(27ch + 32px);
-    //  }
-    //}
+
+    th:nth-child(3), td:nth-child(3), {
+      @screen lg {
+    	width:  12rem;
+      }
+    }
+    th:nth-child(4), td:nth-child(4), {
+      @screen lg {
+
+    	width: calc(20ch + 32px);
+      }
+    }
 
   }
 
@@ -739,38 +747,7 @@
     }
   }
 
-  &[data-style="company"] {
-    th:first-child, td:first-child, {
-      @screen lg {
-        width: 7rem;
-      }
-    }
 
-    th:nth-child(2), td:nth-child(2), {
-      @screen lg {
-        min-width: 10rem;
-      }
-    }
-
-    th:nth-child(2), td:nth-child(2), {
-      @screen lg {
-        width: auto;
-        max-width: fit-content;
-      }
-    }
-
-    //th:nth-child(3), td:nth-child(3), {
-    //  @screen lg {
-    //	width:  calc(20ch + 20px);
-    //  }
-    //}
-    //th:nth-child(4), td:nth-child(4), {
-    //  @screen lg {
-    //	width:  calc(27ch + 32px);
-    //  }
-    //}
-
-  }
 
   svg {
     display: inline-block;

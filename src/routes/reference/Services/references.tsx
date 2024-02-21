@@ -27,7 +27,7 @@ const ServicesPage = () => {
                 header={
                     <>
                         <div>
-                            <Button
+                            <LinkStyled
                                 text={
                                     <>
                                         <SvgBackArrow />
@@ -37,7 +37,7 @@ const ServicesPage = () => {
                                 className={
                                     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                                 }
-                                action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))}
+                                to={location.pathname.split('/').slice(0, -1).join('/')}
                                 variant={ButtonVariant.text}
                             />
                             <Heading
@@ -62,7 +62,7 @@ const ServicesPage = () => {
                 }
             ></Panel>
           <Panel  variant={PanelVariant.textPadding} className={'!mt-0'} background={PanelColor.glass} bodyClassName={'grid grid-cols-3 gap-6'} header={<p>{textData.description}</p>}>
-              {data.results.map((card:any) => <FormCard title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full  group  overflow-hidden'}
+              {data && data.results && data.results.length > 0 && data.results.map((card:any) => <FormCard title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full  group  overflow-hidden'}
                   actions={
                     <div
                       className={

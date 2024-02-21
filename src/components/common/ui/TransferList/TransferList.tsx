@@ -47,7 +47,7 @@ const RenderList = observer(({ options, onTransfer, type, label }: RenderListPro
 			    </label>))
 
     return (
-	    <Panel variant={PanelVariant.textPadding}
+	    <Panel variant={PanelVariant.withPaddingSmWithBody}
 		    background={PanelColor.glass}
 		    className={"flex-1 w-full rounded-lg"}
 		    data-type={type}>
@@ -58,7 +58,7 @@ const RenderList = observer(({ options, onTransfer, type, label }: RenderListPro
 					setSearch(e.target.value)}} inputProps={{ list: 'availible-list' }} />
 
 		    <div className={styles.SelectFromListList + ' ' + '!ml-0 mt-5'}>
-			    <ScrollArea h={250} offsetScrollbars  classNames={styles}>
+			    <ScrollArea h={160} offsetScrollbars  classNames={styles}>
 			    {items && items.length > 0 ? items : "Не найдено...."}
 			    </ScrollArea>
 		    </div>
@@ -72,8 +72,9 @@ export const TransferList = observer(({active = []}:{active?: number[]}) => {
 		const {values, setFieldValue} = useFormContext()
 
 		useEffect(() => {
-			const data = store.companyStore.getCompaniesPerformers;
-			if(data.length > 0) setData(prevState => [store.companyStore.companiesPerformers, prevState[1]])
+			const data = store.companyStore.getCompaniesPerformers.filter((c:any) => c.parent === null);
+			console.log(data, 'perfdata');
+			if(data.length > 0) setData(prevState => [data, prevState[1]])
 		}, [store.companyStore.companiesPerformers]);
 
     const handleTransfer = (transferFrom: number, options: any[]) =>

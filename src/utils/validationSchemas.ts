@@ -21,6 +21,15 @@ export const CreateCompanySchema = Yup.object().shape({
 	contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
 	city: Yup.string().required('Обязательное поле'),
 	type: Yup.string(),
+	overdraft: Yup.string(),
+	overdraft_sum: Yup.number().when('overdraft', (overdraft, schema) => {
+
+		if(overdraft[0] === "1") {
+			return schema.min(0, 'Сумма должна быть не меньше 0').required('Обязательное поле')
+		} else {
+			return schema
+		}
+	}),
 	service_percent: Yup.number().when('type', (type, schema) => {
 		if(type[0] === CompanyType.performer)
 			return schema.min(1, 'Минимум 1%').max(100, 'Максимум').required("Обязательное поле")

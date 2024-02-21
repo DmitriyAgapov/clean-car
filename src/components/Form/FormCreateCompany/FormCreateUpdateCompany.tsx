@@ -373,6 +373,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                               className={'!flex-[1_1_4rem]'}
                                 withAsterisk
                               step={1}
+                              hideControls
                               allowNegative={false}
                               allowDecimal={false}
                                 label={'Макс. высота транспорта в см'}
@@ -386,6 +387,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             {...formData.getInputProps('type')}
                             label={'Тип'}
                             withAsterisk
+                            disabled={edit}
                             defaultValue={formData.values.type}
                             className={'!flex-initial'}
                             data={[
@@ -400,6 +402,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 label={'Процент сервиса'}
                                 {...formData.getInputProps('service_percent')}
                                 allowNegative={false}
+                                hideControls
                                 maxLength={2}
                                 min={0}
                                 max={100}
@@ -418,6 +421,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         className={'!bg-transparent'}
                         bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
+                      footerClassName={''}
                         background={PanelColor.default}
                         header={
                             <>
@@ -442,8 +446,8 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
 
-                        <Select label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
-                        <NumberInput withAsterisk type={'text'} label={'Сумма'} suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} maxLength={2} min={0} max={100} />
+                        <Select withAsterisk label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
+                        <NumberInput onClick={() => console.log(formData.errors)} disabled={formData.values.overdraft === "2"} withAsterisk  label={'Сумма'}     thousandSeparator=" " suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} min={1}  className={formData.errors.overdraft_sum ? ' filter grayscale' : ''}/>
 
                         <Select
                             label={'Список Партнеров'}
@@ -454,7 +458,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 { label: 'Нет', value: '2' },
                             ]}
                         />
-                        <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
+                        <hr className={'mt-0 mb-2 flex-[1_0_100%] w-full border-gray-2'} />
                         {formData.values.performers_list === '1' && <TransferList />}
                     </PanelForForms>
                     <PanelForForms state={step !== 3}

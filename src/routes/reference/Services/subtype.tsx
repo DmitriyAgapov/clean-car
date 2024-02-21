@@ -19,9 +19,7 @@ const ServicesSubTypePage = () => {
     const location = useLocation()
     const params = useParams()
     const { data, page, pageRequest, textData }: any = useLoaderData()
-    useEffect(() => {
-      console.log(data.results.options);
-    }, [data])
+
     return (
         <Section type={SectionType.default}>
             <Panel
@@ -31,7 +29,7 @@ const ServicesSubTypePage = () => {
                 header={
                     <>
                         <div>
-                            <Button
+                            <LinkStyled
                                 text={
                                     <>
                                         <SvgBackArrow />
@@ -41,7 +39,7 @@ const ServicesSubTypePage = () => {
                                 className={
                                     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                                 }
-                                action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))}
+                              to={location.pathname.split('/').slice(0, -1).join('/')}
                                 variant={ButtonVariant.text}
                             />
                             <Heading
@@ -107,7 +105,7 @@ const ServicesSubTypePage = () => {
             </>
           } variant={PanelVariant.textPadding} className={'!mt-0'} background={PanelColor.glass} bodyClassName={'grid grid-cols-3 gap-6'} >
 
-              {data.results.options.map((card:any) => <FormCard title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full group  overflow-hidden'}
+              {data.results.options.map((card:any) => <FormCard key={card.id} title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full group  overflow-hidden'}
                 actions={
                   <div
                     className={

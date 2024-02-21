@@ -5,10 +5,9 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
-import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
-import { PermissionNames } from "stores/permissionStore";
-import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
+import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { PermissionNames } from 'stores/permissionStore'
+import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 
 const CompaniesPage = () => {
   const store = useStore()
@@ -46,6 +45,7 @@ const CompaniesPage = () => {
         total={data.count}
         variant={PanelVariant.dataPadding}
         search={true}
+        style={PanelRouteStyle.company}
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
         filter={false}

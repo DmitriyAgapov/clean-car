@@ -1,6 +1,6 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
 import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
@@ -8,8 +8,7 @@ import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import { carHelperTable } from 'stores/carStore'
-import CarHelper from "components/common/layout/CarHelper/CarHelper";
+import CarHelper from 'components/common/layout/CarHelper/CarHelper'
 
 
 const ReferencesPage = () => {
@@ -23,7 +22,7 @@ const ReferencesPage = () => {
         <Section type={SectionType.default}>
 
             <Panel variant={PanelVariant.withGapOnly} state={false} headerClassName={'flex justify-between'}
-              header={<><div><Button text={<><SvgBackArrow />Назад к справочнику{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
+              header={<><div><Button text={<><SvgBackArrow />Назад к справочнику{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
                   <Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /></div>
                   <div className={'flex gap-6'}>
                     {page === 'car_brands' && <Button
@@ -55,6 +54,7 @@ const ReferencesPage = () => {
                 <TableWithSortNew total={data.count}
                   variant={PanelVariant.dataPadding}
                   search={true}
+                  style={page === 'car_brands' ? PanelRouteStyle.refcars : PanelRouteStyle.default}
                   background={PanelColor.glass}
                   className={'col-span-full table-groups  h-full'}
                   filter={false}

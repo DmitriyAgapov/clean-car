@@ -19,7 +19,7 @@ const dataCreate = {
       id: 0,
         city: '',
         timezone: '',
-        status: '',
+        status: 'true',
     },
     validateSchema: Yup.object().shape({
         city: Yup.string().required('Обязательное поле'),
@@ -77,7 +77,6 @@ const FormCreateCity = (props: any) => {
   return (
       <Formik initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
         onSubmit={(values, isSubmitting) => {
-
             if(location.pathname.includes('edit')) {
               textData.editAction(values.id, values.city, values.status === "true", values.timezone)
               .then((r: any) => {
@@ -107,7 +106,7 @@ const FormCreateCity = (props: any) => {
             footer={
               <>
 
-                <div className={'flex gap-5 flex-1'}>
+                {/* <div className={'flex gap-5 flex-1'}> */}
                   {editStatus && <Button
                     text={'Удалить'}
                     action={async () => {
@@ -146,7 +145,7 @@ const FormCreateCity = (props: any) => {
                     disabled={!isValid}
                     variant={ButtonVariant.accent}
                   />
-                </div>
+                {/* </div> */}
               </>
             }
             headerClassName={'flex gap-10'}
@@ -226,7 +225,7 @@ const FormCreateCity = (props: any) => {
                   label={dataCreate.inputs[2].label}
                   placeholder={dataCreate.inputs[2].placeholder}
                   name={dataCreate.inputs[2].fieldName}
-                  defaultValue={values.status}
+                  defaultValue={'true'}
                   data={[
                       {
                           label: 'Активно',

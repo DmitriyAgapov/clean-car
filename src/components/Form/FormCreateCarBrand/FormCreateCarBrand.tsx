@@ -75,7 +75,6 @@ const FormCreateCarBrand = (props: any) => {
       };
     },
   );
-  console.log(props);
   // @ts-ignore
   return (
     <Formik  validationSchema={dataCreate.validateSchema} initialValues={props?.edit ? {
@@ -84,7 +83,7 @@ const FormCreateCarBrand = (props: any) => {
       brand: props.brand,
       brandId: props.brandId
     } : dataCreate.initValues} onSubmit={(props) => {
-      console.log(props);
+
       store.catalogStore.createCarBrand({ car_type: props.car_type, model: props.modelName, brandId: props.brandId, brandName: typeof props.brand === "string" ? props.brand : null})
       .then(r => r)
       .then((r) => navigate(`/account/references/car_brands/${r?.data.id}`))    //
