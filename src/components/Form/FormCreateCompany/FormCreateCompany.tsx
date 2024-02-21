@@ -38,6 +38,7 @@ const initValues = {
     overdraft: 'Да',
     performers_list: 'Да',
     bill: '100',
+    performer_company: []
 }
 
 type FormCreateCompanyProps = {}
@@ -46,7 +47,7 @@ type FormCreateCompanyProps = {}
 
 const FormCreateCompany = () => {
     const store = useStore()
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(2)
     const [animate, setAnimate] = useState(false)
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
@@ -75,14 +76,15 @@ const FormCreateCompany = () => {
                             ogrn: values.ogrn,
                             legal_address: values.legal_address,
                             contacts: values.contacts,
-                            application_type: values.application_type,
-                            lat: values.lat,
-                            lon: values.lon,
-                            service_percent: values.service_percent,
+                            // application_type: values.application_type,
+                            lat: Number(values.lat),
+                            lon: Number(values.lon),
+                            service_percent: Number(values.service_percent),
                             working_time: values.working_time,
                         },
                     }
-                    store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
+                    store.companyStore.addCompany(data, CompanyType.performer)
+                    .then((r) => {
                         values.id = r.id
                         changeStep(3)
                     })
@@ -90,7 +92,6 @@ const FormCreateCompany = () => {
                 if (values.application_type === CompanyType.customer) {
                     const data: Company<CompanyType.customer> = {
                         company_type: values.application_type,
-
                         name: values.company_name,
                         is_active: true,
                         city: Number(values.city),
@@ -103,13 +104,14 @@ const FormCreateCompany = () => {
                             contacts: values.contacts,
                             bill: String(values.bill),
                             overdraft: values.overdraft === '1',
-                            overdraft_sum: values.overdraft_sum,
-                            lat: values.lat,
-                            lon: values.lon,
+                            overdraft_sum: Number(values.overdraft_sum),
+                            lat: Number(values.lat),
+                            lon: Number(values.lon),
                             performer_company: [],
                         },
                     }
-                    store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
+                    store.companyStore.addCompany(data, CompanyType.customer)
+                    .then((r) => {
                         values.id = r.id
                         changeStep(3)
                     })

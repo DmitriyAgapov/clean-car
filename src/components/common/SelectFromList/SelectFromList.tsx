@@ -4,6 +4,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import  TableSearch  from 'components/common/layout/TableWithSort/TableSearch'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import { SvgRightArrow } from 'components/common/ui/Icon'
+import { ScrollArea } from '@mantine/core'
 
 type SelectFromListProps = {
 	items: any
@@ -11,6 +12,7 @@ type SelectFromListProps = {
 	action?: (e: any) => void
 }
 const SelectListAvailible = ({ items, action, selected }: SelectFromListProps) => {
+	new URLSearchParams()
 	const handleSelected = (event: any) => {
 		if (selected) {selected(event);}
 	}
@@ -24,6 +26,7 @@ const SelectListAvailible = ({ items, action, selected }: SelectFromListProps) =
                 <Heading text={'Доступные компании '} variant={HeadingVariant.h4} color={HeadingColor.accent} />
                 <TableSearch action={action} inputProps={{ list: 'availible-list' }} />
                 <div className={styles.SelectFromListList}>
+
                     {items.map((item: any) => (
                         <label htmlFor={'company-' + item.id} className={styles.listItem}>
                             {item.name}

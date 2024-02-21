@@ -28,7 +28,8 @@ export const companiesLoader = async (props: any) => {
 		const { data: dataCars, status } = await agent.Companies.getOnlyAllCompanies({
 			page: paramsPage ?? 1,
 			page_size: paramsPageSize ?? 10,
-			ordering: paramsOrdering
+			ordering: paramsOrdering,
+			name: paramsSearchString
 		} as PaginationProps)
 
 		if (status === 200) {

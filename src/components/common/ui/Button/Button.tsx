@@ -53,7 +53,7 @@ const Button = ({
   ...props
 }: ButtonProps) => {
   const {width} = useWindowDimensions()
-  console.log();
+
   if(type === 'submit') return  <button type={'submit'} onClick={action} className={styles.Button + ' ' + className}
     data-directory={directory}
     disabled={disabled}

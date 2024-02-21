@@ -8,6 +8,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateCompany from '../../components/Form/FormCreateCompany/FormCreateCompany'
 import { PermissionNames } from "stores/permissionStore";
+import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
 
 export default function CompanyPageCreateAction(props: any) {
   const store = useStore()
@@ -46,7 +47,7 @@ export default function CompanyPageCreateAction(props: any) {
         }
       />
 
-      <FormCreateCompany />
+      <FormCreateUpdateCompany />
 
     </Section>
   )

@@ -8,10 +8,6 @@ import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
-import React from "react";
-import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
-import TableWithSortNewPure from "components/common/layout/TableWithSort/TableWithSortNewPure";
-import { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 
 export const authUser = async () => {
     if (!appStore.token) {
@@ -21,6 +17,7 @@ export const authUser = async () => {
     }
     return null
 }
+
 export const referencesLoader = async (props: any) => {
     const url = new URL(props.request.url)
     const searchParams = url.searchParams
@@ -53,7 +50,7 @@ export const referencesLoader = async (props: any) => {
                     const { data: dataResults, status } = await agent.Catalog.getCarModels({
                         page: paramsPage ?? 1,
                         page_size: paramsPageSize ?? 10,
-                        name: paramsSearchString,
+                        q: paramsSearchString,
                         ordering: paramsOrdering
                     } as PaginationProps)
                     dataResults.results.forEach((e: any) => data.push({ id: e.id, name: e.brand.name, model: e.name, car_type: e.car_type }))
@@ -176,6 +173,7 @@ export const referencesLoader = async (props: any) => {
         // dataModels: dataModels
     })
 }
+
 const mapEd = (ar:[], compareField:string) => {
     let newMap = new Map([])
     if(ar.length > 0) {
@@ -189,8 +187,6 @@ const mapEd = (ar:[], compareField:string) => {
     })
     return result
 }
-
-
 
 export const paginationParams = (urlData:string) => {
 
@@ -281,10 +277,11 @@ export const filialsLoader = async (props: any) => {
         let data :any[] | any = []
         let dataMeta
 
-        const { data: dataCars, status } = await agent.Companies.getAllCompanies({
+        const { data: dataCars, status } = await agent.Companies.getOnlyBranchesCompanies({
             page: paramsPage ?? 1,
             page_size: paramsPageSize ?? 10,
-            ordering: paramsOrdering
+            ordering: paramsOrdering,
+            name: paramsSearchString
         } as PaginationProps)
 
         if (status === 200) {

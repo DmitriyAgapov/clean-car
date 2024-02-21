@@ -45,15 +45,15 @@ const FilialsPage = () => {
         }
       />
    <TableWithSortNew
-        total={all.length}
+        total={data.count}
         filter={true}
         search={true}
         withOutLoader={true}
         background={PanelColor.glass}
         style={PanelRouteStyle.company}
-      ar={[{ label: 'Статус', name: 'status' }, {label: 'Компания', name: 'company'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'type'},{ label: 'Принадлежит', name: 'parent'}]}
+        ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'company_type'},{ label: 'Принадлежит', name: 'parent'}]}
 
-        data={all.map((item: any) => ({
+        data={data.results.map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           city: item.city.name,

@@ -83,7 +83,7 @@ const requests = {
     })
   .then((response) => response)
   .catch(handleErrors),
-  postSuggest: (query: string) =>
+  postSuggest: (props:any) =>
     axiosSuggest({
       url: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_SUGGEST_URL : process.env.REACT_APP__SUGGEST_URL,
       headers: {
@@ -92,7 +92,7 @@ const requests = {
         "Accept": "application/json",
       },
       method: 'POST',
-      data: JSON.stringify({ query: query }) ,
+      data: JSON.stringify(props) ,
     }),
 }
 
@@ -171,7 +171,7 @@ const Bids = {
   updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status})
 }
 const Utils = {
-  suggest: ({ query }:{query: string}) => requests.postSuggest(query)
+  suggest: (props:{query: any, location: any[], restrict_value: boolean}) => requests.postSuggest(props)
 }
 const Auth = {
   current: () => {
@@ -223,6 +223,7 @@ const Companies = {
     getListCompanyPerformer: (pagination?: PaginationProps) => requests.get('/companies/performer/list/', {}, pagination),
     getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', {}, pagination),
     getOnlyAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_companies/list/', {}, pagination),
+    getOnlyBranchesCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_branches/list/', {}, pagination),
 }
 const Permissions = {
   getAllCompanyPermissions: (company_id:number) => requests.get(`/permissions/${company_id}/groups/list/`, {}),

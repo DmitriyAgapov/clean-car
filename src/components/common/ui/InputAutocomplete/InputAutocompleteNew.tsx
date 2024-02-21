@@ -11,6 +11,7 @@ type InputAutocomplete = {}
 
 
 export function InputAutocompleteNew(props:any) {
+
   const store= useStore()
   // const { values, touched,  errors, isValidating }:any = useFormContext();
   const { values, isTouched,  errors } = useFormContext();
@@ -25,12 +26,25 @@ export function InputAutocompleteNew(props:any) {
   const [tempAdress, setTempAdress] = useState(values.city);
   const [empty, setEmpty] = useState(false);
   const abortController = useRef<AbortController>();
-
+  // const [widthLeftProp, setWidthLeftProp] = useState(0);
+  // useEffect(() => {
+  //   // @ts-ignore
+  //   const width = ref.current.previousElementSibling.offsetWidth
+  //   // console.log(ref.current.previousElementSibling.offsetWidth);
+  //   setWidthLeftProp(width)
+  // }, [data]);
   async function getData(query: string) {
     try {
+      const dataToform = { query: query, locations: [
+          {
+            // region: "Челябинская область",
+            city: props.city
+          }
+        ],
+        restrict_value: true }
       // @ts-ignore
-      const response = await agent.Utils.suggest({ query: query })
-
+      const response = await agent.Utils.suggest(dataToform)
+      console.log(response);
       // @ts-ignore
       setData(response)
 
@@ -50,16 +64,16 @@ export function InputAutocompleteNew(props:any) {
     setData(null)
     tempAdress !== values.city ? values.address = '' : void null
     if (values.city && !values.address) {
-      const cityName = store.catalogStore.getCity(values.city).name
-      cityName && setValue(cityName + ', ')
+      // const cityName = store.catalogStore.getCity(values.city).name
+      // cityName && setValue(cityName + ', ')
 
-      if (ref && ref.current && cityName) {
+      if (ref && ref.current) {
         // @ts-ignore
-        const cityNameLength = cityName.size
+        // const cityNameLength = cityName.size
         // @ts-ignore
         ref.current.focus();
         // @ts-ignore
-        ref.current.setSelectionRange(cityNameLength + 1, cityNameLength + 1)
+        // ref.current.setSelectionRange(cityNameLength + 1, cityNameLength + 1)
       }
     }
     if(!values.city) {
@@ -68,6 +82,7 @@ export function InputAutocompleteNew(props:any) {
     }
 
   }, [values.city])
+  const [prefix, setPrefix] = useState('')
 
   const fetchOptions = (query: string) => {
     abortController.current?.abort();
@@ -89,6 +104,8 @@ export function InputAutocompleteNew(props:any) {
   const options = (data || []).map((item, index) => (
     <Combobox.Option value={item.value} key={index} onClick={() => {
       values.address = item.value
+
+      setPrefix(item.label)
       if(item.data.geo_lat && item.data.geo_lon) {
           values.lat = item.data.geo_lat;
           values.lon = item.data.geo_lon;
@@ -98,63 +115,74 @@ export function InputAutocompleteNew(props:any) {
 
     </Combobox.Option>
   ));
-
+  // @ts-ignore
   return (
-    <Combobox
-      onOptionSubmit={(optionValue) => {
-        setValue(optionValue + ' ')
-        combobox.closeDropdown()
-      }}
-      {...props}
-      withinPortal={false}
-      store={combobox}
-    >
-      <Combobox.Target>
-        <label className={`account-form__input w-full flex-grow  !flex-[1_0_20rem] ${!values.city && "filter grayscale"}`}
-          htmlFor={'address'}
-          data-form_error={errors.address && isTouched('address') && 'error'}>
-          {'Адрес'}
-        <TextInput
-          ref={ref}
-          disabled={!values.city}
-
-          placeholder='Введите название компании'
-          value={value}
-
-          onChange={(event: { currentTarget: { value: React.SetStateAction<string> } }) => {
-            setValue(event.currentTarget.value)
-            values.address = event.currentTarget.value;
-            // @ts-ignore
-            fetchOptions(event.currentTarget.value)
-            combobox.resetSelectedOption()
-            combobox.openDropdown()
+      <Combobox
+          onOptionSubmit={(optionValue) => {
+              setValue(optionValue + ' ')
+              combobox.closeDropdown()
           }}
-          onClick={() => combobox.openDropdown()}
-          onFocus={() => {
+          {...props}
+          withinPortal={false}
+          store={combobox}
+      >
+          <Combobox.Target>
+              <label
+                  className={`account-form__input w-full flex-grow  !flex-[1_0_20rem] ${!values.city && 'filter grayscale'}`}
+                  htmlFor={'address'}
+                  data-form_error={errors.address && isTouched('address') && 'error'}
+              >
+                  <text>{'Адрес'}{' '}
+                  <span style={{color: 'var(--input-asterisk-color, var(--mantine-color-error))', paddingLeft: 0}} className='mantine-InputWrapper-required mantine-Select-required' aria-hidden='true'>
 
-            if (data && data.length !== 0) {
-              combobox.openDropdown()
-            }
-            if (data === null) {
-              fetchOptions(value)
-            }
-          }}
-          onBlur={() => combobox.closeDropdown()}
-          rightSection={loading && <Loader size={18} />}
-        />
-          {errors.address && isTouched('address') ? (
-            <div className={'form-error'}>{errors.address}</div>
-          ) : null}
-        </label>
-      </Combobox.Target>
+                      *
+                  </span></text>
+                  <TextInput
+                      ref={ref}
+                      disabled={!values.city}
+                      placeholder='введите адрес'
+                      value={value}
+                      onChange={(event: { currentTarget: { value: React.SetStateAction<string> } }) => {
+                          setValue(event.currentTarget.value)
+                          console.log(values.city_name.length)
+                          values.address = event.currentTarget.value
+                          // @ts-ignore
+                          fetchOptions(event.currentTarget.value)
+                          combobox.resetSelectedOption()
+                          combobox.openDropdown()
+                      }}
+                      onClick={() => combobox.openDropdown()}
+                      onFocus={() => {
+                          if (data && data.length !== 0) {
+                              combobox.openDropdown()
+                          }
+                          if (data === null) {
+                              fetchOptions(value)
+                          }
+                      }}
+                      // leftSectionWidth={widthLeftProp}
+                      // //@ts-ignore
+                      // leftSection={<>{values.city_name}, </>}
+                      className={'text-sm'}
+                      // leftSectionProps={{
+                      //   className: 'w-auto pl-[8px] ',
+                      //   style: {fontSize: '.875rem', lineHeight: 'normal', fontWeight: 500, color: 'rgb(96 97 99 / 1)', fontFamily: "Montserrat, sans-serif"}
+                      //
+                      // }}
+                      onBlur={() => combobox.closeDropdown()}
+                      rightSection={loading && <Loader size={18} />}
+                  />
+                  {errors.address && isTouched('address') ? <div className={'form-error'}>{errors.address}</div> : null}
+              </label>
+          </Combobox.Target>
 
-      <Combobox.Dropdown hidden={data === null}>
-        <Combobox.Options onClick={(e) => console.log(options)}>
-          {options}
-          {empty && <Combobox.Empty>Не найдено</Combobox.Empty>}
-        </Combobox.Options>
-      </Combobox.Dropdown>
-    </Combobox>
+          <Combobox.Dropdown hidden={data === null}>
+              <Combobox.Options onClick={(e) => console.log(options)}>
+                  {options}
+                  {empty && <Combobox.Empty>Не найдено</Combobox.Empty>}
+              </Combobox.Options>
+          </Combobox.Dropdown>
+      </Combobox>
   )
 }
 

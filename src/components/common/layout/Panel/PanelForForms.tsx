@@ -57,7 +57,7 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
       {...props}
 
       className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto] items-start  overflow-x-hidden'}
-      bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} grid  grid-cols-9 items-start gap-4 gap-y-6`}
+      bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} grid  grid-cols-9 items-start gap-4 gap-y-4`}
       variant={props.variant ?? PanelVariant.textPadding}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       footerClassName={props.footerClassName}

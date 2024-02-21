@@ -31,6 +31,7 @@ export type Company<Type> = {
     company_type?: Type
     city: City & number
 } & CompanyProfile<Type>
+
 export type CompanyProfile<Type> = Type extends CompanyType.customer ? CustomerProfile : PerformerProfile
 export interface CustomerProfile {
     customerprofile: {
@@ -42,6 +43,7 @@ export interface CustomerProfile {
         payment?: Payment
         bill?: string
         lat: number
+
         lon: number
         application_type?: string
         overdraft?: boolean
@@ -55,6 +57,7 @@ export interface PerformerProfile {
         inn?: string
         ogrn?: string
         legal_address?: string
+        height?: number
         contacts?: string
         service_percent?: number
         application_type?: string
@@ -85,7 +88,7 @@ export class CompanyStore {
         })
         makePersistable(this, {
             name: 'companyStore',
-            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany"],
+            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers'],
             storage: window.localStorage,
 
         }, { fireImmediately: true }).then(

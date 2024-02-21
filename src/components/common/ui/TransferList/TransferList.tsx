@@ -1,15 +1,13 @@
-import { useState } from 'react';
-import { ActionIcon, Checkbox, Combobox, Group, TextInput, useCombobox } from '@mantine/core';
+import { useEffect,  useState } from "react";
+import {  Checkbox, ScrollArea } from '@mantine/core'
 import styles from './TransferList.module.scss'
 import React from 'react'
-import { SvgChevron, SvgRightArrow } from "components/common/ui/Icon";
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { useStore } from "stores/store";
-
-const fruits = ['🍎 Apples', '🍌 Bananas', '🍓 Strawberries'];
-
-const vegetables = ['🥦 Broccoli', '🥕 Carrots', '🥬 Lettuce'];
+import TableSearch from "components/common/layout/TableWithSort/TableSearch";
+import { observer } from "mobx-react-lite";
+import { useFormContext } from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
 
 
 interface RenderListProps {
@@ -19,110 +17,97 @@ interface RenderListProps {
 	label: string
 }
 
-function RenderList({ options, onTransfer, type, label }: RenderListProps) {
-	const store = useStore()
-	console.log(store.companyStore.getCompaniesPerformers);
-	const combobox = useCombobox();
-	const [value, setValue] = useState<string[]>([]);
-	const [search, setSearch] = useState('');
+const RenderList = observer(({ options, onTransfer, type, label }: RenderListProps) => {
 
-	const handleValueSelect = (val: string) =>
-		setValue((current) =>
-			current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
-		);
+    const [value, setValue] = useState<any[]>([])
+    const [search, setSearch] = useState('')
 
-	const items = options
-	.filter((item:string) => item.toLowerCase().includes(search.toLowerCase().trim()))
-	.map((item:string) => (
-		<Combobox.Option
-			value={item}
-			key={item}
-			active={value.includes(item)}
-			onMouseOver={() => combobox.resetSelectedOption()}
-		>
-			<Group gap="sm">
-				<Checkbox
-					checked={value.includes(item)}
-					onChange={() => {}}
-					aria-hidden
-					tabIndex={-1}
-					style={{ pointerEvents: 'none' }}
-				/>
-				<span>{item}</span>
-			</Group>
-		</Combobox.Option>
-	));
+    const handleValueSelect = (val: string) =>
+        setValue((current) => (current.includes(val) ? current.filter((v) => v !== val) : [...current, val]))
 
-	return (
-		<Panel variant={PanelVariant.textPadding} background={PanelColor.glass} className={'flex-1 w-full rounded-lg'}  data-type={type}>
-			<Heading text={label} variant={HeadingVariant.h4} color={HeadingColor.accent}/>
-			<Combobox store={combobox} onOptionSubmit={handleValueSelect}>
-				<Combobox.EventsTarget>
-					<Group wrap="nowrap" gap={0} className={styles.controls + " " + 'form-search relative h-10'}>
-						<TextInput
-							placeholder="Быстрый поиск"
-							className={styles.listItem + " " }
-							value={search}
-							onChange={(event) => {
-								setSearch(event.currentTarget.value);
-								combobox.updateSelectedOptionIndex();
+		//@ts-ignore
+    const items = options?.filter((item: any) => item.name.toLowerCase().includes(search.toLowerCase().trim())).map((item: any) => (
+	    //@ts-ignore
+			    <label key={value.id} htmlFor={'company-' + item.id} className={styles.listItem + " cursor-pointer"}>
+				    {item.name}
+				    <Checkbox
+					    value={item}
+							checked={type === "backward"}
+					    id={'company-' + item.id}
+					    type={'checkbox'}
+					    name={'company-' + item.id}
+					    className={' mr-6'}
+					    onChange={(props) => {
+						    handleValueSelect(item)
+						    console.log(props);
+
+								onTransfer([item])
 							}}
-						/>
-						<ActionIcon
-							radius={0}
-							variant="default"
-							size={36}
-							className={styles.control}
-							onClick={() => {
-								onTransfer(value);
-								setValue([]);
-							}}
-						>
-							<SvgRightArrow className={'text-accent self-center'} />
-						</ActionIcon>
-					</Group>
-				</Combobox.EventsTarget>
+				    />
+			    </label>))
 
-				<div className={styles.listItem}>
-					<Combobox.Options>
-						{items.length > 0 ? items : <Combobox.Empty>Nothing found....</Combobox.Empty>}
-					</Combobox.Options>
-				</div>
-			</Combobox>
-		</Panel>
-	);
-}
+    return (
+	    <Panel variant={PanelVariant.textPadding}
+		    background={PanelColor.glass}
+		    className={"flex-1 w-full rounded-lg"}
+		    data-type={type}>
+		    <Heading text={label}
+			    variant={HeadingVariant.h4}
+			    color={HeadingColor.accent} />
+		    <TableSearch action={(e) => {
+					setSearch(e.target.value)}} inputProps={{ list: 'availible-list' }} />
 
-export function TransferList() {
-	const store = useStore()
-	const [data, setData] = useState<[string[], string[]]>([store.companyStore.getCompaniesPerformers.map((item:any) => item.name), []]);
+		    <div className={styles.SelectFromListList + ' ' + '!ml-0 mt-5'}>
+			    <ScrollArea h={250} offsetScrollbars  classNames={styles}>
+			    {items && items.length > 0 ? items : "Не найдено...."}
+			    </ScrollArea>
+		    </div>
+	    </Panel>
+)
+})
 
-	const handleTransfer = (transferFrom: number, options: string[]) =>
-		setData((current) => {
-			const transferTo = transferFrom === 0 ? 1 : 0;
-			const transferFromData = current[transferFrom].filter((item) => !options.includes(item));
-			const transferToData = [...current[transferTo], ...options];
+export const TransferList = observer(({active = []}:{active?: number[]}) => {
+		const store = useStore()
+    const [data, setData] = useState<any[]>([[],[]])
+		const {values, setFieldValue} = useFormContext()
 
-			const result = [];
-			result[transferFrom] = transferFromData;
-			result[transferTo] = transferToData;
-			return result as [string[], string[]];
-		});
+		useEffect(() => {
+			const data = store.companyStore.getCompaniesPerformers;
+			if(data.length > 0) setData(prevState => [store.companyStore.companiesPerformers, prevState[1]])
+		}, [store.companyStore.companiesPerformers]);
 
-	return (
-		<>
-			<RenderList
-				label={'Доступные компании '}
-				type="forward"
-				options={data[0]}
-				onTransfer={(options) => handleTransfer(0, options)}
-			/>
-			<RenderList
-				label={'Выбранные компании'}
-				type="backward"
-				options={data[1]}
-				onTransfer={(options) => handleTransfer(1, options)}
-			/>
-		</>
-	);
-}
+    const handleTransfer = (transferFrom: number, options: any[]) =>
+      setData((current:any) => {
+          const transferTo = transferFrom === 0 ? 1 : 0
+          const transferFromData = current[transferFrom].filter((item:any) => !options.includes(item))
+          const transferToData = [...current[transferTo], ...options]
+
+          const result = []
+          result[transferFrom] = transferFromData
+          result[transferTo] = transferToData
+          return result as [string[], string[]]
+      })
+
+		useEffect(() => {
+
+			setFieldValue('performer_company', data[1].map((item:any) => item.id));
+		}, [data[1]]);
+
+    return (
+        <>
+            <RenderList
+                label={'Доступные компании '}
+                type='forward'
+                options={data[0]}
+                onTransfer={(options) => handleTransfer(0, options)}
+            />
+            <RenderList
+                label={'Выбранные компании'}
+                type='backward'
+                options={data[1]}
+                onTransfer={(options) => handleTransfer(1, options)}
+            />
+        </>
+    )
+})
+

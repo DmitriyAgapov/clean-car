@@ -129,36 +129,53 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
     case "Основная информация":
       const navigate = useNavigate()
       const fundBill = {
-        className: '',
-        actions: [
-          <Button text={'Отменить'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
-          <Button
-            text={'Сохранить'}
-            action={() => {
-              // store.permissionStore.deletePermissionStoreAdmin(changes.id)
-              store.appStore.closeModal()
-              navigate('/account/groups')
-            }}
-            variant={ButtonVariant['accent-outline']}
-          />,
-        ],
-        text: <div className={'grid gap-12 mb-12'}><CreateInput text={'Сумма начисления'} name={'paymoney'} type={'number'}/>
-          <DList label={'Компания'} title={data.name}/>
-          <DList label={'Зачислил'}  title={data.name}/>
-        </div>,
-        header: 'Пополнить счет',
-        state: true,
-      };
+          className: '',
+          actions: [
+              <Button text={'Отменить'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
+              <Button
+                  text={'Сохранить'}
+                  action={() => {
+                      // store.permissionStore.deletePermissionStoreAdmin(changes.id)
+                      store.appStore.closeModal()
+                      navigate('/account/groups')
+                  }}
+                  variant={ButtonVariant['accent-outline']}
+              />,
+          ],
+          text: (
+              <div className={'grid gap-12 mb-12'}>
+                  <CreateInput text={'Сумма начисления'} name={'paymoney'} type={'number'} />
+                  <DList label={'Компания'} title={data.name} />
+                  <DList label={'Зачислил'} title={data.name} />
+              </div>
+          ),
+          header: 'Пополнить счет',
+          state: true,
+      }
+      const performers = React.useMemo(() => {
+        const result: any[] = [];
+        if(data[`${company_type}profile`].performer_company && data[`${company_type}profile`].performer_company.length > 0) {        data[`${company_type}profile`].performer_company.forEach((item: any, index:number) => {
+          const el:any = store.companyStore.companies.filter((c: any) => c.id === item)[0];
+          console.log(el);
+          if(el && el.name) {
+            result.push(<span key={el.id} className={'text-xs font-normal'}>{el.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '} </span>)
+          }
+
+        })
+        return <>{result}</>}
+        return null
+      }, [data[`${company_type}profile`].performer_company])
       result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
          {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />}
         <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
         <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
         {company_type === 'customer' && <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}>
-          <DList label={'Исполнители'} title={data[`${company_type}profile`].ogrn} />
+          <DList label={'Исполнители'} title={<>{performers}</>} />
           <CardSimple.Footer>
             <LinkStyled variant={ButtonVariant.text} style={{color: 'var(--accentColor)'}} text={'Подробнее'} to={'#'} />
           </CardSimple.Footer>
         </CardSimple>}
+
         {company_type === 'customer' ? data.balance && <DList label={'Счет'} title={<>
           <Heading text={data.balance.total + ' ₽'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
           <Heading text={data[`${company_type}profile`].overdraft_sum + ' ₽' + ' с овердрафтом'}  variant={HeadingVariant.h4} color={HeadingColor.accent} />
@@ -171,16 +188,15 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         }/>}
         <DList label={'Адрес'} title={data[`${company_type}profile`].address} />
         <DList label={'Юридический адрес'} title={data[`${company_type}profile`].legal_address} />
-        <DList label={'Подключенные услуги'} title={''} />
+        {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
         <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts} />
         {company_type === 'customer' &&  <Button text={'Пополнить счет'}  action={async () => {
         store.appStore.setModal(fundBill) }}
-         variant={ButtonVariant['accent-outline']} size={ButtonSizeType.sm} /> }
+         variant={ButtonVariant['accent-outline']} className={'col-start-3'} size={ButtonSizeType.sm} /> }
       </Tabs.Panel>)
       break;
 
     case 'Сотрудники':
-
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={data.map((item: any & {rootRoute?: string} ) => ({
@@ -201,8 +217,8 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Группа', 'Компания', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'}/>}
       </Tabs.Panel>)
       break;
-    case 'Филиалы':
 
+    case 'Филиалы':
       result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
         {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
           data={data.map((item: any & {rootRoute?: string} ) => ({
@@ -217,6 +233,28 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
       </Tabs.Panel>)
       break;
+
+    case 'Автомобили':
+      result = (<Tabs.Panel  state={state} name={'cars'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+        {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
+          data={data.map((item: any & {rootRoute?: string} ) => ({
+            state: item.is_active,
+            brand: item.brand.name,
+            model: item.model.name,
+            car_type: item.model.car_type,
+            number: item.number,
+            filial: item.company.parent ? item.company.parent.name : '-',
+            city: item.company.city.name,
+            id: item.id,
+            query: {
+              company_id: companyId,
+              rootRoute: `/account/cars/${item.id}`,
+            },
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Бренд', 'Модель', 'Класс', 'Номер', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
+      </Tabs.Panel>)
+      break;
+
+
     default:
       return null;
   }
