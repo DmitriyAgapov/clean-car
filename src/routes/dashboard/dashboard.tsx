@@ -6,6 +6,7 @@ import SearchBar from "components/common/layout/SearchBar/SearchBar";
 import { useForm } from '@mantine/form';
 import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCreateUpdateUsers";
 import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
+import FormCreateUpdateFilial from "components/Form/FormCreateFilials/FormCreateUpdateFilial";
 
 export default function DashboardPage() {
   const form = useForm({
@@ -31,7 +32,7 @@ export default function DashboardPage() {
           </>
         }
       />
-
+      <FormCreateUpdateFilial/>
     </Section>
     </>
   )

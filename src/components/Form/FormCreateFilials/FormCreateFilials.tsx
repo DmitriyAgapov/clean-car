@@ -16,7 +16,6 @@ const SignupSchema = Yup.object().shape({
     address: Yup.string(),
     city: Yup.string(),
     status: Yup.string()
-
 })
 
 

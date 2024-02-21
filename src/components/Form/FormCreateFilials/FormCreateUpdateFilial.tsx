@@ -25,24 +25,14 @@ import company from "routes/company/company";
 
 interface InitValues {
     address: string | null
-    legal_address: string | null
     type: "Компания-Заказчик" | "Компания-исполнитель"
-    bill: string | number
     city: string | null
     city_name?: string | null | any
     company_name: string | null
-    contacts: string | null
     id: string | number
-    inn: string | number
+    company_filials: string
     lat: string | number
     lon: string | number
-    ogrn: string | number
-    overdraft: string
-    overdraft_sum: number
-    height: number
-    service_percent: number
-    payment: "Постоплата" | "Предоплата"
-    performers_list: string
     working_time: string
     performer_company: number[] | any
 }
@@ -50,29 +40,19 @@ interface InitValues {
 export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
 export const createCompanyFormActions = createFormActions<InitValues>('createCompanyForm')
 
-const FormCreateUpdateCompany = ({ company, edit }: any) => {
+const FormCreateUpdateFilial = ({ company, edit }: any) => {
     const store = useStore()
 
     let initValues: InitValues = {
         address: '',
         type: CompanyType.customer,
-        bill: '100',
         city: '',
         city_name: '',
         company_name: '',
-        contacts: '',
         id: 0,
-        inn: '',
-        height:  1,
+        company_filials: 'filials',
         lat: 0,
-        legal_address: '',
         lon: 0,
-        ogrn: '',
-        overdraft: '1',
-        overdraft_sum: 0,
-        payment: Payment.postoplata,
-        performers_list: '1',
-        service_percent: 0,
         working_time: '',
         performer_company: []
     }
@@ -89,34 +69,22 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         }, 1200)
     }
     if(edit) {
-
         initValues = {
             address: company.address,
-            inn: company.inn,
-            ogrn: company.ogrn,
             city: company.city,
             city_name: store.catalogStore.getCity(Number(company.city)).name,
-            height: company.height ?? 100,
             company_name: company.company_name,
             lat: company.lat,
-            contacts: company.contacts,
-            service_percent: company.service_percent,
+            company_filials: 'filials',
             working_time: company.working_time ?? "",
             lon: company.lon,
             id: Number(company.id),
             performer_company: values(company.performer_company),
-            type: company.type,
-            legal_address: company.legal_address,
-            overdraft: company.overdraft,
-            overdraft_sum: company.overdraft_sum,
-            performers_list: company.performers_list,
-            bill: "",
-            payment: company.payment
+            type: company.type
         }
     }
-
     const formData = useForm({
-        name: 'createCompanyForm',
+        name: 'createFilialsForm',
         initialValues: initValues,
         validateInputOnBlur: true,
         onValuesChange: (values, previous) => console.log(values),
@@ -147,7 +115,6 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     className: 'mb-2  flex-grow  !flex-[0_0_22rem] col-span-3',
                 }
             }
-
             return {
                 className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
             }
@@ -275,7 +242,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     onReset={formData.onReset}
                     style={{ display: 'contents' }}
                 >
-                    <Progress total={3} current={step} />
+                    <Progress total={2} current={step} />
                     <PanelForForms
                         state={step !== 1}
                         animate={animate}
@@ -291,14 +258,14 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                     variant={HeadingVariant.h2}
                                 />
                                 <div className={''}>
-                                    Укажите основную информацию о компании для добавления ее в список
+                                    Укажите основную информацию о филиале для добавления ее в список
                                 </div>
                             </>
                         }
                     >
                         <TextInput
                             withAsterisk
-                            label={'Название компании'}
+                            label={'Название филиала'}
                             {...formData.getInputProps('company_name')}
                         />
                         <Select
@@ -318,24 +285,18 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             }))}
                         />
                         <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name}/>
-                        <NumberInput
-                            withAsterisk
-                            type={'text'}
-                            label={'ИНН'}
-                            {...formData.getInputProps('inn')}
-                            hideControls
-                            maxLength={10}
-                            placeholder={'Введите ИНН'}
+                        <Select
+                          {...formData.getInputProps('company_filials')}
+                          defaultValue={formData.values.company_filials}
+                          allowDeselect={false}
+                          label={'Принадлежит'}
+                          data={[
+                              { label: 'Компании', value: 'company' },
+                              { label: 'Филиалу', value: 'filials' },
+                          ]}
+                          className={'col-span-3'}
                         />
-                        <NumberInput
-                            withAsterisk
-                            type={'text'}
-                            label={'ОГРН'}
-                            {...formData.getInputProps('ogrn')}
-                            hideControls
-                            maxLength={13}
-                            placeholder={'Введите ОГРН'}
-                        />
+
                         {formData.values.type === CompanyType.performer && (
                           <InputBase
                             component={IMaskInput}
@@ -361,26 +322,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                           />
                         )}
 
-                        <TextInput
-                          className={'!flex-[1_0_100%]'}
-                            withAsterisk
-                            label={'Юридический адрес'}
-                            {...formData.getInputProps('legal_address')}
-                            placeholder={'Введите Юридический адрес'}
-                        />
-                        {formData.values.type === CompanyType.performer && (
-                            <NumberInput
-                                defaultValue={1}
-                              className={'!flex-[1_1_4rem]'}
-                                withAsterisk
-                              step={1}
-                              allowNegative={false}
-                              allowDecimal={false}
-                                label={'Макс. высота транспорта в см'}
-                                {...formData.getInputProps('height')}
 
-                            />
-                        )}
                         <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
                         <Select
                             allowDeselect={false}
@@ -394,24 +336,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 { label: 'Партнер', value: CompanyType.performer },
                             ]}
                         />
-                        {formData.values.type === CompanyType.performer && (
-                            <NumberInput
-                                withAsterisk
-                                type={'text'}
-                                label={'Процент сервиса'}
-                                {...formData.getInputProps('service_percent')}
-                                allowNegative={false}
-                                maxLength={2}
-                                min={0}
-                                max={100}
-                            />
-                        )}
-                        <TextInput
-                            withAsterisk
-                            label={'Контактные данные'}
-                            {...formData.getInputProps('contacts')}
-                            placeholder={'Введите Контактные данные'}
-                        />
+
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}
@@ -458,36 +383,10 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         <hr className={'my-4 flex-[1_0_100%] w-full border-gray-2'} />
                         {formData.values.performers_list === '1' && <TransferList />}
                     </PanelForForms>
-                    <PanelForForms state={step !== 3}
-                      animate={animate}
-                      className={'!bg-transparent'}
-                      bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
-                      variant={PanelVariant.textPadding}
-                      background={PanelColor.default}
-                      header={
-                          <>
-                              <Heading text={`Шаг ${formData.values.type == 'Компания-Партнер' && '2'|| '3'}
-                               .
-                                  Компания создана `}
-                                color={HeadingColor.accent}
-                                variant={HeadingVariant.h2}
-                              />
-                              <div className={''}>
-                                  Вы можете добавить Прайсы и Лимиты для компании или добавить их позже в соответствующем разделе
-                              </div>
-                          </>
-                      }
-
-                    >
-                        <div className={'mt-10 flex flex-wrap gap-6'}>
-                            <CreateField title={'Создать прайс-лист'} />
-                            <CreateField title={'Создать лимиты'} />
-                        </div>
-                    </PanelForForms>
                 </form>
             </PanelForForms>
         </FormProvider>
     )
 }
 
-export default observer(FormCreateUpdateCompany)
+export default observer(FormCreateUpdateFilial)

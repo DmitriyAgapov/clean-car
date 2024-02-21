@@ -230,7 +230,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
               company_id: companyId,
               rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
             },
-          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
+          }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет филиалов'} className={'py-12'}/>}
       </Tabs.Panel>)
       break;
 
