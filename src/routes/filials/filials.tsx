@@ -14,9 +14,7 @@ const FilialsPage = () => {
   const store = useStore()
   const location = useLocation()
   const {data}:any = useLoaderData()
-  const all = store.companyStore.getFillialsData
-
-  const navigate = useNavigate()
+  console.log(data);
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -48,7 +46,6 @@ const FilialsPage = () => {
         total={data.count}
         filter={true}
         search={true}
-        withOutLoader={true}
         background={PanelColor.glass}
         style={PanelRouteStyle.company}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'company_type'},{ label: 'Принадлежит', name: 'parent'}]}

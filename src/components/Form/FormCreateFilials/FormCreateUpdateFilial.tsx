@@ -95,26 +95,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                     className: 'mb-2 w-full flex-grow  !flex-[0_0_16rem] col-span-3',
                 }
             }
-            if (payload.field === 'service_percent') {
-                return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3',
-                }
-            }
-            if (payload.field === 'overdraft_sum') {
-                return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3',
-                }
-            }
-            if (payload.field === 'overdraft') {
-                return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3',
-                }
-            }
-            if (payload.field === 'height') {
-                return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_22rem] col-span-3',
-                }
-            }
             return {
                 className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
             }
@@ -284,7 +264,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                 value: String(o.id),
                             }))}
                         />
-                        <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name}/>
+                        <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
                         <Select
                           {...formData.getInputProps('company_filials')}
                           defaultValue={formData.values.company_filials}

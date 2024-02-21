@@ -285,11 +285,14 @@ export const filialsLoader = async (props: any) => {
         } as PaginationProps)
 
         if (status === 200) {
-            const filials = dataCars.results.filter((f:any) => f.parent !== null)
-            data = filials
+            data = dataCars.results
+            dataMeta = dataCars
         }
+
+
+
         return ({
-            count: data.length,
+            ...dataMeta,
             results: data,
         })
     }

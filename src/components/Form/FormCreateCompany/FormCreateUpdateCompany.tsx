@@ -89,7 +89,6 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         }, 1200)
     }
     if(edit) {
-
         initValues = {
             address: company.address,
             inn: company.inn,
@@ -317,7 +316,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 value: String(o.id),
                             }))}
                         />
-                        <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name}/>
+                        <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
                         <NumberInput
                             withAsterisk
                             type={'text'}

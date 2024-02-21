@@ -14,7 +14,7 @@ export function InputAutocompleteNew(props:any) {
 
   const store= useStore()
   // const { values, touched,  errors, isValidating }:any = useFormContext();
-  const { values, isTouched,  errors } = useFormContext();
+  const { values, isTouched,  errors } = props.ctx;
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
