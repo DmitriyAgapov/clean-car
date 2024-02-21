@@ -128,7 +128,7 @@ export function InputAutocompleteNew(props:any) {
       >
           <Combobox.Target>
               <label
-                  className={`account-form__input w-full flex-grow  !flex-[1_0_20rem] ${!values.city && 'filter grayscale'}`}
+                  className={`account-form__input w-full flex-grow  flex-[1_0_20rem] ${!values.city && 'filter grayscale'}`}
                   htmlFor={'address'}
                   data-form_error={errors.address && isTouched('address') && 'error'}
               >
@@ -140,7 +140,7 @@ export function InputAutocompleteNew(props:any) {
                   <TextInput
                       ref={ref}
                       disabled={!values.city}
-                      placeholder='введите адрес'
+                      placeholder='Введите адрес'
                       value={value}
                       onChange={(event: { currentTarget: { value: React.SetStateAction<string> } }) => {
                           setValue(event.currentTarget.value)
@@ -160,6 +160,7 @@ export function InputAutocompleteNew(props:any) {
                               fetchOptions(value)
                           }
                       }}
+                    error={errors.address && isTouched('address')}
                       // leftSectionWidth={widthLeftProp}
                       // //@ts-ignore
                       // leftSection={<>{values.city_name}, </>}

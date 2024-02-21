@@ -8,6 +8,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateFilial from '../../components/Form/FormCreateFilials/FormCreateFilials'
 import { PermissionNames } from "stores/permissionStore";
+import FormCreateUpdateFilial from "components/Form/FormCreateFilials/FormCreateUpdateFilial";
 
 export default function FilialsPageCreateAction(props: any) {
   const store = useStore()
@@ -45,7 +46,7 @@ export default function FilialsPageCreateAction(props: any) {
           </>
         }
       />
-      <FormCreateFilial />
+      <FormCreateUpdateFilial/>
     </Section>
   )
 }

@@ -215,11 +215,12 @@ const TableWithSortNew = ({
 
     const fastSearch = React.useCallback((event: React.BaseSyntheticEvent) => {
         event.preventDefault()
-        console.log(event);
-        setFastSearchString(event.target.value)
+        const pageParams = searchParams.get('page');
+        const orderingParams = searchParams.get('ordering');
 
+        setFastSearchString(event.target.value)
         if(fastSearchString.length > 0 )  {
-            setSearchParams((prevstate) => ({...prevstate, searchString: event.target.value}));
+            setSearchParams((prevstate) => ({...prevstate, page: pageParams ?? 1, ordering: orderingParams, searchString: event.target.value}));
         } else {
             setCurrentPage(1)
         }
@@ -255,19 +256,18 @@ const TableWithSortNew = ({
     }, [data, currentPage])
 
     const handleHeaderAction = React.useCallback((e: any) => {
-
-
         // @ts-ignore
         if(e.reversed) {
             setSortedField(`-${ar[e.index].name}`)
         } else {
             setSortedField(ar[e.index].name)
         }
-
     }, [sortedField])
 
     React.useEffect(() => {
-        setSearchParams((prev) => ({...prev,  ordering: sortedField}));
+        const pageParams = searchParams.get('page');
+        const searchStringParams = searchParams.get('searchString');
+        setSearchParams((prevstate) => ({...prevstate, page: pageParams ?? 1, ordering: sortedField, ...(searchStringParams ? {searchString: searchStringParams} : {})}));
         setCurrentPage(1)
     }, [sortedField])
     if (state) return <SvgLoading className={'m-auto'} />

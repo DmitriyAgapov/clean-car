@@ -7,7 +7,7 @@ import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
-import Tabs from 'components/common/layout/Tabs/Tabs'
+import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from "stores/companyStore";
@@ -72,7 +72,7 @@ const FilialPage = () => {
                   </>
               }
           >
-              <Tabs data={arData} panels={arData}/>
+              <Tabs data={arData}  type={TabsType.filial}/>
           </Panel>
       </Section>
 

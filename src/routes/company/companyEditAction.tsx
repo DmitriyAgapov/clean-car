@@ -28,7 +28,7 @@ export default function CompanyPageEditAction(props: any) {
   }
   // @ts-ignore
   const {data:loaderData, type} = useLoaderData()
-  console.log(loaderData);
+
   const  company = {
     id: id,
     company_name: loaderData.company.data?.name,
@@ -51,7 +51,6 @@ export default function CompanyPageEditAction(props: any) {
     performer_company: loaderData.company.data[`${type}profile`].performer_company,
     bill: loaderData.company.data[`${type}profile`].bill,
   }
-  console.log(company);
   if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>

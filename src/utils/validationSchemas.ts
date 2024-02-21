@@ -33,3 +33,15 @@ export const CreateCompanySchema = Yup.object().shape({
 		return schema
 	})
 })
+export const CreateFilialSchema = Yup.object().shape({
+	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	city: Yup.string().required('Обязательное поле'),
+	type: Yup.string(),
+	company_id: Yup.string().required('Обязательное поле'),
+	working_time: Yup.string().when('type', (type, schema) => {
+		if(type[0] === CompanyType.performer)
+			return schema.min(16, 'Укажите время работы правильно').max(16, 'Укажите время работы правильно').required("Обязательное поле")
+		return schema
+	})
+})

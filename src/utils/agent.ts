@@ -13,6 +13,17 @@ import React from "react";
 
 export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
+type CreateFilialPerformerFormData = {
+  name: string
+  city: number
+  is_active: boolean
+  performerprofile: {
+    address: string
+    working_time: string
+    lat: number
+    lon: number
+  }
+}
 
 interface FilterPropsCars {
   number?: number
@@ -213,6 +224,7 @@ const Users = {
 const Companies = {
     createCompanyPerformers: ( data: CreateCompanyPerformerFormData, type: string ) => requests.post(`/companies/${type}/create/`, data),
     editCompany: ( data: CreateCompanyPerformerFormData, type: string, id:number ) => requests.put(`/companies/${type}/${id}/update/`, data),
+
     getCompanyData: (type: string, id: number ) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
     // createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
     //   return  requests.post('/companies/performer/create/', data)
@@ -342,6 +354,9 @@ const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),
   getFilial: (company_type: string, company_id: number, id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/${id}/retrieve/`, params),
   createFilial: (company_type: string, company_id: number, data: any) => requests.post(`/${company_type}_branches/${company_id}/create/`, data),
+  editFilial: ( data: any, company_id: number, type: string, id:number ) => requests.put(`/${type}_branches/${company_id}/${id}/update/`, data),
+
+
 }
 const agent = {
   Price,

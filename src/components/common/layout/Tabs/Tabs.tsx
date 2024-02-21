@@ -5,6 +5,7 @@ import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, Tabs
 export enum TabsType {
   bid = 'bid',
   company = 'company',
+  filial = 'filial',
   user = 'user',
   price = 'price',
   priceEdit = 'priceEdit',
@@ -53,17 +54,18 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
         })
         return result
       }
-        else if(panels) {
-        panels.forEach((item: any) => {
-          result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={panels[0].company_type} data={item.data} label={item.label} props={panels}/>)
+      if(type == TabsType.filial) {
+        data.forEach((item: any) => {
+          result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={data[0].company_type} data={item.data} label={item.label} props={data}/>)
         })
         return result
       }
       if(type == TabsType.company) {
+        console.log(data);
         data.forEach((item: any, index: number) => {
           result.push(
             <TabsVariants   key={`var-${item.label}`}
-              company_type={item.company_type}
+              company_type={data[0].company_type}
               companyId={data[0].data.id} content_type={item.label} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>
           )
         })

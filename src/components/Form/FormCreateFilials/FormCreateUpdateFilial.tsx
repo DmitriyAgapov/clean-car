@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { yupResolver } from 'mantine-form-yup-resolver'
-import { CreateCompanySchema } from 'utils/validationSchemas'
-import { Group, InputBase, NumberInput, Select, TextInput } from '@mantine/core'
+import {  CreateFilialSchema } from "utils/validationSchemas";
+import { InputBase, NumberInput, Select, TextInput } from '@mantine/core'
 import { createFormActions, createFormContext } from '@mantine/form'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
@@ -15,14 +15,9 @@ import { values, values as val } from "mobx";
 import InputAutocompleteNew from 'components/common/ui/InputAutocomplete/InputAutocompleteNew'
 import moment, { MomentInput } from 'moment'
 import Progress from 'components/common/ui/Progress/Progress'
-import SelectCustom from 'components/common/ui/Select/Select'
-import { Field } from 'formik'
-import SelectFromList from 'components/common/SelectFromList/SelectFromList'
 import { TransferList } from 'components/common/ui/TransferList/TransferList'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
-import company from "routes/company/company";
-import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
+import agent from "utils/agent";
 
 interface InitValues {
     address: string | null
@@ -34,7 +29,7 @@ interface InitValues {
     company_filials: string
     lat: string | number
     is_active: string
-    company_id: number
+    company_id: number | null
     lon: string | number
     service_percent: number
     working_time: string
@@ -52,7 +47,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         type: CompanyType.customer,
         city: '',
         city_name: '',
-        company_id: 0,
+        company_id: null,
         company_name: '',
         id: 0,
         company_filials: 'filials',
@@ -88,7 +83,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             lon: company.lon,
             service_percent: company.service_percent,
             id: Number(company.id),
-            performer_company: values(company.performer_company),
+            performer_company: company.performer_company && values(company.performer_company),
             type: company.type,
             is_active: company.is_active ? 'true' : 'false'
         }
@@ -98,7 +93,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         initialValues: initValues,
         validateInputOnBlur: true,
         onValuesChange: (values, previous) => console.log(values),
-        validate: yupResolver(CreateCompanySchema),
+        validate: yupResolver(CreateFilialSchema),
         enhanceGetInputProps: (payload) => {
             if (payload.field === 'working_time') {
                 return {
@@ -115,7 +110,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                     className: 'mb-2 w-full flex-grow  !flex-[0_0_10rem] col-span-3',
                 }
             }
-
             return {
                 className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
             }
@@ -126,8 +120,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     const momentFormat = 'HH:mm'
     const handleSubmit = React.useCallback((values:any) => {
 
-        if (values.application_type == CompanyType.performer) {
-
+        if (values.type == CompanyType.performer) {
             const data:Company<CompanyType.performer> = {
                 city:  Number(values.city),
                 is_active: true,
@@ -136,19 +129,26 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                     address: values.address,
                     lat: Number(values.lat),
                     lon: Number(values.lon),
-                    service_percent: values.service_percent ?? 1,
+                    working_time: values.working_time
                 }
             }
-
-            store.companyStore.createFilial(data,'performer',  values.company_id).then((r) => {
-                values.id = r.id
-                revalidate.revalidate()
-                navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
-            })
+            if(edit) {
+                agent.Filials.editFilial(data, values.company_id, 'performer', values.id).then((r) => {
+                    values.id = r.id
+                    revalidate.revalidate()
+                    navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                })
+            } else {
+                store.companyStore.createFilial(data, 'performer', values.company_id).then((r) => {
+                    values.id = r.id
+                    revalidate.revalidate()
+                    navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                })
+            }
         }
-        if (values.application_type == CompanyType.customer) {
-
+        if (values.type == CompanyType.customer) {
             const data:Company<CompanyType.customer> = {
+                id: values.id,
                 name: values.company_name,
                 is_active: true,
                 city: Number(values.city),
@@ -158,12 +158,19 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                     lon: Number(values.lon)
                 }
             }
-
-            store.companyStore.createFilial(data, 'customer', values.company_id).then((r) => {
-                values.id = r.id
-                revalidate.revalidate()
-                navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
-            })
+            if(edit) {
+                agent.Filials.editFilial(data, values.company_id, 'customer', values.id).then((r) => {
+                    values.id = r.id
+                    revalidate.revalidate()
+                    navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                })
+            } else {
+                store.companyStore.createFilial(data, 'customer', values.company_id).then((r) => {
+                    values.id = r.id
+                    revalidate.revalidate()
+                    navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                })
+            }
         }
     }, [])
     // @ts-ignore
@@ -189,11 +196,8 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         type={'button'}
                         action={() => {
                             formData.validate()
-                            if(step === 2) {
-                                handleSubmit(formData.values)
-                            } else {
-                                changeStep()
-                            }
+                            handleSubmit(formData.values)
+
                         }}
                         disabled={!formData.isValid()}
                         text={'Сохранить'}
@@ -205,7 +209,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             action={() => handleSubmit(formData.values)}
                             type={'submit'}
                             disabled={!formData.isValid()}
-                            text={'Сохранить submit'}
+                            text={'Сохранить'}
                             className={'float-right'}
                             variant={ButtonVariant.accent}
                           />
@@ -252,7 +256,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             label={'Город'}
                             searchable={true}
                             {...formData.getInputProps('city')}
-                            className={'!flex-auto'}
+                            className={'!flex-[0_auto]'}
                             onOptionSubmit={props => {
                                formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name);
                                formData.setFieldValue('address', '');
@@ -278,6 +282,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           allowDeselect={false}
                           {...formData.getInputProps('type')}
                           label={'Тип'}
+                          onOptionSubmit={() => console.log(store.companyStore.getFilialsAll)}
                           withAsterisk
                           defaultValue={formData.values.type}
                           className={'!flex-initial'}
@@ -310,8 +315,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             placeholder='c 00:00 до 23:59'
                           />
                         )}
-
-
                         <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
                         <Select
                           withAsterisk
@@ -326,12 +329,14 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           className={'col-span-3'}
                         />
                         <Select
+                          withAsterisk
+                          searchable
+                          clearable
+                          defaultValue={formData.values.company_id}
                           label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
                           {...formData.getInputProps('company_id')}
-                            data={formData.values.company_filials === 'filials' ? store.companyStore.getFilialsAll.map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))}
-                            />
-
-
+                            data={formData.values.company_filials === 'filials' ? store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.values.type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.values.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))}
+                        />
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}
@@ -343,12 +348,12 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         header={
                             <>
                                 <Heading
-                                    text={'Шаг 2. Информация о счете и индивидуальные настройки '}
+                                    text={'Шаг 2.  Филиал создан'}
                                     color={HeadingColor.accent}
                                     variant={HeadingVariant.h2}
                                 />
                                 <div className={''}>
-                                    Укажите информацию о счета компании и предпочтительных исполнителей, если такие есть
+                                    Вы можете добавить Отдел Сотрудников и Лимиты для компании или добавить их позже в соответствующем разделе
                                 </div>
                             </>
                         }
