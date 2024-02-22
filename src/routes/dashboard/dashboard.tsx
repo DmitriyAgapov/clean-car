@@ -7,6 +7,7 @@ import { useForm } from '@mantine/form';
 import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCreateUpdateUsers";
 import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
 import FormCreateUpdateFilial from "components/Form/FormCreateFilials/FormCreateUpdateFilial";
+import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
 
 export default function DashboardPage() {
   const form = useForm({
@@ -32,7 +33,7 @@ export default function DashboardPage() {
           </>
         }
       />
-      <FormCreateUpdateFilial/>
+      <FormCreateUpdateCar/>
     </Section>
     </>
   )

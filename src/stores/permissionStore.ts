@@ -280,9 +280,7 @@ export class PermissionStore {
     let res;
     const {status, data} = yield agent.Permissions.getAllCompanyPermissions(company_id)
     if(status === 200) {
-
         this.companyPermissions = data.results
-
     }
     this.loadingPermissions = false
   })

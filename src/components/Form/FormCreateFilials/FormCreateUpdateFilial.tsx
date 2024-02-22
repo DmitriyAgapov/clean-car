@@ -168,7 +168,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 store.companyStore.createFilial(data, 'customer', values.company_id).then((r) => {
                     values.id = r.id
                     revalidate.revalidate()
-                    navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                    navigate(`/account/filials/customer/${values.company_id}/${r.id}`)
                 })
             }
         }
@@ -246,13 +246,13 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         }
                     >
                         <TextInput
-                            withAsterisk
+
                             label={'Название филиала'}
                             {...formData.getInputProps('company_name')}
                         />
                         <Select
                             withCheckIcon={false}
-                            withAsterisk
+
                             label={'Город'}
                             searchable={true}
                             {...formData.getInputProps('city')}
@@ -268,7 +268,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         />
                         <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
                         <Select
-                          withAsterisk
+
                           {...formData.getInputProps('is_active')}
                           withCheckIcon={false}
                           label={'Статус'}
@@ -283,7 +283,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           {...formData.getInputProps('type')}
                           label={'Тип'}
                           onOptionSubmit={() => console.log(store.companyStore.getFilialsAll)}
-                          withAsterisk
+
                           defaultValue={formData.values.type}
                           className={'!flex-initial'}
                           data={[
@@ -294,7 +294,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         {formData.values.type === CompanyType.performer && (
                           <InputBase
                             component={IMaskInput}
-                            withAsterisk
+
                             label={'Часы работы'}
                             {...formData.getInputProps('working_time')}
                             mask={Date}
@@ -317,7 +317,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         )}
                         <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
                         <Select
-                          withAsterisk
+
                           {...formData.getInputProps('company_filials')}
                           defaultValue={formData.values.company_filials}
                           allowDeselect={false}
@@ -329,7 +329,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           className={'col-span-3'}
                         />
                         <Select
-                          withAsterisk
+
                           searchable
                           clearable
                           defaultValue={formData.values.company_id}
@@ -369,7 +369,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         />
 
                         <Select label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
-                        <NumberInput withAsterisk type={'text'} label={'Сумма'} suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} maxLength={2} min={0} max={100} />
+                        <NumberInput   type={'text'} label={'Сумма'} suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} maxLength={2} min={0} max={100} />
 
                         <Select
                             label={'Список Партнеров'}

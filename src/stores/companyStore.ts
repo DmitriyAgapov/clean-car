@@ -241,6 +241,7 @@ export class CompanyStore {
                 cars: [],
             }
             if (newid && type) {
+                console.log(type);
                 const company = yield agent.Companies.getCompanyData(type, newid)
                 const users = yield agent.Account.getCompanyUsers(newid)
                 const filials = yield agent.Filials.getFilials(type, newid)
@@ -264,7 +265,7 @@ export class CompanyStore {
                     data: filials.data.results,
                     label: 'Филиалы',
                 } as any
-                console.log(cars)
+                console.log(company)
                 // @ts-ignore
                 set(this.fullCompanyData, { [data.company.data.id]: data })
             }

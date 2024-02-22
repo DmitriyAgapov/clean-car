@@ -6,9 +6,22 @@ export const CreateUserSchema = Yup.object().shape({
 	last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
 	phone: Yup.string().max(16, 'Слишком длинное!').phone('RU', 'Введите правильный номер').required('Обязательное поле'),
 	email: Yup.string().email('Неверный email').required('Обязательное поле'),
-	group: Yup.string().not(['0']).required('Обязательное поле'),
-	company_id: Yup.number().required('Обязательное поле'),
-	depend_on: Yup.string().required('Введите тип'),
+	type: Yup.string(),
+	group: Yup.string().when('type', (type, schema) => {
+		if(type[0] !== "admin") {
+			return schema.required('Обязательное поле')
+		} else {
+			return schema
+		}
+	}),
+	// company_id: Yup.number().when('').required('Обязательное поле'),
+	depend_on: Yup.string().when('type', (type, schema) => {
+		if(type[0] !== "admin") {
+			return schema.required('Введите тип')
+		} else {
+			return schema
+		}
+	}),
 	is_active: Yup.string()
 })
 
@@ -43,6 +56,18 @@ export const CreateCompanySchema = Yup.object().shape({
 	})
 })
 export const CreateFilialSchema = Yup.object().shape({
+	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	city: Yup.string().required('Обязательное поле'),
+	type: Yup.string(),
+	company_id: Yup.string().required('Обязательное поле'),
+	working_time: Yup.string().when('type', (type, schema) => {
+		if(type[0] === CompanyType.performer)
+			return schema.min(16, 'Укажите время работы правильно').max(16, 'Укажите время работы правильно').required("Обязательное поле")
+		return schema
+	})
+})
+export const CreateCarSchema = Yup.object().shape({
 	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
 	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
 	city: Yup.string().required('Обязательное поле'),

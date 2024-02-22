@@ -159,11 +159,12 @@ export class UsersStore {
       }
       try {
         if(company_type) {
+          console.log(company_type);
           const data  = yield companyStore.loadCompanyWithTypeAndId(company_type, Number(companyid));
-
+          console.log(data);
           user = {
             ...user,
-            company: {company_type: label(data.company.company_type), ...data.company.data}
+            company: {company_type: data.company.company_type, ...data.company.data}
           }
         }
       }
@@ -181,6 +182,7 @@ export class UsersStore {
         new Error('get User permissions failed')
       }
     }
+    console.log(user, 'data');
     return user
   })
   async createNewUser( edit:boolean, values:any) {

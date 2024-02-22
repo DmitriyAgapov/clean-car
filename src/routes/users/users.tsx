@@ -54,7 +54,9 @@ const UsersPage = () => {
         search={true}
         ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee__first_name'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city'}]}
         // @ts-ignore
-        data={data.results.map((item: { company: Company; group: number; employee: User }) => ({
+        data={data.results.map((item: { company: Company; group: number; employee: User }) => {
+          console.log(item.company.company_type === "Компания-Заказчик");
+          return ({
           state: item.employee.is_active,
           name: item.employee.first_name + ' ' + item.employee.last_name,
           phone: item.employee.phone,
@@ -64,11 +66,11 @@ const UsersPage = () => {
           city: item.company.city.name,
           id: item.employee.id,
           query: {
-            type: item.company.company_type == 'Компания-заказчик' ? UserTypeEnum.customer : UserTypeEnum.performer,
+            type: item.company.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : UserTypeEnum.performer,
             company_id: item.company.id,
 
           },
-        }))}
+        })})}
         state={store.usersStore.loadingUsers}
         style={PanelRouteStyle.users}
         initFilterParams={[{label: 'Статус', value: 'is_active'}, {label: 'Город', value:  'city'}]}

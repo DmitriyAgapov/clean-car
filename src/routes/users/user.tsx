@@ -10,13 +10,14 @@ import { SvgBackArrow } from 'components/common/ui/Icon'
 import DList from 'components/common/ui/DList/DList'
 import { CompanyType } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
+import label from "utils/labels";
 
 const UserPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
   const { user }: any = useLoaderData()
-
+  console.log(user);
   const userData = React.useMemo(() => {
     return (
         <>
@@ -25,7 +26,7 @@ const UserPage = () => {
             <DList label={'E-mail'} title={user.employee.email} />
             <DList
                 label={'Тип'}
-                title={user.company.company_type}
+                title={label(user.company.company_type)}
                 directory={user.company.company_type === CompanyType.customer ? 'customer' : 'performers'}
             />
 
@@ -39,7 +40,7 @@ const UserPage = () => {
                     </span>
                 }
             />
-            {user.company.id && <hr className={'mt-0 col-span-2'}/>}
+          {user.company.id && <hr className={'mt-0 col-span-2'}/>}
           {user.company.name && <DList label={'Компания'} title={user.company.name} />}
           {user.company.city.name && <DList label={'Город'} title={user.company.city.name} />}
           {user.company.city.name && <DList label={'Филиал'} title={user.company.city.name} />}

@@ -349,6 +349,7 @@ const Account = {
   getCompanyUser: (company_id: number, id: number) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
   createCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/users/create/`, data),
   updateCompanyUser: (company_id: number, data:any) => requests.put(`/accounts/${company_id}/profile/${data.id}/update/`, data),
+  createAdminUser: (data: any) => requests.post('/accounts_admin/user/create/', data)
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),

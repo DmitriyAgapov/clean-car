@@ -50,7 +50,7 @@ export function SelectCreatable({ items, createAction, defaultValue,  label}:{it
 		>
 			<Combobox.Target>
 				<InputBase
-					withAsterisk={true}
+
 					classNames={{
 					input: "bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10"
 

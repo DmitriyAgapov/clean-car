@@ -317,7 +317,7 @@ export const filialLoader = async ({ params: { id, company_type, action, company
 }
 export const usersLoader =  async (props: any) => {
     const paginationData = paginationParams(props.request.url as string)
-    const { data, status } = await agent.Users.getAllUsers(paginationData as PaginationProps)
+    const { data, status } = await agent.Users.getAllUsers({ ...paginationData, q: paginationData.searchString } as PaginationProps)
     console.log(paginationData);
 
 

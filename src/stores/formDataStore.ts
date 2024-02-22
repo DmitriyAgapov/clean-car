@@ -67,7 +67,6 @@ export class FormStore {
       .then((res) => res)
       .then((res:any) => runInAction(() => {
         if(res && res.status > 199 && res.status < 300) {
-
           this.formCreateCar = {}
         }
       }))

@@ -48,7 +48,8 @@ export const carsLoader = async (props: any) => {
 				const { data: dataCars, status } = await agent.Cars.getAdminCars({
 					page: paramsPage ?? 1,
 					page_size: paramsPageSize ?? 10,
-					ordering: paramsOrdering
+					ordering: paramsOrdering,
+					q: paramsSearchString
 				} as PaginationProps)
 
 				if (status === 200) {

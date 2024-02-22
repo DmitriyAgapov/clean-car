@@ -156,7 +156,7 @@ const FormCreateCarBrand = (props: any) => {
           >
           <SelectCreatable defaultValue={props?.edit ? props.brand : null} items={val(store.catalogStore.carBrands).map((item:any)=> ({label: item.name, value: String(item.id)}))} createAction={(e) => setFieldValue('brandId', Number(e.id))} label={values.brand !== null ? 'Создать бренд' : 'Бренд'}/>
           {/* <ComboboxCustom defaultValue={props?.edit ? props.brand : null} action={(e) => setFieldValue('brandId', Number(e.id))} name={'brand'} items={val(store.catalogStore.carBrands).map((item:any)=> item)}/> */}
-          <TextInput withAsterisk  onChange={(e) => values.modelName = e.target.value} defaultValue={props?.edit ? props.modelName : null} placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
+          <TextInput    onChange={(e) => values.modelName = e.target.value} defaultValue={props?.edit ? props.modelName : null} placeholder={dataCreate.inputs[1].placeholder} name={dataCreate.inputs[1].fieldName}  type={'text'} label={dataCreate.inputs[1].placeholder}/>
           <Select  withCheckIcon={false}   required onChange={(e) =>  setFieldValue('car_type', e)} defaultValue={props?.edit ? props.car_type : null} label={dataCreate.inputs[2].label} placeholder={dataCreate.inputs[2].placeholder} name={dataCreate.inputs[2].fieldName} data={result.map((item) => ({
           label: item.label,
           value: String(item.value)

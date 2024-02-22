@@ -23,7 +23,6 @@ axios.interceptors.request
 axios.interceptors.response.use(
 		(response) => response,
 		async (error) => {
-			console.log(error);
 			const config = error.config;
 			if (error.response.status === 401 && !config._retry) {
 				const tokenRefresh = window.sessionStorage.getItem('jwt_refresh')

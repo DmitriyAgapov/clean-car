@@ -296,13 +296,12 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         }
                     >
                         <TextInput
-                            withAsterisk
+
                             label={'Название компании'}
                             {...formData.getInputProps('company_name')}
                         />
                         <Select
                             withCheckIcon={false}
-                            withAsterisk
                             label={'Город'}
                             searchable={true}
                             {...formData.getInputProps('city')}
@@ -318,7 +317,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         />
                         <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
                         <NumberInput
-                            withAsterisk
+
                             type={'text'}
                             label={'ИНН'}
                             {...formData.getInputProps('inn')}
@@ -327,7 +326,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             placeholder={'Введите ИНН'}
                         />
                         <NumberInput
-                            withAsterisk
+
                             type={'text'}
                             label={'ОГРН'}
                             {...formData.getInputProps('ogrn')}
@@ -338,7 +337,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         {formData.values.type === CompanyType.performer && (
                           <InputBase
                             component={IMaskInput}
-                            withAsterisk
+
                             label={'Часы работы'}
                             {...formData.getInputProps('working_time')}
                             mask={Date}
@@ -362,7 +361,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
 
                         <TextInput
                           className={'!flex-[1_0_100%]'}
-                            withAsterisk
+
                             label={'Юридический адрес'}
                             {...formData.getInputProps('legal_address')}
                             placeholder={'Введите Юридический адрес'}
@@ -371,7 +370,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             <NumberInput
                                 defaultValue={1}
                               className={'!flex-[1_1_4rem]'}
-                                withAsterisk
+
                               step={1}
                               hideControls
                               allowNegative={false}
@@ -386,7 +385,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             allowDeselect={false}
                             {...formData.getInputProps('type')}
                             label={'Тип'}
-                            withAsterisk
+
                             disabled={edit}
                             defaultValue={formData.values.type}
                             className={'!flex-initial'}
@@ -397,7 +396,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         />
                         {formData.values.type === CompanyType.performer && (
                             <NumberInput
-                                withAsterisk
+
                                 type={'text'}
                                 label={'Процент сервиса'}
                                 {...formData.getInputProps('service_percent')}
@@ -409,7 +408,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             />
                         )}
                         <TextInput
-                            withAsterisk
+
                             label={'Контактные данные'}
                             {...formData.getInputProps('contacts')}
                             placeholder={'Введите Контактные данные'}
@@ -446,8 +445,8 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
 
-                        <Select withAsterisk label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
-                        <NumberInput onClick={() => console.log(formData.errors)} disabled={formData.values.overdraft === "2"} withAsterisk  label={'Сумма'}     thousandSeparator=" " suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} min={1}  className={formData.errors.overdraft_sum ? ' filter grayscale' : ''}/>
+                        <Select   label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
+                        <NumberInput onClick={() => console.log(formData.errors)} disabled={formData.values.overdraft === "2"}    label={'Сумма'}     thousandSeparator=" " suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} min={1}  className={formData.errors.overdraft_sum ? ' filter grayscale' : ''}/>
 
                         <Select
                             label={'Список Партнеров'}
