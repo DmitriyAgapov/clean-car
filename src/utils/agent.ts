@@ -10,6 +10,7 @@ import { BidsStatus } from "stores/bidsStrore";
 import { notifications } from "@mantine/notifications";
 import { SvgClose } from "components/common/ui/Icon";
 import React from "react";
+import company from "routes/company/company";
 
 export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
@@ -153,6 +154,7 @@ const handleErrors = (err: AxiosError) => {
     return err
 }
 const Price = {
+    createPrice: (company_id: number) => requests.post(`/price/${company_id}/create/`, {}),
     getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list/', {}, pagination),
     getCurentCompanyPriceEvac: (company_id: number) => requests.get(`/price/${company_id}/active_evacuation`, {}),
     getCurentCompanyPriceTire: (company_id: number) => requests.get(`/price/${company_id}/active_tire`, {}),

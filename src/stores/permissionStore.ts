@@ -310,9 +310,8 @@ export class PermissionStore {
       const data = yield agent.PermissionsAdmin.getAllAdminPermissions()
       if (data.status === 200) {
         //@ts-ignore
-        const { results } = data.data
-
-        set(this.permissions, results)
+        const { results } = data.data;
+        set(this.permissions, results);
 
       }
     } catch (error) {

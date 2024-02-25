@@ -68,14 +68,11 @@ export const CreateFilialSchema = Yup.object().shape({
 	})
 })
 export const CreateCarSchema = Yup.object().shape({
-	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	brand: Yup.string().required('Обязательное поле'),
+	model: Yup.string().required('Обязательное поле'),
 	city: Yup.string().required('Обязательное поле'),
-	type: Yup.string(),
+	height: Yup.number().required('Обязательное поле'),
+	radius: Yup.string().required('Обязательное поле'),
 	company_id: Yup.string().required('Обязательное поле'),
-	working_time: Yup.string().when('type', (type, schema) => {
-		if(type[0] === CompanyType.performer)
-			return schema.min(16, 'Укажите время работы правильно').max(16, 'Укажите время работы правильно').required("Обязательное поле")
-		return schema
-	})
+	number: Yup.string().required("Обязательное поле")
 })

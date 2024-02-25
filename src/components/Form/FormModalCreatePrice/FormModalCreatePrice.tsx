@@ -9,6 +9,8 @@ import {  Select } from "@mantine/core";
 import {  observer } from "mobx-react-lite";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import {  runInAction } from "mobx";
+import agent from "utils/agent";
+import { useRevalidator } from "react-router-dom";
 const FormInputs = () => {
   const store = useStore()
   const { values, setFieldValue}:any = useFormikContext()
@@ -18,7 +20,7 @@ const FormInputs = () => {
   })
   const memoized = React.useMemo(() => {
     const allCompanies = store.companyStore.getCompanies()
-    const companies = allCompanies.filter((c: any) => c.parent === null)
+    const companies = allCompanies.filter((c: any) => c.parent === null && c.company_type === "Компания-Заказчик")
     const filials = allCompanies.filter((c: any) => c.parent !== null && c.parent.id === values.company_id)
     return <>
       <Select className={'col-span-full'} onOptionSubmit={(value:any) => {
@@ -30,7 +32,7 @@ const FormInputs = () => {
     }))} name={'company_id'} />
       <Select value={values.filial_id !== 0 ? values.filial_id : null} className={'col-span-full'} disabled={filials.length === 0} onOptionSubmit={(value:any) => {
         setFieldValue('filial_id', Number(value))
-      }}  searchable clearable label={'Выберите компанию'} placeholder={'Компания'} data={filials.map((c:any) => ({
+      }}  searchable clearable label={'Выберите филиал'} placeholder={'Компания'} data={filials.map((c:any) => ({
         label: c.name,
         value: String(c.id)
       }))} name={'company_id'} />
@@ -57,6 +59,7 @@ const FormModalCreatePrice =  () => {
       company_id: 0,
       filial_id: 0
     }
+    let revalidator = useRevalidator();
     return (
         <Formik
             initialValues={initValues}
@@ -77,17 +80,26 @@ const FormModalCreatePrice =  () => {
                         color={HeadingColor.accent}
                     />
                     <FormInputs />
-                    <footer className={'pt-12 col-span-full'}>
+                    <footer className={'pt-12 col-span-full flex'}>
                       <Button text={"Отменить"}
+                        className={'!flex-1'}
                         action={() => store.appStore.closeModal()}
                         variant={ButtonVariant["accent-outline"]}
                />
                       <Button text={"Сохранить"}
                         type={'submit'}
+                        disabled={values.company_id === 0}
                         action={() => {
-
-
+                          console.log(values)
+                          agent.Price.createPrice(values.filial_id !== 0 ? values.filial_id : values.company_id)
+                            .then(r => {
+                              if(r.status === 201) {
+                                revalidator.revalidate();
+                                store.appStore.closeModal()
+                              }
+                          })
                         }}
+                        className={'!flex-1'}
                         // action={async () => {
                         //     store.
                         // }}

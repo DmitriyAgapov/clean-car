@@ -160,7 +160,7 @@ export class CarStore {
   createCar = flow(function* (this: CarStore, company_id: number, car: Car) {
     this.loadingCars = true
     try {
-      yield agent.Cars.createCompanyCar(company_id, car)
+      return yield agent.Cars.createCompanyCar(company_id, car)
     } catch (error) {
       console.error(error)
     }

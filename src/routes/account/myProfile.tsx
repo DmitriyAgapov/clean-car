@@ -152,7 +152,6 @@ const MyProfilePage = () => {
             </>
           }
         >
-      <SignupForm/>
           {userData}
 
         </Panel>

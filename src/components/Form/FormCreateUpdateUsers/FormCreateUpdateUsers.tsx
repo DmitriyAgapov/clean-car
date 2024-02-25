@@ -221,7 +221,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         label={'Телефон'} component={IMaskInput} mask='+7 000 000 0000' placeholder='+7 000 000 0000'
                     />
                     <TextInput   label={'E-mail'} {...form.getInputProps('email')} />
-                    <Select label={'Тип'} onOptionSubmit={() => form.setValues(initData)}
+                    <Select label={'Тип'} onOptionSubmit={() => form.setValues({...form.values, company_id: null, group: null})}
                         {...form.getInputProps('type')}
 	                      defaultValue={form.values.type}
                         data={Object.entries(UserTypeEnum).map((item: any) => ({

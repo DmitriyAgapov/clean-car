@@ -13,11 +13,11 @@ export class FormStore {
       properties: ['formCreateUser', 'formCreateCar'],
       storage: localStorage,
     })
-    reaction(() => this.formCreateCar.company_id, (company_id) => {
-      if (company_id !== 0) {
-        permissionStore.loadCompanyPermissions(company_id)
-      }
-    })
+    // reaction(() => this.formCreateCar.company_id, (company_id) => {
+    //   if (company_id !== 0) {
+    //     permissionStore.loadCompanyPermissions(company_id)
+    //   }
+    // })
   //   reaction(() => this.formCreateCar.employee, async (employee) => {
   //     if (employee.length !== 0) {
   //       await carStore.createCar(this.formCreateCar.company_id, this.formCreateCar)
@@ -63,14 +63,17 @@ export class FormStore {
     return this[form]
   }
   sendCarFormData() {
-      carStore.createCar(this.formCreateCar.company_id, this.formCreateCar)
+    console.log('createCar');
+      return carStore.createCar(this.formCreateCar.company_id, this.formCreateCar)
       .then((res) => res)
       .then((res:any) => runInAction(() => {
         if(res && res.status > 199 && res.status < 300) {
+          console.log(res);
           this.formCreateCar = {}
+          return res
         }
       }))
-        .finally(() => formStore.formClear('formCreateCar'))
+      .finally(() => formStore.formClear('formCreateCar'))
   }
   sendCarFormDataEdit() {
       carStore.editCar(this.formCreateCar.company_id, this.formCreateCar.id, this.formCreateCar)

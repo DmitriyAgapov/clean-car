@@ -55,7 +55,7 @@ const UsersPage = () => {
         ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee__first_name'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city'}]}
         // @ts-ignore
         data={data.results.map((item: { company: Company; group: number; employee: User }) => {
-          console.log(item.company.company_type === "Компания-Заказчик");
+          // console.log(item.company.company_type === "Компания-Заказчик");
           return ({
           state: item.employee.is_active,
           name: item.employee.first_name + ' ' + item.employee.last_name,

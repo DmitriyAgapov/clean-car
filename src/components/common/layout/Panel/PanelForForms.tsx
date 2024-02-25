@@ -51,7 +51,7 @@ export type PanelProps = {
     action?: (event: any) => void | any
 }
 
-const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props }:{actionBack?: JSX.Element, actionCancel?: JSX.Element, actionNext?: JSX.Element, children: React.ReactNode} & PanelProps) => {
+const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props }:{actionBack?: JSX.Element | null, actionCancel?: JSX.Element | null, actionNext?: JSX.Element, children: React.ReactNode} & PanelProps) => {
 
     return <Panel
       {...props}

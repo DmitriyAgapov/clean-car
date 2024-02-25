@@ -3,15 +3,13 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { Navigate, useLoaderData, useNavigate } from 'react-router-dom'
 import 'yup-phone-lite'
-import FormCreateUser from 'components/Form/FormCreateUser/FormCreateUser'
 import { useStore } from "stores/store";
 import { PermissionNames } from "stores/permissionStore";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import FormCreateCar from "components/Form/FormCreateCar/FormCreateCar";
-import { values as val } from "mobx";
+import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
 
 export default function CarsPageEditAction() {
   const store = useStore()
@@ -34,6 +32,7 @@ export default function CarsPageEditAction() {
   return (
     <Section type={SectionType.default}>
       <Panel
+        state={false}
         className={'col-span-full'}
         headerClassName={'flex justify-between flex-wrap'}
         header={<>
@@ -46,7 +45,7 @@ export default function CarsPageEditAction() {
       >
       </Panel>
 
-      <FormCreateCar edit={true} car={{
+      <FormCreateUpdateCar edit={true} car={{
         id: values.id,
         number: values.number,
         height: values.height,
@@ -55,6 +54,7 @@ export default function CarsPageEditAction() {
         company_id: String(values.company.id),
         company_type: values.company.company_type,
         is_active: values.is_active ? "true" : "false",
+        depend_on: values.company.parent === null ? 'company' : 'filials',
         brand: String(values.model.brand),
         model: String(values.model.id),
         car_type: values.model.car_type,

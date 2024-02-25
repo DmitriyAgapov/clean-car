@@ -36,7 +36,7 @@ export class UserStore {
 
   constructor() {
     makeAutoObservable(this, {
-      myProfileState: computed,
+      // myProfileState: computed,
       isAdmin: computed,
     }, { autoBind: true });
     makePersistable(this, {
@@ -53,25 +53,26 @@ export class UserStore {
         }
       }
     )
-    reaction(() => this.myProfileState,
-  (user) => {
-        if(user.user == null) {
-          action(() => appStore.token = "")
-          appStore.token = ""
-        }
-      }
-    )
+  //   reaction(() => this.myProfileState,
+  // (user) => {
+  //       if(user.user == null) {
+  //         action(() => appStore.token = "")
+  //         appStore.token = ""
+  //       }
+  //     }
+  //   )
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
         if(permissions.id && permissions.permissions.length > 0) {
           this.loadUserPermissions()
         } else if(this.currentUser.id) {
-          this.loadMyProfile()
+          // this.loadMyProfile()
         }
     })
     reaction(() => this.currentUserPermissions,
       (currentUserPermissions) => {
           if(authStore.userIsLoggedIn && currentUserPermissions.size === 0) {
+            console.log('create Permissions if it is not created:)');
             this.createUserPermissions()
           }
       })
@@ -110,6 +111,7 @@ export class UserStore {
   }
   loadMyProfile() {
     this.loadingUser = true
+    console.log('Is there an error?');
     return agent.Profile.getMyAccount()
     .then((response:any) => response.data)
     .then(((data:any) => {
@@ -132,39 +134,39 @@ export class UserStore {
     let ar:any = new Map([]);
     console.log(this.currentUser);
     if(authStore.userIsLoggedIn) {
-    if(this.currentUser.is_staff) {
-      action(() => {
-        appStore.setAppType(UserTypeEnum.admin)
-        this.myProfileData.permissions = this.myProfileData.user.staff_group
+      if(this.currentUser.is_staff) {
+        action(() => {
+          appStore.setAppType(UserTypeEnum.admin)
+          this.myProfileData.permissions = this.myProfileData.user.staff_group
 
-        for (let permissionNameKey in PermissionNames) {
-          // @ts-ignore
-          ar.set(PermissionNames[permissionNameKey], {
-            read: true,
-            create: true,
-            delete: true,
-            name: permissionNameKey,
-            update:true
-          })
-        }})
+          for (let permissionNameKey in PermissionNames) {
+            // @ts-ignore
+            ar.set(PermissionNames[permissionNameKey], {
+              read: true,
+              create: true,
+              delete: true,
+              name: permissionNameKey,
+              update:true
+            })
+          }})
 
-    } else {
-      const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
-      appStore.setAppType(type)
+      } else {
+        const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
+        appStore.setAppType(type)
 
-      const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
-      this.myProfileData.company = perm[0].company;
+        const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
+        this.myProfileData.company = perm[0].company;
 
-      perm[0].group.permissions.forEach((item:any) => {
-        const exepctions = ['Компании', 'Расчетный блок', 'Финансовый блок', 'Индивидуальный расчет']
-        if(exepctions.indexOf(item.name) == -1) {
-          // @ts-ignore
-          ar.set(PermissionNames[item.name], item)
-        }
-      })
+        perm[0].group.permissions.forEach((item:any) => {
+          const exepctions = ['Компании', 'Расчетный блок', 'Финансовый блок', 'Индивидуальный расчет']
+          if(exepctions.indexOf(item.name) == -1) {
+            // @ts-ignore
+            ar.set(PermissionNames[item.name], item)
+          }
+        })
 
-      this.myProfileData.permissions = perm[0].group.permissions
-    }
+        this.myProfileData.permissions = perm[0].group.permissions
+      }
     }
     this.setCurrentPermissions(ar)
   }

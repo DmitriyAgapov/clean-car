@@ -10,6 +10,7 @@ import { useStore } from "stores/store";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import FormCreateCar from "components/Form/FormCreateCar/FormCreateCar";
 import { PermissionNames } from "stores/permissionStore";
+import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
 
 export default function CarsPageCreateAction() {
   const store = useStore()
@@ -32,7 +33,7 @@ export default function CarsPageCreateAction() {
         }
       >
       </Panel>
-      <FormCreateCar/>
+      <FormCreateUpdateCar/>
     </Section>
   )
 }
