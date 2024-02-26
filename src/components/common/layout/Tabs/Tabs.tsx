@@ -31,6 +31,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
         return result
       }
       if(type == TabsType.price) {
+
         data.forEach((item: any, index: number) => {
           result.push(
             <TabsVariantPrice state={state == item.label} data={item.dataTable} label={item.label} props={items} className={'!pb-0'}/>
@@ -39,7 +40,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
         return result
       }
       if(type == TabsType.priceEdit) {
-
+        console.log(data);
         data.forEach((item: any, index: number) => {
           result.push(
             <TabsVariantPrice edit={type == TabsType.priceEdit} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>

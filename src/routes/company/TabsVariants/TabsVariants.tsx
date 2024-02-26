@@ -615,7 +615,7 @@ export const TabsVariantPrice = ({
             </div>
         )
     })
-  }, [])
+  }, [ar])
 
   //Разбор массива для Шиномонтажа
   const mapEdTire = (ar: any[], edit: boolean) => React.useMemo(() => {
@@ -774,7 +774,7 @@ export const TabsVariantPrice = ({
 
         </div>
       ))
-    }, [])
+    }, [ar, edit])
 
 
   switch (label) {
@@ -839,12 +839,13 @@ export const TabsVariantPrice = ({
                 filter={false}
                 data={data.tire_positions.map((item:any) => ({
                   id: item.id,
+                  radius: item.radius,
                   service_subtype: item.service_subtype.name,
                   service_option: item.service_option ? item.service_option.name : null,
                   car_class: item.car_type,
                   amount: item.amount
                 }))}
-                ar={[{label: 'Тип услуги', name: 'service_subtype'}, {label: 'Доп. опции', name: 'service_option'}, {label: 'Тип автомобиля', name: 'car_class'}, {label: 'Cтоимость', name: 'amount'}, ]}
+                ar={[{label: 'Радиус', name: 'radius'},{label: 'Тип услуги', name: 'service_subtype'}, {label: 'Доп. опции', name: 'service_option'}, {label: 'Тип автомобиля', name: 'car_class'}, {label: 'Cтоимость', name: 'amount'}, ]}
               />}
             </Tabs.PanelPure>
           )

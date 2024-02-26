@@ -60,7 +60,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
     const store = useStore()
     const {width} = useWindowDimensions()
     const [open, setOpen] = useState(false);
-    const propsRender = () => {
+    const propsRender = React.useMemo(() => {
         const ar = []
         for (const key in props) {
            const priceValue = typeof props[key] === 'number'
@@ -72,19 +72,20 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
                         <NumberInput
                           data-id={props.id}
                           w={72}
-                          thousandSeparator=" "
+                          className={'pb-0'}
+                          // thousandSeparator=" "
                           hideControls
                           classNames={{
                           input: 'h-4 min-h-8 px-1.5 text-xs ',
                             root: ''
-                        }}
-                          
+                          }}
+
                           onChange={(value) => store.priceStore.handleChangeAmount({amount: value, id: props.id, initValue: props[key] === value, ...meta})}
                           suffix=" ₽"
                           // decimalScale={2}
                           // fixedDecimalScale
                           value={store.priceStore.priceOnChange.get(`${props.id}`)?.amount ? store.priceStore.priceOnChange.get(`${props.id}`).amount : props[key]}
-                            placeholder='Input placeholder'
+
                         />
                     ) : (
                         <p className={`m-0 ${priceValue && 'text-accent'} `}>
@@ -97,11 +98,11 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
           }
         }
       return ar;
-    }
+    }, [props])
 
   return (
     <Table.Tr className={styles.tableRowPure} onClick={(width && width > 961) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={open}>
-          {propsRender()}
+          {propsRender}
           {(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
               <SvgChevron/>
           </td>}
@@ -122,7 +123,7 @@ export const TableForPrice = (props: any) => {
 }
 export const TableWithSortNewPure = ({ meta, edit, variant, offsetSticky = 33, data, search = false, filter = false, state, className, total, ar, action, pageSize = 10, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props }: TableWithSortProps) => {
     const initCount = total || 0
-
+  console.log(ar);
     const RowDataMemoized = React.useMemo(() => {
         if(data && data.length > 0) return data.map((item: any, index: number) => <RowDataPure {...item} key={'_00' + index} edit={edit} meta={meta}
           // meta={{company_id: props.company, price_id: props.id}}
