@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -24,7 +24,7 @@ const GroupsPage = () => {
             <Panel
                 variant={PanelVariant.withGapOnly}
                 headerClassName={'flex justify-between'}
-                state={store.permissionStore.loadingPermissions}
+                state={false}
                 header={
                     <>
                         <Heading

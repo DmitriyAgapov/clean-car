@@ -21,7 +21,7 @@ const PricesPage = () => {
 	return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}
-				state={store.permissionStore.loadingPermissions}
+				state={false}
 				header={<>
 					<div className={'mr-auto'}>
 						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />

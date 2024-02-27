@@ -157,6 +157,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     const navigate = useNavigate()
     const momentFormat = 'HH:mm'
     const handleSubmit = React.useCallback((values:any) => {
+        console.log(values);
         if (values.type === CompanyType.performer) {
             const data: Company<CompanyType.performer> = {
                 company_type: values.type,
@@ -226,6 +227,15 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             <PanelForForms
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
+                actionBack={step === 2 ? (<Button
+                  type={'button'}
+                  text={'Назад'}
+                  action={() => {
+                     changeStep(1)
+                  }}
+                  className={'float-right'}
+                  variant={ButtonVariant['accent-outline']}
+                />) : undefined}
                 actionCancel={
                   step !== 3 ? (<Button
                         type={'button'}

@@ -793,7 +793,6 @@ const FormCreateBid = ({ user, edit }: any) => {
                                                         style: { backgroundColor: 'red' },
                                                         loading: false,
                                                     })
-
                                                 } else {
                                                     notifications.show({
                                                         id: 'bid-created',

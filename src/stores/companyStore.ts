@@ -16,6 +16,11 @@ export enum CompanyType {
   customer = "Компания-Заказчик",
   performer = "Компания-Партнер"
 }
+export const CompanyTypeRus = (type:string) => {
+  if(type === "Компания-Заказчик") return "customer"
+  if(type === "Компания-Партнер") return "performer"
+}
+
 export type City = {
     name?: string
     id?: number

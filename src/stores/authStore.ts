@@ -1,9 +1,10 @@
-import { action, flow, makeAutoObservable, makeObservable, observable, reaction, runInAction } from "mobx";
+import { action,  makeAutoObservable,  observable, runInAction } from "mobx";
 import { AxiosError } from 'axios'
 import agent from '../utils/agent'
 import userStore from './userStore'
 import appStore from './appStore'
 import { makePersistable } from "mobx-persist-store";
+import { notifications } from "@mantine/notifications";
 
 export class AuthStore {
   constructor() {
@@ -29,8 +30,6 @@ export class AuthStore {
       fireImmediately: true,
     })
   }
-
-
   userIsLoggedIn: boolean = false
   inProgress = false
   errors: any = undefined
@@ -92,25 +91,40 @@ export class AuthStore {
   login() {
     this.inProgress = true
     this.errors = undefined
-    return agent.Auth.login(this.values.email, this.values.password)
-      .then((resolve: any) => runInAction(() => {
+    agent.Auth.login(this.values.email, this.values.password)
+      .then((resolve: any) =>  {
+        if(resolve && resolve.response && resolve.response.status > 299) {
+          notifications.show({
+            id: 'bid-created',
+            withCloseButton: true,
+            onClose: () => console.log('unmounted'),
+            onOpen: () => console.log('mounted'),
+            autoClose: 3000,
+            title: "Error",
+            message: `${resolve.response.data.detail}`,
+            color: 'red',
+            className: 'my-notification-class z-[9999] absolute top-12 right-12',
+            loading: false,
+          })
+        } else {
           const { access, refresh } = resolve.data
           this.userIsLoggedIn = true
           appStore.setToken(access)
           appStore.setTokenRefresh(refresh)
-        }),
+        }
+      }
       )
       .catch(
         action((err: AxiosError) => {
           this.errors = err.response && err.response.data
-          throw err
+          console.log(err);
         }),
       )
       .finally(
-        action(() => {
+        () => {
           this.inProgress = false
-        }),
-      )
+        })
+
   }
 
   register() {

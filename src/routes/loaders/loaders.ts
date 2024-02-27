@@ -1,7 +1,7 @@
 import { defer, redirect, useLoaderData } from "react-router-dom";
 import appStore from 'stores/appStore'
 import userStore from 'stores/userStore'
-import companyStore from 'stores/companyStore'
+import companyStore, { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import permissionStore, { PermissionName } from 'stores/permissionStore'
 import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
@@ -317,20 +317,38 @@ export const filialLoader = async ({ params: { id, company_type, action, company
 }
 export const usersLoader =  async (props: any) => {
     const paginationData = paginationParams(props.request.url as string)
-    const { data, status } = await agent.Users.getAllUsers({ ...paginationData, q: paginationData.searchString } as PaginationProps)
-    console.log(paginationData);
-
-
-    return {
-        data: data,
-        status: status
+    if(userStore.isAdmin) {
+        const { data, status } = await agent.Users.getAllUsers({ ...paginationData, q: paginationData.searchString } as PaginationProps)
+        return {
+            data: data,
+            status: status
+        }
+    } else {
+        const { data, status } = await agent.Users.getCompanyUsers(userStore.myProfileData.company.id, { ...paginationData, q: paginationData.searchString } as PaginationProps)
+        return defer({
+            data: data,
+            status: status
+        })
     }
 }
 export const userLoader = async ({ params: { company_type, id, company_id } }: any) => {
-    const user = await usersStore.getUser(company_id, id, company_type)
-    return {
-        user: user,
+
+    if(userStore.isAdmin) {
+        const user = await usersStore.getUser(company_id, id, company_type);
+        return defer({
+            user: user,
+        })
+    } else {
+        let user = await usersStore.getUser(company_id, id, <CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type));
+        user = {
+            ...user,
+            company: userStore.myProfileData.company
+        }
+        return defer({
+            user: user,
+        })
     }
+
 }
 
 export const groupsIdLoader = async ({ params: { company_type, id } }: any) => {

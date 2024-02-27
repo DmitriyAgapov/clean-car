@@ -75,7 +75,7 @@ export const TransferList = observer(({active = []}:{active?: number[]}) => {
 			const data = store.companyStore.getCompaniesPerformers.filter((c:any) => c.parent === null);
 			console.log(data, 'perfdata');
 			if(data.length > 0) setData(prevState => [data, prevState[1]])
-		}, [store.companyStore.companiesPerformers]);
+		}, [store.companyStore.companiesPerformers.length]);
 
     const handleTransfer = (transferFrom: number, options: any[]) =>
       setData((current:any) => {

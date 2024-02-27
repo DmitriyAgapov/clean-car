@@ -3,11 +3,9 @@ import { Link, useLocation } from 'react-router-dom'
 import styles from './Sidebar.module.scss'
 import { SectionType } from '../Section/Section'
 import { useStore } from "stores/store";
-import Burger from 'components/common/ui/Burger/Burger'
 import { observer } from 'mobx-react-lite';
-import { useOutsideClick, useWindowDimensions } from "utils/utils";
-import Logo, { LogoProps } from "components/common/layout/Logo/Logo";
-import permissionStore, { PermissionName } from "stores/permissionStore";
+import { useWindowDimensions } from "utils/utils";
+import Logo from "components/common/layout/Logo/Logo";
 
 type SidebarProps = {
     children?: React.ReactNode | React.ReactNode[]
@@ -104,12 +102,8 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       icon: <img src={'/icons/zayavki.png'} alt={''} />,
       title: 'Заявки',
       url: 'bids',
-    },
-      {
-        icon: <img src={'/icons/zayavki.png'} alt={''} />,
-        title: 'Дэш',
-        url: 'dashboard',
-      }]
+    }
+      ]
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
         routeWithPermissions.push(el)

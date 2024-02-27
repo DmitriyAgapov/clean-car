@@ -46,21 +46,12 @@ export class UserStore {
     });
     reaction(() => this.currentUser,
        (currentUser) => {
-         console.log('currentUser', currentUser);
         if(authStore.userIsLoggedIn && currentUser.id === 0 && appStore.token !== '') {
           this.pullUser()
           this.loadMyProfile()
         }
       }
     )
-  //   reaction(() => this.myProfileState,
-  // (user) => {
-  //       if(user.user == null) {
-  //         action(() => appStore.token = "")
-  //         appStore.token = ""
-  //       }
-  //     }
-  //   )
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
         if(permissions.id && permissions.permissions.length > 0) {
@@ -94,6 +85,7 @@ export class UserStore {
     error:  null,
     roles: [] = []
   }
+
   get roles() {
     const roles = []
     if(this.isAdmin) {
@@ -109,50 +101,50 @@ export class UserStore {
     }}
     return roles
   }
+
   loadMyProfile() {
     this.loadingUser = true
     console.log('Is there an error?');
     return agent.Profile.getMyAccount()
-    .then((response:any) => response.data)
-    .then(((data:any) => {
-      runInAction(() => {
-        this.myProfileData.user = data
-        this.currentUser.is_staff = data.is_staff
-        this.currentUser.is_superuser = data.is_superuser
-        this.myProfileData.permissions = data.staff_group
-	      this.createUserPermissions()
-      })
-    }))
-    .catch((error:any) => runInAction(() =>this.myProfileData.error = error))
-    .finally(() => {
-      runInAction(() => {
-        this.loadingUser = false
-        this.myProfileData.loading = false
-      })
-    })}
+      .then((response:any) => response.data)
+      .then(((data:any) => {
+        runInAction(() => {
+          this.myProfileData.user = data
+          this.myProfileData.company = data.account_bindings[0].company
+          this.myProfileData.permissions = data.account_bindings[0].group.permissions
+          this.createUserPermissions()
+        })
+      }))
+      .catch((error:any) => runInAction(() =>this.myProfileData.error = error))
+      .finally(() => {
+        runInAction(() => {
+          this.loadingUser = false
+          this.myProfileData.loading = false
+        })
+    })
+  }
   createUserPermissions() {
     let ar:any = new Map([]);
     console.log(this.currentUser);
     if(authStore.userIsLoggedIn) {
-      if(this.currentUser.is_staff) {
-        action(() => {
-          appStore.setAppType(UserTypeEnum.admin)
-          this.myProfileData.permissions = this.myProfileData.user.staff_group
-
-          for (let permissionNameKey in PermissionNames) {
-            // @ts-ignore
-            ar.set(PermissionNames[permissionNameKey], {
-              read: true,
-              create: true,
-              delete: true,
-              name: permissionNameKey,
-              update:true
-            })
-          }})
-
+      if(this.isAdmin) {
+        console.log('Create admin permissions');
+        appStore.setAppType(UserTypeEnum.admin)
+        for (let permissionNameKey in PermissionNames) {
+          // @ts-ignore
+          ar.set(PermissionNames[permissionNameKey], {
+            read: true,
+            create: true,
+            delete: true,
+            name: permissionNameKey,
+            update:true
+          })
+        }
+        console.log(ar);
       } else {
         const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
         appStore.setAppType(type)
+        console.log(`Create ${type}  permissions`);
 
         const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
         this.myProfileData.company = perm[0].company;
@@ -181,16 +173,15 @@ export class UserStore {
   }
 
   get isAdmin() {
-    return this.currentUser.is_staff
+    console.log('Admin', this.myProfileData.company.company_type === "Администратор системы");
+    return this.myProfileData.company.company_type === "Администратор системы"
   }
 
   loadUserPermissions() {
     if(this.isAdmin) {
-
       this.setCurrentPermissions(this.myProfileData.permissions.permissions.map((el: any) => [String(el.name), el]));
       appStore.setAppType(UserTypeEnum.admin)
     } else if (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings.length > 0) {
-
       this.setCurrentPermissions(this.myProfileData.user.account_bindings[0].group.permissions.map((el: any) => [label(el.name), el]));
     }
   }
@@ -224,8 +215,8 @@ export class UserStore {
   }
 
   pullUser() {
-    action(() => this.loadingUser = true)
-      return agent.Auth.current()
+    this.loadingUser = true
+    return agent.Auth.current()
         .then((r: any) => {
           runInAction(() => {
             this.currentUser = r

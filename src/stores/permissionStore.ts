@@ -202,7 +202,7 @@ export class PermissionStore {
     this.companyPermissions.clear()
     this.permissions.length = 0
 
-    if(userStore.currentUser.is_staff) {
+    if(userStore.isAdmin) {
       this.loadingPermissions = true
        const response = yield agent.PermissionsAdmin.getAllAdminPermissions()
 
@@ -339,7 +339,12 @@ export class PermissionStore {
     }
   })
   getAllPermissions() {
-    this.loadPermissionAdmin()
+    if(userStore.isAdmin) {
+      this.loadPermissionAdmin()
+    } else {
+      this.loadCompanyPermissions(userStore.myProfileData.company.id)
+    }
+
 
     return this.permissions
   }

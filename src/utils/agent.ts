@@ -220,7 +220,8 @@ const Auth = {
 }
 const Users = {
     getAllUsers:  (pagination?: PaginationProps) => requests.get('/accounts/all_users/', {}, pagination),
-    getUser: ({ company_id, id }: { company_id: number; id: number }) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`)
+    getUser: ({ company_id, id }: { company_id: number; id: number }) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
+    getCompanyUsers: (company_id: number, pagination?: PaginationProps) => requests.get(`/accounts/${company_id}/users/list/`, {}, pagination),
 
 }
 const Companies = {

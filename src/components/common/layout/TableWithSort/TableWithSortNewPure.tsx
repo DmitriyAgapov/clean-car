@@ -121,9 +121,10 @@ export const TableForPrice = (props: any) => {
       </Panel>
     )
 }
+
 export const TableWithSortNewPure = ({ meta, edit, variant, offsetSticky = 33, data, search = false, filter = false, state, className, total, ar, action, pageSize = 10, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props }: TableWithSortProps) => {
     const initCount = total || 0
-  console.log(ar);
+
     const RowDataMemoized = React.useMemo(() => {
         if(data && data.length > 0) return data.map((item: any, index: number) => <RowDataPure {...item} key={'_00' + index} edit={edit} meta={meta}
           // meta={{company_id: props.company, price_id: props.id}}
