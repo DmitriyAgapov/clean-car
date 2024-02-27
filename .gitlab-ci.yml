@@ -1,0 +1,28 @@
+stages:
+  - tests
+  - deploy
+  - fixes
+
+deploy to stage:
+  stage: deploy
+  only:
+    - dev
+  variables:
+    GIT_STRATEGY: fetch
+  script:
+    - docker-compose stop
+    - docker-compose up -d
+
+docker down:
+  stage: fixes
+  when: manual
+  script:
+    - docker-compose down
+    - docker-compose up -d
+
+deploy to prod:
+  stage: deploy
+  only:
+    - main
+  script:
+    - echo "Run deploy to prod"
