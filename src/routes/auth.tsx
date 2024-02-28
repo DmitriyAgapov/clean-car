@@ -38,12 +38,10 @@ function AuthPage() {
               color={HeadingColor.accent}
             />
           }
-          footer={<LinkStyled text={'У меня нет аккаунта'} to={'/register'} />}
+          // footer={<LinkStyled text={'У меня нет аккаунта'} to={'/register'} />}
         >
           <p className={'!mb-4'}>
-            <strong>Добро пожаловать в сервис CleanCar.</strong>
-            <br />
-            Для входа в систему, введите ваши данные{' '}
+            <strong>Вас приветствует CleanCar</strong>
           </p>
         </Panel>
         {!store.appStore.token ? (

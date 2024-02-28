@@ -83,7 +83,7 @@ export default function GroupPageEditAction(props: any) {
                   actions: [
                     <Button text={'Нет'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
                     <Button
-                      text={'Да, удалять'}
+                      text={'Удалить'}
                       action={async () => {
                         store.permissionStore.deletePermissionStore(changes.id).then(() => {
                           store.appStore.closeModal()

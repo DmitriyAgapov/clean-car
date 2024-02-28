@@ -114,7 +114,7 @@ const FormCreateCity = (props: any) => {
                         actions: [
                           <Button text={'Нет'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
                           <Button
-                            text={'Да, удалять'}
+                            text={'Удалить'}
                             action={async () => {
                               agent.Catalog.deleteCity(data.results.id).then(() => {
                                 navigate('/account/references/cities', { replace: false })

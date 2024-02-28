@@ -70,7 +70,7 @@ export function SelectCreatable({ items, createAction, defaultValue,  label}:{it
 						combobox.closeDropdown();
 						setSearch(value || '');
 					}}
-					placeholder="Найти марку"
+					placeholder="Выберите марку"
 					rightSectionPointerEvents="none"
 				/>
 			</Combobox.Target>
@@ -79,7 +79,7 @@ export function SelectCreatable({ items, createAction, defaultValue,  label}:{it
 				<Combobox.Options mah={200} style={{ overflowY: 'auto' }}>
 					{options}
 					{!exactOptionMatch && search.trim().length > 0 && (
-						<Combobox.Option value="$create">+ Создать марку {search}</Combobox.Option>
+						<Combobox.Option value="$create">+ Создать автомобиль {search}</Combobox.Option>
 					)}
 				</Combobox.Options>
 			</Combobox.Dropdown>
