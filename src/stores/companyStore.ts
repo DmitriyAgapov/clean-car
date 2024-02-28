@@ -117,6 +117,7 @@ export class CompanyStore {
         reaction(() => this.filials,
           (filials) => {
             if(filials.length === 0) {
+                console.log('get filials')
                 this.getAllFilials()
             }
           }
@@ -322,18 +323,16 @@ export class CompanyStore {
         filials: []
     })
     getAllFilials = flow(function* (this: CompanyStore, params?: PaginationProps) {
-
+        console.log('getAllFilials', userStore.isAdmin);
         let result
         try {
             if (
-                !userStore.currentUser.is_staff &&
-                userStore.currentUser.company?.id &&
-                userStore.currentUser.company.company_type
+                !userStore.isAdmin
             ) {
                 console.log('start');
                 const { data, status } = yield agent.Filials.getFilials(
-                    userStore.currentUser.company.company_type,
-                    userStore.currentUser.company.id,
+                    userStore.myProfileData.company.company_type,
+                    userStore.myProfileData.company.id,
                     params,
                 )
                 console.log(data)

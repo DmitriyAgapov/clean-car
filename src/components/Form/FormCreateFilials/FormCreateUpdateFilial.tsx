@@ -29,7 +29,7 @@ interface InitValues {
     company_filials: string
     lat: string | number
     is_active: string
-    company_id: number | null
+    company_id: number | string |  null
     lon: string | number
     service_percent: number
     working_time: string
@@ -41,7 +41,7 @@ export const createCompanyFormActions = createFormActions<InitValues>('createCom
 
 const FormCreateUpdateFilial = ({ company, edit }: any) => {
     const store = useStore()
-
+    console.log(company);
     let initValues: InitValues = {
         address: '',
         type: CompanyType.customer,
@@ -77,13 +77,13 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             city_name: store.catalogStore.getCity(Number(company.city)).name,
             company_name: company.company_name,
             lat: company.lat,
-            company_id: company.company_id,
-            company_filials: 'filials',
+            company_id: String(company.company_id),
+            company_filials: company.parent === null ? 'company' : 'filials',
             working_time: company.working_time ?? "",
             lon: company.lon,
             service_percent: company.service_percent,
             id: Number(company.id),
-            performer_company: company.performer_company && values(company.performer_company),
+            performer_company: company.performer_company && company.performer_company,
             type: company.type,
             is_active: company.is_active ? 'true' : 'false'
         }

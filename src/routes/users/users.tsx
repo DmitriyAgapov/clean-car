@@ -66,7 +66,7 @@ const UsersPage = () => {
           city: item.company.city.name,
           id: item.employee.id,
           query: {
-            type: item.company.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : UserTypeEnum.performer,
+            type: item.company.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : item.company.company_type === "Компания-Партнер" ? UserTypeEnum.performer : "admin",
             company_id: item.company.id,
 
           },

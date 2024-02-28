@@ -273,17 +273,50 @@ export class CatalogStore {
         console.log(brandId,brandName, car_type, model);
         if (brandId) {
             try {
-                console.log('brandId');
                 const { data, status } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_type, model)
                 return { data, status }
             } catch (error) {
                 console.log(error)
             }
         } else if (brandName) {
-
                 try {
-                    console.log('brandName');
+
                     const { data, status } = yield agent.Catalog.createCarBrandWithNewBrand(brandName, car_type, model)
+                    return { data, status }
+                } catch (error) {
+                    console.log(error)
+                }
+
+        }
+    })
+    updateCarBrand = flow(function* (
+        this: CatalogStore,
+        {
+            id,
+            car_type,
+            model,
+            brandId,
+            brandName,
+        }: {
+            id:number,
+            car_type: string
+            model: string
+            brandId?: number | undefined | null
+            brandName?: string | undefined | null
+        },
+    ) {
+        console.log(brandId,brandName, car_type, model);
+        if (brandId) {
+            try {
+                const { data, status } = yield agent.Catalog.updateCarBrandWithExistBrand(id, brandId, car_type, model)
+                return { data, status }
+            } catch (error) {
+                console.log(error)
+            }
+        } else if (brandName) {
+                try {
+
+                    const { data, status } = yield agent.Catalog.updateCarBrandWithNewBrand(id,brandName, car_type, model)
                     return { data, status }
                 } catch (error) {
                     console.log(error)

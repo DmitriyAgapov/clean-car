@@ -19,7 +19,7 @@ const ServicesSubTypePage = () => {
     const location = useLocation()
     const params = useParams()
     const { data, page, pageRequest, textData }: any = useLoaderData()
-
+  console.log(params);
     return (
         <Section type={SectionType.default}>
             <Panel
@@ -33,7 +33,7 @@ const ServicesSubTypePage = () => {
                                 text={
                                     <>
                                         <SvgBackArrow />
-                                        Назад к справочнику{' '}
+                                        Назад к справочнику1{' '}
                                     </>
                                 }
                                 className={

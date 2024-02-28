@@ -18,16 +18,18 @@ export default function FilialsPageEditAction(props: any) {
   const navigate = useNavigate()
   const { company_type, id } = useParams();
   // @ts-ignore
-  const {data: loaderData, type} = useLoaderData()
-  console.log(loaderData);
+  const {data: loaderData, type, parent} = useLoaderData()
+  console.log('parent', parent);
   const  company = {
     id: id,
+    company_id: parent.data.id,
     company_name: loaderData.company.data?.name,
     address: loaderData.company.data[`${company_type}profile`].address ? loaderData.company.data[`${company_type}profile`].address : "Нет адреса",
     city: String(loaderData.company.data.city.id),
     inn: loaderData.company.data[`${company_type}profile`].inn,
     ogrn: loaderData.company.data[`${company_type}profile`].ogrn,
     legal_address: loaderData.company.data[`${company_type}profile`].legal_address,
+    parent: parent.data.parent,
     // @ts-ignore
     type: CompanyType[type],
     lat: loaderData.company.data[`${company_type}profile`].lat,

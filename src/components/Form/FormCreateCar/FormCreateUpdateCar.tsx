@@ -131,7 +131,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             setStep((prevState) => step ? step : prevState += 1)
         }, 1200)
     }
-    const companyVar = React.useMemo(() => form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Компания-Партнер" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => c.company_type === "Компания-Партнер"),
+    const companyVar = React.useMemo(() => form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Компания-Заказчик" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => c.company_type === "Компания-Заказчик"),
     [form.values.depend_on])
     const navigate = useNavigate()
 

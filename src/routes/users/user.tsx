@@ -8,7 +8,7 @@ import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import DList from 'components/common/ui/DList/DList'
-import { CompanyType } from "stores/companyStore";
+import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
 import label from "utils/labels";
 
@@ -23,13 +23,13 @@ const UserPage = () => {
             <DList label={'Пользователь'} title={user.employee.first_name + ' ' + user.employee.last_name} />
             <DList label={'Номер телефона'} title={user.employee.phone} />
             <DList label={'E-mail'} title={user.employee.email} />
-            <DList
+          <DList
                 label={'Тип'}
                 title={label(user.company.company_type)}
-                directory={user.company.company_type === CompanyType.customer ? 'customer' : 'performers'}
+                directory={CompanyTypeRus(store.userStore.myProfileData.company.company_type)}
             />
 
-            <DList label={'Группа'} title={user.group.name} />
+          {user.group && user.group.name && <DList label={'Группа'} title={user.group.name} />}
             <DList
 
                 label={'Статус'}

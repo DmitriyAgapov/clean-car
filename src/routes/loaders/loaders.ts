@@ -110,12 +110,16 @@ export const referencesLoader = async (props: any) => {
             case 'services':
                 if(props.params.subtype_id) {
                     const { data: dataServiceSubtype, status: statusServiceSubtype } = await agent.Catalog.getServiceSubtype(props.params.subtype_id);
+                    console.log('subtype_id', dataServiceSubtype);
                     if(statusServiceSubtype === 200) data = dataServiceSubtype
                 }
                 if(props.params.id) {
+
                     const { data: dataService, status: statusService } = await agent.Catalog.getService(props.params.id);
                     const servParams:any = Object.assign({},{name: paramsSearchString,  page: paramsPage, page_size: paramsPageSize ?? '9'} )
-                    const subtypes = await agent.Catalog.getServiceSubtypesListByServiceId(props.params.id, servParams)
+                    const subtypes = await agent.Catalog.getServiceSubtypesListByServiceId(props.params.id, servParams);
+                    console.log('params.id', subtypes, servParams);
+
                     if(statusService === 200) {
                         if(props.params.subtype_id) {
                             data = {
@@ -157,14 +161,14 @@ export const referencesLoader = async (props: any) => {
                 break
             default:
                 return
-        }
-
+        }   console.log();
         return ({
             ...dataMeta,
             results: data,
         })
     }
 
+    console.log(await fillData());
     return defer({
         data: await fillData(),
         pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
@@ -332,9 +336,14 @@ export const usersLoader =  async (props: any) => {
     }
 }
 export const userLoader = async ({ params: { company_type, id, company_id } }: any) => {
-
     if(userStore.isAdmin) {
-        const user = await usersStore.getUser(company_id, id, company_type);
+
+        let user = await usersStore.getUser(company_id, id, company_type);
+        console.log('userLoaderIsAdmin', user)
+        user = {
+            ...user,
+            company: userStore.myProfileData.company
+        }
         return defer({
             user: user,
         })
@@ -359,7 +368,6 @@ export const groupsIdLoader = async ({ params: { company_type, id } }: any) => {
         } else {
             currentGroup = await permissionStore.getPermissionByGroupId(id)
         }
-
         if (currentGroup) return { group: currentGroup }
 
         return redirect('/account/groups')
@@ -373,11 +381,14 @@ export const profileLoader = async () => {
 
 export const groupsLoader = async ({ params: { id } }: any) => {
 
-    const response = await permissionStore.getPermissionsFlow()
+    // const response = await permissionStore.getPermissionsFlow()
 
-    await permissionStore.getAllPermissions()
-    await permissionStore.allPermissionsState
-    return { id: id, data: response }
+    // await permissionStore.getAllPermissions()
+    // await permissionStore.allPermissionsState
+    return {
+        id: id,
+        // data: response
+    }
 }
 
 export const groupsCreatLoader = async ({ params: { id } }: any) => {

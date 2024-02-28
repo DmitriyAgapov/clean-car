@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik'
 import React from 'react'
-import { Await, useLoaderData, useNavigate, useParams } from "react-router-dom";
+import { Await, useLoaderData, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import * as Yup from "yup";
 import SelectCustom from "components/common/ui/Select/Select";
 import { useStore } from "stores/store";
@@ -64,6 +64,7 @@ const FormCreateCarBrand = (props: any) => {
 
   const store = useStore()
   const { textData }: any = useLoaderData()
+  const params = useParams()
   const brand = store.catalogStore.getCurrentCarModelWithBrand
   const navigate = useNavigate()
   const edit = props?.edit ?? false
@@ -75,18 +76,41 @@ const FormCreateCarBrand = (props: any) => {
       };
     },
   );
+  let revalidator = useRevalidator()
   // @ts-ignore
   return (
     <Formik  validationSchema={dataCreate.validateSchema} initialValues={props?.edit ? {
+      id: params.id,
       car_type: props.car_type,
       modelName: props.modelName,
       brand: props.brand,
       brandId: props.brandId
     } : dataCreate.initValues} onSubmit={(props) => {
 
-      store.catalogStore.createCarBrand({ car_type: props.car_type, model: props.modelName, brandId: props.brandId, brandName: typeof props.brand === "string" ? props.brand : null})
+        // @ts-ignore
+      if(!edit) {
+        store.catalogStore.createCarBrand({ car_type: props.car_type, model: props.modelName, brandId: props.brandId, brandName: typeof props.brand === "string" ? props.brand : null})
+        .then(r => r)
+        .then((r) => {
+          if(r && r.status < 399) {
+            revalidator.revalidate();
+            navigate(`/account/references/car_brands/${r?.data.id}`)
+          }
+        })
+      } else {
+
+      const modelId = params.id;
+      // @ts-ignore
+        store.catalogStore.updateCarBrand({id: modelId, car_type: props.car_type, model: props.modelName, brandId: props.brandId, brandName: typeof props.brand === "string" ? props.brand : null})
       .then(r => r)
-      .then((r) => navigate(`/account/references/car_brands/${r?.data.id}`))    //
+      .then((r) => {
+        if(r && r.status < 399) {
+          revalidator.revalidate();
+          navigate(`/account/references/car_brands/${r?.data.id}`)
+          }
+        })    //
+
+      }
     }} >
       {({ errors, touched, setFieldValue, values, submitForm,isValid }) => (
         <Form  style={{display: 'contents'}}>

@@ -65,12 +65,12 @@ const FormCreateCity = (props: any) => {
   const navigate = useNavigate()
   const store = useStore()
   const editStatus = props?.edit ?? false
-
+  console.log(data.results.is_active ? "true" : "false");
   const  editInitValues = {
           id: data.results.id,
           city: data.results.name,
           timezone: data.results.timezone,
-          status: String(data.results.is_active),
+          status: data.results.is_active ? "true" : "false",
   }
   let revalidator = useRevalidator();
 
@@ -155,6 +155,7 @@ const FormCreateCity = (props: any) => {
             }
           >
               <CreateInput
+                className={'pb-4'}
                   value={values.city}
                   name={dataCreate.inputs[0].fieldName}
                   action={() => console.log()}
@@ -225,7 +226,7 @@ const FormCreateCity = (props: any) => {
                   label={dataCreate.inputs[2].label}
                   placeholder={dataCreate.inputs[2].placeholder}
                   name={dataCreate.inputs[2].fieldName}
-                  defaultValue={'true'}
+                  defaultValue={values.status}
                   data={[
                       {
                           label: 'Активно',

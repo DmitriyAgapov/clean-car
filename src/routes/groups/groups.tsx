@@ -9,8 +9,6 @@ import {  observer } from "mobx-react-lite";
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import moment from 'moment'
 import { PermissionNames } from "stores/permissionStore";
-import { UserTypeEnum } from "stores/userStore";
-import { CompanyTypeRus } from "stores/companyStore";
 
 const GroupsPage = () => {
     const store = useStore()
