@@ -6,4 +6,4 @@ services:
     volumes:
       - .:/app
     command: >
-      sh -c "yarn build"
+      sh -c "yarn install && yarn build"
