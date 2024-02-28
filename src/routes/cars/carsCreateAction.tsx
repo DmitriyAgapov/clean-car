@@ -8,13 +8,11 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import 'yup-phone-lite'
 import { useStore } from "stores/store";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import FormCreateCar from "components/Form/FormCreateCar/FormCreateCar";
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
 
 export default function CarsPageCreateAction() {
   const store = useStore()
-  const navigate = useNavigate()
   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
   store.usersStore.clearSelectedUsers()
   store.formStore.formClear('formCreateCar')

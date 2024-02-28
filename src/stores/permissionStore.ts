@@ -213,11 +213,11 @@ export class PermissionStore {
 
     } else if(userStore.myProfileData.company?.id && !userStore.isAdmin) {
         this.loadingPermissions = false
-        yield agent.Permissions.getAllCompanyPermissions(userStore.myProfileData.company.id)
-        .then(action((response:any) => response.data))
-        .then(action((data:any) => this.permissions.push(data)))
-        .catch(action((error:any) => this.errors = error))
-        .finally(action(() => this.loadingPermissions = false))
+        const response = yield agent.Permissions.getAllCompanyPermissions(userStore.myProfileData.company.id)
+      if(response.status === 200) {
+        this.permissions = response.data.results
+      }
+      this.loadingPermissions = false
 
       }
     return this.permissions

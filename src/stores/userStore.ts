@@ -7,6 +7,7 @@ import  { Company, CompanyType } from 'stores/companyStore'
 import { makePersistable, clearPersistedStore } from 'mobx-persist-store';
 import label from 'utils/labels';
 import authStore from "stores/authStore";
+import { number, string } from "yup";
 
 
 export enum UserTypeEnum {

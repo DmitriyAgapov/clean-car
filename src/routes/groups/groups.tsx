@@ -9,13 +9,22 @@ import {  observer } from "mobx-react-lite";
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import moment from 'moment'
 import { PermissionNames } from "stores/permissionStore";
+import { UserTypeEnum } from "stores/userStore";
+import { CompanyTypeRus } from "stores/companyStore";
 
 const GroupsPage = () => {
     const store = useStore()
     const navigate = useNavigate()
     const location = useLocation()
     const {loading, groups, errors} = store.permissionStore.allPermissionsState
-
+  console.log(groups.map((item: any) => ({
+    date: moment(item.created).format('DD.MM.YYYY HH:mm'),
+    name: item.name,
+    id: item.id,
+    query:{
+      group: store.appStore.appType
+    }
+  })));
   if ('/account/groups' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
 
@@ -52,7 +61,6 @@ const GroupsPage = () => {
                     чтобы управлять доступом к различным ресурсам системы{' '}
                 </p>
             </Panel>
-
           {groups.length > 0 && <TableWithSort
               background={PanelColor.glass}
                 filter={false}

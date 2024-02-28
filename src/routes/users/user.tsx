@@ -17,7 +17,6 @@ const UserPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { user }: any = useLoaderData()
-  console.log(user);
   const userData = React.useMemo(() => {
     return (
         <>

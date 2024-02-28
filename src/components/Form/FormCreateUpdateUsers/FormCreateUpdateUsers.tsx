@@ -9,8 +9,8 @@ import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
 import label from "utils/labels";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
-import { Await, useNavigate, useRevalidator } from "react-router-dom";
-import { CompanyType } from "stores/companyStore";
+import { useNavigate, useRevalidator } from "react-router-dom";
+import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import agent from "utils/agent";
 
@@ -38,11 +38,11 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	const initData = React.useMemo(() => {
 		let initValues: InitValues = {
 			id: 0,
-			company_id: null,
+			company_id: store.userStore.myProfileData.company.company_type === "Администратор системы" ? null : String(store.userStore.myProfileData.company.id),
+			type: store.userStore.myProfileData.company.company_type === "Администратор системы" ? UserTypeEnum.performer : CompanyTypeRus(store.userStore.myProfileData.company.company_type),
 			email: '',
 			first_name: '',
 			group: null,
-			type: UserTypeEnum.performer,
 			last_name: '',
 			phone: '',
 			depend_on: 'company',

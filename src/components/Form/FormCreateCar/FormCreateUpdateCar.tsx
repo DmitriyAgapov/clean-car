@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "yup-phone-lite";
 import {values as val} from "mobx";
 import { useStore } from "stores/store";
-import { useNavigate } from "react-router-dom";import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import { useNavigate } from "react-router-dom";
+import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { FormCard } from "components/Form/FormCards/FormCards";
 import FormModalAddUser, { FormModalSelectUsers } from "components/Form/FormModalAddUser/FormModalAddUser";
@@ -16,6 +17,8 @@ import { CreateCarSchema} from "utils/validationSchemas";
 import PanelForForms, { PanelColor, PanelVariant } from "components/common/layout/Panel/PanelForForms";
 import { createFormActions, createFormContext } from "@mantine/form";
 import { IMaskInput } from "react-imask";
+import { UserTypeEnum } from "stores/userStore";
+import { CompanyTypeRus } from "stores/companyStore";
 
 interface CarCreateUpdate  {
     number: string
@@ -51,8 +54,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         depend_on: 'company',
         number: '',
         radius: '',
-        company_id: null,
-        company_type: '',
+        company_id: store.userStore.myProfileData.company.company_type === "Администратор системы" ? null : String(store.userStore.myProfileData.company.id),
+        company_type: store.userStore.myProfileData.company.company_type === "Администратор системы" ? UserTypeEnum.performer : CompanyTypeRus(store.userStore.myProfileData.company.company_type),
         company_filials: '',
       }
       if(edit) {
@@ -393,14 +396,12 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                           variant={ButtonVariant.accent}
                           directory={ButtonDirectory.directory}
                           action={() => {
-
                             store.appStore.setModal({
                               className: '!px-10 gap-4 !justify-stretch grid-cols-1',
                               component: (
                                 <FormModalSelectUsers company_id={Number(form.values.company_id)}
                                   users={formDataSelectUsers} />
                               ),
-
                               text: `Вы уверены, что хотите удалить ${'name'}`,
                               state: true,
                             })

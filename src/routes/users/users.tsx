@@ -17,8 +17,8 @@ const UsersPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const {data}:any = useLoaderData()
-  console.log(data);
+  const {data}:any = useLoaderData();
+
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>

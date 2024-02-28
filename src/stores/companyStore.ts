@@ -16,9 +16,10 @@ export enum CompanyType {
   customer = "Компания-Заказчик",
   performer = "Компания-Партнер"
 }
-export const CompanyTypeRus = (type:string) => {
+export const CompanyTypeRus = (type:any) => {
   if(type === "Компания-Заказчик") return "customer"
   if(type === "Компания-Партнер") return "performer"
+  return "admin"
 }
 
 export type City = {
@@ -499,8 +500,6 @@ export class CompanyStore {
 
     getAllCompanies (params?: PaginationProps) {
         this.loadingCompanies = true
-        console.log(userStore);
-        console.log('Может загружать', userStore.getUserCan(PermissionNames["Управление пользователями"], "read"));
         if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
                  agent.Companies.getAllCompanies(params)
@@ -515,9 +514,10 @@ export class CompanyStore {
            else {
                 agent.Companies.getMyCompanies(params)
                     .then((response:any) => response.data)
-                    .then((data:any) => this.myCompany.company = data.results)
-                    // .catch((errors:any) => this.errors = errors)
-
+                    .then((data:any) => runInAction(() => {
+                        this.myCompany.company = data.results
+                        this.companies = data.results
+                    }))
                  return this.stateMyCompany.company
             }
         }
