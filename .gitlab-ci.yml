@@ -13,6 +13,19 @@ deploy to stage:
     - docker-compose stop
     - docker-compose up -d
 
+deploy to stage:
+  stage: deploy
+  environment: "stage"
+  tags:
+    - stage
+  only:
+    - dev
+  variables:
+    GIT_STRATEGY: fetch
+  script:
+    - docker-compose stop
+    - docker-compose up -d
+
 docker down:
   stage: fixes
   when: manual
@@ -22,7 +35,14 @@ docker down:
 
 deploy to prod:
   stage: deploy
+  environment: "prod"
+  when: manual
+  tags:
+    - prod
   only:
     - main
+  variables:
+    GIT_STRATEGY: fetch
   script:
-    - echo "Run deploy to prod"
+    - docker-compose stop
+    - docker-compose up -d
