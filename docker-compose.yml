@@ -3,5 +3,5 @@ services:
   app:
     build: .
     container_name: cleancar
-    volumes:
-      - ./build:/build
+#    volumes:
+#      - ./build1:/app/build
