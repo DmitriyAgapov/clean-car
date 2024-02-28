@@ -6,4 +6,4 @@ services:
     volumes:
       - .:/app
     command: >
-      sh -c "chown -R 998:998 build/ && chown -R 998:998 node_modules/ && yarn install && yarn build"
+      sh -c "yarn install && yarn build && chown -R 998:998 build/ node_modules/ "
