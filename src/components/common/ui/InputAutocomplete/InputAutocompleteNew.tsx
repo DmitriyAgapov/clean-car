@@ -26,13 +26,6 @@ export function InputAutocompleteNew(props:any) {
   const [tempAdress, setTempAdress] = useState(values.city);
   const [empty, setEmpty] = useState(false);
   const abortController = useRef<AbortController>();
-  // const [widthLeftProp, setWidthLeftProp] = useState(0);
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   const width = ref.current.previousElementSibling.offsetWidth
-  //   // console.log(ref.current.previousElementSibling.offsetWidth);
-  //   setWidthLeftProp(width)
-  // }, [data]);
   async function getData(query: string) {
     try {
       const dataToform = { query: query, locations: [
@@ -44,7 +37,6 @@ export function InputAutocompleteNew(props:any) {
         restrict_value: true }
       // @ts-ignore
       const response = await agent.Utils.suggest(dataToform)
-      console.log(response);
       // @ts-ignore
       setData(response)
 
