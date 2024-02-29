@@ -71,7 +71,10 @@ export class PermissionStore {
       ],
       storage: window.localStorage,
     }, {fireImmediately: true})
+    reaction(() => this.permissions,
+      () => {
 
+      })
 
   }
 
@@ -97,7 +100,7 @@ export class PermissionStore {
     this.loadingPermissions = false
   })
   getPermissionByGroupId = flow(function*(this: PermissionStore, id: number) {
-    const company_id = userStore.currentUser?.company?.id
+    const company_id = userStore.myProfileData.company.id
 
     try {
       if(company_id) {
@@ -206,9 +209,10 @@ export class PermissionStore {
 
     if(userStore.isAdmin) {
       this.loadingPermissions = true
-       const response = yield agent.PermissionsAdmin.getAllAdminPermissions()
+       const response = yield agent.Permissions.getAllCompanyPermissions(1)
 
       if(response.status === 200) {
+        console.log(response.data);
         this.permissions = response.data.results
       }
       this.loadingPermissions = false
@@ -222,7 +226,6 @@ export class PermissionStore {
       this.loadingPermissions = false
 
       }
-    return this.permissions
   })
 
   get allPermissionsState() {
@@ -270,6 +273,7 @@ export class PermissionStore {
     this.loadingPermissions = true
     let res;
     const {status, data} = yield agent.Permissions.getAllCompanyPermissions(company_id)
+    console.log(data);
     if(status === 200) {
       this.companyPermissions = data.results
       return data.results
@@ -310,6 +314,7 @@ export class PermissionStore {
     // @ts-ignore
     try {
       const data = yield agent.PermissionsAdmin.getAllAdminPermissions()
+      console.log(data);
       if (data.status === 200) {
         //@ts-ignore
         const { results } = data.data;
@@ -342,11 +347,9 @@ export class PermissionStore {
   })
   getAllPermissions() {
     this.loadingPermissions = true
-    if(userStore.isAdmin) {
-      this.loadPermissionAdmin()
-    } else {
-      this.loadCompanyPermissions(userStore.myProfileData.company.id)
-    }
+
+      this.getPermissionsFlow()
+
     this.loadingPermissions = false
     return this.permissions
   }

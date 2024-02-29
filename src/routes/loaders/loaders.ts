@@ -361,7 +361,7 @@ export const groupsIdLoader = async ({ params: { company_type, id } }: any) => {
     if (id) {
         let currentGroup
         if (company_type === 'admin') {
-            currentGroup = await permissionStore.getPermissionAdmin(id)
+            currentGroup = await permissionStore.getPermissionByGroupId(id)
         } else {
             currentGroup = await permissionStore.getPermissionByGroupId(id)
         }
@@ -377,15 +377,11 @@ export const profileLoader = async () => {
 }
 
 export const groupsLoader = async ({ params: { id } }: any) => {
-
     const response = await permissionStore.getPermissionsFlow()
-
-    permissionStore.getAllPermissions();
-    permissionStore.allPermissionsState
-    return {
-        id: id,
-        data: response
-    }
+    console.log(response);
+    await permissionStore.getAllPermissions()
+    await permissionStore.allPermissionsState
+    return { id: id, data: response }
 }
 
 export const groupsCreatLoader = async ({ params: { id } }: any) => {

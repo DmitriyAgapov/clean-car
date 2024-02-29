@@ -4,18 +4,20 @@ import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import {  observer } from "mobx-react-lite";
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import moment from 'moment'
 import { PermissionNames } from "stores/permissionStore";
+import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 
 const GroupsPage = () => {
     const store = useStore()
     const navigate = useNavigate()
     const location = useLocation()
+  const data = useLoaderData()
     const {loading, groups, errors} = store.permissionStore.allPermissionsState
-  console.log(groups);
+  console.log(data);
   if ('/account/groups' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
 
@@ -52,12 +54,13 @@ const GroupsPage = () => {
                     чтобы управлять доступом к различным ресурсам системы{' '}
                 </p>
             </Panel>
-          {groups.length > 0 && <TableWithSort
+          <TableWithSortNew
+            total={groups.length}
               background={PanelColor.glass}
                 filter={false}
                 search={true}
                 className={'table-groups'}
-                ar={['дата и время', 'Название группы']}
+                ar={[{label: 'дата и время', name: 'created'}, {label: 'Название группы', name: 'name'}]}
                 data={groups.map((item: any) => ({
                     date: moment(item.created).format('DD.MM.YYYY HH:mm'),
                     name: item.name,
@@ -66,8 +69,8 @@ const GroupsPage = () => {
                       group: store.appStore.appType
                     }
                 }))}
-                state={groups.length === 0}
-            />}
+                state={false}
+            />
         </Section>
     )
 }

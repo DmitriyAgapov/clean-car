@@ -475,10 +475,11 @@ export class BidsStore {
         reaction(
             () => this.formResult.service_subtype,
             async (subtype) => {
-                if (subtype !== 0 && subtype && this.formResult.company && this.formResult.car !== 0 && this.formResult.service_option) {
-                    console.log('changed')
+                console.log('changed', this.formResult, subtype)
+                if (subtype !== "0" && subtype && this.formResult.company && this.formResult.car !== 0 && this.formResult.service_option) {
+                    console.log('changed', this.formResult, subtype)
                     await this.loadServiceSubtypeOptions(subtype)
-                    await this.loadCurrentPerformers(Number(this.formResult.company), {
+                     this.loadCurrentPerformers(Number(this.formResult.company), {
                         car_id: this.formResult.car,
                         subtype_id: this.formResult.service_subtype,
                         options_idx: this.formResult.service_option
@@ -610,6 +611,17 @@ export class BidsStore {
     }
     async formCreateBid() {
         this.justCreatedBid = {}
+        console.log({
+            company: this.formResult.company,
+            car: this.formResult.car,
+            customer_comment: this.formResult.customer_comment,
+            conductor: this.formResult.conductor,
+            phone: '+7' + this.formResult.phone,
+            performer: this.formResult.performer,
+            service_option: this.formResult.service_option,
+            service_type: this.formResult.service_type,
+            service_subtype: this.formResult.service_subtype
+        });
         if(this.formResult.company) {
             const res:any = await agent.Bids.createBid(this.formResult.company, {
                 company: this.formResult.company,

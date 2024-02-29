@@ -129,7 +129,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		// }
 		// else {
 		const compId = form.values.type === "admin" ? 1 : Number(form.values.company_id)
-		console.log(form.values.type === "admin");
+
 			const senData = {
 				id: edit ? user.employee.id : 0,
 				phone: form.values.phone.replaceAll(' ', ''),

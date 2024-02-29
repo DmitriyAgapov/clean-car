@@ -25,7 +25,7 @@ export const useUsersAll = ():any => {
 	const store = useStore()
 	const searchParams = paginationParams()
 
-	const { data, error, isLoading } = useSWR(['/accounts/all_users/', {}, searchParams], ([url, body, pagination]) => requests.getNew(url,body, pagination))
+	const { data, error, isLoading } = useSWR([store.userStore.isAdmin ? '/accounts/all_users/' : `/accounts/${store.userStore.myProfileData.company.id}/users/list/`, {}, searchParams], ([url, body, pagination]) => requests.getNew(url,body, pagination))
 	if(isLoading) {
 		store.appStore.setAppState(true);
 	}

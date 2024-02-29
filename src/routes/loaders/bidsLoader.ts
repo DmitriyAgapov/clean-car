@@ -16,7 +16,6 @@ export const bidsLoader = async ({ request, params }:any) => {
 	await bidsStore.loadAllBids({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
 	await companyStore.loadCompanies()
 	return defer({
-
 	  data: {
 		  ...bidsStore.bidsAll.data,
 		  // @ts-ignore
