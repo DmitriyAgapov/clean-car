@@ -29,7 +29,7 @@ type TabsVariantsProps = {
 export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, className, companyId, company_type, props}:TabsVariantsProps) => {
   const store = useStore()
   let result
-
+  console.log(parentCompany);
   switch (label) {
     case "Основная информация":
 

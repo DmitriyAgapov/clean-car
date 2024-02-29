@@ -19,6 +19,7 @@ const FilialPage = () => {
   const navigate = useNavigate()
   // @ts-ignore
   const { data, type, company_id, parent } = useLoaderData()
+
   const { company, cars, users, limits } = data
   const arData = [{ ...company, parent: parent, company_id:company_id, company_type: type}, cars, users, limits]
 

@@ -56,7 +56,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         radius: '',
         company_id: store.userStore.myProfileData.company.company_type === "Администратор системы" ? null : String(store.userStore.myProfileData.company.id),
         company_type: store.userStore.myProfileData.company.company_type === "Администратор системы" ? UserTypeEnum.performer : CompanyTypeRus(store.userStore.myProfileData.company.company_type),
-        company_filials: '',
+        company_filials: store.userStore.myProfileData.company.parent === null ? 'company' : 'filials',
       }
       if(edit) {
         store.formStore.setFormDataCreateCar({
@@ -131,7 +131,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             setStep((prevState) => step ? step : prevState += 1)
         }, 1200)
     }
-    const companyVar = React.useMemo(() => form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Компания-Заказчик" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => c.company_type === "Компания-Заказчик"),
+    const companyVar = React.useMemo(() =>
+        form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Компания-Заказчик" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => c.company_type === "Компания-Заказчик"),
     [form.values.depend_on])
     const navigate = useNavigate()
 

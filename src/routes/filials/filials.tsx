@@ -11,9 +11,10 @@ import companyStore from "stores/companyStore";
 import { observer } from "mobx-react-lite";
 
 const FilialsPage = () => {
+  const store = useStore()
   const location = useLocation()
   const {data}:any = useLoaderData()
-
+  console.log(data);
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -53,11 +54,11 @@ const FilialsPage = () => {
           status: item.is_active as boolean,
           company: item.name,
           city: item.city.name,
-          type: item.company_type,
-          parent: item.parent.name,
+          type: item.company_type || store.userStore.myProfileData.company.company_type,
+          parent: item.parent?.name || store.userStore.myProfileData.company.name,
           id: item.id,
           query: {
-            company_id: item.parent.id
+            company_id: item.parent?.id || store.userStore.myProfileData.company.id
           }
         }))}
         initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}

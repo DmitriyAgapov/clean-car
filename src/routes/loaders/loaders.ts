@@ -285,24 +285,40 @@ export const filialsLoader = async (props: any) => {
     const paramsOrdering = url.searchParams.get('ordering')
     const paramsSearchString = url.searchParams.get('searchString')
     const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
-
+    console.log(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type));
     async function fillData() {
         let data :any[] | any = []
         let dataMeta
+        if(userStore.isAdmin) {
+            const { data: dataCars, status } = await agent.Companies.getOnlyBranchesCompanies({
+                page: paramsPage ?? 1,
+                page_size: paramsPageSize ?? 10,
+                ordering: paramsOrdering,
+                name: paramsSearchString
+            } as PaginationProps)
 
-        const { data: dataCars, status } = await agent.Companies.getOnlyBranchesCompanies({
-            page: paramsPage ?? 1,
-            page_size: paramsPageSize ?? 10,
-            ordering: paramsOrdering,
-            name: paramsSearchString
-        } as PaginationProps)
-
-        if (status === 200) {
-            data = dataCars.results
-            dataMeta = dataCars
+            if (status === 200) {
+                data = dataCars.results
+                dataMeta = dataCars
+            }
+        } else {
+            const { data: dataCars, status } = await agent.Filials.getFilials( <CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id,{
+                page: paramsPage ?? 1,
+                page_size: paramsPageSize ?? 10,
+                ordering: paramsOrdering,
+                name: paramsSearchString
+            } as PaginationProps)
+            console.log(dataCars);
+            if (status === 200) {
+                data = dataCars.results
+                dataMeta = dataCars
+            }
         }
 
-
+        console.log({
+            ...dataMeta,
+            results: data,
+        });
 
         return ({
             ...dataMeta,
@@ -324,8 +340,8 @@ export const carsLoader = async ({ params: { id, company_type, action, company_i
 }
 export const filialLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     const filial = await companyStore.loadFilialWithTypeAndId(company_type, company_id, id)
-    const parent = await agent.Companies.getCompanyData(company_type, company_id)
-
+    const parent = userStore.isAdmin ? await agent.Companies.getCompanyData(company_type, company_id) : {data: userStore.myProfileData.company}
+    console.log(filial, parent);
     return { id: id, company_id: company_id, type: company_type, parent: parent, data: { ...filial } }
 }
 export const usersLoader =  async (props: any) => {

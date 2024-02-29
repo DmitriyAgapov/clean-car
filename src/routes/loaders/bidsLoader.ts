@@ -3,6 +3,7 @@ import { defer } from "react-router-dom";
 import { dateTransform, dateTransformShort } from "utils/utils";
 import companyStore from "stores/companyStore";
 import { PaginationProps } from "utils/agent";
+import userStore from "stores/userStore";
 
 export const bidsLoader = async ({ request, params }:any) => {
 	const url = new URL(request.url)
@@ -15,11 +16,13 @@ export const bidsLoader = async ({ request, params }:any) => {
 	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
 	await bidsStore.loadAllBids({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
 	await companyStore.loadCompanies()
+	const data = bidsStore.bidsAll.data
+	console.log(data);
 	return defer({
 	  data: {
-		  ...bidsStore.bidsAll.data,
+		  ...data,
 		  // @ts-ignore
-			results: await bidsStore.bidsAll.data.results.map((r:any) => ({
+			results: data.results.map((r:any) => ({
 				idnum: r.id,
 				id: r.id,
 				status: r.status,
@@ -31,7 +34,7 @@ export const bidsLoader = async ({ request, params }:any) => {
 				city: r.company.city.name,
 				service_type: r.service_type.name,
 				query: {
-					company_id: r.company.id,
+					company_id: userStore.myProfileData.company.id,
 				}
 			}))
 	  },
@@ -54,7 +57,7 @@ export const bidLoader = async ({ request, params }:any) => {
 	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
 	await bidsStore.loadBidByCompanyAndBidId(params.company_id, params.id)
 	await companyStore.loadCompanies()
-
+	console.log(bidsStore.CurrentBid);
 	return defer({
 		data: bidsStore.CurrentBid,
 		pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},

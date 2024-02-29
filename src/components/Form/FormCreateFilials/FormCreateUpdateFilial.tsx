@@ -103,9 +103,15 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             }
             if (payload.field === 'address') {
                 return {
-                    className: 'mb-2 w-full flex-grow  !flex-[1_0_100%] col-span-3',
+                    className: `mb-2 w-full  flex-grow !flex-[1_1_30rem]   ${store.appStore.appType === "admin" && ''} col-span-3`,
                 }
             }
+            if (payload.field === 'type') {
+                return {
+                    className: `mb-2  col-span-5  ${store.appStore.appType !== "admin" && 'hidden'}`,
+                }
+            }
+
             if (payload.field === 'is_active') {
                 return {
                     className: 'mb-2 w-full flex-grow  !flex-[0_0_10rem] col-span-3',
@@ -286,7 +292,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           onOptionSubmit={() => console.log(store.companyStore.getFilialsAll)}
 
                           defaultValue={formData.values.type}
-                          className={'!flex-initial'}
+
                           data={[
                               { label: 'Заказчик', value: CompanyType.customer },
                               { label: 'Партнер', value: CompanyType.performer },

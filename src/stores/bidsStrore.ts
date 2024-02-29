@@ -453,7 +453,7 @@ export class BidsStore {
 
         reaction(() => this.justCreatedBid.id, (id) => {
             if(id) {
-                runInAction(() => this.loadBidByCompanyAndBidId())
+               this.loadBidByCompanyAndBidId()
             }
         })
         reaction(
@@ -513,6 +513,7 @@ export class BidsStore {
     }
     async loadBidByCompanyAndBidId(company_id?: number, bid_id?: number) {
         const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id)
+        console.log(data);
         if (status === 200) {
             runInAction(() => {
                 this.currentBid = data

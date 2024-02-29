@@ -328,7 +328,7 @@ export class CompanyStore {
             ) {
                 console.log('start');
                 const { data, status } = yield agent.Filials.getFilials(
-                    userStore.myProfileData.company.company_type,
+                  <CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type),
                     userStore.myProfileData.company.id,
                     params,
                 )

@@ -84,13 +84,14 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
         }
 				if(payload.field === 'type') {
 					return ({
-						className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-2',
+
+						className: `w-full flex-grow  !flex-[1_0_20rem] col-span-2 ${store.appStore.appType !== "admin" && 'hidden'}`,
 					})
         }
 				if(payload.field === 'group') {
 					return ({
 						disabled: payload.form.values.company_id === null && payload.form.values.type !== 'admin',
-						className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-2'
+						className: `w-full flex-grow  !flex-[1_0_20rem] col-span-2 ${store.appStore.appType !== "admin" && 'col-span-3'}`
 					})
         }
 	      if(payload.field === 'company_id') {
@@ -101,7 +102,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	      }
 				if(payload.field === 'is_active') {
 					return ({
-						className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-2'
+						className: `w-full flex-grow  !flex-[1_0_20rem] col-span-2 ${store.appStore.appType !== "admin" && 'col-span-3'}`
 					})
         }
 				return ({
