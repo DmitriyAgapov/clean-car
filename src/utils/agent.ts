@@ -259,7 +259,7 @@ const Companies = {
     getOnlyBranchesCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_branches/list/', {}, pagination),
 }
 const Permissions = {
-  getAllCompanyPermissions: (company_id:number) => requests.get(`/permissions/${company_id}/groups/list/`, {}),
+  getAllCompanyPermissions: (company_id:number, pagination?: PaginationProps) => requests.get(`/permissions/${company_id}/groups/list/`, {}, pagination),
   getUserPermissions: (company_id: number, id:number ) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve`),
   createPermission: (company_id: number, data: any) => requests.post(`/permissions/${company_id}/groups/create/`, data),
   getPermissionById: (company_id: number, id: number) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve/`, {}),

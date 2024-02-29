@@ -214,16 +214,22 @@ export const priceLoader = async (props: any) => {
 
     async function fillData() {
         let data: any[] | any = []
-        if (props.params.id) {
+        if (!userStore.isAdmin) {
             const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
             const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
             const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
-
-            data = {
-                tabs: await Promise.all([{label: 'Мойка', data: dataWash,
-                    dataTable: dataWash
-                }, {label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option')}, {label: 'Шиномонтаж', data: dataTire, dataTable: dataTire}])
+            if (props.params.id) {
+                data = {
+                    tabs: await Promise.all([{
+                        label: 'Мойка', data: dataWash,
+                        dataTable: dataWash
+                    }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }])
+                }
+            } else {
+                data = await Promise.all([dataWash, dataTire, dataEvac])
+                console.log(data);
             }
+
 
         } else {
             const { data: dataResults, status } = await agent.Price.getAllPrice(paginationData as PaginationProps)

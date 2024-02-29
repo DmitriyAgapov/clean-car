@@ -65,14 +65,14 @@ export class PriceStore {
     constructor() {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, { name: 'priceStore', storage: window.localStorage, properties: ['prices', 'priceOnChange'] }, {fireImmediately: true})
-        reaction(() => this.priceOnChange,
-          (priceOnChange, previous) => {
-
-            if(priceOnChange.size !== 0) {
-
-
-              }
-          })
+        // reaction(() => this.priceOnChange,
+        //   (priceOnChange, previous) => {
+        //
+        //     if(priceOnChange.size !== 0) {
+        //
+        //
+        //       }
+        //   })
     }
 
     prices: { count: number; next: string | null; previous: string | null; results: any[] } = observable.object({

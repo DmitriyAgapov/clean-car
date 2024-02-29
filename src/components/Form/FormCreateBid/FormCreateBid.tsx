@@ -3,7 +3,7 @@ import { Form, Formik, useFormik, useFormikContext } from "formik";
 import * as Yup from 'yup'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useRevalidator } from "react-router-dom";
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { Step } from 'components/common/layout/Step/StepPure'
@@ -192,7 +192,7 @@ const FormCreateBid = ({ user, edit }: any) => {
     const store = useStore()
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
-
+    let revalidate = useRevalidator()
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
 
@@ -910,7 +910,11 @@ const FormCreateBid = ({ user, edit }: any) => {
                                                     />,
                                                     <Button
                                                         text={'Оплатить'}
-                                                        action={async () => {}}
+                                                        action={() => {
+                                                          revalidate.revalidate()
+                                                          store.appStore.closeModal()
+                                                          navigate('/account/bids')
+                                                        }}
                                                         variant={ButtonVariant.accent}
                                                     />,
                                                 ],

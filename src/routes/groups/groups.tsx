@@ -15,9 +15,9 @@ const GroupsPage = () => {
     const store = useStore()
     const navigate = useNavigate()
     const location = useLocation()
-  const data = useLoaderData()
+  // const data = useLoaderData()
     const {loading, groups, errors} = store.permissionStore.allPermissionsState
-  console.log(data);
+  // console.log(data);
   if ('/account/groups' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
 

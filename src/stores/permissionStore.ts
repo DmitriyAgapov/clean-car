@@ -71,10 +71,6 @@ export class PermissionStore {
       ],
       storage: window.localStorage,
     }, {fireImmediately: true})
-    reaction(() => this.permissions,
-      () => {
-
-      })
 
   }
 

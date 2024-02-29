@@ -106,7 +106,12 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       ]
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
-        routeWithPermissions.push(el)
+        if(store.userStore.myProfileData.company.company_type === "Компания-Партнер" && el.url === "cars") {
+
+
+        } else {
+          routeWithPermissions.push(el)
+        }
       }
     }
     sidebarMenu.forEach((el) => addRouteWithPermissions(el))
