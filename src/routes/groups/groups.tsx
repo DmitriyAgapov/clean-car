@@ -15,14 +15,7 @@ const GroupsPage = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const {loading, groups, errors} = store.permissionStore.allPermissionsState
-  console.log(groups.map((item: any) => ({
-    date: moment(item.created).format('DD.MM.YYYY HH:mm'),
-    name: item.name,
-    id: item.id,
-    query:{
-      group: store.appStore.appType
-    }
-  })));
+  console.log(groups);
   if ('/account/groups' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
 

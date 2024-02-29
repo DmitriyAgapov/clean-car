@@ -46,7 +46,8 @@ export class CatalogStore {
         reaction(() => this.loadingState.cities,
           (cities) => {
               if (!cities) {
-                this.getAllCities().then(r => runInAction(() => {
+                this.getAllCities()
+                .then(r => runInAction(() => {
                     console.log('loadded cities')
 
                     this.loadingState.cities  = true
@@ -56,7 +57,7 @@ export class CatalogStore {
         })
         reaction(() => this.cities,
                   (cities) => {
-                      if (cities.size == 0) {
+                      if (cities.size == 0 && !this.loadingState) {
                         this.getAllCities().then(r => runInAction(() => {
                             console.log('loadded cities')
                             this.loadingState.cities  = true
@@ -305,7 +306,7 @@ export class CatalogStore {
             brandName?: string | undefined | null
         },
     ) {
-        console.log(brandId,brandName, car_type, model);
+
         if (brandId) {
             try {
                 const { data, status } = yield agent.Catalog.updateCarBrandWithExistBrand(id, brandId, car_type, model)

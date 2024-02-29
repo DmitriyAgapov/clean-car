@@ -47,6 +47,7 @@ export class UserStore {
     });
     reaction(() => this.currentUser,
        (currentUser) => {
+         console.log(authStore.userIsLoggedIn);
         if(authStore.userIsLoggedIn && currentUser.id === 0 && appStore.token !== '') {
           this.pullUser()
           this.loadMyProfile()
@@ -61,6 +62,10 @@ export class UserStore {
           // this.loadMyProfile()
         }
     })
+    reaction(() => this.myProfileData.company,
+      (company) => {
+        console.log(company);
+      })
     reaction(() => this.currentUserPermissions,
       (currentUserPermissions) => {
           if(authStore.userIsLoggedIn && currentUserPermissions.size === 0) {
@@ -126,10 +131,9 @@ export class UserStore {
   }
   createUserPermissions() {
     let ar:any = new Map([]);
-    console.log(this.currentUser);
     if(authStore.userIsLoggedIn) {
       if(this.isAdmin) {
-        console.log('Create admin permissions');
+        // console.log('Create admin permissions');
         appStore.setAppType(UserTypeEnum.admin)
         for (let permissionNameKey in PermissionNames) {
           // @ts-ignore
@@ -141,11 +145,10 @@ export class UserStore {
             update:true
           })
         }
-        console.log(ar);
       } else {
         const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
         appStore.setAppType(type)
-        console.log(`Create ${type}  permissions`);
+        // console.log(`Create ${type}  permissions`);
 
         const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
         this.myProfileData.company = perm[0].company;
@@ -174,8 +177,7 @@ export class UserStore {
   }
 
   get isAdmin() {
-    console.log('Admin', this.myProfileData.company.company_type === "Администратор системы");
-    return this.myProfileData.company.company_type === "Администратор системы"
+    return (this.myProfileData.company && this.myProfileData.company.company_type === "Администратор системы")
   }
 
   loadUserPermissions() {
@@ -188,13 +190,13 @@ export class UserStore {
   }
 
   getUserCan(key: string, action: keyof CRUD) {
-    console.log('userIsLoggedIn : getUserCan -------', authStore.userIsLoggedIn, 'Ключ--', key);
+    // console.log(`userIsLoggedIn : ${authStore.userIsLoggedIn},  getUserCan -------`, authStore.userIsLoggedIn, 'Ключ--', key);
     if(authStore.userIsLoggedIn) {
       if(this.currentUserPermissions && this.currentUserPermissions.has(key)) {
-        console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
+        // console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
         return this.currentUserPermissions.get(key)[action]
       } else {
-        console.log('Нет прав, создаем')
+        // console.log('Нет прав, создаем')
         this.createUserPermissions()
         return this.currentUserPermissions.get(key)[action]
       }

@@ -88,6 +88,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             is_active: company.is_active ? 'true' : 'false'
         }
     }
+    console.log(company);
     const formData = useForm({
         name: 'createFilialsForm',
         initialValues: initValues,
@@ -136,7 +137,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 agent.Filials.editFilial(data, values.company_id, 'performer', values.id).then((r) => {
                     values.id = r.id
                     revalidate.revalidate()
-                    navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                    navigate(`/account/filials/performer/${values.company_id}/${company.id}`)
                 })
             } else {
                 store.companyStore.createFilial(data, 'performer', values.company_id).then((r) => {
@@ -162,7 +163,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 agent.Filials.editFilial(data, values.company_id, 'customer', values.id).then((r) => {
                     values.id = r.id
                     revalidate.revalidate()
-                    navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                    navigate(`/account/filials/customer/${values.company_id}/${company.id}`)
                 })
             } else {
                 store.companyStore.createFilial(data, 'customer', values.company_id).then((r) => {

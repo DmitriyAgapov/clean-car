@@ -11,10 +11,9 @@ import companyStore from "stores/companyStore";
 import { observer } from "mobx-react-lite";
 
 const FilialsPage = () => {
-  const store = useStore()
   const location = useLocation()
   const {data}:any = useLoaderData()
-  console.log(data);
+
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (

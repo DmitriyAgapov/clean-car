@@ -18,7 +18,7 @@ import PanelForForms, { PanelColor, PanelVariant } from "components/common/layou
 import { createFormActions, createFormContext } from "@mantine/form";
 import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
-import { CompanyTypeRus } from "stores/companyStore";
+import { CompanyTypeRus } from 'stores/companyStore'
 
 interface CarCreateUpdate  {
     number: string
@@ -200,8 +200,23 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
           state={false}
           footerClassName={'px-8 pb-8 pt-2'}
           variant={PanelVariant.default}
-          actionCancel={
-          step !== 3 ?  <Button type={'button'}
+
+          actionCancel={<>
+              <Button
+                type={'button'}
+                text={'Чек'}
+                action={(e) => {
+            			e.preventDefault()
+                  console.log(form.errors)
+                  console.log(form.values)
+                  form.validate()
+                  console.log(form.isValid())
+
+            		}}
+                className={'float-right'}
+                variant={ButtonVariant['accent-outline']}
+            />
+            {step !== 3 ?  <Button type={'button'}
             text={'Отменить'}
             action={(e) => {
               e.preventDefault()
@@ -209,7 +224,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             }}
             className={'float-right'}
             variant={ButtonVariant['accent-outline']} /> : null
-          }
+            }</>}
           actionBack={step === 2 ?  <Button text={'Назад'}
                       action={() => changeStep(1)}
                       className={' lg:mb-0 mb-5 mr-auto'}

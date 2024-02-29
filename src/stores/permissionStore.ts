@@ -1,4 +1,4 @@
-import { action, autorun, computed, flow, IObservableArray, makeAutoObservable, makeObservable, observable, runInAction, set, toJS } from "mobx";
+import { action, autorun, computed, flow, IObservableArray, makeAutoObservable, makeObservable, observable, reaction, runInAction, set, toJS } from "mobx";
 import agent from 'utils/agent'
 import { Company } from 'stores/companyStore'
 import userStore from "stores/userStore";
@@ -6,6 +6,7 @@ import appStore from "stores/appStore";
 import useAxios from 'axios-hooks'
 import { makePersistable } from "mobx-persist-store";
 import { defer } from "react-router-dom";
+import company from "routes/company/company";
 
 export enum PermissionName  {
   'Компании' = 'companies',
@@ -70,6 +71,7 @@ export class PermissionStore {
       ],
       storage: window.localStorage,
     }, {fireImmediately: true})
+
 
   }
 
@@ -339,13 +341,13 @@ export class PermissionStore {
     }
   })
   getAllPermissions() {
+    this.loadingPermissions = true
     if(userStore.isAdmin) {
       this.loadPermissionAdmin()
     } else {
       this.loadCompanyPermissions(userStore.myProfileData.company.id)
     }
-
-
+    this.loadingPermissions = false
     return this.permissions
   }
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Combobox, InputBase, useCombobox } from '@mantine/core';
 import { useFormikContext } from "formik";
+import { useFormContext } from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
 
 export function SelectCreatable({ items, createAction, defaultValue,  label}:{items: any[], defaultValue?: any, createAction: (e:any) => void, label: string}) {
 
@@ -11,10 +12,8 @@ export function SelectCreatable({ items, createAction, defaultValue,  label}:{it
 	const [data, setData] = useState(items);
 	const [value, setValue] = useState<string | null>(initBrand);
 	const [search, setSearch] = useState(initBrand || '');
-	const {setFieldValue, values} = useFormikContext();
+	const {setFieldValue, values} = useFormContext();
 	const exactOptionMatch = data.some((item) => item.label === search);
-	console.log(exactOptionMatch);
-	console.log(data);
 	const filteredOptions = exactOptionMatch
 		? data
 		: data.filter((item) => item.label.toLowerCase().includes(search.toLowerCase().trim()));

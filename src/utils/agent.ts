@@ -11,8 +11,15 @@ import { notifications } from "@mantine/notifications";
 import { SvgClose } from "components/common/ui/Icon";
 import React from "react";
 import company from "routes/company/company";
+import useSWR from "swr";
 
-export type PaginationProps = {name?: string, ordering?: string, page?: string | number | URLSearchParams, page_size?: number | string}
+export type PaginationProps = {
+  name?: string | number | URLSearchParams | null,
+  ordering?: string | number | URLSearchParams | null,
+  page?: string | number | URLSearchParams | null,
+  page_size?: number | string | number | URLSearchParams | null
+  q?: string | number | URLSearchParams  | null
+}
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
 type CreateFilialPerformerFormData = {
   name: string
@@ -48,7 +55,7 @@ export const API_ROOT = 'https://dev.server.clean-car.net/api'
 
 
 //Объект запросов
-const requests = {
+export const requests = {
   delete: (url: string) =>
     axios({
       url: `${API_ROOT}${url}`,
@@ -65,6 +72,15 @@ const requests = {
       params: pagination
     })
   .then((response:any) => response)
+  .catch(handleErrors),
+  getNew: (url: string, body?: any, pagination?:PaginationProps) =>
+     axios({
+      url: `${API_ROOT}${url}`,
+      // headers: tokenPlugin(),
+      method: 'GET',
+      params: pagination
+    })
+  .then((response:any) => response.data)
   .catch(handleErrors),
 
   put: (url: string, body: any) =>
@@ -220,7 +236,9 @@ const Auth = {
 }
 const Users = {
     getAllUsers:  (pagination?: PaginationProps) => requests.get('/accounts/all_users/', {}, pagination),
+    getAllUsersTest:  (pagination?: PaginationProps) => useSWR('/accounts/all_users/', (url) => requests.get(url,{}, pagination)),
     getUser: ({ company_id, id }: { company_id: number; id: number }) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
+    getUserTest: ({ company_id, id }: { company_id: number; id: number }) => useSWR(`/accounts/${company_id}/users/${id}/retrieve/`, requests.get),
     getCompanyUsers: (company_id: number, pagination?: PaginationProps) => requests.get(`/accounts/${company_id}/users/list/`, {}, pagination),
 
 }

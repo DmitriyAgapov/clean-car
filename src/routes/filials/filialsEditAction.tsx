@@ -23,6 +23,7 @@ export default function FilialsPageEditAction(props: any) {
   const  company = {
     id: id,
     company_id: parent.data.id,
+    is_active: loaderData.company.data?.is_active,
     company_name: loaderData.company.data?.name,
     address: loaderData.company.data[`${company_type}profile`].address ? loaderData.company.data[`${company_type}profile`].address : "Нет адреса",
     city: String(loaderData.company.data.city.id),

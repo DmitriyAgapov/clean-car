@@ -3,10 +3,11 @@ import React, { useEffect } from "react";
 import SelectCustom from 'components/common/ui/Select/Select'
 import { Field, useField, useFormik, useFormikContext } from "formik";
 import Select from "components/common/ui/Select/Select";
-import { SelectProps } from "@mantine/core";
+import { InputBase, SelectProps } from "@mantine/core";
 import { Observer } from "mobx-react-lite";
 import { useStore } from "stores/store";
 import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
+import { IMaskInput } from "react-imask";
 
 export type CreateInputProps = {
     text: string
@@ -160,6 +161,25 @@ export function CreateFormikInput({fieldName, placeholder = "", onChange, defaul
       <div className={'form-error'}>{errors[`${fieldName}`]}</div>
     ) : null}
     </label>
+
+    if(fieldType == 'telphone') return <label
+      className={'account-form__input w-full flex-grow  !flex-[1_0_20rem]' + " " + className}
+      htmlFor={fieldName}
+      data-form_error={(errors[`${fieldName}`] && touched[`${fieldName}`]) ? 'error' : null}
+
+    >
+      {label}<Field
+      as={IMaskInput}
+      //@ts-ignore
+        mask='+7 000 000 0000' placeholder='+7 000 000 0000'
+      id={fieldName}
+      name={fieldName}
+      type={fieldType}
+    />{(errors[`${fieldName}`] && touched[`${fieldName}`]) ? (
+      <div className={'form-error'}>{errors[`${fieldName}`]}</div>
+    ) : null}
+    </label>
+
   }, [values, errors, touched])
   return <>{inputElement}</>
 
