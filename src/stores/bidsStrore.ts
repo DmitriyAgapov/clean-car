@@ -6,6 +6,7 @@ import usersStore from "stores/usersStore";
 import carStore from "stores/carStore";
 import companyStore from "stores/companyStore";
 import { CurrentBidProps } from "stores/types/bidTypes";
+import userStore from "stores/userStore";
 export enum BidsStatus  {
 	'Новая' = 'Новая',
 	'Отмена' = 'Отмена',
@@ -596,13 +597,22 @@ export class BidsStore {
     async loadAllBids(params: PaginationProps) {
         try {
             action(() => (this.loading = true))
-            const { data, status } = await agent.Bids.getAllBids(params)
-
-            if (status === 200) {
-                runInAction(() => {
-                    this.bids = data
-                })
+            if(userStore.myProfileData.company.company_type === "Администратор системы") {
+                const { data, status } = await agent.Bids.getAllBids(params)
+                if (status === 200) {
+                    runInAction(() => {
+                        this.bids = data
+                    })
+                }
+            } else {
+                const { data, status } = await agent.Bids.getAllCompanyBids(userStore.myProfileData.company.id, params)
+                if (status === 200) {
+                    runInAction(() => {
+                        this.bids = data
+                    })
+                }
             }
+
         } catch (error: any) {
             this.error = error
         } finally {

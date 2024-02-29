@@ -197,6 +197,7 @@ const Bids = {
   getAvailablePerformers: (company_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/bid_performers/`, data),
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`),
+  getAllCompanyBids: (company_id: number|string, params: PaginationProps) => requests.get(`/bids/${company_id}/list`, {}, params),
   updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status})
 }
 const Utils = {
