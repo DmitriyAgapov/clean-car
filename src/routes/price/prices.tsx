@@ -1,24 +1,30 @@
-import React from 'react'
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import FormModalCreatePrice from "components/Form/FormModalCreatePrice/FormModalCreatePrice";
+import { replace } from "formik";
 
 const PricesPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
+	// useEffect(() => {
+	// 	if(store.appStore.appType === "performer") navigate(`/account/price/${store.userStore.myProfileData.company.id}`, {replace: true})
+	// }, [store.appStore.appType]);
 	const location = useLocation()
 	const { data }:any = useLoaderData()
 	const { textData }:any = store.priceStore.allPrices
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname !== `/account/price`) return <Outlet />
-	return (
+
+	if(store.appStore.appType !== "performer") {
+		return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}
 				state={false}
@@ -50,6 +56,8 @@ const PricesPage = () => {
 					ar={store.priceStore.allPrices.textData.tableHeaders}
 				/>
 		</Section>
-	)
+	)} else {
+		return  <Navigate to={`${ store.userStore.myProfileData.company.id }`} replace={false}  relative={'route'}/>
+	}
 }
 export default PricesPage

@@ -54,23 +54,22 @@ const GroupsPage = () => {
                     чтобы управлять доступом к различным ресурсам системы{' '}
                 </p>
             </Panel>
-          <TableWithSortNew
-            total={groups.length}
-              background={PanelColor.glass}
-                filter={false}
-                search={true}
-                className={'table-groups'}
-                ar={[{label: 'дата и время', name: 'created'}, {label: 'Название группы', name: 'name'}]}
-                data={groups.map((item: any) => ({
-                    date: moment(item.created).format('DD.MM.YYYY HH:mm'),
-                    name: item.name,
-                    id: item.id,
-                    query:{
-                      group: store.appStore.appType
-                    }
-                }))}
-                state={false}
-            />
+          {groups.length > 0 && <TableWithSort
+            background={PanelColor.glass}
+            filter={false}
+            search={true}
+            className={'table-groups'}
+            ar={['дата и время', 'Название группы']}
+            data={groups.map((item: any) => ({
+              date: moment(item.created).format('DD.MM.YYYY HH:mm'),
+              name: item.name,
+              id: item.id,
+              query:{
+                group: store.appStore.appType
+              }
+            }))}
+            state={groups.length === 0}
+          />}
         </Section>
     )
 }

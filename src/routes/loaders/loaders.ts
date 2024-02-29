@@ -8,6 +8,7 @@ import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
+import logo from "components/common/layout/Logo/Logo";
 
 
 export const authUser = async () => {
@@ -233,6 +234,7 @@ export const priceLoader = async (props: any) => {
 
         } else {
             const { data: dataResults, status } = await agent.Price.getAllPrice(paginationData as PaginationProps)
+            console.log(dataResults);
             if(status === 200) {
                 data = {...dataResults, results: dataResults.results.map((i: any) => {
                         let obj:any;
