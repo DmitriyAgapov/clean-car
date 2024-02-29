@@ -222,7 +222,13 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         label={'Телефон'} component={IMaskInput} mask='+7 000 000 0000' placeholder='+7 000 000 0000'
                     />
                     <TextInput   label={'E-mail'} {...form.getInputProps('email')} />
-                    <Select label={'Тип'} onOptionSubmit={() => form.setValues({...form.values, company_id: null, group: null})}
+                    <Select label={'Тип'}
+	                    onOptionSubmit={(e) => {
+
+		                    e === "admin" && store.permissionStore.loadCompanyPermissionsResults(1)
+
+											form.setValues({...form.values, company_id: null, group: null})}
+										}
                         {...form.getInputProps('type')}
 	                      defaultValue={form.values.type}
                         data={Object.entries(UserTypeEnum).map((item: any) => ({
@@ -232,7 +238,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     />
                     <Select clearable label={'Группа'}
                         {...form.getInputProps('group', { dependOn: 'company_id' })}
-                        data={(form.values.type !== UserTypeEnum.admin ? store.permissionStore.getCompanyPermissions : store.permissionStore.getAdminPermissions).map((p: any) => ({
+                        data={(form.values.type !== UserTypeEnum.admin ? store.permissionStore.getCompanyPermissions : store.permissionStore.getCompanyPermissions).map((p: any) => ({
                             label: p.name,
                             value: String(p.id),
                         }))}
