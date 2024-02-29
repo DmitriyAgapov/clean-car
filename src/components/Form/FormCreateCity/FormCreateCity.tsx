@@ -47,11 +47,11 @@ const dataCreate = {
             type: 'select',
             options: [
                 {
-                    label: 'Активно',
+                    label: 'Активен',
                     value: 'true',
                 },
                 {
-                    label: 'Неактивно',
+                    label: 'Неактивен',
                     value: 'false',
                 },
             ],
@@ -229,11 +229,11 @@ const FormCreateCity = (props: any) => {
                   defaultValue={values.status}
                   data={[
                       {
-                          label: 'Активно',
+                          label: 'Активен',
                           value: 'true',
                       },
                       {
-                          label: 'Неактивно',
+                          label: 'Неактивен',
                           value: 'false',
                       },
                   ]}
