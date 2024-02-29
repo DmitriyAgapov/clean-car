@@ -7,12 +7,14 @@ import { AxiosError, AxiosResponse } from 'axios'
 import { PermissionNames } from 'stores/permissionStore'
 import bidsStore from "stores/bidsStrore";
 import company from "routes/company/company";
+import authStore from "stores/authStore";
 
 export enum Payment {
     postoplata = 'Постоплата',
     predoplata = 'Предоплата',
 }
 export enum CompanyType {
+  admin = "Администратор системы",
   customer = "Компания-Заказчик",
   performer = "Компания-Партнер"
 }
@@ -97,11 +99,7 @@ export class CompanyStore {
             properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers'],
             storage: window.localStorage,
 
-        }, { fireImmediately: true }).then(
-          action((persistStore) => {
-              console.log(persistStore.isHydrated);
-             this.canLoad = true
-          }))
+        }, { fireImmediately: true })
         reaction(() => this.currentCustomersCompany, (currentCustomer: any) => {
             if(currentCustomer) {
                 this.getCustomerCompanyData(currentCustomer)
@@ -116,7 +114,7 @@ export class CompanyStore {
         // })
         reaction(() => this.filials,
           (filials) => {
-            if(filials.length === 0) {
+            if(filials.length === 0 && authStore.userIsLoggedIn) {
                 console.log('get filials')
                 this.getAllFilials()
             }
@@ -126,7 +124,6 @@ export class CompanyStore {
         reaction(
             () => this.companies,
             (companies: any) => {
-                console.log(companies.length === 0);
                 if(companies.length === 0) {
                     this.getAllCompanies()
                 }
@@ -440,6 +437,7 @@ export class CompanyStore {
         console.log(type, company_id, data);
         this.loadingCompanies = true
         try {
+            // @ts-ignore
             const response = yield agent.Filials.createFilial(type, company_id, data)
             if (response.status > 199 && response.status < 299) {
 

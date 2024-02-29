@@ -5,16 +5,6 @@ stages:
 
 deploy to stage:
   stage: deploy
-  only:
-    - dev
-  variables:
-    GIT_STRATEGY: fetch
-  script:
-    - docker-compose stop
-    - docker-compose up -d
-
-deploy to stage:
-  stage: deploy
   environment: "stage"
   tags:
     - stage
@@ -23,15 +13,14 @@ deploy to stage:
   variables:
     GIT_STRATEGY: fetch
   script:
-    - docker-compose stop
-    - docker-compose up -d
+    - bash build.sh
 
-docker down:
-  stage: fixes
-  when: manual
-  script:
-    - docker-compose down
-    - docker-compose up -d
+# docker down:
+#   stage: fixes
+#   when: manual
+#   script:
+#     - docker-compose down
+#     - docker-compose up -d
 
 deploy to prod:
   stage: deploy

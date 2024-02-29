@@ -7,7 +7,8 @@ import usersStore from 'stores/usersStore'
 import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
-import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
+import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
+
 
 export const authUser = async () => {
     if (!appStore.token) {
@@ -67,11 +68,11 @@ export const referencesLoader = async (props: any) => {
                     tableHeaders: [{label: 'Марка', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_type'}],
                     createPageDesc: 'Укажите основную информацию о модели автомобиля, для добавления в справочник',
                     editPageDesc: 'Укажите основную информацию о модели автомобиля, для добавления в справочник',
-                    createPageForm: FormCreateCarBrand.bind(props),
+                    createPageForm: FormCreateUpdateCarBrand.bind(props),
                     createPageBack: 'Назад к списку марок автомобилей',
                     createAction:  agent.Catalog.createCarBrandWithExistBrand,
                     editAction:  agent.Catalog.editCity,
-                    editPageForm: FormCreateCarBrand.bind(props, { ...data, edit:true }),
+                    editPageForm: FormCreateUpdateCarBrand.bind(props, { ...data, edit:true }),
                 }
                 break
             case 'cities':
@@ -337,13 +338,9 @@ export const usersLoader =  async (props: any) => {
 }
 export const userLoader = async ({ params: { company_type, id, company_id } }: any) => {
     if(userStore.isAdmin) {
-
         let user = await usersStore.getUser(company_id, id, company_type);
         console.log('userLoaderIsAdmin', user)
-        user = {
-            ...user,
-            company: userStore.myProfileData.company
-        }
+
         return defer({
             user: user,
         })
@@ -381,13 +378,13 @@ export const profileLoader = async () => {
 
 export const groupsLoader = async ({ params: { id } }: any) => {
 
-    // const response = await permissionStore.getPermissionsFlow()
+    const response = await permissionStore.getPermissionsFlow()
 
-    // await permissionStore.getAllPermissions()
-    // await permissionStore.allPermissionsState
+    permissionStore.getAllPermissions();
+    permissionStore.allPermissionsState
     return {
         id: id,
-        // data: response
+        data: response
     }
 }
 

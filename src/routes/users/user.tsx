@@ -3,7 +3,7 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
@@ -17,6 +17,11 @@ const UserPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { user }: any = useLoaderData()
+  const params = useParams()
+
+  const companyType = params.company_type;
+  const company = companyType !== "admin" ? user.company : store.userStore.myProfileData.company;
+  console.log(companyType);
   const userData = React.useMemo(() => {
     return (
         <>
@@ -25,8 +30,8 @@ const UserPage = () => {
             <DList label={'E-mail'} title={user.employee.email} />
           <DList
                 label={'Тип'}
-                title={label(user.company.company_type)}
-                directory={CompanyTypeRus(store.userStore.myProfileData.company.company_type)}
+                title={label(companyType ? companyType : "admin")}
+                directory={companyType}
             />
 
           {user.group && user.group.name && <DList label={'Группа'} title={user.group.name} />}
@@ -39,17 +44,16 @@ const UserPage = () => {
                     </span>
                 }
             />
-          {user.company.id && <hr className={'mt-0 col-span-2'}/>}
-          {user.company.name && <DList label={'Компания'} title={user.company.name} />}
-          {user.company.city.name && <DList label={'Город'} title={user.company.city.name} />}
-          {user.company.city.name && <DList label={'Филиал'} title={user.company.city.name} />}
+          {company.id && <hr className={'mt-0 col-span-2'}/>}
+          {company.name && <DList label={'Компания'} title={company.name} />}
+          {company.city.name && <DList label={'Город'} title={company.city.name} />}
+          {company.city.name && <DList label={'Филиал'} title={company.city.name} />}
         </>
     )
   }, [])
   return (
     <Section
       type={SectionType.default}
-
     >
       <Panel
         className={'col-span-full'}

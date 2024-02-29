@@ -87,6 +87,7 @@ export class AppStore {
   burgerState: boolean = false
   asideState: boolean = false
   appType: UserTypeEnum | string = ''
+  appState: boolean = false
   bodyRef = document.body
   modal: {
     component?: ReactNode
@@ -100,7 +101,13 @@ export class AppStore {
     text: '',
     actions: null,
   }
-
+  get AppState() {
+    console.log('state', this.appState);
+    return this.appState
+  }
+  setAppState(state: boolean) {
+    this.appState = state
+  }
   setTokenError(error: string | null) {
     this.tokerError = error
   }

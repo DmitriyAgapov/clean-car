@@ -15,10 +15,11 @@ import { CompanyType } from "stores/companyStore";
 import Status from "components/common/ui/Status/Status";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { useStore } from "stores/store";
+import { observer } from "mobx-react-lite";
 
 type TableWithSortProps = {
     data?: any[]
-    state: boolean
+    state?: boolean
     className?: string
     background?: PanelColor
     ar: { label: string, name: string }[]
@@ -175,9 +176,8 @@ const TableWithSortNew = ({
     data,
     search = false,
     filter = false,
-    state,
+    state = false,
     className,
-    total,
     ar,
     action,
     pageSize = 10,
@@ -191,7 +191,7 @@ const TableWithSortNew = ({
         reversed: false,
     })
 
-    const initCount = total || 0
+    const initCount = props.total || 0
     // console.log(Math.ceil(initCount / pageSize));
     const store = useStore()
     let location = useLocation()
@@ -263,7 +263,9 @@ const TableWithSortNew = ({
             setSortedField(ar[e.index].name)
         }
     }, [sortedField])
-
+    React.useEffect(() => {
+        console.log(state, 'intree');
+    }, [state])
     React.useEffect(() => {
         const pageParams = searchParams.get('page');
         const searchStringParams = searchParams.get('searchString');
@@ -305,11 +307,11 @@ const TableWithSortNew = ({
         >       {(initCount === 0) ? <Heading className={'min-h-[40vh] flex items-center justify-center'} text={'Нет данных'} variant={HeadingVariant.h3} />:
           <table className={styles.TableWithSort} data-style={style}>
 
-                <RowHeading action={handleHeaderAction} total={total} ar={ar} />
+                <RowHeading action={handleHeaderAction} total={initCount} ar={ar} />
                 <tbody>{RowDataMemoized}</tbody>
             </table>}
         </Panel>
     )
 }
 
-export default TableWithSortNew;
+export default observer(TableWithSortNew);

@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useEffect } from "react";
 import styles from './Layout.module.scss'
 import { useStore } from 'stores/store'
-import { observer } from 'mobx-react-lite'
+import { Observer, observer } from "mobx-react-lite";
 import Logo from 'components/common/layout/Logo/Logo'
 import Header from 'components/common/layout/Header/Header'
 import Footer from 'components/common/layout/Footer/Footer'
@@ -59,9 +59,12 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
         <Burger className={'lg:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
       </Header>
       <MobileMenu items={sidebarMenu} />
+      {/* <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }} classNames={{ */}
+      {/*   overlay: 'bg-black/80 backdrop-blur-xl' */}
+      {/* }} visible={navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true } loaderProps={{ children: <SvgCleanCarLoader/> }} /> */}
       <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }} classNames={{
         overlay: 'bg-black/80 backdrop-blur-xl'
-      }} visible={navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true } loaderProps={{ children: <SvgCleanCarLoader/> }} />
+      }} visible={store.appStore.AppState } loaderProps={{ children: <SvgCleanCarLoader/> }} />
       <main className={'!contents'}>{children}</main>
       <Footer>
         {footerContent}

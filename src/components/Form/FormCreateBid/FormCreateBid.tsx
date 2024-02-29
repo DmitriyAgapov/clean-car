@@ -164,6 +164,7 @@ const Step1Inputs = observer(({step1}:any) => {
               value: String(c.employee.id),
           }))}
         />
+
         <InputBase
         defaultValue={values.phone}
         unmask={"typed"}
@@ -175,8 +176,8 @@ const Step1Inputs = observer(({step1}:any) => {
         required={true}
         label={step1.fields[3].label}
         component={IMaskInput}
-        mask='+70000000000'
-        placeholder='+70000000000'
+          mask='+7 000 000 0000'
+          placeholder='+7 000 000 0000'
       />
         <Select
         value={store.bidsStore.formResultsAll.car ? String(store.bidsStore.formResultsAll.car) : null}

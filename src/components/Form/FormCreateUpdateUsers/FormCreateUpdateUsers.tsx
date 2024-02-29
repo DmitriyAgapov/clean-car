@@ -32,7 +32,7 @@ export const [FormProvider, useFormContext, useForm] = createFormContext<any>();
 export const createUserFormActions= createFormActions<InitValues>('createUserForm');
 
 const FormCreateUpdateUsers =({ user, edit }: any) => {
-
+	console.log(user);
 	const store = useStore()
 
 	const initData = React.useMemo(() => {
@@ -52,14 +52,14 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		if (edit) {
 			initValues = {
 				id: user.employee.id,
-				company_id: user.company.id.toString(),
-				company_name: user.company.name,
-				depend_on: user.company.parent === null ? 'company' : 'filials',
+				company_id: user.company === undefined ? 1: user.company.id.toString(),
+				company_name: user.company === undefined ? "Администратор системы" : user.company.name,
+				depend_on: user.company?.parent === null ? 'company' : 'filials',
 				first_name: user.employee.first_name,
 				last_name: user.employee.last_name,
 				phone: user.employee.phone,
 				email: user.employee.email,
-				type: user.company.company_type,
+				type: user.company === undefined ? "admin" : user.company.company_type,
 				group: String(user.group.id),
 				is_active: user.employee.is_active ? "true" : "false",
 			}
@@ -112,30 +112,31 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	let revalidator = useRevalidator();
 	const navigate = useNavigate()
 	const handleCreateUser = React.useCallback(() => {
-		if(form.values.type === "admin") {
+		// if(form.values.type === "admin") {
+		// 	const senData = {
+		// 		phone: form.values.phone.replaceAll(' ', ''),
+		// 		email: form.values.email,
+		// 		first_name: form.values.first_name,
+		// 		last_name: form.values.last_name,
+		// 		company_id: 1,
+		// 		is_active: form.values.is_active === 'true',
+		// 		group: Number(form.values.group)
+		// 	}
+		//
+		// 	agent.Account.createAdminUser(senData).then((res) => {
+		// 		console.log(res);
+		// 	})
+		// }
+		// else {
+		const compId = form.values.type === "admin" ? 1 : Number(form.values.company_id)
+		console.log(form.values.type === "admin");
 			const senData = {
+				id: edit ? user.employee.id : 0,
 				phone: form.values.phone.replaceAll(' ', ''),
 				email: form.values.email,
 				first_name: form.values.first_name,
 				last_name: form.values.last_name,
-				company: 0,
-				is_active: form.values.is_active === 'true',
-				group: Number(form.values.group),
-				is_staff: true,
-				staff_group: Number(form.values.group)
-			}
-
-			agent.Account.createAdminUser(senData).then((res) => {
-				console.log(res);
-			})
-		}
-		else {
-			const senData = {
-				phone: form.values.phone.replaceAll(' ', ''),
-				email: form.values.email,
-				first_name: form.values.first_name,
-				last_name: form.values.last_name,
-				company_id: Number(form.values.company_id),
+				company_id: edit && !user.company ? 1 : compId,
 				is_active: form.values.is_active === 'true',
 				group: Number(form.values.group)
 			}
@@ -145,7 +146,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 						const userId = edit ? form.values.id : res.data.id
 						revalidator.revalidate()
 						// @ts-ignore
-						navigate(`/account/users/${form.values.type}/${form.values.company_id}/${userId}`)
+						navigate(`/account/users/${form.values.type}/${compId}/${userId}`)
 					}})
 			} else {
 				agent.Account.createCompanyUser(senData.company_id, senData).then((res) => {
@@ -154,12 +155,12 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 						const userId = edit ? form.values.id : res.data.id
 						revalidator.revalidate()
 						// @ts-ignore
-						navigate(`/account/users/${form.values.type}/${form.values.company_id}/${userId}`)
+						navigate(`/account/users/${form.values.type}/${compId}/${userId}`)
 						}
 					}
 				)
 			}
-		}
+		// }
 		},[form.values])
 	// @ts-ignore
 	const companyVar = React.useMemo(() => form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll.filter((c) => c.company_type === CompanyType[form.values.type]),

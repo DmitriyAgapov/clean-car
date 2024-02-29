@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -11,13 +11,15 @@ import { User } from 'stores/usersStore'
 import { UserTypeEnum } from 'stores/userStore'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-
+import {  useUsersAll } from "utils/fetchers";
 
 const UsersPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const {data}:any = useLoaderData();
+  // const {data}:any = useLoaderData();
+
+  const { data, isError, isLoading } = useUsersAll()
 
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
@@ -48,13 +50,13 @@ const UsersPage = () => {
         }
       ></Panel>
       <TableWithSortNew
-        total={data.count}
+        total={data?.count}
         background={PanelColor.glass}
         filter={true}
         search={true}
         ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee__first_name'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city'}]}
         // @ts-ignore
-        data={data.results.map((item: { company: Company; group: number; employee: User }) => {
+        data={data?.results?.map((item: { company: Company; group: number; employee: User }) => {
           // console.log(item.company.company_type === "Компания-Заказчик");
           return ({
           state: item.employee.is_active,
@@ -71,7 +73,6 @@ const UsersPage = () => {
 
           },
         })})}
-        state={store.usersStore.loadingUsers}
         style={PanelRouteStyle.users}
         initFilterParams={[{label: 'Статус', value: 'is_active'}, {label: 'Город', value:  'city'}]}
       />

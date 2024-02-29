@@ -33,7 +33,7 @@ const ServicesSubTypePage = () => {
                                 text={
                                     <>
                                         <SvgBackArrow />
-                                        Назад к справочнику1{' '}
+                                        Назад к справочнику{' '}
                                     </>
                                 }
                                 className={

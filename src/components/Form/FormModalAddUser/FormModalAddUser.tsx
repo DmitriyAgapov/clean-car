@@ -1,28 +1,30 @@
 import { CreateFormikInput } from "components/common/ui/CreateInput/CreateInput";
-import { Form, Formik, useFormikContext } from 'formik'
+import { Field, Form, Formik, useFormikContext } from "formik";
 import React, { useEffect } from "react";
 import * as Yup from "yup";
 import "yup-phone-lite";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { useStore } from "stores/store";
-import { MultiSelect, Select } from "@mantine/core";
+import { InputBase, MultiSelect, Select } from "@mantine/core";
 import logo from "components/common/layout/Logo/Logo";
 import { Observer, observer } from "mobx-react-lite";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import { action, runInAction } from "mobx";
+import { IMaskInput } from "react-imask";
+import { UserTypeEnum } from "stores/userStore";
 
 const SignupSchema = Yup.object().shape({
   first_name: Yup.string()
   .min(2, 'Too Short!')
   .max(50, 'Too Long!')
-  .required('Required'),
+  .required('Обязательное поле'),
   last_name: Yup.string()
   .min(2, 'Too Short!')
   .max(50, 'Too Long!')
-  .required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-  phone: Yup.string().required('Required'),
-  group: Yup.string().required('Required'),
+  .required('Обязательное поле'),
+  email: Yup.string().email('Invalid email').required('Обязательное поле'),
+  phone: Yup.string().required('Обязательное поле'),
+  group: Yup.string().required('Обязательное поле'),
 })
 const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]}) => {
     const store = useStore()
@@ -82,47 +84,63 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
             label: 'Номер телефона',
             placeholder: 'Введите гос. номер',
             name: 'phone',
-            type: 'text',
+            type: 'telphone',
             value: '',
             depend: false,
         },
 
-      {
-        label: 'Группа',
-        placeholder: 'Выберите группу',
-        name: 'group',
-        type: 'select',
-        value: '',
-        options: group.map((item: any) => ({label: item.name, value: String(item.id)})),
-        depend: false,
-      },
-        {
-            label: 'Статус',
-            placeholder: 'Выбрать статус',
-            name: 'status',
-            type: 'select',
-            options: [
-                { label: 'Активен', value: 'true' },
-                { label: 'Неактивен', value: 'false' },
-            ],
-            value: '',
-            depend: false,
-        },
+      // {
+      //   label: 'Группа',
+      //   placeholder: 'Выберите группу',
+      //   name: 'group',
+      //   type: 'select',
+      //   value: '',
+      //   options: group.map((item: any) => ({label: item.name, value: String(item.id)})),
+      //   depend: false,
+      // },
+      //   {
+      //       label: 'Статус',
+      //       placeholder: 'Выбрать статус',
+      //       name: 'is_active',
+      //       type: 'select',
+      //       options: [
+      //           { label: 'Активен', value: 'true' },
+      //           { label: 'Неактивен', value: 'false' },
+      //       ],
+      //       value: '',
+      //       depend: false,
+      //   },
     ]
     const FormInputs = (): JSX.Element => {
+        const ctx = useFormikContext()
         // @ts-ignore
-        return formData.map((item: any, index: number) => (
+
+      return (<>{formData.map((item: any, index: number) => (
             <CreateFormikInput
                 key={index + 'car_inputs'}
-
                 options={item.options}
                 fieldName={item.name}
                 label={item.label}
                 placeholder={item.placeholder}
                 fieldType={item.type}
-                className={''}
-            />
-        ))
+                className={'pb-4'}
+            />))}
+
+          <Field as={Select}
+            // @ts-ignore
+            label={'Группа'} value={ctx.values.group}  fieldName={'group'} onOptionSubmit={(value:string) => ctx.setFieldValue('group', value)}
+            data={group.map((item: any) => ({label: item.name, value: String(item.id)}))}
+          />
+          <Field as={Select}
+            label={'Статус'}
+            // @ts-ignore
+            value={ctx.values.is_active}
+            onOptionSubmit={(value:string) => ctx.setFieldValue('is_active', value)}
+            fieldName={'is_active'}
+            data={[{ label: 'Активен', value: 'true' }, { label: 'Неактивен', value: 'false' },]}
+          />
+        </>
+        )
     }
     return (
         <Formik
@@ -132,7 +150,7 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                 console.log(values)
             }}
         >
-            {({ submitForm,  handleChange, isSubmitting, errors, touched, values, isValid }) => (
+            {({ submitForm, handleChange, isSubmitting, errors, touched, values, isValid }) => (
                 <Form
                     onChange={() => store.formStore.handleChangeForm('formCreateUser', values)}
                     style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}
@@ -146,27 +164,31 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                     <p className={'col-span-2'}>Введите основные данные водителя</p>
                     <FormInputs />
                     <footer className={'pt-12 col-span-full'}>
-                      <Button text={"Отменить"}
-                        action={() => store.appStore.closeModal()}
-                        variant={ButtonVariant["accent-outline"]}
-                        className={"max-w-fit"} />
-                      <Button text={"Добавить сотрудника"}
-                        action={() => {
-                          store.usersStore.createUser(company_id, values)
-
-                          .then((res) => res)
-                          .then((res) =>  runInAction(() => {
-                            store.usersStore.getUsers(company_id)
-                            console.log(res.status)
-
-                          })).finally(() => store.appStore.closeModal())
-
-
-                        }}
-                        // action={async () => {
-                        //     store.
-                        // }}
-                        variant={ButtonVariant.accent} />
+                        <Button
+                            text={'Отменить'}
+                            action={() => store.appStore.closeModal()}
+                            variant={ButtonVariant['accent-outline']}
+                            className={'max-w-fit'}
+                        />
+                        <Button
+                            text={'Добавить сотрудника'}
+                            action={() => {
+                                store.usersStore
+                                    .createUser(company_id, { ...values, phone: values.phone.replaceAll(' ', '') })
+                                    .then((res) => res)
+                                    .then((res) =>
+                                        runInAction(() => {
+                                            store.usersStore.getUsers(company_id)
+                                            console.log(res.status)
+                                        }),
+                                    )
+                                    .finally(() => store.appStore.closeModal())
+                            }}
+                            // action={async () => {
+                            //     store.
+                            // }}
+                            variant={ButtonVariant.accent}
+                        />
                     </footer>
                 </Form>
             )}

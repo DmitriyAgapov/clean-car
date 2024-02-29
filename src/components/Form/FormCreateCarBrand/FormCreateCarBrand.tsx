@@ -22,8 +22,10 @@ const dataCreate = {
     car_type: '',
   },
   validateSchema: Yup.object().shape({
+    brandId: Yup.string(),
+    brand: Yup.string(),
     modelName: Yup.string(),
-    car_type: Yup.string(),
+    car_type: Yup.string().required('Выберите тип'),
   }),
   submitAction: () => console.log('sumbit brands'),
   inputs: [
@@ -61,7 +63,6 @@ const dataCreate = {
 
 
 const FormCreateCarBrand = (props: any) => {
-
   const store = useStore()
   const { textData }: any = useLoaderData()
   const params = useParams()

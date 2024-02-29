@@ -1,4 +1,4 @@
-import { action,  makeAutoObservable,  observable, runInAction } from "mobx";
+import { action, makeAutoObservable, observable, reaction, runInAction } from "mobx";
 import { AxiosError } from 'axios'
 import agent from '../utils/agent'
 import userStore from './userStore'
@@ -28,6 +28,13 @@ export class AuthStore {
       storage: window.localStorage,
     }, {
       fireImmediately: true,
+    })
+    reaction(() => this.userIsLoggedIn,
+      (userIsLoggedIn) => {
+      if(userIsLoggedIn) {
+        userStore.pullUser()
+        userStore.loadMyProfile()
+      }
     })
   }
   userIsLoggedIn: boolean = false
@@ -108,9 +115,10 @@ export class AuthStore {
           })
         } else {
           const { access, refresh } = resolve.data
-          this.userIsLoggedIn = true
+
           appStore.setToken(access)
           appStore.setTokenRefresh(refresh)
+          this.userIsLoggedIn = true
         }
       }
       )
