@@ -13,8 +13,7 @@ deploy to stage:
   variables:
     GIT_STRATEGY: fetch
   script:
-    - yarn install
-    - yarn build
+    - bash build.sh
 
 # docker down:
 #   stage: fixes
