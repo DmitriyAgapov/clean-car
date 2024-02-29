@@ -259,7 +259,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                     variant={HeadingVariant.h2}
                   />
                   <div className={''}>
-                    Укажите основную информацию о автомобиле для добавления в список
+                    Укажите основную информацию об автомобиле для добавления в список
                   </div>
                 </>
               }
