@@ -3,7 +3,7 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { dateTransformShort } from 'utils/utils'
@@ -19,6 +19,7 @@ const BidPage = () => {
 	const location = useLocation()
 	const params = useParams()
 	const dataL:any = useLoaderData()
+	let revalidator = useRevalidator()
 	const bid = bidsStore.CurrentBid
 	const textData = store.bidsStore.text
 	console.log('bid', bid);
@@ -33,6 +34,7 @@ const BidPage = () => {
 			(async () => {
 				if (params.company_id && params.id) {
 					await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus['Обрабатывается'])
+					revalidator.revalidate()
 				}
 			})()
 		}

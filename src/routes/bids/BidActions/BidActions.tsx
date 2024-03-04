@@ -209,6 +209,24 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
 
                 case BidsStatus["Выполнено"]:
                     return BidText.PerformerVipolnena
+                case BidsStatus["Обрабатывается"]:
+                  return (
+                    <>
+                      <Button
+                        text={"Отказаться"}
+                        variant={ButtonVariant["accent-outline"]}
+                        size={ButtonSizeType.sm}
+                        action={() => handleChangeBidStatus("Разбор" as BidsStatus)}
+                      />
+
+                      <Button
+                        text={"Принять заявку"}
+                        variant={ButtonVariant.accent}
+                        size={ButtonSizeType.sm}
+                        action={() => handleChangeBidStatus("В работе" as BidsStatus)}
+                      />
+                    </>
+                  )
                 case BidsStatus["Завершена"]:
                     return BidText.PerformerResheno
                 case BidsStatus["Разбор"]:
