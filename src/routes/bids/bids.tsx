@@ -16,7 +16,7 @@ const BidsPage = () => {
 	const navigate = useNavigate()
 	const params = useParams()
 	const location = useLocation()
-	const { data:loaderData }:any = useLoaderData()
+	// const { data:loaderData }:any = useLoaderData()
 	const { data:storeData }:any = store.bidsStore.bidsAll
 
 	const textData = store.bidsStore.text
