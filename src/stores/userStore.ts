@@ -3,7 +3,7 @@ import agent from 'utils/agent'
 import { AccountProps, CRUD,  PermissionNames } from "stores/permissionStore";
 import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'
-import  { Company, CompanyType } from 'stores/companyStore'
+import companyStore, { Company, CompanyType } from 'stores/companyStore'
 import { makePersistable, clearPersistedStore } from 'mobx-persist-store';
 import label from 'utils/labels';
 import authStore from "stores/authStore";
@@ -64,7 +64,9 @@ export class UserStore {
     })
     reaction(() => this.myProfileData.company,
       (company) => {
-        console.log(company);
+        if(company && companyStore.companies.length === 0) {
+          companyStore.getAllCompanies()
+        }
       })
     reaction(() => this.currentUserPermissions,
       (currentUserPermissions) => {

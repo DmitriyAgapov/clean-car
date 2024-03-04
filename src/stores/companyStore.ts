@@ -135,6 +135,14 @@ export class CompanyStore {
                 }
             },
         )
+        reaction(() => this.companies.length,
+            (length: any) => {
+                console.log('no company');
+                if(length === 0) {
+                    this.getAllCompanies()
+                }
+            },
+        )
     }
 
     canLoad = false
@@ -209,14 +217,22 @@ export class CompanyStore {
     }
     async getCustomerCompanyData(company_id: number) {
         this.currentCustomersCompany = company_id
-        try {
-            const {data} = await agent.Companies.getCompanyData('customer', company_id)
-            runInAction(() => {
-                bidsStore.formResult.city = data.city.id
-                set(this.customersCompany, { [company_id]: data })
-            })
-        } catch (e) {
-            action(() => this.errors = e)
+        if(appStore.appType === "admin") {
+            try {
+                const { data } = await agent.Companies.getCompanyData('customer', company_id)
+                runInAction(() => {
+                    bidsStore.formResult.city = data.city.id
+                    set(this.customersCompany, { [company_id]: data })
+                })
+            } catch (e) {
+                action(() => this.errors = e)
+            }
+        } else {
+
+            bidsStore.formResult.city = userStore.myProfileData.company.city.id
+            set(this.customersCompany, { [company_id]: userStore.myProfileData.company })
+
+
         }
     }
     get currentCompany() {
@@ -496,8 +512,9 @@ export class CompanyStore {
     }
 
     getAllCompanies (params?: PaginationProps) {
+        console.log('All companies');
         this.loadingCompanies = true
-        if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
+        // if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
                  agent.Companies.getAllCompanies(params)
                     .then((response:any) => response)
@@ -509,6 +526,7 @@ export class CompanyStore {
 
                 }
            else {
+                console.log('my companies');
                 agent.Companies.getMyCompanies(params)
                     .then((response:any) => response.data)
                     .then((data:any) => runInAction(() => {
@@ -517,7 +535,7 @@ export class CompanyStore {
                     }))
                  return this.stateMyCompany.company
             }
-        }
+        // }
     }
     loadCompanyData(company_type: string, id: number) {
         this.loadingCompanies = true

@@ -88,7 +88,9 @@ const Step1Inputs = observer(({step1}:any) => {
     console.log(errors);
     console.log(values);
   }, [errors])
-
+  React.useEffect(() => {
+    console.log(values);
+  }, [values])
   React.useEffect(() => {
 
       if(values.company === null) {
@@ -138,13 +140,13 @@ const Step1Inputs = observer(({step1}:any) => {
               label={step1.fields[1].label}
               onChange={handleChangeCompany}
               searchable
-              data={store.userStore.isAdmin ? store.companyStore.companies
+              data={store.companyStore.companies
                 .filter((c: any) => c.company_type === 'Компания-Заказчик')
                 .map((c: any) => ({
                     label: c.name,
                     value: String(c.id),
                 }))
-                : store.companyStore.myCompany.company
+
               }
             />
 
@@ -195,7 +197,9 @@ const FormCreateBid = ({ user, edit }: any) => {
     let revalidate = useRevalidator()
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
+    if(store.appStore.appType === "customer") {
 
+    }
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
         setTimeout(() => {
@@ -248,6 +252,7 @@ const FormCreateBid = ({ user, edit }: any) => {
                 initialValues={initialResults}
                 enableReinitialize={true}
                 validationSchema={SignupSchema}
+
                 onSubmit={(values, FormikHelpers) => {
                     changeStep(2)
                 }}
