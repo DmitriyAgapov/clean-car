@@ -41,7 +41,7 @@ export const BidAdminActions = () => {
       ar.add(it)
     }
     let res: React.JSX.Element[] = []
-    ar.forEach((el) => res.push(<Menu.Item onClick={() => handleChangeBidStatus(el as BidsStatus)} className={styles.Item} data-variant={el}>{el as string}</Menu.Item>))
+    ar.forEach((el) => res.push(<Menu.Item key={el as string} onClick={() => handleChangeBidStatus(el as BidsStatus)} className={styles.Item} data-variant={el}>{el as string}</Menu.Item>))
     return <>{res}</>
   }, [])
   return (
