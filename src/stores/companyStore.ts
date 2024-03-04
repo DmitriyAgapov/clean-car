@@ -364,7 +364,7 @@ export class CompanyStore {
     loadCompanies = flow(function* (this: CompanyStore) {
         this.loadingCompanies = true
         this.companies.clear()
-        let result
+     if(appStore.appType ==="admin") {
         try {
             const data = yield agent.Companies.getAllCompanies()
             if (data.status === 200) {
@@ -379,7 +379,24 @@ export class CompanyStore {
             this.loadingCompanies = false
         }
         return this.companies as any
-    })
+    } else  {
+             try {
+                 const data = yield agent.Companies.getMyCompanies()
+                 if (data.status === 200) {
+                     //@ts-ignore
+                     const { results } = data.data
+
+                     set(this.companies, results)
+                 }
+             } catch (error) {
+                 throw new Error('Fetch data companies failed')
+             } finally {
+                 this.loadingCompanies = false
+             }
+             return this.companies as any
+            }
+        }
+    )
 
     hydrateStore = flow(function* (this: CompanyStore) {
         yield hydrateStore(this)
