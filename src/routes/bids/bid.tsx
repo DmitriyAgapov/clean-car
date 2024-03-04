@@ -50,7 +50,8 @@ const BidPage = () => {
 
 						<Button text={<><SvgBackArrow />Назад к списку заявок{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
 
-						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /> <BidAdminActions/>
+						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
+						{/* <BidAdminActions/> */}
 					</div>
 					{/* {store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<> */}
 					{/* 	<Button text={textData.loadExcel} action={() => navigate('create')} trimText={true} className={'inline-flex'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} /> */}
@@ -74,7 +75,7 @@ const BidPage = () => {
 		</div>
 		<div className={"flex  items-end gap-12 justify-start col-span-2 row-start-2"}>
 			<div className={"text-xs text-gray-2"}>
-				Дата и время регистрации: <span>{dateTransformShort(bid.company?.updated).date}</span>
+				Дата и время регистрации: <p className={'py-0'}>{dateTransformShort(bid.company?.updated).date}</p>
 			</div>
 			<div className={"flex gap-6 items-center justify-around"}>
 				<Status variant={bid.status as string as BidsStatus}
