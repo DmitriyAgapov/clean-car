@@ -3,17 +3,17 @@ import { useStore } from "stores/store";
 import React from "react";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useParams, useRevalidator } from "react-router-dom";
-import { BidsStatus } from 'stores/bidsStrore'
+import { BidsStatus } from "stores/bidsStrore"
 import { Menu, Button as Btn } from "@mantine/core";
 import { SvgMenu } from "components/common/ui/Icon";
-import styles from './BidActions.module.scss'
+import styles from "./BidActions.module.scss"
 const BidText = {
-  CustomerVObrabotke: <><p>Исполнитель открыл заявку.</p><p>Ожидается обратная связь</p></>,
-  CustomerOzhidaet: <><p>Исполнитель внес изменения. Пожалуйста ознакомьтесь с ними и примите решение по заявке.</p></>,
-  CustomerVRabote: <><p>Изменения подтверждены. Исполнитель начал выполнение заявки.</p></>,
-  CustomerZavershen: <><p>Заявка принята заказчиком. Заказ полностью завершен.</p></>,
-  CustomerRazbor: <><p>Выполненная работа отклонена Заказчиком. Происходит разбор причины</p></>,
-  CustomerOtmenena: <><p>Изменения по заявке со стороны Исполнителя не приняты. Заявка отклонена.</p></>,
+  CustomerVObrabotke: <p>Исполнитель открыл заявку.Ожидается обратная связь</p>,
+  CustomerOzhidaet: <p>Исполнитель внес изменения. Пожалуйста ознакомьтесь с ними и примите решение по заявке.</p>,
+  CustomerVRabote:<p>Изменения подтверждены. Исполнитель начал выполнение заявки.</p>,
+  CustomerZavershen: <p>Заявка принята заказчиком. Заказ полностью завершен.</p>,
+  CustomerRazbor: <p>Выполненная работа отклонена Заказчиком. Происходит разбор причины</p>,
+  CustomerOtmenena: <p>Изменения по заявке со стороны Исполнителя не приняты. Заявка отклонена.</p>,
   PerformerOzhidaet: <p>Вы внесли изменения в заявку. Ожидайте ответ от заказчика.</p>,
   PerformerVipolnena: <p>Заявка выполнена. Ожидается обратная связь от заказчика.</p>,
   PerformerResheno: <p>Заявка принята заказчиком. Заказ полностью завершен.</p>,
@@ -47,7 +47,7 @@ export const BidAdminActions = () => {
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
-        <Btn className={'bg-white'}><SvgMenu className={'text-white'}/></Btn>
+        <Btn className={"bg-white"}><SvgMenu className={"text-white"}/></Btn>
       </Menu.Target>
 
       <Menu.Dropdown>
@@ -57,7 +57,6 @@ export const BidAdminActions = () => {
   )
 }
 const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
-
     const params = useParams()
     const store = useStore()
   let revalidator = useRevalidator()
@@ -70,27 +69,27 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
     })()
   }, [])
     const currentActions = React.useMemo(() => {
-        if (store.appStore.appType === 'admin') {
+        if (store.appStore.appType === "admin") {
           let result:JSX.Element | null
           switch (status) {
             case "Новая":
-              return (<Button text={'Отменить заявку'}
+              return (<Button text={"Отменить заявку"}
                   variant={ButtonVariant.accent}
                   size={ButtonSizeType.sm}
                   action={() => handleChangeBidStatus("Отменена" as BidsStatus)} />
               )
             case BidsStatus["Разбор"]:
               return (
-                <div className={'flex gap-2.5 col-span-2 row-start-1 justify-self-end'}>
-                  <Button text={'Отказать'}
+                <>
+                  <Button text={"Отказать"}
                     variant={ButtonVariant["accent-outline"]}
                     size={ButtonSizeType.sm}
                     action={() => handleChangeBidStatus("Отменена" as BidsStatus)} />
-                  <Button text={'Принять работу'}
+                  <Button text={"Принять работу"}
                     variant={ButtonVariant.accent}
                     size={ButtonSizeType.sm}
                     action={() => handleChangeBidStatus("Завершена" as BidsStatus)} />
-                </div>
+                </>
               )
             default:
               result = null
@@ -98,46 +97,46 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
           }
           return result
         }
-        if (store.appStore.appType === 'customer') {
+        if (store.appStore.appType === "customer") {
             let result: JSX.Element | null
             switch (status) {
 
-                case BidsStatus['Новая']:
+                case BidsStatus["Новая"]:
                     return (
                         <Button
-                            text={'Отменить заявку'}
+                            text={"Отменить заявку"}
                             variant={ButtonVariant.accent}
                             size={ButtonSizeType.sm}
-                            action={() => handleChangeBidStatus('Отменена' as BidsStatus)}
+                            action={() => handleChangeBidStatus("Отменена" as BidsStatus)}
                         />
                     )
-                case BidsStatus['Обрабатывается']:
+                case BidsStatus["Обрабатывается"]:
                     return BidText.CustomerVObrabotke
 
-                case BidsStatus['В работе']:
+                case BidsStatus["В работе"]:
                     return BidText.CustomerVRabote
 
-                case BidsStatus['Выполнено']:
+                case BidsStatus["Выполнено"]:
                     return (
-                        <div className={'flex gap-2.5 col-span-2 row-start-1 justify-self-end'}>
+                        <>
                             <Button
-                                text={'Отказаться'}
-                                variant={ButtonVariant['accent-outline']}
+                                text={"Отказаться"}
+                                variant={ButtonVariant["accent-outline"]}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus('Разбор' as BidsStatus)}
+                                action={() => handleChangeBidStatus("Разбор" as BidsStatus)}
                             />
                             <Button
-                                text={'Принять работу'}
+                                text={"Принять работу"}
                                 variant={ButtonVariant.accent}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus('Завершена' as BidsStatus)}
+                                action={() => handleChangeBidStatus("Завершена" as BidsStatus)}
                             />
-                        </div>
+                        </>
                     )
 
-                case BidsStatus['Ждет подтверждение']:
+                case BidsStatus["Ждет подтверждение"]:
                     return BidText.CustomerOzhidaet
-                case BidsStatus['Завершена']:
+                case BidsStatus["Завершена"]:
 
                     return BidText.CustomerZavershen
                 case BidsStatus["Разбор"]:
@@ -153,69 +152,68 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
             return result
         }
 
-        if (store.appStore.appType === 'performer') {
+        if (store.appStore.appType === "performer") {
             let result: JSX.Element | null
             switch (status) {
-
-                case BidsStatus['Новая']:
+                case BidsStatus["Новая"]:
                     return (
-                        <div className={'flex gap-2.5 col-span-2 row-start-1 justify-self-end'}>
+                        <>
                             <Button
-                                text={'Отказаться'}
-                                variant={ButtonVariant['accent-outline']}
+                                text={"Отказаться"}
+                                variant={ButtonVariant["accent-outline"]}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus('Разбор' as BidsStatus)}
+                                action={() => handleChangeBidStatus("Разбор" as BidsStatus)}
                             />
 
                             <Button
-                                text={'Принять заявку'}
+                                text={"Принять заявку"}
                                 variant={ButtonVariant.accent}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus('В работе' as BidsStatus)}
+                                action={() => handleChangeBidStatus("В работе" as BidsStatus)}
                             />
-                        </div>
+                        </>
                     )
 
-                case BidsStatus['Ждет подтверждение']:
+                case BidsStatus["Ждет подтверждение"]:
                     return BidText.PerformerOzhidaet
 
-                case BidsStatus['Подтверждена']:
+                case BidsStatus["Подтверждена"]:
                   return (
-                    <div className={'flex gap-2.5 col-span-2 row-start-1 justify-self-end'}>
+                    <>
                       <Button
-                        text={'Отказаться'}
-                        variant={ButtonVariant['accent-outline']}
+                        text={"Отказаться"}
+                        variant={ButtonVariant["accent-outline"]}
                         size={ButtonSizeType.sm}
-                        action={() => handleChangeBidStatus('Разбор' as BidsStatus)}
+                        action={() => handleChangeBidStatus("Разбор" as BidsStatus)}
                       />
 
                       <Button
-                        text={'Принять заявку'}
+                        text={"Принять заявку"}
                         variant={ButtonVariant.accent}
                         size={ButtonSizeType.sm}
-                        action={() => handleChangeBidStatus('В работе' as BidsStatus)}
+                        action={() => handleChangeBidStatus("В работе" as BidsStatus)}
                       />
-                    </div>
+                    </>
                   )
-                case BidsStatus['В работе']:
+                case BidsStatus["В работе"]:
                     return (
-                        <div className={'flex gap-2.5 col-span-2 row-start-1 justify-self-end'}>
+                        <>
                             <Button
-                                text={'Завершить заявку'}
+                                text={"Завершить заявку"}
                                 variant={ButtonVariant.accent}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus('Выполнено' as BidsStatus)}
+                                action={() => handleChangeBidStatus("Выполнено" as BidsStatus)}
                             />
-                        </div>
+                        </>
                     )
 
-                case BidsStatus['Выполнено']:
+                case BidsStatus["Выполнено"]:
                     return BidText.PerformerVipolnena
-                case BidsStatus['Завершена']:
+                case BidsStatus["Завершена"]:
                     return BidText.PerformerResheno
-                case BidsStatus['Разбор']:
+                case BidsStatus["Разбор"]:
                     return BidText.PerformerRazbor
-                case BidsStatus['Отменена']:
+                case BidsStatus["Отменена"]:
                     return BidText.PerformerOtmena
                 default:
                     result = null
@@ -224,8 +222,8 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
             return result
         }
         return null
-    }, [store.appStore.appType])
-    return <>{currentActions}</>
+    }, [store.appStore.appType, status])
+    return <div className={styles.bidtext}>{currentActions}</div>
 }
 
 export default observer(BidActions)

@@ -62,30 +62,31 @@ const BidPage = () => {
 				background={PanelColor.glass}
 				bodyClassName={''}
 				footerClassName={'flex  justify-end'}
-				headerClassName={'grid grid-cols-3 gap-4 border-bottom-none'}
+				headerClassName={'grid grid-cols-4 gap-4 border-bottom-none'}
 				header={
 
 	<>
-		<div className={'flex col-span-full justify-between'}>
+		<div className={'flex col-span-2 justify-between'}>
 							<Heading className={'col-span-1 row-start-1 !mb-0'} text={bid.company?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+
+		</div>
+		<div className={"flex  items-end gap-12 justify-start col-span-2 row-start-2"}>
+			<div className={"text-xs text-gray-2"}>
+				Дата и время регистрации: <span>{dateTransformShort(bid.company?.updated).date}</span>
+			</div>
+			<div className={"flex gap-6 items-center justify-around"}>
+				<Status variant={bid.status as string as BidsStatus}
+					size={ButtonSizeType.base} />
+				<Heading className={"!m-0"}
+					text={bid.company?.city?.name}
+					variant={HeadingVariant.h4} />
+			</div>
+		</div>
+
 		{store.userStore.getUserCan(PermissionNames["Управление заявками"], "update") && (
 			<BidActions status={bid.status as BidsStatus}/>
 
-		)}</div>
-							<div className={"flex  items-end gap-12 justify-start col-span-full"}>
-								<div className={"text-xs text-gray-2"}>
-									Дата и время регистрации: <span>{dateTransformShort(bid.company?.updated).date}</span>
-								</div>
-								<div className={"flex gap-6 items-center justify-around"}>
-									<Status variant={bid.status as string as BidsStatus}
-										size={ButtonSizeType.base} />
-									<Heading className={"!m-0"}
-										text={bid.company?.city?.name}
-										variant={HeadingVariant.h4} />
-								</div>
-							</div>
-
-
+		)}
 							</>
 
 							}

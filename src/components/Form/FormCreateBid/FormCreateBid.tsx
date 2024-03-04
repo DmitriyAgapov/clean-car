@@ -298,9 +298,8 @@ const FormCreateBid = ({ user, edit }: any) => {
                                         text={'Дальше'}
                                         action={() => {
                                             changeStep()
-                                            console.log('click')
                                         }}
-                                        /* action={() => console.log(values)} */ className={'float-right'}
+                                        className={'float-right'}
                                         variant={ButtonVariant.accent}
                                     />
                                 </>

@@ -81,3 +81,10 @@ export const CreateCarSchema = Yup.object().shape({
 	company_id: Yup.string().required('Обязательное поле'),
 	number: Yup.string().required("Обязательное поле")
 })
+export const CreateBidSchema = Yup.object().shape({
+	city: Yup.string().required('Обязательное поле'),
+	company: Yup.string().required('Обязательное поле'),
+	conductor: Yup.string().required('Обязательное поле'),
+	car: Yup.string().required('Обязательное поле'),
+	// phone: Yup.string().required('Обязательное поле'),
+})

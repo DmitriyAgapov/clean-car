@@ -102,8 +102,12 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       icon: <img src={'/icons/zayavki.png'} alt={''} />,
       title: 'Заявки',
       url: 'bids',
-    }
-      ]
+    },
+      {
+        icon: <img src={'/icons/zayavki.png'} alt={''} />,
+        title: 'Дэш',
+        url: 'dashboard',
+      }]
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
         if(store.userStore.myProfileData.company.company_type === "Компания-Партнер" && el.url === "cars") {

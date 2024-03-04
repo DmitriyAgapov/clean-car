@@ -24,7 +24,6 @@ export class CatalogStore {
             ],
             storage: window.localStorage,
         }, {fireImmediately: true})
-
         reaction(() => this.loadingState.brands,
           (brands) => {
               if (!brands) {
@@ -61,7 +60,8 @@ export class CatalogStore {
                         this.getAllCities().then(r => runInAction(() => {
                             console.log('loadded cities')
                             this.loadingState.cities  = true
-                        }))
+                        })
+                  )
 
             }
         })

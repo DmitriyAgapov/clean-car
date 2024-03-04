@@ -8,6 +8,7 @@ import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCre
 import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
 import FormCreateUpdateFilial from "components/Form/FormCreateFilials/FormCreateUpdateFilial";
 import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
+import FormCreateUpdateBid from "components/Form/FormCreateBid/FormCreateUpdateBid";
 
 export default function DashboardPage() {
   const form = useForm({
@@ -33,7 +34,7 @@ export default function DashboardPage() {
           </>
         }
       />
-      <FormCreateUpdateCar/>
+      <FormCreateUpdateBid/>
     </Section>
     </>
   )

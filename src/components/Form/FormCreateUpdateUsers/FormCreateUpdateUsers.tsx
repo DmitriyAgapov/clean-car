@@ -32,9 +32,7 @@ export const [FormProvider, useFormContext, useForm] = createFormContext<any>();
 export const createUserFormActions= createFormActions<InitValues>('createUserForm');
 
 const FormCreateUpdateUsers =({ user, edit }: any) => {
-	console.log(user);
 	const store = useStore()
-
 	const initData = React.useMemo(() => {
 		let initValues: InitValues = {
 			id: 0,
@@ -131,7 +129,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		// else {
 		const compId = form.values.type === "admin" ? 1 : Number(form.values.company_id)
 
-			const senData = {
+		const senData = {
 				id: edit ? user.employee.id : 0,
 				phone: form.values.phone.replaceAll(' ', ''),
 				email: form.values.email,
