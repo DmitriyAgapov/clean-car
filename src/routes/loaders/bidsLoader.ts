@@ -12,13 +12,12 @@ export const bidsLoader = async ({ request, params }:any) => {
 	const paramsPageSize = url.searchParams.get('page_size')
 	const paramsOrdering = url.searchParams.get('ordering')
 	const paramsSearchString = url.searchParams.get('searchString')
-
+	console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
 	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
 	await bidsStore.loadAllBids({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
-	await companyStore.loadCompanies()
+	// await companyStore.loadCompanies()
 
 	const data = bidsStore.bidsAll.data
-	console.log(data);
 	return defer({
 	  data: {
 		  ...data,

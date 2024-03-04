@@ -8,6 +8,8 @@ import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import { observer } from "mobx-react-lite";
+import { dateTransformShort } from "utils/utils";
+import userStore from "stores/userStore";
 
 const BidsPage = () => {
 	const store = useStore()
@@ -43,7 +45,21 @@ const BidsPage = () => {
 					background={PanelColor.glass}
 					className={'col-span-full table-groups table-bids'}
 					filter={false}
-					data={loaderData.results}
+					data={storeData.results.map((r:any) => ({
+						idnum: r.id,
+						id: r.id,
+						status: r.status,
+						created: dateTransformShort(r.created).date,
+						customer: r.company.name,
+						performer: r.performer.name,
+						user: r.author.first_name + ' ' + r.author.last_name[0] + '.',
+						number: r.car?.number,
+						city: r.company.city.name,
+						service_type: r.service_type.name,
+						query: {
+							company_id: userStore.isAdmin ? r.company.id : userStore.myProfileData.company.id,
+						}
+					}))}
 					initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
 					state={false}
 					ar={textData.tableHeaders} />

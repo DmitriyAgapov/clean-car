@@ -29,7 +29,7 @@ const BidPage = () => {
 		{ label: 'История заявки', data: bid }
 	]
 	React.useEffect(() => {
-		if(bid.status === BidsStatus["Новая"]) {
+		if(bid.status === BidsStatus["Новая"] && store.appStore.appType === "performer") {
 			(async () => {
 				if (params.company_id && params.id) {
 					await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus['Обрабатывается'])

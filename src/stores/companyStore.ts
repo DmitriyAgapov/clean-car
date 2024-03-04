@@ -364,22 +364,21 @@ export class CompanyStore {
     loadCompanies = flow(function* (this: CompanyStore) {
         this.loadingCompanies = true
         this.companies.clear()
-     if(appStore.appType ==="admin") {
-        try {
-            const data = yield agent.Companies.getAllCompanies()
-            if (data.status === 200) {
-                //@ts-ignore
-                const { results } = data.data
-
-                set(this.companies, results)
+         if(appStore.appType ==="admin") {
+            try {
+                const { data, status } = yield agent.Companies.getAllCompanies()
+                if (status === 200) {
+                    //@ts-ignore
+                    const { results } = data
+                    set(this.companies, results)
+                }
+            } catch (error) {
+                throw new Error('Fetch data companies failed')
+            } finally {
+                this.loadingCompanies = false
             }
-        } catch (error) {
-            throw new Error('Fetch data companies failed')
-        } finally {
-            this.loadingCompanies = false
-        }
-        return this.companies as any
-    } else  {
+            return this.companies as any
+        } else  {
              try {
                  const data = yield agent.Companies.getMyCompanies()
                  if (data.status === 200) {
