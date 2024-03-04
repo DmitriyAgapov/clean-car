@@ -7,13 +7,8 @@ import { useStore } from "stores/store";
 import catalogStore from "stores/catalogStore";
 import { useFormContext } from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
 
-type InputAutocomplete = {}
-
-
 export function InputAutocompleteNew(props:any) {
 
-  const store= useStore()
-  // const { values, touched,  errors, isValidating }:any = useFormContext();
   const { values, isTouched,  errors } = props.ctx;
 
   const combobox = useCombobox({
@@ -31,7 +26,8 @@ export function InputAutocompleteNew(props:any) {
       const dataToform = { query: query, locations: [
           {
             // region: "Челябинская область",
-            city: props.city
+            city: props.city,
+
           }
         ],
         restrict_value: true }

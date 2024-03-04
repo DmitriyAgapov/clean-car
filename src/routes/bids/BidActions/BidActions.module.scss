@@ -1,0 +1,23 @@
+.Item {
+  &[data-variant='Новая'] {
+	color: #FBFF4A;
+  }
+  &[data-variant='Обрабатывается'] {
+	color: rgba(182, 193, 190, 1);
+  }
+  &[data-variant='Разбор'] {
+	color: rgba(3, 134, 93, 1);
+  }
+  &[data-variant='Выполнено'], &[data-variant='Завершена'], &[data-variant='Подтверждена'],  {
+	color: rgba(19, 255, 113, 1);
+  }
+  &[data-variant='Отменена'] {
+	color: rgba(244, 86, 95, 1);
+  }
+  &[data-variant='Ждет подтверждение'] {
+	color: rgba(182, 193, 190, 1);
+  }
+  &[data-variant='В работе'] {
+	color: rgba(182, 193, 190, 1);
+  }
+}

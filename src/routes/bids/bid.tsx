@@ -11,6 +11,7 @@ import bidsStore, { BidsStatus } from 'stores/bidsStrore'
 import Status from 'components/common/ui/Status/Status'
 import { PermissionNames } from 'stores/permissionStore'
 import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
+import BidActions, { BidAdminActions } from "routes/bids/BidActions/BidActions";
 
 const BidPage = () => {
 	const store = useStore()
@@ -27,7 +28,15 @@ const BidPage = () => {
 		{ label: 'Фото', data: bid },
 		{ label: 'История заявки', data: bid }
 	]
-
+	React.useEffect(() => {
+		if(bid.status === BidsStatus["Новая"]) {
+			(async () => {
+				if (params.company_id && params.id) {
+					await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus['Обрабатывается'])
+				}
+			})()
+		}
+	}, [bid.status])
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	// if (location.pathname !== `/account/references/${textData.path}/`) return <Outlet />
 	return (
@@ -39,7 +48,7 @@ const BidPage = () => {
 
 						<Button text={<><SvgBackArrow />Назад к списку заявок{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
 
-						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
+						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /> <BidAdminActions/>
 					</div>
 					{/* {store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<> */}
 					{/* 	<Button text={textData.loadExcel} action={() => navigate('create')} trimText={true} className={'inline-flex'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} /> */}
@@ -57,7 +66,12 @@ const BidPage = () => {
 				header={
 
 	<>
-							<Heading className={'col-span-2 !mb-0'} text={bid.company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+		<div className={'flex col-span-full justify-between'}>
+							<Heading className={'col-span-1 row-start-1 !mb-0'} text={bid.company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+		{store.userStore.getUserCan(PermissionNames["Управление заявками"], "update") && (
+			<BidActions status={bid.status as BidsStatus}/>
+
+		)}</div>
 							<div className={"flex  items-end gap-12 justify-start col-span-full"}>
 								<div className={"text-xs text-gray-2"}>
 									Дата и время регистрации: <span>{dateTransformShort(bid.company.updated).date}</span>
@@ -65,27 +79,13 @@ const BidPage = () => {
 								<div className={"flex gap-6 items-center justify-around"}>
 									<Status variant={bid.status as string as BidsStatus}
 										size={ButtonSizeType.base} />
-
 									<Heading className={"!m-0"}
 										text={bid.company.city.name}
 										variant={HeadingVariant.h4} />
 								</div>
 							</div>
 
-						{store.userStore.getUserCan(PermissionNames["Управление справочниками"], "update") && (
-							<Button text={"Отменить заявку"}
-								size={ButtonSizeType.sm}
 
-								action={async () => {
-									if(params.company_id && params.id) {
-										await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus["Отмена"])
-									}
-								}}
-								className={'justify-self-end ml-auto row-start-1 col-start-3'}
-								variant={ButtonVariant['accent']}
-
-							/>
-						)}
 							</>
 
 							}

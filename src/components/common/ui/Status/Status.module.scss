@@ -22,13 +22,13 @@
   &[data-variant='Разбор'] {
 	background: rgba(3, 134, 93, 1);
   }
-  &[data-variant='Выполнена'], &[data-variant='Завершена'], &[data-variant='Подтверждена'],  {
+  &[data-variant='Выполнено'], &[data-variant='Завершена'], &[data-variant='Подтверждена'],  {
 	background: rgba(19, 255, 113, 1);
   }
-  &[data-variant='Отмена'] {
+  &[data-variant='Отменена'] {
 	background: rgba(244, 86, 95, 1);
   }
-  &[data-variant='Ждет подтверждения'] {
+  &[data-variant='Ждет подтверждение'] {
 	background: rgba(182, 193, 190, 1);
   }
   &[data-variant='В работе'] {

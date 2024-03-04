@@ -16,6 +16,7 @@ export const bidsLoader = async ({ request, params }:any) => {
 	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
 	await bidsStore.loadAllBids({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
 	await companyStore.loadCompanies()
+
 	const data = bidsStore.bidsAll.data
 	console.log(data);
 	return defer({
@@ -34,7 +35,7 @@ export const bidsLoader = async ({ request, params }:any) => {
 				city: r.company.city.name,
 				service_type: r.service_type.name,
 				query: {
-					company_id: userStore.myProfileData.company.id,
+					company_id: r.company.id ? r.company.id : userStore.myProfileData.company.id,
 				}
 			}))
 	  },
@@ -55,9 +56,9 @@ export const bidLoader = async ({ request, params }:any) => {
 	const paramsSearchString = url.searchParams.get('searchString')
 
 	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
-	await bidsStore.loadBidByCompanyAndBidId(params.company_id, params.id)
+	const bidData = await bidsStore.loadBidByCompanyAndBidId(params.company_id, params.id)
 	await companyStore.loadCompanies()
-	console.log(bidsStore.CurrentBid);
+	console.log(bidData);
 	return defer({
 		data: bidsStore.CurrentBid,
 		pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},

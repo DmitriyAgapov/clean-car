@@ -115,8 +115,8 @@ export class PermissionStore {
       if(userStore.currentUser?.is_staff) {
          agent.PermissionsAdmin.createAdminPermission(data)
       }
-      if(!userStore.currentUser?.is_staff && userStore.currentUser?.company?.id) {
-         agent.Permissions.createPermission(userStore.currentUser?.company?.id, data)
+      if(!userStore.currentUser?.is_staff && userStore.myProfileData.company.id) {
+         agent.Permissions.createPermission(userStore.myProfileData.company.id, data)
       }
 
     } catch (error) {
@@ -157,12 +157,13 @@ export class PermissionStore {
 
   setPermissionStore = flow(function *(this: PermissionStore, id: number, data: any) {
     this.loadingPermissions = true
-    let company_id = userStore.currentUser?.company?.id
-    if (appStore.appType !== 'admin' && company_id) {
+    let company_id = userStore.myProfileData.company.id;
+    if (appStore.appType !== "admin" && company_id) {
       try {
         const response = yield agent.Permissions.putUpdatePermissions(company_id, data.id, data)
       if (response.status === 200) {
         const { data } = response
+        userStore.loadMyProfile()
         return response
       }
 
@@ -173,13 +174,14 @@ export class PermissionStore {
         this.loadingPermissions = false
       }
     } else {
+      console.log('is admin');
       this.setPermissionStoreAdmin(id, data)
     }
     this.loadingPermissions = false
   })
   deletePermissionStore = flow(function *(this: PermissionStore, id: number) {
     this.loadingPermissions = true
-    let company_id = userStore.currentUser?.company?.id
+    let company_id = userStore.myProfileData.company.id;
     if (appStore.appType !== 'admin' && company_id) {
       try {
         const response = yield agent.Permissions.deletePermission(company_id, id)

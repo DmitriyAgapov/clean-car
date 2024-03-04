@@ -408,11 +408,11 @@ export const TabsVariantBids = ({
                         label={'Тип'}
                         title={<Heading variant={HeadingVariant.h4} text={data.car.model.car_type} />}
                     />
-                    <DList
+                  {data.customer_comment && <DList
                         className={'child:dt:text-accent col-span-2 col-start-1 row-start-5'}
                         label={'Комментарий'}
                         title={<p>{data.customer_comment}</p>}
-                    />
+                    />}
                     <Panel
                         variant={PanelVariant.withPaddingSmWithBody}
                         background={PanelColor.glass}
@@ -423,11 +423,11 @@ export const TabsVariantBids = ({
                             label={'Партнер'}
                             title={<Heading variant={HeadingVariant.h4} text={data.performer.name} />}
                         />
-                        <DList
+                      {data.performer.address && <DList
                             className={'child:dt:text-accent'}
                             label={'Адрес'}
-                            title={<Heading variant={HeadingVariant.h4} text={data.performer.name} />}
-                        />
+                            title={<Heading variant={HeadingVariant.h4} text={data.performer.address} />}
+                        />}
                     </Panel>
                     {/* /!* //todo: address *!/ */}
                     {/* <DList className={'child:dt:text-accent'}  label={'Адрес выезда'}  title={data.address} /> */}

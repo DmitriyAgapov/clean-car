@@ -110,7 +110,6 @@ export class UserStore {
 
   loadMyProfile() {
     this.loadingUser = true
-    console.log('Is there an error?');
     return agent.Profile.getMyAccount()
       .then((response:any) => response.data)
       .then(((data:any) => {

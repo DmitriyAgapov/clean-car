@@ -112,6 +112,7 @@ export default function GroupPageEditAction(props: any) {
                 action={async () => {
                   // @ts-ignore
                   store.permissionStore.setPermissionStore(changes.id, changes)
+
                   setTimeout(() => navigate('/account/groups'), 500)
                 }}
                 className={'float-right'}

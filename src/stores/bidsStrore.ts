@@ -9,14 +9,15 @@ import { CurrentBidProps } from "stores/types/bidTypes";
 import userStore from "stores/userStore";
 export enum BidsStatus  {
 	'Новая' = 'Новая',
-	'Отмена' = 'Отмена',
-	'Ждет подтверждения' = 'Ждет подтверждения',
+	'Отменена' = 'Отменена',
+	'Ждет подтверждение' = 'Ждет подтверждение',
 	'Обрабатывается' = 'Обрабатывается',
 	'Разбор' = 'Разбор',
 	'В работе' = 'В работе',
-	'Выполнена' = 'Выполнена',
+	'Выполнено' = 'Выполнено',
 	'Завершена' = 'Завершена',
 	'Подтверждена'	 = 'Подтверждена',
+	'Решено'	 = 'Решено',
 }
 const clone = (obj:any) => JSON.parse(JSON.stringify(obj))
 export interface ResultsProps
@@ -513,7 +514,6 @@ export class BidsStore {
     }
     async loadBidByCompanyAndBidId(company_id?: number, bid_id?: number) {
         const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id)
-        console.log(data);
         if (status === 200) {
             runInAction(() => {
                 this.currentBid = data
