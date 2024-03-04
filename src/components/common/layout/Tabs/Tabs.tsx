@@ -25,8 +25,8 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
     const TabPanels = ():any => {
     const result:any = []
       if(type == TabsType.bid) {
-        data.forEach((item: any) => {
-          result.push(<TabsVariantBids state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>)
+        data.forEach((item: any, index: number) => {
+          result.push(<TabsVariantBids key={`tab_${index}`} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>)
         })
         return result
       }
@@ -34,7 +34,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
 
         data.forEach((item: any, index: number) => {
           result.push(
-            <TabsVariantPrice state={state == item.label} data={item.dataTable} label={item.label} props={items} className={'!pb-0'}/>
+            <TabsVariantPrice key={`tab_${index}`} state={state == item.label} data={item.dataTable} label={item.label} props={items} className={'!pb-0'}/>
           )
         })
         return result
@@ -43,21 +43,21 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
         console.log(data);
         data.forEach((item: any, index: number) => {
           result.push(
-            <TabsVariantPrice edit={type == TabsType.priceEdit} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>
+            <TabsVariantPrice key={`tab_${index}`} edit={type == TabsType.priceEdit} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>
           )
         })
         return result
       }
 
       if(items) {
-        data.forEach((item: any) => {
-          result.push(<TabsVariantsCars state={state == item.label} data={item.data} label={item.label} props={items}/>)
+        data.forEach((item: any, index: number) => {
+          result.push(<TabsVariantsCars key={`tab_${index}`} state={state == item.label} data={item.data} label={item.label} props={items}/>)
         })
         return result
       }
       if(type == TabsType.filial) {
-        data.forEach((item: any) => {
-          result.push(<TabsVariantsFilial state={state == item.label} parentCompany={item.parent} company_type={data[0].company_type} data={item.data} label={item.label} props={data}/>)
+        data.forEach((item: any, index: number) => {
+          result.push(<TabsVariantsFilial key={`tab_${index}`} state={state == item.label} parentCompany={item.parent} company_type={data[0].company_type} data={item.data} label={item.label} props={data}/>)
         })
         return result
       }
