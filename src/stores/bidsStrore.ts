@@ -477,9 +477,9 @@ export class BidsStore {
         reaction(
             () => this.formResult.service_subtype,
             async (subtype) => {
-                console.log('changed', this.formResult, subtype)
+                // console.log('changed', this.formResult, subtype)
                 if (subtype !== "0" && subtype && this.formResult.company && this.formResult.car !== 0 && this.formResult.service_option) {
-                    console.log('changed', this.formResult, subtype)
+                    // console.log('changed', this.formResult, subtype)
                     await this.loadServiceSubtypeOptions(subtype)
                      this.loadCurrentPerformers(Number(this.formResult.company), {
                         car_id: this.formResult.car,
@@ -513,7 +513,7 @@ export class BidsStore {
 
     }
     async loadBidByCompanyAndBidId(company_id?: number, bid_id?: number) {
-        const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id)
+        const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id);
         if (status === 200) {
             runInAction(() => {
                 this.currentBid = data

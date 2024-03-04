@@ -35,7 +35,7 @@ export const bidsLoader = async ({ request, params }:any) => {
 				city: r.company.city.name,
 				service_type: r.service_type.name,
 				query: {
-					company_id: r.company.id ? r.company.id : userStore.myProfileData.company.id,
+					company_id: userStore.isAdmin ? r.company.id : userStore.myProfileData.company.id,
 				}
 			}))
 	  },
@@ -57,7 +57,8 @@ export const bidLoader = async ({ request, params }:any) => {
 
 	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
 	const bidData = await bidsStore.loadBidByCompanyAndBidId(params.company_id, params.id)
-	await companyStore.loadCompanies()
+	// await companyStore.loadCompanies()
+	console.log(params.company_id, params.id);
 	console.log(bidData);
 	return defer({
 		data: bidsStore.CurrentBid,
