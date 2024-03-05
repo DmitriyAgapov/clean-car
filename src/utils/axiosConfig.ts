@@ -6,7 +6,7 @@ import { boolean, string } from "yup";
 axios.interceptors.request
 	.use(
 		async (config, ) => {
-			config.params && paramsStore.setParams(config.params)
+			// config.params && paramsStore.setParams(config.params)
 			if (window.sessionStorage.getItem('jwt')) {
 				// @ts-ignore
 				config.headers = {

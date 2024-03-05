@@ -105,6 +105,17 @@ export class CatalogStore {
             subtypes: false,
         }
     }
+    setLoadingStateTrue() {
+        this.loadingState = {
+            cities: false,
+            brands: false,
+            models: false,
+            services: false,
+            types: false,
+            subtypes: false,
+        }
+    }
+
     targetModelId = 0
     cities: Map<any, any> = observable.map([])
     services: Map<any, any> = observable.map([])
@@ -208,7 +219,7 @@ export class CatalogStore {
                         .then((r) => r)
                         .finally(() => {
                             runInAction(() => {
-                                console.log(el)
+                                // console.log(el)
                                 this.carBrandModels.forEach((e: any) => {
                                     this.carBrandModelsReference.push({
                                         id: e.id,
@@ -271,13 +282,13 @@ export class CatalogStore {
             brandName?: string | undefined | null
         },
     ) {
-        console.log(brandId,brandName, car_type, model);
+        // console.log(brandId,brandName, car_type, model);
         if (brandId) {
             try {
                 const { data, status } = yield agent.Catalog.createCarBrandWithExistBrand(brandId, car_type, model)
                 return { data, status }
             } catch (error) {
-                console.log(error)
+                // console.log(error)
             }
         } else if (brandName) {
                 try {
@@ -285,7 +296,7 @@ export class CatalogStore {
                     const { data, status } = yield agent.Catalog.createCarBrandWithNewBrand(brandName, car_type, model)
                     return { data, status }
                 } catch (error) {
-                    console.log(error)
+                    // console.log(error)
                 }
 
         }
@@ -312,7 +323,7 @@ export class CatalogStore {
                 const { data, status } = yield agent.Catalog.updateCarBrandWithExistBrand(id, brandId, car_type, model)
                 return { data, status }
             } catch (error) {
-                console.log(error)
+                // console.log(error)
             }
         } else if (brandName) {
                 try {
@@ -320,7 +331,7 @@ export class CatalogStore {
                     const { data, status } = yield agent.Catalog.updateCarBrandWithNewBrand(id,brandName, car_type, model)
                     return { data, status }
                 } catch (error) {
-                    console.log(error)
+                    // console.log(error)
                 }
 
         }

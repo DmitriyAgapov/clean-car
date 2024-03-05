@@ -59,6 +59,7 @@ export type Car = {
   model: CarModel
   car_type: CarType
   number: string
+  employees?: any[]
 }
 type CarOptions = {
   wheel_radius: string

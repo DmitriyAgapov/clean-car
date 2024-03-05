@@ -6,6 +6,7 @@ import { useFormikContext } from 'formik'
 import { useStore } from "stores/store";
 import catalogStore from "stores/catalogStore";
 import { SvgSearch } from "components/common/ui/Icon";
+import { useFormContext } from "components/Form/FormCreateBid/FormCreateUpdateBid";
 
 type InputAutocomplete = {}
 
@@ -14,7 +15,7 @@ export function InputAutocompleteWithCity(props:any) {
 
   const store= useStore()
   const { step1, step2 ,step3} = store.bidsStore.formDataAll
-  const { values, touched,  errors, isValidating }:any = useFormikContext();
+  const { values, touched,  errors, isValidating }:any = useFormContext();
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),

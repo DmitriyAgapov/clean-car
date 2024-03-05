@@ -10,7 +10,7 @@ import '../../../../assets/styles.scss'
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
 import { useWindowDimensions } from "utils/utils";
-import { useNavigation } from "react-router-dom";
+import { useNavigation, useSearchParams } from "react-router-dom";
 import { LoadingOverlay } from "@mantine/core";
 import { SvgCleanCarLoader } from "components/common/ui/Icon";
 
@@ -46,7 +46,7 @@ interface ChildrenProps {
 
 const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent }) => {
   const store = useStore()
-
+  let [searchParams, setSearchParams] = useSearchParams()
   const navigation = useNavigation();
   const {width} = useWindowDimensions()
 

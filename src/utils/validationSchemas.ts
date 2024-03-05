@@ -85,6 +85,6 @@ export const CreateBidSchema = Yup.object().shape({
 	city: Yup.string().required('Обязательное поле'),
 	company: Yup.string().required('Обязательное поле'),
 	conductor: Yup.string().required('Обязательное поле'),
-	car: Yup.string().required('Обязательное поле'),
-	// phone: Yup.string().required('Обязательное поле'),
+	car: Yup.string().min(1).required('Обязательное поле'),
+	phone: Yup.string().required('Обязательное поле'),
 })

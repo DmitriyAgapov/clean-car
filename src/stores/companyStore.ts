@@ -149,6 +149,7 @@ export class CompanyStore {
     companies: IObservableArray<Companies> = [] as any
     companiesMap: IObservableArray<Companies> = [] as any
     filials: IObservableArray<Companies> = [] as any
+    allFilials:any = null
     companiesCustomer:IObservableArray<Companies> = [] as any
     companiesPerformers:IObservableArray<Companies> = [] as any
     customersCompany = new Map([])
@@ -339,12 +340,9 @@ export class CompanyStore {
         console.log('getAllFilials', userStore.isAdmin);
         let result
         try {
-            if (
-                !userStore.isAdmin
-            ) {
+            if (appStore.appType !== "admin") {
                 console.log('start');
-                const { data, status } = yield agent.Filials.getFilials(
-                  <CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type),
+                const { data, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type),
                     userStore.myProfileData.company.id,
                     params,
                 )
@@ -360,6 +358,43 @@ export class CompanyStore {
         }
         return this.filials
     })
+    loadAllFilials  = flow(function* (this: CompanyStore, params: PaginationProps) {
+        this.loadingCompanies = true
+        let data :any[] | any = []
+        let dataMeta
+        console.log(params);
+        if(appStore.appType === "admin") {
+            const { data: dataCars, status } = yield agent.Companies.getOnlyBranchesCompanies(params)
+
+            if (status === 200) {
+                this.allFilials = dataCars
+                data = dataCars.results
+                dataMeta = dataCars
+            }
+        } else {
+            try {
+                const type = userStore.myProfileData.company.company_type;
+                const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id, params)
+
+                if (status === 200) {
+                    this.allFilials = dataCars
+                    data = dataCars.results
+                    dataMeta = dataCars
+                }
+            } catch (e) {
+                this.errors = e
+            }
+
+        }
+    })
+    get allFilialsFromStore() {
+        return ({
+            data: this.allFilials,
+            errors: this.errors,
+            loading: this.loadingCompanies
+
+        })
+    }
 
     loadCompanies = flow(function* (this: CompanyStore) {
         this.loadingCompanies = true

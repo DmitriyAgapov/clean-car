@@ -96,7 +96,7 @@ export class PermissionStore {
     this.loadingPermissions = false
   })
   getPermissionByGroupId = flow(function*(this: PermissionStore, id: number) {
-    const company_id = userStore.myProfileData.company.id
+    const company_id = userStore.myProfileData.company?.id
 
     try {
       if(company_id) {
@@ -112,10 +112,10 @@ export class PermissionStore {
   createPermission = flow(function*(this: PermissionStore, data: any) {
     this.loadingPermissions = true
     try {
-      if(userStore.currentUser?.is_staff) {
+      if(userStore.isAdmin) {
          agent.PermissionsAdmin.createAdminPermission(data)
       }
-      if(!userStore.currentUser?.is_staff && userStore.myProfileData.company.id) {
+      if(!userStore.isAdmin && userStore.myProfileData.company.id) {
          agent.Permissions.createPermission(userStore.myProfileData.company.id, data)
       }
 

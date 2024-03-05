@@ -83,7 +83,7 @@ const router = createBrowserRouter([
     {
         path: '/account',
         element: <AccountPage />,
-        errorElement: <ErrorPage />,
+        // errorElement: <ErrorPage />,
         loader: authUser,
         children: [
             {
@@ -98,7 +98,7 @@ const router = createBrowserRouter([
             {
                 path: 'users',
                 element: <UsersPage />,
-                // loader: usersLoader,
+                loader: usersLoader,
                 children: [
                     {
                         path: ':company_type/:company_id/:id',
@@ -180,7 +180,7 @@ const router = createBrowserRouter([
             {
                 path: 'filials',
                 element: <FilialsPage />,
-                errorElement: <ErrorPage />,
+                // errorElement: <ErrorPage />,
                 loader: filialsLoader,
                 children: [
                     {

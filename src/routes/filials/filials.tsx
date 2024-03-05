@@ -13,8 +13,8 @@ import { observer } from "mobx-react-lite";
 const FilialsPage = () => {
   const store = useStore()
   const location = useLocation()
-  const {data}:any = useLoaderData()
-  console.log(data);
+  const {data, loading, errors} = store.companyStore.allFilialsFromStore
+  console.log(data, loading);
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -43,14 +43,14 @@ const FilialsPage = () => {
         }
       />
    <TableWithSortNew
-        total={data.count}
-        filter={true}
+        total={data?.count}
+        filter={false}
         search={true}
         background={PanelColor.glass}
         style={PanelRouteStyle.company}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'company_type'},{ label: 'Принадлежит', name: 'parent'}]}
 
-        data={data.results.map((item: any) => ({
+        data={data?.results?.map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           city: item.city.name,

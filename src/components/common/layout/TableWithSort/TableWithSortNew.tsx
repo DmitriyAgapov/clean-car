@@ -198,7 +198,7 @@ const TableWithSortNew = ({
     const navigate = useNavigate()
     let [searchParams, setSearchParams] = useSearchParams()
     // @ts-ignore
-    const [sortedField, setSortedField] = useState(ar[0].name)
+    const [sortedField, setSortedField] = useState<null, string>('')
     const [currentPage, setCurrentPage] = useState(1)
 
     const handleCurrentPage = React.useCallback((value: any) => {
@@ -258,8 +258,10 @@ const TableWithSortNew = ({
     const handleHeaderAction = React.useCallback((e: any) => {
         // @ts-ignore
         if(e.reversed) {
+            // @ts-ignore
             setSortedField(`-${ar[e.index].name}`)
         } else {
+            // @ts-ignore
             setSortedField(ar[e.index].name)
         }
     }, [sortedField])

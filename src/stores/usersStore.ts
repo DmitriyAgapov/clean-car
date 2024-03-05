@@ -1,10 +1,14 @@
-import { flow, makeAutoObservable, get, set, observable, action, computed, runInAction } from "mobx";
+import { flow, makeAutoObservable, get, set, observable, action, computed, runInAction, reaction } from "mobx";
 import agent from 'utils/agent'
 import companyStore, { CompanyType } from "stores/companyStore";
 import { makePersistable, hydrateStore  } from 'mobx-persist-store';
 import permissionStore from "stores/permissionStore";
 import stores from "stores/index";
 import label from "utils/labels";
+import userStore from "stores/userStore";
+import appStore from "stores/appStore";
+import paramsStore from "stores/paramStore";
+import { paginationParams, paginationParamss } from "utils/fetchers";
 
 
 enum UserTypeEnum {
@@ -34,16 +38,25 @@ export class UsersStore {
     }, { autoBind: true });
     makePersistable(this, {
       name: 'usersStore',
-      properties: ['usersMap', 'companyUsers', 'companyUsersSelected'],
+      properties: ['usersMap', 'companyUsers', 'usersData', 'companyUsersSelected'],
       storage: localStorage,
     });
+    reaction(() => this.usersData,
+    (userData) => {
+      console.log(!this.usersData);
+      if(!userData) {
+        this.getAllUser();
+      }
+    })
   }
+  usersData:any
   usersMap = new Map([])
   users: User[] = []
   loadingUsers: boolean = false
   loadingErrors: any = ''
   companyUsers: User[] = observable.array([])
   companyUsersSelected =  observable.map({})
+
   get usersList() {
     return ({
       users: this.companyUsers,
@@ -52,22 +65,55 @@ export class UsersStore {
       selectedUsers: this.companyUsersSelected
     })
   }
+  get allUsersList() {
+
+    return ({
+      users: this.users,
+      loading: this.loadingUsers,
+      errors: this.loadingErrors,
+      data: this.usersData
+    })
+  }
+
   getAllUser = flow(function* (this: UsersStore) {
     this.loadingUsers = true
+
     this.usersMap = new Map([])
-    try {
-      const { data } = yield agent.Users.getAllUsers()
-      this.users = data.results
-      this.users.forEach((el: any) => {
-        set(this.usersMap, { [el.employee.id]: {...el}
-      })})
-      this.loadingUsers = false
-    } catch (error) {
-      this.loadingErrors = 'error'
+    if(appStore.appType === "admin") {
+      try {
+        const { data } = yield agent.Users.getAllUsers(paramsStore.qParams)
+
+        this.users = data.results
+        this.usersData = data
+        this.users.forEach((el: any) => {
+          set(this.usersMap, { [el.employee.id]: {...el}
+          })})
+        this.loadingUsers = false
+      } catch (error) {
+        this.loadingErrors = 'error'
+      }
+      finally {
+        this.loadingUsers = false
+      }
+    } else {
+      try {
+        console.log(paramsStore.qParams);
+        const { data } = yield agent.Users.getCompanyUsers(userStore.myProfileData.company.id, paramsStore.qParams)
+
+        this.usersData = data
+        this.users = data.results
+        this.users.forEach((el: any) => {
+          set(this.usersMap, { [el.employee.id]: {...el}
+          })})
+        this.loadingUsers = false
+      } catch (error) {
+        this.loadingErrors = 'error'
+      }
+      finally {
+        this.loadingUsers = false
+      }
     }
-    finally {
-      this.loadingUsers = false
-    }
+
   })
 
   hydrateStore = flow(function*(this: UsersStore) {
@@ -149,7 +195,6 @@ export class UsersStore {
   }
   getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type: CompanyType) {
     let user: any = {}
-
     if(companyid && company_type && id) {
       try {
         const data  = yield agent.Account.getCompanyUser(Number(companyid), Number(id));
@@ -182,7 +227,6 @@ export class UsersStore {
         new Error('get User permissions failed')
       }
     }
-    console.log(user, 'data');
     return user
   })
   async createNewUser( edit:boolean, values:any) {

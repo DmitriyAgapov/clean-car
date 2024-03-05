@@ -430,7 +430,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         className={'!bg-transparent'}
                         bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
-                      footerClassName={''}
+                          footerClassName={''}
                         background={PanelColor.default}
                         header={
                             <>

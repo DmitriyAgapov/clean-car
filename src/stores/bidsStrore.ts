@@ -7,6 +7,7 @@ import carStore from "stores/carStore";
 import companyStore from "stores/companyStore";
 import { CurrentBidProps } from "stores/types/bidTypes";
 import userStore from "stores/userStore";
+import appStore from "stores/appStore";
 export enum BidsStatus  {
 	'Новая' = 'Новая',
 	'Отменена' = 'Отменена',
@@ -145,6 +146,7 @@ export class BidsStore {
         ],
         createPageBack: 'Назад к списку заявок',
         createPage: 'Создать заявку',
+        editPage: 'Редактировать заявку',
         fillTemplate: 'Заполнить шаблон',
     }
     cities = catalogStore.cities
@@ -598,7 +600,7 @@ export class BidsStore {
     async loadAllBids(params: PaginationProps) {
         try {
             action(() => (this.loading = true))
-            if(userStore.myProfileData.company.company_type === "Администратор системы") {
+            if(appStore.appType === "admin") {
                 const { data, status } = await agent.Bids.getAllBids(params)
                 if (status === 200) {
                     runInAction(() => {

@@ -170,6 +170,7 @@ export class AuthStore {
     appStore.setTokenRefresh(null)
     userStore.forgetUser()
     action(() => this.userIsLoggedIn = false)
+    console.log('logout');
     window.location.replace('/')
   }
 }

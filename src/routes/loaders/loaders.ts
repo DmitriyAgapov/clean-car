@@ -8,7 +8,8 @@ import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
-import logo from "components/common/layout/Logo/Logo";
+import paramsStore from "stores/paramStore";
+
 
 
 export const authUser = async () => {
@@ -285,53 +286,54 @@ export const filialsLoader = async (props: any) => {
     const paramsOrdering = url.searchParams.get('ordering')
     const paramsSearchString = url.searchParams.get('searchString')
     const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
-    console.log(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type));
-    async function fillData() {
-        let data :any[] | any = []
-        let dataMeta
-        if(userStore.isAdmin) {
-            const { data: dataCars, status } = await agent.Companies.getOnlyBranchesCompanies({
-                page: paramsPage ?? 1,
-                page_size: paramsPageSize ?? 10,
-                ordering: paramsOrdering,
-                name: paramsSearchString
-            } as PaginationProps)
-
-            if (status === 200) {
-                data = dataCars.results
-                dataMeta = dataCars
-            }
-        } else {
-            const { data: dataCars, status } = await agent.Filials.getFilials( <CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id,{
-                page: paramsPage ?? 1,
-                page_size: paramsPageSize ?? 10,
-                ordering: paramsOrdering,
-                name: paramsSearchString
-            } as PaginationProps)
-            console.log(dataCars);
-            if (status === 200) {
-                data = dataCars.results
-                dataMeta = dataCars
-            }
-        }
-
-        console.log({
-            ...dataMeta,
-            results: data,
-        });
-
-        return ({
-            ...dataMeta,
-            results: data,
-        })
-    }
-
-    return defer({
-        data: await fillData(),
-        pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
-        page: refUrlsRoot,
-        // dataModels: dataModels
-    })
+    companyStore.loadAllFilials({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
+    // async function fillData() {
+    //     let data :any[] | any = []
+    //     let dataMeta
+    //     if(userStore.isAdmin) {
+    //         const { data: dataCars, status } = await agent.Companies.getOnlyBranchesCompanies({
+    //             page: paramsPage ?? 1,
+    //             page_size: paramsPageSize ?? 10,
+    //             ordering: paramsOrdering,
+    //             name: paramsSearchString
+    //         } as PaginationProps)
+    //
+    //         if (status === 200) {
+    //             data = dataCars.results
+    //             dataMeta = dataCars
+    //         }
+    //     } else {
+    //         const { data: dataCars, status } = await agent.Filials.getFilials(props.params.company_type, userStore.myProfileData.company.id,{
+    //             page: paramsPage ?? 1,
+    //             page_size: paramsPageSize ?? 10,
+    //             ordering: paramsOrdering,
+    //             name: paramsSearchString
+    //         } as PaginationProps)
+    //         console.log(dataCars);
+    //         if (status === 200) {
+    //             data = dataCars.results
+    //             dataMeta = dataCars
+    //         }
+    //     }
+    //
+    //     console.log({
+    //         ...dataMeta,
+    //         results: data,
+    //     });
+    //
+    //     return ({
+    //         ...dataMeta,
+    //         results: data,
+    //     })
+    // }
+    //
+    // return defer({
+    //     data: await fillData(),
+    //     pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
+    //     page: refUrlsRoot,
+    //     // dataModels: dataModels
+    // })
+    return null
 }
 export const carsLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     await catalogStore.getCarBrands()
@@ -341,27 +343,24 @@ export const carsLoader = async ({ params: { id, company_type, action, company_i
 export const filialLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     const filial = await companyStore.loadFilialWithTypeAndId(company_type, company_id, id)
     const parent = userStore.isAdmin ? await agent.Companies.getCompanyData(company_type, company_id) : {data: userStore.myProfileData.company}
-    console.log(filial, parent);
+
     return { id: id, company_id: company_id, type: company_type, parent: parent, data: { ...filial } }
 }
 export const usersLoader =  async (props: any) => {
-    const paginationData = paginationParams(props.request.url as string)
-    if(userStore.isAdmin) {
-        const { data, status } = await agent.Users.getAllUsers({ ...paginationData, q: paginationData.searchString } as PaginationProps)
-        return {
-            data: data,
-            status: status
-        }
-    } else {
-        const { data, status } = await agent.Users.getCompanyUsers(userStore.myProfileData.company.id, { ...paginationData, q: paginationData.searchString } as PaginationProps)
-        return defer({
-            data: data,
-            status: status
-        })
-    }
+    const searchParams = new URL(props.request.url).searchParams
+    paramsStore.setParams({
+        page: Number(searchParams.get('page')),
+        ordering: searchParams.get('ordering'),
+        name: searchParams.get('name'),
+        page_size: Number(searchParams.get('page_size')),
+        searchString: searchParams.get('searchString')
+    })
+    usersStore.getAllUser()
+    return null
 }
 export const userLoader = async ({ params: { company_type, id, company_id } }: any) => {
-    if(userStore.isAdmin) {
+    console.log(company_type);
+    if(appStore.appType === "admin") {
         let user = await usersStore.getUser(company_id, id, company_type);
         console.log('userLoaderIsAdmin', user)
 
@@ -369,7 +368,7 @@ export const userLoader = async ({ params: { company_type, id, company_id } }: a
             user: user,
         })
     } else {
-        let user = await usersStore.getUser(company_id, id, <CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type));
+        let user = await usersStore.getUser(company_id, id, company_type);
         user = {
             ...user,
             company: userStore.myProfileData.company
@@ -382,6 +381,7 @@ export const userLoader = async ({ params: { company_type, id, company_id } }: a
 }
 
 export const groupsIdLoader = async ({ params: { company_type, id } }: any) => {
+
     if (id) {
         let currentGroup
         if (company_type === 'admin') {

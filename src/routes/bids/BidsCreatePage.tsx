@@ -14,12 +14,11 @@ const BidsCreatePage = (props:any) => {
 	const location = useLocation()
 	const navigate = useNavigate()
 
-	const { data, page, pageRequest, loading, textData }: any = useLoaderData()
-
+	const textData = store.bidsStore.text
 	if(!store.userStore.getUserCan(PermissionNames["Управление заявками"], 'create')) return <Navigate to={'/account'}/>
 	return (
 		<Section type={SectionType.default}>
-			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={loading} header={<>
+			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={store.bidsStore.loading} header={<>
 				<div>
 					<Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
 					<Heading text={!props.edit ? textData.createPage : textData.editPage} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />

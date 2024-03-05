@@ -19,8 +19,8 @@ const UsersPage = () => {
   const navigate = useNavigate()
   // const {data}:any = useLoaderData();
 
-  const { data, isError, isLoading } = useUsersAll()
-
+  const { data, errors, loading, users } = store.usersStore.allUsersList
+  console.log({ data, errors, loading, users });
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -50,6 +50,7 @@ const UsersPage = () => {
         }
       ></Panel>
       <TableWithSortNew
+        state={false}
         total={data?.count}
         background={PanelColor.glass}
         filter={true}

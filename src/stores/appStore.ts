@@ -4,6 +4,7 @@ import userStore, { UserTypeEnum } from "./userStore";
 import { PermissionName, Permissions } from "stores/permissionStore";
 import { makePersistable } from 'mobx-persist-store'
 import catalogStore from "stores/catalogStore";
+import authStore from "stores/authStore";
 
 export class AppStore {
   constructor() {
@@ -22,7 +23,6 @@ export class AppStore {
           window.sessionStorage.setItem('jwt', token)
           userStore.pullUser()
           userStore.loadMyProfile()
-
         } else {
           window.sessionStorage.removeItem('jwt')
           sessionStorage.clear()
@@ -38,6 +38,12 @@ export class AppStore {
         }
       },
     )
+    autorun(() => {
+      if(this.appType === "") {
+        console.log('appType in ""')
+        action(() => authStore.logout)
+      }
+    })
     reaction(() => this.appType,
       (appType => {
         let ar:any = new Map([]);
@@ -67,9 +73,12 @@ export class AppStore {
         }
         userStore.setPermissionsVariants(ar)
         if(appType !== "") {
-
           catalogStore.setLoadingStateFalse()
         }
+        if(appType === "") {
+          console.log('appType in ""')
+        }
+
 
       })
     )

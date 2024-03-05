@@ -20,6 +20,22 @@ export const paginationParams = () => {
 		q:paramsSearchString
 	})
 }
+export const paginationParamss = () => {
+	const location = document.location
+	const url = new URL(location.href)
+	const searchParams = url.searchParams
+	const paramsPage = searchParams.get('page')
+	const paramsPageSize = searchParams.get('page_size')
+	const paramsOrdering = searchParams.get('ordering')
+	const paramsSearchString = searchParams.get('searchString')
+
+	return ({
+		page: paramsPage ?? 1,
+		page_size:paramsPageSize ?? 10,
+		ordering: paramsOrdering,
+		q:paramsSearchString
+	})
+}
 
 export const useUsersAll = ():any => {
 	const store = useStore()
