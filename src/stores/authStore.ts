@@ -168,6 +168,8 @@ export class AuthStore {
   logout() {
     appStore.setToken(null)
     appStore.setTokenRefresh(null)
+    window.localStorage.clear()
+    window.sessionStorage.clear()
     userStore.forgetUser()
     action(() => this.userIsLoggedIn = false)
     console.log('logout');

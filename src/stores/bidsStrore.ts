@@ -462,7 +462,7 @@ export class BidsStore {
         reaction(
             () => this.formResult.company,
             (customer, oldCustomer) => {
-
+                console.log(customer);
                 if (customer !== 0 && customer !== null) {
                     runInAction(async () => {
                         await usersStore.getUsers(customer)

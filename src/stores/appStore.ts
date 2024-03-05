@@ -11,7 +11,7 @@ export class AppStore {
     makeAutoObservable(this, {}, { autoBind: true } )
     makePersistable(this, {
       name: 'appStore',
-      properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions', 'token'],
+      properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions'],
       storage: localStorage,
     }, {
       fireImmediately: true,
@@ -20,10 +20,12 @@ export class AppStore {
       () => this.token,
       (token) => {
         if (token) {
+          console.log('Has token');
           window.sessionStorage.setItem('jwt', token)
           userStore.pullUser()
           userStore.loadMyProfile()
         } else {
+          console.log('no token');
           window.sessionStorage.removeItem('jwt')
           sessionStorage.clear()
         }
@@ -38,10 +40,12 @@ export class AppStore {
         }
       },
     )
-    autorun(() => {
-      if(this.appType === "") {
+
+    reaction(() => this.appType,
+      (appType) => {
+      if(appType === "") {
         console.log('appType in ""')
-        action(() => authStore.logout)
+        action(() => authStore.logout())
       }
     })
     reaction(() => this.appType,

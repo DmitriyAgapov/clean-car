@@ -26,6 +26,10 @@ const PricePage = ():JSX.Element => {
   const  currentPriceById = store.priceStore.currentPriceById;
   const  company = store.companyStore.getCompanyById(Number(params.id));
   console.log(currentPriceById.data);
+  React.useEffect(() => {
+    console.log(currentPriceById.data.tabs)
+    console.log(currentPriceById.loading)
+  }, [currentPriceById.loading])
   // console.log((!currentPriceById.loading && currentPriceById.data.tabs && currentPriceById.data.tabs.length > 0));
   // console.log('loading', !currentPriceById.loading);
   // console.log('data.tabs.length > 0)', currentPriceById.data.tabs?.length > 0);
@@ -89,7 +93,7 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-       <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>
+        {currentPriceById.data.tabs ? <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/> : null}
       </Panel>
     </Section>
   )

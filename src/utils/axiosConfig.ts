@@ -2,6 +2,8 @@ import axios, { AxiosHeaders } from "axios";
 import agent from "utils/agent";
 import paramsStore from "stores/paramStore";
 import { boolean, string } from "yup";
+import { runInAction } from "mobx";
+import appStore from "stores/appStore";
 
 axios.interceptors.request
 	.use(
@@ -30,9 +32,9 @@ axios.interceptors.response.use(
 				if(tokenRefresh) {
 			  agent.Auth.tokenRefresh(tokenRefresh).then((response: any) => {
 				console.log(response);
-				// runInAction(() => {
-				// 	appStore.token && localStorage.setItem("jwt", appStore.token)
-				// })
+				runInAction(() => {
+					appStore.token && localStorage.setItem("jwt", appStore.token)
+				})
 			}).finally(	() =>	config._retry = false)
 				}
 				return axios(config);
