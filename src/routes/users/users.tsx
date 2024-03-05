@@ -11,7 +11,6 @@ import { User } from 'stores/usersStore'
 import { UserTypeEnum } from 'stores/userStore'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import {  useUsersAll } from "utils/fetchers";
 
 const UsersPage = () => {
   const store = useStore()
@@ -20,7 +19,7 @@ const UsersPage = () => {
   // const {data}:any = useLoaderData();
 
   const { data, errors, loading, users } = store.usersStore.allUsersList
-  console.log({ data, errors, loading, users });
+
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -55,7 +54,7 @@ const UsersPage = () => {
         background={PanelColor.glass}
         filter={true}
         search={true}
-        ar={[{label: 'Статус', name: 'is_active'},{label: 'ФИО', name: 'employee__first_name'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city'}]}
+        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee__first_name'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city'}]}
         // @ts-ignore
         data={data?.results?.map((item: { company: Company; group: number; employee: User }) => {
           // console.log(item.company.company_type === "Компания-Заказчик");

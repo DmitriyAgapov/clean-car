@@ -82,7 +82,7 @@ export class UsersStore {
     if(appStore.appType === "admin") {
       try {
         const { data } = yield agent.Users.getAllUsers(paramsStore.qParams)
-
+        // console.log(data);
         this.users = data.results
         this.usersData = data
         this.users.forEach((el: any) => {
@@ -97,7 +97,7 @@ export class UsersStore {
       }
     } else {
       try {
-        console.log(paramsStore.qParams);
+        // console.log(paramsStore.qParams);
         const { data } = yield agent.Users.getCompanyUsers(userStore.myProfileData.company.id, paramsStore.qParams)
 
         this.usersData = data
@@ -184,12 +184,12 @@ export class UsersStore {
     // @ts-ignore
     this.companyUsersSelected.set(id, data)
   }
-  async getUsers(company_id: any) {
-    const {data} = await agent.Account.getCompanyUsers(Number(company_id))
+  getUsers = flow(function *(this: UsersStore, company_id: any) {
+    const {data, status} = yield agent.Account.getCompanyUsers(Number(company_id))
     runInAction(() => this.companyUsers = data.results)
     action(() => this.companyUsers = data.results)
-    return await data.results
-  }
+    return data.results
+  })
   get currentCompanyUsers() {
     return this.companyUsers
   }

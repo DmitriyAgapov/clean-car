@@ -12,7 +12,7 @@ import { useStore } from 'stores/store'
 import CreateInput from 'components/common/ui/CreateInput/CreateInput'
 import { useNavigate } from 'react-router-dom'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
-import { tires } from "utils/utils";
+import { tires, translite } from "utils/utils";
 import { CAR_RADIUS } from 'stores/priceStore'
 import { ScrollArea } from '@mantine/core'
 
@@ -579,8 +579,9 @@ export const TabsVariantPrice = ({
         result.push({ label: key, data: resultInner })
     })
     return result.map((item: any) => {
+
         return (
-            <div className={'col-span-full border-gray-4/70 border-b pb-4'}>
+            <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label)}>
               <Heading
                 text={item.label}
                 variant={HeadingVariant.h6}
@@ -676,104 +677,108 @@ export const TabsVariantPrice = ({
         })
         result.push({ label: key, data: resultInner })
       })
-      return result.map((item: any) => (
-        <div className={'col-span-full border-gray-4/70 border-b pb-4'}>
-          <Heading text={item.label} variant={HeadingVariant.h6} className={'text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70'}/>
-          {item.data.map((item: any) => {
-            return (
-                <div>
-                    <Heading
-                        text={item.label}
-                        variant={HeadingVariant.h6}
-                        className={'text-xs capitalize  !mb-0 py-2  px-6 sticky top-0 z-10 bg-[#090909]'}
-                    />
-                    <TableWithSortNewPure
-                        edit={edit}
-                        total={item.data.length}
-                        variant={PanelVariant.default}
-                        search={false}
-                        background={PanelColor.default}
-                        className={'col-span-full table-groups'}
-                        filter={false}
-                        data={item.data.map(
-                            (it: any) =>
-                                ({
-                                    [it.label]: it.label ? it.label : '-',
-                                    r14:
-                                        it.data.filter((i: any) => i.label == 'R14').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R14')[0].data
-                                            : '-',
-                                    r15:
-                                        it.data.filter((i: any) => i.label == 'R15').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R15')[0].data
-                                            : '-',
-                                    r16:
-                                        it.data.filter((i: any) => i.label == 'R16').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R16')[0].data
-                                            : '-',
-                                    r17:
-                                        it.data.filter((i: any) => i.label == 'R17').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R17')[0].data
-                                            : '-',
-                                    r18:
-                                        it.data.filter((i: any) => i.label == 'R18').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R18')[0].data
-                                            : '-',
-                                    r19:
-                                        it.data.filter((i: any) => i.label == 'R19').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R19')[0].data
-                                            : '-',
-                                    r20:
-                                        it.data.filter((i: any) => i.label == 'R20').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R20')[0].data
-                                            : '-',
-                                    r2123:
-                                        it.data.filter((i: any) => i.label == 'R21-23').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R21-23')[0].data
-                                            : '-',
-                                    r15C:
-                                        it.data.filter((i: any) => i.label == 'R15C').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R15C')[0].data
-                                            : '-',
-                                    r16C:
-                                        it.data.filter((i: any) => i.label == 'R16C').length > 0
-                                            ? it.data.filter((i: any) => i.label == 'R16C')[0].data
-                                            : '-',
-                                }) as any,
-                        )}
-                        // data={item.data.map((it: any) => {
-                        //   const ad = it.data.map((i: any) => ({
-                        //     [i.label]: i.data
-                        //   }))
-                        //   ad.push({service: item.label})
-                        //   console.log(ad);
-                        //   return ad
-                        //   })}
+      return result.map((item: any, index: number) => {
 
-                        initFilterParams={[
-                            { label: 'Статус', value: 'status' },
-                            { label: 'Город', value: 'city' },
-                        ]}
-                        state={false}
-                        ar={[
-                            { label: 'Тип услуги', name: 'service_option' },
-                            { label: 'R14', name: 'R14}' },
-                            { label: 'R15', name: 'R15' },
-                            { label: 'R16', name: 'R16' },
-                            { label: 'R17', name: 'R17' },
-                            { label: 'R18', name: 'R18' },
-                            { label: 'R19', name: 'R19' },
-                            { label: 'R20', name: 'R20' },
-                            { label: 'R21-23', name: 'R21-23' },
-                            { label: 'R15C', name: 'R15C' },
-                            { label: 'R16C', name: 'R16C' },
-                        ]}
-                    />
+        return (
+          <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
+            <Heading text={item.label} variant={HeadingVariant.h6} className={'text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70'}/>
+            {item.data.map((item: any, index: number) => {
+
+              return (
+                <div key={translite(item.label ?? `null_${index}`)}>
+                  <Heading
+                    text={item.label}
+                    variant={HeadingVariant.h6}
+                    className={'text-xs capitalize  !mb-0 py-2  px-6 sticky top-0 z-10 bg-[#090909]'}
+                  />
+                  <TableWithSortNewPure
+                    edit={edit}
+                    total={item.data.length}
+                    variant={PanelVariant.default}
+                    search={false}
+                    background={PanelColor.default}
+                    className={'col-span-full table-groups'}
+                    filter={false}
+                    data={item.data.map(
+                      (it: any) =>
+                        ({
+                          [it.label]: it.label ? it.label : '-',
+                          r14:
+                            it.data.filter((i: any) => i.label == 'R14').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R14')[0].data
+                              : '-',
+                          r15:
+                            it.data.filter((i: any) => i.label == 'R15').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R15')[0].data
+                              : '-',
+                          r16:
+                            it.data.filter((i: any) => i.label == 'R16').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R16')[0].data
+                              : '-',
+                          r17:
+                            it.data.filter((i: any) => i.label == 'R17').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R17')[0].data
+                              : '-',
+                          r18:
+                            it.data.filter((i: any) => i.label == 'R18').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R18')[0].data
+                              : '-',
+                          r19:
+                            it.data.filter((i: any) => i.label == 'R19').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R19')[0].data
+                              : '-',
+                          r20:
+                            it.data.filter((i: any) => i.label == 'R20').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R20')[0].data
+                              : '-',
+                          r2123:
+                            it.data.filter((i: any) => i.label == 'R21-23').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R21-23')[0].data
+                              : '-',
+                          r15C:
+                            it.data.filter((i: any) => i.label == 'R15C').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R15C')[0].data
+                              : '-',
+                          r16C:
+                            it.data.filter((i: any) => i.label == 'R16C').length > 0
+                              ? it.data.filter((i: any) => i.label == 'R16C')[0].data
+                              : '-',
+                        }) as any,
+                    )}
+                    // data={item.data.map((it: any) => {
+                    //   const ad = it.data.map((i: any) => ({
+                    //     [i.label]: i.data
+                    //   }))
+                    //   ad.push({service: item.label})
+                    //   console.log(ad);
+                    //   return ad
+                    //   })}
+
+                    initFilterParams={[
+                      { label: 'Статус', value: 'status' },
+                      { label: 'Город', value: 'city' },
+                    ]}
+                    state={false}
+                    ar={[
+                      { label: 'Тип услуги', name: 'service_option' },
+                      { label: 'R14', name: 'R14}' },
+                      { label: 'R15', name: 'R15' },
+                      { label: 'R16', name: 'R16' },
+                      { label: 'R17', name: 'R17' },
+                      { label: 'R18', name: 'R18' },
+                      { label: 'R19', name: 'R19' },
+                      { label: 'R20', name: 'R20' },
+                      { label: 'R21-23', name: 'R21-23' },
+                      { label: 'R15C', name: 'R15C' },
+                      { label: 'R16C', name: 'R16C' },
+                    ]}
+                  />
                 </div>
-            )})}
+              )})}
 
-        </div>
-      ))
+          </div>
+        )
+      })
     }, [ar, edit])
 
 

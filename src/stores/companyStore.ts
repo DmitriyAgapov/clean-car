@@ -114,9 +114,11 @@ export class CompanyStore {
         // })
         reaction(() => this.filials,
           (filials) => {
-            if(filials.length === 0 && authStore.userIsLoggedIn) {
+            if(filials.length === 0 && authStore.userIsLoggedIn && !this.loadingState.filials) {
                 console.log('get filials')
                 this.getAllFilials()
+                this.loadingState.filials = true
+                console.log(this.loadingState);
             }
           }
         )
@@ -362,7 +364,6 @@ export class CompanyStore {
         } finally {
             this.loadingCompanies = false
         }
-        return this.filials
     })
     loadAllFilials  = flow(function* (this: CompanyStore, params: PaginationProps) {
         this.loadingCompanies = true

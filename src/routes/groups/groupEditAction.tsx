@@ -67,7 +67,7 @@ export default function GroupPageEditAction(props: any) {
       ></Panel>
       <Panel
         variant={PanelVariant.textPadding}
-        state={store.permissionStore.loadingPermissions}
+        state={false}
         bodyClassName={'!pt-0 !px-0'}
         className={'grid grid-rows-[auto_1fr_auto]'}
         header={<label className={'account-form__input flex-1'} htmlFor='cleanm'>
@@ -87,6 +87,7 @@ export default function GroupPageEditAction(props: any) {
                       action={async () => {
                         store.permissionStore.deletePermissionStore(changes.id).then(() => {
                           store.appStore.closeModal()
+                          revalidator.revalidate()
                           navigate('/account/groups', { replace: false })
                         })
 

@@ -1,6 +1,8 @@
 import { autorun, makeAutoObservable, reaction } from "mobx";
 import { CompanyStore } from "stores/companyStore";
 import { makePersistable } from "mobx-persist-store";
+import { PaginationProps } from "utils/agent";
+import { PaginationParams } from "@mantine/hooks/lib/use-pagination/use-pagination";
 
 export type ParamsProps = {
 	page: string | null | number
@@ -8,6 +10,7 @@ export type ParamsProps = {
 	ordering: string | null
 	searchString?: string | null
 	name?: string | null
+	q?: string
 }
 
 export class ParamStore {
@@ -17,23 +20,20 @@ export class ParamStore {
 		autorun(() => console.log(this.params))
 	}
 
-	params:ParamsProps = {
+	params:PaginationProps = {
 		page: 1,
 		page_size: 10,
-		ordering: '',
-		searchString: '',
+		ordering: null,
+		searchString: null,
+		q:null
 	}
 	get qParams() {
+		console.log(this.params);
 		// console.log(this.url);
 		// console.log('qParams', this.searchParams.get('page'));
 
 		// console.log('qParams',sparams.get('page'))
-		return ({
-			page: this.params.page && this.params.page !== 0 ? this.params.page : 1,
-			page_size:  10,
-			ordering: this.params.ordering ?? null,
-			q: this.params.searchString,
-		})
+		return this.params
 	}
 	// incrementPage() {
 	// 	this.params.page++
@@ -42,13 +42,14 @@ export class ParamStore {
 	// 	this.params.page--
 	// }
 
-	setParams(params:ParamsProps) {
-		// console.log('set', params);
+	setParams(params:any) {
 		this.params = {
 			page: params.page,
 			page_size: params.page_size,
 			ordering: params.ordering,
-			searchString: params.searchString || params.name
+			name: params.name,
+			searchString: params.searchString,
+			q: params.q
 		}
 	}
 	get currentParams() {

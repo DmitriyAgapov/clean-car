@@ -4,20 +4,21 @@ import { dateTransform, dateTransformShort } from "utils/utils";
 import companyStore from "stores/companyStore";
 import { PaginationProps } from "utils/agent";
 import userStore from "stores/userStore";
+import paramsStore from "stores/paramStore";
+import { paginationParams } from "utils/fetchers";
 
 export const bidsLoader = async ({ request, params }:any) => {
-	const url = new URL(request.url)
-	const searchParams = url.searchParams
-	const paramsPage = url.searchParams.get('page')
-	const paramsPageSize = url.searchParams.get('page_size')
-	const paramsOrdering = url.searchParams.get('ordering')
-	const paramsSearchString = url.searchParams.get('searchString')
-	// console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
-	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
-	await bidsStore.loadAllBids({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, q: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
+	// const url = new URL(request.url)
+	// const searchParams = url.searchParams
+	// const paramsPage = url.searchParams.get('page')
+	// const paramsPageSize = url.searchParams.get('page_size')
+	// const paramsOrdering = url.searchParams.get('ordering')
+	// const paramsSearchString = url.searchParams.get('searchString')
+	// // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
+	// const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
+	await bidsStore.loadAllBids(paramsStore.qParams)
 	// await companyStore.loadCompanies()
 
-	const data = bidsStore.bidsAll.data
 	return null
 	// return defer({
 	//   data: {

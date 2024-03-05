@@ -48,11 +48,13 @@ export class UserStore {
     reaction(() => this.currentUser,
        (currentUser) => {
          console.log(authStore.userIsLoggedIn);
-        if(authStore.userIsLoggedIn && currentUser.id === 0 && appStore.token !== '') {
-          this.pullUser()
-          this.loadMyProfile()
-        }
-      }
+         if (authStore.userIsLoggedIn) {
+           if (currentUser.id === 0 && appStore.token !== '') {
+             this.pullUser()
+             this.loadMyProfile()
+           }
+         }
+       }
     )
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
@@ -184,11 +186,13 @@ export class UserStore {
   }
 
   loadUserPermissions() {
-    if(this.isAdmin) {
-      this.setCurrentPermissions(this.myProfileData.permissions.permissions.map((el: any) => [String(el.name), el]));
-      appStore.setAppType(UserTypeEnum.admin)
-    } else if (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings.length > 0) {
-      this.setCurrentPermissions(this.myProfileData.user.account_bindings[0].group.permissions.map((el: any) => [label(el.name), el]));
+    if(authStore.userIsLoggedIn) {
+      if (this.isAdmin) {
+        this.setCurrentPermissions(this.myProfileData.permissions.permissions.map((el: any) => [String(el.name), el]));
+        appStore.setAppType(UserTypeEnum.admin)
+      } else if (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings.length > 0) {
+        this.setCurrentPermissions(this.myProfileData.user.account_bindings[0].group.permissions.map((el: any) => [label(el.name), el]));
+      }
     }
   }
 

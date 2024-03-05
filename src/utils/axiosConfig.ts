@@ -2,13 +2,16 @@ import axios, { AxiosHeaders } from "axios";
 import agent from "utils/agent";
 import paramsStore from "stores/paramStore";
 import { boolean, string } from "yup";
-import { runInAction } from "mobx";
+import { action, runInAction } from "mobx";
 import appStore from "stores/appStore";
 
 axios.interceptors.request
 	.use(
-		async (config, ) => {
-			// config.params && paramsStore.setParams(config.params)
+		async (config,  ) => {
+			// if(config.params) {
+			// 	console.log('config.params', config);
+			// 	paramsStore.setParams(config.params)
+			// }
 			if (window.sessionStorage.getItem('jwt')) {
 				// @ts-ignore
 				config.headers = {

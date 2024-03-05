@@ -112,10 +112,10 @@ export class PermissionStore {
   createPermission = flow(function*(this: PermissionStore, data: any) {
     this.loadingPermissions = true
     try {
-      if(userStore.isAdmin) {
-         agent.PermissionsAdmin.createAdminPermission(data)
-      }
-      if(!userStore.isAdmin && userStore.myProfileData.company.id) {
+      // if(userStore.isAdmin) {
+      //    agent.PermissionsAdmin.createAdminPermission(data)
+      // }
+      if(userStore.myProfileData.company.id) {
          agent.Permissions.createPermission(userStore.myProfileData.company.id, data)
       }
 
@@ -158,7 +158,7 @@ export class PermissionStore {
   setPermissionStore = flow(function *(this: PermissionStore, id: number, data: any) {
     this.loadingPermissions = true
     let company_id = userStore.myProfileData.company.id;
-    if (appStore.appType !== "admin" && company_id) {
+    if (company_id) {
       try {
         const response = yield agent.Permissions.putUpdatePermissions(company_id, data.id, data)
       if (response.status === 200) {
@@ -173,16 +173,17 @@ export class PermissionStore {
       finally {
         this.loadingPermissions = false
       }
-    } else {
-      console.log('is admin');
-      this.setPermissionStoreAdmin(id, data)
     }
+    // else {
+    //   console.log('is admin');
+    //   this.setPermissionStoreAdmin(id, data)
+    // }
     this.loadingPermissions = false
   })
   deletePermissionStore = flow(function *(this: PermissionStore, id: number) {
     this.loadingPermissions = true
     let company_id = userStore.myProfileData.company.id;
-    if (appStore.appType !== 'admin' && company_id) {
+    if (company_id) {
       try {
         const response = yield agent.Permissions.deletePermission(company_id, id)
         if (response.status === 200) {
@@ -196,9 +197,10 @@ export class PermissionStore {
       finally {
         this.loadingPermissions = false
       }
-    } else {
-      yield this.deletePermissionStoreAdmin(id)
     }
+    // else {
+    //   yield this.deletePermissionStoreAdmin(id)
+    // }
     this.loadingPermissions = false
   })
   getPermissionsFlow = flow(function*(this: PermissionStore) {

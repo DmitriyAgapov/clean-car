@@ -24,7 +24,7 @@ const PricesPage = () => {
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname !== `/account/price`) return <Outlet />
 
-	if(store.appStore.appType !== "performer") {
+	if(store.appStore.appType === "admin") {
 		return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}

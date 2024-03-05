@@ -8,6 +8,8 @@ import companyStore from "stores/companyStore";
 import { CurrentBidProps } from "stores/types/bidTypes";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
+import paramsStore from "stores/paramStore";
+import authStore from "stores/authStore";
 export enum BidsStatus  {
 	'Новая' = 'Новая',
 	'Отменена' = 'Отменена',
@@ -127,6 +129,7 @@ export class BidsStore {
         photosPreview: null,
         photosPreviewAr: [],
     }
+    refreshBids: boolean = false
     error = ''
     bidPageData = new Map([])
     textData = {
@@ -463,15 +466,17 @@ export class BidsStore {
             () => this.formResult.company,
             (customer, oldCustomer) => {
                 console.log(customer);
-                if (customer !== 0 && customer !== null) {
-                    runInAction(async () => {
-                        await usersStore.getUsers(customer)
-                        await carStore.getCarsByCompony(customer)
-                        await companyStore.getCustomerCompanyData(customer)
-                    })
-                }
-                if(customer === 0) {
-                    this.formResult = observable.object(initialResult)
+                if(authStore.userIsLoggedIn) {
+                    if (customer !== 0 && customer !== null) {
+                        runInAction(async () => {
+                            await usersStore.getUsers(customer)
+                            await carStore.getCarsByCompony(customer)
+                            await companyStore.getCustomerCompanyData(customer)
+                        })
+                    }
+                    if (customer === 0) {
+                        this.formResult = observable.object(initialResult)
+                    }
                 }
             },
         )
@@ -605,6 +610,7 @@ export class BidsStore {
             // this.photo.photosPreviewAr = []
     }
     async loadAllBids(params: PaginationProps) {
+        console.log(paramsStore.qParams);
         try {
             action(() => (this.loading = true))
             if(appStore.appType === "admin") {
@@ -685,6 +691,7 @@ export class BidsStore {
             ...value,
         }
     }
+
     get bidsAll() {
         return {
             loading: this.loading,

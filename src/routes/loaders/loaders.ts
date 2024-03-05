@@ -10,10 +10,19 @@ import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
 import paramsStore from "stores/paramStore";
 import priceStore from "stores/priceStore";
+import bidsStore from "stores/bidsStrore";
 
 
 
-export const authUser = async () => {
+export const authUser = async ({ request, params }:any) => {
+    const url = new URL(request.url)
+    const searchParams = url.searchParams
+    const paramsPage = url.searchParams.get('page')
+    const paramsPageSize = url.searchParams.get('page_size')
+    const paramsOrdering = url.searchParams.get('ordering')
+    const paramsSearchString = url.searchParams.get('searchString')
+    paramsStore.setParams({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering })
+    // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
     if (!appStore.token) {
         return redirect('/')
     } else {
@@ -217,6 +226,8 @@ export const priceLoader = async (props: any) => {
     console.log(props);
     if(props.params.id) {
         await priceStore.getCurrentPrice(props);
+    } else {
+        await priceStore.getCurrentPrice(props);
     }
     // console.log('loader', !userStore.isAdmin);
     // async function fillData() {
@@ -349,15 +360,17 @@ export const filialLoader = async ({ params: { id, company_type, action, company
 
     return { id: id, company_id: company_id, type: company_type, parent: parent, data: { ...filial } }
 }
-export const usersLoader =  async (props: any) => {
-    const searchParams = new URL(props.request.url).searchParams
-    paramsStore.setParams({
-        page: Number(searchParams.get('page')),
-        ordering: searchParams.get('ordering'),
-        name: searchParams.get('name'),
-        page_size: Number(searchParams.get('page_size')),
-        searchString: searchParams.get('searchString')
-    })
+export const usersLoader = async ({ request, params }:any) => {
+    // const url = new URL(request.url)
+    // const searchParams = url.searchParams
+    // const paramsPage = url.searchParams.get('page')
+    // const paramsPageSize = url.searchParams.get('page_size')
+    // const paramsOrdering = url.searchParams.get('ordering')
+    // const paramsSearchString = url.searchParams.get('searchString')
+    // paramsStore.setParams({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, q: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
+    // // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
+    // const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
+    // await bidsStore.loadAllBids(paramsStore.qParams)
     usersStore.getAllUser()
     return null
 }

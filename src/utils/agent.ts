@@ -19,6 +19,7 @@ export type PaginationProps = {
   page?: string | number | URLSearchParams | null,
   page_size?: number | string | number | URLSearchParams | null
   q?: string | number | URLSearchParams  | null
+  searchString?: string | number | URLSearchParams  | null
 }
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
 type CreateFilialPerformerFormData = {
