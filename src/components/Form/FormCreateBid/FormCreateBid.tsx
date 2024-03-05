@@ -162,7 +162,7 @@ const Step1Inputs = observer(({step1}:any) => {
             store.usersStore.currentCompanyUsers.length === 0
           }
           data={store.usersStore.currentCompanyUsers.map((c: any) => ({
-              label: c.employee.first_name,
+              label: c.employee.first_name + " " + c.employee.last_name,
               value: String(c.employee.id),
           }))}
         />

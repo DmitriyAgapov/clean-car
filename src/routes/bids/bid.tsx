@@ -12,6 +12,7 @@ import Status from 'components/common/ui/Status/Status'
 import { PermissionNames } from 'stores/permissionStore'
 import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import BidActions, { BidAdminActions } from "routes/bids/BidActions/BidActions";
+import appStore from "stores/appStore";
 
 const BidPage = () => {
 	const store = useStore()
@@ -51,7 +52,7 @@ const BidPage = () => {
 						<Button text={<><SvgBackArrow />Назад к списку заявок{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
 
 						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
-						{/* <BidAdminActions/> */}
+						{process.env.NODE_ENV === "development" && appStore.appType === "admin" && <BidAdminActions/>}
 					</div>
 					{/* {store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<> */}
 					{/* 	<Button text={textData.loadExcel} action={() => navigate('create')} trimText={true} className={'inline-flex'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} /> */}

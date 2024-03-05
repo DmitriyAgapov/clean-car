@@ -475,7 +475,14 @@ export class BidsStore {
                 }
             },
         )
-
+        reaction(() => this.formResult.conductor,
+            async (conductor)=> {
+                if(conductor !== 0 || conductor !== null) {
+                    //@ts-ignore
+                    action(() => this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone)
+                }
+            }
+        )
         reaction(
             () => this.formResult.service_subtype,
             async (subtype) => {

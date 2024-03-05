@@ -222,6 +222,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     />
                     <TextInput   label={'E-mail'} {...form.getInputProps('email')} />
                     <Select label={'Тип'}
+	                    allowDeselect={false}
 	                    onOptionSubmit={(e) => {
 
 		                    e === "admin" && store.permissionStore.loadCompanyPermissionsResults(1)

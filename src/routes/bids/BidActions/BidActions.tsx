@@ -81,11 +81,11 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
             case BidsStatus["Разбор"]:
               return (
                 <>
-                  <Button text={"Отказать"}
+                  <Button text={"Отменить"}
                     variant={ButtonVariant["accent-outline"]}
                     size={ButtonSizeType.sm}
                     action={() => handleChangeBidStatus("Отменена" as BidsStatus)} />
-                  <Button text={"Принять работу"}
+                  <Button text={"Завершить"}
                     variant={ButtonVariant.accent}
                     size={ButtonSizeType.sm}
                     action={() => handleChangeBidStatus("Завершена" as BidsStatus)} />

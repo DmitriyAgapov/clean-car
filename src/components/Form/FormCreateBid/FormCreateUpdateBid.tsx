@@ -256,6 +256,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       formData.setFieldValue('phone', "")
       // formikReset.resetForm()
     } else  {
+      console.log(store.bidsStore.formResultsAll);
       formData.values.car = String(store.bidsStore.formResultsAll.car);
       formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
     }
@@ -268,20 +269,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           footerClassName={'px-8 pb-8 pt-2'}
           variant={PanelVariant.default}
           actionBack={
-              <Button
-              type={'button'}
-              text={'Чек'}
-              action={(e) => {
-          			e.preventDefault()
-                console.log(formData.errors)
-                console.log(formData.values)
-                formData.validate()
-                console.log(formData.isValid())
-
-          		}}
-              className={'float-right'}
-              variant={ButtonVariant['accent-outline']}
-          />
+            <Button
+            text={'Назад'}
+          action={() => setStep((prevState: number) => prevState - 1)}
+          className={'lg:mb-0 mr-auto'}
+          variant={ButtonVariant['accent-outline']}
+        />
           }
           actionCancel={
          <Button type={'button'}
@@ -309,7 +302,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           <form onSubmit={formData.onSubmit((props) => console.log('form', props))}
             onReset={formData.onReset}
             style={{ display: 'contents' }}>
-            <Progress total={3} current={step} />
+            <Progress total={formData.values.service_type === "1" ? 4 : 5} current={step} />
             <PanelForForms
               state={step !== 1}
               animate={animate}
@@ -373,6 +366,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
               <InputBase
                 {...formData.getInputProps('phone')}
+                defaultValue={formData.values.phone !== "" ? formData.values.phone : store.bidsStore.formResult.phone}
                 label={step1.fields[3].label} component={IMaskInput} mask='+7 000 000 0000' placeholder='+7 000 000 0000'
               />
               <Select

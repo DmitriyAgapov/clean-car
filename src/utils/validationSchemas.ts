@@ -11,7 +11,7 @@ export const CreateUserSchema = Yup.object().shape({
 		if(type[0] !== "admin") {
 			return schema.required('Обязательное поле')
 		} else {
-			return schema
+			return schema.required('Обязательное поле')
 		}
 	}),
 	// company_id: Yup.number().when('').required('Обязательное поле'),
