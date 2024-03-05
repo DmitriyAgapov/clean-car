@@ -25,7 +25,7 @@ const PriceEditPage = ():JSX.Element => {
   const location = useLocation()
   const params = useParams()
   const store = useStore()
-  const { data, dataTable }: any = useLoaderData()
+  const  {data} = store.priceStore.currentPriceById;
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
   const revalidator = useRevalidator()

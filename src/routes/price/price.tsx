@@ -1,4 +1,4 @@
-import React, { JSX } from 'react'
+import React, { JSX, useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -11,16 +11,25 @@ import {  dateTransformShort } from "utils/utils";
 import { CompanyType } from 'stores/companyStore'
 import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
+import { observer } from "mobx-react-lite";
+import priceStore from "stores/priceStore";
 
 const PricePage = ():JSX.Element => {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
   const store = useStore()
-  const { data, dataTable }: any = useLoaderData()
+  // const { data, dataTable }: any = useLoaderData()
   const  textData  : any = store.priceStore.TextData
-  const  company = store.companyStore.getCompanyById(Number(params.id))
 
+
+  const  currentPriceById = store.priceStore.currentPriceById;
+  const  company = store.companyStore.getCompanyById(Number(params.id));
+  console.log(currentPriceById.data);
+  // console.log((!currentPriceById.loading && currentPriceById.data.tabs && currentPriceById.data.tabs.length > 0));
+  // console.log('loading', !currentPriceById.loading);
+  // console.log('data.tabs.length > 0)', currentPriceById.data.tabs?.length > 0);
+  // console.log('data.tabs', currentPriceById.data.tabs);
   if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -36,6 +45,7 @@ const PricePage = ():JSX.Element => {
       </Panel>
 
       <Panel
+        state={false}
         className={'col-span-full grid grid-rows-[auto_1fr] px-5 py-8 !gap-10 '}
         variant={PanelVariant.withGapOnly}
         background={PanelColor.glass}
@@ -79,9 +89,9 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-        <Tabs data={data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>
+       <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>
       </Panel>
     </Section>
   )
 }
-export default PricePage
+export default observer(PricePage)

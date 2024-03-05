@@ -1,10 +1,12 @@
-import { makeAutoObservable, observable, reaction, toJS, values } from "mobx";
+import { action, makeAutoObservable, observable, reaction, runInAction, toJS, values } from "mobx";
 import { makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import paramsStore from 'stores/paramStore'
 import { notifications } from "@mantine/notifications";
 import { SvgClose } from "components/common/ui/Icon";
 import React from "react";
+import userStore from "stores/userStore";
+import appStore from "stores/appStore";
 
 export enum CAR_TP {'легковой', 'внедорожный', 'коммерческий'}
 export enum CAR_RADIUS {
@@ -74,13 +76,14 @@ export class PriceStore {
         //       }
         //   })
     }
-
+    currentPrice: any = {}
     prices: { count: number; next: string | null; previous: string | null; results: any[] } = observable.object({
         next: null,
         count: 0,
         previous: null,
         results: [],
     })
+    loading: boolean = false
     textData = {
         path: 'price',
         title: 'Прайс-листы',
@@ -138,6 +141,114 @@ export class PriceStore {
     }
     clearPriceOnChange() {
         this.priceOnChange.clear()
+    }
+    get currentPriceById() {
+        // console.log({
+        //     data: this.currentPrice,
+        //     loading: this.loading
+        // });
+        return ({
+            data: this.currentPrice,
+            loading: this.loading
+        })
+    }
+    async getCurrentPrice(props:any) {
+        console.log(props.params.id);
+        action(() => this.loading = true);
+        console.log('statePriceStart', this.loading);
+        const mapEd = (ar:[], compareField:string) => {
+            let newMap = new Map([])
+            if(ar.length > 0) {
+                ar.forEach((item: any) => {
+                    newMap.set(item[compareField].name, ar.filter((i:any) => i[compareField].name == item[compareField].name))
+                })}
+            let result:any[] = []
+
+            newMap.forEach((value:any, key) => {
+                return result.push(Object.assign({service_option: key}, ...value.map((i:any, index:number) => ({[`service_subtype_${index}`]: i.amount}))))
+            })
+            return result
+        }
+
+        let data: any[] | any = []
+        console.log('is not admin', !userStore.isAdmin, 'paramsId', props.params.id);
+        if (!userStore.isAdmin) {
+            console.log('not admin');
+            const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
+            const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
+            const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
+
+            if (props.params.id) {
+                console.log('есть ID');
+                runInAction(() => {
+                    this.currentPrice = {
+                    tabs: [{
+                        label: 'Мойка', data: dataWash,
+                        dataTable: dataWash
+                    }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }]
+                }
+                this.loading = false
+            })
+                console.log('statePriceFinish', this.loading);
+
+            } else {
+                data =  [dataWash, dataTire, dataEvac]
+                console.log(data);
+                this.currentPrice = data
+                this.loading = false
+                console.log('statePriceFinish', this.loading);
+            }
+
+        } else {
+            console.log('admin');
+
+            if (props.params.id) {
+                console.log('есть ID admin');
+                const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
+                const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
+                const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
+
+                runInAction(() => {
+                    this.currentPrice = {
+                        tabs: [{
+                            label: 'Мойка', data: dataWash,
+                            dataTable: dataWash
+                        }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }]
+                    }
+                    this.loading = false
+                })
+            } else {
+                const { data: dataResults, status } = await agent.Price.getAllPrice(paramsStore.qParams as PaginationProps)
+                if (status === 200) {
+                    console.log(dataResults);
+                    data = {
+                        ...dataResults, results: dataResults.results.map((i: any) => {
+                            let obj: any;
+                            for (const key in i) {
+                                if (i[key] === null) {
+                                    obj = {
+                                        ...obj,
+                                        [key]: '-'
+                                    }
+                                } else {
+                                    obj = {
+                                        ...obj,
+                                        [key]: i[key]
+                                    }
+                                }
+                            }
+                            return obj;
+                        })
+                    }
+                    console.log(data);
+                    this.currentPrice = data
+                    console.log(this.currentPrice);
+                    this.loading = false
+                    console.log('statePriceFinish', this.loading);
+                }
+            }
+
+        }
     }
     async updatePriceWash() {
         const values = this.parseEntries().wash

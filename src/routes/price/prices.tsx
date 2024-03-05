@@ -17,9 +17,10 @@ const PricesPage = () => {
 	// 	if(store.appStore.appType === "performer") navigate(`/account/price/${store.userStore.myProfileData.company.id}`, {replace: true})
 	// }, [store.appStore.appType]);
 	const location = useLocation()
-	const { data }:any = useLoaderData()
+	// const { data }:any = useLoaderData()
 	const { textData }:any = store.priceStore.allPrices
-
+	const { data, loading }:any = store.priceStore.currentPriceById
+	console.log(data, loading);
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname !== `/account/price`) return <Outlet />
 
