@@ -96,7 +96,7 @@ export class CompanyStore {
         })
         makePersistable(this, {
             name: 'companyStore',
-            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers'],
+            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers', 'loadingState'],
             storage: window.localStorage,
 
         }, { fireImmediately: true })
@@ -125,8 +125,9 @@ export class CompanyStore {
             () => this.companies,
             (companies: any) => {
                 if(authStore.userIsLoggedIn) {
-                if(companies.length === 0) {
+                if(!this.loadingState.companies && companies.length === 0) {
                     this.getAllCompanies()
+                    runInAction(() => this.loadingState.companies = true)
                 }
                 if (companies.length > 0) {
                     this.filials.length = 0
@@ -137,16 +138,19 @@ export class CompanyStore {
             }
             }
         )
-        reaction(() => this.companies.length,
-            (length: any) => {
-                console.log('no company');
-                if(length === 0) {
-                    this.getAllCompanies()
-                }
-            },
-        )
+        // reaction(() => this.companies.length,
+        //     (length: any) => {
+        //         console.log('no company');
+        //         if(length === 0) {
+        //             this.getAllCompanies()
+        //         }
+        //     },
+        // )
     }
-
+    loadingState = {
+        companies: false,
+        filials: false,
+    }
     canLoad = false
     companies: IObservableArray<Companies> = [] as any
     companiesMap: IObservableArray<Companies> = [] as any

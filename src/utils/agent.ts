@@ -51,7 +51,7 @@ const axiosSuggest = axios.create({
 )
 
 //Константа для запросов
-export const API_ROOT = 'https://dev.server.clean-car.net/api'
+export const API_ROOT = process.env.REACT_APP_PUBLIC_API
 
 
 //Объект запросов

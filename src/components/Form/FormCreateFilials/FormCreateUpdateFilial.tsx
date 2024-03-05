@@ -132,7 +132,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 city:  Number(values.city),
                 is_active: true,
                 name: values.company_name,
-                performerprofile:  {
+                performerprofile: {
                     address: values.address,
                     lat: Number(values.lat),
                     lon: Number(values.lon),

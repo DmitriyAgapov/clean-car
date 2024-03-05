@@ -214,7 +214,10 @@ export const paginationParams = (urlData:string) => {
 }
 export const priceLoader = async (props: any) => {
     const paginationData = paginationParams(props.request.url as string)
-    await priceStore.getCurrentPrice(props);
+    console.log(props);
+    if(props.params.id) {
+        await priceStore.getCurrentPrice(props);
+    }
     // console.log('loader', !userStore.isAdmin);
     // async function fillData() {
     //     let data: any[] | any = []
