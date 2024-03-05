@@ -2,6 +2,7 @@ import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import styles from './Tabs.module.scss'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
 import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
+import { observer } from "mobx-react-lite";
 export enum TabsType {
   bid = 'bid',
   company = 'company',
@@ -133,4 +134,4 @@ Tabs.PanelPure = ({ children, state, name, className = " ", company_type, ...pro
 Tabs.TabHeaderContainer = ({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string }) => (
     <ul className={styles.containerHeader}>{children}</ul>
 )
-export default Tabs;
+export default observer(Tabs);
