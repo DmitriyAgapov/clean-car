@@ -124,6 +124,7 @@ export class CompanyStore {
         reaction(
             () => this.companies,
             (companies: any) => {
+                if(authStore.userIsLoggedIn) {
                 if(companies.length === 0) {
                     this.getAllCompanies()
                 }
@@ -133,7 +134,8 @@ export class CompanyStore {
                     // @ts-ignore
                     this.setFilials(filials)
                 }
-            },
+            }
+            }
         )
         reaction(() => this.companies.length,
             (length: any) => {

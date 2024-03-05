@@ -56,12 +56,14 @@ export class UserStore {
     )
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
-        if(permissions.id && permissions.permissions.length > 0) {
-          this.loadUserPermissions()
-        } else if(this.currentUser.id) {
-          // this.loadMyProfile()
+        if (authStore.userIsLoggedIn) {
+          if (permissions && permissions.id && permissions.permissions.length > 0) {
+            this.loadUserPermissions()
+          } else if (this.currentUser.id) {
+            // this.loadMyProfile()
+          }
         }
-    })
+      })
     reaction(() => this.myProfileData.company,
       (company) => {
         if(company && companyStore.companies.length === 0) {
