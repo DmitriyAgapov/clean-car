@@ -412,6 +412,7 @@ export const groupsIdLoader = async ({ params: { company_type, id } }: any) => {
     return null
 }
 export const profileLoader = async () => {
+    console.log('profileLoader');
     await userStore.loadMyProfile()
     return null
 }

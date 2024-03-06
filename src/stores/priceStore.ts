@@ -111,7 +111,6 @@ export class PriceStore {
     }
 
     parseEntries() {
-
         const result = (ar:any[]) => ar.reduce((acc, item) => {
             acc[item.id] = item.amount;
             return acc;
@@ -153,9 +152,7 @@ export class PriceStore {
         })
     }
     async getCurrentPrice(props:any) {
-        console.log(props.params.id);
         action(() => this.loading = true);
-        console.log('statePriceStart', this.loading);
         const mapEd = (ar:[], compareField:string) => {
             let newMap = new Map([])
             if(ar.length > 0) {
@@ -171,7 +168,6 @@ export class PriceStore {
         }
 
         let data: any[] | any = []
-        console.log('is not admin', !userStore.isAdmin, 'paramsId', props.params.id);
         if (!userStore.isAdmin) {
             console.log('not admin');
             const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
@@ -193,7 +189,7 @@ export class PriceStore {
 
             } else {
                 data =  [dataWash, dataTire, dataEvac]
-                console.log(data);
+
                 this.currentPrice = data
                 this.loading = false
                 console.log('statePriceFinish', this.loading);
@@ -220,7 +216,6 @@ export class PriceStore {
             } else {
                 const { data: dataResults, status } = await agent.Price.getAllPrice(paramsStore.qParams as PaginationProps)
                 if (status === 200) {
-                    console.log(dataResults);
                     data = {
                         ...dataResults, results: dataResults.results.map((i: any) => {
                             let obj: any;
@@ -240,9 +235,7 @@ export class PriceStore {
                             return obj;
                         })
                     }
-                    console.log(data);
                     this.currentPrice = data
-                    console.log(this.currentPrice);
                     this.loading = false
                     console.log('statePriceFinish', this.loading);
                 }
@@ -252,12 +245,12 @@ export class PriceStore {
     }
     async updatePriceWash() {
         const values = this.parseEntries().wash
-        console.log('va0', values);
+
         if(values)  {
             const {data, status}:any = await agent.Price.updatePriceWash(values.company_id, values.price_id, values.data)
             return {data, status}
         }
-        return {data: null, status: 400}
+        // return {data: null, status: 400}
     }
     async updatePriceTire() {
         const values = this.parseEntries().tire
@@ -266,7 +259,7 @@ export class PriceStore {
             return {data, status}
         }
 
-        return {data: null, status: 400}
+        // return {data: null, status: 400}
     }
     async updatePriceEvac() {
         const values = this.parseEntries().evac
@@ -274,7 +267,7 @@ export class PriceStore {
             const {data, status}:any = await agent.Price.updatePriceEvac(values.company_id, values.price_id, values.data)
             return {data, status}
         }
-        return {data: null, status: 400}
+        // return {data: null, status: 400}
     }
     async updatePrices() {
         return Promise.all([this.updatePriceWash(), this.updatePriceTire(), this.updatePriceEvac()])
@@ -285,38 +278,39 @@ export class PriceStore {
             console.log('success', r)
             r.forEach((r: any) => {
                 setTimeout(() => {
-                    if(r.status === 201) {
-                        notifications.show({
-                            id: 'car-created',
-                            withCloseButton: true,
-                            autoClose: 5000,
-                            title: "Прайс обновлен",
-                            message: 'Возвращаемся на страницу прайса',
-                            className: 'my-notification-class z-[9999] absolute top-12 right-12',
-                            loading: false,
-                        });
-                        this.clearPriceOnChange()
-                    } else {
-                        notifications.show({
-                            id: 'car-created',
-                            withCloseButton: true,
-                            onClose: () => console.log('unmounted'),
-                            onOpen: () => console.log('mounted'),
-                            autoClose: 5000,
-                            title: "Ошибка",
-                            message: 'Прайс не удалось обновить',
-                            color: 'red',
-                            className: 'my-notification-class z-[9999]',
-                            style: { backgroundColor: 'red' },
-                            loading: false,
-                        });
-                    }}, 2000)})
+                    if(r) {
+                        if(r.status === 201) {
+                            notifications.show({
+                                id: 'car-created',
+                                withCloseButton: true,
+                                autoClose: 5000,
+                                title: "Прайс обновлен",
+                                message: 'Возвращаемся на страницу прайса',
+                                className: 'my-notification-class z-[9999] absolute top-12 right-12',
+                                loading: false,
+                            });
+                            this.clearPriceOnChange()
+                        } else {
+                            notifications.show({
+                                id: 'car-created',
+                                withCloseButton: true,
+                                // onClose: () => console.log('unmounted'),
+                                // onOpen: () => console.log('mounted'),
+                                autoClose: 5000,
+                                title: "Ошибка",
+                                message: 'Прайс не удалось обновить',
+                                color: 'red',
+                                className: 'my-notification-class z-[9999]',
+                                style: { backgroundColor: 'red' },
+                                loading: false,
+                            });
+                        }}
+                    }, 2000)})
 
         })}
     // @ts-ignore
     handleChangeAmount({label, price_id, company_id, initValue, amount, id}) {
-        console.log(amount);
-        console.log(initValue);
+
         if(!initValue) {
             // @ts-ignore
             this.priceOnChange.set(id.toString(), {amount: amount, label: label, price_id: price_id, company_id, id: id})

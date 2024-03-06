@@ -43,7 +43,6 @@ export class UsersStore {
     });
     reaction(() => this.usersData,
     (userData) => {
-      console.log(!this.usersData);
       if(!userData) {
         this.getAllUser();
       }
@@ -82,7 +81,7 @@ export class UsersStore {
     if(appStore.appType === "admin") {
       try {
         const { data } = yield agent.Users.getAllUsers(paramsStore.qParams)
-        // console.log(data);
+
         this.users = data.results
         this.usersData = data
         this.users.forEach((el: any) => {
@@ -97,7 +96,6 @@ export class UsersStore {
       }
     } else {
       try {
-        // console.log(paramsStore.qParams);
         const { data } = yield agent.Users.getCompanyUsers(userStore.myProfileData.company.id, paramsStore.qParams)
 
         this.usersData = data
@@ -170,7 +168,6 @@ export class UsersStore {
     this.companyUsersSelected.set(String(id), this.companyUsers.filter((e: any) => e.employee.id == Number(id))[0])
   }
   removeFromSelectedUsers(id:number) {
-    console.log(this.companyUsersSelected.get(String(id)));
     this.companyUsersSelected.delete(String(id))
   }
   get allUsers() {
@@ -204,9 +201,8 @@ export class UsersStore {
       }
       try {
         if(company_type) {
-          console.log(company_type);
           const data  = yield companyStore.loadCompanyWithTypeAndId(company_type, Number(companyid));
-          console.log(data);
+
           user = {
             ...user,
             company: {company_type: data.company.company_type, ...data.company.data}
@@ -241,8 +237,6 @@ export class UsersStore {
         group: Number(values.group),
         is_active: values.is_active === "true",
       }
-      console.log(data);
-      console.log(values);
       return this.updateUser(values.company_id, data);
 
     } else {

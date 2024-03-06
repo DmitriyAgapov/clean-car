@@ -30,6 +30,7 @@ const PricePage = ():JSX.Element => {
     console.log(currentPriceById.data.tabs)
     console.log(currentPriceById.loading)
   }, [currentPriceById.loading])
+  console.log(currentPriceById);
   // console.log((!currentPriceById.loading && currentPriceById.data.tabs && currentPriceById.data.tabs.length > 0));
   // console.log('loading', !currentPriceById.loading);
   // console.log('data.tabs.length > 0)', currentPriceById.data.tabs?.length > 0);

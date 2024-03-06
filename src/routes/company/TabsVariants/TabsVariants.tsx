@@ -556,7 +556,6 @@ export const TabsVariantPrice = ({
       newMap.set(key, newAr)
     })
     let result:any[] = []
-
     newMap.forEach((value: any, key: any) => {
         let resultInner: any[] = []
         value.forEach((value: any, key: any) => {
@@ -578,6 +577,7 @@ export const TabsVariantPrice = ({
         })
         result.push({ label: key, data: resultInner })
     })
+    console.log(result, 'result');
     return result.map((item: any) => {
 
         return (
@@ -678,7 +678,6 @@ export const TabsVariantPrice = ({
         result.push({ label: key, data: resultInner })
       })
       return result.map((item: any, index: number) => {
-
         return (
           <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
             <Heading text={item.label} variant={HeadingVariant.h6} className={'text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70'}/>
@@ -785,7 +784,7 @@ export const TabsVariantPrice = ({
   switch (label) {
 
       case 'Мойка':
-
+        console.log(mapEdWast(data.wash_positions));
           result = (
               <Tabs.PanelPure
                   state={state}
@@ -902,22 +901,6 @@ export const TabsVariantPrice = ({
               </Tabs.PanelPure>
           )
           break;
-      // case 'Филиалы':
-      //   console.log(data);
-      //   result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
-      //     {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
-      //       data={data.map((item: any & {rootRoute?: string} ) => ({
-      //         state: item.is_active,
-      //         name: item.name,
-      //         city: item.city.name,
-      //         id: item.id,
-      //         query: {
-      //           company_id: companyId,
-      //           rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
-      //         },
-      //       }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
-      //   </Tabs.Panel>)
-      //   break;
       default:
           return null
   }

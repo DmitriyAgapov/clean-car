@@ -26,7 +26,13 @@ const clone = (obj:any) => JSON.parse(JSON.stringify(obj))
 export interface ResultsProps
     {
         address: string
+        address_from?: string
+        address_to?: string
         company: number | null
+        lat_from?: number,
+        lon_from?: number,
+        lat_to?: number,
+        lon_to?: number,
         conductor: number
         important: {
             label?: string
@@ -57,8 +63,14 @@ export interface ResultsProps
 
 export const initialResult: ResultsProps = {
     address: '',
+    address_from: '',
+    address_to: '',
     company: null,
     conductor: 0,
+    lat_from: 0,
+    lon_from: 0,
+    lat_to: 0,
+    lon_to: 0,
     car: 0,
     important: {
         label: '',
@@ -462,10 +474,10 @@ export class BidsStore {
                this.loadBidByCompanyAndBidId()
             }
         })
+
         reaction(
             () => this.formResult.company,
             (customer, oldCustomer) => {
-                console.log(customer);
                 if(authStore.userIsLoggedIn) {
                     if (customer !== 0 && customer !== null) {
                         runInAction(async () => {
@@ -480,11 +492,27 @@ export class BidsStore {
                 }
             },
         )
+        autorun(() => {
+            if(!this.refreshBids) {
+                console.log('refresh');
+                if (window.location.pathname.includes('bids')) {
+                    console.log('includes(\'bids\')');
+                    setTimeout(() => {
+                        this.loadAllBids(paramsStore.qParams)
+                        runInAction(() => this.refreshBids = false)
+                    }, 5000)
+                    runInAction(() => this.refreshBids = true)
+                } else {
+                    runInAction(() => this.refreshBids = true)
+                }
+            }
+        })
         reaction(() => this.formResult.conductor,
             async (conductor)=> {
                 if(conductor !== 0 || conductor !== null) {
                     //@ts-ignore
-                    action(() => this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone)
+                    action(() => this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone);
+                    carStore.getCarsByCompony(this.formResult.company);
                 }
             }
         )
@@ -610,7 +638,7 @@ export class BidsStore {
             // this.photo.photosPreviewAr = []
     }
     async loadAllBids(params: PaginationProps) {
-        console.log(paramsStore.qParams);
+
         try {
             action(() => (this.loading = true))
             if(appStore.appType === "admin") {
@@ -632,33 +660,28 @@ export class BidsStore {
         } catch (error: any) {
             this.error = error
         } finally {
+
             action(() => (this.loading = false))
         }
     }
     async formCreateBid() {
         this.justCreatedBid = {}
-        console.log({
-            company: this.formResult.company,
-            car: this.formResult.car,
-            customer_comment: this.formResult.customer_comment,
-            conductor: this.formResult.conductor,
-            phone: '+7' + this.formResult.phone,
-            performer: this.formResult.performer,
-            service_option: this.formResult.service_option,
-            service_type: this.formResult.service_type,
-            service_subtype: this.formResult.service_subtype
-        });
+
         if(this.formResult.company) {
             const res:any = await agent.Bids.createBid(this.formResult.company, {
                 company: this.formResult.company,
                 car: this.formResult.car,
                 customer_comment: this.formResult.customer_comment,
                 conductor: this.formResult.conductor,
-                phone: '+7' + this.formResult.phone,
+                phone: this.formResult.phone.replaceAll(' ', ''),
                 performer: this.formResult.performer,
                 service_option: this.formResult.service_option,
                 service_type: this.formResult.service_type,
-                service_subtype: this.formResult.service_subtype
+                service_subtype: this.formResult.service_subtype,
+                lat_from: this.formResult.lat_from,
+                lon_from: this.formResult.lon_from,
+                lat_to: this.formResult.lat_to,
+                lon_to: this.formResult.lon_to,
             })
 
             if(res.status === 200) {

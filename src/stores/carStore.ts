@@ -2,7 +2,7 @@ import { action, flow, IObservableValue, makeAutoObservable, observable, reactio
 import { makePersistable } from "mobx-persist-store";
 import agent, { PaginationProps } from "utils/agent";
 import appStore from "stores/appStore";
-import { UserTypeEnum } from "stores/userStore";
+import userStore, { UserTypeEnum } from "stores/userStore";
 import authStore from "stores/authStore";
 export const carHelperTable = [
 ['А','Легковой', '1 класс', 'До 2 тонн'],
@@ -80,18 +80,29 @@ export class CarStore {
     }, {
       fireImmediately: true,
     })
-
+    reaction(() => this.cars,
+      (cars) => {
+        console.log(cars);
+        if (cars.length === 0 && !this.loadingState.cars) {
+          this.getCars(appStore.appType === "admin" ? 0 : userStore.myProfileData.company.id)
+          this.loadingState.cars = true
+        }
+      })
     reaction(() => this.currentBrand,
       (currentBrand) => {
         if(authStore.userIsLoggedIn) {
           if(currentBrand) {
             this.getCarBrandModels(currentBrand)
           }
-        }  })
+        }
+    })
 
   }
+  loadingState = {
+    cars: false
+  }
   loadingCars = false
-  cars: Car[] = []
+  cars: Car[] | any = []
   currentBrand:null | number = null
   brandModels  = observable.array([])
   get getBrandModels() {
@@ -120,6 +131,7 @@ export class CarStore {
     }
   }
   getCars = flow(function* (this: CarStore, company_id:number) {
+    console.log('getCars');
     this.loadingCars = true
     try {
       if(appStore.appType === UserTypeEnum.admin) {
@@ -161,7 +173,7 @@ export class CarStore {
   createCar = flow(function* (this: CarStore, company_id: number, car: Car) {
     this.loadingCars = true
     try {
-      return yield agent.Cars.createCompanyCar(company_id, car)
+      return yield agent.Cars.createCompanyCar(company_id, car).then((res) => this.getCarsByCompony(company_id))
     } catch (error) {
       console.error(error)
     }

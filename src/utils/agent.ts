@@ -191,6 +191,10 @@ export interface CreateBidData {
   service_subtype: number,
   service_option: number[],
   customer_comment?: string
+  lat_from?: number,
+  lon_from?: number,
+  lat_to?: number,
+  lon_to?: number,
 }
 
 const Bids = {

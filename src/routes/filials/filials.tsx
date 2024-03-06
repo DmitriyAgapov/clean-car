@@ -22,7 +22,6 @@ const FilialsPage = () => {
       <Panel
         headerClassName={'flex justify-between'}
         variant={PanelVariant.withGapOnly}
-
         header={
           <>
             <Heading

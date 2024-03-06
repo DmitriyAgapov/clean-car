@@ -111,8 +111,21 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
           }
         })
       }
+      if (payload.field === "company_id") {
+        return ({
+          label: form.values.depend_on === "company" ? 'Компания' : 'Филиал',
+
+        })
+      }
+
       if(payload.field === "depend_on") {
         return ({
+          onChange: (event:any) => {
+            form.setFieldValue('depend_on', event)
+          }
+            // payload.form.values.model = null;
+            // store.carStore.setBrand(prop);
+          ,
           className: '!flex-[0_0_14rem]'
         })
       }
@@ -131,9 +144,13 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             setStep((prevState) => step ? step : prevState += 1)
         }, 1200)
     }
-    const companyVar = React.useMemo(() =>
-        form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Компания-Заказчик" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => c.company_type === "Компания-Заказчик"),
-    [form.values.depend_on])
+    const companyVar = React.useMemo(() => {
+      const  res = form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Компания-Заказчик" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => store.appStore.appType === "admin" ? c.company_type === "Компания-Заказчик" : c)
+      if(res.length === 1) {
+        form.values.company_id = String(res[0].id)
+      }
+      return res
+      },[form.values.depend_on])
     const navigate = useNavigate()
 
     const formDataSelectUsers = React.useMemo(() => {
@@ -325,10 +342,11 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               {/* /> */}
               <hr className={'col-span-full flex-[1_100%]'}/>
               <Select
-                onOptionSubmit={() => form.setValues({...form.values, company_id: null, group: null})}
+
                 label={'Принадлежит'}
                 {...form.getInputProps('depend_on', { dependOn: 'type' })}
                 defaultValue={form.values.depend_on}
+                onOptionSubmit={() => form.setValues({...form.values, company_id: null, group: null})}
                 data={[
                   { label: 'Компании', value: 'company' },
                   { label: 'Филиалы', value: 'filials' },

@@ -212,7 +212,6 @@ export class PermissionStore {
        const response = yield agent.Permissions.getAllCompanyPermissions(1)
 
       if(response.status === 200) {
-        console.log(response.data);
         this.permissions = response.data.results
       }
       this.loadingPermissions = false
@@ -273,7 +272,7 @@ export class PermissionStore {
     this.loadingPermissions = true
     let res;
     const {status, data} = yield agent.Permissions.getAllCompanyPermissions(company_id)
-    console.log(data);
+
     if(status === 200) {
       this.companyPermissions = data.results
       return data.results
@@ -314,7 +313,7 @@ export class PermissionStore {
     // @ts-ignore
     try {
       const data = yield agent.PermissionsAdmin.getAllAdminPermissions()
-      console.log(data);
+
       if (data.status === 200) {
         //@ts-ignore
         const { results } = data.data;

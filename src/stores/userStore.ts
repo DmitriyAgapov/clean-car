@@ -8,6 +8,7 @@ import { makePersistable, clearPersistedStore } from 'mobx-persist-store';
 import label from 'utils/labels';
 import authStore from "stores/authStore";
 import { number, string } from "yup";
+import carStore from "stores/carStore";
 
 
 export enum UserTypeEnum {
@@ -47,11 +48,11 @@ export class UserStore {
     });
     reaction(() => this.currentUser,
        (currentUser) => {
-         console.log(authStore.userIsLoggedIn);
          if (authStore.userIsLoggedIn) {
            if (currentUser.id === 0 && appStore.token !== '') {
-             this.pullUser()
-             this.loadMyProfile()
+               console.log('this.currentUser')
+               this.pullUser()
+               this.loadMyProfile()
            }
          }
        }
@@ -68,8 +69,11 @@ export class UserStore {
       })
     reaction(() => this.myProfileData.company,
       (company) => {
-        if(company && companyStore.companies.length === 0) {
-          companyStore.getAllCompanies()
+        if(authStore.userIsLoggedIn) {
+          if (company && companyStore.companies.length === 0) {
+            companyStore.getAllCompanies()
+            carStore.getCars(company.id)
+          }
         }
       })
     reaction(() => this.currentUserPermissions,

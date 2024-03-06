@@ -10,7 +10,7 @@ import { TimeInput } from '@mantine/dates'
 import { observer, Observer } from "mobx-react-lite";
 import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, Select, Textarea } from '@mantine/core'
 import { action, values as val } from 'mobx'
-import { IMaskInput } from 'react-imask'
+import { IMask, IMaskInput } from "react-imask";
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import { yupResolver } from "mantine-form-yup-resolver";
 import { CreateBidSchema} from "utils/validationSchemas";
@@ -22,67 +22,52 @@ import { SvgClose } from "components/common/ui/Icon";
 import MapWithDots from "components/common/Map/Map";
 import DList from "components/common/ui/DList/DList";
 import InputAutocompleteWithCity from "components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency";
+import moment, { MomentInput } from "moment/moment";
 
 interface InitValues {
   address: string;
   company: string;
   conductor: string;
   car: string;
-  important: {
-    label: string;
-    value: string;
-  };
-  secretKey: {
-    label: string;
-    value: string;
-  };
-  address_to: string;
-  address_from: string;
+  important: string;
+  secretKey: string;
+  address_from?: string
+  address_to?: string
+  lat_from?: number,
+  lon_from?: number,
+  lat_to?: number,
+  lon_to?: number,
   phone: string;
   customer_comment: string;
   service_type: string;
-  parking: {
-    label: string;
-    value: string;
-  };
+  parking: string;
   service_option: any[];
   service_subtype: string;
   city: string;
-  time: {
-    label: string;
-    value: string;
-  };
+  time: string;
   performer: string;
 }
 export const InitValues:InitValues = {
   address: '',
   company: '0',
   conductor: '0',
+  lat_from: 0,
+  lon_from: 0,
+  lat_to: 0,
+  lon_to: 0,
   address_from: '',
   address_to: '',
   car: '0',
-  important: {
-    label: '',
-    value: '',
-  },
-  secretKey: {
-    label: '',
-    value: 'true',
-  },
+  important: 'time',
+  secretKey: 'false',
   phone: '',
   customer_comment: '',
   service_type: '0',
-  parking: {
-    label: '',
-    value: 'true',
-  },
+  parking: 'true',
   service_option: [],
   service_subtype: '0',
   city: '0',
-  time: {
-    label: '',
-    value: '',
-  },
+  time: '',
   performer: '0',
 }
 
@@ -91,6 +76,7 @@ export const createBidFormActions = createFormActions<InitValues>('createBidForm
 
 const FormCreateUpdateBid = ({ bid, edit }: any) => {
     const store = useStore()
+    const momentFormat = 'HH:mm'
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
     let revalidate = useRevalidator()
@@ -178,15 +164,31 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     // onValuesChange: (values, previous) => console.log(values),
     validate: yupResolver(CreateBidSchema),
     enhanceGetInputProps: (payload) => {
-        if (payload.field === 'city' && store.appStore.appType === "customer") {
+        if (payload.field === 'city') {
+          if(store.appStore.appType === "customer") {
             return {
-                className: 'hidden',
+              className: 'hidden',
             }
+          }
         }
-        if (payload.field === 'company' && store.appStore.appType === "customer") {
+        if (payload.field === 'time') {
+          return ({
+            disabled: formData.values.important === 'fast'
+          })
+        }
+        if (payload.field === 'company') {
+          if(formData.values.company === '0' || formData.values.company === null) {
+            formData.values.city = null
+            formData.values.conductor = null
+            formData.values.car = null
+            formData.values.phone = null
+          }
+
+          if(store.appStore.appType === "customer") {
             return {
-                className: 'hidden',
+              className: 'hidden',
             }
+          }
         }
 
         if (payload.field === "car") {
@@ -195,6 +197,23 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
             disabled: store.carStore.getCompanyCars.cars.count === 0 || payload.form.values.conductor === "0" || carsData === null
           })
         }
+        if(payload.field === "conductor") {
+
+        }
+        if(payload.field === "conductor") {
+          if(formData.values.conductor !== "0" && formData.values.conductor !== null && formData.values.company !== null && formData.values.company !== "0") {
+
+            const car = store.carStore.cars.results.filter((c: any) => c.employees.filter((e:any) =>  e.id === Number(formData.values.conductor))[0])
+
+            if(car.length === 1) {
+              formData.values.car = String(car[0].id)
+            }
+
+          }
+        }
+        if(payload.field !== "company") return ({
+          disabled: formData.values.company === '0' || formData.values.company === null
+        })
 
 
     },
@@ -203,8 +222,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       if(formData.values.company !== '0') {
         store.bidsStore.formResultSet({ company: Number(formData.values.company) })
       }
-
-      }, [formData.values.company])
+    }, [formData.values.company])
 
    const carsData = React.useMemo(() => {
      //@ts-ignore
@@ -221,7 +239,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       formData.values.company = '0'
       store.bidsStore.formResultSet({company: 0})
     }
-    if(e !== 0) {
+    if(e !== "0") {
+
       formData.setFieldValue('company', e);
       store.bidsStore.formResultSet({ company: Number(e) })
     } else {
@@ -238,31 +257,82 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       store.bidsStore.formResultsClear()
 
     } else  {
-      setTimeout(() => {
+
         formData.setFieldValue('city', String(store.bidsStore.formResultsAll.city))
 
-      }, 500);
 
       formData.values.phone = String(store.bidsStore.formResultsAll.phone);
-      formData.values.car = String(store.bidsStore.formResultsAll.car);
+      // formData.values.car = String(store.bidsStore.formResultsAll.car);
       formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
     }
-  }, [store.bidsStore.formResultsAll.company, formData.values.company])
+  }, [store.bidsStore.formResultsAll.company, formData.values.company, store.bidsStore.formResultsAll.city])
 
   React.useEffect(() => {
     if(formData.values.conductor === null) {
       formData.setFieldValue('conductor', null)
       formData.setFieldValue('car', null)
-      formData.setFieldValue('phone', "")
+      formData.setFieldValue('phone', null)
       // formikReset.resetForm()
     } else  {
-      console.log(store.bidsStore.formResultsAll);
-      formData.values.car = String(store.bidsStore.formResultsAll.car);
-      formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
+
+      const value = store.usersStore.companyUsers.filter((c: any) => c.employee.id === Number(formData.values.conductor))[0]
+      //@ts-ignore
+      formData.setFieldValue('phone', value && value.employee && value.employee?.phone)
+      //@ts-ignore
+      store.bidsStore.formResultSet({ phone: value && value.employee && value.employee?.phone })
+      // formData.values.car = String(store.bidsStore.formResultsAll.car);
+      // formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
     }
   }, [formData.values.conductor])
 
-
+  const handleNext = React.useCallback(() => {
+    if(step === 2) {
+      if (formData.values.service_type === '1') {
+        changeStep(4)
+      } else {
+        changeStep()
+      }
+    } else if(step === 4) {
+        (async () => {
+          store.bidsStore.formCreateBid().then((res) => {
+            if (res.status !== 201) {
+              notifications.show({
+                id: 'bid-created',
+                withCloseButton: true,
+                onClose: () => console.log('unmounted'),
+                onOpen: () => console.log('mounted'),
+                autoClose: 3000,
+                title: "You've been compromised",
+                message: 'Leave the building immediately',
+                color: 'red',
+                icon: <SvgClose />,
+                className:
+                  'my-notification-class z-[9999] absolute top-12 right-12',
+                style: { backgroundColor: 'red' },
+                loading: false,
+              })
+            } else {
+              notifications.show({
+                id: 'bid-created',
+                withCloseButton: true,
+                onClose: () => console.log('unmounted'),
+                onOpen: () => console.log('mounted'),
+                autoClose: 3000,
+                title: 'Заявка создана',
+                message: 'Успешное создание',
+                // color: 'red',
+                className: 'my-notification-class z-[9999]',
+                // style: { backgroundColor: 'red' },
+                loading: false,
+              })
+              changeStep()
+            }
+          })
+        })()
+    } else {
+    changeStep()
+  }
+  }, [formData.values.service_type, step])
     return (
       <FormProvider form={formData}>
         <PanelForForms
@@ -289,11 +359,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         }
           actionNext={
             <Button type={'button'}
-              action={() => {
-                if(formData.values.service_type === "1" && step === 2) {
-                  changeStep(4)
-                } else changeStep()
-              }}
+              action={handleNext}
               disabled={!formData.isValid()}
               text={'Сохранить'}
               className={'float-right'}
@@ -352,21 +418,30 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 {...formData.getInputProps('conductor')}
                 label={step1.fields[2].label}
                 searchable
-                onOptionSubmit={(value) => store.bidsStore.formResultSet({ conductor: Number(value) })}
+                onOptionSubmit={(value) => {
+                  formData.values.car = null
+                  formData.values.phone = null
+                  store.bidsStore.formResultSet({ conductor: Number(value) })
+                }}
                 disabled={
                   store.bidsStore.formResult.company === 0 ||
                   store.usersStore.currentCompanyUsers.length === 0
                 }
                 data={store.usersStore.currentCompanyUsers.map((c: any) => ({
-                  label: c.employee.first_name,
+                  label: c.employee.first_name + " " + c.employee.last_name,
                   value: String(c.employee.id),
                 }))}
               />
 
-
               <InputBase
                 {...formData.getInputProps('phone')}
-                defaultValue={formData.values.phone !== "" ? formData.values.phone : store.bidsStore.formResult.phone}
+                onAccept={(value:any, mask:any) => {
+
+                  formData.setFieldValue('phone', value)
+                  store.bidsStore.formResultSet({ phone: value })
+                }}
+                //@ts-ignore
+                // defaultValue={formData.values.phone !== "" ? formData.values.phone : store.bidsStore.formResult.phone}
                 label={step1.fields[3].label} component={IMaskInput} mask='+7 000 000 0000' placeholder='+7 000 000 0000'
               />
               <Select
@@ -537,7 +612,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     label={'Откуда вас забрать?'}
                     {...formData.getInputProps('address_from')}
                     action={(val: any) => {
-                      store.bidsStore.formResultSet({ address: val })
+                      formData.setFieldValue('address_from', val)
+                      store.bidsStore.formResultSet({ address_from: val })
                     }}
                     city={
                       store.bidsStore.formResult.city !== 0
@@ -552,7 +628,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     {...formData.getInputProps('address_to')}
                     label={'Куда привезти?'}
                     action={(val: any) => {
-                      store.bidsStore.formResultSet({ address: val })
+                      formData.setFieldValue('address_to', val)
+                      store.bidsStore.formResultSet({ address_to: val })
                     }}
                     city={
                       store.bidsStore.formResult.city !== 0
@@ -565,7 +642,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   <hr className={'col-span-full border-transparent my-2'} />
                   <Select
                     {...formData.getInputProps('tire_destroyed')}
-                    onChange={(values) => store.bidsStore.formResultSet({ tire_destroyed: values })}
+                    onOptionSubmit={(values) => store.bidsStore.formResultSet({ tire_destroyed: values })}
                     label={'Сколько колес вышло из строя?'}
                     data={[
                       { label: '1', value: '1' },
@@ -576,7 +653,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   />
                   <Select
                     {...formData.getInputProps('truck_type')}
-                    onChange={(values) => store.bidsStore.formResultSet({ truck_type: values })}
+                    onOptionSubmit={(values) => store.bidsStore.formResultSet({ truck_type: values })}
                     label={'Тип эвакуатора?'}
                     data={[
                       { label: 'эвакуатор', value: 'эвакуатор' },
@@ -586,36 +663,54 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     ]}
                   />
                   <hr className={'col-span-full border-transparent my-2'} />
-                  <Select
-                    {...formData.getInputProps('parking')}
-                    onChange={(values) =>
-                      store.bidsStore.formResultSet({
-                        parking: {
-                          label: step3?.fields[3]?.options?.filter(
-                            (item) => item.value == values,
-                          )[0].label,
-                          value: values,
-                        },
-                      })
-                    }
-                    label={step3.fields[3].label}
-                    data={step3.fields[3].options}
-                  />
+                <Select
+                  {...formData.getInputProps('important')}
+                  onOptionSubmit={(values) => {
+                    formData.setFieldValue('time', '')
+                    store.bidsStore.formResultSet({
+                      important: {
+                        label: step3?.fields[3]?.options?.filter(
+                          (item) => item.value == values,
+                        )[0].label,
+                        value: values,
+                      },
+                    })
+                  }}
+                  // value={store.bidsStore.formResult.important}
+                  label={step3.fields[3].label}
+                  data={step3.fields[3].options}
+                />
 
-                  <TimeInput
-                    {...formData.getInputProps('time')}
-                    onChange={(values) =>
-                      store.bidsStore.formResultSet({
-                        time: { label: step3.fields[4].label, value: values.target.value },
-                      })
-                    }
-                    classNames={{
-                      section: 'mr-1 text-sm',
-                      input: 'pl-7',
-                    }}
-                    leftSection={<span>C</span>}
-                    label={step3.fields[4].label}
-                  />
+                <InputBase
+                  component={IMaskInput}
+
+                  label={step3.fields[4].label}
+                  {...formData.getInputProps('time')}
+                  mask={Date}
+                  classNames={{
+                    section: 'mr-1 text-sm',
+                    // input: 'pl-7',
+                  }}
+                  onInput={(values) =>
+                    store.bidsStore.formResultSet({
+                      time: { label: step3.fields[4].label, value: values.currentTarget.value },
+                    })
+                  }
+                  /*@ts-ignore*/
+                  blocks={{
+                    YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
+                    MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
+                    DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
+                    HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
+                    mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
+                  }}
+                  pattern={`c ${momentFormat} до ${momentFormat}0`}
+                  format={(date: MomentInput) => moment(date).format(momentFormat)}
+                  parse={(str) => moment(str, momentFormat)}
+                  autofix
+                  overwrite
+                  placeholder='c 00:00 до 23:59'
+                />
               </PanelForForms>
             ) : (
               <PanelForForms
@@ -638,7 +733,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
               >
                 <>
-                  <InputAutocompleteWithCity
+                  {formData.values.service_subtype === "6" && <><InputAutocompleteWithCity
                     action={(val: any) => {
                       store.bidsStore.formResultSet({ address: val })
                     }}
@@ -650,25 +745,25 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         : ''
                     }
                   />
-                  <hr className={'col-span-full border-transparent my-2'} />
-                  <Select
-                    {...formData.getInputProps('parking')}
-                    onChange={(values) =>
-                      store.bidsStore.formResultSet({
-                        parking: {
-                          label: step3?.fields[1]?.options?.filter(
-                            (item) => item.value == values,
-                          )[0].label,
-                          value: values,
-                        },
-                      })
-                    }
-                    label={step3.fields[1].label}
-                    data={step3.fields[1].options}
-                  />
+                  <hr className={'col-span-full border-transparent my-2'} /></>}
+                  {/* <Select */}
+                  {/*   {...formData.getInputProps('parking')} */}
+                  {/*   onChange={(values) => */}
+                  {/*     store.bidsStore.formResultSet({ */}
+                  {/*       parking: { */}
+                  {/*         label: step3?.fields[1]?.options?.filter( */}
+                  {/*           (item) => item.value == values, */}
+                  {/*         )[0].label, */}
+                  {/*         value: values, */}
+                  {/*       }, */}
+                  {/*     }) */}
+                  {/*   } */}
+                  {/*   label={step3.fields[1].label} */}
+                  {/*   data={step3.fields[1].options} */}
+                  {/* /> */}
                   <Select
                     {...formData.getInputProps('secretKey')}
-                    onChange={(values) => {
+                    onOptionSubmit={(values) => {
                       store.bidsStore.formResultSet({
                         secretKey: {
                           label: step3?.fields[2]?.options?.filter(
@@ -684,7 +779,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   <hr className={'col-span-full border-transparent my-2'} />
                   <Select
                     {...formData.getInputProps('important')}
-                    onChange={(values) => {
+                    onOptionSubmit={(values) => {
+                      formData.setFieldValue('time', '')
                       store.bidsStore.formResultSet({
                         important: {
                           label: step3?.fields[3]?.options?.filter(
@@ -698,20 +794,50 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     label={step3.fields[3].label}
                     data={step3.fields[3].options}
                   />
-                  <TimeInput
+                  <InputBase
+                    component={IMaskInput}
+
+                    label={step3.fields[4].label}
                     {...formData.getInputProps('time')}
-                    onChange={(values) =>
-                      store.bidsStore.formResultSet({
-                        time: { label: step3.fields[4].label, value: values.target.value },
-                      })
-                    }
+                    mask={Date}
                     classNames={{
                       section: 'mr-1 text-sm',
-                      input: 'pl-7',
+                      // input: 'pl-7',
                     }}
-                    leftSection={<span>C</span>}
-                    label={step3.fields[4].label}
+                    onInput={(values) =>
+                      store.bidsStore.formResultSet({
+                        time: { label: step3.fields[4].label, value: values.currentTarget.value },
+                      })
+                    }
+                    /*@ts-ignore*/
+                    blocks={{
+                      YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
+                      MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
+                      DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
+                      HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
+                      mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
+                    }}
+                    pattern={`c ${momentFormat} до ${momentFormat}0`}
+                    format={(date: MomentInput) => moment(date).format(momentFormat)}
+                    parse={(str) => moment(str, momentFormat)}
+                    autofix
+                    overwrite
+                    placeholder='c 00:00 до 23:59'
                   />
+                  {/* <TimeInput */}
+                  {/*   {...formData.getInputProps('time')} */}
+                  {/*   onTouchEnd={(values) => */}
+                  {/*     store.bidsStore.formResultSet({ */}
+                  {/*       time: { label: step3.fields[4].label, value: values.currentTarget.value }, */}
+                  {/*     }) */}
+                  {/*   } */}
+                  {/*   classNames={{ */}
+                  {/*     section: 'mr-1 text-sm', */}
+                  {/*     input: 'pl-7', */}
+                  {/*   }} */}
+                  {/*   leftSection={<span>C</span>} */}
+                  {/*   label={step3.fields[4].label} */}
+                  {/* /> */}
                 </>
               </PanelForForms>
             )}

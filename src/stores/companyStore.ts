@@ -118,7 +118,6 @@ export class CompanyStore {
                 console.log('get filials')
                 this.getAllFilials()
                 this.loadingState.filials = true
-                console.log(this.loadingState);
             }
           }
         )
@@ -248,8 +247,7 @@ export class CompanyStore {
         return this.customersCompany.get(String(this.currentCustomersCompany))
     }
     loadCompanyWithTypeAndId = flow(function* (this: CompanyStore, type?: string, company_id?: number) {
-        // if(id && type) {
-        console.log('netu')
+
         let newid
         if (userStore.myProfileData.user) {
             if (appStore.appType && appStore.appType !== UserTypeEnum.admin) {
@@ -270,7 +268,6 @@ export class CompanyStore {
                 cars: [],
             }
             if (newid && type) {
-                console.log(type);
                 const company = yield agent.Companies.getCompanyData(type, newid)
                 const users = yield agent.Account.getCompanyUsers(newid)
                 const filials = yield agent.Filials.getFilials(type, newid)
@@ -294,7 +291,7 @@ export class CompanyStore {
                     data: filials.data.results,
                     label: 'Филиалы',
                 } as any
-                console.log(company)
+
                 // @ts-ignore
                 set(this.fullCompanyData, { [data.company.data.id]: data })
             }
@@ -345,7 +342,7 @@ export class CompanyStore {
         filials: []
     })
     getAllFilials = flow(function* (this: CompanyStore, params?: PaginationProps) {
-        console.log('getAllFilials', userStore.isAdmin);
+
         let result
         try {
             if (appStore.appType !== "admin") {
@@ -354,7 +351,6 @@ export class CompanyStore {
                     userStore.myProfileData.company.id,
                     params,
                 )
-                console.log(data)
                 if (status === 200) {
                     this.filials = data.results
                 }
@@ -369,7 +365,6 @@ export class CompanyStore {
         this.loadingCompanies = true
         let data :any[] | any = []
         let dataMeta
-        console.log(params);
         if(appStore.appType === "admin") {
             const { data: dataCars, status } = yield agent.Companies.getOnlyBranchesCompanies(params)
 
@@ -508,7 +503,7 @@ export class CompanyStore {
         return filials
     }
     createFilial = flow(function* (this: CompanyStore, data: any, type: string, company_id: number) {
-        console.log(type, company_id, data);
+
         this.loadingCompanies = true
         try {
             // @ts-ignore

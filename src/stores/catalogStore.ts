@@ -1,6 +1,7 @@
 import { autorun, computed, flow, get, makeAutoObservable, observable, ObservableMap, reaction, runInAction, set, values } from "mobx";
 import agent, { PaginationProps } from 'utils/agent'
 import { hydrateStore, makePersistable } from "mobx-persist-store";
+import authStore from "stores/authStore";
 
 export class CatalogStore {
     constructor() {
@@ -26,24 +27,30 @@ export class CatalogStore {
         }, {fireImmediately: true})
         reaction(() => this.loadingState.brands,
           (brands) => {
+            if(authStore.userIsLoggedIn) {
               if (!brands) {
                 this.getCarBrands().then(r => runInAction(() => {
                     console.log('loadded brands')
                     this.loadingState.brands = true
                 }))
               }}
+          }
         )
         reaction(() => this.loadingState.services,
           (services) => {
-              if (!services) {
-                  this.getServices().then(r => runInAction(() => {
-                      console.log('loadded services')
-                      this.loadingState.services = true
-                  }))
-              }}
+              if (authStore.userIsLoggedIn) {
+                  if (!services) {
+                      this.getServices().then(r => runInAction(() => {
+                          console.log('loadded services')
+                          this.loadingState.services = true
+                      }))
+                  }
+              }
+          }
         )
         reaction(() => this.loadingState.cities,
           (cities) => {
+              if(authStore.userIsLoggedIn) {
               if (!cities) {
                 this.getAllCities()
                 .then(r => runInAction(() => {
@@ -52,10 +59,11 @@ export class CatalogStore {
                     this.loadingState.cities  = true
                 }))
 
-            }
+            }}
         })
         reaction(() => this.cities,
                   (cities) => {
+                      if(authStore.userIsLoggedIn) {
                       if (cities.size == 0 && !this.loadingState) {
                         this.getAllCities().then(r => runInAction(() => {
                             console.log('loadded cities')
@@ -63,16 +71,17 @@ export class CatalogStore {
                         })
                   )
 
-            }
+            }}
         })
 
         reaction(
             () => this.currentService,
             (service) => {
+                if(authStore.userIsLoggedIn) {
                 if (service !== 0) {
                     this.getServiceSubtypes(service)
                 }
-            },
+            }}
         )
         reaction(
             () => this.targetModelId,
@@ -219,7 +228,6 @@ export class CatalogStore {
                         .then((r) => r)
                         .finally(() => {
                             runInAction(() => {
-                                // console.log(el)
                                 this.carBrandModels.forEach((e: any) => {
                                     this.carBrandModelsReference.push({
                                         id: e.id,

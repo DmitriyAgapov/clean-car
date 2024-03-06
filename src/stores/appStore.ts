@@ -16,6 +16,7 @@ export class AppStore {
     }, {
       fireImmediately: true,
     })
+
     reaction(
       () => this.token,
       (token) => {
@@ -31,6 +32,14 @@ export class AppStore {
         }
       },
     )
+    reaction(() => this.appType,
+      (appType) => {
+        if(appType !== "" && !this.token) {
+          console.log('Нет токена но есть стор');
+          authStore.logout()
+        }
+
+    })
     reaction(() => this.tokenRefresh,
       (tokenRefresh) => {
         if (tokenRefresh) {
@@ -87,7 +96,7 @@ export class AppStore {
       })
     )
   }
-
+  location:any = window.location
   appName = 'CleanCar'
   appRouteName = '.авторизация'
   appTheme = 'dark'
@@ -115,7 +124,6 @@ export class AppStore {
     actions: null,
   }
   get AppState() {
-    console.log('state', this.appState);
     return this.appState
   }
   setAppState(state: boolean) {

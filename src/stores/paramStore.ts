@@ -28,11 +28,7 @@ export class ParamStore {
 		q:null
 	}
 	get qParams() {
-		console.log(this.params);
-		// console.log(this.url);
-		// console.log('qParams', this.searchParams.get('page'));
 
-		// console.log('qParams',sparams.get('page'))
 		return this.params
 	}
 	// incrementPage() {

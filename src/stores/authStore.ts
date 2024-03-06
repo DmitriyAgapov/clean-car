@@ -3,8 +3,9 @@ import { AxiosError } from 'axios'
 import agent from '../utils/agent'
 import userStore from './userStore'
 import appStore from './appStore'
-import { makePersistable } from "mobx-persist-store";
+import { makePersistable, clearPersistedStore  } from "mobx-persist-store";
 import { notifications } from "@mantine/notifications";
+import rootStore from "stores/index";
 
 export class AuthStore {
   constructor() {
@@ -31,9 +32,13 @@ export class AuthStore {
     })
     reaction(() => this.userIsLoggedIn,
       (userIsLoggedIn) => {
-      if(userIsLoggedIn) {
+
+      if(userIsLoggedIn && appStore.token && appStore.token !== "") {
+
         userStore.pullUser()
         userStore.loadMyProfile()
+      } else {
+        clearPersistedStore('authStore').then((r) => console.log(r))
       }
     })
   }
@@ -104,8 +109,8 @@ export class AuthStore {
           notifications.show({
             id: 'bid-created',
             withCloseButton: true,
-            onClose: () => console.log('unmounted'),
-            onOpen: () => console.log('mounted'),
+            // onClose: () => console.log('unmounted'),
+            // onOpen: () => console.log('mounted'),
             autoClose: 3000,
             title: "Error",
             message: `${resolve.response.data.detail}`,

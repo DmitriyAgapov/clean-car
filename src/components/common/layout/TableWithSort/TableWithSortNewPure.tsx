@@ -80,7 +80,9 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
                             root: ''
                           }}
 
-                          onChange={(value) => store.priceStore.handleChangeAmount({amount: value, id: props.id, initValue: props[key] === value, ...meta})}
+                          min={0}
+                          max={999999999999}
+                          onChange={(value) => store.priceStore.handleChangeAmount({amount: value !== "" ? value : 0, id: props.id, initValue: props[key] === value, ...meta})}
                           suffix=" ₽"
                           // decimalScale={2}
                           // fixedDecimalScale

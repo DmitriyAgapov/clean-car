@@ -32,7 +32,6 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
         return result
       }
       if(type == TabsType.price) {
-
         data.forEach((item: any, index: number) => {
           result.push(
             <TabsVariantPrice key={`tab_${index}`} state={state == item.label} data={item.dataTable} label={item.label} props={items} className={'!pb-0'}/>
