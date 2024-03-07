@@ -524,13 +524,13 @@ export class BidsStore {
                     // console.log('changed', this.formResult, subtype)
                         await this.loadServiceSubtypeOptions(subtype)
                     console.log('changed', this.formResult, subtype, this.formResult.service_option);
-                    // if(this.formResult.service_option.length > 0 && this.formResult.service_option !== 0 && this.formResult.service_subtype !== 0) {
-                    //     this.loadCurrentPerformers(Number(this.formResult.company), {
-                    //         car_id: this.formResult.car,
-                    //         subtype_id: this.formResult.service_subtype,
-                    //         options_idx: this.formResult.service_option
-                    //     })
-                    // }
+                    if(this.formResult.company !== "0" && this.formResult.car !== 0) {
+                        this.loadCurrentPerformers(Number(this.formResult.company), {
+                            car_id: this.formResult.car,
+                            subtype_id: this.formResult.service_subtype,
+                            options_idx: this.formResult.service_option
+                        })
+                    }
                 }
 
                 if(subtype === 0) {
