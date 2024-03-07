@@ -8,6 +8,7 @@ import { SvgBackArrow } from "components/common/ui/Icon";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import React from "react";
 import FormCreateBid from "components/Form/FormCreateBid/FormCreateBid";
+import FormCreateUpdateBid from "components/Form/FormCreateBid/FormCreateUpdateBid";
 
 const BidsCreatePage = (props:any) => {
 	const store = useStore()
@@ -31,7 +32,7 @@ const BidsCreatePage = (props:any) => {
 				</>)}
 			</>}>
 			</Panel>
-			<FormCreateBid />
+			<FormCreateUpdateBid />
 
 		</Section>
 	)

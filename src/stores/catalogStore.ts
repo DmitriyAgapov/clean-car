@@ -125,10 +125,21 @@ export class CatalogStore {
             subtypes: false,
         }
     }
+    getServiceSubtypeOption(service_type_id: number | string, service_subtype_id: number | string, service_option_id:number | string) {
+        return this.getServiceSubtype(service_type_id, service_subtype_id).options.filter((i: any) => i.id === service_option_id)[0]
+    }
+    getServiceSubtype(service_type_id: number | string, service_subtype_id: number | string) {
+        return this.getServiceType(service_type_id).subtypes.filter((i: any) => i.id === service_subtype_id)[0]
+    }
+    getServiceType(id: number | string) {
+        return this.services.get(String(id))
+    }
     get ServiceSubtypesOptions() {
         const activeSubtype = this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]
-        console.log(this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]);
-        return activeSubtype.options
+        // console.log(this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]);
+        return activeSubtype && activeSubtype.options ? activeSubtype.options : {
+            options: []
+        }
     }
     targetModelId = 0
     cities: Map<any, any> = observable.map([])

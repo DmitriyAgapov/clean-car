@@ -38,7 +38,7 @@ axios.interceptors.response.use(
 				runInAction(() => {
 					appStore.token && localStorage.setItem("jwt", appStore.token)
 				})
-			}).finally(	() =>	config._retry = false)
+			}).finally(	() =>	config._retry = true)
 				}
 				return axios(config);
 			}

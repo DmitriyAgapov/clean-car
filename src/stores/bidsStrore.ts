@@ -73,12 +73,12 @@ export const initialResult: ResultsProps = {
     lon_to: 0,
     car: 0,
     important: {
-        label: '',
-        value: '',
+        label: 'По времени',
+        value: 'time',
     },
     secretKey: {
-        label: '',
-        value: 'true',
+        label: 'Нет секретки и ключа',
+        value: 'false',
     },
     phone: '',
     customer_comment: '',
@@ -520,6 +520,7 @@ export class BidsStore {
             () => this.formResult.service_subtype,
             async (subtype) => {
                 // console.log('changed', this.formResult, subtype)
+                this.formResult.service_option = [];
                 if (subtype !== "0" && subtype && this.formResult.company && this.formResult.car !== 0 && this.formResult.service_option) {
                     // console.log('changed', this.formResult, subtype)
                         await this.loadServiceSubtypeOptions(subtype)
@@ -561,6 +562,8 @@ export class BidsStore {
         reaction(
             () => this.formResult.service_type,
             async (service) => {
+                this.formResult.service_option = [];
+                this.formResult.service_subtype = 0;
                 if (service && service !== 0) {
                     await catalogStore.getServiceSubtypes(service)
                 }
@@ -679,7 +682,7 @@ export class BidsStore {
         }
     }
     async formCreateBid() {
-        this.justCreatedBid = {}
+        runInAction(() => this.justCreatedBid = {})
 
         if(this.formResult.company) {
             const res:any = await agent.Bids.createBid(this.formResult.company, {
@@ -696,11 +699,13 @@ export class BidsStore {
                 lon_from: this.formResult.lon_from,
                 lat_to: this.formResult.lat_to,
                 lon_to: this.formResult.lon_to,
+                address_from: this.formResult.address_from,
+                address_to: this.formResult.address_to,
+                truck_type: this.formResult.truck_type
             })
 
-            if(res.status === 200) {
+            if(res.status === 201) {
                 //@ts-ignore
-
                 runInAction(() => this.justCreatedBid = res.data)
             }
             return res

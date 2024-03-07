@@ -195,6 +195,9 @@ export interface CreateBidData {
   lon_from?: number,
   lat_to?: number,
   lon_to?: number,
+  truck_type?: string,
+  address_from?: string,
+  address_to?: string,
 }
 
 const Bids = {

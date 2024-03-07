@@ -1,28 +1,26 @@
-import React, { useState } from 'react'
-import 'yup-phone-lite'
-import { useStore } from 'stores/store'
+import React, { useState } from "react";
+import "yup-phone-lite";
+import { useStore } from "stores/store";
 import { useNavigate, useRevalidator } from "react-router-dom";
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import { Step } from 'components/common/layout/Step/StepPure'
-import Progress from 'components/common/ui/Progress/Progress'
-import { TimeInput } from '@mantine/dates'
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
+import Progress from "components/common/ui/Progress/Progress";
 import { observer, Observer } from "mobx-react-lite";
-import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, Select, Textarea } from '@mantine/core'
-import { action, values as val } from 'mobx'
+import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, Select, Textarea } from "@mantine/core";
+import { action, values as val } from "mobx";
 import { IMask, IMaskInput } from "react-imask";
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import { yupResolver } from "mantine-form-yup-resolver";
-import { CreateBidSchema} from "utils/validationSchemas";
-import PanelForForms from 'components/common/layout/Panel/PanelForForms';
+import { CreateBidSchema } from "utils/validationSchemas";
+import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import { createFormActions, createFormContext } from "@mantine/form";
-import SelectMantine from "components/common/ui/SelectMantine/SelectMantine";
 import { notifications } from "@mantine/notifications";
 import { SvgClose } from "components/common/ui/Icon";
 import MapWithDots from "components/common/Map/Map";
 import DList from "components/common/ui/DList/DList";
 import InputAutocompleteWithCity from "components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency";
 import moment, { MomentInput } from "moment/moment";
+import FormBidResult from "routes/bids/FormBidResult/FormBidResult";
 
 interface InitValues {
   address: string;
@@ -30,13 +28,14 @@ interface InitValues {
   conductor: string;
   car: string;
   important: string;
-  secretKey: string;
+  secretKey: { value: string, label: string } | string;
   address_from?: string
   address_to?: string
   lat_from?: number,
   lon_from?: number,
   lat_to?: number,
   lon_to?: number,
+  truck_type?: string
   phone: string;
   customer_comment: string;
   service_type: string;
@@ -61,6 +60,7 @@ export const InitValues:InitValues = {
   important: 'time',
   secretKey: 'false',
   phone: '',
+  truck_type: '',
   customer_comment: '',
   service_type: '0',
   parking: 'true',
@@ -71,13 +71,13 @@ export const InitValues:InitValues = {
   performer: '0',
 }
 
-export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
-export const createBidFormActions = createFormActions<InitValues>('createBidForm')
+export const [FormProvider, useFormContext, useForm] = createFormContext<any>();
+export const createBidFormActions = createFormActions<InitValues>('createBidForm');
 
 const FormCreateUpdateBid = ({ bid, edit }: any) => {
     const store = useStore()
     const momentFormat = 'HH:mm'
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(5)
     const [animate, setAnimate] = useState(false)
     let revalidate = useRevalidator()
     const navigate = useNavigate()
@@ -197,7 +197,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         if (payload.field === "car") {
           return ({
             //@ts-ignore
-            disabled: store.carStore.getCompanyCars.cars?.count === 0 || payload.form.values.conductor === "0" || carsData === null
+            disabled: payload.form.values.conductor === "0" || carsData === null
           })
         }
         if(payload.field === "conductor") {
@@ -292,16 +292,24 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [formData.values.conductor])
 
   const handleBack = React.useCallback(() => {
+    console.log(store.bidsStore.formResult.service_type);
+    console.log(store.bidsStore.formResult.service_type === 1);
+    console.log(step === 4);
+    console.log(step, 'step');
+    console.log(formData.values.service_type, 'formData.values.service_type');
     if(step === 4) {
-      if (formData.values.service_type === '1') {
-        changeStep(2)
+      console.log('step 4');
+      if (store.bidsStore.formResult.service_type === 1 || formData.values.service_type === "1") {
+        console.log('step 4, service type 1');
+        setStep(2)
       } else {
         setStep((prevState: number) => prevState - 1)
       }
     } else {
       setStep((prevState: number) => prevState - 1)
     }
-  }, [])
+  }, [step, store.bidsStore.formResult.service_type, formData.values.service_type])
+
   const handleNext = React.useCallback(() => {
     if(step === 2) {
       if (formData.values.service_type === '1') {
@@ -349,35 +357,38 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     } else {
     changeStep()
   }
+    console.log(step, 'step');
   }, [formData.values.service_type, step])
     return (
       <FormProvider form={formData}>
         <PanelForForms
           footerClassName={'px-8 pb-8 pt-2'}
           variant={PanelVariant.default}
-          actionBack={step !== 1 ? (
-            <Button
-            text={'Назад'}
-          action={handleBack}
-          className={'lg:mb-0 mr-auto'}
-          variant={ButtonVariant['accent-outline']}
-        />) : null
+          actionBack={step === 5 || step === 1 ? null
+             : (<Button
+              text={'Назад'}
+              action={handleBack}
+              className={'lg:mb-0 mr-auto'}
+              variant={ButtonVariant['accent-outline']}
+            />)
           }
-          actionCancel={
-         <Button type={'button'}
+          actionCancel={step !== 5 ? <Button type={'button'}
             text={'Отменить'}
             action={(e) => {
               e.preventDefault()
               navigate(-1)
             }}
             className={'float-right'}
-            variant={ButtonVariant['accent-outline']} />
-
-        }
-          actionNext={
+            variant={ButtonVariant['accent-outline']} />: null}
+          actionNext={step === 5 ?  <Button type={'button'}
+            action={() => navigate('/account/bids')}
+            text={'Закрыть'}
+            className={'float-right'}
+            variant={ButtonVariant.accent} />
+           :
             <Button type={'button'}
               action={handleNext}
-              disabled={!formData.isValid()}
+              disabled={!formData.isValid() || (store.bidsStore.AvailablePerformers.size === 0 && step === 4)}
               text={'Сохранить'}
               className={'float-right'}
               variant={ButtonVariant.accent} />
@@ -483,8 +494,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                           formData.setFieldValue(step2.fields[1].name, '0')
                           formData.setFieldValue(step2.fields[0].name, '0')
                         } else {
+                          console.log('set service_type');
+                          formData.setFieldValue(step2.fields[1].name, null);
                           action(() => {
-                            store.catalogStore.currentService = Number(value)
+                            store.catalogStore.currentService = Number(value);
                             store.catalogStore.currentServiceSubtypesOptions = new Map([])
                           })
                           store.bidsStore.formResultSet({ service_type: Number(value) })
@@ -554,6 +567,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                               val(store.catalogStore.ServiceSubtypesOptions).map(
                                 (i: any) => (
                                   <Checkbox
+                                    key={i.id}
                                     value={String(i.id)}
                                     onClick={(values: any) =>
                                       console.log(values.target.checked)
@@ -573,7 +587,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     store.bidsStore.formResultSet({ customer_comment: values.currentTarget.value })
                     formData.setFieldValue('customer_comment', values.currentTarget.value)
                   }}
-                  defaultValue={store.bidsStore.formResult.customer_comment ?? ''}
                   label={'Комментарий'}
                   placeholder={'Дополнительная информация, которая может помочь в выполнении заявки'}
                 />
@@ -677,11 +690,13 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     section: 'mr-1 text-sm',
                     // input: 'pl-7',
                   }}
-                  onInput={(values) =>
+                  onInput={(values) => {
+                    console.log(formData.values.time);
+                    formData.setFieldValue('time', values.currentTarget.value);
                     store.bidsStore.formResultSet({
                       time: { label: step3.fields[4].label, value: values.currentTarget.value },
                     })
-                  }
+                  }}
                   /*@ts-ignore*/
                   blocks={{
                     YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
@@ -749,6 +764,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   {/* /> */}
                   <Select
                     {...formData.getInputProps('secretKey')}
+                    defaultValue={'true'}
                     onOptionSubmit={(values) => {
                       store.bidsStore.formResultSet({
                         secretKey: {
@@ -790,11 +806,13 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                       section: 'mr-1 text-sm',
                       // input: 'pl-7',
                     }}
-                    onInput={(values) =>
+                    onInput={(values) => {
+                      console.log(formData.values.time);
+                      formData.setFieldValue('time', values.currentTarget.value);
                       store.bidsStore.formResultSet({
                         time: { label: step3.fields[4].label, value: values.currentTarget.value },
                       })
-                    }
+                    }}
                     /*@ts-ignore*/
                     blocks={{
                       YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
@@ -846,7 +864,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 </>
               }
             >
-                    <Select
+              {(store.bidsStore.AvailablePerformers.size === 0) ? <><Heading className={'col-span-full'} text={'Исполнители не найдены'} variant={HeadingVariant.h3}/></> :
+                    (<><Select
                       className={'col-span-2'}
                       required
                       label={step4.fields[0].label}
@@ -872,99 +891,16 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                       }))}
                     />
                 <MapWithDots />
-
-            </PanelForForms>
-            <PanelForForms
-              state={step !== 5}
-              animate={animate}
-              className={'!bg-transparent'}
-              bodyClassName={'grid !grid-cols-3 gap-4'}
-              variant={PanelVariant.textPadding}
-              background={PanelColor.default}
-              header={
-                <>
-                  <Heading
-                    text={step5.title}
-                    color={HeadingColor.accent}
-                    variant={HeadingVariant.h2}
-                  />
-                  <div className={'text-base'}>{step5.description}</div>
-                </>
+                    </>
+                    )
               }
 
-            >
-              {store.bidsStore.currentBid.id && (
-                <Panel
-                  className={' !border-active !border-1'}
-                  bodyClassName={'grid grid-cols-2  gap-y-5  gap-x-12 content-start !py-8'}
-                  variant={PanelVariant.withPaddingSmWithBody}
-                  background={PanelColor.glass}
-                >
-                  <DList
-                    className={'child:dt:text-accent'}
-                    label={'Услуга'}
-                    title={
-                      <Heading
-                        variant={HeadingVariant.h2}
-                        text={store.bidsStore.currentBid.service_type.name}
-                        color={HeadingColor.active}
-                      />
-                    }
-                  />
-                  <DList
-                    className={'child:dt:text-accent'}
-                    label={'Тип услуги'}
-                    title={
-                      <Heading
-                        variant={HeadingVariant.h4}
-                        text={store.bidsStore.currentBid.service_subtype.name}
-                      />
-                    }
-                  />
-                  {/* //todo: address */}
-                  <DList
-                    className={'child:dt:text-accent'}
-                    label={'Адрес выезда'}
-                    title={store.bidsStore.formResultsAll.address}
-                  />
-                  <DList
-                    className={'child:dt:text-accent'}
-                    label={'Важность'}
-                    title={store.bidsStore.formResultsAll.important.label}
-                  />
-                  <DList
-                    className={'child:dt:text-accent'}
-                    label={'Время'}
-                    title={store.bidsStore.formResultsAll.time.value}
-                  />
-                  <DList
-                    className={'child:dt:text-accent'}
-                    label={'Дополнительные данные'}
-                    title={
-                      <>
-                        <ul>
-                          <li>{store.bidsStore.formResultsAll.secretKey.label}</li>
-                          <li>{store.bidsStore.formResultsAll.parking.label}</li>
-                        </ul>
-                      </>
-                    }
-                  />
-                  <DList
-                    className={'child:dt:text-accent'}
-                    label={'Дополнительные опции'}
-                    title={
-                      <>
-                        <ul>
-                          {store.bidsStore.currentBid.service_option.map((i: any) => (
-                            <li key={i.id}>{i.name}</li>
-                          ))}
-                        </ul>
-                      </>
-                    }
-                  />
-                </Panel>
-              )}
             </PanelForForms>
+            <FormBidResult
+              state={step !== 5}
+              animate={animate}
+              {...store.bidsStore.justCreatedBid}
+            />
 
           </form>
         </PanelForForms>
