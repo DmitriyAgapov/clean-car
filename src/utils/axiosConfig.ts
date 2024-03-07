@@ -12,10 +12,10 @@ axios.interceptors.request
 			// 	console.log('config.params', config);
 			// 	paramsStore.setParams(config.params)
 			// }
-			if (window.sessionStorage.getItem('jwt')) {
+			if (window.localStorage.getItem('jwt')) {
 				// @ts-ignore
 				config.headers = {
-					Authorization: `Bearer ${window.sessionStorage.getItem('jwt')}`
+					Authorization: `Bearer ${window.localStorage.getItem('jwt')}`
 				};
 			}
 			return config;
@@ -30,7 +30,7 @@ axios.interceptors.response.use(
 		async (error) => {
 			const config = error.config;
 			if (error.response.status === 401 && !config._retry) {
-				const tokenRefresh = window.sessionStorage.getItem('jwt_refresh')
+				const tokenRefresh = window.localStorage.getItem('jwt_refresh')
 				config._retry = true;
 				if(tokenRefresh) {
 			  agent.Auth.tokenRefresh(tokenRefresh).then((response: any) => {

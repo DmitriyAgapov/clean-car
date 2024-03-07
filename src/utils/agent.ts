@@ -152,7 +152,7 @@ const handleErrors = (err: AxiosError) => {
       })
     }
     if (err && err.response && err.response.status === 401) {
-        const refr = window.sessionStorage.getItem('jwt_refresh')
+        const refr = window.localStorage.getItem('jwt_refresh')
         if (refr) {
         agent.Auth.tokenRefresh(refr)
             .then((resolve: any) => resolve.data)

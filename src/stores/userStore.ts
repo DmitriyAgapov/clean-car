@@ -257,7 +257,7 @@ export class UserStore {
     window.localStorage.clear()
     appStore.setAppType('')
     appStore.setAppRouteName('.авторизация')
-    sessionStorage.clear()
+    localStorage.clear()
   }
 }
 

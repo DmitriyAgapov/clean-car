@@ -22,13 +22,13 @@ export class AppStore {
       (token) => {
         if (token) {
           console.log('Has token');
-          window.sessionStorage.setItem('jwt', token)
+          window.localStorage.setItem('jwt', token)
           userStore.pullUser()
           userStore.loadMyProfile()
         } else {
           console.log('no token');
-          window.sessionStorage.removeItem('jwt')
-          sessionStorage.clear()
+          window.localStorage.removeItem('jwt')
+          localStorage.clear()
         }
       },
     )
@@ -43,9 +43,9 @@ export class AppStore {
     reaction(() => this.tokenRefresh,
       (tokenRefresh) => {
         if (tokenRefresh) {
-          window.sessionStorage.setItem('jwt_refresh', tokenRefresh)
+          window.localStorage.setItem('jwt_refresh', tokenRefresh)
         } else {
-          window.sessionStorage.removeItem('jwt_refresh')
+          window.localStorage.removeItem('jwt_refresh')
         }
       },
     )
@@ -100,8 +100,8 @@ export class AppStore {
   appName = 'CleanCar'
   appRouteName = '.авторизация'
   appTheme = 'dark'
-  token = window.sessionStorage.getItem('jwt')
-  tokenRefresh = window.sessionStorage.getItem('jwt_refresh')
+  token = window.localStorage.getItem('jwt')
+  tokenRefresh = window.localStorage.getItem('jwt_refresh')
   appPermissions?: Permissions[]
   tokerError: string | null = null
   tokenFull: {} | null = null
