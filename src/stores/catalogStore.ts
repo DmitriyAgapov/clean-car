@@ -2,6 +2,7 @@ import { autorun, computed, flow, get, makeAutoObservable, observable, Observabl
 import agent, { PaginationProps } from 'utils/agent'
 import { hydrateStore, makePersistable } from "mobx-persist-store";
 import authStore from "stores/authStore";
+import bidsStore from "stores/bidsStrore";
 
 export class CatalogStore {
     constructor() {
@@ -124,7 +125,11 @@ export class CatalogStore {
             subtypes: false,
         }
     }
-
+    get ServiceSubtypesOptions() {
+        const activeSubtype = this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]
+        console.log(this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]);
+        return activeSubtype.options
+    }
     targetModelId = 0
     cities: Map<any, any> = observable.map([])
     services: Map<any, any> = observable.map([])

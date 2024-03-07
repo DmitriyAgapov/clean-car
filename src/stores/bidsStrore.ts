@@ -522,12 +522,15 @@ export class BidsStore {
                 // console.log('changed', this.formResult, subtype)
                 if (subtype !== "0" && subtype && this.formResult.company && this.formResult.car !== 0 && this.formResult.service_option) {
                     // console.log('changed', this.formResult, subtype)
-                    await this.loadServiceSubtypeOptions(subtype)
-                     this.loadCurrentPerformers(Number(this.formResult.company), {
-                        car_id: this.formResult.car,
-                        subtype_id: this.formResult.service_subtype,
-                        options_idx: this.formResult.service_option
-                    })
+                        await this.loadServiceSubtypeOptions(subtype)
+                    console.log('changed', this.formResult, subtype, this.formResult.service_option);
+                    // if(this.formResult.service_option.length > 0 && this.formResult.service_option !== 0 && this.formResult.service_subtype !== 0) {
+                    //     this.loadCurrentPerformers(Number(this.formResult.company), {
+                    //         car_id: this.formResult.car,
+                    //         subtype_id: this.formResult.service_subtype,
+                    //         options_idx: this.formResult.service_option
+                    //     })
+                    // }
                 }
 
                 if(subtype === 0) {
@@ -535,6 +538,17 @@ export class BidsStore {
                 }
             },
         )
+        reaction(() => this.formResult.service_option, async (options) => {
+          if(options) {
+              if (this.formResult.car !== 0 && this.formResult.service_subtype !== 0) {
+                  await this.loadCurrentPerformers(Number(this.formResult.company), {
+                      car_id: this.formResult.car,
+                      subtype_id: this.formResult.service_subtype,
+                      options_idx: this.formResult.service_option
+                  })
+              }
+          }
+        })
         reaction(
             () => this.formResult.service_type,
             async (service) => {

@@ -132,7 +132,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }, [])
   const initData = React.useMemo(() => {
     let initValues = InitValues
-
+    if(!edit) {
+      console.log('Очистить форму');
+      store.bidsStore.formResultsClear()
+    }
     if (edit) {
       initValues = {
         ...InitValues
@@ -194,7 +197,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         if (payload.field === "car") {
           return ({
             //@ts-ignore
-            disabled: store.carStore.getCompanyCars.cars.count === 0 || payload.form.values.conductor === "0" || carsData === null
+            disabled: store.carStore.getCompanyCars.cars?.count === 0 || payload.form.values.conductor === "0" || carsData === null
           })
         }
         if(payload.field === "conductor") {
@@ -202,11 +205,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         }
         if(payload.field === "conductor") {
           if(formData.values.conductor !== "0" && formData.values.conductor !== null && formData.values.company !== null && formData.values.company !== "0") {
-
             const car = store.carStore.cars.results.filter((c: any) => c.employees.filter((e:any) =>  e.id === Number(formData.values.conductor))[0])
-
             if(car.length === 1) {
               formData.values.car = String(car[0].id)
+             if(store.bidsStore.formResult.car === 0) {
+               store.bidsStore.formResultSet({ car: car[0].id })
+             }
             }
 
           }
@@ -218,11 +222,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
     },
   });
-    React.useEffect(() => {
-      if(formData.values.company !== '0') {
-        store.bidsStore.formResultSet({ company: Number(formData.values.company) })
-      }
-    }, [formData.values.company])
+
+  React.useEffect(() => {
+    if(formData.values.company !== '0') {
+      store.bidsStore.formResultSet({ company: Number(formData.values.company) })
+    }
+  }, [formData.values.company])
 
    const carsData = React.useMemo(() => {
      //@ts-ignore
@@ -247,6 +252,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       store.bidsStore.formResultSet({ company: 0 })
     }
   },[])
+
   React.useEffect(() => {
     if(formData.values.company === null) {
       // setValues(initialValues, true)
@@ -285,6 +291,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }
   }, [formData.values.conductor])
 
+  const handleBack = React.useCallback(() => {
+    if(step === 4) {
+      if (formData.values.service_type === '1') {
+        changeStep(2)
+      } else {
+        setStep((prevState: number) => prevState - 1)
+      }
+    } else {
+      setStep((prevState: number) => prevState - 1)
+    }
+  }, [])
   const handleNext = React.useCallback(() => {
     if(step === 2) {
       if (formData.values.service_type === '1') {
@@ -338,13 +355,13 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         <PanelForForms
           footerClassName={'px-8 pb-8 pt-2'}
           variant={PanelVariant.default}
-          actionBack={
+          actionBack={step !== 1 ? (
             <Button
             text={'Назад'}
-          action={() => setStep((prevState: number) => prevState - 1)}
+          action={handleBack}
           className={'lg:mb-0 mr-auto'}
           variant={ButtonVariant['accent-outline']}
-        />
+        />) : null
           }
           actionCancel={
          <Button type={'button'}
@@ -376,16 +393,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               bodyClassName={'grid !grid-cols-3 gap-4'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
-              header={
-                <>
-                  <Heading
-                    text={step1.title}
-                    color={HeadingColor.accent}
-                    variant={HeadingVariant.h2}
-                  />
-                  <div className={'text-base'}>{step1.description}</div>
-                </>
-              }
+              header={<><Heading text={step1.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step1.description}</div></>}
             >
               <Select
                 {...formData.getInputProps('company')}
@@ -449,7 +457,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 clearable
                 onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
                 //@ts-ignore
-                label={step1.fields[4].label} searchable data={store.carStore.cars.length !== 0 && carsData !== null ? carsData.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']}
+                label={step1.fields[4].label} searchable data={store.carStore.cars && store.carStore.cars.length !== 0 && carsData !== null ? carsData.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']}
               />
               <hr className={'col-span-full border-transparent my-2'} />
               {memoFileUpload}
@@ -462,18 +470,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               bodyClassName={'grid !grid-cols-3 gap-4'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
-              header={
-                <>
-                  <Heading
-                    text={step2.title}
-                    color={HeadingColor.accent}
-                    variant={HeadingVariant.h2}
-                  />
-                  <div className={'text-base'}>{step2.description}</div>
-                </>
-              }
+              header={<><Heading text={step2.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step2.description}</div></>}
             >
-
                     <Select
                       {...formData.getInputProps(step2.fields[0].name)}
                       label={step2.fields[0].label}
@@ -502,7 +500,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         {...formData.getInputProps(step2.fields[1].name)}
                         label={step2.fields[1].label}
                         disabled={store.bidsStore.formResult.service_type === 0}
-                        onChange={(value) => {
+                        // onChange={(value) => {
+                        //
+                        // }}
+                        onOptionSubmit={(value) => {
                           if (value === null) {
                             store.bidsStore.formResultSet({ service_subtype: 0 })
                             formData.setFieldValue(step2.fields[1].name, '0')
@@ -514,10 +515,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             })
                           }
                         }}
-                        onOptionSubmit={(value) => {
-                          store.bidsStore.formResultSet({ service_subtype: Number(value) })
-                        }}
-                        name={step2.fields[1].name}
                         data={
                           store.catalogStore.currentService !== 0
                             ? val(store.catalogStore.currentServiceSubtypes).map(
@@ -533,7 +530,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   formData.values.service_subtype !== '0' &&
                   formData.values.service_subtype &&
                   formData.values.service_subtype !== '0' && (
-                        <Checkbox.Group
+                <Checkbox.Group
                           className={'col-span-2'}
                           classNames={{
                             label: 'text-accent label mb-4',
@@ -553,8 +550,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                           label='Выберите дополнительные опции (при необходимости)'
                         >
                           <Group mt='xs'>
-                            {store.catalogStore.currentServiceSubtypesOptions.size !== 0 &&
-                              val(store.catalogStore.currentServiceSubtypesOptions).map(
+                            {store.catalogStore.ServiceSubtypesOptions.length !== 0 &&
+                              val(store.catalogStore.ServiceSubtypesOptions).map(
                                 (i: any) => (
                                   <Checkbox
                                     value={String(i.id)}
@@ -596,16 +593,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 bodyClassName={'grid !grid-cols-3 gap-4'}
                 variant={PanelVariant.textPadding}
                 background={PanelColor.default}
-                header={
-                  <>
-                    <Heading
-                      text={step3.title}
-                      color={HeadingColor.accent}
-                      variant={HeadingVariant.h2}
-                    />
-                    <div className={'text-base'}>{step3.description}</div>
-                  </>
-                }
+                header={<><Heading text={step3.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step3.description}</div></>}
               >
 
                   <InputAutocompleteWithCity
@@ -657,9 +645,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     label={'Тип эвакуатора?'}
                     data={[
                       { label: 'эвакуатор', value: 'эвакуатор' },
-                      { label: 'манипулятор ', value: 'манипулятор' },
-                      { label: '3', value: '3' },
-                      { label: '4', value: '4' },
+                      { label: 'манипулятор ', value: 'манипулятор' }
                     ]}
                   />
                   <hr className={'col-span-full border-transparent my-2'} />

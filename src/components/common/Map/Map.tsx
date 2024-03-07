@@ -73,7 +73,7 @@ const MapWithDots = () => {
     ),
     [])
   if(performersAr.size > 0) return (
-        <div className={'rounded-md overflow-hidden bg-black/80 content-start col-span-2 row-start-1 col-start-3 row-span-2'} style={{minHeight: '500px', height:' 100%', width: '100%', position: 'relative', display: 'block' }}>
+        <div className={'rounded-md overflow-hidden bg-black/80 content-start col-span-2 row-start-1 col-start-3 row-span-2'} style={{minHeight: '24rem', height:' 100%', width: '100%', position: 'relative', display: 'block' }}>
             {displayMap}
         </div>
     )
