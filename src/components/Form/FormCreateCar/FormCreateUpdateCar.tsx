@@ -220,20 +220,20 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
           variant={PanelVariant.default}
 
           actionCancel={<>
-              <Button
-                type={'button'}
-                text={'Чек'}
-                action={(e) => {
-            			e.preventDefault()
-                  console.log(form.errors)
-                  console.log(form.values)
-                  form.validate()
-                  console.log(form.isValid())
+            {/*   <Button */}
+            {/*     type={'button'} */}
+            {/*     text={'Чек'} */}
+            {/*     action={(e) => { */}
+            {/* 			e.preventDefault() */}
+            {/*       console.log(form.errors) */}
+            {/*       console.log(form.values) */}
+            {/*       form.validate() */}
+            {/*       console.log(form.isValid()) */}
 
-            		}}
-                className={'float-right'}
-                variant={ButtonVariant['accent-outline']}
-            />
+            {/* 		}} */}
+            {/*     className={'float-right'} */}
+            {/*     variant={ButtonVariant['accent-outline']} */}
+            {/* /> */}
             {step !== 3 ?  <Button type={'button'}
             text={'Отменить'}
             action={(e) => {

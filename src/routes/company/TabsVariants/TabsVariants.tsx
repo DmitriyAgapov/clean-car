@@ -497,7 +497,7 @@ export const TabsVariantBids = ({
                     {data.create_amount && <DList
                       className={'child:dt:text-accent child:*:text-accent'}
                       label={'Стоимость услуги'}
-                      title={<Heading variant={HeadingVariant.h2} text={String(data.create_amount)} />}
+                      title={<Heading variant={HeadingVariant.h2} text={data.create_amount} />}
                     />}
                   </Panel>
                 </Tabs.Panel>

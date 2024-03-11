@@ -22,7 +22,7 @@ const BidPage = () => {
 	const params = useParams()
 	const dataL:any = useLoaderData()
 	let revalidator = useRevalidator()
-	const bid = bidsStore.CurrentBid
+	const bid = store.bidsStore.CurrentBid
 	const textData = store.bidsStore.text
 	console.log('bid', bid);
 	const tabedData = [
@@ -32,6 +32,7 @@ const BidPage = () => {
 		{ label: 'История заявки', data: bid }
 	]
 	React.useEffect(() => {
+		console.log(bid);
 		if(bid.status === BidsStatus["Новая"] && store.appStore.appType === "performer") {
 			(async () => {
 				if (params.company_id && params.id) {
@@ -41,6 +42,7 @@ const BidPage = () => {
 			})()
 		}
 	}, [bid.status])
+
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	// if (location.pathname !== `/account/references/${textData.path}/`) return <Outlet />
 	return (

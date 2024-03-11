@@ -8,18 +8,20 @@ import React from "react";
 
 interface BidResult {
 	service_type: number | string
+	create_amount?: number | string
 	service_subtype: number | string
 	important?: string
 	time?: string
 	service_option?: number[]
 	additional_data?: string[]
 	address?: string | null
+	customer_comment? : string | null
 	address_to?: string | null
 	address_from?: string | null
 	destroyed_tires?: string
 	truck_type?: string
 }
-const FormBidResult = observer(({service_type, service_subtype, important, time, service_option, additional_data, address, address_to, address_from, destroyed_tires, truck_type, ...props}:BidResult) => {
+const FormBidResult = observer(({service_type, create_amount, service_subtype, customer_comment, important, time, service_option, additional_data, address, address_to, address_from, destroyed_tires, truck_type, ...props}:BidResult) => {
 
 	const store = useStore()
 	const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
@@ -121,6 +123,21 @@ const FormBidResult = observer(({service_type, service_subtype, important, time,
 					</>
 				}
       />}
+			{customer_comment && <DList
+        className={'child:dt:text-accent col-span-full'}
+        label={'Комментарий'}
+        title={
+					<p>
+						{customer_comment}
+					</p>
+				}
+      />}
+			{create_amount && <DList
+        className={'child:dt:text-accent child:*:text-accent'}
+        label={'Стоимость услуги'}
+        title={<Heading variant={HeadingVariant.h2} text={create_amount} />}
+      />}
+
 		</Panel>}
 
 	</PanelForForms>

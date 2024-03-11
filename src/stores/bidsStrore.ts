@@ -486,8 +486,8 @@ export class BidsStore {
         )
         autorun(() => {
             if(!this.refreshBids) {
-                console.log('refresh');
-                if (window.location.pathname.includes('bids')) {
+                console.log('refresh', window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/"));
+                if (window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/")) {
                     console.log('includes(\'bids\')');
                     setTimeout(() => {
                         this.loadAllBids(paramsStore.qParams)
@@ -497,8 +497,37 @@ export class BidsStore {
                 } else {
                     runInAction(() => this.refreshBids = true)
                 }
+                if (window.location.pathname.includes('bids') && window.location.pathname.includes("bids/")) {
+                    console.log('includes(\'bids\')');
+                    setTimeout(() => {
+                        const id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 1];
+                        console.log('params', window.location.pathname.split('/')[window.location.pathname.split('/').length - 1]);
+                        this.loadBidByCompanyAndBidId(Number(userStore.myProfileData.company.id), Number(id))
+                        runInAction(() => this.refreshBids = false)
+                    }, 5000)
+                    runInAction(() => this.refreshBids = true)
+                } else {
+                    runInAction(() => this.refreshBids = true)
+                }
+
             }
         })
+        // autorun(() => {
+        //     if(this.currentBid.id) {
+        //         console.log('refresh', window.location.pathname.includes(`bids\'`));
+        //         if (window.location.pathname.includes(`bids\'`)) {
+        //             console.log('includes(\'bids\')');
+        //             setTimeout(() => {
+        //                 this.loadAllBids(paramsStore.qParams)
+        //                 runInAction(() => this.refreshBids = false)
+        //             }, 5000)
+        //             runInAction(() => this.refreshBids = true)
+        //         } else {
+        //             runInAction(() => this.refreshBids = true)
+        //         }
+        //     }
+        // })
+
         reaction(() => this.formResult.conductor,
             async (conductor)=> {
                 if(conductor !== 0 || conductor !== null) {
