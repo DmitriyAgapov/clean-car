@@ -461,11 +461,7 @@ export const TabsVariantBids = ({
                       />
                     }
                   />
-                  {data.service_subtype?.id && <DList
-                    className={'child:dt:text-accent col-span-2'}
-                    label={'Адрес забора'}
-                    title={data.address_from}
-                  />}
+
                   {data.address_from && <DList
                     className={'child:dt:text-accent col-span-2'}
                     label={'Адрес забора'}
@@ -496,7 +492,7 @@ export const TabsVariantBids = ({
                     {data.truck_type && <DList
                       className={'child:dt:text-accent'}
                       label={'Тип эвакуатора'}
-                      title={<Heading variant={HeadingVariant.h4} text={data.truck_type.name} />}
+                      title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
                     />}
                     {data.create_amount && <DList
                       className={'child:dt:text-accent child:*:text-accent'}
