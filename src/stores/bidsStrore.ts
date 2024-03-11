@@ -1,15 +1,16 @@
 import { action, autorun, makeAutoObservable, observable, reaction, runInAction, values as val, values, when } from "mobx";
-import agent, { CreateBidData, PaginationProps } from "utils/agent";
+import agent, { CreateBidData,  PaginationProps } from "utils/agent";
 import catalogStore, { CatalogStore } from "stores/catalogStore";
 import { makePersistable, hydrateStore, clearPersistedStore, StorageController } from "mobx-persist-store";
 import usersStore from "stores/usersStore";
 import carStore from "stores/carStore";
 import companyStore from "stores/companyStore";
-import { CurrentBidProps } from "stores/types/bidTypes";
+import { CurrentBidProps, KeysBidCreate } from "stores/types/bidTypes";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
 import paramsStore from "stores/paramStore";
 import authStore from "stores/authStore";
+
 export enum BidsStatus  {
 	'Новая' = 'Новая',
 	'Отменена' = 'Отменена',
@@ -25,75 +26,65 @@ export enum BidsStatus  {
 const clone = (obj:any) => JSON.parse(JSON.stringify(obj))
 export interface ResultsProps
     {
-        address: string
-        address_from?: string
-        address_to?: string
+        address: string | null
+        address_from?: string  | null
+        address_to?: string  | null
         company: number | null
-        lat_from?: number,
-        lon_from?: number,
-        lat_to?: number,
-        lon_to?: number,
+        lat_from?: number  | null
+        lon_from?: number  | null
+        lat_to?: number  | null
+        lon_to?: number  | null
+        is_parking: boolean | null
         conductor: number
         important: {
             label?: string
             value?: string
-        }
+        }  | null
         car: number
-        phone: string
+        phone: string  | null
         parking:  {
-            label?: string
-            value?: string
-        }
+            label?: string  | null
+            value?: string  | null
+        }  | null
         secretKey:  {
-            label?: string
-            value?: string
-        }
-        customer_comment: string
+            label?: string  | null
+            value?: string  | null
+        }  | null
+        customer_comment: string  | null
         service_type: number
         service_option: number[]|[]
         service_subtype: number
         city: number
         time:  {
-            label?: string
-            value?: string
-        }
+            label?: string  | null
+            value?: string  | null
+        }  | null
         performer: number
 
     }
 
 export const initialResult: ResultsProps = {
-    address: '',
-    address_from: '',
-    address_to: '',
-    company: null,
+    address: null,
+    city: 0,
+    address_from: "",
+    address_to: "",
+    company: 0,
     conductor: 0,
     lat_from: 0,
     lon_from: 0,
     lat_to: 0,
     lon_to: 0,
     car: 0,
-    important: {
-        label: 'По времени',
-        value: 'time',
-    },
-    secretKey: {
-        label: 'Нет секретки и ключа',
-        value: 'false',
-    },
+    important: null,
+    secretKey: null,
     phone: '',
-    customer_comment: '',
+    customer_comment: null,
     service_type: 0,
-    parking: {
-        label: '',
-        value: 'true',
-    },
+    parking: null,
     service_option: [],
     service_subtype: 0,
-    city: 0,
-    time: {
-        label: '',
-        value: '',
-    },
+    is_parking: null,
+    time: null,
     performer: 0,
 }
 export class InitialResult {
@@ -296,8 +287,9 @@ export class BidsStore {
                     required: true,
                     //TODO: Варианты какие еще могут быть
                     options: [
-                        { value: 'true', label: 'Есть секретка и ключ' },
-                        { value: 'false', label: 'Нет секретки и ключа' },
+                        { value: 'есть секретка и ключ', label: 'есть секретка и ключ' },
+                        { value: 'есть секретка и нет ключа', label: 'есть секретка и нет ключа' },
+                        { value: 'нет секретки', label: 'нет секретки' },
                     ],
                     defaultValue: 'true',
                 },
@@ -479,7 +471,7 @@ export class BidsStore {
             () => this.formResult.company,
             (customer, oldCustomer) => {
                 if(authStore.userIsLoggedIn) {
-                    if (customer !== 0 && customer !== null) {
+                    if (customer !== "0" && customer !== 0 && customer !== null) {
                         runInAction(async () => {
                             await usersStore.getUsers(customer)
                             await carStore.getCarsByCompony(customer)
@@ -686,22 +678,27 @@ export class BidsStore {
 
         if(this.formResult.company) {
             const res:any = await agent.Bids.createBid(this.formResult.company, {
-                company: this.formResult.company,
-                car: this.formResult.car,
-                customer_comment: this.formResult.customer_comment,
-                conductor: this.formResult.conductor,
-                phone: this.formResult.phone.replaceAll(' ', ''),
-                performer: this.formResult.performer,
-                service_option: this.formResult.service_option,
-                service_type: this.formResult.service_type,
-                service_subtype: this.formResult.service_subtype,
-                lat_from: this.formResult.lat_from,
-                lon_from: this.formResult.lon_from,
-                lat_to: this.formResult.lat_to,
-                lon_to: this.formResult.lon_to,
-                address_from: this.formResult.address_from,
-                address_to: this.formResult.address_to,
-                truck_type: this.formResult.truck_type
+                address_from: this.formResult.address_from,/**/
+                address_to: this.formResult.address_to,/**/
+                car: this.formResult.car,/**/
+                city: this.formResult.city,/**/
+                company: this.formResult.company,/**/
+                conductor: this.formResult.conductor,/**/
+                keys: this.formResult.secretKey?.value,/**/
+                customer_comment: this.formResult.customer_comment,/**/
+                is_parking: this.formResult.parking?.value === "true",/**/
+                lat_from: this.formResult.lat_from,/**/
+                lat_to: this.formResult.lat_to,/**/
+                lon_from: this.formResult.lon_from,/**/
+                lon_to: this.formResult.lon_to,/**/
+                performer: this.formResult.performer,/**/
+                phone: this.formResult.phone.replaceAll(" ", ""),/**/
+                service_option: this.formResult.service_option,/**/
+                service_subtype: this.formResult.service_subtype,/**/
+                service_type: this.formResult.service_type,/**/
+                truck_type: this.formResult.truck_type,/**/
+                wheel_lock: Number(this.formResult.tire_destroyed)
+                /**/
             })
 
             if(res.status === 201) {

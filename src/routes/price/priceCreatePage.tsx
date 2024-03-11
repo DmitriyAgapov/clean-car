@@ -7,8 +7,6 @@ import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "componen
 import { SvgBackArrow } from "components/common/ui/Icon";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import React from "react";
-import FormCreateBid from "components/Form/FormCreateBid/FormCreateBid";
-
 const PriceCreatePage = (props:any) => {
 	const store = useStore()
 	const location = useLocation()
@@ -29,7 +27,6 @@ const PriceCreatePage = (props:any) => {
 				</>)}
 			</>}>
 			</Panel>
-			<FormCreateBid />
 			{/* {!props.edit ? textData.createPageForm.call() : textData.editPageForm.call()} */}
 
 		</Section>

@@ -12,6 +12,7 @@ import { SvgClose } from "components/common/ui/Icon";
 import React from "react";
 import company from "routes/company/company";
 import useSWR from "swr";
+import { KeysBidCreate } from "stores/types/bidTypes";
 
 export type PaginationProps = {
   name?: string | number | URLSearchParams | null,
@@ -176,29 +177,37 @@ const Price = {
     getCurentCompanyPriceEvac: (company_id: number) => requests.get(`/price/${company_id}/active_evacuation`, {}),
     getCurentCompanyPriceTire: (company_id: number) => requests.get(`/price/${company_id}/active_tire`, {}),
     getCurentCompanyPriceWash: (company_id: number) => requests.get(`/price/${company_id}/active_wash`, {}),
-    updatePriceWash: (company_id: number, price_id: number, data: any) => requests.post(`/price/${company_id}/${price_id}/new_wash/`, {positions: data}),
-    updatePriceEvac: (company_id: number, price_id: number, data: any) => requests.post(`/price/${company_id}/${price_id}/new_evacuation/`, {positions: data}),
-    updatePriceTire: (company_id: number, price_id: number, data: any) => requests.post(`/price/${company_id}/${price_id}/new_tire/`, {positions: data}),
+    updatePriceWash: (company_id: number, price_id: number, data: any) =>
+        requests.post(`/price/${company_id}/${price_id}/new_wash/`, { positions: data }),
+    updatePriceEvac: (company_id: number, price_id: number, data: any) =>
+        requests.post(`/price/${company_id}/${price_id}/new_evacuation/`, { positions: data }),
+    updatePriceTire: (company_id: number, price_id: number, data: any) =>
+        requests.post(`/price/${company_id}/${price_id}/new_tire/`, { positions: data }),
 }
 
 export interface CreateBidData {
-  phone: string,
-  performer: number,
-  company: number,
-  conductor: number,
-  car: number,
-  service_type: number,
-  service_subtype: number,
-  service_option: number[],
-  customer_comment?: string
-  lat_from?: number,
-  lon_from?: number,
-  lat_to?: number,
-  lon_to?: number,
-  truck_type?: string,
-  address_from?: string,
-  address_to?: string,
+    address_from?: string | null
+    address_to?: string | null
+    car: number
+    city: number
+    company: number
+    conductor: number
+    customer_comment?: string | null
+    is_parking?: boolean | null
+    keys: KeysBidCreate | null
+    lat_from?: number | null
+    lat_to?: number | null
+    lon_from?: number | null
+    lon_to?: number | null
+    performer: number | null
+    phone: string | null
+    service_option: number[]
+    service_subtype: number
+    service_type: number
+    truck_type?: string | null
+    wheel_lock: number | null
 }
+
 
 const Bids = {
   getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),

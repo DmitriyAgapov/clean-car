@@ -86,28 +86,28 @@ const FormBidResult = observer(({service_type, service_subtype, important, time,
         title={address_to}
       />}
 
-			<DList
+			{store.bidsStore.formResultsAll.important?.label && <DList
 				className={'child:dt:text-accent'}
 				label={'Важность'}
 				title={store.bidsStore.formResultsAll.important.label}
-			/>
-			{store.bidsStore.formResultsAll.important.value === "time" && <DList
+			/>}
+			{store.bidsStore.formResultsAll.important?.value === "time" && <DList
         className={'child:dt:text-accent'}
         label={'Время'}
-        title={store.bidsStore.formResultsAll.time.value}
+        title={store.bidsStore.formResultsAll.time?.value}
       />}
-			<DList
+			{store.bidsStore.formResultsAll.secretKey?.label || store.bidsStore.formResultsAll.secretKey?.label && <DList
 				className={'child:dt:text-accent'}
 				label={'Дополнительные данные'}
 				title={
 					<>
 						<ul>
-							<li>{store.bidsStore.formResultsAll.secretKey.label}</li>
-							<li>{store.bidsStore.formResultsAll.parking.label}</li>
+							{store.bidsStore.formResultsAll.secretKey?.label && <li>{store.bidsStore.formResultsAll.secretKey.label}</li>}
+							{store.bidsStore.formResultsAll.parking?.label	 && <li>{store.bidsStore.formResultsAll.parking.label}</li>}
 						</ul>
 					</>
 				}
-			/>
+			/>}
 			{service_option && service_option.length !== 0 && <DList
         className={'child:dt:text-accent'}
         label={'Дополнительные опции'}

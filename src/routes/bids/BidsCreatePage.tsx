@@ -1,14 +1,12 @@
 import { useStore } from "stores/store";
-import { Navigate, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Navigate,  useLocation, useNavigate } from "react-router-dom";
 import { PermissionNames } from "stores/permissionStore";
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelVariant } from "components/common/layout/Panel/Panel";
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { SvgBackArrow } from "components/common/ui/Icon";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import React from "react";
-import FormCreateBid from "components/Form/FormCreateBid/FormCreateBid";
-import FormCreateUpdateBid from "components/Form/FormCreateBid/FormCreateUpdateBid";
+import React from "react";import FormCreateUpdateBid from "components/Form/FormCreateBid/FormCreateUpdateBid";
 
 const BidsCreatePage = (props:any) => {
 	const store = useStore()

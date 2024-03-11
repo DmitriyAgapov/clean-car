@@ -343,13 +343,12 @@ export const TabsVariantBids = ({
     let result
     switch (label) {
         case 'Основная информация':
-            const navigate = useNavigate()
-
             result = (
                 <Tabs.Panel
                     className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !py-8' + ' ' + className}
                     state={state}
                     name={'bidInfo'}
+                    variant={PanelVariant.default}
                     company_type={company_type}
                 >
                     <DList
@@ -439,54 +438,72 @@ export const TabsVariantBids = ({
             )
             break
 
-        case 'Сотрудники':
+        case 'Услуги':
             // @ts-ignore
             console.log(data)
 
             result = (
                 <Tabs.Panel
-                    state={state}
-                    name={'users'}
-                    variant={PanelVariant.dataPadding}
-                    background={PanelColor.default}
-                    className={'!bg-none !border-0'}
-                    bodyClassName={'!bg-transparent'}
+                  className={'pt-8 grid !grid-cols-5  !gap-y-3  gap-x-12 content-start !py-8' + ' ' + className}
+                  state={state}
+                  name={'bidService'}
+                  variant={PanelVariant.default}
+                  company_type={company_type}
                 >
-                    {data.employees.length !== 0 ? (
-                        <TableWithSort
-                            total={data.count}
-                            className={'!rounded-none  !bg-none overflow-visible !border-0'}
-                            bodyClassName={'!bg-none !rounded-none !bg-transparent'}
-                            background={PanelColor.default}
-                            search={true}
-                            filter={true}
-                            data={data.employees.map((item: any & { rootRoute?: string }) => ({
-                                state: item.is_active,
-                                name: item.first_name + ' ' + item.last_name,
-                                phone: item.phone,
-                                email: item.email,
+                  <DList
+                    className={'child:dt:text-accent'}
+                    label={'Услуга'}
+                    title={
+                      <Heading
+                        variant={HeadingVariant.h2}
+                        text={store.catalogStore.getServiceType(Number(data.service_type.id)).name}
+                        color={HeadingColor.active}
+                      />
+                    }
+                  />
+                  {data.service_subtype?.id && <DList
+                    className={'child:dt:text-accent col-span-2'}
+                    label={'Адрес забора'}
+                    title={data.address_from}
+                  />}
+                  {data.address_from && <DList
+                    className={'child:dt:text-accent col-span-2'}
+                    label={'Адрес забора'}
+                    title={data.address_from}
+                  />}
 
-                                company: data.company.name,
+                  {data.address_to && <DList
+                    className={'child:dt:text-accent  col-span-2'}
+                    label={'Адрес доставки'}
+                    title={data.address_to}
+                  />}
 
-                                city: data.company.city.name,
-                                id: item.id,
-                                query: {
-                                    company_id: data.company.id,
-                                    rootRoute: `/account/users/${data.company.company_type === 'Компания-Заказчик' ? 'customer' : 'performer'}/${data.company.id}/${item.id}`,
-                                },
-                            }))}
-                            initFilterParams={[
-                                { label: 'Статус', value: 'state' },
-                                { label: 'Город', value: 'city' },
-                            ]}
-                            state={false}
-                            variant={PanelVariant.default}
-                            footer={false}
-                            ar={['Статус', 'ФИО', 'Номер телефона', 'e-mail', 'Компания', 'Город']}
-                        />
-                    ) : (
-                        <Heading variant={HeadingVariant.h2} text={'Нет сотрудников'} className={'py-12'} />
-                    )}
+                  <Panel
+                    variant={PanelVariant.withPaddingSmWithBody}
+                    background={PanelColor.glass}
+                    className={'!col-start-4 row-span-5 !border-active'}
+                  >
+                    <DList
+                      className={'child:dt:text-accent'}
+                      label={'Тип услуги'}
+                      title={<Heading variant={HeadingVariant.h4} text={data.service_subtype.name} />}
+                    />
+                    {(data.service_option && data.service_option.length > 0) && <DList
+                      className={'child:dt:text-accent'}
+                      label={'Дополнительные опции'}
+                      title={data.service_option.map((o:any) => <Heading variant={HeadingVariant.h4} text={o.name} />)}
+                    />}
+                    {data.truck_type && <DList
+                      className={'child:dt:text-accent'}
+                      label={'Тип эвакуатора'}
+                      title={<Heading variant={HeadingVariant.h4} text={data.truck_type.name} />}
+                    />}
+                    {data.create_amount && <DList
+                      className={'child:dt:text-accent child:*:text-accent'}
+                      label={'Стоимость услуги'}
+                      title={<Heading variant={HeadingVariant.h2} text={String(data.create_amount)} />}
+                    />}
+                  </Panel>
                 </Tabs.Panel>
             )
             break

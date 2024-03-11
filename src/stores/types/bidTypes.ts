@@ -10,7 +10,11 @@ interface City {
 	id: number;
 	name: string;
 }
-
+export enum KeysBidCreate {
+	"нет секретки"= "нет секретки",
+	"есть секретка и ключ" = "есть секретка и ключ",
+	"есть секретка и нет ключа" = "есть секретка и нет ключа"
+}
 interface Company {
 	id: number;
 	name: string;

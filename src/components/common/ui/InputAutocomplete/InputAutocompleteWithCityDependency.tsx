@@ -101,7 +101,7 @@ export function InputAutocompleteWithCity(props:any) {
             createBidFormActions.setFieldValue('lon_to', Number(item.data.geo_lon))
             store.bidsStore.formResultSet({lat_to: Number(item.data.geo_lat), lon_to: Number(item.data.geo_lon)})
           }
-          if(props.label === "Откуда вас забрать?") {
+          if(props.label === "Откуда вас забрать?"  || props.label === "Куда подъехать?") {
             createBidFormActions.setFieldValue('lat_from', Number(item.data.geo_lat))
             createBidFormActions.setFieldValue('lat_from', Number(item.data.geo_lon))
             store.bidsStore.formResultSet({lat_from: Number(item.data.geo_lat), lon_from: Number(item.data.geo_lon)})

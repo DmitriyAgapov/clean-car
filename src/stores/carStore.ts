@@ -150,13 +150,12 @@ export class CarStore {
     }
     return this.cars
   })
+
   async getCarsByCompony(company_id:number) {
     this.loadingCars = true
     try {
-
         const { data } = await agent.Cars.getCompanyCars(company_id)
         runInAction(() => this.cars = data)
-
 
     } catch (error) {
       console.error(error)
@@ -165,7 +164,6 @@ export class CarStore {
     }
   }
   get getCompanyCars() {
-
     return ({
       cars: this.cars
     })

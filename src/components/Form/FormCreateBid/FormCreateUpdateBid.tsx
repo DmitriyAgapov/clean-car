@@ -23,52 +23,55 @@ import moment, { MomentInput } from "moment/moment";
 import FormBidResult from "routes/bids/FormBidResult/FormBidResult";
 
 interface InitValues {
-  address: string;
-  company: string;
-  conductor: string;
-  car: string;
-  important: string;
-  secretKey: { value: string, label: string } | string;
-  address_from?: string
-  address_to?: string
-  lat_from?: number,
-  lon_from?: number,
-  lat_to?: number,
-  lon_to?: number,
-  truck_type?: string
-  phone: string;
-  customer_comment: string;
-  service_type: string;
-  parking: string;
-  service_option: any[];
-  service_subtype: string;
-  city: string;
-  time: string;
-  performer: string;
+    address: string | null
+    address_from?: string | null
+    address_to?: string | null
+    car: string
+    city: string
+    company: string
+    conductor: string
+    customer_comment: string | null
+    important: string | null
+    lat_from?: number | null
+    lat_to?: number | null
+    lon_from?: number | null
+    lon_to?: number | null
+    parking: string | null
+    performer: string | null
+    phone: string | null
+    secretKey: { value: string; label: string } | string | null
+    service_option: any[]
+    service_subtype: string
+    service_type: string
+    time: string | null
+    tire_destroyed: string | null
+    truck_type?: string | null
 }
-export const InitValues:InitValues = {
-  address: '',
-  company: '0',
-  conductor: '0',
-  lat_from: 0,
-  lon_from: 0,
-  lat_to: 0,
-  lon_to: 0,
-  address_from: '',
-  address_to: '',
-  car: '0',
-  important: 'time',
-  secretKey: 'false',
-  phone: '',
-  truck_type: '',
-  customer_comment: '',
-  service_type: '0',
-  parking: 'true',
-  service_option: [],
-  service_subtype: '0',
-  city: '0',
-  time: '',
-  performer: '0',
+
+export const InitValues: InitValues = {
+    address: null,
+    address_from: null,
+    address_to: null,
+    car: '0',
+    city: '0',
+    company: '0',
+    conductor: '0',
+    customer_comment: null,
+    important: null,
+    lat_from: null,
+    lat_to: null,
+    lon_from: null,
+    lon_to: null,
+    parking: null,
+    performer: '0',
+    phone: '',
+    secretKey: null,
+    service_option: [],
+    service_subtype: '0',
+    service_type: '0',
+    time: null,
+    tire_destroyed: null,
+    truck_type: null,
 }
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<any>();
@@ -77,7 +80,7 @@ export const createBidFormActions = createFormActions<InitValues>('createBidForm
 const FormCreateUpdateBid = ({ bid, edit }: any) => {
     const store = useStore()
     const momentFormat = 'HH:mm'
-    const [step, setStep] = useState(5)
+    const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
     let revalidate = useRevalidator()
     const navigate = useNavigate()
@@ -231,7 +234,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
    const carsData = React.useMemo(() => {
      //@ts-ignore
-     const car = store.carStore.getCompanyCars.cars.results?.filter((car) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
+     const car = store.carStore.getCompanyCars.cars?.results?.filter((car) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
 
      if(car?.length > 0) {
         return car
@@ -646,6 +649,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     onOptionSubmit={(values) => store.bidsStore.formResultSet({ tire_destroyed: values })}
                     label={'Сколько колес вышло из строя?'}
                     data={[
+                      { label: '0', value: '0' },
                       { label: '1', value: '1' },
                       { label: '2', value: '2' },
                       { label: '3', value: '3' },
@@ -675,6 +679,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                       },
                     })
                   }}
+                  defaultValue={null}
                   // value={store.bidsStore.formResult.important}
                   label={step3.fields[3].label}
                   data={step3.fields[3].options}
@@ -735,8 +740,11 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               >
                 <>
                   {formData.values.service_subtype === "6" && <><InputAutocompleteWithCity
+                    label={'Куда подъехать?'}
+                    {...formData.getInputProps('address_from')}
                     action={(val: any) => {
-                      store.bidsStore.formResultSet({ address: val })
+                      formData.setFieldValue('address_from', val)
+                      store.bidsStore.formResultSet({ address_from: val })
                     }}
                     city={
                       store.bidsStore.formResult.city !== 0
@@ -747,24 +755,23 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     }
                   />
                   <hr className={'col-span-full border-transparent my-2'} /></>}
-                  {/* <Select */}
-                  {/*   {...formData.getInputProps('parking')} */}
-                  {/*   onChange={(values) => */}
-                  {/*     store.bidsStore.formResultSet({ */}
-                  {/*       parking: { */}
-                  {/*         label: step3?.fields[1]?.options?.filter( */}
-                  {/*           (item) => item.value == values, */}
-                  {/*         )[0].label, */}
-                  {/*         value: values, */}
-                  {/*       }, */}
-                  {/*     }) */}
-                  {/*   } */}
-                  {/*   label={step3.fields[1].label} */}
-                  {/*   data={step3.fields[1].options} */}
-                  {/* /> */}
+                  <Select
+                    {...formData.getInputProps('parking')}
+                    onOptionSubmit={(values) =>
+                      store.bidsStore.formResultSet({
+                        parking: {
+                          label: step3?.fields[1]?.options?.filter(
+                            (item) => item.value == values,
+                          )[0].label,
+                          value: values,
+                        },
+                      })
+                    }
+                    label={step3.fields[1].label}
+                    data={step3.fields[1].options}
+                  />
                   <Select
                     {...formData.getInputProps('secretKey')}
-                    defaultValue={'true'}
                     onOptionSubmit={(values) => {
                       store.bidsStore.formResultSet({
                         secretKey: {
