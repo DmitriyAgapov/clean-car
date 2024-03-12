@@ -208,6 +208,7 @@ export interface CreateBidData {
     lat_from?: number | null
     lat_to?: number | null
     lon_from?: number | null
+    schedule?: string | null
     lon_to?: number | null
     performer: number | null
     phone: string | null

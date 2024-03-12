@@ -11,17 +11,19 @@ interface BidResult {
 	create_amount: number | string
 	service_subtype: number | string
 	important?: string
-	time?: string
+	schedule?: string
 	service_option?: number[]
 	additional_data?: string[]
 	address?: string | null
 	customer_comment? : string | null
 	address_to?: string | null
 	address_from?: string | null
-	destroyed_tires?: string
+	wheel_lock?: string
+	keys: string
+	is_parking: boolean
 	truck_type?: string
 }
-const FormBidResult = observer(({service_type, create_amount, service_subtype, customer_comment, important, time, service_option, additional_data, address, address_to, address_from, destroyed_tires, truck_type, ...props}:BidResult) => {
+const FormBidResult = observer(({service_type, is_parking, keys, create_amount, service_subtype, customer_comment, important, schedule, service_option, additional_data, address, address_to, address_from, wheel_lock, truck_type, ...props}:BidResult) => {
 
 	const store = useStore()
 	const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
@@ -75,9 +77,9 @@ const FormBidResult = observer(({service_type, create_amount, service_subtype, c
 			{service_subtype === 6 && <DList
         className={'child:dt:text-accent'}
         label={'Адрес выезда'}
-        title={store.bidsStore.formResultsAll.address}
+        title={address_from}
       />}
-			{address_from && <DList
+			{address_from && service_subtype !== 6 && <DList
         className={'child:dt:text-accent'}
         label={'Адрес забора'}
         title={address_from}
@@ -88,24 +90,36 @@ const FormBidResult = observer(({service_type, create_amount, service_subtype, c
         title={address_to}
       />}
 
-			{store.bidsStore.formResultsAll.important?.label && <DList
+			<DList
 				className={'child:dt:text-accent'}
 				label={'Важность'}
-				title={store.bidsStore.formResultsAll.important.label}
+				title={schedule !== null ? schedule : 'Побыстрее'}
+			/>
+			{schedule && <DList
+				className={'child:dt:text-accent'}
+				label={'Время'}
+				title={schedule}
 			/>}
-			{store.bidsStore.formResultsAll.important?.value === "time" && <DList
-        className={'child:dt:text-accent'}
-        label={'Время'}
-        title={store.bidsStore.formResultsAll.time?.value}
-      />}
-			{store.bidsStore.formResultsAll.secretKey?.label || store.bidsStore.formResultsAll.secretKey?.label && <DList
+			{wheel_lock && <DList
+				className={'child:dt:text-accent'}
+				label={'Нерабочие колеса'}
+				title={wheel_lock + " шт."}
+			/>}
+			{truck_type && <DList
+				className={'child:dt:text-accent'}
+				label={'Тип эвакуатора'}
+				title={truck_type}
+			/>}
+
+
+			{(keys || is_parking) && <DList
 				className={'child:dt:text-accent'}
 				label={'Дополнительные данные'}
 				title={
 					<>
 						<ul>
-							{store.bidsStore.formResultsAll.secretKey?.label && <li>{store.bidsStore.formResultsAll.secretKey.label}</li>}
-							{store.bidsStore.formResultsAll.parking?.label	 && <li>{store.bidsStore.formResultsAll.parking.label}</li>}
+							{keys && <li>{keys}</li>}
+							{is_parking	 && <li>{is_parking && 'Есть парковочное место'}</li>}
 						</ul>
 					</>
 				}

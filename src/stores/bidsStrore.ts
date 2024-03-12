@@ -785,7 +785,31 @@ export class BidsStore {
     })
     async formCreateBid() {
         runInAction(() => this.justCreatedBid = {})
-
+        console.log({
+            address_from: this.formResult.address_from,/**/
+            address_to: this.formResult.address_to,/**/
+            car: this.formResult.car,/**/
+            city: this.formResult.city,/**/
+            company: this.formResult.company,/**/
+            conductor: this.formResult.conductor,/**/
+            keys: this.formResult.secretKey?.value,/**/
+            customer_comment: this.formResult.customer_comment,/**/
+            is_parking: this.formResult.parking?.value === "true",/**/
+            lat_from: this.formResult.lat_from,/**/
+            lat_to: this.formResult.lat_to,/**/
+            lon_from: this.formResult.lon_from,/**/
+            lon_to: this.formResult.lon_to,/**/
+            performer: this.formResult.performer,/**/
+            //*TODO: ВРемя*//
+            // schedule: this.formResult.time.value,
+            phone: this.formResult.phone.replaceAll(" ", ""),/**/
+            service_option: this.formResult.service_option,/**/
+            service_subtype: this.formResult.service_subtype,/**/
+            service_type: this.formResult.service_type,/**/
+            truck_type: this.formResult.truck_type,/**/
+            wheel_lock: Number(this.formResult.tire_destroyed)
+            /**/
+        });
         if(this.formResult.company) {
             const res:any = await agent.Bids.createBid(this.formResult.company, {
                 address_from: this.formResult.address_from,/**/
@@ -797,6 +821,7 @@ export class BidsStore {
                 keys: this.formResult.secretKey?.value,/**/
                 customer_comment: this.formResult.customer_comment,/**/
                 is_parking: this.formResult.parking?.value === "true",/**/
+                // schedule: this.formResult.time.value,
                 lat_from: this.formResult.lat_from,/**/
                 lat_to: this.formResult.lat_to,/**/
                 lon_from: this.formResult.lon_from,/**/

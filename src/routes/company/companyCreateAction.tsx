@@ -12,9 +12,8 @@ import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreat
 
 export default function CompanyPageCreateAction(props: any) {
   const store = useStore()
-  const location = useLocation()
-
-  const navigate = useNavigate()
+  const location = useLocation();
+  const navigate = useNavigate();
 
   // @ts-ignore
   const [changes, setChanges] = useState({})

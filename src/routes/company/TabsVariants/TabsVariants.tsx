@@ -475,6 +475,7 @@ export const TabsVariantBids = observer(({
                     }
                   />
                   {store.appStore.appType === "performer" && <Text className={'col-span-2'}>Ознакомьтесь с услугой. И при необходимости внесите изменения. Сервис передаст их на согласование</Text>}
+                  {(store.appStore.appType === "customer" || store.appStore.appType === "admin") && <Text className={'col-span-3'}>Исполнитель отредактировал перечень услуг. Пожалуйста проверьте и подтвердите изменения </Text>}
 
                   {data.address_from && <DList
                     className={'child:dt:text-accent col-span-2'}
@@ -487,7 +488,18 @@ export const TabsVariantBids = observer(({
                     label={'Адрес доставки'}
                     title={data.address_to}
                   />}
-
+                  {(data.keys || data.is_parking) && <DList
+                    className={'child:dt:text-accent  col-span-2'}
+                    label={'Дополнительные данные'}
+                    title={
+                      <>
+                        <ul>
+                          {data.keys && <li>{data.keys}</li>}
+                          {data.is_parking	 && <li>{data.is_parking && 'Есть парковочное место'}</li>}
+                        </ul>
+                      </>
+                    }
+                  />}
                   <Panel
                     variant={PanelVariant.withPaddingSmWithBody}
                     background={PanelColor.glass}
@@ -499,7 +511,7 @@ export const TabsVariantBids = observer(({
                       title={<Heading variant={HeadingVariant.h4} text={data.service_subtype.name} />}
                     />
                     {(data.service_option && data.service_option.length > 0) && <DList
-                      className={'child:dt: text-accent mb-6'}
+                      className={'mb-6'}
                       label={'Дополнительные опции'}
                       title={data.service_option.map((o:any) => <Heading variant={HeadingVariant.h4} text={o.name} />)}
                     />}
@@ -508,8 +520,10 @@ export const TabsVariantBids = observer(({
                       label={'Тип эвакуатора'}
                       title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
                     />}
+
+
                     {data.wheel_lock && <DList
-                      className={'child:*:!text-accent mb-6'}
+                      className={' mb-6'}
                       label={'Нерабочие колеса'}
                       title={<Heading  variant={HeadingVariant.h4} text={data.wheel_lock + "шт."} />}
                     />}
