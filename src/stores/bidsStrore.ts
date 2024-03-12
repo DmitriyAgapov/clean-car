@@ -133,6 +133,7 @@ export class BidsStore {
         photosPreview: null,
         photosPreviewAr: [],
     }
+    activeTab:string | null = null;
     img: FormData = new FormData()
     refreshBids: boolean = false
     error = ''
@@ -379,6 +380,7 @@ export class BidsStore {
         },
     }
     currentBid:CurrentBidProps  = observable.object<CurrentBidProps>({} as CurrentBidProps)
+    currentBidPhotos = observable.array([])
     justCreatedBid:any = {}
     tempDataPerformers = {
         count: 2,
@@ -459,7 +461,7 @@ export class BidsStore {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, {
             name: 'bidsStore',
-            properties: ['formResult', 'bids', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid'],
+            properties: ['formResult', 'bids', 'currentBidPhotos', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid'],
             storage: window.localStorage,
         }, {fireImmediately: true})
         //
@@ -601,21 +603,35 @@ export class BidsStore {
         )
 
     }
+    get ActiveTab() {
+        return this.activeTab
+    }
+    setActiveTab(label:string | null) {
+        console.log(label);
+        this.activeTab = label
+        console.log(this.activeTab);
+    }
     async loadBidByCompanyAndBidId(company_id?: number, bid_id?: number) {
         const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id);
-        const photo = await this.loadBidPhotos(company_id ? company_id : undefined, bid_id ? bid_id : undefined)
-        console.log('photo', photo);
+
         if (status === 200) {
             runInAction(() => {
-                this.currentBid = {
-                    ...data,
-                    photos: photo?.results
+                if(this.currentBid.status !== data.status) {
+                    this.currentBid = data
+                    if (company_id && bid_id) {
+                        console.log('loadBidPhotos', company_id, bid_id);
+                        this.loadBidPhotos(company_id, bid_id)
+                    }
                 }
             })
         }
+
     }
     get CurrentBid() {
         return this.currentBid
+    }
+    get CurrentBidPhotos() {
+        return this.currentBid.photos
     }
 
     async loadServiceSubtypeOptions(service_subtype_id: number) {
@@ -679,36 +695,36 @@ export class BidsStore {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader()
                 reader.readAsDataURL(file)
-                console.log('reader', reader);
-                reader.onload = () => resolve({result:reader.result, name: file.name})
+                console.log('reader', reader)
+                reader.onload = () => resolve({ result: reader.result, name: file.name })
                 reader.onerror = reject
             })
         }
         files.forEach((file: string | Blob, index: any) => {
             fd.push(readFileAsText(file))
             // @ts-ignore
-            console.log('file.name', file.name);
+            console.log('file.name', file.name)
             // @ts-ignore
-            this.img.append(`file${file.name}`, file);
-        });
-        Promise.all(fd).then((res: any) => runInAction(() => {
-              if (this.photo.photosPreviewAr.length === 0) {
-                  this.photo.photosPreviewAr = res
-              } else {
-                  this.photo.photosPreviewAr.push(...res)
-              }
-          }
-        ))
-    }
-    uploadPhotos() {
-        return agent.Img.uploadFiles(this.img, this.justCreatedBid.id).then((res) => {
-            if(res.status < 301) {
-                this.photo.photosPreviewAr.forEach((item: any) => {
-                    agent.Img.createBidPhoto(this.justCreatedBid.id, this.justCreatedBid.company, item.name, true).then((res) => console.log('resCreatePhoto', res))
-                })
-            }
-            return res
+            this.img.append(`file${file.name}`, file)
         })
+        Promise.all(fd).then((res: any) =>
+            runInAction(() => {
+                if (this.photo.photosPreviewAr.length === 0) {
+                    this.photo.photosPreviewAr = res
+                } else {
+                    this.photo.photosPreviewAr.push(...res)
+                }
+            }),
+        )
+    }
+    async uploadPhotos(state: boolean, company_id?: string, bid_id?: string) {
+        const res = await agent.Img.uploadFiles(this.img, bid_id ? bid_id : this.justCreatedBid.id);
+        if (res.status < 301) {
+            this.photo.photosPreviewAr.forEach((item: any) => {
+                agent.Img.createBidPhoto(bid_id ? bid_id : this.justCreatedBid.id, company_id ? company_id : this.justCreatedBid.company, item.name, state).then((res_1) => console.log("resCreatePhoto", res_1));
+            });
+        }
+        return res;
     }
     initResults() {
             this.formResult.company = 0
@@ -748,18 +764,22 @@ export class BidsStore {
         } catch (error: any) {
             this.error = error
         } finally {
-
             action(() => (this.loading = false))
         }
     }
-     loadBidPhotos = flow(function* (this: BidsStore, company_id?: number|string, bid_id?: number|string) {
-        const urlParams = window.location.pathname.split('/');
-        const newCompany_id = urlParams[3];
-        const newBid_id = urlParams[4];
-        let resData = null
-        if((company_id && bid_id) || (newCompany_id && newBid_id)) {
-            resData = yield agent.Bids.loadBidPhotos(company_id ? company_id : newCompany_id, bid_id ? bid_id : newBid_id).then((res) => res.data)
-        }
+     loadBidPhotos = flow(function* (this: BidsStore, company_id: number|string, bid_id: number|string) {
+        // const urlParams = window.location.pathname.split('/');
+        // const newCompany_id = urlParams[3];
+        // const newBid_id = urlParams[4];
+        let resData:any = null
+        // if((company_id && bid_id) || (newCompany_id && newBid_id)) {
+        const {data, status} = yield agent.Bids.loadBidPhotos(company_id, bid_id)
+         console.log('loadBidPhotos', data, status);
+
+         if(status < 300) {
+             resData = data
+             this.currentBidPhotos = data.results
+         }
 
         return resData
     })
@@ -807,6 +827,9 @@ export class BidsStore {
 
     get text() {
         return this.textData
+    }
+    get CurrentBidPhotosAll() {
+        return this.currentBidPhotos
     }
     formResultsClear() {
         this.currentBid  = observable.object<CurrentBidProps>({} as CurrentBidProps)

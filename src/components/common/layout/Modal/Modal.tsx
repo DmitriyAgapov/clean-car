@@ -41,7 +41,7 @@ const Modal = (): JSX.Element | null => {
               }
             }}
           >
-            <SvgClose className={'close__modal'} />
+
           </a>
         </Panel>
       </div>

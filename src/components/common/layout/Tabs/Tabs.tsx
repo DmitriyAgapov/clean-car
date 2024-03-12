@@ -3,6 +3,7 @@ import styles from './Tabs.module.scss'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
 import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import { Observer, observer } from "mobx-react-lite";
+import { useStore } from "stores/store";
 export enum TabsType {
   bid = 'bid',
   company = 'company',
@@ -17,13 +18,22 @@ export type TabsProps = {
   type?: TabsType
 }
 const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: any, items?: any}) => {
-
+  const store = useStore()
+  const aTab = store.bidsStore.ActiveTab
   const [state, setState] = useState(data[0].label);
 
-    const  handleChangeTabState = (event: Event, label: string) => {
-     setState(label);
+    const  handleChangeTabState = React.useCallback((event: Event, label: string) => {
+      setState(label);
+    }, [])
+
+  React.useEffect(() => {
+    if(aTab !== null) {
+      setState(aTab)
     }
-    const TabPanels = observer(()=> {
+    store.bidsStore.setActiveTab(null);
+  }, [aTab]);
+
+  const TabPanels = observer(()=> {
       const result:any = []
         if(type == TabsType.bid) {
           data.forEach((item: any, index: number) => {

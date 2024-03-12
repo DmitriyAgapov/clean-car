@@ -14,9 +14,11 @@ import { useNavigate } from 'react-router-dom'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
 import { translite } from 'utils/utils'
 import { CAR_RADIUS } from 'stores/priceStore'
-import { ScrollArea } from '@mantine/core'
+import { ScrollArea, Text } from '@mantine/core'
 import { Observer, observer } from "mobx-react-lite";
 import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
+import { computed } from "mobx";
+import { BidsStatus } from "stores/bidsStrore";
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -171,7 +173,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         const result: any[] = [];
         if(data[`${company_type}profile`].performer_company && data[`${company_type}profile`].performer_company.length > 0) {        data[`${company_type}profile`].performer_company.forEach((item: any, index:number) => {
           const el:any = store.companyStore.companies.filter((c: any) => c.id === item)[0];
-          console.log(el);
+
           if(el && el.name) {
             result.push(<span key={el.id} className={'text-xs font-normal'}>{el.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '} </span>)
           }
@@ -276,14 +278,10 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
   return  result
 };
 export const TabsVariantsCars = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
-  const store = useStore()
   let result
 
   switch (label) {
     case "Основная информация":
-      const navigate = useNavigate()
-
-
       result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
        <DList label={'Марка'} title={data.brand.name} />
        <DList label={'Модель'} title={data.model.name} />
@@ -355,6 +353,7 @@ export const TabsVariantBids = observer(({
     ...props
 }: TabsVariantsProps) => {
     const store = useStore()
+  console.log(data);
     let result
     switch (label) {
         case 'Основная информация':
@@ -427,7 +426,7 @@ export const TabsVariantBids = observer(({
                         label={'Комментарий'}
                         title={<p>{data.customer_comment}</p>}
                     />}
-                    <Panel
+                  {store.appStore.appType !== "performer" && <Panel
                         variant={PanelVariant.withPaddingSmWithBody}
                         background={PanelColor.glass}
                         className={'!col-start-3 row-span-5'}
@@ -442,7 +441,7 @@ export const TabsVariantBids = observer(({
                             label={'Адрес'}
                             title={<Heading variant={HeadingVariant.h4} text={data.performer.address} />}
                         />}
-                    </Panel>
+                    </Panel>}
                     {/* /!* //todo: address *!/ */}
                     {/* <DList className={'child:dt:text-accent'}  label={'Адрес выезда'}  title={data.address} /> */}
                     {/* <DList className={'child:dt:text-accent'}  label={'Важность'}  title={store.bidsStore.formResultsAll.important.label} /> */}
@@ -475,6 +474,7 @@ export const TabsVariantBids = observer(({
                       />
                     }
                   />
+                  {store.appStore.appType === "performer" && <Text className={'col-span-2'}>Ознакомьтесь с услугой. И при необходимости внесите изменения. Сервис передаст их на согласование</Text>}
 
                   {data.address_from && <DList
                     className={'child:dt:text-accent col-span-2'}
@@ -499,17 +499,23 @@ export const TabsVariantBids = observer(({
                       title={<Heading variant={HeadingVariant.h4} text={data.service_subtype.name} />}
                     />
                     {(data.service_option && data.service_option.length > 0) && <DList
-                      className={'child:dt:text-accent'}
+                      className={'child:dt: text-accent mb-6'}
                       label={'Дополнительные опции'}
                       title={data.service_option.map((o:any) => <Heading variant={HeadingVariant.h4} text={o.name} />)}
                     />}
                     {data.truck_type && <DList
-                      className={'child:dt:text-accent'}
+                      className={'child:dt:text-accent mb-6'}
                       label={'Тип эвакуатора'}
                       title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
                     />}
+                    {data.wheel_lock && <DList
+                      className={'child:*:!text-accent mb-6'}
+                      label={'Нерабочие колеса'}
+                      title={<Heading  variant={HeadingVariant.h4} text={data.wheel_lock + "шт."} />}
+                    />}
+
                     {data.create_amount !== null && <DList
-                      className={'child:dt:text-accent child:*:text-accent'}
+                      className={'child:dt:text-accent mb-6 child:*:text-accent'}
                       label={'Стоимость услуги'}
                       title={<Heading variant={HeadingVariant.h2} text={String(data.create_amount) + " ₽"} />}
                     />}
@@ -518,30 +524,32 @@ export const TabsVariantBids = observer(({
             )
             break
         case 'Фото':
+          const ph = store.bidsStore.CurrentBidPhotosAll
           result = (<Tabs.Panel className={"pt-8 grid !grid-cols-5  !gap-y-3 !grid-flow-row  gap-x-12 content-start !py-8" + " " + className}
             state={state}
             name={"bidService"}
             variant={PanelVariant.default}
             company_type={company_type}>
-            <div className={"col-span-2"}>
+            <div className={"col-span-2  pr-12"}>
               <Heading text={"Фотографии До"}
                 variant={HeadingVariant.h3}
                 color={HeadingColor.accent} />
               <p>Фотографии до оказания услуги. Загрузил Заказчик</p>
+
             </div>
             <div className={"col-span-3"}>
-              <CarouselCustom items={store.bidsStore.CurrentBid.photos.filter((e:any) => e.is_before)}/>
+              <CarouselCustom items={ph.filter((e:any) => e.is_before)}/>
             </div>
               <hr className={"col-span-full border-gray-4/70 border"} />
-            <div className={"col-span-2"}>
+            <div className={"col-span-2   pr-12"}>
               <Heading text={"Фотографии После"}
                 variant={HeadingVariant.h3}
                 color={HeadingColor.accent} />
               <p>После оказания услуги загрузите пожалуйста фотографии</p>
-              <Button text={'Загрузить'} variant={ButtonVariant["accent-outline"]} className={'mt-7'} size={ButtonSizeType.sm}/>
+                {(store.appStore.appType === "performer" && data.status !== BidsStatus["Выполнено"] && data.status !== BidsStatus["Завершена"]) && <Button type={"button"} disabled={data.status !== BidsStatus["В работе"]} text={'Загрузить'} variant={ButtonVariant["accent-outline"]} className={'mt-7'} size={ButtonSizeType.sm}/>}
             </div>
             <div className={"col-span-3"}>
-              <CarouselCustom items={store.bidsStore.CurrentBid.photos.filter((e:any) => !e.is_before)}/>
+              <CarouselCustom items={ph.filter((e:any) => !e.is_before)}/>
             </div>
 
           </Tabs.Panel>
@@ -814,7 +822,6 @@ export const TabsVariantPrice = ({
   switch (label) {
 
       case 'Мойка':
-        console.log(mapEdWast(data.wash_positions));
           result = (
               <Tabs.PanelPure
                   state={state}

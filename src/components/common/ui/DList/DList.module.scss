@@ -1,8 +1,9 @@
 @layer {
   .DList {
+
 	dt {
-	  @apply text-gray-2 font-medium mb-2.5;
-	  line-height: 1.25rem;
+	  @apply text-gray-2 font-medium mb-1.5;
+	  line-height: 1;
 	}
 
 	dd {
@@ -34,5 +35,6 @@
 		-webkit-text-fill-color: transparent;
 	  }
 	}
+
   }
 }

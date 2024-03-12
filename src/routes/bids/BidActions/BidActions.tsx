@@ -4,9 +4,11 @@ import React from "react";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useParams, useRevalidator } from "react-router-dom";
 import { BidsStatus } from "stores/bidsStrore"
-import { Menu, Button as Btn } from "@mantine/core";
+import { Menu, Button as Btn, Modal, Text } from "@mantine/core";
 import { SvgMenu } from "components/common/ui/Icon";
 import styles from "./BidActions.module.scss"
+import { useDisclosure } from "@mantine/hooks";
+import { BidModal } from "components/common/layout/Modal/BidModal";
 const BidText = {
   CustomerVObrabotke: <p>Исполнитель открыл заявку.Ожидается обратная связь</p>,
   CustomerOzhidaet: <p>Исполнитель внес изменения. Пожалуйста ознакомьтесь с ними и примите решение по заявке.</p>,
@@ -24,41 +26,61 @@ const BidText = {
 
 }
 export const BidAdminActions = () => {
-  const store = useStore()
-  let revalidator = useRevalidator()
-  const params = useParams()
-  const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
-    (async () => {
-      if (params.company_id && params.id) {
-        await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus[`${status}`])
-        revalidator.revalidate()
-      }
-    })()
-  }, [])
-  const items = React.useMemo(() => {
-    const ar = new Set()
-    for(let it in BidsStatus) {
-      ar.add(it)
-    }
-    let res: React.JSX.Element[] = []
-    ar.forEach((el) => res.push(<Menu.Item key={el as string} onClick={() => handleChangeBidStatus(el as BidsStatus)} className={styles.Item} data-variant={el}>{el as string}</Menu.Item>))
-    return <>{res}</>
-  }, [])
-  return (
-    <Menu shadow="md" width={200}>
-      <Menu.Target>
-        <Btn className={"bg-white"}><SvgMenu className={"text-white"}/></Btn>
-      </Menu.Target>
-
-      <Menu.Dropdown>
-        {items}
-      </Menu.Dropdown>
-    </Menu>
-  )
-}
-const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
-    const params = useParams()
     const store = useStore()
+    let revalidator = useRevalidator()
+    const params = useParams()
+    const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
+        ;(async () => {
+            if (params.company_id && params.id) {
+                await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus[`${status}`])
+                revalidator.revalidate()
+            }
+        })()
+    }, [])
+    const items = React.useMemo(() => {
+        const ar = new Set()
+        for (let it in BidsStatus) {
+            ar.add(it)
+        }
+        let res: React.JSX.Element[] = []
+        ar.forEach((el) =>
+            res.push(
+                <Menu.Item
+                    key={el as string}
+                    onClick={() => handleChangeBidStatus(el as BidsStatus)}
+                    className={styles.Item}
+                    data-variant={el}
+                >
+                    {el as string}
+                </Menu.Item>,
+            ),
+        )
+        return <>{res}</>
+    }, [])
+    return (
+        <Menu shadow='md' width={200}>
+            <Menu.Target>
+                <Btn className={'bg-white'}>
+                    <SvgMenu className={'text-white'} />
+                </Btn>
+            </Menu.Target>
+
+            <Menu.Dropdown>{items}</Menu.Dropdown>
+        </Menu>
+    )
+}
+
+
+const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
+  const [opened, { open, close }] = useDisclosure(false);
+
+  const params = useParams()
+  const store = useStore()
+  const memoModal = React.useMemo(() => {
+    return  <BidModal opened={opened}
+      onClose={close} />
+  }, [opened]);
+
   let revalidator = useRevalidator()
   const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
     (async () => {
@@ -202,7 +224,15 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                                 text={"Завершить заявку"}
                                 variant={ButtonVariant.accent}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus("Выполнено" as BidsStatus)}
+                                action={() => {
+                                  if(store.bidsStore.CurrentBidPhotosAll.filter((p:any) => !p.is_before).length === 0) {
+                                    console.log('no photo');
+                                    store.bidsStore.setActiveTab("Фото")
+                                    open()
+                                  } else {
+                                    handleChangeBidStatus("Выполнено" as BidsStatus)
+                                  }
+                                }}
                             />
                         </>
                     )
@@ -241,7 +271,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
         }
         return null
     }, [store.appStore.appType, status])
-    return <div className={styles.bidtext}>{currentActions}</div>
+    return <div className={styles.bidtext}>{currentActions}{memoModal}</div>
 }
 
 export default observer(BidActions)

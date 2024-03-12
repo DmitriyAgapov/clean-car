@@ -362,7 +362,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 loading: false,
               })
               if(store.bidsStore.photo.photosPreviewAr.length !== 0) {
-                store.bidsStore.uploadPhotos().then((res: any) => {
+                store.bidsStore.uploadPhotos(true).then((res: any) => {
                   if (res.status < 300) {
                     changeStep()
                   }
