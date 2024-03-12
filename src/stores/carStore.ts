@@ -83,7 +83,7 @@ export class CarStore {
     reaction(() => this.cars,
       (cars) => {
         console.log(cars);
-        if (cars.length === 0 && !this.loadingState.cars) {
+        if (cars?.length === 0 && !this.loadingState.cars) {
           this.getCars(appStore.appType === "admin" ? 0 : userStore.myProfileData.company.id)
           this.loadingState.cars = true
         }

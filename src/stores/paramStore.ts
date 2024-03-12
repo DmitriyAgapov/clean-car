@@ -17,7 +17,7 @@ export class ParamStore {
 	constructor() {
 		makeAutoObservable(this, {}, { autoBind: true })
 		makePersistable(this, { storage: localStorage, name: 'paramStore', properties: ['params']} )
-		autorun(() => console.log(this.params))
+		// autorun(() => console.log(this.params))
 	}
 
 	params:PaginationProps = {
@@ -28,7 +28,6 @@ export class ParamStore {
 		q:null
 	}
 	get qParams() {
-
 		return this.params
 	}
 	// incrementPage() {

@@ -51,6 +51,14 @@ const axiosSuggest = axios.create({
   }
   }
 )
+const axiosUpload = axios.create({
+  headers: {
+    'Content-Type': 'multipart/form-data',
+    'Authorization': `Bearer ${process.env.REACT_APP_IMG}`
+  }
+  }
+)
+
 
 //Константа для запросов
 export const API_ROOT = process.env.REACT_APP_PUBLIC_API
@@ -124,6 +132,8 @@ export const requests = {
       method: 'POST',
       data: JSON.stringify(props) ,
     }),
+  img: (form:FormData, bidId?: number) => axiosUpload.post(`https://api.timeweb.cloud/api/v1/storages/buckets/292055/object-manager/upload?path=${bidId}`, form)
+  .then((response) => response)
 }
 
 //Обработка ошибок
@@ -208,14 +218,22 @@ export interface CreateBidData {
     wheel_lock: number | null
 }
 
-
+const Img = {
+  uploadFiles: (form: FormData, bidId: number) => requests.img(form, bidId),
+  createBidPhoto: (bid_id: number, company_id: number, name: string, is_before: boolean) => requests.post(`/bid_photos/${company_id}/${bid_id}/create/`, {
+    is_before: is_before,
+    img: `https://s3.timeweb.cloud/3c2e3e1f-b87109fe-0085-436a-8a57-be275dc35ee8/${bid_id}/${name}`,
+    bid: bid_id
+  }),
+}
 const Bids = {
   getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),
   getAvailablePerformers: (company_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/bid_performers/`, data),
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`),
   getAllCompanyBids: (company_id: number|string, params: PaginationProps) => requests.get(`/bids/${company_id}/list`, {}, params),
-  updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status})
+  updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status}),
+  loadBidPhotos: (company_id:  number|string, bid_id:  number|string) => requests.get(`/bid_photos/${company_id}/${bid_id}/list/`),
 }
 const Utils = {
   suggest: (props:{query: any, location: any[], restrict_value: boolean}) => requests.postSuggest(props)
@@ -411,6 +429,7 @@ const Filials = {
 
 }
 const agent = {
+  Img,
   Price,
   Bids,
   Utils,

@@ -4,15 +4,17 @@
 @tailwind utilities;
 
 @import "./fonts/RfDewi/stylesheet.css";
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 @import "_vars";
 @import "_base";
 @import "_page";
 @import "_animation";
 @import "_position";
 @import "_forms";
-
+//@import '@mantine/carousel/styles.css';
 @import '@mantine/core/styles.css';
 @import '@mantine/dates/styles.css';
 @import "leaflet/dist/leaflet.css";
 @import '@mantine/notifications/styles.css';
+
+

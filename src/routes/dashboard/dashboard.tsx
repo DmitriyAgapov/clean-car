@@ -13,6 +13,7 @@ import DList from "components/common/ui/DList/DList";
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import { useStore } from 'stores/store'
 import { observer } from "mobx-react-lite";
+import { Carousel } from "@mantine/carousel";
 
 const testWashData = {
   "id": 29,
@@ -35,6 +36,8 @@ const testWashData = {
 }
 
 export default function DashboardPage() {
+  const store = useStore()
+
   return (
     <>
     <Section type={SectionType.default}>
@@ -48,7 +51,26 @@ export default function DashboardPage() {
           </>
         }
       />
-      <FormCreateUpdateBid/>
+      <div className={'col-span-full'}>
+        <Carousel      withIndicators
+
+          slideSize="50%"
+          slideGap="md"
+          loop
+          align="start"
+          slidesToScroll={2}>{store.bidsStore.CurrentBid.photos.length !==0 ? store.bidsStore.CurrentBid.photos.map((item: any) => {
+          return (
+            <Carousel.Slide className={'flex'}><img
+              key={item.id}
+              src={item.img}
+              alt={item.id}
+              width={"10rem"}
+              className={'flex-1'}
+
+            /></Carousel.Slide>
+          )
+        }) : null}</Carousel>
+      </div>
     </Section>
     </>
   )

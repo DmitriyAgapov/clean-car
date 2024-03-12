@@ -16,7 +16,7 @@ export const bidsLoader = async ({ request, params }:any) => {
 	// const paramsSearchString = url.searchParams.get('searchString')
 	// // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
 	// const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
-	await bidsStore.loadAllBids(paramsStore.qParams)
+	await bidsStore.loadAllBids({...paramsStore.qParams, ordering: (paramsStore.qParams.ordering === "" || paramsStore.qParams.ordering === null) ? "id" : paramsStore.qParams.ordering})
 	// await companyStore.loadCompanies()
 
 	return null
@@ -49,22 +49,16 @@ export const bidsLoader = async ({ request, params }:any) => {
 
 
 export const bidLoader = async ({ request, params }:any) => {
-	const url = new URL(request.url)
-	const searchParams = url.searchParams
-	const paramsPage = url.searchParams.get('page')
-	const paramsPageSize = url.searchParams.get('page_size')
-	const paramsOrdering = url.searchParams.get('ordering')
-	const paramsSearchString = url.searchParams.get('searchString')
+	// const url = new URL(request.url)
+	// const searchParams = url.searchParams
+	// const paramsPage = url.searchParams.get('page')
+	// const paramsPageSize = url.searchParams.get('page_size')
+	// const paramsOrdering = url.searchParams.get('ordering')
+	// const paramsSearchString = url.searchParams.get('searchString')
 
-	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
-	const bidData = await bidsStore.loadBidByCompanyAndBidId(params.company_id, params.id)
+	// const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
+	await bidsStore.loadBidByCompanyAndBidId(params.company_id, params.id)
 	// await companyStore.loadCompanies()
 
-	return defer({
-		data: bidsStore.CurrentBid,
-		pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
-		page: refUrlsRoot,
-		textData: bidsStore.text,
-		// dataModels: dataModels
-	})
+	return null
 }

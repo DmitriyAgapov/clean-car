@@ -87,6 +87,7 @@ export interface CurrentBidProps {
 	performer_comment: null;
 	geog_from: null;
 	geog_to: null;
+	photos?: any;
 	schedule: null;
 	created: string;
 	updated: string;

@@ -8,7 +8,7 @@ import React from "react";
 
 interface BidResult {
 	service_type: number | string
-	create_amount?: number | string
+	create_amount: number | string
 	service_subtype: number | string
 	important?: string
 	time?: string
@@ -135,7 +135,7 @@ const FormBidResult = observer(({service_type, create_amount, service_subtype, c
 			{create_amount && <DList
         className={'child:dt:text-accent child:*:text-accent'}
         label={'Стоимость услуги'}
-        title={<Heading variant={HeadingVariant.h2} text={create_amount} />}
+        title={<Heading variant={HeadingVariant.h2} text={create_amount + " ₽"} />}
       />}
 
 		</Panel>}

@@ -265,9 +265,7 @@ const TableWithSortNew = ({
             setSortedField(ar[e.index].name)
         }
     }, [sortedField])
-    React.useEffect(() => {
-        console.log(state, 'intree');
-    }, [state])
+
     React.useEffect(() => {
         const pageParams = searchParams.get('page');
         const searchStringParams = searchParams.get('searchString');

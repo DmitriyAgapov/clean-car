@@ -20,19 +20,18 @@ const BidPage = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const params = useParams()
-	const dataL:any = useLoaderData()
 	let revalidator = useRevalidator()
 	const bid = store.bidsStore.CurrentBid
 	const textData = store.bidsStore.text
-	console.log('bid', bid);
-	const tabedData = [
+
+	const tabedData = React.useMemo(() => [
 		{ label: 'Основная информация', data: bid },
 		{ label: 'Услуги', data: bid },
 		{ label: 'Фото', data: bid },
 		{ label: 'История заявки', data: bid }
-	]
+	], [bid.status])
+
 	React.useEffect(() => {
-		console.log(bid);
 		if(bid.status === BidsStatus["Новая"] && store.appStore.appType === "performer") {
 			(async () => {
 				if (params.company_id && params.id) {
@@ -122,7 +121,7 @@ const BidPage = () => {
                     </>
                 }
             >
-                <Tabs data={tabedData} type={TabsType.bid} />
+                <Tabs data={tabedData} type={TabsType.bid} className={'!grid grid-rows-[auto_1fr] max-h-fit h-full'}/>
             </Panel>
         </Section>
     )

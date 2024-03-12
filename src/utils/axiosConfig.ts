@@ -1,8 +1,6 @@
-import axios, { AxiosHeaders } from "axios";
+import axios from "axios";
 import agent from "utils/agent";
-import paramsStore from "stores/paramStore";
-import { boolean, string } from "yup";
-import { action, runInAction } from "mobx";
+import {  runInAction } from "mobx";
 import appStore from "stores/appStore";
 
 axios.interceptors.request
@@ -33,13 +31,14 @@ axios.interceptors.response.use(
 				const tokenRefresh = window.localStorage.getItem('jwt_refresh')
 				config._retry = true;
 				if(tokenRefresh) {
-			  agent.Auth.tokenRefresh(tokenRefresh).then((response: any) => {
-				console.log(response);
-				runInAction(() => {
-					appStore.token && localStorage.setItem("jwt", appStore.token)
-				})
-			}).finally(	() =>	config._retry = true)
-				}
+				  agent.Auth.tokenRefresh(tokenRefresh)
+				    .then((response: any) => {
+							runInAction(() => {
+									appStore.token && localStorage.setItem("jwt", appStore.token)
+								})
+							})
+				    .finally(	() =>	config._retry = true)
+					}
 				return axios(config);
 			}
 

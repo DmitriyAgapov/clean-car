@@ -7,16 +7,19 @@ import Heading, { HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import DList from "components/common/ui/DList/DList";
 import { values } from "mobx";
+import { createBidFormActions } from "components/Form/FormCreateBid/FormCreateUpdateBid";
 // type MapProps = {}
 const ElMapPanel = (item:any) => {
-
     const store = useStore()
-    return <div className={'bg-black/80 rounded-sm border border-accent px-2 py-4'}>
+    return <div className={'bg-black/90 rounded-md border-2 border-accent px-2 py-4'}>
         <Heading text={item.name} className={'text-white font-normal font-sans'} variant={HeadingVariant.h6}/>
         <p className={'text-white'}>{item.address}</p>
         <hr className={'border-gray-2'}/>
-        <DList className={'uppercase !text-white text-xs'} label={'Время работы'}  title={item.working_time} />
-        <Button text={'Выбрать'} variant={ButtonVariant.accent} className={'!rounded-md !text-xs'} action={() => store.bidsStore.formResultSet({performer: item.id})} size={ButtonSizeType.xs}/>
+        <DList className={'uppercase !text-white text-xs [&_dt]:text-xss [&_dt]:mb-1.5 [&_dd]:text-lg '} label={'Время работы'}  title={item.working_time} />
+        <Button text={'Выбрать'} variant={ButtonVariant.accent} className={'!rounded-md !text-xs mt-4'} action={() => {
+            createBidFormActions.setFieldValue('performer', String(item.id));
+            store.bidsStore.formResultSet({performer: item.id})
+        }} size={ButtonSizeType.xs}/>
     </div>
 }
 
@@ -66,8 +69,8 @@ const MapWithDots = () => {
       <MapContainer/* @ts-ignore */ ref={setMap} attributionControl={false} center={[centerLon, centerLat]} className={styles.Map} style={{ width: '100%', height: '100%' }} scrollWheelZoom={false} zoom={12}>
 
         <TileLayer/* attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' */ url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
-        {performers.map((item: any) => (
-          <ElMap {...item} />
+        {performers.map((item: any, index: number) => (
+          <ElMap {...item} key={`perf_map_${index}`}/>
         ))}
       </MapContainer>
     ),

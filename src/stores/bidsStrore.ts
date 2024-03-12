@@ -1,15 +1,16 @@
-import { action, autorun, makeAutoObservable, observable, reaction, runInAction, values as val, values, when } from "mobx";
-import agent, { CreateBidData,  PaginationProps } from "utils/agent";
-import catalogStore, { CatalogStore } from "stores/catalogStore";
-import { makePersistable, hydrateStore, clearPersistedStore, StorageController } from "mobx-persist-store";
+import { action, autorun, flow, makeAutoObservable, observable, reaction, runInAction, values as val, values, when } from "mobx";
+import agent, {   PaginationProps } from "utils/agent";
+import catalogStore from "stores/catalogStore";
+import { makePersistable } from "mobx-persist-store";
 import usersStore from "stores/usersStore";
 import carStore from "stores/carStore";
 import companyStore from "stores/companyStore";
-import { CurrentBidProps, KeysBidCreate } from "stores/types/bidTypes";
+import { CurrentBidProps } from "stores/types/bidTypes";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
 import paramsStore from "stores/paramStore";
 import authStore from "stores/authStore";
+import { defer } from "react-router-dom";
 
 export enum BidsStatus  {
 	'Новая' = 'Новая',
@@ -121,7 +122,7 @@ export class InitialResult {
 interface PhotosProps {
     photos: number| null
     photosPreview: string | ArrayBuffer | null
-    photosPreviewAr: []
+    photosPreviewAr: any[]
 }
 
 export class BidsStore {
@@ -132,6 +133,7 @@ export class BidsStore {
         photosPreview: null,
         photosPreviewAr: [],
     }
+    img: FormData = new FormData()
     refreshBids: boolean = false
     error = ''
     bidPageData = new Map([])
@@ -457,15 +459,15 @@ export class BidsStore {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, {
             name: 'bidsStore',
-            properties: ['formResult', 'bids', 'currentPerformers', 'justCreatedBid', 'currentBid'],
+            properties: ['formResult', 'bids', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid'],
             storage: window.localStorage,
         }, {fireImmediately: true})
-
-        reaction(() => this.justCreatedBid.id, (id) => {
-            if(id) {
-               this.loadBidByCompanyAndBidId()
-            }
-        })
+        //
+        // reaction(() => this.justCreatedBid.id, (id) => {
+        //     if(id) {
+        //        this.loadBidByCompanyAndBidId()
+        //     }
+        // })
 
         reaction(
             () => this.formResult.company,
@@ -486,22 +488,21 @@ export class BidsStore {
         )
         autorun(() => {
             if(!this.refreshBids) {
-                console.log('refresh', window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/"));
+                // console.log('refresh', window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/"));
                 if (window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/")) {
-                    console.log('includes(\'bids\')');
+
                     setTimeout(() => {
-                        this.loadAllBids(paramsStore.qParams)
+                        this.loadAllBids({...paramsStore.qParams, ordering: (paramsStore.qParams.ordering === "" || paramsStore.qParams.ordering === null) ? "id" : paramsStore.qParams.ordering})
                         runInAction(() => this.refreshBids = false)
                     }, 5000)
                     runInAction(() => this.refreshBids = true)
                 } else {
                     runInAction(() => this.refreshBids = true)
                 }
-                if (window.location.pathname.includes('bids') && window.location.pathname.includes("bids/")) {
-                    console.log('includes(\'bids\')');
+                if (window.location.pathname.includes('bids') && window.location.pathname.includes("bids/") && !window.location.pathname.includes("bids/create") ) {
+                    // console.log('includes(\'bids/\')');
                     setTimeout(() => {
                         const id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 1];
-                        console.log('params', window.location.pathname.split('/')[window.location.pathname.split('/').length - 1]);
                         this.loadBidByCompanyAndBidId(Number(userStore.myProfileData.company.id), Number(id))
                         runInAction(() => this.refreshBids = false)
                     }, 5000)
@@ -509,7 +510,15 @@ export class BidsStore {
                 } else {
                     runInAction(() => this.refreshBids = true)
                 }
-
+            }
+        })
+        autorun(() => {
+            if(this.justCreatedBid.id) {
+                console.log('justCreated exist');
+                if(!window.location.pathname.includes('bids/create')) {
+                    this.formResultsClear()
+                    this.justCreatedBid = {}
+                }
             }
         })
         // autorun(() => {
@@ -530,7 +539,7 @@ export class BidsStore {
 
         reaction(() => this.formResult.conductor,
             async (conductor)=> {
-                if(conductor !== 0 || conductor !== null) {
+                if(conductor !== "0" && conductor !== null && conductor !== 0) {
                     //@ts-ignore
                     action(() => this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone);
                     carStore.getCarsByCompony(this.formResult.company);
@@ -542,11 +551,12 @@ export class BidsStore {
             async (subtype) => {
                 // console.log('changed', this.formResult, subtype)
                 this.formResult.service_option = [];
-                if (subtype !== "0" && subtype && this.formResult.company && this.formResult.car !== 0 && this.formResult.service_option) {
+                if (subtype !== "0" && subtype && this.formResult.company && this.formResult.car !== 0 && this.formResult.car !== null && this.formResult.service_option) {
                     // console.log('changed', this.formResult, subtype)
                         await this.loadServiceSubtypeOptions(subtype)
                     console.log('changed', this.formResult, subtype, this.formResult.service_option);
-                    if(this.formResult.company !== "0" && this.formResult.car !== 0) {
+
+                    if(this.formResult.company !== "0" && this.formResult.car !== "0" && this.formResult.car !== 0 && this.formResult.car !== null) {
                         this.loadCurrentPerformers(Number(this.formResult.company), {
                             car_id: this.formResult.car,
                             subtype_id: this.formResult.service_subtype,
@@ -554,7 +564,6 @@ export class BidsStore {
                         })
                     }
                 }
-
                 if(subtype === 0) {
                     action(() => catalogStore.currentServiceSubtypesOptions  = new Map([]))
                 }
@@ -562,7 +571,7 @@ export class BidsStore {
         )
         reaction(() => this.formResult.service_option, async (options) => {
           if(options) {
-              if (this.formResult.car !== 0 && this.formResult.service_subtype !== 0) {
+            if (this.formResult.car !== "0" && this.formResult.car !== null  && this.formResult.service_subtype !== "0" && this.formResult.service_subtype !== 0 && this.formResult.service_subtype !== null) {
                   await this.loadCurrentPerformers(Number(this.formResult.company), {
                       car_id: this.formResult.car,
                       subtype_id: this.formResult.service_subtype,
@@ -594,9 +603,14 @@ export class BidsStore {
     }
     async loadBidByCompanyAndBidId(company_id?: number, bid_id?: number) {
         const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id);
+        const photo = await this.loadBidPhotos(company_id ? company_id : undefined, bid_id ? bid_id : undefined)
+        console.log('photo', photo);
         if (status === 200) {
             runInAction(() => {
-                this.currentBid = data
+                this.currentBid = {
+                    ...data,
+                    photos: photo?.results
+                }
             })
         }
     }
@@ -637,9 +651,11 @@ export class BidsStore {
     get AvailablePerformers() {
         return this.currentPerformers
     }
-    removeFile(index: number) {
+    removeFile(index: number | string) {
         runInAction(() => {
-            this.photo.photosPreviewAr.splice(index, 1)
+            const targetToDelete = this.photo.photosPreviewAr.findIndex((e) => e.name === index)
+            this.photo.photosPreviewAr.splice(targetToDelete, 1);
+            this.img.has(`file${index}`) && this.img.delete(`file${index}`)
         })
     }
     addFile(file: any[]) {
@@ -657,8 +673,42 @@ export class BidsStore {
         })
         Promise.all(fd).then((res: any) => runInAction(() => (this.photo.photosPreviewAr = res)))
     }
-    uploadPhotos(ar:any) {
-        console.log(ar)
+    addFiles(files: any) {
+        const fd: any[] = []
+        function readFileAsText(file: any) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.readAsDataURL(file)
+                console.log('reader', reader);
+                reader.onload = () => resolve({result:reader.result, name: file.name})
+                reader.onerror = reject
+            })
+        }
+        files.forEach((file: string | Blob, index: any) => {
+            fd.push(readFileAsText(file))
+            // @ts-ignore
+            console.log('file.name', file.name);
+            // @ts-ignore
+            this.img.append(`file${file.name}`, file);
+        });
+        Promise.all(fd).then((res: any) => runInAction(() => {
+              if (this.photo.photosPreviewAr.length === 0) {
+                  this.photo.photosPreviewAr = res
+              } else {
+                  this.photo.photosPreviewAr.push(...res)
+              }
+          }
+        ))
+    }
+    uploadPhotos() {
+        return agent.Img.uploadFiles(this.img, this.justCreatedBid.id).then((res) => {
+            if(res.status < 301) {
+                this.photo.photosPreviewAr.forEach((item: any) => {
+                    agent.Img.createBidPhoto(this.justCreatedBid.id, this.justCreatedBid.company, item.name, true).then((res) => console.log('resCreatePhoto', res))
+                })
+            }
+            return res
+        })
     }
     initResults() {
             this.formResult.company = 0
@@ -702,6 +752,17 @@ export class BidsStore {
             action(() => (this.loading = false))
         }
     }
+     loadBidPhotos = flow(function* (this: BidsStore, company_id?: number|string, bid_id?: number|string) {
+        const urlParams = window.location.pathname.split('/');
+        const newCompany_id = urlParams[3];
+        const newBid_id = urlParams[4];
+        let resData = null
+        if((company_id && bid_id) || (newCompany_id && newBid_id)) {
+            resData = yield agent.Bids.loadBidPhotos(company_id ? company_id : newCompany_id, bid_id ? bid_id : newBid_id).then((res) => res.data)
+        }
+
+        return resData
+    })
     async formCreateBid() {
         runInAction(() => this.justCreatedBid = {})
 
@@ -752,6 +813,12 @@ export class BidsStore {
         this.formResult = observable.object(initialResult);
         this.currentPerformers.clear()
         this.currentPerformers = new Map([])
+        this.photo = {
+            photos: null,
+            photosPreview: null,
+            photosPreviewAr: [],
+        }
+        this.img = new FormData()
     }
     formResultSet(value: any) {
         this.formResult = {

@@ -170,9 +170,10 @@ export class PriceStore {
         let data: any[] | any = []
         if (!userStore.isAdmin) {
             console.log('not admin');
-            const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
-            const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
-            const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
+            let tempId = props.params.id || userStore.myProfileData.company.id
+            const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
+            const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
+            const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(tempId);
 
             if (props.params.id) {
                 console.log('есть ID');

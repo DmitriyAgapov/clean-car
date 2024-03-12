@@ -12,10 +12,25 @@ import { useStore } from 'stores/store'
 import CreateInput from 'components/common/ui/CreateInput/CreateInput'
 import { useNavigate } from 'react-router-dom'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
-import { tires, translite } from "utils/utils";
+import { translite } from 'utils/utils'
 import { CAR_RADIUS } from 'stores/priceStore'
 import { ScrollArea } from '@mantine/core'
+import { Observer, observer } from "mobx-react-lite";
+import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
 
+export type CAR_RADIUS_KEYS = {
+  [K in keyof typeof CAR_RADIUS]: string | number;
+}
+
+export type ParsedResultTiresSubtype = {
+  label: string
+  items: CAR_RADIUS_KEYS
+}
+
+export type ParsedResultTires = {
+  label: string
+  items: ParsedResultTiresSubtype[]
+}
 type TabsVariantsProps = {
   label: string
   data: any
@@ -328,7 +343,7 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
   return  result
 };
 
-export const TabsVariantBids = ({
+export const TabsVariantBids = observer(({
     label,
     content_type,
     data,
@@ -439,8 +454,6 @@ export const TabsVariantBids = ({
             break
 
         case 'Услуги':
-            // @ts-ignore
-            console.log(data)
 
             result = (
                 <Tabs.Panel
@@ -456,6 +469,7 @@ export const TabsVariantBids = ({
                     title={
                       <Heading
                         variant={HeadingVariant.h2}
+                        className={'!mb-0'}
                         text={store.catalogStore.getServiceType(Number(data.service_type.id)).name}
                         color={HeadingColor.active}
                       />
@@ -494,48 +508,51 @@ export const TabsVariantBids = ({
                       label={'Тип эвакуатора'}
                       title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
                     />}
-                    {data.create_amount && <DList
+                    {data.create_amount !== null && <DList
                       className={'child:dt:text-accent child:*:text-accent'}
                       label={'Стоимость услуги'}
-                      title={<Heading variant={HeadingVariant.h2} text={data.create_amount} />}
+                      title={<Heading variant={HeadingVariant.h2} text={String(data.create_amount) + " ₽"} />}
                     />}
                   </Panel>
                 </Tabs.Panel>
             )
             break
-        // case 'Филиалы':
-        //   console.log(data);
-        //   result = (<Tabs.Panel  state={state} name={'filials'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
-        //     {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={true} filter={true}
-        //       data={data.map((item: any & {rootRoute?: string} ) => ({
-        //         state: item.is_active,
-        //         name: item.name,
-        //         city: item.city.name,
-        //         id: item.id,
-        //         query: {
-        //           company_id: companyId,
-        //           rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
-        //         },
-        //       }))} initFilterParams={[{label: 'Статус', value: 'state'}, {label: 'Город', value:  'city'}]} state={false} variant={PanelVariant.default} footer={false}   ar={['Статус', 'Филиал', 'Город']}/> : <Heading  variant={HeadingVariant.h2} text={'Нет автомобилей'} className={'py-12'}/>}
-        //   </Tabs.Panel>)
-        //   break;
+        case 'Фото':
+          result = (<Tabs.Panel className={"pt-8 grid !grid-cols-5  !gap-y-3 !grid-flow-row  gap-x-12 content-start !py-8" + " " + className}
+            state={state}
+            name={"bidService"}
+            variant={PanelVariant.default}
+            company_type={company_type}>
+            <div className={"col-span-2"}>
+              <Heading text={"Фотографии До"}
+                variant={HeadingVariant.h3}
+                color={HeadingColor.accent} />
+              <p>Фотографии до оказания услуги. Загрузил Заказчик</p>
+            </div>
+            <div className={"col-span-3"}>
+              <CarouselCustom items={store.bidsStore.CurrentBid.photos.filter((e:any) => e.is_before)}/>
+            </div>
+              <hr className={"col-span-full border-gray-4/70 border"} />
+            <div className={"col-span-2"}>
+              <Heading text={"Фотографии После"}
+                variant={HeadingVariant.h3}
+                color={HeadingColor.accent} />
+              <p>После оказания услуги загрузите пожалуйста фотографии</p>
+              <Button text={'Загрузить'} variant={ButtonVariant["accent-outline"]} className={'mt-7'} size={ButtonSizeType.sm}/>
+            </div>
+            <div className={"col-span-3"}>
+              <CarouselCustom items={store.bidsStore.CurrentBid.photos.filter((e:any) => !e.is_before)}/>
+            </div>
+
+          </Tabs.Panel>
+        )
+        break;
         default:
             return null
     }
     return result
-}
-export type CAR_RADIUS_KEYS = {
-  [K in keyof typeof CAR_RADIUS]: string | number;
-};
-export type ParsedResultTiresSubtype = {
-    label: string
-    items: CAR_RADIUS_KEYS
-}
+})
 
-export type ParsedResultTires = {
-  label: string
-  items: ParsedResultTiresSubtype[]
-}
 export const TabsVariantPrice = ({
     label,
     content_type,
@@ -578,14 +595,14 @@ export const TabsVariantPrice = ({
             })
             resultInner.push({
                 service_option: key,
-                class1: resultInnerAr[0].value,
-                class2: resultInnerAr[1].value,
-                class3: resultInnerAr[2].value,
-                class4: resultInnerAr[3].value,
-                class5: resultInnerAr[4].value,
-                class6: resultInnerAr[5].value,
-                class7: resultInnerAr[6].value,
-                class8: resultInnerAr[7].value,
+                class1: resultInnerAr[0]?.value,
+                class2: resultInnerAr[1]?.value,
+                class3: resultInnerAr[2]?.value,
+                class4: resultInnerAr[3]?.value,
+                class5: resultInnerAr[4]?.value,
+                class6: resultInnerAr[5]?.value,
+                class7: resultInnerAr[6]?.value,
+                class8: resultInnerAr[7]?.value,
             })
         })
         result.push({ label: key, data: resultInner })
@@ -921,4 +938,4 @@ export const TabsVariantPrice = ({
     {result}
   </ScrollArea.Autosize>
 }
-export default TabsVariants;
+export default observer(TabsVariants);

@@ -137,9 +137,10 @@ export class CatalogStore {
     get ServiceSubtypesOptions() {
         const activeSubtype = this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]
         // console.log(this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]);
-        return activeSubtype && activeSubtype.options ? activeSubtype.options : {
+        console.log('activeSubtype',activeSubtype && activeSubtype.options ? activeSubtype.options : {
             options: []
-        }
+        });
+        return activeSubtype && activeSubtype.options ? activeSubtype.options : []
     }
     targetModelId = 0
     cities: Map<any, any> = observable.map([])

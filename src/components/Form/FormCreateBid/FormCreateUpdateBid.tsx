@@ -1,35 +1,34 @@
-import React, { useState } from "react";
-import "yup-phone-lite";
-import { useStore } from "stores/store";
-import { useNavigate, useRevalidator } from "react-router-dom";
-import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import Progress from "components/common/ui/Progress/Progress";
-import { observer, Observer } from "mobx-react-lite";
-import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, Select, Textarea } from "@mantine/core";
-import { action, values as val } from "mobx";
-import { IMask, IMaskInput } from "react-imask";
-import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
-import { yupResolver } from "mantine-form-yup-resolver";
-import { CreateBidSchema } from "utils/validationSchemas";
-import PanelForForms from "components/common/layout/Panel/PanelForForms";
-import { createFormActions, createFormContext } from "@mantine/form";
-import { notifications } from "@mantine/notifications";
-import { SvgClose } from "components/common/ui/Icon";
-import MapWithDots from "components/common/Map/Map";
-import DList from "components/common/ui/DList/DList";
-import InputAutocompleteWithCity from "components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency";
-import moment, { MomentInput } from "moment/moment";
-import FormBidResult from "routes/bids/FormBidResult/FormBidResult";
+import React, { useState } from 'react'
+import 'yup-phone-lite'
+import { useStore } from 'stores/store'
+import { useNavigate, useRevalidator } from 'react-router-dom'
+import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
+import Progress from 'components/common/ui/Progress/Progress'
+import { observer, Observer } from 'mobx-react-lite'
+import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, Select, Textarea } from '@mantine/core'
+import { action, values as val } from 'mobx'
+import { IMask, IMaskInput } from 'react-imask'
+import { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
+import { yupResolver } from 'mantine-form-yup-resolver'
+import { CreateBidSchema, CreateBidSchemaStep2, CreateBidSchemaStep3, CreateBidSchemaStep4 } from "utils/validationSchemas";
+import PanelForForms from 'components/common/layout/Panel/PanelForForms'
+import { createFormActions, createFormContext } from '@mantine/form'
+import { notifications } from '@mantine/notifications'
+import { SvgClose } from 'components/common/ui/Icon'
+import MapWithDots from 'components/common/Map/Map'
+import InputAutocompleteWithCity from 'components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency'
+import moment, { MomentInput } from 'moment/moment'
+import FormBidResult from 'routes/bids/FormBidResult/FormBidResult'
 
 interface InitValues {
     address: string | null
     address_from?: string | null
     address_to?: string | null
-    car: string
-    city: string
-    company: string
-    conductor: string
+    car: string | null
+    city: string | null
+    company: string | null
+    conductor: string | null
     customer_comment: string | null
     important: string | null
     lat_from?: number | null
@@ -41,8 +40,8 @@ interface InitValues {
     phone: string | null
     secretKey: { value: string; label: string } | string | null
     service_option: any[]
-    service_subtype: string
-    service_type: string
+    service_subtype: string | null
+    service_type: string | null
     time: string | null
     tire_destroyed: string | null
     truck_type?: string | null
@@ -52,23 +51,23 @@ export const InitValues: InitValues = {
     address: null,
     address_from: null,
     address_to: null,
-    car: '0',
-    city: '0',
-    company: '0',
-    conductor: '0',
+    car: null,
+    city: null,
+    company: null,
+    conductor: null,
     customer_comment: null,
-    important: null,
+    important: "time",
     lat_from: null,
     lat_to: null,
     lon_from: null,
     lon_to: null,
     parking: null,
-    performer: '0',
+    performer: null,
     phone: '',
     secretKey: null,
     service_option: [],
-    service_subtype: '0',
-    service_type: '0',
+    service_subtype: null,
+    service_type: null,
     time: null,
     tire_destroyed: null,
     truck_type: null,
@@ -106,18 +105,18 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               (item: any, index: number) => (
                 <div className={'group max-w-[6rem] relative'}>
                   <CloseIcon
-                    onClick={() => store.bidsStore.removeFile(index)}
+                    onClick={() => store.bidsStore.removeFile(item.name)}
                     className={
                       'bg-white cursor-pointer group-hover:text-white group-hover:bg-accent  border-1 text-gray-2 absolute right-0 top-0 block rounded-full !w-4 !h-4'
                     }
                   />
-                  <Image src={item} alt={String(index)} />
+                  <Image src={item.result} alt={String(item.name)} />
                 </div>
               ),
             )}
           </div>
           <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>
-          <FileButton onChange={handleChangeFile} multiple accept='image/png,image/jpeg'>
+          <FileButton onChange={store.bidsStore.addFiles} multiple accept='image/png,image/jpeg'>
             {(props) => (
               <Button
                 className={'col-span-1'}
@@ -130,9 +129,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           </FileButton>
         </div>)}   />
     }, [])
-    const handleChangeFile = React.useCallback((e: any) => {
-        store.bidsStore.addFile(e)
-    }, [])
+
   const initData = React.useMemo(() => {
     let initValues = InitValues
     if(!edit) {
@@ -163,68 +160,87 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
   }, [edit, bid])
 
+
   const formData = useForm({
-    name: 'createBidForm',
-    initialValues: initData,
-    validateInputOnBlur: true,
-    // onValuesChange: (values, previous) => console.log(values),
-    validate: yupResolver(CreateBidSchema),
-    enhanceGetInputProps: (payload) => {
-        if (payload.field === 'city') {
-          if(store.appStore.appType === "customer") {
-            return {
-              className: 'hidden',
-            }
+      name: 'createBidForm',
+      initialValues: initData,
+      validateInputOnBlur: true,
+      // onValuesChange: (values, previous) => console.log(values),
+    // @ts-ignore
+      validate: values => {
+        if(step === 1) {
+          return yupResolver(CreateBidSchema).call({}, values)
+        }
+        if(step === 2) {
+          return yupResolver(CreateBidSchemaStep2).call({}, values)
+        }
+        if(step === 3 && (values.service_type === 3 || values.service_subtype === 6)) {
+          return yupResolver(CreateBidSchemaStep3).call({}, values)
+        }
+        if(step === 4) {
+          return yupResolver(CreateBidSchemaStep4).call({}, values)
+        }
+      },
+      enhanceGetInputProps: (payload) => {
+          if (payload.field === 'city') {
+              if (store.appStore.appType === 'customer') {
+                  return {
+                      className: 'hidden',
+                  }
+              }
           }
-        }
-        if (payload.field === 'time') {
-          return ({
-            disabled: formData.values.important === 'fast'
-          })
-        }
-        if (payload.field === 'company') {
-          if(formData.values.company === '0' || formData.values.company === null) {
-            formData.values.city = null
-            formData.values.conductor = null
-            formData.values.car = null
-            formData.values.phone = null
+          if (payload.field === 'time') {
+              return {
+                  disabled: formData.values.important === 'fast',
+              }
+          }
+          if (payload.field === 'company') {
+              if (formData.values.company === '0' || formData.values.company === null) {
+                  formData.values.city = null
+                  formData.values.conductor = null
+                  formData.values.car = null
+                  formData.values.phone = null
+              }
+
+              if (store.appStore.appType === 'customer') {
+                  return {
+                      className: 'hidden',
+                  }
+              }
           }
 
-          if(store.appStore.appType === "customer") {
-            return {
-              className: 'hidden',
-            }
+          if (payload.field === 'car') {
+              return {
+                  //@ts-ignore
+                  disabled: payload.form.values.conductor === '0' || carsData === null,
+              }
           }
-        }
-
-        if (payload.field === "car") {
-          return ({
-            //@ts-ignore
-            disabled: payload.form.values.conductor === "0" || carsData === null
-          })
-        }
-        if(payload.field === "conductor") {
-
-        }
-        if(payload.field === "conductor") {
-          if(formData.values.conductor !== "0" && formData.values.conductor !== null && formData.values.company !== null && formData.values.company !== "0") {
-            const car = store.carStore.cars.results.filter((c: any) => c.employees.filter((e:any) =>  e.id === Number(formData.values.conductor))[0])
-            if(car.length === 1) {
-              formData.values.car = String(car[0].id)
-             if(store.bidsStore.formResult.car === 0) {
-               store.bidsStore.formResultSet({ car: car[0].id })
-             }
-            }
-
+          if (payload.field === 'conductor') {
           }
-        }
-        if(payload.field !== "company") return ({
-          disabled: formData.values.company === '0' || formData.values.company === null
-        })
-
-
-    },
-  });
+          if (payload.field === 'conductor') {
+              if (
+                  formData.values.conductor !== '0' &&
+                  formData.values.conductor !== null &&
+                  formData.values.company !== null &&
+                  formData.values.company !== '0'
+              ) {
+                  const car = store.carStore.cars.results.filter(
+                      (c: any) => c.employees.filter((e: any) => e.id === Number(formData.values.conductor))[0],
+                  )
+                  if (car.length === 1) {
+                      formData.values.car = String(car[0].id)
+                      if (store.bidsStore.formResult.car === 0) {
+                          store.bidsStore.formResultSet({ car: car[0].id })
+                      }
+                  }
+              }
+          }
+          if (payload.field !== 'company')
+              return {
+                  disabled: formData.values.company === '0' || formData.values.company === null,
+              }
+      },
+  })
 
   React.useEffect(() => {
     if(formData.values.company !== '0') {
@@ -295,15 +311,9 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [formData.values.conductor])
 
   const handleBack = React.useCallback(() => {
-    console.log(store.bidsStore.formResult.service_type);
-    console.log(store.bidsStore.formResult.service_type === 1);
-    console.log(step === 4);
-    console.log(step, 'step');
-    console.log(formData.values.service_type, 'formData.values.service_type');
     if(step === 4) {
-      console.log('step 4');
       if (store.bidsStore.formResult.service_type === 1 || formData.values.service_type === "1") {
-        console.log('step 4, service type 1');
+
         setStep(2)
       } else {
         setStep((prevState: number) => prevState - 1)
@@ -322,21 +332,19 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       }
     } else if(step === 4) {
         (async () => {
-          store.bidsStore.formCreateBid().then((res) => {
+          store.bidsStore.formCreateBid()
+          .then((res) => {
+            console.log(res, 'res');
             if (res.status !== 201) {
               notifications.show({
                 id: 'bid-created',
                 withCloseButton: true,
-                onClose: () => console.log('unmounted'),
-                onOpen: () => console.log('mounted'),
                 autoClose: 3000,
-                title: "You've been compromised",
+                title: "Ошибка создания заявки",
                 message: 'Leave the building immediately',
-                color: 'red',
                 icon: <SvgClose />,
                 className:
-                  'my-notification-class z-[9999] absolute top-12 right-12',
-                style: { backgroundColor: 'red' },
+                  'my-notification-class z-[9999]',
                 loading: false,
               })
             } else {
@@ -353,9 +361,19 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 // style: { backgroundColor: 'red' },
                 loading: false,
               })
-              changeStep()
+              if(store.bidsStore.photo.photosPreviewAr.length !== 0) {
+                store.bidsStore.uploadPhotos().then((res: any) => {
+                  if (res.status < 300) {
+                    changeStep()
+                  }
+                }).finally(() => {store.bidsStore.formResultsClear()})
+              } else {
+                store.bidsStore.formResultsClear()
+                changeStep()
+              }
             }
           })
+
         })()
     } else {
     changeStep()
@@ -458,7 +476,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               <InputBase
                 {...formData.getInputProps('phone')}
                 onAccept={(value:any, mask:any) => {
-
                   formData.setFieldValue('phone', value)
                   store.bidsStore.formResultSet({ phone: value })
                 }}
@@ -559,15 +576,16 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                               service_option: vals.map((e) => Number(e)),
                             })
                             // @ts-ignore
+                            if(store.bidsStore.formResultsAll.service_option.length > 0) {
                             formData.values.service_option = val(
                               store.bidsStore.formResultsAll.service_option,
                             )
-                          }}
+                          }}}
                           label='Выберите дополнительные опции (при необходимости)'
                         >
                           <Group mt='xs'>
                             {store.catalogStore.ServiceSubtypesOptions.length !== 0 &&
-                              val(store.catalogStore.ServiceSubtypesOptions).map(
+                             store.catalogStore.ServiceSubtypesOptions.map(
                                 (i: any) => (
                                   <Checkbox
                                     key={i.id}
@@ -669,6 +687,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 <Select
                   {...formData.getInputProps('important')}
                   onOptionSubmit={(values) => {
+                    console.log(values);
+                    if(values !== 'time') {
                     formData.setFieldValue('time', '')
                     store.bidsStore.formResultSet({
                       important: {
@@ -678,6 +698,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         value: values,
                       },
                     })
+                  }
                   }}
                   defaultValue={null}
                   // value={store.bidsStore.formResult.important}
@@ -789,16 +810,21 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   <Select
                     {...formData.getInputProps('important')}
                     onOptionSubmit={(values) => {
-                      formData.setFieldValue('time', '')
-                      store.bidsStore.formResultSet({
-                        important: {
-                          label: step3?.fields[3]?.options?.filter(
-                            (item) => item.value == values,
-                          )[0].label,
-                          value: values,
-                        },
-                      })
+                      console.log(values);
+                      if(values === 'fast') {
+                        formData.setFieldValue('time', '')
+                        store.bidsStore.formResultSet({
+                          important: {
+                            label: step3?.fields[3]?.options?.filter(
+                              (item) => item.value == values,
+                            )[0].label,
+                            value: values,
+                          },
+                          time: null
+                        })
+                      }
                     }}
+                    defaultValue={'time'}
                     // value={store.bidsStore.formResult.important}
                     label={step3.fields[3].label}
                     data={step3.fields[3].options}
@@ -886,11 +912,14 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     <Select
                       className={'col-span-2'}
                       required
+                      {...formData.getInputProps('performer')}
                       label={step4.fields[1].label}
                       searchable
-                      value={String(store.bidsStore.formResult.performer)}
-                      onChange={(val: any) =>
+                      clearable
+                      onOptionSubmit={(val: any) => {
+                        console.log(val);
                         store.bidsStore.formResultSet({ performer: Number(val) })
+                      }
                       }
                       data={val(store.bidsStore.currentPerformers).map((i: any) => ({
                         label: i.name,
