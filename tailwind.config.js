@@ -6,6 +6,7 @@ module.exports = withMT({
     fontFamily: {
       sans: 'RF Dewi Expanded',
       body: 'Montserrat',
+      sansSerif: 'Montserrat'
     },
     fontSize: {
       xss: ['0.625rem', '.75rem'],

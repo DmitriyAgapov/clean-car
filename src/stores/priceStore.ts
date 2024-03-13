@@ -7,8 +7,6 @@ import { SvgClose } from "components/common/ui/Icon";
 import React from "react";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
-
-export enum CAR_TP {'легковой', 'внедорожный', 'коммерческий'}
 export enum CAR_RADIUS {
     'R14',
     'R15',
@@ -67,14 +65,6 @@ export class PriceStore {
     constructor() {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, { name: 'priceStore', storage: window.localStorage, properties: ['prices', 'priceOnChange'] }, {fireImmediately: true})
-        // reaction(() => this.priceOnChange,
-        //   (priceOnChange, previous) => {
-        //
-        //     if(priceOnChange.size !== 0) {
-        //
-        //
-        //       }
-        //   })
     }
     currentPrice: any = {}
     prices: { count: number; next: string | null; previous: string | null; results: any[] } = observable.object({
@@ -151,7 +141,7 @@ export class PriceStore {
             loading: this.loading
         })
     }
-    async getCurrentPrice(props:any) {
+    async getCurrentPrice(props:any, history: boolean) {
         action(() => this.loading = true);
         const mapEd = (ar:[], compareField:string) => {
             let newMap = new Map([])
@@ -170,12 +160,12 @@ export class PriceStore {
         let data: any[] | any = []
         if (!userStore.isAdmin) {
             console.log('not admin');
-            let tempId = props.params.id || userStore.myProfileData.company.id
-            const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
-            const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
-            const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(tempId);
 
             if (props.params.id) {
+                let tempId = props.params.id || userStore.myProfileData.company?.id
+                const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
+                const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
+                const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(tempId);
                 console.log('есть ID');
                 runInAction(() => {
                     this.currentPrice = {
@@ -189,8 +179,11 @@ export class PriceStore {
                 console.log('statePriceFinish', this.loading);
 
             } else {
+                let tempId = props.params.id || userStore.myProfileData.company?.id
+                const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
+                const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
+                const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(tempId);
                 data =  [dataWash, dataTire, dataEvac]
-
                 this.currentPrice = data
                 this.loading = false
                 console.log('statePriceFinish', this.loading);
@@ -215,30 +208,61 @@ export class PriceStore {
                     this.loading = false
                 })
             } else {
-                const { data: dataResults, status } = await agent.Price.getAllPrice(paramsStore.qParams as PaginationProps)
-                if (status === 200) {
-                    data = {
-                        ...dataResults, results: dataResults.results.map((i: any) => {
-                            let obj: any;
-                            for (const key in i) {
-                                if (i[key] === null) {
-                                    obj = {
-                                        ...obj,
-                                        [key]: '-'
-                                    }
-                                } else {
-                                    obj = {
-                                        ...obj,
-                                        [key]: i[key]
+                if(history) {
+                    const { data: dataResults, status } = await agent.Price.getHistoryPrice(props.params.company_id, paramsStore.qParams as PaginationProps);
+                    if (status === 200) {
+                        data = {
+                            ...dataResults, results: dataResults.results.map((i: any) => {
+                                let obj: any;
+                                for (const key in i) {
+                                    if (i[key] === null) {
+                                        obj = {
+                                            ...obj,
+                                            [key]: '-'
+                                        }
+                                    } else {
+                                        obj = {
+                                            ...obj,
+                                            [key]: i[key]
+                                        }
                                     }
                                 }
-                            }
-                            return obj;
-                        })
+                                return obj;
+                            })
+                        }
+
+                        this.currentPrice = data
+                        this.loading = false
+                        console.log('statePriceFinish', this.loading);
                     }
-                    this.currentPrice = data
-                    this.loading = false
-                    console.log('statePriceFinish', this.loading);
+                    console.log(data);
+                    console.log(dataResults, status);
+                } else {
+                    const { data: dataResults, status } = await agent.Price.getAllPrice(paramsStore.qParams as PaginationProps)
+                    if (status === 200) {
+                        data = {
+                            ...dataResults, results: dataResults.results.map((i: any) => {
+                                let obj: any;
+                                for (const key in i) {
+                                    if (i[key] === null) {
+                                        obj = {
+                                            ...obj,
+                                            [key]: '-'
+                                        }
+                                    } else {
+                                        obj = {
+                                            ...obj,
+                                            [key]: i[key]
+                                        }
+                                    }
+                                }
+                                return obj;
+                            })
+                        }
+                        this.currentPrice = data
+                        this.loading = false
+                        console.log('statePriceFinish', this.loading);
+                    }
                 }
             }
 

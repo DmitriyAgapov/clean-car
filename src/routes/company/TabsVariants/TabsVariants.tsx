@@ -353,7 +353,6 @@ export const TabsVariantBids = observer(({
     ...props
 }: TabsVariantsProps) => {
     const store = useStore()
-  console.log(data);
     let result
     switch (label) {
         case 'Основная информация':
@@ -453,15 +452,19 @@ export const TabsVariantBids = observer(({
             break
 
         case 'Услуги':
-
             result = (
                 <Tabs.Panel
-                  className={'pt-8 grid !grid-cols-5  !gap-y-3  gap-x-12 content-start !py-8' + ' ' + className}
+                  className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 !py-8' + ' ' + className}
                   state={state}
                   name={'bidService'}
                   variant={PanelVariant.default}
                   company_type={company_type}
                 >
+                  <Panel
+                    variant={PanelVariant.withGapOnly}
+                    background={PanelColor.default}
+                    className={'!col-span-2 row-span-5 child:*:mb-5'}
+                  >
                   <DList
                     className={'child:dt:text-accent'}
                     label={'Услуга'}
@@ -470,12 +473,12 @@ export const TabsVariantBids = observer(({
                         variant={HeadingVariant.h2}
                         className={'!mb-0'}
                         text={store.catalogStore.getServiceType(Number(data.service_type.id)).name}
-                        color={HeadingColor.active}
+                        color={HeadingColor.accent}
                       />
                     }
                   />
-                  {store.appStore.appType === "performer" && <Text className={'col-span-2'}>Ознакомьтесь с услугой. И при необходимости внесите изменения. Сервис передаст их на согласование</Text>}
-                  {(store.appStore.appType === "customer" || store.appStore.appType === "admin") && <Text className={'col-span-3'}>Исполнитель отредактировал перечень услуг. Пожалуйста проверьте и подтвердите изменения </Text>}
+                  {store.appStore.appType === "performer" && <p className={'col-span-2'}>Ознакомьтесь с услугой. И при необходимости внесите изменения. Сервис передаст их на согласование</p>}
+                  {(store.appStore.appType === "customer" || store.appStore.appType === "admin") && <p className={'col-span-2'}>Исполнитель отредактировал перечень услуг. Пожалуйста проверьте и подтвердите изменения </p>}
 
                   {data.address_from && <DList
                     className={'child:dt:text-accent col-span-2'}
@@ -488,22 +491,22 @@ export const TabsVariantBids = observer(({
                     label={'Адрес доставки'}
                     title={data.address_to}
                   />}
-                  {(data.keys || data.is_parking) && <DList
-                    className={'child:dt:text-accent  col-span-2'}
-                    label={'Дополнительные данные'}
-                    title={
-                      <>
-                        <ul>
-                          {data.keys && <li>{data.keys}</li>}
-                          {data.is_parking	 && <li>{data.is_parking && 'Есть парковочное место'}</li>}
-                        </ul>
-                      </>
-                    }
+                  {data.keys && <DList
+                    className={'child:dt:text-accent'}
+                    label={'Секретка и ключ'}
+                    title={data.keys}
                   />}
+                  {data.is_parking && <DList
+                    className={'child:dt:text-accent'}
+                    label={'Есть ли парковочное место?'}
+                    title={data.is_parking ? "Да" : "Нет"}
+                  />}
+                  </Panel>
                   <Panel
                     variant={PanelVariant.withPaddingSmWithBody}
                     background={PanelColor.glass}
-                    className={'!col-start-4 row-span-5 !border-active'}
+                    bodyClassName={'flex flex-col  h-full'}
+                    className={'!col-start-3 row-span-5 !border-active'}
                   >
                     <DList
                       className={'child:dt:text-accent'}
@@ -511,27 +514,27 @@ export const TabsVariantBids = observer(({
                       title={<Heading variant={HeadingVariant.h4} text={data.service_subtype.name} />}
                     />
                     {(data.service_option && data.service_option.length > 0) && <DList
-                      className={'mb-6'}
+
                       label={'Дополнительные опции'}
                       title={data.service_option.map((o:any) => <Heading variant={HeadingVariant.h4} text={o.name} />)}
                     />}
                     {data.truck_type && <DList
-                      className={'child:dt:text-accent mb-6'}
+                      className={'child:dt:text-accent'}
                       label={'Тип эвакуатора'}
                       title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
                     />}
 
 
                     {data.wheel_lock && <DList
-                      className={' mb-6'}
+
                       label={'Нерабочие колеса'}
                       title={<Heading  variant={HeadingVariant.h4} text={data.wheel_lock + "шт."} />}
                     />}
 
                     {data.create_amount !== null && <DList
-                      className={'child:dt:text-accent mb-6 child:*:text-accent'}
+                      className={'child:dt:text-accent mb-6 mt-auto child:*:text-accent'}
                       label={'Стоимость услуги'}
-                      title={<Heading variant={HeadingVariant.h2} text={String(data.create_amount) + " ₽"} />}
+                      title={<Heading variant={HeadingVariant.h2} className={'!mb-0'} text={String(data.create_amount) + " ₽"} />}
                     />}
                   </Panel>
                 </Tabs.Panel>

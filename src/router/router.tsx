@@ -57,6 +57,8 @@ import BidPage from "routes/bids/bid";
 import PricePage from "routes/price/price";
 import { companiesLoader } from "routes/loaders/companiesLoader";
 import PriceEditPage from "routes/price/priceEdit";
+import PriceHistory from "routes/price/priceHistory";
+import PricesHistoryPage from "routes/price/priceHistory";
 
 const router = createBrowserRouter([
     {
@@ -307,13 +309,13 @@ const router = createBrowserRouter([
             },
             {
                 path: 'price',
-                element: <PricesPage/>,
+                element: <PricesPage />,
                 loader: priceLoader,
                 children: [
                     {
                         path: ':id',
                         loader: priceLoader,
-                        element: <PricePage/>,
+                        element: <PricePage />,
                         children: [
                             {
                                 path: 'edit',
@@ -321,8 +323,21 @@ const router = createBrowserRouter([
                                 element: <PriceEditPage />
                             }
                         ]
-                    }
-                ]
+                    },
+                ],
+            },
+            {
+                path: 'pricehistory/:company_id',
+                element: <PricesHistoryPage/>,
+                loader: priceLoader,
+                children: [
+                    {
+                        path: ':id',
+                        loader: priceLoader,
+                        element: <PricePage/>,
+                    },
+                ],
+
             },
         ],
     },

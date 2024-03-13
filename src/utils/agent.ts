@@ -184,9 +184,13 @@ const handleErrors = (err: AxiosError) => {
 const Price = {
     createPrice: (company_id: number) => requests.post(`/price/${company_id}/create/`, {}),
     getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list/', {}, pagination),
+    getHistoryPrice: (company_id:number, pagination?: PaginationProps) => requests.get(`/price/${company_id}/history/`, {}, pagination),
     getCurentCompanyPriceEvac: (company_id: number) => requests.get(`/price/${company_id}/active_evacuation`, {}),
+    getCompanyPriceEvac: (company_id: number, id: number) => requests.get(`/price/${company_id}/${id}/evacuation/`, {}),
     getCurentCompanyPriceTire: (company_id: number) => requests.get(`/price/${company_id}/active_tire`, {}),
+    getCompanyPriceTire: (company_id: number, id: number) => requests.get(`/price/${company_id}/${id}/tire/`, {}),
     getCurentCompanyPriceWash: (company_id: number) => requests.get(`/price/${company_id}/active_wash`, {}),
+    getCompanyPriceWash: (company_id: number, id: number) => requests.get(`/price/${company_id}/${id}/wash/`, {}),
     updatePriceWash: (company_id: number, price_id: number, data: any) =>
         requests.post(`/price/${company_id}/${price_id}/new_wash/`, { positions: data }),
     updatePriceEvac: (company_id: number, price_id: number, data: any) =>

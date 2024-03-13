@@ -223,11 +223,11 @@ export const paginationParams = (urlData:string) => {
 }
 export const priceLoader = async (props: any) => {
     const paginationData = paginationParams(props.request.url as string)
-    console.log(props);
+    const is_history = props.request.url.includes('pricehistory')
     if(props.params.id) {
-        await priceStore.getCurrentPrice(props);
+        await priceStore.getCurrentPrice(props, is_history);
     } else {
-        await priceStore.getCurrentPrice(props);
+        await priceStore.getCurrentPrice(props, is_history);
     }
     // console.log('loader', !userStore.isAdmin);
     // async function fillData() {
@@ -282,6 +282,7 @@ export const priceLoader = async (props: any) => {
     //     // dataModels: dataModels
     // })
 }
+
 export const companyLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
     // const pathAr = props.request.url.split('/');
     // const actionName:string = pathAr[pathAr.length - 1] || 'read'

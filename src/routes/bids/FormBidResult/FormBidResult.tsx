@@ -110,19 +110,15 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
 				label={'Тип эвакуатора'}
 				title={truck_type}
 			/>}
-
-
-			{(keys || is_parking) && <DList
+			{keys && <DList
 				className={'child:dt:text-accent'}
-				label={'Дополнительные данные'}
-				title={
-					<>
-						<ul>
-							{keys && <li>{keys}</li>}
-							{is_parking	 && <li>{is_parking && 'Есть парковочное место'}</li>}
-						</ul>
-					</>
-				}
+				label={'Секретка и ключ'}
+				title={keys}
+			/>}
+			{is_parking && <DList
+				className={'child:dt:text-accent'}
+				label={'Есть ли парковочное место?'}
+				title={is_parking ? "Да" : "Нет"}
 			/>}
 			{service_option && service_option.length !== 0 && <DList
         className={'child:dt:text-accent'}
@@ -137,6 +133,7 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
 					</>
 				}
       />}
+
 			{customer_comment && <DList
         className={'child:dt:text-accent col-span-full'}
         label={'Комментарий'}

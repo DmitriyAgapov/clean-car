@@ -61,7 +61,7 @@ const PricePage = ():JSX.Element => {
           <>
             <div className={'flex w-full  col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
-              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <><LinkStyled to={'history'} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <><LinkStyled to={`/account/pricehistory/${params.id}`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <LinkStyled to={'history'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>}
             </div>

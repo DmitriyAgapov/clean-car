@@ -1,25 +1,17 @@
-import React, { JSX } from 'react'
-import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
-import { SvgBackArrow, SvgClose } from "components/common/ui/Icon";
-import { PermissionNames } from 'stores/permissionStore'
-import { dateTransform, dateTransformShort } from "utils/utils";
-import { CompanyType } from 'stores/companyStore'
-import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
-import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { ScrollArea } from '@mantine/core'
-import { notifications } from "@mantine/notifications";
+import React, { JSX } from "react";
+import Section, { SectionType } from "components/common/layout/Section/Section";
+import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import { useStore } from "stores/store";
+import { useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
+import { SvgBackArrow } from "components/common/ui/Icon";
+import { PermissionNames } from "stores/permissionStore";
+import { dateTransformShort } from "utils/utils";
+import { CompanyType } from "stores/companyStore";
+import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import { observer } from "mobx-react-lite";
 
-const test = [
-  {
-    label: ''
-  }
-]
 const PriceEditPage = ():JSX.Element => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -34,7 +26,7 @@ const PriceEditPage = ():JSX.Element => {
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
         header={<>
           <div>
-            <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
+            <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
             <Heading text={company.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
           </div>
           {/* {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <Button */}
@@ -58,13 +50,17 @@ const PriceEditPage = ():JSX.Element => {
           <>
             <div className={'flex w-full  col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
-              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={() => {
+              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <><Button text={'Отменить'} action={() =>  {
+                navigate(location.pathname.split('/').slice(0, -1).join('/'))
+                store.priceStore.clearPriceOnChange()
+                }
+              } size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/> <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={() => {
                 store.priceStore.handleSavePrice()
                 .then(() => {
                   navigate(location.pathname.split('/edit')[0])
                 })
                 revalidator.revalidate()
-              }} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>
+              }} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/></>
 
               }
             </div>

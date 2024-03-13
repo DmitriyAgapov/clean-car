@@ -224,7 +224,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   formData.values.company !== null &&
                   formData.values.company !== '0'
               ) {
-                  const car = store.carStore.cars.results.filter(
+                  const car = store.carStore.cars?.results.filter(
                       (c: any) => c.employees.filter((e: any) => e.id === Number(formData.values.conductor))[0],
                   )
                   if (car.length === 1) {
@@ -282,10 +282,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       store.bidsStore.formResultsClear()
 
     } else  {
-
-        formData.setFieldValue('city', String(store.bidsStore.formResultsAll.city))
-
-
+      formData.setFieldValue('city', String(store.bidsStore.formResultsAll.city))
       formData.values.phone = String(store.bidsStore.formResultsAll.phone);
       // formData.values.car = String(store.bidsStore.formResultsAll.car);
       formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
@@ -313,7 +310,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   const handleBack = React.useCallback(() => {
     if(step === 4) {
       if (store.bidsStore.formResult.service_type === 1 || formData.values.service_type === "1") {
-
         setStep(2)
       } else {
         setStep((prevState: number) => prevState - 1)
@@ -378,8 +374,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     } else {
     changeStep()
   }
-    console.log(step, 'step');
   }, [formData.values.service_type, step])
+
     return (
       <FormProvider form={formData}>
         <PanelForForms
@@ -410,7 +406,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
             <Button type={'button'}
               action={handleNext}
               disabled={!formData.isValid() || (store.bidsStore.AvailablePerformers.size === 0 && step === 4)}
-              text={'Сохранить'}
+              text={'Дальше'}
               className={'float-right'}
               variant={ButtonVariant.accent} />
           }>
@@ -541,6 +537,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             store.bidsStore.formResultSet({ service_subtype: 0 })
                             formData.setFieldValue(step2.fields[1].name, '0')
                             formData.resetTouched()
+                            formData.setFieldValue('service_option', []);
                           } else {
                             formData.setFieldValue('service_subtype', value)
                             store.bidsStore.formResultSet({
@@ -562,29 +559,38 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 {formData.values.service_subtype &&
                   formData.values.service_subtype !== '0' &&
                   formData.values.service_subtype &&
-                  formData.values.service_subtype !== '0' && (
+                  formData.values.service_subtype !== '0' && store.catalogStore.ServiceSubtypesOptions.length !== 0 && (
                 <Checkbox.Group
                           className={'col-span-2'}
+                          {...formData.getInputProps('service_option')}
                           classNames={{
                             label: 'text-accent label mb-4',
+                            error: 'absolute -bottom-2',
+                            root: 'relative pb-4'
                           }}
                           value={store.bidsStore.formResult.service_option.map((o: number) =>
                             String(o),
                           )}
+
                           onChange={(vals) => {
+                            console.log(formData.values);
                             store.bidsStore.formResultSet({
                               service_option: vals.map((e) => Number(e)),
                             })
-                            // @ts-ignore
-                            if(store.bidsStore.formResultsAll.service_option.length > 0) {
                             formData.values.service_option = val(
                               store.bidsStore.formResultsAll.service_option,
                             )
-                          }}}
+                            // @ts-ignore
+                            // if(store.bidsStore.formResultsAll.service_option.length > 0) {
+                            // formData.values.service_option = val(
+                            //   store.bidsStore.formResultsAll.service_option,
+                            // )
+                          // }
+                        }}
                           label='Выберите дополнительные опции (при необходимости)'
                         >
                           <Group mt='xs'>
-                            {store.catalogStore.ServiceSubtypesOptions.length !== 0 &&
+                            {
                              store.catalogStore.ServiceSubtypesOptions.map(
                                 (i: any) => (
                                   <Checkbox

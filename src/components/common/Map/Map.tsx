@@ -15,7 +15,7 @@ const ElMapPanel = (item:any) => {
         <Heading text={item.name} className={'text-white font-normal font-sans'} variant={HeadingVariant.h6}/>
         <p className={'text-white'}>{item.address}</p>
         <hr className={'border-gray-2'}/>
-        <DList className={'uppercase !text-white text-xs [&_dt]:text-xss [&_dt]:mb-1.5 [&_dd]:text-lg '} label={'Время работы'}  title={item.working_time} />
+        <DList className={'uppercase !text-white text-xs [&_dt]:text-xss [&_dt]:mb-1.5 [&_dd]:text-sm [&_dd]:font-sansSerif [&_dd]:font-medium'} label={'Время работы'}  title={item.working_time} />
         <Button text={'Выбрать'} variant={ButtonVariant.accent} className={'!rounded-md !text-xs mt-4'} action={() => {
             createBidFormActions.setFieldValue('performer', String(item.id));
             store.bidsStore.formResultSet({performer: item.id})

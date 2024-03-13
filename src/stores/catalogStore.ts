@@ -71,7 +71,6 @@ export class CatalogStore {
                             this.loadingState.cities  = true
                         })
                   )
-
             }}
         })
 
@@ -115,16 +114,6 @@ export class CatalogStore {
             subtypes: false,
         }
     }
-    setLoadingStateTrue() {
-        this.loadingState = {
-            cities: false,
-            brands: false,
-            models: false,
-            services: false,
-            types: false,
-            subtypes: false,
-        }
-    }
     getServiceSubtypeOption(service_type_id: number | string, service_subtype_id: number | string, service_option_id:number | string) {
         return this.getServiceSubtype(service_type_id, service_subtype_id).options.filter((i: any) => i.id === service_option_id)[0]
     }
@@ -137,9 +126,9 @@ export class CatalogStore {
     get ServiceSubtypesOptions() {
         const activeSubtype = this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]
         // console.log(this.currentServiceSubtypes.filter((i: any) => i.id === bidsStore.formResult.service_subtype)[0]);
-        console.log('activeSubtype',activeSubtype && activeSubtype.options ? activeSubtype.options : {
-            options: []
-        });
+        // console.log('activeSubtype',activeSubtype && activeSubtype.options ? activeSubtype.options : {
+        //     options: []
+        // });
         return activeSubtype && activeSubtype.options ? activeSubtype.options : []
     }
     targetModelId = 0
@@ -152,16 +141,9 @@ export class CatalogStore {
     currentServiceSubtypes = observable.array(<any>[])
     currentServiceSubtypesOptions = new Map([])
     carBrandModels: Map<any, any> = observable.map([])
-    carBrandModelsCount = 0
     currentCarModelWithBrand: any = {}
     carBrandModelsReference: any[] = []
-    get brandModelsCurrent() {
-        return this.brandModels
-    }
 
-    set clearOptions(val: any) {
-        this.currentServiceSubtypesOptions.clear()
-    }
     async getServices(params?: PaginationProps) {
         const { status, data } = await agent.Catalog.getServices(params)
         if (status == 200) {

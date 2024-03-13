@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 import { CompanyType } from "stores/companyStore";
+import { useStore } from "stores/store";
+import rootStore from "stores";
 
 export const CreateUserSchema = Yup.object().shape({
 	first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
@@ -90,7 +92,15 @@ export const CreateBidSchema = Yup.object().shape({
 })
 export const CreateBidSchemaStep2 = Yup.object().shape({
 	service_type: Yup.string().required('Обязательное поле'),
-	service_subtype: Yup.string().required('Обязательное поле')
+	service_subtype: Yup.string().required('Обязательное поле'),
+	service_option: Yup.array().when('service_subtype', (service_subtype, schema) => {
+		const store = rootStore
+		if(!store.catalogStore.currentServiceSubtypes.find((el:any) => (Number(service_subtype) === el.id) && el.in_price)) {
+			return schema.min(1, 'Выберите опции').required('Выберите опции')
+		} else {
+			return schema
+		}
+	}),
 })
 export const CreateBidSchemaStep3 = Yup.object().shape({
 	address_from: Yup.string().required('Обязательное поле')
