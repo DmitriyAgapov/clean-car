@@ -156,12 +156,12 @@ export class PriceStore {
             })
             return result
         }
-
+        console.log(props, history);
         let data: any[] | any = []
         if (!userStore.isAdmin) {
             console.log('not admin');
 
-            if (props.params.id) {
+            if (props.params.id && !history) {
                 let tempId = props.params.id || userStore.myProfileData.company?.id
                 const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
                 const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
@@ -178,21 +178,60 @@ export class PriceStore {
             })
                 console.log('statePriceFinish', this.loading);
 
-            } else {
+            } else if(props.params.bid_id && history) {
+                console.log('historyBid');
                 let tempId = props.params.id || userStore.myProfileData.company?.id
-                const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
-                const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
-                const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(tempId);
-                data =  [dataWash, dataTire, dataEvac]
-                this.currentPrice = data
+                const { data: dataEvac } = await agent.Price.getCompanyPriceEvac(tempId, props.params.bid_id);
+                const { data: dataTire } = await agent.Price.getCompanyPriceTire(tempId, props.params.bid_id);
+                const { data: dataWash } = await agent.Price.getCompanyPriceWash(tempId, props.params.bid_id);
+                const tempAr:any[] = []
+                runInAction(() => {
+
+                    dataWash && dataWash.wash_positions.length !== 0 && tempAr.push({ label: 'Мойка', data: dataWash, dataTable: dataWash })
+                    dataEvac && dataEvac.evacuation_positions.length !== 0 && tempAr.push({ label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') })
+                    dataTire && dataTire.tire_positions.length !== 0 && tempAr.push({ label: 'Шиномонтаж', data: dataTire, dataTable: dataTire })
+                    this.currentPrice = {
+                        tabs: tempAr
+                    }
+
                 this.loading = false
+                })
+
                 console.log('statePriceFinish', this.loading);
+            } else if(props.params.id &&  history) {
+                const { data: dataResults, status } = await agent.Price.getHistoryPrice(props.params.id, paramsStore.qParams as PaginationProps);
+
+                if (status === 200) {
+                    data = {
+                        ...dataResults, results: dataResults.results.map((i: any) => {
+                            let obj: any;
+                            for (const key in i) {
+                                if (i[key] === null) {
+                                    obj = {
+                                        ...obj,
+                                        [key]: '-'
+                                    }
+                                } else {
+                                    obj = {
+                                        ...obj,
+                                        [key]: i[key]
+                                    }
+                                }
+                            }
+                            return obj;
+                        })
+                    }
+
+                    this.currentPrice = data
+                    this.loading = false
+                    console.log('statePriceFinish', this.loading);
+                }
             }
 
         } else {
             console.log('admin');
 
-            if (props.params.id) {
+            if (props.params.id && !history) {
                 console.log('есть ID admin');
                 const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
                 const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
@@ -209,34 +248,54 @@ export class PriceStore {
                 })
             } else {
                 if(history) {
-                    const { data: dataResults, status } = await agent.Price.getHistoryPrice(props.params.company_id, paramsStore.qParams as PaginationProps);
-                    if (status === 200) {
-                        data = {
-                            ...dataResults, results: dataResults.results.map((i: any) => {
-                                let obj: any;
-                                for (const key in i) {
-                                    if (i[key] === null) {
-                                        obj = {
-                                            ...obj,
-                                            [key]: '-'
-                                        }
-                                    } else {
-                                        obj = {
-                                            ...obj,
-                                            [key]: i[key]
+                    if(!props.params.bid_id) {
+                        const { data: dataResults, status } = await agent.Price.getHistoryPrice(props.params.id, paramsStore.qParams as PaginationProps);
+
+                        if (status === 200) {
+                            data = {
+                                ...dataResults, results: dataResults.results.map((i: any) => {
+                                    let obj: any;
+                                    for (const key in i) {
+                                        if (i[key] === null) {
+                                            obj = {
+                                                ...obj,
+                                                [key]: '-'
+                                            }
+                                        } else {
+                                            obj = {
+                                                ...obj,
+                                                [key]: i[key]
+                                            }
                                         }
                                     }
-                                }
-                                return obj;
-                            })
-                        }
+                                    return obj;
+                                })
+                            }
 
-                        this.currentPrice = data
-                        this.loading = false
-                        console.log('statePriceFinish', this.loading);
+                            this.currentPrice = data
+                            this.loading = false
+                            console.log('statePriceFinish', this.loading);
+                        }
+                        console.log(data);
+                        console.log(dataResults, status);
+                    } else {
+                        let tempId = props.params.id || userStore.myProfileData.company?.id
+                        const { data: dataEvac } = await agent.Price.getCompanyPriceEvac(tempId, props.params.bid_id);
+                        const { data: dataTire } = await agent.Price.getCompanyPriceTire(tempId, props.params.bid_id);
+                        const { data: dataWash } = await agent.Price.getCompanyPriceWash(tempId, props.params.bid_id);
+                        const tempAr:any[] = []
+                        runInAction(() => {
+
+                            dataWash && dataWash.wash_positions.length !== 0 && tempAr.push({ label: 'Мойка', data: dataWash, dataTable: dataWash })
+                            dataEvac && dataEvac.evacuation_positions.length !== 0 && tempAr.push({ label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') })
+                            dataTire && dataTire.tire_positions.length !== 0 && tempAr.push({ label: 'Шиномонтаж', data: dataTire, dataTable: dataTire })
+                            this.currentPrice = {
+                                tabs: tempAr
+                            }
+
+                            this.loading = false
+                        })
                     }
-                    console.log(data);
-                    console.log(dataResults, status);
                 } else {
                     const { data: dataResults, status } = await agent.Price.getAllPrice(paramsStore.qParams as PaginationProps)
                     if (status === 200) {

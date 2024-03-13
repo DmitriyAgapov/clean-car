@@ -47,7 +47,6 @@
   //justify-content: center;
   //background: rgba(0,0,0,.8);
   //align-items: center;
-
   & > * {
 	a[data-close='true'] {
 	  cursor: pointer;
@@ -69,11 +68,14 @@
 	}
   }
   section {
-	@apply px-10 py-12;
+	@apply px-10 py-12 border-gray-2 border;
+	background: rgba(36, 37, 41, .6);
+	header {
+	  @apply pt-0 bg-none;
+	  background: none !important;
+	}
   }
-  header {
-	@apply pt-0;
-  }
+
 
 
 }

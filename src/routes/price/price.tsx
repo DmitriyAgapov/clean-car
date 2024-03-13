@@ -13,6 +13,10 @@ import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { observer } from "mobx-react-lite";
 import priceStore from "stores/priceStore";
+import dayjs from "dayjs";
+import { useDisclosure } from "@mantine/hooks";
+import { BidModal } from "components/common/layout/Modal/BidModal";
+import { PriceCopy } from "components/common/layout/Modal/PriceCopy";
 
 const PricePage = ():JSX.Element => {
   const navigate = useNavigate()
@@ -22,10 +26,16 @@ const PricePage = ():JSX.Element => {
   // const { data, dataTable }: any = useLoaderData()
   const  textData  : any = store.priceStore.TextData
 
-
+  const [opened, { open, close }] = useDisclosure(false);
+  const memoModal = React.useMemo(() => {
+    return  <PriceCopy opened={opened}
+      onClose={close} />
+  }, [opened]);
   const  currentPriceById = store.priceStore.currentPriceById;
   const  company = store.companyStore.getCompanyById(Number(params.id));
-  console.log(currentPriceById.data);
+  const isHistory = location.pathname.includes('history');
+  // @ts-ignore
+  const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
   React.useEffect(() => {
     console.log(currentPriceById.data.tabs)
     console.log(currentPriceById.loading)
@@ -35,14 +45,14 @@ const PricePage = ():JSX.Element => {
   // console.log('loading', !currentPriceById.loading);
   // console.log('data.tabs.length > 0)', currentPriceById.data.tabs?.length > 0);
   // console.log('data.tabs', currentPriceById.data.tabs);
-  if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
+  if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
         header={<>
           <div>
             <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
-            <Heading text={company.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
+            <Heading text={(isHistory && isCreate) ? `Прайс лист ${dayjs(isCreate.created).format('DD.MM.YY')} - ${dayjs(isCreate.expired).format('DD.MM.YY')}` : company?.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
           </div>
 
         </>}>
@@ -61,8 +71,8 @@ const PricePage = ():JSX.Element => {
           <>
             <div className={'flex w-full  col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
-              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <><LinkStyled to={`/account/pricehistory/${params.id}`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-              <LinkStyled to={'history'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+              {(store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && !location.pathname.includes('history')) && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+              <Button action={() => open()} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>}
             </div>
             <div className={'flex items-baseline  gap-6'}>
@@ -70,12 +80,12 @@ const PricePage = ():JSX.Element => {
                 Дата и время регистрации: <span>{dateTransformShort(company.updated).date}</span>
               </div>
               <div className={'flex flex-1 gap-6'}>
-                <Heading
+                {isCreate && isCreate.is_active && <Heading
                   className={'!m-0'}
-                  text={company.is_active ? 'Активен' : 'Не активна'}
+                  text={isCreate.is_active ? 'Активен' : 'Не активна'}
                   color={company.is_active ? HeadingColor.active : HeadingColor.notActive}
                   variant={HeadingVariant.h4}
-                />
+                />}
                 <Heading
                   className={'!m-0'}
                   text={company.company_type == 'customer'
@@ -94,7 +104,7 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-        {currentPriceById.data.tabs ? <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/> : null}
+        {currentPriceById.data.tabs ? <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/> : null}{memoModal}
       </Panel>
     </Section>
   )

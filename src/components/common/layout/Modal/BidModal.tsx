@@ -11,7 +11,6 @@ import { useParams } from "react-router-dom";
 export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 	const store = useStore()
 	const params = useParams()
-	console.log(params);
 	const memoFileUpload = React.useMemo(() => {
 		return <Observer
 			children={() => (<div className={'grid grid-cols-3  gap-4 col-span-full'}>
@@ -54,12 +53,12 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 	}, [])
 
 	return (
-		<Modal.Root size={"lg"} opened={props.opened} onClose={props.onClose} centered>
-			<Modal.Overlay />
-			<Modal.Content radius={"lg"} className={styles.ModalBid}>
+		<Modal.Root size={685} opened={props.opened} onClose={props.onClose} centered>
+			<Modal.Overlay className={'bg-black/80'}/>
+			<Modal.Content radius={20} className={styles.ModalBid}>
 				<Modal.Header className={'static '}>
 					<Modal.Title><Heading className={'!mb-0'} color={HeadingColor.accent} text={'Завершение заявки'} variant={HeadingVariant.h2}/></Modal.Title>
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-6 right-6"} icon={<SvgClose className={'close__modal'} />}/>
+					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
 				</Modal.Header>
 				<Modal.Body>
 				<Text className={''}>Для завершения заявки, загрузите фото после, минимум 2 штуки</Text>
@@ -67,14 +66,5 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 				</Modal.Body>
 			</Modal.Content>
 		</Modal.Root>
-
-	// <Modal size={"xl"} radius={"lg"} title={} closeButtonProps={{
-	// 		icon: <SvgClose className={'close__modal'} />,
-	// 		className: "hover:rotate-90 transition-all"
-	// 	}} className={styles.ModalBid} opened={props.opened} onClose={props.onClose} >
-	//
-	// 		<Text className={''}>Для завершения заявки, загрузите фото после, минимум 2 штуки</Text>
-	// 		{memoFileUpload}
-	// 	</Modal>
 	)
 }

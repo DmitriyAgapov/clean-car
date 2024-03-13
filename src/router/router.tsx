@@ -321,24 +321,25 @@ const router = createBrowserRouter([
                                 path: 'edit',
                                 loader: priceLoader,
                                 element: <PriceEditPage />
+                            },
+                            {
+                                path: 'history',
+                                element: <PricesHistoryPage/>,
+                                loader: priceLoader,
+                                children: [
+                                    {
+                                        path: ':bid_id',
+                                        loader: priceLoader,
+                                        element: <PricePage/>,
+                                    },
+                                ],
+
                             }
                         ]
                     },
                 ],
             },
-            {
-                path: 'pricehistory/:company_id',
-                element: <PricesHistoryPage/>,
-                loader: priceLoader,
-                children: [
-                    {
-                        path: ':id',
-                        loader: priceLoader,
-                        element: <PricePage/>,
-                    },
-                ],
 
-            },
         ],
     },
 ])

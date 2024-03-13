@@ -96,6 +96,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
       })
 
       const HeadersTabs = () => {
+        console.log(data);
         const result:any = [];
         for(const key in data) {
           // @ts-ignore

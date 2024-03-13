@@ -183,6 +183,7 @@ const handleErrors = (err: AxiosError) => {
 }
 const Price = {
     createPrice: (company_id: number) => requests.post(`/price/${company_id}/create/`, {}),
+    priceDoubling: (company_id: number, id: number) => requests.post(`/price/${company_id}/${id}/doubling/`, {}),
     getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list/', {}, pagination),
     getHistoryPrice: (company_id:number, pagination?: PaginationProps) => requests.get(`/price/${company_id}/history/`, {}, pagination),
     getCurentCompanyPriceEvac: (company_id: number) => requests.get(`/price/${company_id}/active_evacuation`, {}),

@@ -223,12 +223,11 @@ export const paginationParams = (urlData:string) => {
 }
 export const priceLoader = async (props: any) => {
     const paginationData = paginationParams(props.request.url as string)
-    const is_history = props.request.url.includes('pricehistory')
-    if(props.params.id) {
-        await priceStore.getCurrentPrice(props, is_history);
-    } else {
-        await priceStore.getCurrentPrice(props, is_history);
-    }
+    const is_history = props.request.url.includes('history')
+    console.log('priceLoader', is_history, props.params.id, props.params.bid_id);
+
+    await priceStore.getCurrentPrice(props, is_history);
+
     // console.log('loader', !userStore.isAdmin);
     // async function fillData() {
     //     let data: any[] | any = []
