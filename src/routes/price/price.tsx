@@ -25,24 +25,18 @@ const PricePage = ():JSX.Element => {
   const  textData  : any = store.priceStore.TextData
 
   const [opened, { open, close }] = useDisclosure(false);
-  const memoModal = React.useMemo(() => {
-    return  <PriceCopy opened={opened}
-      onClose={close} />
-  }, [opened]);
+
   const  currentPriceById = store.priceStore.currentPriceById;
   const  company = store.companyStore.getCompanyById(Number(params.id));
   const isHistory = location.pathname.includes('history');
   // @ts-ignore
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
-  React.useEffect(() => {
-    console.log(currentPriceById.data.tabs)
-    console.log(currentPriceById.loading)
-  }, [currentPriceById.loading])
-  console.log(currentPriceById);
-  // console.log((!currentPriceById.loading && currentPriceById.data.tabs && currentPriceById.data.tabs.length > 0));
-  // console.log('loading', !currentPriceById.loading);
-  // console.log('data.tabs.length > 0)', currentPriceById.data.tabs?.length > 0);
-  // console.log('data.tabs', currentPriceById.data.tabs);
+  console.log(company);
+  const memoModal = React.useMemo(() => {
+    return  <PriceCopy opened={opened} id={isCreate.id} title={company.name}
+      onClose={close} />
+  }, [opened]);
+
   if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
     <Section type={SectionType.default}>

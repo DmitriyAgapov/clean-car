@@ -31,8 +31,6 @@ export enum CAR_RADIUSTEXT {
     'R15C'= 'R15C',
     'R16C'= 'R16C',
 }
-
-
 export enum CAR_CLASS   {
     '1 класс',
     '2 класс',
@@ -140,6 +138,9 @@ export class PriceStore {
             data: this.currentPrice,
             loading: this.loading
         })
+    }
+    copyPrice(company_id: number, price_id: number) {
+        return agent.Price.priceDoubling(company_id, price_id)
     }
     async getCurrentPrice(props:any, history: boolean) {
         action(() => this.loading = true);

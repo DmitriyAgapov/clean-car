@@ -9,24 +9,25 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import { useParams } from "react-router-dom";
 import { CompanyType } from "stores/companyStore";
 
-export function PriceCopy(props: { opened: boolean; onClose: () => void;}) {
+export function PriceCopy(props: { opened: boolean; onClose: () => void; id: number, title: string}) {
 	const store = useStore()
-	const params = useParams()
 	const [formData, setFormData]:any = useState({
 		type: CompanyType.customer,
 		company: null,
 		company_filials: null
 	})
-	const handleSubmmit = React.useCallback(() => {
 
-	}, [])
+	const handleSubmmit = React.useCallback(() => {
+		if(formData.company_filials || formData.company) {
+			store.priceStore.copyPrice(formData.company_filials ? formData.company_filials : formData.company, props.id)
+			.then((res: any) => res).finally(() => props.onClose())
+		}
+	}, [formData]);
+
 	const memoFileUpload = React.useMemo(() => {
-		console.log(formData);
 		const availableFilials = store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.type).map((f:any) => ({label: f.name, value: f.id.toString()}))
 		return <Observer
 			children={() => (<>
-
-
 				<div className={'my-8'}>
 					<Select
 						allowDeselect={false}
@@ -47,7 +48,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void;}) {
 						disabled={formData.type === null}
 						searchable
 						clearable
-						onOptionSubmit={(e) => setFormData((prevState:any) => ({
+						onChange={(e) => setFormData((prevState:any) => ({
 							...prevState,
 							company: e
 						}))}
@@ -59,7 +60,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void;}) {
 							disabled={availableFilials.length === 0}
 						searchable
 						clearable
-							onOptionSubmit={(e) => setFormData((prevState:any) => ({...prevState, company_filials: e}))}
+							onChange={(e) => setFormData((prevState:any) => ({...prevState, company_filials: e}))}
 						// defaultValue={formData.values.company_id}
 						label={'Филиал'}
 						data={availableFilials}
@@ -69,16 +70,14 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void;}) {
 
 				<footer className={'col-span-full'}>
 						<Button
-							className={'col-span-1'}
+							className={'col-span-1 flex-1'}
 							variant={ButtonVariant['accent-outline']}
 							size={ButtonSizeType.base}
 							action={props.onClose}
 							text={'отменить'}
+							type={'button'}
 						/>
-					<Button text={'сохранить'} variant={ButtonVariant.accent} action={() => store.bidsStore.uploadPhotos(false, params.company_id as string, params.id as string).then(r => {
-						store.bidsStore.loadBidPhotos(params.company_id as string, params.id as string)
-						.then(() => props.onClose())
-					})}/>
+					<Button text={'сохранить'} className={'flex-1'} type={'button'} disabled={!formData.company && !formData.company_filials} variant={ButtonVariant.accent} action={handleSubmmit}/>
 				</footer>
 			</>)}   />
 	}, [formData])
@@ -88,7 +87,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void;}) {
 			<Modal.Overlay className={'bg-black/80'}/>
 			<Modal.Content radius={20} className={styles.ModalBid}>
 				<Modal.Header className={'static '}>
-					<Modal.Title><Heading className={'!mb-0'} color={HeadingColor.accent} text={'Дублировать данные Компания 1'} variant={HeadingVariant.h2}/></Modal.Title>
+					<Modal.Title><Heading className={'!mb-0'} color={HeadingColor.accent} text={`Дублировать данные ${props.title}`} variant={HeadingVariant.h2}/></Modal.Title>
 					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
 				</Modal.Header>
 				<Modal.Body>
