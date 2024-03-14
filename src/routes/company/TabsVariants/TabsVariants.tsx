@@ -19,6 +19,7 @@ import { Observer, observer } from "mobx-react-lite";
 import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
 import { computed } from "mobx";
 import { BidsStatus } from "stores/bidsStrore";
+import { PermissionNames } from "stores/permissionStore";
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -286,12 +287,14 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
        <DList label={'Марка'} title={data.brand.name} />
        <DList label={'Модель'} title={data.model.name} />
        <DList label={'Тип'} title={data.model.car_type} />
+       <DList label={'Высота'} title={data.height + " см"} />
+       <DList label={'Радиус колес'} title={data.radius} />
         {/* todo: Добавить высоту и радиус */}
-        <div className={'subgrid'}>
-          <DList label={'Компания'} title={data.company.name} />
+        {/* <div className={'subgrid'}> */}
+          <DList label={'Компания'} title={data.company.parent ? data.company.parent.name : data.company.name} />
         {/* todo: Добавить филиал */}
-          {data.company.parent && <DList label={'Филиал'} title={data.company.parent} />}
-        </div>
+          {data.company.parent && <DList label={'Филиал'} title={data.company.name} />}
+        {/* </div> */}
       </Tabs.Panel>)
       break;
 
@@ -531,7 +534,7 @@ export const TabsVariantBids = observer(({
                       title={<Heading  variant={HeadingVariant.h4} text={data.wheel_lock + "шт."} />}
                     />}
 
-                    {data.create_amount !== null && <DList
+                    {data.create_amount !== null && store.userStore.getUserCan(PermissionNames["Финансовый блок"], "read") && <DList
                       className={'child:dt:text-accent mb-6 mt-auto child:*:text-accent'}
                       label={'Стоимость услуги'}
                       title={<Heading variant={HeadingVariant.h2} className={'!mb-0'} text={String(data.create_amount) + " ₽"} />}

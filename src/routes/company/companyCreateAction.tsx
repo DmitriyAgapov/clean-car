@@ -15,15 +15,6 @@ export default function CompanyPageCreateAction(props: any) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // @ts-ignore
-  const [changes, setChanges] = useState({})
-
-  const handleChangeName = (event: any) => {
-    setChanges((prevState: any) => ({
-      ...prevState,
-      name: event.target.value,
-    }))
-  }
   if(!store.userStore.getUserCan(PermissionNames["Компании"], 'create')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>

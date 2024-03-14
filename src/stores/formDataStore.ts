@@ -13,7 +13,7 @@ export class FormStore {
       properties: ['formCreateUser', 'formCreateCar'],
       storage: localStorage,
     })
-  
+
   //   reaction(() => this.formCreateCar.employee, async (employee) => {
   //     if (employee.length !== 0) {
   //       await carStore.createCar(this.formCreateCar.company_id, this.formCreateCar)
@@ -63,6 +63,7 @@ export class FormStore {
       return carStore.createCar(this.formCreateCar.company_id, this.formCreateCar)
       .then((res) => res)
       .then((res:any) => runInAction(() => {
+        console.log(res);
         if(res && res.status > 199 && res.status < 300) {
           this.formCreateCar = {}
           return res

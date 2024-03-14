@@ -25,6 +25,7 @@ interface InitValues {
     city: string | null
     city_name?: string | null | any
     company_name: string | null
+    height: string | number | null
     id: string | number
     company_filials: string
     lat: string | number
@@ -50,6 +51,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         company_id: null,
         company_name: '',
         id: 0,
+        height: null,
         company_filials: 'filials',
         lat: 0,
         lon: 0,
@@ -77,6 +79,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             city_name: store.catalogStore.getCity(Number(company.city)).name,
             company_name: company.company_name,
             lat: company.lat,
+            height: company.height,
             company_id: String(company.company_id),
             company_filials: company.parent === null ? 'company' : 'filials',
             working_time: company.working_time ?? "",
@@ -320,6 +323,19 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             autofix
                             overwrite
                             placeholder='c 00:00 до 23:59'
+                          />
+                        )}
+                        {formData.values.type === CompanyType.performer && (
+                          <NumberInput
+                            className={'!flex-[1_1_4rem]'}
+
+                            step={1}
+                            hideControls
+                            allowNegative={false}
+                            allowDecimal={false}
+                            label={'Макс. высота транспорта в см'}
+                            {...formData.getInputProps('height')}
+
                           />
                         )}
                         <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />

@@ -174,7 +174,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         if(step === 2) {
           return yupResolver(CreateBidSchemaStep2).call({}, values)
         }
-        if(step === 3 && (values.service_type === 3 || values.service_subtype === 6)) {
+        if(step === 3) {
           return yupResolver(CreateBidSchemaStep3).call({}, values)
         }
         if(step === 4) {
@@ -382,12 +382,16 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           footerClassName={'px-8 pb-8 pt-2'}
           variant={PanelVariant.default}
           actionBack={step === 5 || step === 1 ? null
-             : (<Button
+             : (<><Button
               text={'Назад'}
               action={handleBack}
               className={'lg:mb-0 mr-auto'}
               variant={ButtonVariant['accent-outline']}
-            />)
+            /><Button text={'Check'} action={() => {
+              console.log(formData.validate())
+              console.log(formData.values)
+
+            }}/> </>)
           }
           actionCancel={step !== 5 ? <Button type={'button'}
             text={'Отменить'}
@@ -536,13 +540,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                           if (value === null) {
                             store.bidsStore.formResultSet({ service_subtype: 0 })
                             formData.setFieldValue(step2.fields[1].name, '0')
-                            formData.resetTouched()
+                            formData.setTouched({service_option: false})
                             formData.setFieldValue('service_option', []);
                           } else {
+                            formData.setTouched({service_option: false})
                             formData.setFieldValue('service_subtype', value)
                             store.bidsStore.formResultSet({
                               service_subtype: Number(value),
                             })
+                            formData.setFieldValue('service_option', []);
+                            console.log('setTouched');
+                            formData.setTouched({ 'service_option': true });
                           }
                         }}
                         data={
@@ -895,7 +903,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               header={
                 <>
                   <Heading
-                    text={step4.title}
+                    text={formData.values.service_type === "1" ? "Шаг 3. Выбор исполнителя" : step4.title}
                     color={HeadingColor.accent}
                     variant={HeadingVariant.h2}
                   />

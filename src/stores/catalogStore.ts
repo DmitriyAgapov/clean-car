@@ -114,6 +114,9 @@ export class CatalogStore {
             subtypes: false,
         }
     }
+    get CurrentServiceSubtypes() {
+        return this.currentServiceSubtypes
+    }
     getServiceSubtypeOption(service_type_id: number | string, service_subtype_id: number | string, service_option_id:number | string) {
         return this.getServiceSubtype(service_type_id, service_subtype_id).options.filter((i: any) => i.id === service_option_id)[0]
     }

@@ -1,22 +1,20 @@
-import React, { JSX, useEffect } from "react";
-import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { SvgBackArrow } from 'components/common/ui/Icon'
-import { PermissionNames } from 'stores/permissionStore'
-import {  dateTransformShort } from "utils/utils";
-import { CompanyType } from 'stores/companyStore'
-import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
-import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { observer } from "mobx-react-lite";
-import priceStore from "stores/priceStore";
+import React, { JSX } from "react";
+import Section, { SectionType } from "components/common/layout/Section/Section";
+import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import { useStore } from "stores/store";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { SvgBackArrow } from "components/common/ui/Icon";
+import { PermissionNames } from "stores/permissionStore";
+import { dateTransformShort } from "utils/utils";
+import { CompanyType } from "stores/companyStore";
+import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import dayjs from "dayjs";
 import { useDisclosure } from "@mantine/hooks";
-import { BidModal } from "components/common/layout/Modal/BidModal";
 import { PriceCopy } from "components/common/layout/Modal/PriceCopy";
+import { observer } from "mobx-react-lite";
 
 const PricePage = ():JSX.Element => {
   const navigate = useNavigate()
@@ -104,7 +102,7 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-        {currentPriceById.data.tabs ? <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/> : null}{memoModal}
+        {(currentPriceById.data.tabs && currentPriceById.data.tabs.length !== 0) ? <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/> : <Heading text={'Нет прайса'}  variant={HeadingVariant.h2} />}{memoModal}
       </Panel>
     </Section>
   )

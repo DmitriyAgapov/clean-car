@@ -200,7 +200,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             } else {
               store.formStore.setFormDataCreateCar(data)
               store.formStore.sendCarFormData().then(r => {
-
+                console.log(r);
                 form.values.id = r.data.id
               })
             }

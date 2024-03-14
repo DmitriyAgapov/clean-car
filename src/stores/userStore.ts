@@ -163,7 +163,9 @@ export class UserStore {
         this.myProfileData.company = perm[0].company;
 
         perm[0].group.permissions.forEach((item:any) => {
-          const exepctions = ['Компании', 'Расчетный блок', 'Финансовый блок', 'Индивидуальный расчет']
+          const exepctions = ['Компании', 'Расчетный блок',
+            // 'Финансовый блок',
+            'Индивидуальный расчет']
           if(exepctions.indexOf(item.name) == -1) {
             // @ts-ignore
             ar.set(PermissionNames[item.name], item)

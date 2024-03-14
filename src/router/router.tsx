@@ -176,6 +176,7 @@ const router = createBrowserRouter([
                     {
                         path: 'create',
                         element: <CompanyPageCreateAction />,
+                        loader: companyLoader,
                     },
                 ],
             },

@@ -5,6 +5,7 @@ import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import DList from "components/common/ui/DList/DList";
 import React from "react";
+import { PermissionNames } from "stores/permissionStore";
 
 interface BidResult {
 	service_type: number | string
@@ -29,14 +30,14 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
 	const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
 	return <PanelForForms
 		{...props}
-		className={'!bg-transparent'}
-		bodyClassName={'grid !grid-cols-3 gap-4'}
+		className={'!bg-transparent !grid-rows-[auto_1fr]'}
+		bodyClassName={'!flex h-full'}
 		variant={PanelVariant.textPadding}
 		background={PanelColor.default}
 		header={
 			<>
 				<Heading
-					text={step5.title}
+					text={service_type === 1 ? "Шаг 4. Заявка сформирована" : step5.title}
 					color={HeadingColor.accent}
 					variant={HeadingVariant.h2}
 				/>
@@ -47,8 +48,8 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
 	>
 		{service_type &&
 		<Panel
-			className={' !border-active !border-1'}
-			bodyClassName={'grid grid-cols-2  gap-y-5  gap-x-12 content-start !py-8'}
+			className={' !border-active !border-1 flex-1 h-full'}
+			bodyClassName={'grid grid-cols-2  gap-y-5  gap-x-12 content-start !py-12'}
 			variant={PanelVariant.withPaddingSmWithBody}
 			background={PanelColor.glass}
 		>
@@ -143,7 +144,7 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
 					</p>
 				}
       />}
-			{create_amount && <DList
+			{create_amount && store.userStore.getUserCan(PermissionNames["Финансовый блок"], "read") && <DList
         className={'child:dt:text-accent child:*:text-accent'}
         label={'Стоимость услуги'}
         title={<Heading variant={HeadingVariant.h2} text={create_amount + " ₽"} />}

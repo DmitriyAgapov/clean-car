@@ -37,6 +37,7 @@ export default function CompanyPageEditAction(props: any) {
     inn: loaderData.company.data[`${type}profile`].inn,
     ogrn: loaderData.company.data[`${type}profile`].ogrn,
     legal_address: loaderData.company.data[`${type}profile`].legal_address,
+    height: loaderData.company.data[`${type}profile`].height,
     // @ts-ignore
     type: CompanyType[type],
     lat: loaderData.company.data[`${type}profile`].lat,

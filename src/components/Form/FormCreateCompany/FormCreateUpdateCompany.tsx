@@ -39,7 +39,7 @@ interface InitValues {
     ogrn: string | number
     overdraft: string
     overdraft_sum: number
-    height: number
+    height: number | null
     service_percent: number
     payment: "Постоплата" | "Предоплата"
     performers_list: string
@@ -63,7 +63,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         contacts: '',
         id: 0,
         inn: '',
-        height:  1,
+        height:  null,
         lat: 0,
         legal_address: '',
         lon: 0,
@@ -88,6 +88,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             setStep(step ? step : 2)
         }, 1200)
     }
+    console.log(company);
     if(edit) {
         initValues = {
             address: company.address,
@@ -95,7 +96,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             ogrn: company.ogrn,
             city: company.city,
             city_name: store.catalogStore.getCity(Number(company.city)).name,
-            height: company.height ?? 100,
+            height: company.height ?? null,
             company_name: company.company_name,
             lat: company.lat,
             contacts: company.contacts,
@@ -327,7 +328,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         />
                         <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
                         <NumberInput
-
+                          allowLeadingZeros
                             type={'text'}
                             label={'ИНН'}
                             {...formData.getInputProps('inn')}
@@ -336,7 +337,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             placeholder={'Введите ИНН'}
                         />
                         <NumberInput
-
+                          allowLeadingZeros
                             type={'text'}
                             label={'ОГРН'}
                             {...formData.getInputProps('ogrn')}

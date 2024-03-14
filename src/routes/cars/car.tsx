@@ -18,7 +18,7 @@ const CarPage = () => {
   const navigate = useNavigate()
   const { data, page, pageRequest, textData, company_type }: any = useLoaderData()
   const navigation = useNavigation();
-
+  console.log(data);
 
   const [state, setState] = useState(navigation.state)
 

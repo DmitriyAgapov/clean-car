@@ -30,6 +30,7 @@ export default function FilialsPageEditAction(props: any) {
     inn: loaderData.company.data[`${company_type}profile`].inn,
     ogrn: loaderData.company.data[`${company_type}profile`].ogrn,
     legal_address: loaderData.company.data[`${company_type}profile`].legal_address,
+    height: loaderData.company.data[`${company_type}profile`].height,
     parent: parent.data.parent,
     // @ts-ignore
     type: CompanyType[type],

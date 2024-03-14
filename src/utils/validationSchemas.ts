@@ -95,15 +95,55 @@ export const CreateBidSchemaStep2 = Yup.object().shape({
 	service_subtype: Yup.string().required('Обязательное поле'),
 	service_option: Yup.array().when('service_subtype', (service_subtype, schema) => {
 		const store = rootStore
-		if(!store.catalogStore.currentServiceSubtypes.find((el:any) => (Number(service_subtype) === el.id) && el.in_price)) {
-			return schema.min(1, 'Выберите опции').required('Выберите опции')
+		if(!store.catalogStore.CurrentServiceSubtypes.find((el:any) => (Number(service_subtype) === el.id) && el.in_price)) {
+			console.log('option req');
+			return schema.min(1, 'Выберите опции')
 		} else {
+			console.log('option notreq');
 			return schema
 		}
 	}),
 })
 export const CreateBidSchemaStep3 = Yup.object().shape({
-	address_from: Yup.string().required('Обязательное поле')
+	address_from: Yup.string().when('service_type', (service_type, schema) => {
+		console.log('service_type', service_type[0] === "3");
+		if(service_type[0] === "3") {
+			return schema.required("Обязательное поле")
+		}
+		return schema.nullable()
+	}),
+	address_to: Yup.string().when('service_type', (service_type, schema) => {
+		if(service_type[0] === "3") {
+			return schema.required("Обязательное поле")
+		}
+		return schema.nullable()
+	}),
+	time: Yup.string().nullable().required('Обязательное поле'),
+	secretKey: Yup.string().nullable().when('service_type', (service_type, schema) => {
+		if(service_type[0] === "2") {
+			return schema.required("Обязательное поле")
+		}
+		return schema
+	}),
+	parking: Yup.string().nullable().when('service_type', (service_type, schema) => {
+		if(service_type[0] === "2") {
+			return schema.required("Обязательное поле")
+		}
+		return schema
+	}),
+	truck_type: Yup.string().nullable().when('service_type', (service_type, schema) => {
+		if(service_type[0] === "3") {
+			return schema.required("Обязательное поле")
+		}
+		return schema
+	}),
+
+	tire_destroyed: Yup.string().nullable().when('service_type', (service_type, schema) => {
+		if(service_type[0] === "3") {
+			return schema.required("Обязательное поле")
+		}
+		return schema
+	})
 })
 export const CreateBidSchemaStep4 = Yup.object().shape({
 	performer: Yup.number().required('Обязательное поле')

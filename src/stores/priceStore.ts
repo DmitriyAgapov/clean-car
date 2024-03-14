@@ -145,7 +145,7 @@ export class PriceStore {
         action(() => this.loading = true);
         const mapEd = (ar:[], compareField:string) => {
             let newMap = new Map([])
-            if(ar.length > 0) {
+            if(ar && ar.length > 0) {
                 ar.forEach((item: any) => {
                     newMap.set(item[compareField].name, ar.filter((i:any) => i[compareField].name == item[compareField].name))
                 })}
@@ -167,15 +167,18 @@ export class PriceStore {
                 const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
                 const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(tempId);
                 console.log('есть ID');
+                const tempAr:any[] = []
                 runInAction(() => {
+
+                    dataWash && dataWash.wash_positions && dataWash.wash_positions.length !== 0 && tempAr.push({ label: 'Мойка', data: dataWash, dataTable: dataWash })
+                    dataEvac && dataEvac.evacuation_positions && dataEvac.evacuation_positions.length !== 0 && tempAr.push({ label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') })
+                    dataTire && dataTire.tire_positions && dataTire.tire_positions.length !== 0 && tempAr.push({ label: 'Шиномонтаж', data: dataTire, dataTable: dataTire })
                     this.currentPrice = {
-                    tabs: [{
-                        label: 'Мойка', data: dataWash,
-                        dataTable: dataWash
-                    }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }]
-                }
-                this.loading = false
-            })
+                        tabs: tempAr
+                    }
+
+                    this.loading = false
+                })
                 console.log('statePriceFinish', this.loading);
 
             } else if(props.params.bid_id && history) {
