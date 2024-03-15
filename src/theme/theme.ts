@@ -5,6 +5,7 @@ import {
     Combobox,
     Select,
     DEFAULT_THEME,
+
     mergeMantineTheme,
     Checkbox,
     Textarea,
@@ -12,6 +13,7 @@ import {
     Popover,
     InputBase,
     NumberInput,
+    Modal,
 } from '@mantine/core'
 import { TimeInput } from '@mantine/dates';
 
@@ -51,6 +53,7 @@ const themeOverride = createTheme({
                 option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent focus:!bg-transparent focus:!text-accent',
             }
         }),
+
         TextInput: TextInput.extend({
             classNames: {
                 label: 'font-semibold',
@@ -60,10 +63,16 @@ const themeOverride = createTheme({
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
             }
         }),
+        Modal: Modal.extend({
+            classNames: {
+                root: '',
+                content: 'rounded-xl !bg-[#242529]',
+                body: 'py-6 px-6'
+            }
+        }),
         Popover: Popover.extend({
            classNames: {
-               // dropdown: '!bg-white',
-               // arrow: '!bg-transparent'
+               dropdown: ' p-8'
            }
         }),
         InputBase: InputBase.extend({

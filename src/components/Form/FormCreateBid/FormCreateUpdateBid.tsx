@@ -83,7 +83,7 @@ export const createBidFormActions = createFormActions<InitValues>('createBidForm
 const FormCreateUpdateBid = ({ bid, edit }: any) => {
     const store = useStore()
     const momentFormat = 'HH:mm'
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(3)
     const [animate, setAnimate] = useState(false)
     let revalidate = useRevalidator()
     const navigate = useNavigate()
@@ -704,9 +704,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 />
 
                 <DateTimePicker
+
                   classNames={{
                     root: '',
                     input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+
+                    monthCell: '!p-6'
 
                   }}
                   {...formData.getInputProps('time')}
@@ -823,6 +826,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         root: '',
                       input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
 
+                      monthCell: 'text-white',
+                      day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80'
                     }}
                     {...formData.getInputProps('time')}
                     dropdownType="modal"
