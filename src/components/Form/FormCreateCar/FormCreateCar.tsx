@@ -317,7 +317,7 @@ const FormCreateCar = ({ car, edit }: any) => {
 
                       className={'form_with_progress'}>
                         <Progress total={3} current={step}/>
-                        <Step footer={<><Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
+                        <Step footer={<><Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'}       variant={ButtonVariant.cancel} />
                           <Button type={(Object.keys(errors).length > 0)   ? 'button' : 'text'} disabled={Object.keys(errors).length > 0}  text={'Дальше'} action={() => {
                             store.formStore.setFormDataCreateCar({
                               id: store.formStore.formCreateCar.id,
@@ -341,7 +341,7 @@ const FormCreateCar = ({ car, edit }: any) => {
                         </Step>
                         <Step footer={<>
                             <Button text={'Назад'} action={() =>  changeStep(1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
-                            <Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'} variant={ButtonVariant['accent-outline']} />
+                            <Button text={'Отменить'} action={() => navigate(-1)} className={'float-right lg:mb-0 mb-5'}       variant={ButtonVariant.cancel} />
                             <Observer children={() => <Button type={'submit'} disabled={!isValid || store.usersStore.selectedUsers.size === 0} text={'Дальше'}
 
                           // .then((r:any) => console.log('result', r))

@@ -180,7 +180,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 													e.preventDefault()
 													navigate(-1)}}
                         className={'float-right'}
-                        variant={ButtonVariant['accent-outline']}
+	                    variant={ButtonVariant.cancel}
                     />
 	                  {/*   <Button */}
 	                  {/*     type={'button'} */}

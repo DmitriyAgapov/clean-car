@@ -9,7 +9,7 @@ const BidImg = ({ item, ...props }: any) => {
     const [visible, { toggle }] = useDisclosure(true)
     return (
         <div className={'group relative'}>
-            {(store.bidsStore.formResult.company !== 0 && store.bidsStore.formResult.company !== null) || props.company_id && (
+            {((store.bidsStore.formResult.company !== 0 && store.bidsStore.formResult.company !== null) || props.company_id) && (
                 <CloseIcon
                     onClick={() => store.bidsStore.removeFile(props.company_id ? props.company_id : store.bidsStore.formResult.company, item.id)}
                     className={

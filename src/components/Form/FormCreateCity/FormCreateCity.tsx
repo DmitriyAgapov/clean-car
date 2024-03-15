@@ -65,7 +65,6 @@ const FormCreateCity = (props: any) => {
   const navigate = useNavigate()
   const store = useStore()
   const editStatus = props?.edit ?? false
-  console.log(data.results.is_active ? "true" : "false");
   const  editInitValues = {
           id: data.results.id,
           city: data.results.name,
@@ -102,6 +101,7 @@ const FormCreateCity = (props: any) => {
             className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
             variant={PanelVariant.textPadding}
             background={PanelColor.glass}
+            footerClassName={'!px-8 !pb-8 !pt-2'}
             bodyClassName={'grid gap-6 lg:grid-cols-3 items-start'}
             footer={
               <>
@@ -134,8 +134,8 @@ const FormCreateCity = (props: any) => {
                   <Button
                     text={'Отменить'}
                     action={() => navigate(-1)}
-                    className={'justify-self-end float-right'}
-                    variant={ButtonVariant['accent-outline']}
+                    className={!editStatus ? 'mr-auto' : ''}
+                    variant={ButtonVariant.cancel}
                   />
                   <Button
                     text={'Сохранить'}

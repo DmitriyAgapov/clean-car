@@ -97,33 +97,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         }, 1200)
     }
 
-    const memoFileUpload = React.useMemo(() => {
 
-      const status = store.bidsStore.formResult.company !== 0 && store.bidsStore.formResult.company !== null && store.bidsStore.formResult.company !== "0"
-      console.log(status, 'status');
-      return <Observer
-        children={() => (<div className={`grid grid-cols-3  gap-4 col-span-full ${!status ? 'pointer-events-none grayscale' : ""}`}>
-          <InputLabel className={'col-span-2'}>Фотографии До</InputLabel>
-
-          <div className={'flex col-span-2  gap-3 items-center justify-items-center'}>
-            {store.bidsStore.getPhotos.map(
-              (item: any, index: number) => <BidImg key={index} item={item} />,
-            )}
-          </div>
-          <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>
-          <FileButton onChange={(e) => store.bidsStore.sendFiles(e, true)} multiple accept='image/png,image/jpeg'>
-            {(props) => (
-              <Button
-                className={'col-span-1'}
-                variant={ButtonVariant['accent-outline']}
-                size={ButtonSizeType.sm}
-                {...props}
-                text={'Добавить фото'}
-              ></Button>
-            )}
-          </FileButton>
-        </div>)}   />
-    }, [store.bidsStore.getPhotos, store.bidsStore.formResult.company])
 
   const initData = React.useMemo(() => {
     let initValues = InitValues
@@ -375,28 +349,34 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         <PanelForForms
           footerClassName={'px-8 pb-8 pt-2'}
           variant={PanelVariant.default}
-          actionBack={step === 5 || step === 1 ? null
-             : (<><Button
+          actionBack={<>{step === 5 || step === 1 ? null
+             : (<Button
               text={'Назад'}
               action={handleBack}
               className={'lg:mb-0 mr-auto'}
               variant={ButtonVariant['accent-outline']}
             />
-            {/*   <Button text={'Check'} action={() => { */}
-            {/*   console.log(formData.validate()) */}
-            {/*   console.log(formData.values) */}
-
-            {/* }}/>  */}
-            </>)
-          }
+           )}
+            {step === 1 && <FileButton onChange={(e) => store.bidsStore.sendFiles(e, true)} multiple accept='image/png,image/jpeg'>
+          {(props) => (
+            <Button
+              className={'col-span-1'}
+              type={'button'}
+              variant={ButtonVariant['accent-outline']}
+              disabled={store.bidsStore.formResult.company === 0 || store.bidsStore.formResult.company === null}
+              {...props}
+              text={'Добавить фото'}
+            ></Button>
+          )}
+        </FileButton>}
+            </>}
           actionCancel={step !== 5 ? <Button type={'button'}
             text={'Отменить'}
             action={(e) => {
               e.preventDefault()
               navigate(-1)
             }}
-            className={'float-right'}
-            variant={ButtonVariant['accent-outline']} />: null}
+            variant={ButtonVariant.cancel} />: null}
           actionNext={step === 5 ?  <Button type={'button'}
             action={() => navigate('/account/bids')}
             text={'Закрыть'}

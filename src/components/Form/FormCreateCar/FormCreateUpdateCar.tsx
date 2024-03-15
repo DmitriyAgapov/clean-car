@@ -241,7 +241,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               navigate(-1)
             }}
             className={'float-right'}
-            variant={ButtonVariant['accent-outline']} /> : null
+              variant={ButtonVariant.cancel} /> : null
             }</>}
           actionBack={step === 2 ?  <Button text={'Назад'}
                       action={() => changeStep(1)}

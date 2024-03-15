@@ -167,7 +167,7 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                         <Button
                             text={'Отменить'}
                             action={() => store.appStore.closeModal()}
-                            variant={ButtonVariant['accent-outline']}
+                          variant={ButtonVariant.cancel}
                             className={'max-w-fit'}
                         />
                         <Button

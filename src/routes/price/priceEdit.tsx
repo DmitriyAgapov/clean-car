@@ -54,7 +54,7 @@ const PriceEditPage = ():JSX.Element => {
                 navigate(location.pathname.split('/').slice(0, -1).join('/'))
                 store.priceStore.clearPriceOnChange()
                 }
-              } size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/> <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={() => {
+              } size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/> <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={() => {
                 store.priceStore.handleSavePrice()
                 .then(() => {
                   navigate(location.pathname.split('/edit')[0])

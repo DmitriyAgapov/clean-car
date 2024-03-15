@@ -48,16 +48,16 @@ const ServicesPage = () => {
                             />
                         </div>
 
-                        {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (
-                            <Button
-                                text={textData.create}
-                                action={() => navigate('create')}
-                                trimText={true}
-                                /* action={() => store.companyStore.addCompany()} */ className={'inline-flex'}
-                                directory={ButtonDirectory.directory}
-                                size={ButtonSizeType.sm}
-                            />
-                        )}
+                        {/* {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && ( */}
+                        {/*     <Button */}
+                        {/*         text={textData.create} */}
+                        {/*         action={() => navigate('create')} */}
+                        {/*         trimText={true} */}
+                        {/*      className={'inline-flex'} */}
+                        {/*         directory={ButtonDirectory.directory} */}
+                        {/*         size={ButtonSizeType.sm} */}
+                        {/*     /> */}
+                        {/* )} */}
                     </>
                 }
             ></Panel>

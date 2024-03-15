@@ -17,17 +17,7 @@ const UploadedPhotos = () => {
 				)}
 			</div>
 			<p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>
-			<FileButton onChange={(e) => store.bidsStore.sendFiles(e, true)} multiple accept='image/png,image/jpeg'>
-				{(props) => (
-					<Button
-						className={'col-span-1'}
-						variant={ButtonVariant['accent-outline']}
-						size={ButtonSizeType.sm}
-						{...props}
-						text={'Добавить фото'}
-					></Button>
-				)}
-			</FileButton>
+
 		</div>
 }
 export default observer(UploadedPhotos)

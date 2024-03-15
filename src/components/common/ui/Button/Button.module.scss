@@ -123,6 +123,24 @@ user-select: none ;
 	  color: black;
 	}
   }
+  &[data-variant="cancel"] {
+	background: transparent;
+	border: 1px solid ;
+	text-transform: uppercase;
+	align-items: center;
+	@apply font-medium border-white/60 text-white/60;
+* {
+  transition: all initial !important;
+}
+
+	&:hover, &:focus {
+	  //background: var(--colorWhite);
+	  @apply font-medium border-accent text-accent;
+	  transition: all initial !important;
+
+	}
+  }
+
 
   &[data-variant="outline"] {
 	border-color: var(--colorWhite);

@@ -156,7 +156,7 @@ const FormCreateCarBrand = (props: any) => {
                     text={'Отменить'}
                     action={() => navigate(-1)}
                     className={'float-right'}
-                    variant={ButtonVariant['accent-outline']}
+                    variant={ButtonVariant.cancel}
                   />
                   <Button
                     text={'Сохранить'}

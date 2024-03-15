@@ -35,7 +35,7 @@ export function FormStepTwo(props: {
           <Button text={'Отменить'}
             action={props.action}
             className={'float-right'}
-            variant={ButtonVariant['accent-outline']} />
+            variant={ButtonVariant.cancel} />
 
           <Button text={'Сохранить'}
             type={'submit'}

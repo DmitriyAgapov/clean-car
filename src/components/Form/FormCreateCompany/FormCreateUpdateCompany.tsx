@@ -246,7 +246,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             navigate(-1)
                         }}
                         className={'float-right'}
-                        variant={ButtonVariant['accent-outline']}
+                    variant={ButtonVariant.cancel}
                     />) : undefined
                 }
                 actionNext={step !== 3 ? (formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (

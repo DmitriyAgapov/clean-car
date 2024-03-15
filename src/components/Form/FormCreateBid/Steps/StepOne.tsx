@@ -20,7 +20,7 @@ export function FormStep1(props: {
   prop8: (o: any) => { label: any; value: string }
 }) {
   const { values, touched,  errors, isValidating, isValid }:any = useFormikContext();
-  
+
    return (
     <Panel
       variant={PanelVariant.textPadding}
@@ -36,7 +36,7 @@ export function FormStep1(props: {
               text={'Отменить'}
               action={props.action}
               className={'float-right lg:mb-0 mb-5'}
-              variant={ButtonVariant['accent-outline']}
+              variant={ButtonVariant.cancel}
             />
 
             {values.application_type == CompanyType.customer || values.application_type.value == CompanyType.customer ? (

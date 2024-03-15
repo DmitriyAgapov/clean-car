@@ -149,7 +149,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
       const fundBill = {
           className: '',
           actions: [
-              <Button text={'Отменить'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
+              <Button text={'Отменить'} action={() => store.appStore.closeModal()}       variant={ButtonVariant.cancel} />,
               <Button
                   text={'Сохранить'}
                   action={() => {

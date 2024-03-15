@@ -10,6 +10,7 @@ export enum ButtonVariant {
   outline = 'outline',
   text = 'text',
   icon = 'icon',
+  cancel = 'cancel',
 }
 
 export enum ButtonDirectory {

@@ -71,14 +71,15 @@ export default function GroupPageCreateAction(props: any) {
           <Panel
               variant={PanelVariant.textPadding}
               state={store.permissionStore.loadingPermissions}
-              className={'grid grid-rows-[auto_1fr_auto]'}
+              className={'grid  grid-rows-[auto_1fr_auto]'}
+            footerClassName={'flex !justify-between gap-5'}
               footer={
                   <>
                       <Button
                           text={'Отменить'}
                           action={() => navigate(-1)}
-                          className={'float-right'}
-                          variant={ButtonVariant['accent-outline']}
+
+                        variant={ButtonVariant.cancel}
                       />
 
                       <Button
@@ -92,7 +93,7 @@ export default function GroupPageCreateAction(props: any) {
                               })
                               // navigate('/account/groups')
                           }}
-                          className={'float-right'}
+
                           variant={ButtonVariant.accent}
                       />
                   </>

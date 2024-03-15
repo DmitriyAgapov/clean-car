@@ -63,10 +63,12 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
       footerClassName={props.footerClassName}
       footer={(actionBack || actionCancel || actionNext) &&
           // <div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
-              <div className={'flex col-start-2 justify-end gap-5 flex-wrap'}>
-                  {actionBack}
-                  {actionCancel}
-                  {actionNext}
+              <div className={'flex flex-1 col-start-2 justify-end gap-5 flex-wrap'}>
+                  <div className={'mr-auto'}> {actionCancel}</div>
+                  <div className={'flex gap-5'}>
+                      {actionBack}
+                     {actionNext}
+                  </div>
               </div>
           // </div>
       }

@@ -147,7 +147,7 @@ const FormCreateUpdateCarBrand = (props: any) => {
           variant={PanelVariant.textPadding}
           background={PanelColor.glass}
           bodyClassName={'grid gap-6 lg:grid-cols-3 items-start'}
-          footerClassName={'!block'}
+          footerClassName={'!block px-8 !pb-8 !pt-2'}
           actionBack={<>{edit && <Button
             text={'Удалить'}
             action={async () => {
@@ -188,7 +188,7 @@ const FormCreateUpdateCarBrand = (props: any) => {
             text={'Отменить'}
             action={() => navigate(-1)}
             className={'float-right'}
-            variant={ButtonVariant['accent-outline']}
+            variant={ButtonVariant.cancel}
           />}
           actionNext={<Button
             text={'Сохранить'}
