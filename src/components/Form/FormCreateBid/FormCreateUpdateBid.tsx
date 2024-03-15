@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
 import { useNavigate, useRevalidator } from 'react-router-dom'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import Button, {  ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Progress from 'components/common/ui/Progress/Progress'
-import { observer, Observer } from 'mobx-react-lite'
-import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, LoadingOverlay, Select, Textarea } from "@mantine/core";
+import { observer } from 'mobx-react-lite'
+import { Checkbox,  FileButton, Group,  InputBase,   Select, Textarea } from "@mantine/core";
 import { action, values as val } from 'mobx'
 import { IMask, IMaskInput } from 'react-imask'
 import { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
@@ -18,12 +18,9 @@ import { notifications } from '@mantine/notifications'
 import { SvgClose } from 'components/common/ui/Icon'
 import MapWithDots from 'components/common/Map/Map'
 import InputAutocompleteWithCity from 'components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency'
-import moment, { MomentInput } from 'moment/moment'
 import FormBidResult from 'routes/bids/FormBidResult/FormBidResult'
-import { useDisclosure } from '@mantine/hooks'
-import BidImg from 'components/common/layout/Modal/BidImg'
 import UploadedPhotos from 'components/common/layout/Modal/UploadedPhotos'
-import { DateInput, DatesProvider, DateTimePicker } from '@mantine/dates'
+import {  DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 
 interface InitValues {
@@ -82,10 +79,8 @@ export const createBidFormActions = createFormActions<InitValues>('createBidForm
 
 const FormCreateUpdateBid = ({ bid, edit }: any) => {
     const store = useStore()
-    const momentFormat = 'HH:mm'
-    const [step, setStep] = useState(3)
+    const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
-    let revalidate = useRevalidator()
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
     if(store.appStore.appType === "customer") {
