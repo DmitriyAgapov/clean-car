@@ -20,6 +20,7 @@ import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
 import { computed } from "mobx";
 import { BidsStatus } from "stores/bidsStrore";
 import { PermissionNames } from "stores/permissionStore";
+import dayjs from "dayjs";
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -488,7 +489,16 @@ export const TabsVariantBids = observer(({
                     label={'Адрес забора'}
                     title={data.address_from}
                   />}
-
+                    <DList
+                      className={'child:dt:text-accent'}
+                      label={'Важность'}
+                      title={data.schedule !== null ? 'По времени' : 'Побыстрее'}
+                    />
+                    {data.schedule && <DList
+                      className={'child:dt:text-accent'}
+                      label={'Время'}
+                      title={dayjs(data.schedule).format("DD.MM.YYYY HH:mm")}
+                    />}
                   {data.address_to && <DList
                     className={'child:dt:text-accent  col-span-2'}
                     label={'Адрес доставки'}

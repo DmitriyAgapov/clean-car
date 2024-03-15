@@ -9,6 +9,7 @@ import {
     Checkbox,
     Textarea,
     TextInput,
+    Popover,
     InputBase,
     NumberInput,
 } from '@mantine/core'
@@ -59,7 +60,12 @@ const themeOverride = createTheme({
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
             }
         }),
-
+        Popover: Popover.extend({
+           classNames: {
+               // dropdown: '!bg-white',
+               // arrow: '!bg-transparent'
+           }
+        }),
         InputBase: InputBase.extend({
             classNames: {
                 label: 'font-semibold',

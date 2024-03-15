@@ -22,7 +22,9 @@ import moment, { MomentInput } from 'moment/moment'
 import FormBidResult from 'routes/bids/FormBidResult/FormBidResult'
 import { useDisclosure } from '@mantine/hooks'
 import BidImg from 'components/common/layout/Modal/BidImg'
-import UploadedPhotos from "components/common/layout/Modal/UploadedPhotos";
+import UploadedPhotos from 'components/common/layout/Modal/UploadedPhotos'
+import { DateInput, DatesProvider, DateTimePicker } from '@mantine/dates'
+import dayjs from 'dayjs'
 
 interface InitValues {
     address: string | null
@@ -70,7 +72,7 @@ export const InitValues: InitValues = {
     service_option: [],
     service_subtype: null,
     service_type: null,
-    time: null,
+  time: null,
     tire_destroyed: null,
     truck_type: null,
 }
@@ -174,6 +176,11 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   return {
                       className: 'hidden',
                   }
+              }
+          }
+          if (payload.field === 'important') {
+              if (formData.values.important === 'fast') {
+                  formData.values.time = null
               }
           }
 
@@ -696,37 +703,28 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   data={step3.fields[3].options}
                 />
 
-                <InputBase
-                  component={IMaskInput}
-
-                  label={step3.fields[4].label}
-                  {...formData.getInputProps('time')}
-                  mask={Date}
+                <DateTimePicker
                   classNames={{
-                    section: 'mr-1 text-sm',
-                    // input: 'pl-7',
+                    root: '',
+                    input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+
                   }}
-                  onInput={(values) => {
-                    console.log(formData.values.time);
-                    formData.setFieldValue('time', values.currentTarget.value);
-                    store.bidsStore.formResultSet({
-                      time: { label: step3.fields[4].label, value: values.currentTarget.value },
-                    })
+                  {...formData.getInputProps('time')}
+                  dropdownType="modal"
+                  modalProps={{
+                    centered: true
                   }}
-                  /*@ts-ignore*/
-                  blocks={{
-                    YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
-                    MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
-                    DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
-                    HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
-                    mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
+                  onChange={(value) => {
+                    const timestamp = dayjs(String(value)).valueOf()
+                    formData.setFieldValue('time', value)
+                    formData.setTouched({time: true})
+                    store.bidsStore.formResultSet({time: timestamp})
                   }}
-                  pattern={`c ${momentFormat} до ${momentFormat}0`}
-                  format={(date: MomentInput) => moment(date).format(momentFormat)}
-                  parse={(str) => moment(str, momentFormat)}
-                  autofix
-                  overwrite
-                  placeholder='c 00:00 до 23:59'
+                  valueFormat="DD.MM.YYYY hh:mm"
+                  minDate={dayjs(new Date()).add(2, 'hours').toDate()}
+                  maxDate={dayjs(new Date()).add(2, 'hours').add(2, 'days').toDate()}
+                  label={step3.fields[4].label}
+                  placeholder=""
                 />
               </PanelForForms>
             ) : (
@@ -819,38 +817,63 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     label={step3.fields[3].label}
                     data={step3.fields[3].options}
                   />
-                  <InputBase
-                    component={IMaskInput}
 
-                    label={step3.fields[4].label}
-                    {...formData.getInputProps('time')}
-                    mask={Date}
+                  <DateTimePicker
                     classNames={{
-                      section: 'mr-1 text-sm',
-                      // input: 'pl-7',
+                        root: '',
+                      input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+
                     }}
-                    onInput={(values) => {
-                      console.log(formData.values.time);
-                      formData.setFieldValue('time', values.currentTarget.value);
-                      store.bidsStore.formResultSet({
-                        time: { label: step3.fields[4].label, value: values.currentTarget.value },
-                      })
+                    {...formData.getInputProps('time')}
+                    dropdownType="modal"
+                    modalProps={{
+                      centered: true
                     }}
-                    /*@ts-ignore*/
-                    blocks={{
-                      YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
-                      MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
-                      DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
-                      HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
-                      mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
+                    onChange={(value) => {
+                      const timestamp = dayjs(String(value)).valueOf()
+                      formData.setFieldValue('time', value)
+                      formData.setTouched({time: true})
+                      store.bidsStore.formResultSet({time: timestamp})
                     }}
-                    pattern={`c ${momentFormat} до ${momentFormat}0`}
-                    format={(date: MomentInput) => moment(date).format(momentFormat)}
-                    parse={(str) => moment(str, momentFormat)}
-                    autofix
-                    overwrite
-                    placeholder='c 00:00 до 23:59'
+	                  valueFormat="DD.MM.YYYY hh:mm"
+                    minDate={dayjs(new Date()).add(2, 'hours').toDate()}
+                    maxDate={dayjs(new Date()).add(2, 'hours').add(2, 'days').toDate()}
+                    label={step3.fields[4].label}
+                    placeholder=""
                   />
+
+                  {/* <InputBase */}
+                  {/*   component={IMaskInput} */}
+
+                  {/*   label={step3.fields[4].label} */}
+                  {/*   {...formData.getInputProps('time')} */}
+                  {/*   mask={Date} */}
+                  {/*   classNames={{ */}
+                  {/*     section: 'mr-1 text-sm', */}
+                  {/*     // input: 'pl-7', */}
+                  {/*   }} */}
+                  {/*   onInput={(values) => { */}
+                  {/*     console.log(formData.values.time); */}
+                  {/*     formData.setFieldValue('time', values.currentTarget.value); */}
+                  {/*     store.bidsStore.formResultSet({ */}
+                  {/*       time: { label: step3.fields[4].label, value: values.currentTarget.value }, */}
+                  {/*     }) */}
+                  {/*   }} */}
+
+                  {/*   blocks={{ */}
+                  {/*     YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 }, */}
+                  {/*     MM: { mask: IMask.MaskedRange, from: 1, to: 12 }, */}
+                  {/*     DD: { mask: IMask.MaskedRange, from: 1, to: 31 }, */}
+                  {/*     HH: { mask: IMask.MaskedRange, from: 0, to: 23 }, */}
+                  {/*     mm: { mask: IMask.MaskedRange, from: 0, to: 59 }, */}
+                  {/*   }} */}
+                  {/*   pattern={`c ${momentFormat} до ${momentFormat}0`} */}
+                  {/*   format={(date: MomentInput) => moment(date).format(momentFormat)} */}
+                  {/*   parse={(str) => moment(str, momentFormat)} */}
+                  {/*   autofix */}
+                  {/*   overwrite */}
+                  {/*   placeholder='c 00:00 до 23:59' */}
+                  {/* /> */}
                   {/* <TimeInput */}
                   {/*   {...formData.getInputProps('time')} */}
                   {/*   onTouchEnd={(values) => */}

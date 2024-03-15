@@ -819,7 +819,7 @@ export class BidsStore {
                 keys: this.formResult.secretKey?.value,/**/
                 customer_comment: this.formResult.customer_comment,/**/
                 is_parking: this.formResult.parking?.value === "true",/**/
-                // schedule: this.formResult.time.value,
+                schedule: this.formResult.time,
                 lat_from: this.formResult.lat_from,/**/
                 lat_to: this.formResult.lat_to,/**/
                 lon_from: this.formResult.lon_from,/**/

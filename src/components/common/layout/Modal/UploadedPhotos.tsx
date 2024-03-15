@@ -16,7 +16,7 @@ const UploadedPhotos = () => {
 						w={'4rem'} key={index} item={item} />,
 				)}
 			</div>
-			<p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>
+		{store.bidsStore.getPhotos.length === 0 && <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>}
 
 		</div>
 }

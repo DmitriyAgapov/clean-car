@@ -6,6 +6,7 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import DList from "components/common/ui/DList/DList";
 import React from "react";
 import { PermissionNames } from "stores/permissionStore";
+import dayjs from "dayjs";
 
 interface BidResult {
 	service_type: number | string
@@ -94,12 +95,12 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
 			<DList
 				className={'child:dt:text-accent'}
 				label={'Важность'}
-				title={schedule !== null ? schedule : 'Побыстрее'}
+				title={schedule !== null ? 'По времени' : 'Побыстрее'}
 			/>
 			{schedule && <DList
 				className={'child:dt:text-accent'}
 				label={'Время'}
-				title={schedule}
+				title={dayjs(schedule).format("DD.MM.YYYY HH:mm")}
 			/>}
 			{wheel_lock && <DList
 				className={'child:dt:text-accent'}

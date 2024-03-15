@@ -106,7 +106,7 @@ export const CreateBidSchemaStep2 = Yup.object().shape({
 })
 export const CreateBidSchemaStep3 = Yup.object().shape({
 	address_from: Yup.string().when('service_type', (service_type, schema) => {
-		console.log('service_type', service_type[0] === "3");
+
 		if(service_type[0] === "3") {
 			return schema.required("Обязательное поле")
 		}
