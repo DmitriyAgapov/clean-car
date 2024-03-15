@@ -6,7 +6,7 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Progress from 'components/common/ui/Progress/Progress'
 import { observer, Observer } from 'mobx-react-lite'
-import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, Select, Textarea } from '@mantine/core'
+import { Checkbox, CloseIcon, FileButton, Group, Image, InputBase, InputLabel, LoadingOverlay, Select, Textarea } from "@mantine/core";
 import { action, values as val } from 'mobx'
 import { IMask, IMaskInput } from 'react-imask'
 import { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
@@ -20,6 +20,9 @@ import MapWithDots from 'components/common/Map/Map'
 import InputAutocompleteWithCity from 'components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency'
 import moment, { MomentInput } from 'moment/moment'
 import FormBidResult from 'routes/bids/FormBidResult/FormBidResult'
+import { useDisclosure } from '@mantine/hooks'
+import BidImg from 'components/common/layout/Modal/BidImg'
+import UploadedPhotos from "components/common/layout/Modal/UploadedPhotos";
 
 interface InitValues {
     address: string | null
@@ -46,7 +49,6 @@ interface InitValues {
     tire_destroyed: string | null
     truck_type?: string | null
 }
-
 export const InitValues: InitValues = {
     address: null,
     address_from: null,
@@ -96,27 +98,20 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }
 
     const memoFileUpload = React.useMemo(() => {
+
+      const status = store.bidsStore.formResult.company !== 0 && store.bidsStore.formResult.company !== null && store.bidsStore.formResult.company !== "0"
+      console.log(status, 'status');
       return <Observer
-        children={() => (<div className={'grid grid-cols-3  gap-4 col-span-full'}>
+        children={() => (<div className={`grid grid-cols-3  gap-4 col-span-full ${!status ? 'pointer-events-none grayscale' : ""}`}>
           <InputLabel className={'col-span-2'}>Фотографии До</InputLabel>
 
           <div className={'flex col-span-2  gap-3 items-center justify-items-center'}>
-            {store.bidsStore.photo.photosPreviewAr.map(
-              (item: any, index: number) => (
-                <div className={'group max-w-[6rem] relative'}>
-                  <CloseIcon
-                    onClick={() => store.bidsStore.removeFile(item.name)}
-                    className={
-                      'bg-white cursor-pointer group-hover:text-white group-hover:bg-accent  border-1 text-gray-2 absolute right-0 top-0 block rounded-full !w-4 !h-4'
-                    }
-                  />
-                  <Image src={item.result} alt={String(item.name)} />
-                </div>
-              ),
+            {store.bidsStore.getPhotos.map(
+              (item: any, index: number) => <BidImg key={index} item={item} />,
             )}
           </div>
           <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>
-          <FileButton onChange={store.bidsStore.addFiles} multiple accept='image/png,image/jpeg'>
+          <FileButton onChange={(e) => store.bidsStore.sendFiles(e, true)} multiple accept='image/png,image/jpeg'>
             {(props) => (
               <Button
                 className={'col-span-1'}
@@ -128,7 +123,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
             )}
           </FileButton>
         </div>)}   />
-    }, [])
+    }, [store.bidsStore.getPhotos, store.bidsStore.formResult.company])
 
   const initData = React.useMemo(() => {
     let initValues = InitValues
@@ -159,8 +154,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     return initValues
 
   }, [edit, bid])
-
-
   const formData = useForm({
       name: 'createBidForm',
       initialValues: initData,
@@ -169,7 +162,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     // @ts-ignore
       validate: values => {
         if(step === 1) {
-          return yupResolver(CreateBidSchema).call({}, values)
+
+          return store.bidsStore.loadedPhoto.length !== 0 ? yupResolver(CreateBidSchema).call({}, values) : {err: true}
         }
         if(step === 2) {
           return yupResolver(CreateBidSchemaStep2).call({}, values)
@@ -241,7 +235,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               }
       },
   })
-
   React.useEffect(() => {
     if(formData.values.company !== '0') {
       store.bidsStore.formResultSet({ company: Number(formData.values.company) })
@@ -262,15 +255,15 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     if(e === null) {
       formData.values.company = '0'
       store.bidsStore.formResultSet({company: 0})
+
     }
     if(e !== "0") {
-
       formData.setFieldValue('company', e);
       store.bidsStore.formResultSet({ company: Number(e) })
     } else {
       store.bidsStore.formResultSet({ company: 0 })
     }
-  },[])
+  },[formData.values.company])
 
   React.useEffect(() => {
     if(formData.values.company === null) {
@@ -280,7 +273,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       formData.setFieldValue('car', null)
       // formikReset.resetForm()
       store.bidsStore.formResultsClear()
-
+      store.bidsStore.clearPhotos()
     } else  {
       formData.setFieldValue('city', String(store.bidsStore.formResultsAll.city))
       formData.values.phone = String(store.bidsStore.formResultsAll.phone);
@@ -357,16 +350,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 // style: { backgroundColor: 'red' },
                 loading: false,
               })
-              if(store.bidsStore.photo.photosPreviewAr.length !== 0) {
-                store.bidsStore.uploadPhotos(true).then((res: any) => {
-                  if (res.status < 300) {
-                    changeStep()
-                  }
-                }).finally(() => {store.bidsStore.formResultsClear()})
-              } else {
+              // if(store.bidsStore.photo.photosPreviewAr.length !== 0) {
+              //   store.bidsStore.uploadPhotos(true).then((res: any) => {
+              //     if (res.status < 300) {
+              //       changeStep()
+              //     }
+              //   }).finally(() => {store.bidsStore.formResultsClear()})
+              // } else {
                 store.bidsStore.formResultsClear()
                 changeStep()
-              }
+                store.bidsStore.clearPhotos()
+              // }
             }
           })
 
@@ -387,11 +381,13 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               action={handleBack}
               className={'lg:mb-0 mr-auto'}
               variant={ButtonVariant['accent-outline']}
-            /><Button text={'Check'} action={() => {
-              console.log(formData.validate())
-              console.log(formData.values)
+            />
+            {/*   <Button text={'Check'} action={() => { */}
+            {/*   console.log(formData.validate()) */}
+            {/*   console.log(formData.values) */}
 
-            }}/> </>)
+            {/* }}/>  */}
+            </>)
           }
           actionCancel={step !== 5 ? <Button type={'button'}
             text={'Отменить'}
@@ -467,7 +463,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   store.bidsStore.formResult.company === 0 ||
                   store.usersStore.currentCompanyUsers.length === 0
                 }
-                data={store.usersStore.currentCompanyUsers.map((c: any) => ({
+                data={store.usersStore.currentCompanyUsers.filter((cond:any) => cond.company.id === Number(formData.values.company) ).map((c: any) => ({
                   label: c.employee.first_name + " " + c.employee.last_name,
                   value: String(c.employee.id),
                 }))}
@@ -491,7 +487,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 label={step1.fields[4].label} searchable data={store.carStore.cars && store.carStore.cars.length !== 0 && carsData !== null ? carsData.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']}
               />
               <hr className={'col-span-full border-transparent my-2'} />
-              {memoFileUpload}
+              <UploadedPhotos/>
             </PanelForForms>
 
             <PanelForForms

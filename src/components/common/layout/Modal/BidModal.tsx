@@ -6,22 +6,42 @@ import { useStore } from "stores/store";
 import styles from "./Modal.module.scss";
 import { SvgClose } from "components/common/ui/Icon";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import { useParams } from "react-router-dom";
+import { useParams, useRevalidator } from "react-router-dom";
+import BidImg from "components/common/layout/Modal/BidImg";
+import { BidsStatus } from "stores/bidsStrore";
 
 export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 	const store = useStore()
+	let revalidator = useRevalidator()
 	const params = useParams()
+	const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
+
+		(async () => {
+			console.log('status', store.bidsStore.PhotoId)
+			if (params.company_id && params.id) {
+				await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus[`${status}`], store.bidsStore.PhotoId).finally(() => store.bidsStore.clearPhotos())
+				revalidator.revalidate()
+			}
+		})()
+	}, [])
 	const memoFileUpload = React.useMemo(() => {
 		return <Observer
 			children={() => (<div className={'grid grid-cols-3  gap-4 col-span-full'}>
 
 
-				<div className={'flex col-span-2  gap-3 items-center justify-items-center my-8'}>
+				<div className={'flex col-span-2  gap-3 items-center col-span-full justify-items-center my-8'}>
+					{store.bidsStore.getPhotos.map(
+						(item: any, index: number) => <BidImg company_id={params.company_id} h={'4rem'}
+							w={'4rem'} key={index} item={item} />,
+					)}
 					{store.bidsStore.photo.photosPreviewAr.map(
 						(item: any, index: number) => (
 							<div className={'group max-w-[6rem] relative'}>
 								<CloseIcon
-									onClick={() => store.bidsStore.removeFile(item.name)}
+									onClick={() => {
+										if(params.company_id) {
+											store.bidsStore.removeFile(params.company_id, item.name)
+										}}}
 									className={
 										'bg-white cursor-pointer group-hover:text-white group-hover:bg-accent  border-1 text-gray-2 absolute right-0 top-0 block rounded-full !w-4 !h-4'
 									}
@@ -33,7 +53,7 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 				</div>
 
 				<footer className={'col-span-full'}>
-					<FileButton onChange={store.bidsStore.addFiles} multiple accept='image/png,image/jpeg'>
+					<FileButton onChange={(e) => store.bidsStore.sendFiles(e, false, params.id, params.company_id)} multiple accept='image/png,image/jpeg'>
 					{(props) => (
 						<Button
 							className={'col-span-1'}
@@ -44,10 +64,10 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 						></Button>
 					)}
 				</FileButton>
-					<Button text={'Завершить заявку'} variant={ButtonVariant.accent} action={() => store.bidsStore.uploadPhotos(false, params.company_id as string, params.id as string).then(r => {
-						store.bidsStore.loadBidPhotos(params.company_id as string, params.id as string)
-						.then(() => props.onClose())
-					})}/>
+					<Button text={'Завершить заявку'} variant={ButtonVariant.accent} action={() => {
+						handleChangeBidStatus("Выполнено" as BidsStatus)
+						props.onClose()
+					}}/>
 				</footer>
 			</div>)}   />
 	}, [])

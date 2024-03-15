@@ -11,6 +11,8 @@ import appStore from "stores/appStore";
 import paramsStore from "stores/paramStore";
 import authStore from "stores/authStore";
 import { defer } from "react-router-dom";
+import * as fs from "fs";
+import { AxiosResponse } from "axios";
 
 export enum BidsStatus  {
 	'Новая' = 'Новая',
@@ -25,6 +27,13 @@ export enum BidsStatus  {
 	'Решено'	 = 'Решено',
 }
 const clone = (obj:any) => JSON.parse(JSON.stringify(obj))
+export interface BidPhoto {
+    "id": number,
+    "is_before": boolean,
+    "foto": string,
+    "created": string,
+    "bid": null | string
+}
 export interface ResultsProps
     {
         address: string | null
@@ -61,7 +70,7 @@ export interface ResultsProps
             value?: string  | null
         }  | null
         performer: number
-
+        fotos: BidPhoto[]
     }
 
 export const initialResult: ResultsProps = {
@@ -87,6 +96,7 @@ export const initialResult: ResultsProps = {
     is_parking: null,
     time: null,
     performer: 0,
+    fotos: []
 }
 export class InitialResult {
     constructor() {}
@@ -128,6 +138,7 @@ interface PhotosProps {
 export class BidsStore {
     bids = []
     loading = false
+    loadedPhoto:BidPhoto[] = []
     photo: PhotosProps = {
         photos: null,
         photosPreview: null,
@@ -461,7 +472,7 @@ export class BidsStore {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, {
             name: 'bidsStore',
-            properties: ['formResult', 'bids', 'currentBidPhotos', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid'],
+            properties: ['formResult', 'bids', 'loadedPhoto', 'currentBidPhotos', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid'],
             storage: window.localStorage,
         }, {fireImmediately: true})
         //
@@ -656,8 +667,8 @@ export class BidsStore {
             performers.results.length > 0 && performers.results.forEach((i: any) => runInAction(() => this.currentPerformers.set(String(i.id), i)))
         }
     }
-    async updateBitStatus(company_id:number|string, bid_id:number|string, bidStatus: BidsStatus) {
-        const { data:dataStatus, status }:any = await agent.Bids.updateBidStatus(Number(company_id), Number(bid_id), bidStatus)
+    async updateBitStatus(company_id:number|string, bid_id:number|string, bidStatus: BidsStatus, fotos?: number[]) {
+        const { data:dataStatus, status }:any = await agent.Bids.updateBidStatus(Number(company_id), Number(bid_id), bidStatus, fotos)
         if (status === 200) {
             return ({
                 data: dataStatus.status
@@ -667,11 +678,11 @@ export class BidsStore {
     get AvailablePerformers() {
         return this.currentPerformers
     }
-    removeFile(index: number | string) {
+    removeFile(company_id: number|string, id: number | string) {
         runInAction(() => {
-            const targetToDelete = this.photo.photosPreviewAr.findIndex((e) => e.name === index)
-            this.photo.photosPreviewAr.splice(targetToDelete, 1);
-            this.img.has(`file${index}`) && this.img.delete(`file${index}`)
+            const targetToDelete = this.loadedPhoto.findIndex((e) => e.id === id)
+            this.loadedPhoto.splice(targetToDelete, 1);
+            agent.Img.deleteBidPhoto(company_id, id).then((res) => console.log(res))
         })
     }
     addFile(file: any[]) {
@@ -689,41 +700,53 @@ export class BidsStore {
         })
         Promise.all(fd).then((res: any) => runInAction(() => (this.photo.photosPreviewAr = res)))
     }
-    addFiles(files: any) {
-        const fd: any[] = []
-        function readFileAsText(file: any) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader()
-                reader.readAsDataURL(file)
-                console.log('reader', reader)
-                reader.onload = () => resolve({ result: reader.result, name: file.name })
-                reader.onerror = reject
-            })
-        }
-        files.forEach((file: string | Blob, index: any) => {
-            fd.push(readFileAsText(file))
-            // @ts-ignore
-            console.log('file.name', file.name)
-            // @ts-ignore
-            this.img.append(`file${file.name}`, file)
-        })
-        Promise.all(fd).then((res: any) =>
-            runInAction(() => {
-                if (this.photo.photosPreviewAr.length === 0) {
-                    this.photo.photosPreviewAr = res
-                } else {
-                    this.photo.photosPreviewAr.push(...res)
+    sendFiles(files: File[], state: boolean, bid_id?: string, company_id?: string) {
+        async function* uploadFiles(this: BidsStore) {
+            let i = 0;
+            let result: any = null;
+            while (i < files.length) {
+                const formData = new FormData();
+                let el = new File([files[i]], files[i].name, { type: 'image/jpeg' })
+                formData.set(`foto`, el)
+                formData.append(`is_before`, state ? 'true' : 'false');
+                if(bid_id) {
+                    formData.append(`bid`, bid_id);
                 }
-            }),
-        )
+                await agent.Img.uploadFiles(formData, company_id ? company_id : this.formResult.company).then((res) => result = res).catch((e) => console.log(e));
+                yield result
+                i++;
+            }
+        }
+        (async () => {
+            for await (const result of uploadFiles.call(this)) {
+                if (result && result.data) {
+                    this.loadedPhoto.push(result.data);
+                }
+            }
+            this.formResultSet({ fotos: this.loadedPhoto.map((item: BidPhoto) => Number(item.id)) })
+        })();
+    }
+    get getPhotos() {
+        return this.loadedPhoto
+    }
+    clearPhotos() {
+        console.log('clearPhotos');
+        this.loadedPhoto = []
+    }
+    get PhotoId() {
+        if(this.loadedPhoto.length > 0) {
+            return this.loadedPhoto.map((item: BidPhoto) => Number(item.id))
+        }
+        return []
     }
     async uploadPhotos(state: boolean, company_id?: string, bid_id?: string) {
         const res = await agent.Img.uploadFiles(this.img, bid_id ? bid_id : this.justCreatedBid.id);
-        if (res.status < 301) {
-            this.photo.photosPreviewAr.forEach((item: any) => {
-                agent.Img.createBidPhoto(bid_id ? bid_id : this.justCreatedBid.id, company_id ? company_id : this.justCreatedBid.company, item.name, state).then((res_1) => console.log("resCreatePhoto", res_1));
-            });
-        }
+        console.log(res);
+        // if (res.status < 301) {
+        //     this.photo.photosPreviewAr.forEach((item: any) => {
+        //         agent.Img.createBidPhoto(bid_id ? bid_id : this.justCreatedBid.id, company_id ? company_id : this.justCreatedBid.company, item.name, state).then((res_1) => console.log("resCreatePhoto", res_1));
+        //     });
+        // }
         return res;
     }
     initResults() {
@@ -785,31 +808,6 @@ export class BidsStore {
     })
     async formCreateBid() {
         runInAction(() => this.justCreatedBid = {})
-        console.log({
-            address_from: this.formResult.address_from,/**/
-            address_to: this.formResult.address_to,/**/
-            car: this.formResult.car,/**/
-            city: this.formResult.city,/**/
-            company: this.formResult.company,/**/
-            conductor: this.formResult.conductor,/**/
-            keys: this.formResult.secretKey?.value,/**/
-            customer_comment: this.formResult.customer_comment,/**/
-            is_parking: this.formResult.parking?.value === "true",/**/
-            lat_from: this.formResult.lat_from,/**/
-            lat_to: this.formResult.lat_to,/**/
-            lon_from: this.formResult.lon_from,/**/
-            lon_to: this.formResult.lon_to,/**/
-            performer: this.formResult.performer,/**/
-            //*TODO: ВРемя*//
-            // schedule: this.formResult.time.value,
-            phone: this.formResult.phone.replaceAll(" ", ""),/**/
-            service_option: this.formResult.service_option,/**/
-            service_subtype: this.formResult.service_subtype,/**/
-            service_type: this.formResult.service_type,/**/
-            truck_type: this.formResult.truck_type,/**/
-            wheel_lock: Number(this.formResult.tire_destroyed)
-            /**/
-        });
         if(this.formResult.company) {
             const res:any = await agent.Bids.createBid(this.formResult.company, {
                 address_from: this.formResult.address_from,/**/
@@ -832,6 +830,7 @@ export class BidsStore {
                 service_subtype: this.formResult.service_subtype,/**/
                 service_type: this.formResult.service_type,/**/
                 truck_type: this.formResult.truck_type,/**/
+                fotos: this.PhotoId,
                 wheel_lock: Number(this.formResult.tire_destroyed)
                 /**/
             })

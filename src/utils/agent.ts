@@ -54,7 +54,7 @@ const axiosSuggest = axios.create({
 const axiosUpload = axios.create({
   headers: {
     'Content-Type': 'multipart/form-data',
-    'Authorization': `Bearer ${process.env.REACT_APP_IMG}`
+    'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
   }
   }
 )
@@ -132,7 +132,7 @@ export const requests = {
       method: 'POST',
       data: JSON.stringify(props) ,
     }),
-  img: (form:FormData, bidId?: number) => axiosUpload.post(`https://api.timeweb.cloud/api/v1/storages/buckets/292055/object-manager/upload?path=${bidId}`, form)
+  img: (url:string, form:FormData, bidId?: number) => axiosUpload.post(`${API_ROOT}${url}`, form)
   .then((response) => response)
 }
 
@@ -204,6 +204,7 @@ export interface CreateBidData {
     address_from?: string | null
     address_to?: string | null
     car: number
+    fotos: number[]
     city: number
     company: number
     conductor: number
@@ -225,12 +226,13 @@ export interface CreateBidData {
 }
 
 const Img = {
-  uploadFiles: (form: FormData, bidId: number) => requests.img(form, bidId),
+  uploadFiles: (form: FormData | any, company_id: number) => requests.post(`/bid_photos/${company_id}/create/`, form),
   createBidPhoto: (bid_id: number, company_id: number, name: string, is_before: boolean) => requests.post(`/bid_photos/${company_id}/${bid_id}/create/`, {
     is_before: is_before,
     img: `https://s3.timeweb.cloud/3c2e3e1f-b87109fe-0085-436a-8a57-be275dc35ee8/${bid_id}/${name}`,
     bid: bid_id
   }),
+  deleteBidPhoto: (company_id: number|string, id: number|string) => requests.delete(`/bid_photos/${company_id}/${id}/delete/`),
 }
 const Bids = {
   getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),
@@ -238,7 +240,7 @@ const Bids = {
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`),
   getAllCompanyBids: (company_id: number|string, params: PaginationProps) => requests.get(`/bids/${company_id}/list`, {}, params),
-  updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status}),
+  updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus, fotos?: number[]) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status, fotos: fotos}),
   loadBidPhotos: (company_id:  number|string, bid_id:  number|string) => requests.get(`/bid_photos/${company_id}/${bid_id}/list/`),
 }
 const Utils = {
