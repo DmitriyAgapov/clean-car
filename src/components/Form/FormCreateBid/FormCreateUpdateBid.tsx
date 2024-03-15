@@ -704,13 +704,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 />
 
                 <DateTimePicker
-
                   classNames={{
                     root: '',
                     input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
 
-                    monthCell: '!p-6'
-
+                    monthCell: 'text-white',
+                    day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80'
                   }}
                   {...formData.getInputProps('time')}
                   dropdownType="modal"
