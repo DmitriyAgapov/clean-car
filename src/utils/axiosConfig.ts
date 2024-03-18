@@ -27,19 +27,26 @@ axios.interceptors.response.use(
 		(response) => response,
 		async (error) => {
 			const config = error.config;
-			if (error.response.status === 401 && !config._retry) {
+			console.log('/token/refresh/', config.url.includes('/token/refresh/'));
+			if (error.response.status === 401 && !config.url.includes('/token/refresh/')) {
 				const tokenRefresh = window.localStorage.getItem('jwt_refresh')
-				config._retry = true;
+				console.log('tokenRefresh', tokenRefresh);
+				// config._retry = true;
 				if(tokenRefresh) {
-				  agent.Auth.tokenRefresh(tokenRefresh)
+				  await agent.Auth.tokenRefresh(tokenRefresh)
 				    .then((response: any) => {
+					  console.log(response);
 							runInAction(() => {
-									appStore.token && localStorage.setItem("jwt", appStore.token)
+									localStorage.setItem("jwt", response.data.access)
+									appStore.setToken(response.data.access)
+									localStorage.setItem("jwt_refresh", response.data.refresh)
+									appStore.setTokenRefresh(response.data.refresh)
 								})
+					    config.headers['Authorization'] = "Bearer " + response.data.access
+					    return axios(config)
 							})
-				    .finally(	() =>	config._retry = true)
+				    // .finally(	() =>	config._retry = true)
 					}
-				return axios(config);
 			}
 
 			return Promise.reject(error);

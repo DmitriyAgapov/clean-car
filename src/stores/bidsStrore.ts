@@ -13,19 +13,33 @@ import authStore from "stores/authStore";
 import { defer } from "react-router-dom";
 import * as fs from "fs";
 import { AxiosResponse } from "axios";
-
+//
+// export enum BidsStatus  {
+// 	'Новая' = 'Новая',
+// 	'Отменена' = 'Отменена',
+// 	'Ждет подтверждение' = 'Ждет подтверждение',
+// 	'Обрабатывается' = 'Обрабатывается',
+// 	'Разбор' = 'Разбор',
+// 	'В работе' = 'В работе',
+// 	'Выполнено' = 'Выполнено',
+// 	'Завершена' = 'Завершена',
+// 	'Подтверждена'	 = 'Подтверждена',
+// 	'Решено'	 = 'Решено',
+//   "Новая1" = 11
+// }
 export enum BidsStatus  {
-	'Новая' = 'Новая',
-	'Отменена' = 'Отменена',
-	'Ждет подтверждение' = 'Ждет подтверждение',
-	'Обрабатывается' = 'Обрабатывается',
-	'Разбор' = 'Разбор',
-	'В работе' = 'В работе',
-	'Выполнено' = 'Выполнено',
-	'Завершена' = 'Завершена',
-	'Подтверждена'	 = 'Подтверждена',
-	'Решено'	 = 'Решено',
+	'Новая' = 1,
+	'Отменена' = 6,
+	'Ждет подтверждение'= 4,
+	'Обрабатывается'= 2,
+	'Разбор'= 8,
+	'В работе' = 3,
+	'Выполнено' = 9,
+	'Завершена' = 7,
+	'Подтверждена'= 5
 }
+export type ReverseEnum = {[K in keyof typeof BidsStatus as typeof BidsStatus[K]]: K}
+type EnumKeyFromValue = typeof BidsStatus[ReverseEnum[1]]
 const clone = (obj:any) => JSON.parse(JSON.stringify(obj))
 export interface BidPhoto {
     "id": number,

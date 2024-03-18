@@ -23,7 +23,7 @@ const BidPage = () => {
 	let revalidator = useRevalidator()
 	const bid = store.bidsStore.CurrentBid
 	const textData = store.bidsStore.text
-
+	console.log(bid.status === BidsStatus["Новая"]);
 	const tabedData = React.useMemo(() => [
 		{ label: 'Основная информация', data: bid },
 		{ label: 'Услуги', data: bid },
@@ -106,7 +106,7 @@ const BidPage = () => {
                                 <p className={'py-0'}>{dateTransformShort(bid.company?.updated).date}</p>
                             </div>
                             <div className={'flex gap-6 items-center justify-around'}>
-                                <Status variant={bid.status as string as BidsStatus} size={ButtonSizeType.base} />
+                                <Status variant={bid.status  as BidsStatus} size={ButtonSizeType.base} />
                                 <Heading
                                     className={'!m-0'}
                                     text={bid.company?.city?.name}

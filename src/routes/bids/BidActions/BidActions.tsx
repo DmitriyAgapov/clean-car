@@ -32,7 +32,7 @@ export const BidAdminActions = () => {
     const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
         ;(async () => {
             if (params.company_id && params.id) {
-                await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus[`${status}`])
+                await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
                 revalidator.revalidate()
             }
         })()
@@ -85,7 +85,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
   const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
     (async () => {
       if (params.company_id && params.id) {
-        await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus[`${status}`])
+        await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
         revalidator.revalidate()
       }
     })()
@@ -94,11 +94,11 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
         if (store.appStore.appType === "admin") {
           let result:JSX.Element | null
           switch (status) {
-            case "Новая":
+            case BidsStatus["Новая"]:
               return (<Button text={"Отменить заявку"}
                   variant={ButtonVariant.accent}
                   size={ButtonSizeType.sm}
-                  action={() => handleChangeBidStatus("Отменена" as BidsStatus)} />
+                  action={() => handleChangeBidStatus(BidsStatus["Отменена"])} />
               )
             case BidsStatus["Разбор"]:
               return (
@@ -106,11 +106,11 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                   <Button text={"Отменить"}
                     variant={ButtonVariant["accent-outline"]}
                     size={ButtonSizeType.sm}
-                    action={() => handleChangeBidStatus("Отменена" as BidsStatus)} />
+                    action={() => handleChangeBidStatus(BidsStatus["Отменена"])} />
                   <Button text={"Завершить"}
                     variant={ButtonVariant.accent}
                     size={ButtonSizeType.sm}
-                    action={() => handleChangeBidStatus("Завершена" as BidsStatus)} />
+                    action={() => handleChangeBidStatus(BidsStatus["Завершена"])} />
                 </>
               )
             default:
@@ -129,7 +129,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                             text={"Отменить заявку"}
                             variant={ButtonVariant.accent}
                             size={ButtonSizeType.sm}
-                            action={() => handleChangeBidStatus("Отменена" as BidsStatus)}
+                            action={() => handleChangeBidStatus(BidsStatus["Отменена"])}
                         />
                     )
                 case BidsStatus["Обрабатывается"]:
@@ -145,13 +145,13 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                                 text={"Отказаться"}
                                 variant={ButtonVariant["accent-outline"]}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus("Разбор" as BidsStatus)}
+                                action={() => handleChangeBidStatus(BidsStatus["Разбор"])}
                             />
                             <Button
                                 text={"Принять работу"}
                                 variant={ButtonVariant.accent}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus("Завершена" as BidsStatus)}
+                                action={() => handleChangeBidStatus(BidsStatus["Завершена"])}
                             />
                         </>
                     )
@@ -184,14 +184,14 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                                 text={"Отказаться"}
                                 variant={ButtonVariant["accent-outline"]}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus("Разбор" as BidsStatus)}
+                                action={() => handleChangeBidStatus(BidsStatus["Разбор"])}
                             />
 
                             <Button
                                 text={"Принять заявку"}
                                 variant={ButtonVariant.accent}
                                 size={ButtonSizeType.sm}
-                                action={() => handleChangeBidStatus("В работе" as BidsStatus)}
+                                action={() => handleChangeBidStatus(BidsStatus["В работе"])}
                             />
                         </>
                     )
@@ -206,14 +206,14 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                         text={"Отказаться"}
                         variant={ButtonVariant["accent-outline"]}
                         size={ButtonSizeType.sm}
-                        action={() => handleChangeBidStatus("Разбор" as BidsStatus)}
+                        action={() => handleChangeBidStatus(BidsStatus["Разбор"])}
                       />
 
                       <Button
                         text={"Принять заявку"}
                         variant={ButtonVariant.accent}
                         size={ButtonSizeType.sm}
-                        action={() => handleChangeBidStatus("В работе" as BidsStatus)}
+                        action={() => handleChangeBidStatus(BidsStatus["В работе"])}
                       />
                     </>
                   )
@@ -230,7 +230,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                                     store.bidsStore.setActiveTab("Фото")
                                     open()
                                   } else {
-                                    handleChangeBidStatus("Выполнено" as BidsStatus)
+                                    handleChangeBidStatus(BidsStatus["Выполнено"])
                                   }
                                 }}
                             />
@@ -246,14 +246,14 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                         text={"Отказаться"}
                         variant={ButtonVariant["accent-outline"]}
                         size={ButtonSizeType.sm}
-                        action={() => handleChangeBidStatus("Разбор" as BidsStatus)}
+                        action={() => handleChangeBidStatus(BidsStatus["Разбор"])}
                       />
 
                       <Button
                         text={"Принять заявку"}
                         variant={ButtonVariant.accent}
                         size={ButtonSizeType.sm}
-                        action={() => handleChangeBidStatus("В работе" as BidsStatus)}
+                        action={() => handleChangeBidStatus(BidsStatus["В работе"])}
                       />
                     </>
                   )

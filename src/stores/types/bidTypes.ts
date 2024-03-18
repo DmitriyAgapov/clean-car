@@ -71,7 +71,7 @@ interface ServiceOption {
 
 export interface CurrentBidProps {
 	id: number;
-	status: string;
+	status: string | number;
 	author: Author;
 	performer: Company;
 	executor: null;

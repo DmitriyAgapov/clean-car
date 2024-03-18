@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import React, { JSX, useEffect } from "react";
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
@@ -20,7 +20,11 @@ const PriceEditPage = ():JSX.Element => {
   const  {data} = store.priceStore.currentPriceById;
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
-  const revalidator = useRevalidator()
+  const revalidator = useRevalidator();
+  useEffect(() => {
+    console.log('params changed, priceOnChange cleared');
+    store.priceStore.clearPriceOnChange()
+  }, [params.id])
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}

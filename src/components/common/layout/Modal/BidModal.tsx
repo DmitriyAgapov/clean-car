@@ -1,4 +1,4 @@
-import { CloseIcon, FileButton, Image, InputLabel, Modal, Text } from "@mantine/core";
+import { CloseIcon, FileButton, Image, Modal, Text } from "@mantine/core";
 import React from "react";
 import { Observer } from "mobx-react-lite";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
@@ -19,7 +19,7 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 		(async () => {
 			console.log('status', store.bidsStore.PhotoId)
 			if (params.company_id && params.id) {
-				await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus[`${status}`], store.bidsStore.PhotoId).finally(() => store.bidsStore.clearPhotos())
+				await store.bidsStore.updateBitStatus(params.company_id, params.id, status, store.bidsStore.PhotoId).finally(() => store.bidsStore.clearPhotos())
 				revalidator.revalidate()
 			}
 		})()
@@ -65,7 +65,7 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 					)}
 				</FileButton>
 					<Button text={'Завершить заявку'} variant={ButtonVariant.accent} action={() => {
-						handleChangeBidStatus("Выполнено" as BidsStatus)
+						handleChangeBidStatus(BidsStatus["Выполнено"])
 						props.onClose()
 					}}/>
 				</footer>

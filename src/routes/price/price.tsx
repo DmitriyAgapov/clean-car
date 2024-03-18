@@ -25,13 +25,13 @@ const PricePage = ():JSX.Element => {
   const  textData  : any = store.priceStore.TextData
 
   const [opened, { open, close }] = useDisclosure(false);
-  console.log(params.id);
+
   const  currentPriceById = store.priceStore.currentPriceById;
   const  company = store.companyStore.getCompanyById(Number(params.id)) ?? store.userStore.myProfileData.company;
   const isHistory = location.pathname.includes('history');
   // @ts-ignore
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
-  console.log(currentPriceById);
+
   const memoModal = React.useMemo(() => {
     if(isHistory) {
     return  <PriceCopy opened={opened} id={isCreate.id} title={company.name}

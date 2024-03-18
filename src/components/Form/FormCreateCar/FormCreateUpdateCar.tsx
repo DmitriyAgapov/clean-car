@@ -266,7 +266,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               state={step !== 1}
               animate={animate}
               className={'!bg-transparent'}
-              bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+              bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
               header={
@@ -365,7 +365,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               state={step !== 2}
               animate={animate}
               className={'!bg-transparent'}
-              bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+              bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
               header={
@@ -445,7 +445,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               state={step !== 3}
               animate={animate}
               className={'!bg-transparent'}
-              bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+              bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
               header={

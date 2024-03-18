@@ -185,79 +185,40 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
         </form>
     )
 }
-const FormInputs = (): JSX.Element => {
+export const FormModalSelectUsers = observer(({ company_id, users }: { company_id: any, users: any }) => {
   const store = useStore();
-  const { handleChange, values } = useFormikContext();
-  console.log(values);
-  // @ts-ignore
-  return formData.map((item: any, index: number) => (
-    <CreateFormikInput key={index + "car_inputs"}
-
-      options={item.options}
-      fieldName={item.name}
-      label={item.label}
-      placeholder={item.placeholder}
-      fieldType={item.type}
-      className={""} />
-  ));
-};
-export const FormModalSelectUsers = ({ company_id, users }: { company_id: any, users: any }) => {
-  const store = useStore();
-
-  console.log(store.usersStore.getUsers(store.formStore.getFormDataCarCreate.company_id));
-
   const initValues: {
     users: string | null
   } = {
     users: null,
   }
-  // const formData = [
-  //   {
-  //     label: 'Сотрудники',
-  //     name: 'users',
-  //     type: 'select',
-  //     placeholder: 'Выберите группу',
-  //     value: '',
-  //     options: usersStore.companyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))
-  //   }
-  // ]
-  const memoizedData = React.useMemo( async () => {
-    await store.usersStore.getUsers(store.formStore.getFormDataCarCreate.company_id)
-   return store.usersStore.currentCompanyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}));
-
-  }, [store.formStore.formCreateCar.company_id])
-  console.log(memoizedData);
+  const form = useForm({
+    name: 'selectModalUser',
+    initialValues: initValues,
+    validateInputOnBlur: true,
+    onValuesChange: (values, previous) => console.log(values),
+    validate: yupResolver(SelectModalUserSchema),
+  })
   return (
-    <Formik
-      initialValues={initValues}
-      validationSchema={SelectModalUserSchema}
-      onSubmit={(values, FormikHelpers) => {
-        store.usersStore.addToSelectedUsers(Number(values.users))
-      }}
-    >
-      {({
-        setValues,  submitForm, handleChange, isSubmitting, errors, touched, values, isValid,
-      }) => (
 
-        <Form style={{ display: "grid", gap: "1rem" }}>
+        <form style={{ display: "grid", gap: "1rem" }}>
           <Heading text={"Выбрать сотрудника из списка пользователей"}
-            className={"!mb-0"}
+            // className={"!mb-0"}
             variant={HeadingVariant.h2}
             color={HeadingColor.accent} />
-          <p>Выберите пользователя</p>
+          {/* <p>Выберите пользователя</p> */}
           <Observer children={() => (
           <Select
-
+            {...form.getInputProps('users')}
             // @ts-ignore
             data={store.usersStore.currentCompanyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))}
             label={"Выберите сотрудника"}
             placeholder={"Выберите сотрудника"}
-            value={values.users}
             clearable
             searchable
             onOptionSubmit={(value) => {
-              setValues({ users: String(value) });
-              console.log(values);
+              form.setValues({ users: String(value) });
+              console.log(form.values);
             }}
 
 
@@ -269,16 +230,14 @@ export const FormModalSelectUsers = ({ company_id, users }: { company_id: any, u
               className={"max-w-fit"} />
             <Button text={"Добавить сотрудника"}
               action={async () => {
-                store.usersStore.addToSelectedUsers(Number(values.users))
+                store.usersStore.addToSelectedUsers(Number(form.values.users))
                 store.appStore.closeModal()
               }}
+              className={'!px-4 flex-1'}
               type={'submit'}
-              disabled={!isValid}
+              disabled={!form.isValid()}
               variant={ButtonVariant.accent} /></footer>
-        </Form>
-
-      )}
-    </Formik>
+        </form>
   )
-}
+})
 export default observer(FormModalAddUser)

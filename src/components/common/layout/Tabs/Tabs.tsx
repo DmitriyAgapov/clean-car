@@ -50,7 +50,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
           return result
         }
         if(type == TabsType.priceEdit) {
-          console.log(data);
+          // console.log(data);
           data.forEach((item: any, index: number) => {
             result.push(
               <TabsVariantPrice key={`tab_${index}`} edit={type == TabsType.priceEdit} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>
@@ -72,7 +72,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
           return result
         }
         if(type == TabsType.company) {
-          console.log(data);
+          // console.log(data);
           data.forEach((item: any, index: number) => {
             result.push(
               <TabsVariants   key={`var-${item.label}`}
@@ -96,7 +96,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
       })
 
       const HeadersTabs = () => {
-        console.log(data);
+        // console.log(data);
         const result:any = [];
         for(const key in data) {
           // @ts-ignore
