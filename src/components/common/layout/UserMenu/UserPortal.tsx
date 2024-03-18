@@ -1,6 +1,6 @@
 import { useStore } from 'stores/store'
 import Panel from 'components/common/layout/Panel/Panel'
-import Button, { ButtonDirectory, ButtonVariant } from 'components/common/ui/Button/Button'
+import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import Image from 'components/common/ui/Image/Image'
 import photo from 'assets/images/userphoto.png'
 import { SvgLogout, SvgPencil } from 'components/common/ui/Icon'
@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserTypeEnum } from 'stores/userStore'
-import label from "utils/labels";
+import label from 'utils/labels'
 
 const StyledAccounts = styled.ul`
   margin: 0;
@@ -104,11 +104,11 @@ const UserPortal = ({
         footer={
           <Button
             text={'Управление аккаунтом'}
-            className={'w-full'}
+            className={'!text-sm'}
             action={() => {
               navigate('/account/profile')
             }}
-            variant={ButtonVariant.outline}
+            size={ButtonSizeType.sm}
             directory={ButtonDirectory.directory}
           />
         }

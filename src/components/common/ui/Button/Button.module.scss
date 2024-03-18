@@ -17,10 +17,12 @@ user-select: none ;
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
+  transition: all .15s ease-in-out;
 
   &:hover {
 	background: transparent;
 	border-color: var(--accentColor);
+	transition: all .35s ease-in-out;
 	color: var(--accentColor);
   }
 
