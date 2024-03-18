@@ -72,7 +72,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         overdraft_sum: 0,
         payment: Payment.postoplata,
         performers_list: '1',
-        service_percent: 0,
+        service_percent: 15,
         working_time: '',
         performer_company: []
     }
@@ -88,7 +88,6 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             setStep(step ? step : 2)
         }, 1200)
     }
-    console.log(company);
     if(edit) {
         initValues = {
             address: company.address,
@@ -116,11 +115,11 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     }
 
     const formData = useForm({
-        name: 'createCompanyForm',
-        initialValues: initValues,
-        validateInputOnBlur: true,
-        onValuesChange: (values, previous) => console.log(values),
-        validate: yupResolver(CreateCompanySchema),
+            name: 'createCompanyForm',
+            initialValues: initValues,
+            validateInputOnBlur: true,
+            // onValuesChange: (values, previous) => console.log(values),
+            validate: yupResolver(CreateCompanySchema),
         enhanceGetInputProps: (payload) => {
             if (payload.field === 'working_time') {
                 return {
@@ -129,7 +128,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             }
             if (payload.field === 'service_percent') {
                 return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3',
+                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3'
                 }
             }
             if (payload.field === 'overdraft_sum') {
@@ -407,15 +406,37 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         />
                         {formData.values.type === CompanyType.performer && (
                             <NumberInput
-
                                 type={'text'}
                                 label={'Процент сервиса'}
                                 {...formData.getInputProps('service_percent')}
                                 allowNegative={false}
                                 hideControls
+                                // onChange={(value: any) => {
+                                //     console.log(typeof value);
+                                //     if(typeof value === "string") {
+                                //         console.log('string');
+                                //         // formData.values.service_percent =  1
+                                //         formData.setFieldValue('service_percent', 1);
+                                //         formData.validateField('service_percent')
+                                //         return 1
+                                //         // formData.setDirty({service_percent: false})
+                                //         // formData.setTouched({service_percent: false})
+                                //     } else {
+                                //
+                                //         // formData.values.service_percent = value
+                                //         formData.setFieldValue('service_percent', value);
+                                //         formData.validateField('service_percent')
+                                //         return value
+                                //         // formData.setDirty({service_percent: false})
+                                //         // formData.setTouched({service_percent: false})
+                                //     }
+                                //
+                                // }}
+                                startValue={1}
+                                defaultValue={1}
                                 maxLength={2}
-                                min={0}
-                                max={100}
+                                min={1}
+                                max={99}
                             />
                         )}
                         <TextInput
@@ -456,7 +477,11 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
 
-                        <Select   label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
+                        <Select label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'} onOptionSubmit={(value: any) => {
+                            if(value === "2") {
+                                formData.setFieldValue('overdraft_sum', 0);
+                            }
+                        }}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
                         <NumberInput onClick={() => console.log(formData.errors)} disabled={formData.values.overdraft === "2"}    label={'Сумма'}     thousandSeparator=" " suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} min={1}  className={formData.errors.overdraft_sum ? ' filter grayscale' : ''}/>
 
                         <Select

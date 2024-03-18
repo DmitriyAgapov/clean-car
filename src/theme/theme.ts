@@ -70,11 +70,6 @@ const themeOverride = createTheme({
                 body: 'py-6 px-6'
             }
         }),
-        Popover: Popover.extend({
-           classNames: {
-               dropdown: ' p-8'
-           }
-        }),
         InputBase: InputBase.extend({
             classNames: {
                 label: 'font-semibold',

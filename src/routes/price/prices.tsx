@@ -24,7 +24,7 @@ const PricesPage = () => {
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname !== `/account/price`) return <Outlet />
 
-	if(store.appStore.appType === "admin") {
+	// if(store.appStore.appType === "admin") {
 		return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}
@@ -57,8 +57,9 @@ const PricesPage = () => {
 					ar={store.priceStore.allPrices.textData.tableHeaders}
 				/>
 		</Section>
-	)} else {
-		return  <Navigate to={`${ store.userStore.myProfileData.company?.id }`} replace={false}  relative={'route'}/>
-	}
+	)
+	// } else {
+	// 	return  <Navigate to={`${ store.userStore.myProfileData.company?.id }`} replace={false}  relative={'route'}/>
+	// }
 }
 export default PricesPage

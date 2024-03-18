@@ -184,6 +184,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         return <>{result}</>}
         return null
       }, [data[`${company_type}profile`].performer_company])
+
       result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
          {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />}
         <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
@@ -207,7 +208,12 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         }/>}
         <DList label={'Адрес'} title={data[`${company_type}profile`].address} />
         <DList label={'Юридический адрес'} title={data[`${company_type}profile`].legal_address} />
-        {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
+        {/* //TODO  Высота въезда*/}
+        {company_type === 'performer' && <>
+          <DList label={'Макс. высота транспорта, в см'} title={<>{data[`${company_type}profile`].height} <sub className={'bottom-0 text-white/75'}> см</sub></>} />
+        <DList label={'Время работы'} title={data[`${company_type}profile`].working_time} />
+        </>}
+        {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} className={'col-span-2 row-start-5'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
         <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts} />
         {company_type === 'customer' &&  <Button text={'Пополнить счет'}  action={async () => {
         store.appStore.setModal(fundBill) }}

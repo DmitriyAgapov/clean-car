@@ -45,7 +45,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     console.log(company);
     let initValues: InitValues = {
         address: '',
-        type: CompanyType.customer,
+        type: store.userStore.myProfileData.company.company_type ? store.userStore.myProfileData.company.company_type : null,
         city: '',
         city_name: '',
         company_id: null,
@@ -358,7 +358,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           defaultValue={formData.values.company_id}
                           label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
                           {...formData.getInputProps('company_id')}
-                            data={formData.values.company_filials === 'filials' ? store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.values.type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.values.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))}
+                            data={formData.values.company_filials === 'filials' ? store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.values.type ? formData.values.type : store.userStore.myProfileData.company.company_type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.values.type ? formData.values.type : store.userStore.myProfileData.company.company_type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))}
                         />
                     </PanelForForms>
                     <PanelForForms
