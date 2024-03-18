@@ -8,9 +8,6 @@ import { runInAction, toJS } from "mobx";
 import { Company, CompanyType } from "stores/companyStore";
 import { BidsStatus } from "stores/bidsStrore";
 import { notifications } from "@mantine/notifications";
-import { SvgClose } from "components/common/ui/Icon";
-import React from "react";
-import company from "routes/company/company";
 import useSWR from "swr";
 import { KeysBidCreate } from "stores/types/bidTypes";
 
@@ -23,17 +20,6 @@ export type PaginationProps = {
   searchString?: string | number | URLSearchParams  | null
 }
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
-type CreateFilialPerformerFormData = {
-  name: string
-  city: number
-  is_active: boolean
-  performerprofile: {
-    address: string
-    working_time: string
-    lat: number
-    lon: number
-  }
-}
 
 interface FilterPropsCars {
   number?: number

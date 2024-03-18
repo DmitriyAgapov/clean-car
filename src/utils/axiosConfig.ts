@@ -27,15 +27,15 @@ axios.interceptors.response.use(
 		(response) => response,
 		async (error) => {
 			const config = error.config;
-			console.log('/token/refresh/', config.url.includes('/token/refresh/'));
+			// console.log('/token/refresh/', config.url.includes('/token/refresh/'));
 			if (error.response.status === 401 && !config.url.includes('/token/refresh/')) {
 				const tokenRefresh = window.localStorage.getItem('jwt_refresh')
-				console.log('tokenRefresh', tokenRefresh);
+				// console.log('tokenRefresh', tokenRefresh);
 				// config._retry = true;
 				if(tokenRefresh) {
 				  await agent.Auth.tokenRefresh(tokenRefresh)
 				    .then((response: any) => {
-					  console.log(response);
+
 							runInAction(() => {
 									localStorage.setItem("jwt", response.data.access)
 									appStore.setToken(response.data.access)
