@@ -22,7 +22,7 @@ import { CompanyTypeRus } from 'stores/companyStore'
 
 interface CarCreateUpdate  {
     number: string
-    height:number
+    height: number | null
     id: number | null
     radius:	CAR_RADIUS
     limit:string
@@ -47,7 +47,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         car_type: '',
         city: '',
         employees: [],
-        height: 0,
+        height: null,
         is_active: 'true',
         limit: '',
         model: null,

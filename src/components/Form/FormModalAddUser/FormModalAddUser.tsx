@@ -187,6 +187,7 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
 }
 export const FormModalSelectUsers = observer(({ company_id, users }: { company_id: any, users: any }) => {
   const store = useStore();
+  store.usersStore.getUsers(company_id)
   const initValues: {
     users: string | null
   } = {

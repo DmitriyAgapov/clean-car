@@ -275,11 +275,19 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
   const handleNext = React.useCallback(() => {
     if(step === 2) {
-      if (formData.values.service_type === '1') {
-        changeStep(4)
-      } else {
-        changeStep()
-      }
+        store.bidsStore.loadCurrentPerformers(Number(store.bidsStore.formResult.company), {
+          car_id: store.bidsStore.formResult.car,
+          subtype_id: store.bidsStore.formResult.service_subtype,
+          options_idx: store.bidsStore.formResult.service_option
+        }).then((res:any) => {
+          console.log(res);
+          if (formData.values.service_type === '1') {
+          changeStep(4)
+          } else {
+            changeStep()
+          }
+        })
+
     } else if(step === 4) {
         (async () => {
           store.bidsStore.formCreateBid()
@@ -561,8 +569,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                           label='Выберите дополнительные опции (при необходимости)'
                         >
                           <Group mt='xs'>
-                            {
-                             store.catalogStore.ServiceSubtypesOptions.map(
+                            {store.catalogStore.ServiceSubtypesOptions.map(
                                 (i: any) => (
                                   <Checkbox
                                     key={i.id}

@@ -68,7 +68,6 @@ const PricePage = ():JSX.Element => {
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
               {(store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && !location.pathname.includes('history')) && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <Button action={() => {
-                console.log('double');
                 open()
               }} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>}

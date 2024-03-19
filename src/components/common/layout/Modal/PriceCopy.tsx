@@ -1,4 +1,4 @@
-import { CloseIcon, FileButton, Image, InputLabel, Modal, Select, Text } from "@mantine/core";
+import { Modal, Select, Text } from "@mantine/core";
 import React, { useState } from "react";
 import { Observer } from "mobx-react-lite";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
@@ -6,13 +6,12 @@ import { useStore } from "stores/store";
 import styles from "./Modal.module.scss";
 import { SvgClose } from "components/common/ui/Icon";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import { useParams } from "react-router-dom";
 import { CompanyType } from "stores/companyStore";
 
 export function PriceCopy(props: { opened: boolean; onClose: () => void; id: number, title: string}) {
 	const store = useStore()
 	const [formData, setFormData]:any = useState({
-		type: CompanyType.customer,
+		type: store.appStore.appType !== "admin" ? store.userStore.myProfileData.company.company_type === "Компания-Заказчик" ? CompanyType.customer : CompanyType.performer : CompanyType.performer,
 		company: null,
 		company_filials: null
 	})
@@ -25,13 +24,15 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
 	}, [formData]);
 
 	const memoFileUpload = React.useMemo(() => {
-		const availableFilials = store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.type).map((f:any) => ({label: f.name, value: f.id.toString()}))
+		const availableFilials = store.appStore.appType === "admin" ? store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getFilialsAll.map((f:any) => ({label: f.name, value: f.id.toString()}))
+		const availableCompanies = store.appStore.appType === "admin" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.id !== store.userStore.myProfileData.company.id).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))
 		return <Observer
 			children={() => (<>
 				<div className={'my-8'}>
 					<Select
 						allowDeselect={false}
 						label={'Тип'}
+						disabled={store.appStore.appType !== "admin"}
 						onOptionSubmit={(e) => setFormData((prevState:any) => ({
 							company: null,
 							company_filials: null,
@@ -45,7 +46,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
 						]}
 					/>
 					<Select
-						disabled={formData.type === null}
+						disabled={availableCompanies.length === 0}
 						searchable
 						clearable
 						onChange={(e) => setFormData((prevState:any) => ({
@@ -54,7 +55,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
 						}))}
 						value={formData.company}
 						label={'Компания'}
-						data={store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))}
+						data={availableCompanies}
 					/>
 						<Select
 							disabled={availableFilials.length === 0}
