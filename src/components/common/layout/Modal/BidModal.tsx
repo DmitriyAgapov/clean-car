@@ -25,6 +25,7 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 		})()
 	}, [])
 	const memoFileUpload = React.useMemo(() => {
+		console.log(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0);
 		return <Observer
 			children={() => (<div className={'grid grid-cols-3  gap-4 col-span-full'}>
 
@@ -64,13 +65,13 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 						></Button>
 					)}
 				</FileButton>
-					<Button text={'Завершить заявку'} variant={ButtonVariant.accent} action={() => {
+					<Button type={'button'} text={'Завершить заявку'} variant={ButtonVariant.accent}  disabled={store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0} action={() => {
 						handleChangeBidStatus(BidsStatus["Выполнено"])
 						props.onClose()
 					}}/>
 				</footer>
 			</div>)}   />
-	}, [])
+	}, [store.bidsStore.getPhotos])
 
 	return (
 		<Modal.Root size={685} opened={props.opened} onClose={props.onClose} centered>

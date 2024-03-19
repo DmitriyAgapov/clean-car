@@ -197,9 +197,15 @@ const TableWithSortNew = ({
     let location = useLocation()
     const navigate = useNavigate()
     let [searchParams, setSearchParams] = useSearchParams()
+    const memPage = React.useMemo(() => {
+       if( searchParams.get('page'))  {
+           return Number(searchParams.get('page'))
+       } else return 1
+    }, [])
+
     // @ts-ignore
     const [sortedField, setSortedField] = useState<null, string>('')
-    const [currentPage, setCurrentPage] = useState(1)
+    const [currentPage, setCurrentPage] = useState<number>(memPage)
 
     const handleCurrentPage = React.useCallback((value: any) => {
         if(withOutLoader) {
@@ -270,7 +276,7 @@ const TableWithSortNew = ({
         const pageParams = searchParams.get('page');
         const searchStringParams = searchParams.get('searchString');
         setSearchParams((prevstate) => ({...prevstate, page: pageParams ?? 1, ordering: sortedField, ...(searchStringParams ? {searchString: searchStringParams} : {})}));
-        setCurrentPage(1)
+        setCurrentPage(memPage)
     }, [sortedField])
     if (state) return <SvgLoading className={'m-auto'} />
 

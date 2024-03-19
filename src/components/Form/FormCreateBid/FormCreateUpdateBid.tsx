@@ -255,6 +255,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       formData.values.phone = String(store.bidsStore.formResultsAll.phone);
       // formData.values.car = String(store.bidsStore.formResultsAll.car);
       formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
+      store.bidsStore.clearPhotos()
     }
   }, [store.bidsStore.formResultsAll.company, formData.values.company, store.bidsStore.formResultsAll.city])
 

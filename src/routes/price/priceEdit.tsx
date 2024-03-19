@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from "stores/store";
-import { useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
+import { useLocation, useNavigate, useNavigation, useParams, useRevalidator } from "react-router-dom";
 import { SvgBackArrow } from "components/common/ui/Icon";
 import { PermissionNames } from "stores/permissionStore";
 import { dateTransformShort } from "utils/utils";
@@ -14,6 +14,7 @@ import { observer } from "mobx-react-lite";
 
 const PriceEditPage = ():JSX.Element => {
   const navigate = useNavigate()
+  const navigation = useNavigation();
   const location = useLocation()
   const params = useParams()
   const store = useStore()
@@ -25,6 +26,9 @@ const PriceEditPage = ():JSX.Element => {
     console.log('params changed, priceOnChange cleared');
     store.priceStore.clearPriceOnChange()
   }, [params.id])
+  useEffect(() => {
+    console.log('navState', navigation.state);
+  }, [navigation.state]);
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
@@ -59,6 +63,7 @@ const PriceEditPage = ():JSX.Element => {
                 store.priceStore.clearPriceOnChange()
                 }
               } size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/> <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={() => {
+
                 store.priceStore.handleSavePrice()
                 .then(() => {
                   navigate(location.pathname.split('/edit')[0])

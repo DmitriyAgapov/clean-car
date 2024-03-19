@@ -92,11 +92,11 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
         title={address_to}
       />}
 
-			<DList
+			{!schedule && <DList
 				className={'child:dt:text-accent'}
 				label={'Важность'}
 				title={schedule !== null ? 'По времени' : 'Побыстрее'}
-			/>
+			/>}
 			{schedule && <DList
 				className={'child:dt:text-accent'}
 				label={'Время'}

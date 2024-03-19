@@ -2,6 +2,7 @@ import axios from "axios";
 import agent from "utils/agent";
 import {  runInAction } from "mobx";
 import appStore from "stores/appStore";
+import authStore from "stores/authStore";
 
 axios.interceptors.request
 	.use(
@@ -46,7 +47,9 @@ axios.interceptors.response.use(
 					    return axios(config)
 							})
 				    // .finally(	() =>	config._retry = true)
-					}
+					} else {
+						authStore.logout()
+				}
 			}
 
 			return Promise.reject(error);

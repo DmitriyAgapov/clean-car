@@ -77,9 +77,9 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
   const params = useParams()
   const store = useStore()
   const memoModal = React.useMemo(() => {
-    return  <BidModal opened={opened}
-      onClose={close} />
-  }, [opened]);
+    return  <BidModal opened={store.bidsStore.modalCurrentState}
+      onClose={() => store.bidsStore.setModalCurrentState(false)} />
+  }, [store.bidsStore.modalCurrentState]);
 
   let revalidator = useRevalidator()
   const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
@@ -223,12 +223,15 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                             <Button
                                 text={"Завершить заявку"}
                                 variant={ButtonVariant.accent}
+                                type={'button'}
+
                                 size={ButtonSizeType.sm}
                                 action={() => {
-                                  if(store.bidsStore.CurrentBidPhotosAll.filter((p:any) => !p.is_before).length === 0) {
+                                  console.log(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0);
+                                  if(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0) {
                                     console.log('no photo');
                                     store.bidsStore.setActiveTab("Фото")
-                                    open()
+                                    store.bidsStore.setModalCurrentState(true)
                                   } else {
                                     handleChangeBidStatus(BidsStatus["Выполнено"])
                                   }

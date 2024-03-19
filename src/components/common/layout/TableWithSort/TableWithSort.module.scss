@@ -27,6 +27,26 @@
     }
 
   }
+  &[data-style="price_history"] {
+    th {
+      @apply text-xss font-medium px-1;
+      padding-top: .75rem;
+      padding-bottom: .75rem;
+      letter-spacing: 0.05em;
+      line-height: 1;
+
+      &:first-child {
+        padding-left: 2rem;
+        width: 10rem;
+      }
+
+      &:last-child {
+        padding-right: 2rem;
+        width: 10rem;
+      }
+
+    }
+  }
 
   tr {
     width: 100%;
@@ -485,7 +505,7 @@
   font-size: .75rem;
   font-weight: 500;
   //display: block;
-  padding: .375rem 0;
+  //padding: .375rem 0;
 
   &:first-child {
     padding-left: 1.625rem;
@@ -532,7 +552,7 @@
     line-height: 1;
 
     &:first-child {
-      padding-left: 2rem;
+      padding-left: 1.625rem;
       width: 12rem;
     }
 
@@ -542,7 +562,36 @@
     }
 
   }
+  &[data-style="price_tire"] {
+    th {
+      @apply text-xss font-medium px-1;
+      padding-top: .375rem;
+      padding-bottom: .375rem;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      width: 4rem  !important;
 
+      &:first-child {
+        padding-left: 1.625rem;
+        width: 12rem !important;
+      }
+
+      &:last-child {
+        padding-right: .625rem;
+        width: initial;
+      }
+
+    }
+    tr {
+      &:first-child {
+        padding-left: 2rem;
+        width: 12rem !important;
+      }
+      td {
+        width: calc((100% - 12rem) / 10) !important;
+      }
+    }
+  }
   tr {
     width: 100%;
     @screen lg-max {

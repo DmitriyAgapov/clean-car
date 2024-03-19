@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -23,7 +23,7 @@ const BidPage = () => {
 	let revalidator = useRevalidator()
 	const bid = store.bidsStore.CurrentBid
 	const textData = store.bidsStore.text
-	console.log(bid.status === BidsStatus["Новая"]);
+
 	const tabedData = React.useMemo(() => [
 		{ label: 'Основная информация', data: bid },
 		{ label: 'Услуги', data: bid },
@@ -41,6 +41,10 @@ const BidPage = () => {
 			})()
 		}
 	}, [bid.status])
+
+	useEffect(() => {
+		store.bidsStore.clearPhotos()
+	}, [params.bid_id])
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	// if (location.pathname !== `/account/references/${textData.path}/`) return <Outlet />

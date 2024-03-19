@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Navigate, Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
-import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import { observer } from "mobx-react-lite";
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
+import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
+import { observer } from 'mobx-react-lite'
 import dayjs from 'dayjs'
 
 const PricesHistoryPage = () => {
@@ -38,13 +38,14 @@ const PricesHistoryPage = () => {
 					total={data.count}
 					variant={PanelVariant.dataPadding}
 					search={true}
+					style={PanelRouteStyle.price_history}
 					background={PanelColor.glass}
 					className={'col-span-full table-groups h-full'}
 					filter={false}
 					data={data.results?.map((p:any) => ({
 						id: p.id,
 						created: dayjs(p.created).format('DD.MM.YYYY HH:mm'),
-						expires: p.expires,
+						expires:  dayjs(p.expires).format('DD.MM.YYYY HH:mm'),
 						service_type: store.catalogStore.getServiceType(p.service_type)?.name
 					}))}
 					initFilterParams={[{ label: 'дата начала', value: 'created' }, { label: 'Дата окончания', value: 'expires' }, {label: 'Тип услуги', value: 'service_type'}]}

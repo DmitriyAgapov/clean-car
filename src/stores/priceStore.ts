@@ -171,19 +171,28 @@ export class PriceStore {
                 const { data: dataEvac } = await agent.Price.getCompanyPriceEvac(userStore.myProfileData.company?.id, props.params.id);
                 const { data: dataTire } = await agent.Price.getCompanyPriceTire(userStore.myProfileData.company?.id, props.params.id);
                 const { data: dataWash } = await agent.Price.getCompanyPriceWash(userStore.myProfileData.company?.id, props.params.id);
-                console.log('есть ID');
+                console.log('есть ID', props.params.id);
                 const tempAr:any[] = []
+                console.log(dataTire);
                 runInAction(() => {
-
-                    dataWash && dataWash.wash_positions && dataWash.wash_positions.length !== 0 && tempAr.push({ label: 'Мойка', data: dataWash, dataTable: dataWash })
-                    dataEvac && dataEvac.evacuation_positions && dataEvac.evacuation_positions.length !== 0 && tempAr.push({ label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') })
-                    dataTire && dataTire.tire_positions && dataTire.tire_positions.length !== 0 && tempAr.push({ label: 'Шиномонтаж', data: dataTire, dataTable: dataTire })
                     this.currentPrice = {
-                        tabs: tempAr
+                        tabs: [{
+                            label: 'Мойка', data: dataWash,
+                            dataTable: dataWash
+                        }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }]
                     }
-
                     this.loading = false
                 })
+                // runInAction(() => {
+                //     dataWash && dataWash.wash_positions && dataWash.wash_positions.length !== 0 && tempAr.push({ label: 'Мойка', data: dataWash, dataTable: dataWash })
+                //     dataEvac && dataEvac.evacuation_positions && dataEvac.evacuation_positions.length !== 0 && tempAr.push({ label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') })
+                //     dataTire && dataTire.tire_positions && dataTire.tire_positions.length !== 0 && tempAr.push({ label: 'Шиномонтаж', data: dataTire, dataTable: dataTire })
+                //     this.currentPrice = {
+                //         tabs: tempAr
+                //     }
+                //
+                //     this.loading = false
+                // })
                 console.log('statePriceFinish', this.loading);
 
             } else if(props.params.bid_id && history) {
@@ -238,13 +247,7 @@ export class PriceStore {
                 const { data: dataResults, status } = await agent.Price.getAllCompanyPrices(userStore.myProfileData.company?.id, paramsStore.qParams as PaginationProps)
                 if (status === 200) {
                     data = {
-                        ...dataResults, results: dataResults.results.map((i:any) => ({
-
-                            id: i.id,
-                            name: i.company.name,
-                            company_type: i.company.company_type,
-                            root_company: i.company.parent?.name ?? "-"
-                        })).map((i: any) => {
+                        ...dataResults, results: dataResults.results.map((i: any) => {
                             let obj: any;
                             for (const key in i) {
                                 if (i[key] === null) {
@@ -260,9 +263,15 @@ export class PriceStore {
                                 }
                             }
                             return obj;
-                        })
+                        }).map((i:any) => ({
+                            id: i.id,
+                            name: i.company.name,
+                            company_type: i.company.company_type,
+                            root_company: i.company.parent?.name ?? "-"
+                        }))
                     }
                     console.log('datalist', data);
+                    console.log('dataResults', dataResults);
                     this.currentPrice = data
                     this.loading = false
                     console.log('statePriceFinish', this.loading);
@@ -340,7 +349,7 @@ export class PriceStore {
                 } else {
                     const { data: dataResults, status } = await agent.Price.getAllPrice(paramsStore.qParams as PaginationProps)
                     if (status === 200) {
-                        console.log('admin listRes', dataResults);
+                        console.log('admin list', data);
                         data = {
                             ...dataResults, results: dataResults.results.map((i: any) => {
                                 let obj: any;
@@ -363,6 +372,7 @@ export class PriceStore {
                         this.currentPrice = data
                         this.loading = false
                         console.log('admin list', data);
+                        console.log('admin listRes', dataResults);
                     }
                 }
             }

@@ -4,7 +4,7 @@ import CardSimple from 'components/common/layout/Cards/CardSimple/CardSimple'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Panel, { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { User } from 'stores/usersStore'
 import Tabs, { TabsProps } from '../../../components/common/layout/Tabs/Tabs'
@@ -14,13 +14,12 @@ import { useNavigate } from 'react-router-dom'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
 import { translite } from 'utils/utils'
 import { CAR_RADIUS } from 'stores/priceStore'
-import { ScrollArea, Text } from '@mantine/core'
-import { Observer, observer } from "mobx-react-lite";
+import { ScrollArea } from '@mantine/core'
+import { observer } from 'mobx-react-lite'
 import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
-import { computed } from "mobx";
-import { BidsStatus } from "stores/bidsStrore";
-import { PermissionNames } from "stores/permissionStore";
-import dayjs from "dayjs";
+import { BidsStatus } from 'stores/bidsStrore'
+import { PermissionNames } from 'stores/permissionStore'
+import dayjs from 'dayjs'
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -495,11 +494,11 @@ export const TabsVariantBids = observer(({
                     label={'Адрес забора'}
                     title={data.address_from}
                   />}
-                    <DList
+                    {!data.schedule && <DList
                       className={'child:dt:text-accent'}
                       label={'Важность'}
                       title={data.schedule !== null ? 'По времени' : 'Побыстрее'}
-                    />
+                    />}
                     {data.schedule && <DList
                       className={'child:dt:text-accent'}
                       label={'Время'}
@@ -582,7 +581,13 @@ export const TabsVariantBids = observer(({
                 variant={HeadingVariant.h3}
                 color={HeadingColor.accent} />
               <p>После оказания услуги загрузите пожалуйста фотографии</p>
-                {(store.appStore.appType === "performer" && data.status !== BidsStatus["Выполнено"] && data.status !== BidsStatus["Завершена"]) && <Button type={"button"} disabled={data.status !== BidsStatus["В работе"]} text={'Загрузить'} variant={ButtonVariant["accent-outline"]} className={'mt-7'} size={ButtonSizeType.sm}/>}
+                {(store.appStore.appType === "performer" && data.status !== BidsStatus["Выполнено"] && data.status !== BidsStatus["Завершена"]) && <Button type={"button"}
+
+                  action={() => store.bidsStore.setModalCurrentState(true)}
+
+
+
+                  disabled={data.status !== BidsStatus["В работе"]} text={'Загрузить'} variant={ButtonVariant["accent-outline"]} className={'mt-7'} size={ButtonSizeType.sm}/>}
             </div>
             <div className={"col-span-3"}>
               <CarouselCustom items={ph.filter((e:any) => !e.is_before)}/>
@@ -708,6 +713,7 @@ export const TabsVariantPrice = ({
         return at
       }
       let newMap:any = new Map(ar.map((item: any) => [item.service_subtype.name,  innerData(ar, 'service_subtype', item.service_subtype.name)]))
+    console.log('newMap', newMap);
       newMap.forEach((value:any, key: any) => {
         const newAr = new Map([])
         const  curVal = value;
@@ -754,25 +760,26 @@ export const TabsVariantPrice = ({
       return result.map((item: any, index: number) => {
         return (
           <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
-            <Heading text={item.label} variant={HeadingVariant.h6} className={'text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70'}/>
+            <Heading text={item.label} variant={HeadingVariant.h6} className={`text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 ${item.data[0].label === null ? 'px-6 sticky top-0 z-10  bg-[#090909]' : ''}`}/>
             {item.data.map((item: any, index: number) => {
-
+              console.log('item', item);
               return (
                 <div key={translite(item.label ?? `null_${index}`)}>
-                  <Heading
+                  {item.label && <Heading
                     text={item.label}
                     variant={HeadingVariant.h6}
                     className={'text-xs capitalize  !mb-0 py-2  px-6 sticky top-0 z-10 bg-[#090909]'}
-                  />
+                  />}
                   <TableWithSortNewPure
                     edit={edit}
                     total={item.data.length}
                     variant={PanelVariant.default}
                     search={false}
+                    style={item.label ? PanelRouteStyle.price_tire : PanelRouteStyle.default}
                     background={PanelColor.default}
                     className={'col-span-full table-groups'}
                     filter={false}
-                    data={item.data.map(
+                    data={item.label ? item.data.map(
                       (it: any) =>
                         ({
                           [it.label]: it.label ? it.label : '-',
@@ -817,6 +824,12 @@ export const TabsVariantPrice = ({
                               ? it.data.filter((i: any) => i.label == 'R16C')[0].data
                               : '-',
                         }) as any,
+                    ) : item.data.map(
+                      (it: any) =>
+                        ({
+                          [it.label]: it.label ? it.label : '-',
+                          value: it.data[0].data
+                        }) as any,
                     )}
                     // data={item.data.map((it: any) => {
                     //   const ad = it.data.map((i: any) => ({
@@ -832,9 +845,9 @@ export const TabsVariantPrice = ({
                       { label: 'Город', value: 'city' },
                     ]}
                     state={false}
-                    ar={[
+                    ar={item.label ? [
                       { label: 'Тип услуги', name: 'service_option' },
-                      { label: 'R14', name: 'R14}' },
+                      { label: 'R14', name: 'R14' },
                       { label: 'R15', name: 'R15' },
                       { label: 'R16', name: 'R16' },
                       { label: 'R17', name: 'R17' },
@@ -844,6 +857,9 @@ export const TabsVariantPrice = ({
                       { label: 'R21-23', name: 'R21-23' },
                       { label: 'R15C', name: 'R15C' },
                       { label: 'R16C', name: 'R16C' },
+                    ] : [
+                      { label: 'Тип услуги', name: 'service_option' },
+                      { label: 'Цена', name: 'price' }
                     ]}
                   />
                 </div>

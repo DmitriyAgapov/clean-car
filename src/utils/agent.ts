@@ -148,23 +148,23 @@ const handleErrors = (err: AxiosError) => {
         loading: false,
       })
     }
-    if (err && err.response && err.response.status === 401) {
-        const refr = window.localStorage.getItem('jwt_refresh')
-        if (refr) {
-        agent.Auth.tokenRefresh(refr)
-            .then((resolve: any) => resolve.data)
-            .then((data) => {
-                runInAction(() => {
-                  appStore.setToken(null)
-                  appStore.setToken(data.access)
-                })
-            })
-            .catch((err) => {
-                appStore.setTokenError(err.response.data)
-                authStore.logout()
-            })
-        }
-    }
+    // if (err && err.response && err.response.status === 401) {
+    //     const refr = window.localStorage.getItem('jwt_refresh')
+    //     if (refr) {
+    //     agent.Auth.tokenRefresh(refr)
+    //         .then((resolve: any) => resolve.data)
+    //         .then((data) => {
+    //             runInAction(() => {
+    //               appStore.setToken(null)
+    //               appStore.setToken(data.access)
+    //             })
+    //         })
+    //         .catch((err) => {
+    //             appStore.setTokenError(err.response.data)
+    //             authStore.logout()
+    //         })
+    //     }
+    // }
     return err
 }
 const Price = {

@@ -25,7 +25,7 @@ const PricePage = ():JSX.Element => {
   const  textData  : any = store.priceStore.TextData
 
   const [opened, { open, close }] = useDisclosure(false);
-
+  console.log('opened', opened);
   const  currentPriceById = store.priceStore.currentPriceById;
   const  company = store.companyStore.getCompanyById(Number(params.id)) ?? store.userStore.myProfileData.company;
   const isHistory = location.pathname.includes('history');
@@ -33,7 +33,7 @@ const PricePage = ():JSX.Element => {
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
 
   const memoModal = React.useMemo(() => {
-    if(isHistory) {
+    if(!isHistory) {
     return  <PriceCopy opened={opened} id={isCreate.id} title={company.name}
       onClose={close} />
       }
@@ -67,7 +67,10 @@ const PricePage = ():JSX.Element => {
             <div className={'flex w-full  col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
               {(store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && !location.pathname.includes('history')) && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-              <Button action={() => open()} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+              <Button action={() => {
+                console.log('double');
+                open()
+              }} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>}
             </div>
             <div className={'flex items-baseline  gap-6'}>

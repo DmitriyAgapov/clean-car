@@ -159,6 +159,7 @@ export class BidsStore {
         photosPreviewAr: [],
     }
     activeTab:string | null = null;
+    modalState:boolean = false;
     img: FormData = new FormData()
     refreshBids: boolean = false
     error = ''
@@ -530,7 +531,8 @@ export class BidsStore {
                     // console.log('includes(\'bids/\')');
                     setTimeout(() => {
                         const id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 1];
-                        this.loadBidByCompanyAndBidId(Number(userStore.myProfileData.company.id), Number(id))
+                        const company_id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 2];
+                        this.loadBidByCompanyAndBidId(Number(company_id), Number(id))
                         runInAction(() => this.refreshBids = false)
                     }, 5000)
                     runInAction(() => this.refreshBids = true)
@@ -632,18 +634,36 @@ export class BidsStore {
         return this.activeTab
     }
     setActiveTab(label:string | null) {
-        console.log(label);
+        // console.log(label);
         this.activeTab = label
-        console.log(this.activeTab);
+        // console.log(this.activeTab);
     }
+    get modalCurrentState() {
+        return this.modalState
+    }
+    setModalCurrentState(state:boolean) {
+        // console.log(label);
+        this.modalState = state
+        // console.log(this.activeTab);
+    }
+
     async loadBidByCompanyAndBidId(company_id?: number, bid_id?: number) {
         const { data, status } = await agent.Bids.getBid(company_id ? company_id : this.justCreatedBid.company, bid_id ? bid_id : this.justCreatedBid.id);
 
         if (status === 200) {
             runInAction(() => {
-                if(this.currentBid.status !== data.status) {
+                if(this.currentBid.status !== data.status && this.currentBid.id === data.id) {
                     this.currentBid = data
-                    if (company_id && bid_id) {
+                    console.log(company_id && bid_id);
+                    if(company_id && bid_id) {
+                        console.log('loadBidPhotos', company_id, bid_id);
+                        this.loadBidPhotos(company_id, bid_id)
+                    }
+                }
+                if(this.currentBid.id !== data.id) {
+                    this.currentBid = data
+                    console.log(company_id && bid_id);
+                    if(company_id && bid_id) {
                         console.log('loadBidPhotos', company_id, bid_id);
                         this.loadBidPhotos(company_id, bid_id)
                     }
@@ -744,7 +764,6 @@ export class BidsStore {
         return this.loadedPhoto
     }
     clearPhotos() {
-        console.log('clearPhotos');
         this.loadedPhoto = []
     }
     get PhotoId() {
