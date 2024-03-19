@@ -9,14 +9,21 @@ import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'componen
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import CarHelper from 'components/common/layout/CarHelper/CarHelper'
+import { useDisclosure } from "@mantine/hooks";
+import { PriceCopy } from "components/common/layout/Modal/PriceCopy";
+import { CarClasses } from "components/common/layout/Modal/CarClasses";
 
 
 const ReferencesPage = () => {
     const store = useStore()
     const navigate = useNavigate()
     const location = useLocation()
+  const [opened, { open, close }] = useDisclosure(false);
     const { data, page, textData }: any = useLoaderData()
-  console.log(page);
+  const memoModal = React.useMemo(() => {
+
+    return  <CarClasses opened={opened} onClose={close} />
+  }, [opened]);
     if (location.pathname !== `/account/references/${textData.path}`) return <Outlet />
     return (
         <Section type={SectionType.default}>
@@ -25,27 +32,14 @@ const ReferencesPage = () => {
               header={<><div><Button text={<><SvgBackArrow />Назад к справочнику{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
                   <Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /></div>
                   <div className={'flex gap-6'}>
-                    {page === 'car_brands' && <Button
+                    {page === 'car_brands' && <><Button
                       text={'Классификация автомобилей'}
-                      action={async () => {
-                        store.appStore.setModal({
-                          header: (
-                            <Heading
-                              text={`Классификация автомобилей`}
-                              variant={HeadingVariant.h2}
-                              className={'pb-12'}
-                            />
-                          ),
-                          className: '!flex-[0_1_45.5rem] !block',
-                          component: <CarHelper/>,
-                          state: true,
-                        })
-                      }}
+                      action={open}
                       trimText={true}
                       /* action={() => store.companyStore.addCompany()} */ className={'inline-flex'}
                       variant={ButtonVariant["accent-outline"]}
                       size={ButtonSizeType.sm}
-                    />}
+                    /> {memoModal}</>}
                     {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (<Button text={textData.create} action={() => navigate('create')} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />)}
                   </div>
               </>}/>

@@ -72,7 +72,7 @@ export class UserStore {
         if(authStore.userIsLoggedIn) {
           if (company && companyStore.companies.length === 0) {
             companyStore.getAllCompanies()
-            carStore.getCars(company.id)
+            (appStore.appType !== UserTypeEnum.performer && appStore.appType !== "") && carStore.getCars(company.id)
           }
         }
       })

@@ -487,7 +487,7 @@ export class BidsStore {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, {
             name: 'bidsStore',
-            properties: ['formResult', 'bids', 'loadedPhoto', 'currentBidPhotos', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid'],
+            properties: ['formResult', 'bids', 'loadedPhoto', 'currentBidPhotos', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid', 'refreshBids'],
             storage: window.localStorage,
         }, {fireImmediately: true})
         //
@@ -514,33 +514,33 @@ export class BidsStore {
                 }
             },
         )
-        autorun(() => {
-            if(!this.refreshBids) {
-                // console.log('refresh', window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/"));
-                if (window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/")) {
-
-                    setTimeout(() => {
-                        this.loadAllBids({...paramsStore.qParams, ordering: (paramsStore.qParams.ordering === "" || paramsStore.qParams.ordering === null) ? "id" : paramsStore.qParams.ordering})
-                        runInAction(() => this.refreshBids = false)
-                    }, 5000)
-                    runInAction(() => this.refreshBids = true)
-                } else {
-                    runInAction(() => this.refreshBids = true)
-                }
-                if (window.location.pathname.includes('bids') && window.location.pathname.includes("bids/") && !window.location.pathname.includes("bids/create") ) {
-                    // console.log('includes(\'bids/\')');
-                    setTimeout(() => {
-                        const id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 1];
-                        const company_id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 2];
-                        this.loadBidByCompanyAndBidId(Number(company_id), Number(id))
-                        runInAction(() => this.refreshBids = false)
-                    }, 5000)
-                    runInAction(() => this.refreshBids = true)
-                } else {
-                    runInAction(() => this.refreshBids = true)
-                }
-            }
-        })
+        // autorun(() => {
+        //     if(!this.refreshBids) {
+        //         // console.log('refresh', window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/"));
+        //         if (window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/")) {
+        //
+        //             setTimeout(() => {
+        //                 this.loadAllBids({...paramsStore.qParams, ordering: (paramsStore.qParams.ordering === "" || paramsStore.qParams.ordering === null) ? "id" : paramsStore.qParams.ordering})
+        //                 runInAction(() => this.refreshBids = false)
+        //             }, 5000)
+        //             runInAction(() => this.refreshBids = true)
+        //         } else {
+        //             runInAction(() => this.refreshBids = true)
+        //         }
+        //         if (window.location.pathname.includes('bids') && window.location.pathname.includes("bids/") && !window.location.pathname.includes("bids/create") ) {
+        //             // console.log('includes(\'bids/\')');
+        //             setTimeout(() => {
+        //                 const id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 1];
+        //                 const company_id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 2];
+        //                 this.loadBidByCompanyAndBidId(Number(company_id), Number(id))
+        //                 runInAction(() => this.refreshBids = false)
+        //             }, 5000)
+        //             runInAction(() => this.refreshBids = true)
+        //         } else {
+        //             runInAction(() => this.refreshBids = true)
+        //         }
+        //     }
+        // })
         autorun(() => {
             if(this.justCreatedBid.id) {
                 console.log('justCreated exist');

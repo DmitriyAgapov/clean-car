@@ -25,7 +25,7 @@ const PricePage = ():JSX.Element => {
   const  textData  : any = store.priceStore.TextData
 
   const [opened, { open, close }] = useDisclosure(false);
-  console.log('opened', opened);
+
   const  currentPriceById = store.priceStore.currentPriceById;
   const  company = store.companyStore.getCompanyById(Number(params.id)) ?? store.userStore.myProfileData.company;
   const isHistory = location.pathname.includes('history');

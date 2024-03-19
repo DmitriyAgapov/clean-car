@@ -135,7 +135,13 @@ export const CreateBidSchemaStep3 = Yup.object().shape({
 		}
 		return schema.nullable()
 	}),
-	time: Yup.string().nullable().required('Обязательное поле'),
+	time: Yup.string().when('important', (important, schema) => {
+		console.log(important);
+		if(important[0] === "time") {
+			return schema.required('Обязательное поле')
+		}
+		return schema.nullable()
+	}),
 	secretKey: Yup.string().nullable().when('service_type', (service_type, schema) => {
 		if(service_type[0] === "2") {
 			return schema.required("Обязательное поле")

@@ -82,16 +82,18 @@ export class CarStore {
     })
     reaction(() => this.cars,
       (cars) => {
-        console.log(cars);
-        if (cars?.length === 0 && !this.loadingState.cars) {
-          this.getCars(appStore.appType === "admin" ? 0 : userStore.myProfileData.company.id)
-          this.loadingState.cars = true
+        if(authStore.userIsLoggedIn) {
+          console.log(cars);
+          if (cars?.length === 0 && !this.loadingState.cars) {
+            this.getCars(appStore.appType === "admin" ? 0 : userStore.myProfileData.company?.id)
+            this.loadingState.cars = true
+          }
         }
       })
     reaction(() => this.currentBrand,
       (currentBrand) => {
         if(authStore.userIsLoggedIn) {
-          if(currentBrand) {
+          if(currentBrand !== null) {
             this.getCarBrandModels(currentBrand)
           }
         }

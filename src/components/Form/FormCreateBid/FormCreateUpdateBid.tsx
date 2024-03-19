@@ -57,7 +57,7 @@ export const InitValues: InitValues = {
     company: null,
     conductor: null,
     customer_comment: null,
-    important: "time",
+    important: "fast",
     lat_from: null,
     lat_to: null,
     lon_from: null,
@@ -83,9 +83,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     const [animate, setAnimate] = useState(false)
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
-    if(store.appStore.appType === "customer") {
 
-    }
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
         setTimeout(() => {
@@ -94,28 +92,14 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         }, 1200)
     }
 
-
-
   const initData = React.useMemo(() => {
     let initValues = InitValues
     if(!edit) {
-      console.log('Очистить форму');
       store.bidsStore.formResultsClear()
     }
     if (edit) {
       initValues = {
         ...InitValues
-        // id: user.employee.id,
-        // company_id: user.company === undefined ? 1: user.company.id.toString(),
-        // company_name: user.company === undefined ? "Администратор системы" : user.company.name,
-        // depend_on: user.company?.parent === null ? 'company' : 'filials',
-        // first_name: user.employee.first_name,
-        // last_name: user.employee.last_name,
-        // phone: user.employee.phone,
-        // email: user.employee.email,
-        // type: user.company === undefined ? "admin" : user.company.company_type,
-        // group: String(user.group.id),
-        // is_active: user.employee.is_active ? "true" : "false",
       }
     }
     if(store.appStore.appType === "customer") {

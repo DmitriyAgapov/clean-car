@@ -1,24 +1,37 @@
-import React from 'react'
+import React, { useState } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import { observer } from "mobx-react-lite";
 import { dateTransformShort } from "utils/utils";
 import userStore from "stores/userStore";
+import paramsStore from "stores/paramStore";
 
 const BidsPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
 	const params = useParams()
 	const location = useLocation()
-	// const { data:loaderData }:any = useLoaderData()
-	const { data:storeData }:any = store.bidsStore.bidsAll
+	const revalidator = useRevalidator()
 
+	const [tick, setTick] = useState(0)
+
+	React.useEffect(() => {
+		if(location.pathname.includes('bids') && !location.pathname.includes('bids/')) {
+			setTimeout(() => {
+				console.log('tick', tick);
+				store.bidsStore.loadAllBids({...paramsStore.qParams, ordering: (paramsStore.qParams.ordering === "" || paramsStore.qParams.ordering === null) ? "id" : paramsStore.qParams.ordering})
+				setTick(prevState => prevState + 1)
+			}, 10000)
+		}
+	}, [tick])
+
+	const { data:storeData }:any = store.bidsStore.bidsAll
 	const textData = store.bidsStore.text
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />

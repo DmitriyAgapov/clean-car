@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -14,6 +14,7 @@ import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import BidActions, { BidAdminActions } from "routes/bids/BidActions/BidActions";
 import appStore from "stores/appStore";
 import { observer } from "mobx-react-lite";
+import paramsStore from "stores/paramStore";
 
 const BidPage = () => {
 	const store = useStore()
@@ -23,7 +24,7 @@ const BidPage = () => {
 	let revalidator = useRevalidator()
 	const bid = store.bidsStore.CurrentBid
 	const textData = store.bidsStore.text
-
+	console.log(params);
 	const tabedData = React.useMemo(() => [
 		{ label: 'Основная информация', data: bid },
 		{ label: 'Услуги', data: bid },
@@ -41,6 +42,20 @@ const BidPage = () => {
 			})()
 		}
 	}, [bid.status])
+
+	const [tick, setTick] = useState(0)
+
+	React.useEffect(() => {
+		if(location.pathname.includes('bids') && location.pathname.includes('bids/')) {
+			setTimeout(() => {
+				console.log('tick', tick);
+				const id = location.pathname.split('/')[location.pathname.split('/').length - 1];
+				const company_id = location.pathname.split('/')[location.pathname.split('/').length - 2];
+				store.bidsStore.loadBidByCompanyAndBidId(Number(company_id), Number(id))
+				setTick(prevState => prevState + 1)
+			}, 10000)
+		}
+	}, [tick])
 
 	useEffect(() => {
 		store.bidsStore.clearPhotos()
