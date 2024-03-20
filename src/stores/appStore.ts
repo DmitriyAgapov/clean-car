@@ -140,7 +140,7 @@ export class AppStore {
         routeName = 'администратор системы'
         break
       case UserTypeEnum.performer:
-        routeName = 'Кабинет исполнителя'
+        routeName = 'Кабинет партнера'
         break
       case UserTypeEnum.customer:
         routeName = 'Кабинет заказчика'

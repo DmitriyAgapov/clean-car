@@ -214,9 +214,9 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         </>}
         {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} className={'col-span-2 row-start-5'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
         <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts} />
-        {company_type === 'customer' &&  <Button text={'Пополнить счет'}  action={async () => {
-        store.appStore.setModal(fundBill) }}
-         variant={ButtonVariant['accent-outline']} className={'col-start-3'} size={ButtonSizeType.sm} /> }
+        {/*{company_type === 'customer' &&  <Button text={'Пополнить счет'}  action={async () => {*/}
+        {/*store.appStore.setModal(fundBill) }}*/}
+        {/* variant={ButtonVariant['accent-outline']} className={'col-start-3'} size={ButtonSizeType.sm} /> }*/}
       </Tabs.Panel>)
       break;
 

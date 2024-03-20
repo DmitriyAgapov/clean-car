@@ -62,7 +62,7 @@ export function FormStepSuccess(props: {
           variant={HeadingVariant.h2}
          />
         <div className={'text-base'}>
-          Укажите информацию о счета компании и предпочтительных исполнителей, если такие есть
+          Укажите информацию о счете компании и предпочтительных исполнителей, если такие есть
         </div>
       </>}>
       <div className={'mt-10 flex flex-wrap gap-6'}>

@@ -44,7 +44,7 @@ export function FormStepTwo(props: {
         </div>
       </div>}
       header={<>
-        <Heading text={'Шаг 2. Информация о счете и индивидуальные настройки '}
+        <Heading text={'Шаг 2. Индивидуальные настройки'}
           color={HeadingColor.accent}
           variant={HeadingVariant.h2}
           />

@@ -44,12 +44,12 @@ export function FormStepTwo(props: {
         </div>
       </div>}
       header={<>
-        <Heading text={'Шаг 2. Информация о счете и индивидуальные настройки '}
+        <Heading text={'Шаг 2. Индивидуальные настройки'}
           color={HeadingColor.accent}
           variant={HeadingVariant.h2}
           />
         <div className={'text-base'}>
-          Укажите информацию о счета компании и предпочтительных исполнителей, если такие есть
+          Укажите информацию о счете компании и предпочтительных исполнителей, если такие есть
         </div>
       </>}>
       <div className={'mt-10 flex flex-wrap gap-6'}>

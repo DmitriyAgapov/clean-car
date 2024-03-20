@@ -307,7 +307,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     >
                         <TextInput
 
-                            label={'Название компании'}
+                            label={'Название'}
                             {...formData.getInputProps('company_name')}
                         />
                         <Select
@@ -457,12 +457,12 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         header={
                             <>
                                 <Heading
-                                    text={'Шаг 2. Информация о счете и индивидуальные настройки '}
+                                    text={'Шаг 2. Индивидуальные настройки'}
                                     color={HeadingColor.accent}
                                     variant={HeadingVariant.h2}
                                 />
                                 <div className={''}>
-                                    Укажите информацию о счета компании и предпочтительных исполнителей, если такие есть
+                                    Укажите информацию о счете компании и предпочтительных исполнителей, если такие есть
                                 </div>
                             </>
                         }
