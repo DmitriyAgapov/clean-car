@@ -75,7 +75,7 @@ export const referencesLoader = async (props: any) => {
                     title: 'Автомобили',
                     create: 'Добавить',
                     referenceTitle: 'Марка автомобиля',
-                    createPage: 'Добавить марку автомобиля',
+                    createPage: 'Добавить автомобиль',
                     editPage: 'Редактировать марку автомобиля',
                     tableHeaders: [{label: 'Марка', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_type'}],
                     createPageDesc: 'Укажите основную информацию о модели автомобиля, для добавления в справочник',

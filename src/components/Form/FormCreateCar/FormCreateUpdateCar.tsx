@@ -290,7 +290,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                 />
               <Select
                 {...form.getInputProps('model')}
-                placeholder={'Выберите модель'}
+                placeholder={'Модель'}
                 label={'Модель'}
                 searchable
                 clearable

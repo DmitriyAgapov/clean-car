@@ -17,14 +17,14 @@ function AuthPage() {
   return (
     <Layout
       className={'page-intro'}
-      headerContent={
-        <Button
-          className={'!hidden tablet:!inline-flex ml-auto mr-8'}
-          text={'Помощь'}
-          variant={ButtonVariant['accent-outline']}
-          size={ButtonSizeType.sm}
-        />
-      }
+      // headerContent={
+      //   <Button
+      //     className={'!hidden tablet:!inline-flex ml-auto mr-8'}
+      //     text={'Помощь'}
+      //     variant={ButtonVariant['accent-outline']}
+      //     size={ButtonSizeType.sm}
+      //   />
+      // }
     >
       <Section type={SectionType.centered}>
         <Panel

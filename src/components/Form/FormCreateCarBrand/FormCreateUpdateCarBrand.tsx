@@ -36,7 +36,7 @@ const dataCreate = {
     },
     {
       label: 'Модель',
-      placeholder: 'Выберите модель',
+      placeholder: 'Модель',
       fieldName: 'modelName',
       type: 'text',
     },

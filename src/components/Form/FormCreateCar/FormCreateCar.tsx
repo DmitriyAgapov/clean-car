@@ -106,7 +106,7 @@ const FormInputs = observer(():JSX.Element => {
               <SelectMantine
                 name={'models'}
                 disabled={!values.brand}
-                placeholder={'Выберите модель'} label={'Модель'}
+                placeholder={'Модель'} label={'Модель'}
                 searchable={true}
 
                 clearable={true}

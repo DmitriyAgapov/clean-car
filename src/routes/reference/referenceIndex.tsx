@@ -34,7 +34,7 @@ const ReferencesPage = () => {
                 }
             >
                 <p className={''}>
-                  Вы можете дополнять и расширять справочник под свои запросы. К созданию доступны: марки автомобилей, города. Раздел услуги — есть возможность интегрировать свои наименования.
+                  Вы можете дополнять и расширять справочник под свои запросы. К созданию доступны: марки автомобилей, города. Раздел услуги — есть возможность интегрировать свои подтипы услуг.
                 </p>
             </Panel>
           <Panel  bodyClassName={' subgrid  col-span-full'} className={'grid xl:grid-cols-12 md:grid-cols-8   grid-cols-4 gap-8 justify-items-stretch col-span-full !backdrop:filter-none !bg-transparent content-stretch items-stretch justify-items-stretch'} variant={PanelVariant.textPadding}>
