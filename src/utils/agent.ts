@@ -274,7 +274,7 @@ const Auth = {
 }
 const Users = {
     getAllUsers:  (pagination?: PaginationProps) => requests.get('/accounts/all_users/', pagination),
-    getAllUsersTest:  (params: string, pagination?: PaginationProps) => useSWR(`/accounts/all_users${params ? `?${params}` : '?page=1&page_size=10'}`, (url) => requests.getNew(url).then(r => r.data)),
+    getAllUsersTest:  (params: string, pagination?: PaginationProps) => useSWR(`${userStore.isAdmin ? `/accounts/all_users${params ? `?${params}` : '?page=1&page_size=10'}` : `/accounts/${userStore.myProfileData.company?.id}/users/list${params ? `?${params}` : '?page=1&page_size=10'}`}`,(url) => requests.getNew(url).then(r => r.data)),
     getUser: ({ company_id, id }: { company_id: number; id: number }) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
     getUserTest: ({ company_id, id }: { company_id: number; id: number }) => useSWR(`/accounts/${company_id}/users/${id}/retrieve/`, requests.get),
     getCompanyUsers: (company_id: number, pagination?: PaginationProps) => requests.get(`/accounts/${company_id}/users/list/`, pagination),
@@ -294,6 +294,7 @@ const Companies = {
     getListCompanyPerformer: (pagination?: PaginationProps) => requests.get('/companies/performer/list/', pagination),
     getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', pagination),
     getOnlyAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_companies/list/', pagination),
+    getOnlyAllCompaniesNew: (params: string, pagination?: PaginationProps) => useSWR(`/companies/only_companies/list${params ? `?${params}` : '?page=1&page_size=10'}`, (url) => requests.getNew(url).then(r => r.data)),
     getOnlyBranchesCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_branches/list/', pagination),
 }
 const Permissions = {

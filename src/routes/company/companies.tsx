@@ -5,15 +5,17 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
-import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
+import agent from "utils/agent";
 
 const CompaniesPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const { data, page, pageRequest, textData }: any = useLoaderData();
+  let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
+  const {isLoading, data, error} = agent.Companies.getOnlyAllCompaniesNew(searchParams.toString())
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -42,14 +44,14 @@ const CompaniesPage = () => {
         }
       />
       <TableWithSortNew
-        total={data.count}
+        total={data?.count}
         variant={PanelVariant.dataPadding}
         search={true}
         style={PanelRouteStyle.company}
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
         filter={false}
-        data={data.results.filter((item:any) => item.parent === null).map((item: any) => ({
+        data={data?.results?.filter((item:any) => item.parent === null).map((item: any) => ({
           status: item.is_active as boolean,
           company: item.name,
           type: item.company_type,
@@ -57,7 +59,7 @@ const CompaniesPage = () => {
           id: item.id
         }))}
 
-        state={false}
+        state={isLoading}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'}, {label: 'Тип', name: 'company_type'},{ label: 'Город', name: 'city' }]}
       />
     </Section>

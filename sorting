@@ -1,10 +1,15 @@
 //Пользователи
 /accounts/all_users/
-phone, email, city
+Не работает ordering: phone, email, city
 
 /accounts/{company_id}/users/list/
 Нет поиска q=
 
 //Компании
+/companies/only_companies/list
 Нет поиска q=
 
+//Заявки
+/bids/all_bids/list/
+/bids/{company_id}/list/
+Нет поиска q=

@@ -8,124 +8,6 @@
       display: none;
     }
   }
-
-  th {
-    @apply text-xss font-medium px-1;
-    padding-top: .75rem;
-    padding-bottom: .75rem;
-    letter-spacing: 0.05em;
-    line-height: 1;
-
-    &:first-child {
-      padding-left: 2rem;
-      width: 7rem;
-    }
-
-    &:last-child {
-      padding-right: 2rem;
-      width: 10rem;
-    }
-
-  }
-  &[data-style="bids"] {
-    th,td {
-      //width: 2rem;
-      overflow: hidden;
-      position: relative;
-
-      & p {
-        margin: 0;
-        background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: block;
-        line-height: 14px;
-        vertical-align: middle;
-        position: relative;
-        overflow: hidden;
-        font-weight: 600;
-      }
-
-      & p:after {
-        //content: "";
-        position: absolute;
-        right: 0px;
-        width: 50%;
-        top: 0;
-        bottom: 0;
-        background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
-      }
-      &:first-child {
-        padding-left: 2rem;
-        width: 4rem;
-        max-width: 4rem;
-      }
-      &:nth-child(2){
-        //padding-left: 2rem;
-        width: 5rem;
-        max-width: 5rem;
-      }
-      &:nth-child(3){
-        //padding-left: 2rem;
-        width: 7rem;
-        max-width: 7rem;
-      }
-      &:nth-child(4){
-        //padding-left: 2rem;
-        width: 10rem;
-        max-width: 10rem;
-      }
-      &:nth-child(5){
-        width: 14rem;
-        max-width: 14rem;
-      }
-      &:nth-child(6){
-        width: 8rem;
-        max-width: 8rem;
-      }
-      &:nth-child(7){
-        width: 6rem;
-        max-width: 6rem;
-      }
-
-      &:nth-child(8){
-        width: 6rem;
-        max-width: 6rem;
-      }
-
-
-
-
-
-
-      &:last-child {
-        padding-right: 1rem;
-        width: 8rem;
-      }
-
-    }
-  }
-  &[data-style="price_history"] {
-    th {
-      @apply text-xss font-medium px-1;
-      padding-top: .75rem;
-      padding-bottom: .75rem;
-      letter-spacing: 0.05em;
-      line-height: 1;
-
-      &:first-child {
-        padding-left: 2rem;
-        width: 10rem;
-      }
-
-      &:last-child {
-        padding-right: 2rem;
-        width: 10rem;
-      }
-
-    }
-  }
-
   tr {
     width: 100%;
     @screen lg-max {
@@ -269,10 +151,123 @@
 
     white-space: nowrap;
   }
+  th {
+    @apply text-xss font-medium px-1;
+    padding-top: .75rem;
+    padding-bottom: .75rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
 
-  &[data-style="users"] {
+    &:first-child {
+      padding-left: 2rem;
+      width: 7rem;
+    }
+
+    &:last-child {
+      padding-right: 2rem;
+      width: 10rem;
+    }
 
   }
+  &[data-style="bids"] {
+    th,td {
+      //width: 2rem;
+      overflow: hidden;
+      position: relative;
+
+      & p {
+        margin: 0;
+        background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: block;
+        line-height: 14px;
+        vertical-align: middle;
+        position: relative;
+        overflow: hidden;
+        font-weight: 600;
+      }
+
+      & p:after {
+        //content: "";
+        position: absolute;
+        right: 0px;
+        width: 50%;
+        top: 0;
+        bottom: 0;
+        background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
+      }
+      &:first-child {
+        padding-left: 2rem;
+        width: 4rem;
+        max-width: 4rem;
+      }
+      &:nth-child(2){
+        //padding-left: 2rem;
+        width: 5rem;
+        max-width: 5rem;
+      }
+      &:nth-child(3){
+        //padding-left: 2rem;
+        width: 7rem;
+        max-width: 7rem;
+      }
+      &:nth-child(4){
+        //padding-left: 2rem;
+        width: 8rem;
+        max-width: 8rem;
+      }
+      &:nth-child(5){
+        width: 14rem;
+        max-width: 14rem;
+      }
+      &:nth-child(6){
+        width: 8rem;
+        max-width: 8rem;
+      }
+      &:nth-child(7){
+        width: 6rem;
+        max-width: 6rem;
+      }
+
+      &:nth-child(8){
+        width: 6rem;
+        max-width: 6rem;
+      }
+
+
+
+
+
+
+      &:last-child {
+        padding-right: 1rem;
+        width: 8rem;
+      }
+
+    }
+  }
+  &[data-style="price_history"] {
+    th {
+      @apply text-xss font-medium px-1;
+      padding-top: .75rem;
+      padding-bottom: .75rem;
+      letter-spacing: 0.05em;
+      line-height: 1;
+
+      &:first-child {
+        padding-left: 2rem;
+        width: 10rem;
+      }
+
+      &:last-child {
+        padding-right: 2rem;
+        width: 10rem;
+      }
+
+    }
+  }
+
   &[data-style="users"] {
     th, td, {
       max-width: 8rem;
@@ -301,24 +296,38 @@
         bottom: 0;
         background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
       }
-    }
-
-    th:nth-child(1), td:nth-child(1), {
-      @screen lg {
+      &:first-child {
+        padding-left: 2rem;
+        width: 6rem;
+        max-width: 6rem;
+      }
+      &:nth-child(2){
+        //padding-left: 2rem;
+        width: 8rem;
+        max-width: 8rem;
+      }
+      &:nth-child(3){
+        //padding-left: 2rem;
+        width: 7rem;
         max-width: 7rem;
       }
-    }
-
-    th:nth-child(2), td:nth-child(2), {
-      @screen lg {
-        min-width: 10rem;
+      &:nth-child(4){
+        //padding-left: 2rem;
+        width: 10rem;
+        max-width: 10rem;
       }
-    }
+      &:nth-child(5){
+        width: 8rem;
+        max-width: 8rem;
+      }
+      &:nth-child(6){
+        width: 10rem;
+        max-width: 10rem;
+      }
 
-    th:nth-child(2), td:nth-child(2), {
-      @screen lg {
-        width: auto;
-        max-width: fit-content;
+      &:last-child {
+        padding-right: 1rem;
+        width: 6rem;
       }
     }
   }
@@ -337,28 +346,57 @@
     }
   }
   &[data-style="company"] {
-    th:first-child, td:first-child, {
+    th, td {
       @screen lg {
-        width: 7rem;
-      }
-    }
+          max-width: 8rem;
+          overflow: hidden;
+          position: relative;
 
-    th:nth-child(2), td:nth-child(2), {
-      @screen lg {
-        width: auto;
-      }
-    }
+          & p {
+            margin: 0;
+            background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            line-height: 14px;
+            vertical-align: middle;
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+          }
+
+          & p:after {
+            //content: "";
+            position: absolute;
+            right: 0px;
+            width: 50%;
+            top: 0;
+            bottom: 0;
+            background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
+          }
+          &:first-child {
+            padding-left: 2rem;
+            width: 7rem;
+            max-width: 7rem;
+          }
+          &:nth-child(2){
+            //padding-left: 2rem;
+            width: 20rem;
+            max-width: 20rem;
+          }
+          &:nth-child(3){
+            //padding-left: 2rem;
+            width: auto;
+            max-width: initial;
+          }
+
+          &:last-child {
+            padding-right: 1rem;
+            width: 20rem;
+            max-width: 20rem;
+          }
 
 
-    th:nth-child(3), td:nth-child(3), {
-      @screen lg {
-    	width:  12rem;
-      }
-    }
-    th:nth-child(4), td:nth-child(4), {
-      @screen lg {
-
-    	width: calc(20ch + 32px);
       }
     }
 

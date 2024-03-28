@@ -159,7 +159,7 @@ const router = createBrowserRouter([
             {
                 path: 'companies',
                 element: <CompaniesPage />,
-                loader: companiesLoader,
+                // loader: companiesLoader,
                 // errorElement: <Navigate to='/account' replace={true} />,
                 // errorElement: <ErrorPage />,
                 children: [

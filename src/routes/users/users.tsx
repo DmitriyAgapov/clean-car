@@ -17,7 +17,7 @@ const UsersPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  let [searchParams, setSearchParams] = useSearchParams(new URLSearchParams());
+  const [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10');
   const {isLoading, data, error} = agent.Users.getAllUsersTest(searchParams.toString())
 
   if ('/account/users' !== location.pathname) return <Outlet />
