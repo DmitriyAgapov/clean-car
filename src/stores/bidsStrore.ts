@@ -408,81 +408,7 @@ export class BidsStore {
     currentBid:CurrentBidProps  = observable.object<CurrentBidProps>({} as CurrentBidProps)
     currentBidPhotos = observable.array([])
     justCreatedBid:any = {}
-    tempDataPerformers = {
-        count: 2,
-        next: null,
-        previous: null,
-        results: [
-            {
-                id: 8,
-                name: 'Исполнитель Москва',
-                city: {
-                    id: 1619,
-                    name: 'Москва',
-                },
-                performerprofile: {
-                    address: 'г Москва, Варшавское шоссе, д 1 стр 2',
-                    contacts: 'вавыаыва',
-                    service_percent: 12,
-                    working_time: '',
-                    lat: 55.704022,
-                    lon: 37.625603,
-                },
-                amount: 1000.0,
-            },
-            {
-                id: 2,
-                name: 'ООО Рогоносец',
-                city: {
-                    id: 1619,
-                    name: 'Москва',
-                },
-                performerprofile: {
-                    address: 'г Москва, Дербеневская наб, д 2',
-                    contacts: '++153618674641',
-                    service_percent: 12,
-                    working_time: '',
-                    lat: 55.727582,
-                    lon: 37.653451,
-                },
-                amount: 1000.0,
-            },
-            {
-                id: 2,
-                name: 'ООО Рогоносец',
-                city: {
-                    id: 1619,
-                    name: 'Москва',
-                },
-                performerprofile: {
-                    address: 'г Москва, Дербеневская наб, д 2',
-                    contacts: '++153618674641',
-                    service_percent: 12,
-                    working_time: '',
-                    lat: 55.627582,
-                    lon: 37.553451,
-                },
-                amount: 1000.0,
-            },
-            {
-                id: 2,
-                name: 'ООО Рогоносец',
-                city: {
-                    id: 1619,
-                    name: 'Москва',
-                },
-                performerprofile: {
-                    address: 'г Москва, Дербеневская наб, д 2',
-                    contacts: '++153618674641',
-                    service_percent: 12,
-                    working_time: '',
-                    lat: 55.947582,
-                    lon: 37.753451,
-                },
-                amount: 1000.0,
-            },
-        ],
-    }
+    eventCounts: any = observable.object({})
     constructor() {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, {
@@ -629,6 +555,32 @@ export class BidsStore {
             },
         )
 
+    }
+    get getEventCount() {
+        return this.eventCounts
+    }
+    async loadEventCount() {
+        if(authStore.userIsLoggedIn && appStore.token !== "") {
+            console.log('startCount');
+            try {
+                if(appStore.appType === "admin") {
+                    console.log('startCountadmin');
+                    const {data, status}:any = await agent.Bids.getBidCountAdmin()
+                    console.log(data);
+                    this.eventCounts = data
+                }
+                if(appStore.appType === "customer") {
+                    const {data, status}:any = await agent.Bids.getBidCountCustomer(userStore.myProfileData.company.id)
+                    this.eventCounts = data
+                }
+                if(appStore.appType === "performer") {
+                    const {data, status}:any = await agent.Bids.getBidCountPerformer(userStore.myProfileData.company.id)
+                    this.eventCounts = data
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
     get ActiveTab() {
         return this.activeTab
