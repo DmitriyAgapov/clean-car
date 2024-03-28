@@ -1,5 +1,5 @@
 import { SvgSearch } from "components/common/ui/Icon";
-import React, { EventHandler, useEffect, useState } from "react";
+import React, { EventHandler, useEffect, useRef, useState } from "react";
 import { useStore } from "stores/store";
 import { observer } from "mobx-react-lite";
 import { useSearchParams } from "react-router-dom";
@@ -11,22 +11,23 @@ const TableSearch = ({ inputProps, action }: { inputProps?: { list?: string }; a
   let [searchParams, setSearchParams] = useSearchParams()
   const [value, setValue] = useState("");
   const [debounced, cancel] = useDebouncedValue(value, 500);
-
+  const ref = useRef(null)
  React.useEffect(() => {
     if(debounced !== "") {
-      store.paramsStore.setParams({ page: 1, q: debounced})
-      searchParams.set('q',debounced)
+      // store.paramsStore.setParams({ page: 1, q: debounced})
+      searchParams.set('q', String(debounced))
       searchParams.set('page', "1")
-      setSearchParams(searchParams)
+      setSearchParams(searchParams.toString())
     } else {
       searchParams.delete('q')
       store.paramsStore.removeQParams();
-      setSearchParams(() => (searchParams.toString()))
+      setSearchParams(searchParams.toString())
     }
   }, [debounced])
 
   return <div className={'form-search relative h-10'}>
     <input type={'search'}
+      ref={ref}
       placeholder={'Быстрый поиск'}
       value={value}
       // onChange={action}

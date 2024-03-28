@@ -198,6 +198,7 @@ const TableWithSortNew = ({
     const [currentPage, setCurrentPage] = useState<number>(1)
 
     const handleCurrentPage = React.useCallback((value: any) => {
+        console.log(searchParams.toString() , 'searchParams');
         if(withOutLoader) {
             // console.log('withyout', searchParams);
             searchParams.set('page', String(value))
@@ -206,19 +207,19 @@ const TableWithSortNew = ({
 
         } else  {
             console.log('withyout', searchParams.get('page'));
-            searchParams.set('page', encodeURIComponent(value))
+            searchParams.set('page', String(value))
             // store.paramsStore.setParams({page: encodeURIComponent(value)});
             setSearchParams(searchParams.toString())
 
         }
         setCurrentPage(Number(value))
-    }, [sortedField, currentPage])
+    }, [sortedField, currentPage, searchParams])
 
     React.useEffect(() => {
         console.log(currentPage, 'currentPage');
         const pageParams = searchParams.get('page');
-        searchParams.has('page') && setCurrentPage(Number(pageParams))
-    }, [currentPage])
+        searchParams.has('page') ? setCurrentPage(Number(pageParams)) : setCurrentPage(1)
+    }, [currentPage, searchParams])
 
 
     const RowDataMemoized = React.useMemo(() => {
@@ -255,7 +256,7 @@ const TableWithSortNew = ({
         }
         console.log('searchParams', searchParams.toString());
         setSearchParams(searchParams.toString())
-    }, [sortedField])
+    }, [sortedField, currentPage, searchParams])
 
 
     // if (state) return <SvgLoading className={'m-auto'} />
