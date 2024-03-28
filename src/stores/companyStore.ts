@@ -225,11 +225,18 @@ export class CompanyStore {
         let company:any;
         if(this.companies.length !== 0) {
             company = this.allCompanies.companies.filter((company: any) => company.id == id)[0]
+            if(!company) {
+                company = this.AllFilials.filter((company: any) => company.id == id)[0]
+            }
             action(() => this.targetCompany  = company)
         } else {
             this.getAllCompanies()
             action(( ) => {
                 company = this.allCompanies.companies.filter((company: any) => company.id == id)[0]
+                if(!company) {
+                    company = this.AllFilials.filter((company: any) => company.id == id)[0]
+                }
+
                 this.targetCompany  = company
             })
         }

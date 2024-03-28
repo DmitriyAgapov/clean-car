@@ -165,12 +165,12 @@ export class PriceStore {
             if (props.params.id && !history) {
                 console.log(props);
                 let tempId = props.params.id || userStore.myProfileData.company?.id
-                // const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
-                // const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
-                // const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(tempId);
-                const { data: dataEvac } = await agent.Price.getCompanyPriceEvac(userStore.myProfileData.company?.id, props.params.id);
-                const { data: dataTire } = await agent.Price.getCompanyPriceTire(userStore.myProfileData.company?.id, props.params.id);
-                const { data: dataWash } = await agent.Price.getCompanyPriceWash(userStore.myProfileData.company?.id, props.params.id);
+                const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
+                const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
+                const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(tempId);
+                // const { data: dataEvac } = await agent.Price.getCompanyPriceEvac(userStore.myProfileData.company?.id, props.params.id);
+                // const { data: dataTire } = await agent.Price.getCompanyPriceTire(userStore.myProfileData.company?.id, props.params.id);
+                // const { data: dataWash } = await agent.Price.getCompanyPriceWash(userStore.myProfileData.company?.id, props.params.id);
                 console.log('есть ID', props.params.id);
                 const tempAr:any[] = []
                 console.log(dataTire);
@@ -244,38 +244,40 @@ export class PriceStore {
                     console.log('statePriceFinish', this.loading);
                 }
             } else {
-                const { data: dataResults, status } = await agent.Price.getAllCompanyPrices(userStore.myProfileData.company?.id, paramsStore.qParams as PaginationProps)
-                if (status === 200) {
-                    data = {
-                        ...dataResults, results: dataResults.results.map((i: any) => {
-                            let obj: any;
-                            for (const key in i) {
-                                if (i[key] === null) {
-                                    obj = {
-                                        ...obj,
-                                        [key]: '-'
-                                    }
-                                } else {
-                                    obj = {
-                                        ...obj,
-                                        [key]: i[key]
+                console.log('not admin price list');
+                try {
+                    const { data: dataResults, status } = await agent.Price.getAllCompanyPrices(userStore.myProfileData.company?.id, paramsStore.qParams as PaginationProps)
+
+                    if (status === 200) {
+                        data = {
+                            ...dataResults, results: dataResults.results.map((i: any) => {
+                                let obj: any;
+                                for (const key in i) {
+                                    if (i[key] === null) {
+                                        obj = {
+                                            ...obj,
+                                            [key]: '-'
+                                        }
+                                    } else {
+                                        obj = {
+                                            ...obj,
+                                            [key]: i[key]
+                                        }
                                     }
                                 }
-                            }
-                            return obj;
-                        }).map((i:any) => ({
-                            id: i.id,
-                            name: i.company.name,
-                            company_type: i.company.company_type,
-                            root_company: i.company.parent?.name ?? "-"
-                        }))
+                                return obj;
+                            })
+                        }
+                        console.log('datalist', data);
+                        console.log('dataResults', dataResults);
+                        this.currentPrice = data
+                        this.loading = false
+                        console.log('statePriceFinish', this.loading);
                     }
-                    console.log('datalist', data);
-                    console.log('dataResults', dataResults);
-                    this.currentPrice = data
-                    this.loading = false
-                    console.log('statePriceFinish', this.loading);
+                } catch (e) {
+                    console.log(e)
                 }
+
             }
 
         } else {

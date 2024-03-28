@@ -140,42 +140,48 @@ export class UserStore {
   }
   createUserPermissions() {
     let ar:any = new Map([]);
-    if(authStore.userIsLoggedIn) {
-      if(this.isAdmin) {
-        // console.log('Create admin permissions');
-        appStore.setAppType(UserTypeEnum.admin)
-        for (let permissionNameKey in PermissionNames) {
-          // @ts-ignore
-          ar.set(PermissionNames[permissionNameKey], {
-            read: true,
-            create: true,
-            delete: true,
-            name: permissionNameKey,
-            update:true
-          })
-        }
-      } else {
-        const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
-        appStore.setAppType(type)
-        // console.log(`Create ${type}  permissions`);
-
-        const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
-        this.myProfileData.company = perm[0].company;
-
-        perm[0].group.permissions.forEach((item:any) => {
-          const exepctions = ['Компании', 'Расчетный блок',
-            // 'Финансовый блок',
-            'Индивидуальный расчет']
-          if(exepctions.indexOf(item.name) == -1) {
+    if(authStore.userIsLoggedIn && appStore.token !== "") {
+      try {
+        if(this.isAdmin) {
+          // console.log('Create admin permissions');
+          appStore.setAppType(UserTypeEnum.admin)
+          for (let permissionNameKey in PermissionNames) {
             // @ts-ignore
-            ar.set(PermissionNames[item.name], item)
+            ar.set(PermissionNames[permissionNameKey], {
+              read: true,
+              create: true,
+              delete: true,
+              name: permissionNameKey,
+              update:true
+            })
           }
-        })
+        } else {
+          const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
+          appStore.setAppType(type)
+          // console.log(`Create ${type}  permissions`);
 
-        this.myProfileData.permissions = perm[0].group.permissions
+          const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
+          this.myProfileData.company = perm[0].company;
+
+          perm[0].group.permissions.forEach((item:any) => {
+            const exepctions = ['Компании', 'Расчетный блок',
+              // 'Финансовый блок',
+              'Индивидуальный расчет']
+            if(exepctions.indexOf(item.name) == -1) {
+              // @ts-ignore
+              ar.set(PermissionNames[item.name], item)
+            }
+          })
+
+          this.myProfileData.permissions = perm[0].group.permissions
+        }
+        this.setCurrentPermissions(ar)
+      } catch (e) {
+        console.log(e);
       }
-    }
-    this.setCurrentPermissions(ar)
+
+      }
+
   }
   get myProfileState() {
     return ({
@@ -204,14 +210,20 @@ export class UserStore {
 
   getUserCan(key: string, action: keyof CRUD) {
     // console.log(`userIsLoggedIn : ${authStore.userIsLoggedIn},  getUserCan -------`, authStore.userIsLoggedIn, 'Ключ--', key);
-    if(authStore.userIsLoggedIn) {
-      if(this.currentUserPermissions && this.currentUserPermissions.has(key)) {
-        // console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
-        return this.currentUserPermissions.get(key)[action]
-      } else {
-        // console.log('Нет прав, создаем')
-        this.createUserPermissions()
-        return this.currentUserPermissions.get(key)[action]
+    if(authStore.userIsLoggedIn && appStore.token !== "") {
+      try {
+        if (this.isAdmin) {
+          if (this.currentUserPermissions && this.currentUserPermissions.has(key)) {
+            // console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
+            return this.currentUserPermissions.get(key)[action]
+          } else {
+            // console.log('Нет прав, создаем')
+            this.createUserPermissions()
+            return this.currentUserPermissions.get(key)[action]
+          }
+        }
+      } catch (e) {
+        console.log(e);
       }
     }
     // if(this.myProfileData.permissions && this.myProfileData.permissions.permissions.has(key)) {

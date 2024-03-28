@@ -54,7 +54,7 @@ const UsersPage = () => {
         background={PanelColor.glass}
         filter={false}
         search={true}
-        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'city'}]}
+        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city__name'}]}
         // @ts-ignore
         data={data?.results?.map((item: { company: Company; group: number; employee: User }) => {
           // console.log(item.company.company_type === "Компания-Заказчик");

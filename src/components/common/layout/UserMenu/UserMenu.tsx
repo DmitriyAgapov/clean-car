@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from "react";
 import styles from './UserMenu.module.scss'
 import { SvgChevron, SvgNotification } from 'components/common/ui/Icon'
 import photo from '../../../../assets/images/userphoto.png'
@@ -7,13 +7,32 @@ import { useStore } from 'stores/store'
 import styled from 'styled-components'
 import UserPortal from 'components/common/layout/UserMenu/UserPortal'
 import { useOutsideClick } from 'utils/utils'
+import { useInterval } from "@mantine/hooks";
+import { Link } from "react-router-dom";
 
-const Notification = () => (
-  <div className={styles.notification}>
-    <SvgNotification />
-    <span>{notificationCount}</span>
-  </div>
-)
+const Notification = observer(() => {
+  const store = useStore()
+  const interval = useInterval(() => {
+    store.bidsStore.loadEventCount()
+    console.log(store.bidsStore.getEventCount.bid_count);
+  }, 8000);
+
+  useEffect(() => {
+    interval.start();
+    return interval.stop;
+  }, []);
+
+  return (
+
+    <div className={styles.notification}>
+      <Link to={'/account/bids'} >
+      <SvgNotification />
+      {store.bidsStore.getEventCount.bid_count && <span>{store.bidsStore.getEventCount.bid_count}</span>}
+      </Link>
+    </div>
+
+  )
+})
 type UserProps = {
   name?: string
   status?: string

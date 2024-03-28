@@ -28,7 +28,7 @@ export default function DataFilter({ filterData}: {filterData: any[] | undefined
 
     return (
         <div className={styles.btnFilter} ref={ref}>
-            <a onClick={(event) => handleState(event)}>
+            <a className={'flex-1 flex justify-center items-center'} onClick={(event) => handleState(event)}>
                 <SvgFilter />
             </a>
             {state && <FilterBar state={state} filters={filterData} />}

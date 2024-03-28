@@ -9,11 +9,19 @@
 
 }
 .notification {
-  padding: .75rem;
+  //padding: .75rem;
   background-color: #181818;
   position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: .625rem;
-  display: inline-block;
+  display: inline-flex;
+  a {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 1 100%;
+  }
   span {
 	background-color: #FBFF4A;
 	position: absolute;

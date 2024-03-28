@@ -214,7 +214,7 @@ export const paginationParams = (urlData:string) => {
 export const priceLoader = async (props: any) => {
     const paginationData = paginationParams(props.request.url as string)
     const is_history = props.request.url.includes('history')
-    console.log('priceLoader', is_history, props.params.id, props.params.bid_id);
+    console.log('priceLoader', is_history, props.params.id);
 
     await priceStore.getCurrentPrice(props, is_history);
 

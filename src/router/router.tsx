@@ -152,7 +152,7 @@ const router = createBrowserRouter([
                   {
                       path: 'create',
                       element: <BidsCreatePage/>,
-                      loader: bidsLoader,
+                      // loader: bidsLoader,
                   }
               ]
             },

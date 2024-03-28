@@ -285,7 +285,7 @@ const TableWithSort = ({
             variant={variant ? variant : PanelVariant.dataPadding}
             footerClassName={'px-6 pt-2 pb-6 flex  justify-end'}
             headerClassName={''}
-            header={search && filter ?
+            header={(search || filter) ?
                 <>
                     {search && <TableSearch action={handleFastSearch} />}
                     {filter && <DataFilter filterData={[{}]} />}

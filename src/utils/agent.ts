@@ -236,6 +236,9 @@ const Bids = {
   getAllCompanyBids: (company_id: number|string, params: PaginationProps) => requests.get(`/bids/${company_id}/list`, params),
   updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus, fotos?: number[]) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status, fotos: fotos}),
   loadBidPhotos: (company_id:  number|string, bid_id:  number|string) => requests.get(`/bid_photos/${company_id}/${bid_id}/list/`),
+  getBidCountAdmin: () => requests.get('/bids/count/admin/'),
+  getBidCountCustomer: (company_id: number) => requests.get(`/bids/${company_id}/count/customer/`),
+  getBidCountPerformer: (company_id: number) => requests.get(`/bids/${company_id}/count/performer/`)
 }
 const Utils = {
   suggest: (props:{query: any, location: any[], restrict_value: boolean}) => requests.postSuggest(props)

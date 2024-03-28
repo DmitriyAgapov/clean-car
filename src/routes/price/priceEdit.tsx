@@ -21,6 +21,7 @@ const PriceEditPage = ():JSX.Element => {
   const  {data} = store.priceStore.currentPriceById;
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
+  console.log(company);
   const revalidator = useRevalidator();
   useEffect(() => {
     console.log('params changed, priceOnChange cleared');
