@@ -283,18 +283,14 @@ export const companyLoader = async ({ params: { id, company_type, action, compan
 }
 
 export const filialsLoader = async (props: any) => {
-    // const url = new URL(props.request.url)
-    // const searchParams = url.searchParams
-    // const paramsPage = url.searchParams.get('page')
-    // const paramsPageSize = url.searchParams.get('page_size')
-    // const paramsOrdering = url.searchParams.get('ordering')
-    // const paramsSearchString = url.searchParams.get('searchString')
-    console.log(props.request.url);
-    const params = new InitParams()
     const url = new URL(props.request.url)
-
-    // const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
-    companyStore.loadAllFilials()
+    const searchParams = url.searchParams
+    const paramsPage = url.searchParams.get('page')
+    const paramsPageSize = url.searchParams.get('page_size')
+    const paramsOrdering = url.searchParams.get('ordering')
+    const paramsSearchString = url.searchParams.get('searchString')
+    const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
+    companyStore.loadAllFilials({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
     // async function fillData() {
     //     let data :any[] | any = []
     //     let dataMeta

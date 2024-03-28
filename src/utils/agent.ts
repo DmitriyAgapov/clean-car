@@ -5,7 +5,7 @@ import  { decodeToken } from 'utils/getData'
 import  'utils/axiosConfig'
 import userStore, { User } from 'stores/userStore'
 import { runInAction, toJS } from "mobx";
-import { Company, CompanyType } from "stores/companyStore";
+import { Company, CompanyType, CompanyTypeRus } from "stores/companyStore";
 import { BidsStatus } from "stores/bidsStrore";
 import { notifications } from "@mantine/notifications";
 import useSWR from "swr";
@@ -278,6 +278,7 @@ const Users = {
     getUser: ({ company_id, id }: { company_id: number; id: number }) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
     getUserTest: ({ company_id, id }: { company_id: number; id: number }) => useSWR(`/accounts/${company_id}/users/${id}/retrieve/`, requests.get),
     getCompanyUsers: (company_id: number, pagination?: PaginationProps) => requests.get(`/accounts/${company_id}/users/list/`, pagination),
+    getCompanyUsersNew: (params: string, company_id: number, pagination?: PaginationProps) => useSWR(`/accounts/${company_id}/users/list${params ? `?${params}` : '?page=1&page_size=10'}`, (url) => requests.getNew(url).then(r => r.data)),
 
 }
 const Companies = {
@@ -285,6 +286,7 @@ const Companies = {
     editCompany: ( data: CreateCompanyPerformerFormData, type: string, id:number ) => requests.put(`/companies/${type}/${id}/update/`, data),
 
     getCompanyData: (type: string, id: number ) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
+    getCompanyDataNew: (type: string, id: number) => useSWR(`/companies/${type}/${id}/retrieve/`, (url) => requests.getNew(url).then(r => r.data)),
     // createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
     //   return  requests.post('/companies/performer/create/', data)
     // },
@@ -411,6 +413,7 @@ const Catalog = {
 const Cars = {
   getCompanyCars: (company_id: number, params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars/${company_id}/list/`, params),
   getAdminCars: ( params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars_admin/list/`, params),
+  getCarsNew: (params: string, company_id?: string | number,  pagination?: PaginationProps) => useSWR(`${userStore.isAdmin ? `/cars_admin/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/cars/${company_id ? company_id : userStore.myProfileData.company?.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`,(url) => requests.getNew(url).then(r => r.data)),
   getAdminCar: (id: number) => requests.get(`/cars_admin/${id}/retrieve/`, {}),
   getCompanyCar: (company_id: number , id: number)  => requests.get(`/cars/${company_id}/${id}/retrieve/`),
   createCompanyCar: (company_id: number, data: any) => requests.post(`/cars/${company_id}/create/`, data),
@@ -425,6 +428,7 @@ const Account = {
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),
+  getFilialsNew: (params: string, pagination?: PaginationProps) => useSWR(`${userStore.isAdmin ? `/companies/only_branches/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/${CompanyTypeRus(userStore.myProfileData.company?.company_type)}_branches/${userStore.myProfileData.company?.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`, (url) => requests.getNew(url).then(r => r.data)),
   getFilial: (company_type: string, company_id: number, id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/${id}/retrieve/`, params),
   createFilial: (company_type: string, company_id: number, data: any) => requests.post(`/${company_type}_branches/${company_id}/create/`, data),
   editFilial: ( data: any, company_id: number, type: string, id:number ) => requests.put(`/${type}_branches/${company_id}/${id}/update/`, data),

@@ -401,6 +401,67 @@
     }
 
   }
+  &[data-style="filials"] {
+    th, td {
+      @screen lg {
+          max-width: 8rem;
+          overflow: hidden;
+          position: relative;
+
+          & p {
+            margin: 0;
+            background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            line-height: 14px;
+            vertical-align: middle;
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+          }
+
+          & p:after {
+            //content: "";
+            position: absolute;
+            right: 0px;
+            width: 50%;
+            top: 0;
+            bottom: 0;
+            background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
+          }
+          &:first-child {
+            padding-left: 2rem;
+            width: 7rem;
+            max-width: 7rem;
+          }
+          &:nth-child(2){
+            //padding-left: 2rem;
+            width: 10rem;
+            max-width: 10rem;
+          }
+          &:nth-child(3){
+            //padding-left: 2rem;
+            width: 10rem;
+            max-width: 10rem;
+          }
+          &:nth-child(4){
+            //padding-left: 2rem;
+            width: 10rem;
+            max-width: 10rem;
+          }
+
+          &:last-child {
+            padding-right: 1rem;
+            width: 20rem;
+            max-width: 20rem;
+          }
+
+
+      }
+    }
+
+  }
   //&[data-width] {
   //  th, td {
   //    width: attr(data-width px, inherit);

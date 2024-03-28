@@ -22,6 +22,7 @@ export enum PanelRouteStyle {
     bids = 'bids',
     auth = 'auth',
     company = 'company',
+    filials = 'filials',
     users = 'users',
     groups = 'groups',
     refcars = 'refcars',

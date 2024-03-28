@@ -5,16 +5,18 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import companyStore from "stores/companyStore";
 import { observer } from "mobx-react-lite";
+import agent from "utils/agent";
 
 const FilialsPage = () => {
   const store = useStore()
   const location = useLocation()
-  const {data, loading, errors} = store.companyStore.allFilialsFromStore
-  console.log(data, loading);
+  const [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10');
+  const {isLoading, data, error} = agent.Filials.getFilialsNew(searchParams.toString())
+
   if ('/account/filials' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -46,7 +48,7 @@ const FilialsPage = () => {
         filter={false}
         search={true}
         background={PanelColor.glass}
-        style={PanelRouteStyle.company}
+        style={PanelRouteStyle.filials}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'company_type'},{ label: 'Принадлежит', name: 'parent'}]}
 
         data={data?.results?.map((item: any) => ({
@@ -60,7 +62,7 @@ const FilialsPage = () => {
             company_id: item.parent?.id || store.userStore.myProfileData.company.id
           }
         }))}
-        state={false}
+        state={isLoading}
       />
 
     </Section>

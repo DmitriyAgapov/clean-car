@@ -285,11 +285,11 @@ const TableWithSort = ({
             variant={variant ? variant : PanelVariant.dataPadding}
             footerClassName={'px-6 pt-2 pb-6 flex  justify-end'}
             headerClassName={''}
-            header={
+            header={search && filter ?
                 <>
                     {search && <TableSearch action={handleFastSearch} />}
                     {filter && <DataFilter filterData={[{}]} />}
-                </>
+                </> : null
             }
           footer={
             ( Math.ceil(dataSorted.length / pageSize)) > 1 && (

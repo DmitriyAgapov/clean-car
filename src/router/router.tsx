@@ -121,7 +121,7 @@ const router = createBrowserRouter([
             {
                 path: 'cars',
                 element: <CarsPage />,
-                loader: carsLoader,
+                // loader: carsLoader,
                 children: [
                     {
                         path: ':id',
@@ -184,7 +184,7 @@ const router = createBrowserRouter([
                 path: 'filials',
                 element: <FilialsPage />,
                 // errorElement: <ErrorPage />,
-                loader: filialsLoader,
+                // loader: filialsLoader,
                 children: [
                     {
                         path: ':company_type/:company_id/:id',
