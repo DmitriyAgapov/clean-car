@@ -21,7 +21,7 @@ const TableSearch = ({ inputProps, action }: { inputProps?: { list?: string }; a
     } else {
       searchParams.delete('q')
       store.paramsStore.removeQParams();
-      setSearchParams(() => ({...store.paramsStore.currentParams as URLSearchParams}))
+      setSearchParams(() => (searchParams.toString()))
     }
   }, [debounced])
 

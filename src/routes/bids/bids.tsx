@@ -19,7 +19,7 @@ const BidsPage = () => {
 	const params = useParams()
 	const location = useLocation()
 	const [tick, setTick] = useState(0)
-	let [searchParams, setSearchParams] = useSearchParams();
+	let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
 	const {isLoading, data, error} = agent.Bids.getAllBidsNew(searchParams.toString())
 	// console.log('BidsHook', data, isLoading, error);
 	// React.useEffect(() => {

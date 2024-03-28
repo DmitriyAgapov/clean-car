@@ -1,0 +1,10 @@
+//Пользователи
+/accounts/all_users/
+phone, email, city
+
+/accounts/{company_id}/users/list/
+Нет поиска q=
+
+//Компании
+Нет поиска q=
+

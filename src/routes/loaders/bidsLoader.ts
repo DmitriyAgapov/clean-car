@@ -1,9 +1,11 @@
 import bidsStore from "stores/bidsStrore";
 import paramsStore from "stores/paramStore";
+import agent from "utils/agent";
+import { defer } from "react-router-dom";
 
 export const bidsLoader = async ({ request, params }:any) => {
-	// const url = new URL(request.url)
-	// const searchParams = url.searchParams
+	const url = new URL(request.url)
+	const searchParams = url.searchParams
 	// const paramsPage = url.searchParams.get('page')
 	// const paramsPageSize = url.searchParams.get('page_size')
 	// const paramsOrdering = url.searchParams.get('ordering')
@@ -18,7 +20,7 @@ export const bidsLoader = async ({ request, params }:any) => {
 	// bidsStore.loadAllBids(params)
 	// await companyStore.loadCompanies()
 
-	return null
+	// return defer({isLoading: isLoading, data: data, error: error})
 	// return defer({
 	//   data: {
 	// 	  ...data,

@@ -71,12 +71,20 @@ export const requests = {
   .catch(handleErrors),
   getNew: (url: string) => {
     console.log(url);
+    return axios.get(`${API_ROOT}${url}`,{
+      // headers: tokenPlugin(),
+      method: 'GET'
+    }).then((response: any) => response).catch(handleErrors)
+  },
+  getNewFetch: (url: string) => {
+    console.log(url);
     return axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
       method: 'GET'
     }).then((response: any) => response).catch(handleErrors)
   },
+
   put: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
@@ -221,7 +229,7 @@ const Img = {
 }
 const Bids = {
   getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', params),
-  getAllBidsNew: (params: string) =>  useSWR(`${userStore.isAdmin ? `/bids/all_bids/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/bids/${userStore.myProfileData.company.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`,(url) => requests.getNew(url).then(r => r.data)),
+  getAllBidsNew: (params: string) =>  useSWR(`${userStore.isAdmin ? `/bids/all_bids/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/bids/${userStore.myProfileData.company?.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`,(url) => requests.getNew(url).then(r => r.data)),
   getAvailablePerformers: (company_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/bid_performers/`, data),
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`),

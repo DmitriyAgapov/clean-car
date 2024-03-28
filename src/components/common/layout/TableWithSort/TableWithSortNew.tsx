@@ -194,33 +194,31 @@ const TableWithSortNew = ({
     let [searchParams, setSearchParams] = useSearchParams()
 
     // @ts-ignore
-    const [sortedField, setSortedField] = useState<null | string>(searchParams.get('ordering'))
-    const [currentPage, setCurrentPage] = useState<number>(Number(searchParams.get('page')) ?? 1)
+    const [sortedField, setSortedField] = useState<null | string>(null)
+    const [currentPage, setCurrentPage] = useState<number>(1)
 
     const handleCurrentPage = React.useCallback((value: any) => {
-        const pageParams = searchParams.get('page');
         if(withOutLoader) {
             // console.log('withyout', searchParams);
-            // searchParams.set('page', encodeURIComponent(value))
-            store.paramsStore.setParams({page: encodeURIComponent(value)});
-            setSearchParams((prev) => {
-                searchParams.set('page', encodeURIComponent(value))
-                return searchParams
-            })} else  {
+            searchParams.set('page', String(value))
+            // store.paramsStore.setParams({page: encodeURIComponent(value)});
+            setSearchParams(searchParams.toString())
+
+        } else  {
             console.log('withyout', searchParams.get('page'));
-            // searchParams.set('page', encodeURIComponent(value))
-            store.paramsStore.setParams({page: encodeURIComponent(value)});
-            setSearchParams((prev) => {
-                searchParams.set('page', encodeURIComponent(value))
-                return searchParams
-            })
+            searchParams.set('page', encodeURIComponent(value))
+            // store.paramsStore.setParams({page: encodeURIComponent(value)});
+            setSearchParams(searchParams.toString())
+
         }
-        setCurrentPage(Number(searchParams.get('page')))
-    }, [searchParams])
+        setCurrentPage(Number(value))
+    }, [sortedField, currentPage])
+
     React.useEffect(() => {
+        console.log(currentPage, 'currentPage');
         const pageParams = searchParams.get('page');
-        setCurrentPage(Number(searchParams.get('page')))
-    }, [searchParams.get('page')])
+        searchParams.has('page') && setCurrentPage(Number(pageParams))
+    }, [currentPage])
 
 
     const RowDataMemoized = React.useMemo(() => {
@@ -242,19 +240,22 @@ const TableWithSortNew = ({
 
     const handleHeaderAction = React.useCallback((e: any) => {
         // @ts-ignore
+        searchParams.set('page', '1')
         if(e.reversed) {
-            // searchParams.set('ordering', encodeURIComponent(`-${ar[e.index].name}`))
-            store.paramsStore.setParams({ordering: encodeURIComponent(`-${ar[e.index].name}`)});
-            setSearchParams((prev) => ({...store.paramsStore.params as URLSearchParams, ordering: encodeURIComponent(`-${ar[e.index].name}`)}))
+            searchParams.set('ordering', encodeURIComponent(`-${ar[e.index].name}`))
+            // store.paramsStore.setParams({ordering: encodeURIComponent(`-${ar[e.index].name}`)});
+
             setSortedField(`-${ar[e.index].name}`)
         } else {
             // @ts-ignore
-            // searchParams.set('ordering', encodeURIComponent(`${ar[e.index].name}`))
-            store.paramsStore.setParams({ordering: encodeURIComponent(`${ar[e.index].name}`)});
-            setSearchParams((prev) => ({...store.paramsStore.params as URLSearchParams, ordering: encodeURIComponent(`${ar[e.index].name}`)}))
+            searchParams.set('ordering', encodeURIComponent(`${ar[e.index].name}`))
+            // store.paramsStore.setParams({ordering: encodeURIComponent(`${ar[e.index].name}`)});
+
             setSortedField(ar[e.index].name)
         }
-    }, [sortedField, searchParams.get('ordering')])
+        console.log('searchParams', searchParams.toString());
+        setSearchParams(searchParams.toString())
+    }, [sortedField])
 
 
     // if (state) return <SvgLoading className={'m-auto'} />
@@ -282,9 +283,9 @@ const TableWithSortNew = ({
                         }}
                         total={Math.ceil(initCount / pageSize)}
                         value={currentPage}
-                        onChange={(e) => handleCurrentPage(e)}
+                        onChange={handleCurrentPage}
                         // boundaries={2}
-                        defaultValue={10}
+                        defaultValue={1}
                     />
                 )
             }
