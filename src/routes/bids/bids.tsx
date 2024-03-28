@@ -1,37 +1,41 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import { observer } from "mobx-react-lite";
-import { dateTransformShort } from "utils/utils";
-import userStore from "stores/userStore";
-import paramsStore from "stores/paramStore";
+import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
+import { observer } from 'mobx-react-lite'
+import { dateTransformShort } from 'utils/utils'
+import userStore from 'stores/userStore'
+import agent from 'utils/agent'
+import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 
 const BidsPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
 	const params = useParams()
 	const location = useLocation()
-	const revalidator = useRevalidator()
-
 	const [tick, setTick] = useState(0)
+	let [searchParams, setSearchParams] = useSearchParams();
+	const {isLoading, data, error} = agent.Bids.getAllBidsNew(searchParams.toString())
+	// console.log('BidsHook', data, isLoading, error);
+	// React.useEffect(() => {
+	// 	// store.bidsStore.bids.length === 0 && store.bidsStore.loadAllBids()
+	// 	console.log(navigator.state === "idle");
+	// 	setTimeout(() => {
+	// 		if (location.pathname.includes('bids') && !location.pathname.includes('bids/')) {
+	// 			setTimeout(() => {
+	// 				store.bidsStore.loadAllBids()
+	// 				setTick(prevState => prevState + 1)
+	// 			}, 10000)
+	// 		}
+	// 	}, tick === 0 ? 10000 : 1)
+	// }, [tick])
 
-	React.useEffect(() => {
-		if(location.pathname.includes('bids') && !location.pathname.includes('bids/')) {
-			setTimeout(() => {
-				console.log('tick', tick);
-				store.bidsStore.loadAllBids({...paramsStore.qParams, ordering: (paramsStore.qParams.ordering === "" || paramsStore.qParams.ordering === null) ? "id" : paramsStore.qParams.ordering})
-				setTick(prevState => prevState + 1)
-			}, 10000)
-		}
-	}, [tick])
-
-	const { data:storeData }:any = store.bidsStore.bidsAll
+	// const { data:storeData, loading }:any = store.bidsStore.bidsAll
 	const textData = store.bidsStore.text
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
@@ -52,13 +56,14 @@ const BidsPage = () => {
 						}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
-				<TableWithSortNew total={storeData.count}
+		<TableWithSortNew total={data?.count}
 					variant={PanelVariant.dataPadding}
 					search={true}
+					style={PanelRouteStyle.bids}
 					background={PanelColor.glass}
 					className={'col-span-full table-groups table-bids'}
-					filter={false}
-					data={storeData.results.map((r:any) => ({
+					filter={true}
+					data={data?.results?.map((r:any) => ({
 						idnum: r.id,
 						id: r.id,
 						status: r.status,
@@ -73,9 +78,10 @@ const BidsPage = () => {
 							company_id: userStore.isAdmin ? r.company.id : userStore.myProfileData.company.id,
 						}
 					}))}
-					initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
-					state={false}
-					ar={textData.tableHeaders} />
+					initFilterParams={[FilterData.city, FilterData.is_active, FilterData.service_type, FilterData.start_date, FilterData.end_date]}
+					state={isLoading}
+					ar={textData.tableHeaders}
+		/>
 
 		</Section>
 	)

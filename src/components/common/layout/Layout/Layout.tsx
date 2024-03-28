@@ -48,8 +48,8 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   const store = useStore()
   let [searchParams, setSearchParams] = useSearchParams()
   const navigation = useNavigation();
-  const {width} = useWindowDimensions()
-
+  const {width} = useWindowDimensions();
+  // console.log('st', (navigation.state === "idle" || store.appStore.getAppState) ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true );
   const { appStore, userStore, authStore } = store;
   return (
     <div className={styles.Layout + ' ' + className } data-theme={appStore.appTheme} data-app-type={appStore.appType}>
@@ -59,9 +59,9 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
         <Burger className={'lg:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
       </Header>
       <MobileMenu items={sidebarMenu} />
-      <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }} classNames={{
-        overlay: 'bg-black/80 backdrop-blur-xl'
-      }} visible={navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true } loaderProps={{ children: <SvgCleanCarLoader/> }} />
+      {/* {!store.appStore.loaderBlocked && <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{ */}
+      {/*   overlay: 'bg-black/80 backdrop-blur-xl z-9999' */}
+      {/* }} visible={store.appStore.getAppState ? store.appStore.getAppState :  (navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true )} loaderProps={{ children: <SvgCleanCarLoader/> }} />} */}
       {/* <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }} classNames={{ */}
       {/*   overlay: 'bg-black/80 backdrop-blur-xl' */}
       {/* }} visible={store.appStore.AppState } loaderProps={{ children: <SvgCleanCarLoader/> }} /> */}

@@ -8,6 +8,7 @@ import { PermissionNames } from 'stores/permissionStore'
 import bidsStore from "stores/bidsStrore";
 import company from "routes/company/company";
 import authStore from "stores/authStore";
+import carStore from "stores/carStore";
 
 export enum Payment {
     postoplata = 'Постоплата',
@@ -96,7 +97,7 @@ export class CompanyStore {
         })
         makePersistable(this, {
             name: 'companyStore',
-            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers', 'loadingState'],
+            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers', 'loadingState', 'allFilials'],
             storage: window.localStorage,
 
         }, { fireImmediately: true })
@@ -121,6 +122,26 @@ export class CompanyStore {
             }
           }
         )
+        // reaction(() => this.allFilials.results,
+        //           (filials) => {
+        //               console.log('get allFilials', filials)
+        //             if(filials.length !== 0 && authStore.userIsLoggedIn) {
+        //                 console.log('get allFilials', filials)
+        //
+        //                     filials.forEach((f:any, index: number) => {
+        //                         carStore.getCars(f.id).then((res) => {
+        //                             runInAction(() => {
+        //                             const newData = {...this.allFilials.results[index], cars: res}
+        //                             console.log(newData);
+        //                             this.allFilials.results[index] = {...this.allFilials.results[index], cars: res}
+        //                         })
+        //
+        //                     })
+        //                 })
+        //                 this.loadingState.filials = true
+        //             }
+        //           }
+        //         )
 
         reaction(
             () => this.companies,
@@ -188,7 +209,7 @@ export class CompanyStore {
             },
             cars: {
                 label: 'Автомобили',
-                data: []
+                data: yield carStore.getCars(id).then((res) => res),
             },
             limits: {
                 label: 'Лимиты',
@@ -361,13 +382,13 @@ export class CompanyStore {
             this.loadingCompanies = false
         }
     })
-    loadAllFilials  = flow(function* (this: CompanyStore, params: PaginationProps) {
+    loadAllFilials  = flow(function* (this: CompanyStore, params?: PaginationProps) {
         this.loadingCompanies = true
         let data :any[] | any = []
         let dataMeta
         if(appStore.appType === "admin") {
             const { data: dataCars, status } = yield agent.Companies.getOnlyBranchesCompanies(params)
-
+            console.log(dataCars);
             if (status === 200) {
                 this.allFilials = dataCars
                 data = dataCars.results
@@ -377,7 +398,7 @@ export class CompanyStore {
             try {
                 const type = userStore.myProfileData.company.company_type;
                 const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id, params)
-
+                console.log(dataCars);
                 if (status === 200) {
                     this.allFilials = dataCars
                     data = dataCars.results

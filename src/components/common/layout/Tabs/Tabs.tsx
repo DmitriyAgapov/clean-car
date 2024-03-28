@@ -109,7 +109,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
               <Tabs.TabHeaderContainer>
                 <HeadersTabs/>
               </Tabs.TabHeaderContainer>
-              <Observer render={() => <TabPanels/>}/>
+             <TabPanels/>
           </div>
       )
 }

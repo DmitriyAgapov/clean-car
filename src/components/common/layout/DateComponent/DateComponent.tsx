@@ -10,7 +10,7 @@ const DateComponent = () => {
   const memoTime = React.useMemo(() => {
     setTimeout(() => {
       const date = dayjs()
-      const curTime = dayjs(date).locale('ru').format('DD MMMM YYYY HH:mm:ss')
+      const curTime = dayjs(date).locale('ru').format('DD MMMM YYYY г. HH:mm')
       setValue(curTime);
     }, 1000)
     return <>{value}</>

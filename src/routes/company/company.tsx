@@ -13,6 +13,7 @@ import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from 'stores/companyStore'
 import { PermissionNames } from 'stores/permissionStore'
 import { values } from 'mobx'
+import dayjs from "dayjs";
 
 const CompanyPage = () => {
   const store = useStore()
@@ -44,7 +45,7 @@ const CompanyPage = () => {
                       <Heading text={company.data.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
                       <div className={'flex items-baseline justify-between'}>
                           <div className={'text-xs text-gray-2'}>
-                              Дата и время регистрации: <span>{dateTransform(company.data.updated).date}</span>
+                              Дата и время регистрации: <span className={'block'}>{dayjs(company.data.updated).locale('ru').format('DD MMMM YYYY г. HH:mm')}</span>
                           </div>
                           <div className={'flex flex-1 justify-around'}>
                               <Heading

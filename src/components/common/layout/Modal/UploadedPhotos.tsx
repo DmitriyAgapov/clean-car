@@ -21,3 +21,22 @@ const UploadedPhotos = () => {
 		</div>
 }
 export default observer(UploadedPhotos)
+
+export const UploadedPhotosFirstStep = () => {
+	const store = useStore()
+	return <div className={`flex flex-col col-span-full ${!(store.bidsStore.formResult.company !== 0 && store.bidsStore.formResult.company !== null && store.bidsStore.formResult.company !== "0") ? 'pointer-events-none grayscale' : ""}`}>
+			<InputLabel className={'col-span-2'}>Фотографии До</InputLabel>
+
+			<div className={'flex-1 flex col-span-full -mx-3'}>
+				{store.bidsStore.getPhotos.map(
+					(item: any, index: number) => <BidImg  h={"100%"}
+						 key={index} item={item} containerClassName={'max-h-[12rem]  max-w-[12.5%]  p-3'} className={'aspect-video hover:outline-accent hover:outline rounded cursor-pointer'}/>,
+				)}
+			</div>
+		{store.bidsStore.getPhotos.length < 2 && <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>}
+		<div className={''}>
+			<p className={'text-xs'}>Загружено <span  className={'text-accent text-lg'}>{store.bidsStore.getPhotos.length}/</span><span className={'text-gray-1 text-lg'}>8</span></p>
+		</div>
+
+		</div>
+}

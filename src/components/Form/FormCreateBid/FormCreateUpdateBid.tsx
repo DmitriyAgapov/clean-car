@@ -19,7 +19,7 @@ import { SvgClose } from 'components/common/ui/Icon'
 import MapWithDots from 'components/common/Map/Map'
 import InputAutocompleteWithCity from 'components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency'
 import FormBidResult from 'routes/bids/FormBidResult/FormBidResult'
-import UploadedPhotos from 'components/common/layout/Modal/UploadedPhotos'
+import UploadedPhotos, { UploadedPhotosFirstStep } from "components/common/layout/Modal/UploadedPhotos";
 import {  DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 
@@ -118,7 +118,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       validate: values => {
         if(step === 1) {
 
-          return store.bidsStore.loadedPhoto.length !== 0 ? yupResolver(CreateBidSchema).call({}, values) : {err: true}
+          return store.bidsStore.loadedPhoto.length > 1 ? yupResolver(CreateBidSchema).call({}, values) : {err: true}
         }
         if(step === 2) {
           return yupResolver(CreateBidSchemaStep2).call({}, values)
@@ -343,6 +343,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       <FormProvider form={formData}>
         <PanelForForms
           footerClassName={'px-8 pb-8 pt-2'}
+          // className={'self-stretch'}
+          bodyClassName={'self-stretch'}
           variant={PanelVariant.default}
           actionBack={<>{step === 5 || step === 1 ? null
              : (<Button
@@ -358,7 +360,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               className={'col-span-1'}
               type={'button'}
               variant={ButtonVariant['accent-outline']}
-              disabled={store.bidsStore.formResult.company === 0 || store.bidsStore.formResult.company === null}
+              disabled={(store.bidsStore.formResult.company === 0 || store.bidsStore.formResult.company === null) ||  store.bidsStore.getPhotos.length > 7}
               {...props}
               text={'Добавить фото'}
             ></Button>
@@ -392,13 +394,16 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
             <PanelForForms
               state={step !== 1}
               animate={animate}
-              className={'!bg-transparent'}
-              bodyClassName={'grid !grid-cols-3 gap-4'}
+              className={'!bg-transparent h-full !flex flex-col'}
+              // bodyClassName={''}
+              // style={{    flex: "1 100%",alignSelf: "stretch"}}
+              bodyClassName={'grid  flex-col !grid-cols-3 !grid-rows-[auto_auto_auto_auto_1fr] !gap-0 !pb-2 flex-[1_100%] !self-stretch !items-stretch'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
               header={<><Heading text={step1.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step1.description}</div></>}
             >
-              <Select
+              <Group grow  className={'col-span-2'}>
+                <Select
                 {...formData.getInputProps('company')}
                 clearable
                 label={step1.fields[1].label}
@@ -419,16 +424,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   value: String(i.id),
                 }))}
               />
-
+                </Group>
               {store.appStore.appType === "admin" && <hr className={'col-span-full border-transparent my-2'} />}
               {/* //todo: map not admin values to select */}
 
 
-
+              <Group grow  className={'col-span-full'}>
               <Select
                 {...formData.getInputProps('conductor')}
                 label={step1.fields[2].label}
                 searchable
+                className={'self-start'}
                 onOptionSubmit={(value) => {
                   formData.values.car = null
                   formData.values.phone = null
@@ -445,6 +451,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               />
 
               <InputBase
+                className={'self-start'}
                 {...formData.getInputProps('phone')}
                 onAccept={(value:any, mask:any) => {
                   formData.setFieldValue('phone', value)
@@ -456,13 +463,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               />
               <Select
                 {...formData.getInputProps('car')}
+                className={'self-start'}
                 clearable
                 onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
                 //@ts-ignore
                 label={step1.fields[4].label} searchable data={store.carStore.cars && store.carStore.cars.length !== 0 && carsData !== null ? carsData.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']}
               />
+              </Group>
               <hr className={'col-span-full border-transparent my-2'} />
-              <UploadedPhotos/>
+              <Group grow  className={'col-span-full flex-1 gap-0'} align={'stretch'}>
+              <UploadedPhotosFirstStep/>
+              </Group>
             </PanelForForms>
 
             <PanelForForms
@@ -694,7 +705,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   classNames={{
                     root: '',
                     input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
-
                     monthCell: 'text-white',
                     day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80'
                   }}

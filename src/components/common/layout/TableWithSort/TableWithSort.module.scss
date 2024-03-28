@@ -27,6 +27,84 @@
     }
 
   }
+  &[data-style="bids"] {
+    th,td {
+      //width: 2rem;
+      overflow: hidden;
+      position: relative;
+
+      & p {
+        margin: 0;
+        background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: block;
+        line-height: 14px;
+        vertical-align: middle;
+        position: relative;
+        overflow: hidden;
+        font-weight: 600;
+      }
+
+      & p:after {
+        //content: "";
+        position: absolute;
+        right: 0px;
+        width: 50%;
+        top: 0;
+        bottom: 0;
+        background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
+      }
+      &:first-child {
+        padding-left: 2rem;
+        width: 4rem;
+        max-width: 4rem;
+      }
+      &:nth-child(2){
+        //padding-left: 2rem;
+        width: 5rem;
+        max-width: 5rem;
+      }
+      &:nth-child(3){
+        //padding-left: 2rem;
+        width: 7rem;
+        max-width: 7rem;
+      }
+      &:nth-child(4){
+        //padding-left: 2rem;
+        width: 10rem;
+        max-width: 10rem;
+      }
+      &:nth-child(5){
+        width: 14rem;
+        max-width: 14rem;
+      }
+      &:nth-child(6){
+        width: 8rem;
+        max-width: 8rem;
+      }
+      &:nth-child(7){
+        width: 6rem;
+        max-width: 6rem;
+      }
+
+      &:nth-child(8){
+        width: 6rem;
+        max-width: 6rem;
+      }
+
+
+
+
+
+
+      &:last-child {
+        padding-right: 1rem;
+        width: 8rem;
+      }
+
+    }
+  }
   &[data-style="price_history"] {
     th {
       @apply text-xss font-medium px-1;
@@ -193,6 +271,9 @@
   }
 
   &[data-style="users"] {
+
+  }
+  &[data-style="users"] {
     th, td, {
       max-width: 8rem;
       overflow: hidden;
@@ -282,7 +363,11 @@
     }
 
   }
-
+  //&[data-width] {
+  //  th, td {
+  //    width: attr(data-width px, inherit);
+  //  }
+  //}
   svg {
     display: inline-block;
     margin-left: .5rem;
@@ -438,8 +523,8 @@
 .tableRow {
   //display: grid;
   width: 100%;
-  grid-auto-flow: column;
-  grid-template-columns: 6rem 2fr 1fr 1fr;
+  //grid-auto-flow: column;
+  //grid-template-columns: 6rem 2fr 1fr 1fr;
 
   &:hover {
     background-attachment: fixed;

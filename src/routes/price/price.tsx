@@ -21,7 +21,6 @@ const PricePage = ():JSX.Element => {
   const location = useLocation()
   const params = useParams()
   const store = useStore()
-  // const { data, dataTable }: any = useLoaderData()
   const  textData  : any = store.priceStore.TextData
 
   const [opened, { open, close }] = useDisclosure(false);

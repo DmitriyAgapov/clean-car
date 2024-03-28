@@ -52,8 +52,7 @@ const ReferencesPage = () => {
                   background={PanelColor.glass}
                   className={'col-span-full table-groups  h-full'}
                   filter={false}
-                  data={data.results}
-                  initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
+                  data={data?.results}
                   state={false}
                   ar={textData.tableHeaders} />
             </Panel>

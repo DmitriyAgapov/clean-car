@@ -100,7 +100,7 @@ const router = createBrowserRouter([
             {
                 path: 'users',
                 element: <UsersPage />,
-                loader: usersLoader,
+                // loader: usersLoader,
                 children: [
                     {
                         path: ':company_type/:company_id/:id',
@@ -142,7 +142,7 @@ const router = createBrowserRouter([
             {
               path: 'bids',
               element: <BidsPage/>,
-              loader: bidsLoader,
+              // loader: bidsLoader,
               children: [
                   {
                       path: ':company_id/:id',

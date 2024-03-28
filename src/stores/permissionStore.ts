@@ -204,27 +204,19 @@ export class PermissionStore {
     this.loadingPermissions = false
   })
   getPermissionsFlow = flow(function*(this: PermissionStore) {
-    this.companyPermissions.clear()
-    this.permissions.length = 0
-
-    if(userStore.isAdmin) {
-      this.loadingPermissions = true
-       const response = yield agent.Permissions.getAllCompanyPermissions(1)
-
-      if(response.status === 200) {
-        this.permissions = response.data.results
+    this.loadingPermissions = true
+    try {
+      const {status, data} = yield agent.Permissions.getAllCompanyPermissions(userStore.myProfileData.company.id)
+      if(status === 200) {
+        this.permissions = data.results
+        return data.results
       }
+    } catch (error) {
+      this.errors = 'error'
+    }
+    finally {
       this.loadingPermissions = false
-
-    } else if(userStore.myProfileData.company?.id && !userStore.isAdmin) {
-        this.loadingPermissions = false
-        const response = yield agent.Permissions.getAllCompanyPermissions(userStore.myProfileData.company.id)
-      if(response.status === 200) {
-        this.permissions = response.data.results
-      }
-      this.loadingPermissions = false
-
-      }
+    }
   })
 
   get allPermissionsState() {
@@ -347,7 +339,7 @@ export class PermissionStore {
   getAllPermissions() {
     this.loadingPermissions = true
 
-      this.getPermissionsFlow()
+    this.getPermissionsFlow()
 
     this.loadingPermissions = false
     return this.permissions

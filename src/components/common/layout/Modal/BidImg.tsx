@@ -4,11 +4,11 @@ import { useStore } from "stores/store";
 import { useDisclosure } from "@mantine/hooks";
 import { observer } from "mobx-react-lite";
 
-const BidImg = ({ item, ...props }: any) => {
+const BidImg = ({ item, containerClassName, ...props }: any) => {
     const store = useStore()
-    const [visible, { toggle }] = useDisclosure(true)
+    const [visible, { toggle, close, open }] = useDisclosure(true)
     return (
-        <div className={'group relative'}>
+        <div className={'group relative' + " " + containerClassName}>
             {((store.bidsStore.formResult.company !== 0 && store.bidsStore.formResult.company !== null) || props.company_id) && (
                 <CloseIcon
                     onClick={() => store.bidsStore.removeFile(props.company_id ? props.company_id : store.bidsStore.formResult.company, item.id)}
@@ -24,10 +24,10 @@ const BidImg = ({ item, ...props }: any) => {
             />
             <Image
               {...props}
-                loading={'lazy'}
+                // loading={'lazy'}
                 // style={{opacity: visible ? 0 : 1}}
                 src={item.foto}
-                onLoad={toggle}
+                onLoad={close}
 
                 alt={String(item.id)}
             />

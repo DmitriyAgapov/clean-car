@@ -8,20 +8,21 @@ import catalogStore from 'stores/catalogStore'
 import agent, { PaginationProps } from 'utils/agent'
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
 import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
-import paramsStore from "stores/paramStore";
+import paramsStore, { InitParams } from "stores/paramStore";
 import priceStore from "stores/priceStore";
 import bidsStore from "stores/bidsStrore";
+import paramStore from "stores/paramStore";
 
 
 
 export const authUser = async ({ request, params }:any) => {
-    const url = new URL(request.url)
-    const searchParams = url.searchParams
-    const paramsPage = url.searchParams.get('page')
-    const paramsPageSize = url.searchParams.get('page_size')
-    const paramsOrdering = url.searchParams.get('ordering')
-    const paramsSearchString = url.searchParams.get('searchString')
-    paramsStore.setParams({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering })
+    // const url = new URL(request.url)
+    // const searchParams = url.searchParams
+    // const paramsPage = url.searchParams.get('page')
+    // const paramsPageSize = url.searchParams.get('page_size')
+    // const paramsOrdering = url.searchParams.get('ordering')
+    // const paramsSearchString = url.searchParams.get('searchString')
+    // paramsStore.setParams({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering })
     // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
     if (!appStore.token) {
         return redirect('/')
@@ -51,23 +52,26 @@ export const referencesLoader = async (props: any) => {
         switch (refUrlsRoot) {
             case 'car_brands':
                 if(props.params.id) {
-                    const { data: dataModel, status: statusDataModel } = await agent.Catalog.getCarModelWithBrand(props.params.id);
-                    if(statusDataModel === 200) data = {
-                        id: dataModel.id,
-                        brand: dataModel.brand.name,
-                        car_type: dataModel.car_type,
-                        modelName: dataModel.name
+                    try {
+                        const { data: dataModel, status: statusDataModel } = await agent.Catalog.getCarModelWithBrand(props.params.id);
+                        if(statusDataModel === 200) data = {
+                            id: dataModel.id,
+                            brand: dataModel.brand.name,
+                            car_type: dataModel.car_type,
+                            modelName: dataModel.name
+                        }
+                    } catch (e) {
+                        console.log(e);
                     }
-
                 } else {
-                    const { data: dataResults, status } = await agent.Catalog.getCarModels({
-                        page: paramsPage ?? 1,
-                        page_size: paramsPageSize ?? 10,
-                        q: paramsSearchString,
-                        ordering: paramsOrdering
-                    } as PaginationProps)
-                    dataResults.results.forEach((e: any) => data.push({ id: e.id, name: e.brand.name, model: e.name, car_type: e.car_type }))
-                    dataMeta = dataResults
+                    try {
+                        const { data: dataResults, status } = await agent.Catalog.getCarModels({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10} as PaginationProps)
+                        dataResults.results.forEach((e: any) => data.push({ id: e.id, name: e.brand.name, model: e.name, car_type: e.car_type }))
+                        dataMeta = dataResults
+
+                    } catch (e) {
+                        console.log(e);
+                    }
                 }
                 textData = {
                     path: 'car_brands',
@@ -191,20 +195,6 @@ export const referencesLoader = async (props: any) => {
     })
 }
 
-const mapEd = (ar:[], compareField:string) => {
-    let newMap = new Map([])
-    if(ar.length > 0) {
-        ar.forEach((item: any) => {
-            newMap.set(item[compareField].name, ar.filter((i:any) => i[compareField].name == item[compareField].name))
-        })}
-    let result:any[] = []
-
-    newMap.forEach((value:any, key) => {
-        return result.push(Object.assign({service_option: key}, ...value.map((i:any, index:number) => ({[`service_subtype_${index}`]: i.amount}))))
-    })
-    return result
-}
-
 export const paginationParams = (urlData:string) => {
 
     const url = new URL(urlData);
@@ -293,14 +283,18 @@ export const companyLoader = async ({ params: { id, company_type, action, compan
 }
 
 export const filialsLoader = async (props: any) => {
+    // const url = new URL(props.request.url)
+    // const searchParams = url.searchParams
+    // const paramsPage = url.searchParams.get('page')
+    // const paramsPageSize = url.searchParams.get('page_size')
+    // const paramsOrdering = url.searchParams.get('ordering')
+    // const paramsSearchString = url.searchParams.get('searchString')
+    console.log(props.request.url);
+    const params = new InitParams()
     const url = new URL(props.request.url)
-    const searchParams = url.searchParams
-    const paramsPage = url.searchParams.get('page')
-    const paramsPageSize = url.searchParams.get('page_size')
-    const paramsOrdering = url.searchParams.get('ordering')
-    const paramsSearchString = url.searchParams.get('searchString')
-    const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
-    companyStore.loadAllFilials({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
+
+    // const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
+    companyStore.loadAllFilials()
     // async function fillData() {
     //     let data :any[] | any = []
     //     let dataMeta
@@ -371,7 +365,7 @@ export const usersLoader = async ({ request, params }:any) => {
     // // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
     // const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
     // await bidsStore.loadAllBids(paramsStore.qParams)
-    usersStore.getAllUser()
+    // usersStore.getAllUser()
     return null
 }
 export const userLoader = async ({ params: { company_type, id, company_id } }: any) => {
@@ -417,12 +411,9 @@ export const profileLoader = async () => {
     return null
 }
 
-export const groupsLoader = async ({ params: { id } }: any) => {
-    const response = await permissionStore.getPermissionsFlow()
-    console.log(response);
-    await permissionStore.getAllPermissions()
-    await permissionStore.allPermissionsState
-    return { id: id, data: response }
+export const groupsLoader =  () => {
+    permissionStore.getPermissionsFlow()
+    return null
 }
 
 export const groupsCreatLoader = async ({ params: { id } }: any) => {

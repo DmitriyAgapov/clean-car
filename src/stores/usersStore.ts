@@ -1,14 +1,10 @@
-import { flow, makeAutoObservable, get, set, observable, action, computed, runInAction, reaction } from "mobx";
+import { flow, makeAutoObservable, set, observable, action, computed, runInAction, reaction } from "mobx";
 import agent from 'utils/agent'
 import companyStore, { CompanyType } from "stores/companyStore";
 import { makePersistable, hydrateStore  } from 'mobx-persist-store';
-import permissionStore from "stores/permissionStore";
-import stores from "stores/index";
-import label from "utils/labels";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
 import paramsStore from "stores/paramStore";
-import { paginationParams, paginationParamss } from "utils/fetchers";
 
 
 enum UserTypeEnum {

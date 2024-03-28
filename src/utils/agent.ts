@@ -3,7 +3,7 @@ import appStore from 'stores/appStore'
 import authStore from 'stores/authStore'
 import  { decodeToken } from 'utils/getData'
 import  'utils/axiosConfig'
-import { User } from 'stores/userStore'
+import userStore, { User } from 'stores/userStore'
 import { runInAction, toJS } from "mobx";
 import { Company, CompanyType } from "stores/companyStore";
 import { BidsStatus } from "stores/bidsStrore";
@@ -12,12 +12,12 @@ import useSWR from "swr";
 import { KeysBidCreate } from "stores/types/bidTypes";
 
 export type PaginationProps = {
-  name?: string | number | URLSearchParams | null,
-  ordering?: string | number | URLSearchParams | null,
-  page?: string | number | URLSearchParams | null,
-  page_size?: number | string | number | URLSearchParams | null
-  q?: string | number | URLSearchParams  | null
-  searchString?: string | number | URLSearchParams  | null
+  name?: string | number | URLSearchParams,
+  ordering?: string | number | URLSearchParams,
+  page?: string | number | URLSearchParams,
+  page_size?: number | string | number | URLSearchParams
+  q?: string | number | URLSearchParams
+  searchString?: string | number | URLSearchParams
 }
 type CreateCompanyPerformerFormData = Company<CompanyType.performer>
 
@@ -69,16 +69,14 @@ export const requests = {
     })
   .then((response:any) => response)
   .catch(handleErrors),
-  getNew: (url: string, body?: any, pagination?:PaginationProps) =>
-     axios({
+  getNew: (url: string) => {
+    console.log(url);
+    return axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
-      method: 'GET',
-      params: pagination
-    })
-  .then((response:any) => response.data)
-  .catch(handleErrors),
-
+      method: 'GET'
+    }).then((response: any) => response).catch(handleErrors)
+  },
   put: (url: string, body: any) =>
     axios({
       url: `${API_ROOT}${url}`,
@@ -170,9 +168,9 @@ const handleErrors = (err: AxiosError) => {
 const Price = {
     createPrice: (company_id: number) => requests.post(`/price/${company_id}/create/`, {}),
     priceDoubling: (company_id: number, id: number) => requests.post(`/price/${company_id}/${id}/doubling/`, {}),
-    getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list/', {}, pagination),
-    getAllCompanyPrices: (company_id: number | string, pagination?: PaginationProps) => requests.get(`/price/${company_id}/active_list/`, {}, pagination),
-    getHistoryPrice: (company_id:number, pagination?: PaginationProps) => requests.get(`/price/${company_id}/history/`, {}, pagination),
+    getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list/', pagination),
+    getAllCompanyPrices: (company_id: number | string, pagination?: PaginationProps) => requests.get(`/price/${company_id}/active_list/`, pagination),
+    getHistoryPrice: (company_id:number, pagination?: PaginationProps) => requests.get(`/price/${company_id}/history/`, pagination),
     getCurentCompanyPriceEvac: (company_id: number) => requests.get(`/price/${company_id}/active_evacuation`, {}),
     getCompanyPriceEvac: (company_id: number, id: number) => requests.get(`/price/${company_id}/${id}/evacuation/`, {}),
     getCurentCompanyPriceTire: (company_id: number) => requests.get(`/price/${company_id}/active_tire`, {}),
@@ -222,11 +220,12 @@ const Img = {
   deleteBidPhoto: (company_id: number|string, id: number|string) => requests.delete(`/bid_photos/${company_id}/${id}/delete/`),
 }
 const Bids = {
-  getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', {}, params),
+  getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', params),
+  getAllBidsNew: (params: string) =>  useSWR(`${userStore.isAdmin ? `/bids/all_bids/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/bids/${userStore.myProfileData.company.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`,(url) => requests.getNew(url).then(r => r.data)),
   getAvailablePerformers: (company_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/bid_performers/`, data),
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`),
-  getAllCompanyBids: (company_id: number|string, params: PaginationProps) => requests.get(`/bids/${company_id}/list`, {}, params),
+  getAllCompanyBids: (company_id: number|string, params: PaginationProps) => requests.get(`/bids/${company_id}/list`, params),
   updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus, fotos?: number[]) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status, fotos: fotos}),
   loadBidPhotos: (company_id:  number|string, bid_id:  number|string) => requests.get(`/bid_photos/${company_id}/${bid_id}/list/`),
 }
@@ -266,11 +265,11 @@ const Auth = {
     }),
 }
 const Users = {
-    getAllUsers:  (pagination?: PaginationProps) => requests.get('/accounts/all_users/', {}, pagination),
-    getAllUsersTest:  (pagination?: PaginationProps) => useSWR('/accounts/all_users/', (url) => requests.get(url,{}, pagination)),
+    getAllUsers:  (pagination?: PaginationProps) => requests.get('/accounts/all_users/', pagination),
+    getAllUsersTest:  (params: string, pagination?: PaginationProps) => useSWR(`/accounts/all_users${params ? `?${params}` : '?page=1&page_size=10'}`, (url) => requests.getNew(url).then(r => r.data)),
     getUser: ({ company_id, id }: { company_id: number; id: number }) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
     getUserTest: ({ company_id, id }: { company_id: number; id: number }) => useSWR(`/accounts/${company_id}/users/${id}/retrieve/`, requests.get),
-    getCompanyUsers: (company_id: number, pagination?: PaginationProps) => requests.get(`/accounts/${company_id}/users/list/`, {}, pagination),
+    getCompanyUsers: (company_id: number, pagination?: PaginationProps) => requests.get(`/accounts/${company_id}/users/list/`, pagination),
 
 }
 const Companies = {
@@ -282,15 +281,15 @@ const Companies = {
     //   return  requests.post('/companies/performer/create/', data)
     // },
     createCompanyCustomer: ( data: CreateCompanyPerformerFormData, type: string ) => requests.post('/companies/customer/create/', data),
-    getMyCompanies: (pagination?: PaginationProps) => requests.get('/companies/my_companies/list/', {},pagination),
-    getListCompanyCustomer: (pagination?: PaginationProps) => requests.get('/companies/customer/list/', {}, pagination),
-    getListCompanyPerformer: (pagination?: PaginationProps) => requests.get('/companies/performer/list/', {}, pagination),
-    getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', {}, pagination),
-    getOnlyAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_companies/list/', {}, pagination),
-    getOnlyBranchesCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_branches/list/', {}, pagination),
+    getMyCompanies: (pagination?: PaginationProps) => requests.get('/companies/my_companies/list/', pagination),
+    getListCompanyCustomer: (pagination?: PaginationProps) => requests.get('/companies/customer/list/', pagination),
+    getListCompanyPerformer: (pagination?: PaginationProps) => requests.get('/companies/performer/list/', pagination),
+    getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', pagination),
+    getOnlyAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_companies/list/', pagination),
+    getOnlyBranchesCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_branches/list/', pagination),
 }
 const Permissions = {
-  getAllCompanyPermissions: (company_id:number, pagination?: PaginationProps) => requests.get(`/permissions/${company_id}/groups/list/`, {}, pagination),
+  getAllCompanyPermissions: (company_id:number, pagination?: PaginationProps) => requests.get(`/permissions/${company_id}/groups/list/`, pagination),
   getUserPermissions: (company_id: number, id:number ) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve`),
   createPermission: (company_id: number, data: any) => requests.post(`/permissions/${company_id}/groups/create/`, data),
   getPermissionById: (company_id: number, id: number) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve/`, {}),
@@ -331,7 +330,7 @@ const Profile = {
     getMyCompany: () => requests.get('/companies/my_companies/list/', {})
 }
 const Catalog = {
-    getCarBrands: (params?: PaginationProps) => requests.get('/catalog/car_brands', {}, params),
+    getCarBrands: (params?: PaginationProps) => requests.get('/catalog/car_brands', params),
     getCarModelWithBrand: (id: number) => requests.get(`/catalog/car_models/${id}/retrieve`),
     createCarBrandWithNewBrand: (brand_name: string, car_class: string, model: string) =>
         requests.post('/catalog/car_models/create_with_new_brand/', {
@@ -358,12 +357,12 @@ const Catalog = {
             brand: brand,
         }),
     getCarBrandModels: (brand_id: number, params?: PaginationProps) =>
-        requests.get(`/catalog/car_brands/${brand_id}/car_models/list`, {}, params),
+        requests.get(`/catalog/car_brands/${brand_id}/car_models/list`, params),
     getCarModels: (params?: PaginationProps) =>
-        requests.get(`/catalog/car_models/list`, {}, params),
+        requests.get(`/catalog/car_models/list`, params),
     getCarBrandsWithModels: (params?: PaginationProps | undefined) =>
-        requests.get(`/catalog/car_brands_with_models`, {}, params),
-    getCities: (params?: PaginationProps) => requests.get('/catalog/cities/', {}, params),
+        requests.get(`/catalog/car_brands_with_models`, params),
+    getCities: (params?: PaginationProps) => requests.get('/catalog/cities/', params),
     getCity: (id: number) => requests.get(`/catalog/cities/${id}/retrieve/`),
     createCity: (name: string, is_active: boolean, timezone: string)  =>
         requests.post('/catalog/cities/create/', { name: name, is_active: is_active, timezone: timezone}),
@@ -371,7 +370,7 @@ const Catalog = {
     deleteCarModel: (id: number) => requests.delete(`/catalog/car_models/${id}/delete`),
     editCity: (id: number, name: string, is_active: boolean, timezone: string) =>
         requests.put(`/catalog/cities/${id}/update/`, { name: name, id: id, is_active: is_active, timezone: timezone }),
-    getServices: (params?: PaginationProps) => requests.get('/catalog/services/', {}, params),
+    getServices: (params?: PaginationProps) => requests.get('/catalog/services/', params),
     getService: (id: number) => requests.get(`/catalog/services/${id}/retrieve/`),
     createSubtype: (id: number, name: string, is_active: boolean) =>
         requests.post('/catalog/services/subypes/create/', { name: name, is_active: is_active, service_type: id }),
@@ -396,14 +395,14 @@ const Catalog = {
     getServiceSubtypeOptions: (subtype_id: number) => requests.get(`/catalog/services/${subtype_id}/options`),
     getServiceSubtypes: (id: number) => requests.get(`/catalog/services/${id}/retrieve`),
     getServiceSubtype: (subtype_id: number, params?: PaginationProps) =>
-        requests.get(`/catalog/services/subypes/${subtype_id}/retrieve`, {}, params),
+        requests.get(`/catalog/services/subypes/${subtype_id}/retrieve`, params),
     getServiceSubtypesListByServiceId: (id: number, params?: PaginationProps) =>
-        requests.get(`/catalog/services/${id}/subypes/`, {}, params)
+        requests.get(`/catalog/services/${id}/subypes/`, params)
 }
 const Cars = {
   getCompanyCars: (company_id: number, params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars/${company_id}/list/`, params),
-  getAdminCars: ( params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars_admin/list/`, {}, params),
-  getAdminCar: (id: number) => requests.get(`/cars_admin/${id}/retrieve/`),
+  getAdminCars: ( params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars_admin/list/`, params),
+  getAdminCar: (id: number) => requests.get(`/cars_admin/${id}/retrieve/`, {}),
   getCompanyCar: (company_id: number , id: number)  => requests.get(`/cars/${company_id}/${id}/retrieve/`),
   createCompanyCar: (company_id: number, data: any) => requests.post(`/cars/${company_id}/create/`, data),
   editCompanyCar: (company_id: number, id: number, data: any) => requests.put(`/cars/${company_id}/${id}/update/`, data),

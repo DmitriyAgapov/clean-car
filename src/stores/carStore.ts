@@ -4,6 +4,7 @@ import agent, { PaginationProps } from "utils/agent";
 import appStore from "stores/appStore";
 import userStore, { UserTypeEnum } from "stores/userStore";
 import authStore from "stores/authStore";
+import paramsStore from "stores/paramStore";
 export const carHelperTable = [
 ['А','Легковой', '1 класс', 'До 2 тонн'],
 ['B','Легковой', '1 класс', 'До 2 тонн'],
@@ -137,11 +138,11 @@ export class CarStore {
     this.loadingCars = true
     try {
       if(appStore.appType === UserTypeEnum.admin) {
-        const { data } = yield agent.Cars.getAdminCars()
+        const { data } = yield agent.Cars.getAdminCars(paramsStore.currentParams)
         this.cars = data
       }
       if(appStore.appType !== UserTypeEnum.admin && company_id) {
-        const { data } = yield agent.Cars.getCompanyCars(company_id)
+        const { data } = yield agent.Cars.getCompanyCars(company_id, paramsStore.currentParams)
         this.cars = data
       }
 

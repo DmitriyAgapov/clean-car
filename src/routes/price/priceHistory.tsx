@@ -45,10 +45,9 @@ const PricesHistoryPage = () => {
 					data={data.results?.map((p:any) => ({
 						id: p.id,
 						created: dayjs(p.created).format('DD.MM.YYYY HH:mm'),
-						expires:  dayjs(p.expires).format('DD.MM.YYYY HH:mm'),
+						expires:  p.expires === "-" ? " " : dayjs(p.expires).format('DD.MM.YYYY HH:mm'),
 						service_type: store.catalogStore.getServiceType(p.service_type)?.name
 					}))}
-					initFilterParams={[{ label: 'дата начала', value: 'created' }, { label: 'Дата окончания', value: 'expires' }, {label: 'Тип услуги', value: 'service_type'}]}
 					state={loading}
 					ar={[{ label: 'дата начала', name: 'created' }, { label: 'Дата окончания', name: 'expires' }, {label: 'Тип услуги', name: 'service_type'}]}
 				/>

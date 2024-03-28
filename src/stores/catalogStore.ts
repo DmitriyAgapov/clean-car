@@ -357,6 +357,10 @@ export class CatalogStore {
     get allCities() {
         return values(this.cities)
     }
+    get allServices() {
+        return values(this.services)
+    }
+
     get carBrandsModels() {
         return values(this.carBrandModels)
     }

@@ -15,6 +15,7 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import { UserTypeEnum } from "stores/userStore";
 import { CompanyType } from "stores/companyStore";
 import { useStore } from "stores/store";
+import { observer } from "mobx-react-lite";
 
 type TableWithSortProps = {
     data: any[]
@@ -38,7 +39,7 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
         count: total ?? 0,
     })
     const handleSortKey = (index: number) => {
-        
+
         let newVal = {
             index: index,
             reversed: false,
@@ -182,8 +183,6 @@ const TableWithSort = ({
         index: 0,
         reversed: false,
     })
-    const store = useStore()
-    const navigate = useNavigate();
     let [searchParams, setSearchParams] = useSearchParams();
     const [dataSorted, setSortedData] = useState(data)
     const [currentPage, setCurrentPage] = useState(1)
@@ -276,7 +275,7 @@ const TableWithSort = ({
         someData()
     }
 
-    if (state) return <SvgLoading className={'m-auto'} />
+    // if (state) return <SvgLoading className={'m-auto'} />
     // @ts-ignore
     return (
         <Panel
@@ -289,30 +288,25 @@ const TableWithSort = ({
             header={
                 <>
                     {search && <TableSearch action={handleFastSearch} />}
-                    {filter && <DataFilter filterData={filteredData} />}
+                    {filter && <DataFilter filterData={[{}]} />}
                 </>
             }
-            footer={
-                dataSorted.length > 10 && (
-                    <Pagination
-                        classNames={{
-                            control:
-                                'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
-                        }}
-                        total={dataSorted.length / pageSize}
-                        value={currentPage}
-                        onChange={(e) => handleCurrentPage(e)}
-                        boundaries={2}
-                        defaultValue={10}
-                    />
-                )
-                // <Pagination
-                //     itemsLength={dataSorted.length}
-                //     action={(event: any) => handleCurrentPage(event)}
-                //     currenPage={currentPage}
-                // />
-            }
-            {...props}
+          footer={
+            ( Math.ceil(dataSorted.length / pageSize)) > 1 && (
+              <Pagination
+                classNames={{
+                    control:
+                      'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
+                }}
+                total={Math.ceil(dataSorted.length / pageSize)}
+                value={currentPage}
+                onChange={(e) => handleCurrentPage(e)}
+                // boundaries={2}
+                defaultValue={10}
+              />
+            )
+          }
+
         >
             <table className={styles.TableWithSort} data-style={style}>
                 <RowHeading action={handleHeaderAction} total={total} ar={ar} />
@@ -322,4 +316,4 @@ const TableWithSort = ({
     )
 }
 
-export default TableWithSort;
+export default observer(TableWithSort);

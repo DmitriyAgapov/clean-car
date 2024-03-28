@@ -52,7 +52,6 @@ const PricesPage = () => {
 					className={'col-span-full table-groups h-full'}
 					filter={false}
 					data={data.results}
-					initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
 					state={false}
 					ar={store.priceStore.allPrices.textData.tableHeaders}
 				/>

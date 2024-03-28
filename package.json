@@ -31,6 +31,7 @@
     "leaflet": "^1.9.4",
     "mantine-form-yup-resolver": "^2.0.0",
     "mobx": "^6.11.0",
+    "mobx-location": "^0.6.6",
     "mobx-persist-store": "^1.1.4",
     "mobx-react-lite": "^4.0.5",
     "moment": "^2.30.1",

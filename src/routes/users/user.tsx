@@ -25,9 +25,9 @@ const UserPage = () => {
   const userData = React.useMemo(() => {
     return (
         <>
-            <DList label={'Пользователь'} title={user.employee.first_name + ' ' + user.employee.last_name} />
-            <DList label={'Номер телефона'} title={user.employee.phone} />
-            <DList label={'E-mail'} title={user.employee.email} />
+            <DList label={'Пользователь'} title={user.employee?.first_name + ' ' + user.employee?.last_name} />
+            <DList label={'Номер телефона'} title={user.employee?.phone} />
+            <DList label={'E-mail'} title={user.employee?.email} />
           <DList
                 label={'Тип'}
                 title={label(companyType ? companyType : "admin")}

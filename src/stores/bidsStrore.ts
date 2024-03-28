@@ -29,14 +29,14 @@ import { AxiosResponse } from "axios";
 // }
 export enum BidsStatus  {
 	'Новая' = 1,
+  'Обрабатывается'= 2,
+  'В работе' = 3,
+  'Ждет подтверждение'= 4,
+  'Подтверждена'= 5,
 	'Отменена' = 6,
-	'Ждет подтверждение'= 4,
-	'Обрабатывается'= 2,
-	'Разбор'= 8,
-	'В работе' = 3,
-	'Выполнено' = 9,
-	'Завершена' = 7,
-	'Подтверждена'= 5
+  'Завершена' = 7,
+  'Разбор'= 8,
+	'Выполнено' = 9
 }
 export type ReverseEnum = {[K in keyof typeof BidsStatus as typeof BidsStatus[K]]: K}
 type EnumKeyFromValue = typeof BidsStatus[ReverseEnum[1]]
@@ -172,12 +172,12 @@ export class BidsStore {
             { label: '№', name: 'id' },
             { label: 'Статус', name: 'status' },
             { label: 'Дата/Время', name: 'created' },
-            { label: 'Заказчик', name: 'company__name' },
-            { label: 'Партнер', name: 'performer__name' },
+            { label: 'Заказчик', name: 'company' },
+            { label: 'Партнер', name: 'performer' },
             { label: 'Пользователь', name: 'author' },
-            { label: 'ТС', name: 'number' },
-            { label: 'Город', name: 'city' },
-            { label: 'Услуга', name: 'service_type__name' },
+            { label: 'ТС', name: 'car' },
+            { label: 'Город', name: 'city__name' },
+            { label: 'Услуга', name: 'service_type' },
         ],
         createPageBack: 'Назад к списку заявок',
         createPage: 'Создать заявку',
@@ -797,19 +797,19 @@ export class BidsStore {
             // this.photo.photosPreview = null,
             // this.photo.photosPreviewAr = []
     }
-    async loadAllBids(params: PaginationProps) {
+    async loadAllBids(params?:any) {
 
         try {
             action(() => (this.loading = true))
             if(appStore.appType === "admin") {
-                const { data, status } = await agent.Bids.getAllBids(params)
+                const { data, status } = await agent.Bids.getAllBids({...paramsStore.currentParams, ...params})
                 if (status === 200) {
                     runInAction(() => {
                         this.bids = data
                     })
                 }
             } else {
-                const { data, status } = await agent.Bids.getAllCompanyBids(userStore.myProfileData.company.id, params)
+                const { data, status } = await agent.Bids.getAllCompanyBids(userStore.myProfileData.company.id, paramsStore.currentParams)
                 if (status === 200) {
                     runInAction(() => {
                         this.bids = data

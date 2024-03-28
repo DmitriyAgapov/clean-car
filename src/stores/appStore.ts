@@ -105,11 +105,13 @@ export class AppStore {
   appPermissions?: Permissions[]
   tokerError: string | null = null
   tokenFull: {} | null = null
+  loaderBlocked: boolean = false
   appLoaded = false
   burgerState: boolean = false
   asideState: boolean = false
   appType: UserTypeEnum | string = ''
   appState: boolean = false
+
   bodyRef = document.body
   modal: {
     component?: ReactNode
@@ -131,6 +133,12 @@ export class AppStore {
   }
   setTokenError(error: string | null) {
     this.tokerError = error
+  }
+  setBlocked() {
+    this.loaderBlocked = true
+  }
+  get getAppState() {
+    return this.appState
   }
   setAppType(type: UserTypeEnum | string) {
     this.appType = type

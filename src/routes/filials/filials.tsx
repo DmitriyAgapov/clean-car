@@ -60,7 +60,6 @@ const FilialsPage = () => {
             company_id: item.parent?.id || store.userStore.myProfileData.company.id
           }
         }))}
-        initFilterParams={[{label: 'Статус', value: 'status'}, {label: 'Город', value:  'city'}]}
         state={false}
       />
 

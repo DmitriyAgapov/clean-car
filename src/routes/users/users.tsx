@@ -3,7 +3,7 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
-import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { Company } from 'stores/companyStore'
@@ -11,14 +11,17 @@ import { User } from 'stores/usersStore'
 import { UserTypeEnum } from 'stores/userStore'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
+import agent from "utils/agent";
 
 const UsersPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  // const {data}:any = useLoaderData();
-
-  const { data, errors, loading, users } = store.usersStore.allUsersList
+  let [searchParams, setSearchParams] = useSearchParams();
+  const {isLoading, data, error} = agent.Users.getAllUsersTest(searchParams.toString() ?? 'page=1&page_size=10')
+  console.log('testData', data, isLoading, error);
+  console.log('searchParams', searchParams.toString());
+  // const { data, errors, loading, users } = store.usersStore.allUsersList
 
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
@@ -48,13 +51,13 @@ const UsersPage = () => {
           </>
         }
       ></Panel>
-      <TableWithSortNew
-        state={false}
+     <TableWithSortNew
+        state={isLoading}
         total={data?.count}
         background={PanelColor.glass}
-        filter={true}
+        filter={false}
         search={true}
-        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee__first_name'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city'}]}
+        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'city'}]}
         // @ts-ignore
         data={data?.results?.map((item: { company: Company; group: number; employee: User }) => {
           // console.log(item.company.company_type === "Компания-Заказчик");
@@ -74,7 +77,6 @@ const UsersPage = () => {
           },
         })})}
         style={PanelRouteStyle.users}
-        initFilterParams={[{label: 'Статус', value: 'is_active'}, {label: 'Город', value:  'city'}]}
       />
     </Section>
   )

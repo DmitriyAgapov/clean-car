@@ -16,7 +16,7 @@ const CarPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const { data, page, pageRequest, textData, company_type }: any = useLoaderData()
+  const { data,  company_type }: any = useLoaderData()
   const navigation = useNavigation();
   console.log(data);
 
@@ -94,7 +94,7 @@ const dataMap = new Map([])
         }
       />
       <Panel
-        state={store.usersStore.loadingUsers}
+        state={false}
         className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}

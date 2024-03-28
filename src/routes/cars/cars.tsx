@@ -18,7 +18,7 @@ const CarsPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { data, page, pageRequest, textData }: any = useLoaderData()
-
+  console.log(data);
   if ('/account/cars' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -56,7 +56,7 @@ const CarsPage = () => {
         className={'col-span-full table-groups'}
         filter={false}
         data={data.results}
-        initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
+
         state={false}
         ar={textData.tableHeaders} />
 

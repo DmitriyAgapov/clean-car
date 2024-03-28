@@ -260,7 +260,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             }
                         }}
                         disabled={!formData.isValid()}
-                        text={'Сохранить'}
+                        text={step === 1 ? 'Далее' : 'Сохранить'}
                         className={'float-right'}
                         variant={ButtonVariant.accent}
                       />

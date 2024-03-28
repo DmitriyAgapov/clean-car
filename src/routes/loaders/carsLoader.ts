@@ -5,16 +5,17 @@ import { defer } from "react-router-dom";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
 import company from "routes/company/company";
+import paramsStore from "stores/paramStore";
 
 export const carsLoader = async (props: any) => {
-
-	const url = new URL(props.request.url)
-	const searchParams = url.searchParams
-	const paramsPage = url.searchParams.get('page')
-	const paramsPageSize = url.searchParams.get('page_size')
-	const paramsOrdering = url.searchParams.get('ordering')
-	const paramsSearchString = url.searchParams.get('searchString')
-	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
+	//
+	// const url = new URL(props.request.url)
+	// const searchParams = url.searchParams
+	// const paramsPage = url.searchParams.get('page')
+	// const paramsPageSize = url.searchParams.get('page_size')
+	// const paramsOrdering = url.searchParams.get('ordering')
+	// const paramsSearchString = url.searchParams.get('searchString')
+	// const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('cars') + 1]
 	let textData: any = {
 		title: '',
 		description: null,
@@ -45,12 +46,7 @@ export const carsLoader = async (props: any) => {
 
 				}
 			} else {
-				const { data: dataCars, status } = await agent.Cars.getAdminCars({
-					page: paramsPage ?? 1,
-					page_size: paramsPageSize ?? 10,
-					ordering: paramsOrdering,
-					q: paramsSearchString
-				} as PaginationProps)
+				const { data: dataCars, status } = await agent.Cars.getAdminCars(paramsStore.currentParams as PaginationProps)
 
 				if (status === 200) {
 					data = dataCars.results.map((item: any) => ({
@@ -69,17 +65,12 @@ export const carsLoader = async (props: any) => {
 		}
 		else {
 			if (props.params.id) {
-				const { data: dataCars, status } = await agent.Cars.getCompanyCar(userStore.myProfileData.company.id,props.params.id)
+				const { data: dataCars, status } = await agent.Cars.getCompanyCar(userStore.myProfileData.company.id, props.params.id)
 				if (status === 200) {
 					data = dataCars
 				}
 			} else {
-					const { data: dataCars, status } = await agent.Cars.getCompanyCars(userStore.myProfileData.company.id, {
-						page: paramsPage ?? 1,
-						page_size: paramsPageSize ?? 10,
-						ordering: paramsOrdering,
-						q: paramsSearchString
-					} as PaginationProps)
+					const { data: dataCars, status } = await agent.Cars.getCompanyCars(userStore.myProfileData.company.id, paramsStore.currentParams as PaginationProps)
 					if (status === 200) {
 						data = dataCars.results.map((item: any) => ({
 							id: item.id,
@@ -121,9 +112,9 @@ export const carsLoader = async (props: any) => {
 	return defer({
 		data: await fillData(),
 		company_type: await getCompanyType(),
-		pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
+		// pageRequest: {page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, searchString: paramsSearchString},
 		textData: textData,
-		page: refUrlsRoot,
+		// page: refUrlsRoot,
 		// dataModels: dataModels
 	})
 }

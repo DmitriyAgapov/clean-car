@@ -56,7 +56,7 @@ const CompaniesPage = () => {
           city: item.city.name,
           id: item.id
         }))}
-        initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
+
         state={false}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'}, {label: 'Тип', name: 'company_type'},{ label: 'Город', name: 'city' }]}
       />

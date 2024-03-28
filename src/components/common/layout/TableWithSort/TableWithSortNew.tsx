@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from "react";
 import styles from "./TableWithSort.module.scss";
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import { SvgChevron, SvgLoading, SvgSort } from "components/common/ui/Icon";
+import { SvgChevron, SvgCleanCarLoader, SvgLoading, SvgSort } from "components/common/ui/Icon";
 import Chips from "components/common/ui/Chips/Chips";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { Pagination } from "@mantine/core";
-import DataFilter from "components/common/layout/TableWithSort/DataFilter";
+import { LoadingOverlay, Pagination } from "@mantine/core";
+import DataFilter, { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import TableSearch from "components/common/layout/TableWithSort/TableSearch";
 import { useDebouncedState } from "@mantine/hooks";
 import label from "utils/labels";
@@ -25,7 +25,7 @@ type TableWithSortProps = {
     ar: { label: string, name: string }[]
     style?: PanelRouteStyle
     search?: boolean
-    initFilterParams?: {}
+    initFilterParams?: FilterData[] | undefined
     total: number
     withOutLoader?: boolean
     filter?: boolean
@@ -72,6 +72,7 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
                     return (
                         <th
                             key={`rh-${index}`}
+                            // style={(index !== 0 && index !== ar.length - 1) ? ({ width: `${100 / ar.length}%` } ): {}}
                             className={styles.tableheading}
                             onClick={() => handleSortKey(index)}
                             data-sort-selected={index === count.index}
@@ -186,99 +187,77 @@ const TableWithSortNew = ({
     initFilterParams,
     ...props
 }: TableWithSortProps) => {
-    const [filterString, setFilterString] = React.useState({
-        index: 0,
-        reversed: false,
-    })
 
     const initCount = props.total || 0
-    // console.log(Math.ceil(initCount / pageSize));
     const store = useStore()
-    let location = useLocation()
-    const navigate = useNavigate()
+
     let [searchParams, setSearchParams] = useSearchParams()
-    const memPage = React.useMemo(() => {
-       if( searchParams.get('page'))  {
-           return Number(searchParams.get('page'))
-       } else return 1
-    }, [])
 
     // @ts-ignore
-    const [sortedField, setSortedField] = useState<null, string>('')
-    const [currentPage, setCurrentPage] = useState<number>(memPage)
+    const [sortedField, setSortedField] = useState<null | string>(searchParams.get('ordering'))
+    const [currentPage, setCurrentPage] = useState<number>(Number(searchParams.get('page')) ?? 1)
 
     const handleCurrentPage = React.useCallback((value: any) => {
-        if(withOutLoader) {
-            setSearchParams((prev) => ({...prev, ordering: sortedField, page: value}));
-        } else  {
-            setSearchParams((prev) => ({...prev,  ...(searchParams.has('searchString') ? {searchString: searchParams.get('searchString')} : {}), ordering: sortedField, page: value}));
-        }
-        setCurrentPage(value)
-    }, [sortedField])
-
-    // Быстрый поиск
-    const [fastSearchString, setFastSearchString] = useDebouncedState('', 200)
-
-    const fastSearch = React.useCallback((event: React.BaseSyntheticEvent) => {
-        event.preventDefault()
         const pageParams = searchParams.get('page');
-        const orderingParams = searchParams.get('ordering');
-
-        setFastSearchString(event.target.value)
-        if(fastSearchString.length > 0 )  {
-            setSearchParams((prevstate) => ({...prevstate, page:  1, ordering: orderingParams, searchString: event.target.value}));
-        } else {
-            setCurrentPage(1)
+        if(withOutLoader) {
+            // console.log('withyout', searchParams);
+            // searchParams.set('page', encodeURIComponent(value))
+            store.paramsStore.setParams({page: encodeURIComponent(value)});
+            setSearchParams((prev) => {
+                searchParams.set('page', encodeURIComponent(value))
+                return searchParams
+            })} else  {
+            console.log('withyout', searchParams.get('page'));
+            // searchParams.set('page', encodeURIComponent(value))
+            store.paramsStore.setParams({page: encodeURIComponent(value)});
+            setSearchParams((prev) => {
+                searchParams.set('page', encodeURIComponent(value))
+                return searchParams
+            })
         }
-    }, [fastSearchString])
+        setCurrentPage(Number(searchParams.get('page')))
+    }, [searchParams])
+    React.useEffect(() => {
+        const pageParams = searchParams.get('page');
+        setCurrentPage(Number(searchParams.get('page')))
+    }, [searchParams.get('page')])
 
-    //Сортировка результатов
-    const someData = React.useCallback((event:  React.BaseSyntheticEvent) => {
-        event.preventDefault()
-        setFastSearchString(event.target.value)
-
-        if(fastSearchString.length > 0 )  {
-            setSearchParams((prevstate) => ({...prevstate, searchString: event.target.value}));
-        } else {
-            setCurrentPage(1)
-        }
-    }, [filterString])
-
-    //Фильтрация результатов
-    const [filterParams, setFilterParams] = useState(initFilterParams)
-
-    const filteredData = useMemo(() => {
-        // @ts-ignore
-        return null
-    }, [filterParams])
 
     const RowDataMemoized = React.useMemo(() => {
         if(withOutLoader) {
             let initPage = (currentPage === 1) ? currentPage - 1 : (currentPage - 1) * pageSize
             if (data && data.length > 0) return data.slice(initPage, initPage + pageSize).map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
         }
-        if(data && data.length > 0) return data.map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
+        //* TODO Сделать прелоадер *//
+
+        // return <tr className={' !-mb-48'}><td colSpan={100}><LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{
+        //     overlay: 'bg-black/80 backdrop-blur-xl z-9999',
+        //     loader: 'w-8 h-8'
+        // }} visible={true}  loaderProps={{ children: <SvgCleanCarLoader className={'!w-16 !h-16 !m-0'}/> }} />
+        // </td>
+        // </tr>
+        if(data && data.length > 0) return data.map((item: any, index: number) => <RowData  {...item} key={item.id + '_00' + index} />)
 
     }, [data, currentPage])
 
     const handleHeaderAction = React.useCallback((e: any) => {
         // @ts-ignore
         if(e.reversed) {
-            // @ts-ignore
+            // searchParams.set('ordering', encodeURIComponent(`-${ar[e.index].name}`))
+            store.paramsStore.setParams({ordering: encodeURIComponent(`-${ar[e.index].name}`)});
+            setSearchParams((prev) => ({...store.paramsStore.params as URLSearchParams, ordering: encodeURIComponent(`-${ar[e.index].name}`)}))
             setSortedField(`-${ar[e.index].name}`)
         } else {
             // @ts-ignore
+            // searchParams.set('ordering', encodeURIComponent(`${ar[e.index].name}`))
+            store.paramsStore.setParams({ordering: encodeURIComponent(`${ar[e.index].name}`)});
+            setSearchParams((prev) => ({...store.paramsStore.params as URLSearchParams, ordering: encodeURIComponent(`${ar[e.index].name}`)}))
             setSortedField(ar[e.index].name)
         }
-    }, [sortedField])
+    }, [sortedField, searchParams.get('ordering')])
 
-    React.useEffect(() => {
-        const pageParams = searchParams.get('page');
-        const searchStringParams = searchParams.get('searchString');
-        setSearchParams((prevstate) => ({...prevstate, page: pageParams ?? 1, ordering: sortedField, ...(searchStringParams ? {searchString: searchStringParams} : {})}));
-        setCurrentPage(memPage)
-    }, [sortedField])
-    if (state) return <SvgLoading className={'m-auto'} />
+
+    // if (state) return <SvgLoading className={'m-auto'} />
 
     return (
         <Panel
@@ -288,11 +267,11 @@ const TableWithSortNew = ({
             variant={variant ? variant : PanelVariant.dataPadding}
             footerClassName={'px-6 pt-2 pb-6 flex  justify-end'}
             headerClassName={''}
-            header={
+            header={search || filter ?
                 <>
-                    {search && <TableSearch action={fastSearch} />}
-                    {filter && <DataFilter filterData={filteredData} />}
-                </>
+                    {search && <TableSearch/>}
+                    {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
+                </> : null
             }
             footer={
              ( Math.ceil(initCount / pageSize)) > 1 && (
@@ -310,10 +289,11 @@ const TableWithSortNew = ({
                 )
             }
             {...props}
-        >       {(initCount === 0) ? <Heading className={'min-h-[40vh] flex items-center justify-center'} text={'Нет данных'} variant={HeadingVariant.h3} />:
-          <table className={styles.TableWithSort} data-style={style}>
+        >       {(initCount === 0 && props.total ) ? <Heading className={'min-h-[40vh] flex items-center justify-center'} text={'Нет данных'} variant={HeadingVariant.h3} />:
+          <table className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
 
                 <RowHeading action={handleHeaderAction} total={initCount} ar={ar} />
+
                 <tbody>{RowDataMemoized}</tbody>
             </table>}
         </Panel>

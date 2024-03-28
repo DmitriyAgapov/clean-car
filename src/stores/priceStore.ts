@@ -347,7 +347,7 @@ export class PriceStore {
                         })
                     }
                 } else {
-                    const { data: dataResults, status } = await agent.Price.getAllPrice(paramsStore.qParams as PaginationProps)
+                    const { data: dataResults, status } = await agent.Price.getAllPrice(paramsStore.qParams)
                     if (status === 200) {
                         console.log('admin list', data);
                         data = {

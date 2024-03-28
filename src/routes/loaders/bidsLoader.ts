@@ -1,11 +1,5 @@
 import bidsStore from "stores/bidsStrore";
-import { defer } from "react-router-dom";
-import { dateTransform, dateTransformShort } from "utils/utils";
-import companyStore from "stores/companyStore";
-import { PaginationProps } from "utils/agent";
-import userStore from "stores/userStore";
 import paramsStore from "stores/paramStore";
-import { paginationParams } from "utils/fetchers";
 
 export const bidsLoader = async ({ request, params }:any) => {
 	// const url = new URL(request.url)
@@ -16,7 +10,12 @@ export const bidsLoader = async ({ request, params }:any) => {
 	// const paramsSearchString = url.searchParams.get('searchString')
 	// // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
 	// const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('bids') + 1]
-	await bidsStore.loadAllBids({...paramsStore.qParams, ordering: (paramsStore.qParams.ordering === "" || paramsStore.qParams.ordering === null) ? "id" : paramsStore.qParams.ordering})
+
+	// paramsStore.clearParams({
+	// 	page: 1,
+	// 	page_size: 10
+	// })
+	// bidsStore.loadAllBids(params)
 	// await companyStore.loadCompanies()
 
 	return null
