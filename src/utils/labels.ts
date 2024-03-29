@@ -13,6 +13,7 @@ const label = (key:string|unknown) => {
     executor: "Исполнитель",
     conductor: "Водитель",
     number: "Гос.номер",
+    service_type: "Услуга",
     performer_k: "КП",
     performer_name: "Исполнителя",
     name: "ФИО",
