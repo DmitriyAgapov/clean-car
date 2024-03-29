@@ -209,10 +209,11 @@ export class UserStore {
   }
 
   getUserCan(key: string, action: keyof CRUD) {
+
     // console.log(`userIsLoggedIn : ${authStore.userIsLoggedIn},  getUserCan -------`, authStore.userIsLoggedIn, 'Ключ--', key);
     if(authStore.userIsLoggedIn && appStore.token !== "") {
       try {
-        if (this.isAdmin) {
+        // if (this.isAdmin) {
           if (this.currentUserPermissions && this.currentUserPermissions.has(key)) {
             // console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
             return this.currentUserPermissions.get(key)[action]
@@ -221,7 +222,7 @@ export class UserStore {
             this.createUserPermissions()
             return this.currentUserPermissions.get(key)[action]
           }
-        }
+        // }
       } catch (e) {
         console.log(e);
       }

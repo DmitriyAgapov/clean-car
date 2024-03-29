@@ -17,7 +17,7 @@ export type TabsProps = {
   className?: string
   type?: TabsType
 }
-const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: any, items?: any}) => {
+const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
   const [state, setState] = useState(data[0].label);
@@ -37,7 +37,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
       const result:any = []
         if(type == TabsType.bid) {
           data.forEach((item: any, index: number) => {
-            result.push(<TabsVariantBids key={`tab_${index}`} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0 h-full content-between'}/>)
+            result.push(<TabsVariantBids key={`tab_${index}`} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0 h-full'}/>)
           })
           return result
         }
@@ -100,12 +100,19 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
         const result:any = [];
         for(const key in data) {
           // @ts-ignore
-          result.push(<Tabs.Tab onClick={(event: Event) => handleChangeTabState(event, data[key].label)} title={data[key].label} state={data[key].label == state} key={data[key].label + `-tab`} />)
+          result.push(
+              <Tabs.Tab
+                  onClick={(event: Event) => handleChangeTabState(event, data[key].label)}
+                  title={data[key].label}
+                  state={data[key].label == state}
+                  key={data[key].label + `-tab`}
+              />,
+          )
         }
         return  result
       }
       return (
-          <div className={styles.Tabs + ' ' + (className ? className : "")}>
+          <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant}>
               <Tabs.TabHeaderContainer>
                 <HeadersTabs/>
               </Tabs.TabHeaderContainer>
@@ -114,7 +121,7 @@ const Tabs = ({ data, className, panels, items, type }: TabsProps & {panels?: an
       )
 }
 
-Tabs.Tab = ({ title, state, ...props }: { title: string; state: boolean } | any) => {
+Tabs.Tab = ({ title, state, type, ...props }: { title: string; state: boolean} | any) => {
   return (
       <li className={styles.tabHeader} data-state={state} {...props}>
           {title}
@@ -140,7 +147,9 @@ Tabs.PanelPure = observer(({ children, state, name, className = " ", company_typ
   return null
 })
 
-Tabs.TabHeaderContainer = ({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string }) => (
+Tabs.TabHeaderContainer = ({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string}) => (
+  <div className={styles.tabHeaderWrapper}>
     <ul className={styles.containerHeader}>{children}</ul>
-)
+  </div>
+  )
 export default observer(Tabs);

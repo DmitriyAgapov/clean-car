@@ -42,7 +42,7 @@ const BidPage = () => {
 			})()
 		}
 	}, [bid.status])
-
+	console.log('Управление заявками', store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update'));
 	const [tick, setTick] = useState(0)
 
 	React.useEffect(() => {
@@ -103,7 +103,7 @@ const BidPage = () => {
                 }
             ></Panel>
             <Panel
-                className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+                className={'col-span-full grid grid-rows-[auto_1fr_auto] tablet-max:-mx-6'}
                 variant={PanelVariant.textPadding}
                 background={PanelColor.glass}
                 bodyClassName={''}
@@ -111,7 +111,7 @@ const BidPage = () => {
                 headerClassName={'grid grid-cols-4 gap-4 border-bottom-none'}
                 header={
                     <>
-                        <div className={'flex col-span-2 justify-between'}>
+                        <div className={'flex col-span-2 tablet-max:col-span-full justify-between'}>
                             <Heading
                                 className={'col-span-1 row-start-1 !mb-0'}
                                 text={bid.company?.name}
@@ -119,12 +119,12 @@ const BidPage = () => {
                                 color={HeadingColor.accent}
                             />
                         </div>
-                        <div className={'flex  items-end gap-12 justify-start col-span-2 row-start-2'}>
+                        <div className={'flex  items-end gap-12 justify-start col-span-2 tablet-max:col-span-full tablet-max:block row-start-2'}>
                             <div className={'text-xs text-gray-2'}>
                                 Дата и время регистрации:{' '}
                                 <p className={'py-0'}>{dateTransformShort(bid.company?.updated).date}</p>
                             </div>
-                            <div className={'flex gap-6 items-center justify-around'}>
+                            <div className={'flex gap-6 items-center justify-around tablet-max:inline-flex'}>
                                 <Status variant={bid.status  as BidsStatus} size={ButtonSizeType.base} />
                                 <Heading
                                     className={'!m-0'}
@@ -140,7 +140,7 @@ const BidPage = () => {
                     </>
                 }
             >
-                <Tabs data={tabedData} type={TabsType.bid} className={'!grid grid-rows-[auto_1fr] max-h-fit h-full'}/>
+                <Tabs variant={'bid-tabs'} data={tabedData} type={TabsType.bid} className={'!grid grid-rows-[auto_1fr] max-h-fit h-full panel__tabs'}/>
             </Panel>
         </Section>
     )

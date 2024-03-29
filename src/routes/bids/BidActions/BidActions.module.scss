@@ -22,8 +22,17 @@
   }
 }
 .bidtext {
-  @apply text-accent text-xs font-medium text-right row-span-2 col-start-3 col-span-2 justify-self-end flex gap-2.5;
+  @apply text-accent text-xs font-medium text-right row-span-2 col-start-3 col-span-2 justify-self-end flex gap-2.5 tablet-max:flex tablet-max:mt-4 tablet-max:col-start-1;
   p {
-	@apply text-accent max-w-80 py-0;
+	@apply text-accent max-w-80 py-0 tablet-max:flex-[1_0_20rem];
+	@screen tablet-max {
+	  width: initial !important;
+	}
+  }
+  button {
+	@apply tablet-max:flex-[1_0_20rem];
+	@screen tablet-max {
+	  width: initial !important;
+	}
   }
 }

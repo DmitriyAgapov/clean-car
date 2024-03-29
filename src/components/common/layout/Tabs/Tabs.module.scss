@@ -1,5 +1,33 @@
 .Tabs {
   display: block;
+  &[data-variant="bid-tabs"] {
+    @screen tablet-max {
+
+    }
+  }
+}
+.tabHeaderWrapper {
+  display: contents;
+  @screen tablet-max {
+    display: block;
+    overflow: scroll;
+    margin: 0 -1.5rem;
+    scroll-margin: 0 4rem;
+    padding: 0 1.5rem;
+    ul {
+      width: max-content;
+    }
+    & + [data-name] {
+      //grid-template-columns: 1fr;
+      dl {
+        grid-column: 1 / -1 !important;
+      }
+      > div {
+        grid-column: 1 / -1 !important;
+      }
+    }
+  }
+
 }
 .tabHeader {
   @apply list-none text-xss uppercase text-gray-2 font-medium pb-3.5 border-b-2 border-transparent;

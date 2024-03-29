@@ -13,20 +13,7 @@ import authStore from "stores/authStore";
 import { defer } from "react-router-dom";
 import * as fs from "fs";
 import { AxiosResponse } from "axios";
-//
-// export enum BidsStatus  {
-// 	'Новая' = 'Новая',
-// 	'Отменена' = 'Отменена',
-// 	'Ждет подтверждение' = 'Ждет подтверждение',
-// 	'Обрабатывается' = 'Обрабатывается',
-// 	'Разбор' = 'Разбор',
-// 	'В работе' = 'В работе',
-// 	'Выполнено' = 'Выполнено',
-// 	'Завершена' = 'Завершена',
-// 	'Подтверждена'	 = 'Подтверждена',
-// 	'Решено'	 = 'Решено',
-//   "Новая1" = 11
-// }
+
 export enum BidsStatus  {
 	'Новая' = 1,
   'Обрабатывается'= 2,
@@ -48,8 +35,7 @@ export interface BidPhoto {
     "created": string,
     "bid": null | string
 }
-export interface ResultsProps
-    {
+export interface ResultsProps    {
         address: string | null
         address_from?: string  | null
         address_to?: string  | null
@@ -86,7 +72,6 @@ export interface ResultsProps
         performer: number
         fotos: BidPhoto[]
     }
-
 export const initialResult: ResultsProps = {
     address: null,
     city: 0,
@@ -112,37 +97,6 @@ export const initialResult: ResultsProps = {
     performer: 0,
     fotos: []
 }
-export class InitialResult {
-    constructor() {}
-    address = ''
-    company = 0
-    conductor = 0
-    car = 0
-    important = {
-        label : '',
-        value : ''
-    }
-    secretKey =  {
-        label: '',
-        value: 'true',
-    }
-    phone = ''
-    customer_comment = ''
-    service_type = 0
-    parking = {
-        label: '',
-        value: 'true',
-    }
-    service_option = []
-    service_subtype = 0
-    city = 0
-    time = {
-        label: '',
-        value: '',
-    }
-    performer = 0
-}
-
 interface PhotosProps {
     photos: number| null
     photosPreview: string | ArrayBuffer | null
@@ -174,7 +128,8 @@ export class BidsStore {
             { label: 'Дата/Время', name: 'created' },
             { label: 'Заказчик', name: 'company' },
             { label: 'Партнер', name: 'performer' },
-            { label: 'Пользователь', name: 'author' },
+            { label: 'Водитель', name: 'conductor' },
+            { label: 'Исполнитель', name: 'executor' },
             { label: 'ТС', name: 'car' },
             { label: 'Город', name: 'city__name' },
             { label: 'Услуга', name: 'service_type' },
@@ -416,12 +371,6 @@ export class BidsStore {
             properties: ['formResult', 'bids', 'loadedPhoto', 'currentBidPhotos', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid', 'refreshBids'],
             storage: window.localStorage,
         }, {fireImmediately: true})
-        //
-        // reaction(() => this.justCreatedBid.id, (id) => {
-        //     if(id) {
-        //        this.loadBidByCompanyAndBidId()
-        //     }
-        // })
 
         reaction(
             () => this.formResult.company,
@@ -440,33 +389,6 @@ export class BidsStore {
                 }
             },
         )
-        // autorun(() => {
-        //     if(!this.refreshBids) {
-        //         // console.log('refresh', window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/"));
-        //         if (window.location.pathname.includes('bids') && !window.location.pathname.includes("bids/")) {
-        //
-        //             setTimeout(() => {
-        //                 this.loadAllBids({...paramsStore.qParams, ordering: (paramsStore.qParams.ordering === "" || paramsStore.qParams.ordering === null) ? "id" : paramsStore.qParams.ordering})
-        //                 runInAction(() => this.refreshBids = false)
-        //             }, 5000)
-        //             runInAction(() => this.refreshBids = true)
-        //         } else {
-        //             runInAction(() => this.refreshBids = true)
-        //         }
-        //         if (window.location.pathname.includes('bids') && window.location.pathname.includes("bids/") && !window.location.pathname.includes("bids/create") ) {
-        //             // console.log('includes(\'bids/\')');
-        //             setTimeout(() => {
-        //                 const id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 1];
-        //                 const company_id = window.location.pathname.split('/')[window.location.pathname.split('/').length - 2];
-        //                 this.loadBidByCompanyAndBidId(Number(company_id), Number(id))
-        //                 runInAction(() => this.refreshBids = false)
-        //             }, 5000)
-        //             runInAction(() => this.refreshBids = true)
-        //         } else {
-        //             runInAction(() => this.refreshBids = true)
-        //         }
-        //     }
-        // })
         autorun(() => {
             if(this.justCreatedBid.id) {
                 console.log('justCreated exist');
@@ -554,8 +476,8 @@ export class BidsStore {
                 }
             },
         )
-
     }
+
     get getEventCount() {
         return this.eventCounts
     }
@@ -868,5 +790,4 @@ export class BidsStore {
     }
 }
 const bidsStore = new BidsStore()
-
 export default bidsStore

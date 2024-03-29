@@ -1,12 +1,5 @@
 import React, { ReactNode } from 'react'
-import styles from './Panel.module.scss'
-import Button, { ButtonVariant } from "components/common/ui/Button/Button";
-import { InputBase, Select, TextInput } from "@mantine/core";
-import { IMaskInput } from "react-imask";
-import { UserTypeEnum } from "stores/userStore";
-import label from "utils/labels";
-import Panel from "components/common/layout/Panel/Panel";
-import Progress from "components/common/ui/Progress/Progress";
+import Panel, { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
 
 export enum PanelVariant {
     default = 'default',
@@ -22,14 +15,6 @@ export enum PanelVariant {
 export enum PanelColor {
     default = 'default',
     glass = 'glass',
-}
-
-export enum PanelRouteStyle {
-    default = 'default',
-    auth = 'auth',
-    company = 'company',
-    users = 'users',
-    groups = 'groups',
 }
 
 export type PanelProps = {
@@ -55,7 +40,7 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
 
     return <Panel
       {...props}
-
+        routeStyle={PanelRouteStyle.default_form}
       className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto] items-start  overflow-x-hidden'}
       bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} grid  grid-cols-9 items-start gap-4 gap-y-4`}
       variant={props.variant ?? PanelVariant.textPadding}

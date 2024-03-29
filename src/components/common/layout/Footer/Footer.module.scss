@@ -10,8 +10,8 @@
   }
 
   &[data-layout-account="true"] {
-	display: block;
-	@apply text-xss;
+
+	@apply text-xss desktop:block;
 	line-height: 1.5;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -12,30 +12,26 @@ import { dateTransformShort } from 'utils/utils'
 import userStore from 'stores/userStore'
 import agent from 'utils/agent'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
+import { useInterval } from "@mantine/hooks";
 
 const BidsPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
 	const params = useParams()
 	const location = useLocation()
-	const [tick, setTick] = useState(0)
 	let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
 	const {isLoading, data, error} = agent.Bids.getAllBidsNew(searchParams.toString())
-	// console.log('BidsHook', data, isLoading, error);
-	// React.useEffect(() => {
-	// 	// store.bidsStore.bids.length === 0 && store.bidsStore.loadAllBids()
-	// 	console.log(navigator.state === "idle");
-	// 	setTimeout(() => {
-	// 		if (location.pathname.includes('bids') && !location.pathname.includes('bids/')) {
-	// 			setTimeout(() => {
-	// 				store.bidsStore.loadAllBids()
-	// 				setTick(prevState => prevState + 1)
-	// 			}, 10000)
-	// 		}
-	// 	}, tick === 0 ? 10000 : 1)
-	// }, [tick])
+	const interval = useInterval(() => {
+				store.bidsStore.loadAllBids()
+	}, 10000);
 
-	// const { data:storeData, loading }:any = store.bidsStore.bidsAll
+	useEffect(() => {
+		if (location.pathname.includes('bids') && !location.pathname.includes('bids/')) {
+			interval.start();
+		}
+		return interval.stop;
+	}, []);
+
 	const textData = store.bidsStore.text
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
@@ -70,7 +66,8 @@ const BidsPage = () => {
 						created: dateTransformShort(r.created).date,
 						customer: r.company.name,
 						performer: r.performer.name,
-						user: r.author.first_name + ' ' + r.author.last_name[0] + '.',
+						conductor: r.conductor.first_name + ' ' + r.conductor.last_name[0] + '.',
+						executor: r.executor ? r.executor.first_name + ' ' + r.executor.last_name[0] + '.' : "",
 						number: r.car?.number,
 						city: r.company.city.name,
 						service_type: r.service_type.name,

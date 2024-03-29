@@ -19,6 +19,7 @@ export enum PanelColor {
 
 export enum PanelRouteStyle {
     default = 'default',
+    default_form = 'default_form',
     bids = 'bids',
     auth = 'auth',
     company = 'company',
@@ -28,6 +29,12 @@ export enum PanelRouteStyle {
     refcars = 'refcars',
     price_history = 'price_history',
     price_tire = 'price_tire'
+
+
+
+
+
+
 }
 
 export type PanelProps = {

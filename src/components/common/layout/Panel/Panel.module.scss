@@ -26,6 +26,43 @@
   &[data-style="default"] {
 	@apply col-span-full;
   }
+  &[data-style="default_form"] {
+	@apply col-span-full;
+	@screen tablet-max {
+	  margin: 0 -1.25rem;
+	  overflow: hidden;
+	  max-width: 100vw;
+	  [data-panel="body"] {
+		display: block;
+		padding-right: 0 !important;
+		> div {
+		  display: block;
+		  > div {
+			display: block;
+			max-width: initial;
+		  }
+		}
+	  }
+	  footer {
+		overflow: hidden;
+		display: flex;
+		flex-flow: column;
+		max-width: 100vw;
+		 div {
+		  display: contents;
+		   margin: 1rem 0;
+		  flex-flow: column;
+		}
+	   a, button {
+		 &[data-variant="cancel"] {
+		   order: 1;
+		 }
+		 margin-bottom: 1rem;
+	   }
+	  }
+	}
+  }
+
   [data-panel="body"] {
 	& > *:first-child {
 	  margin-top: 0;

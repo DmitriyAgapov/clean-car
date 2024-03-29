@@ -130,18 +130,27 @@ const RowData = (props: any) => {
             if (typeof props[key] !== 'object') {
                 if (props[key] === 'Активна' || props[key] === true) {
                     ar.push(<td key={key}
+                      data-label={label(key)}
                       className={styles.tableCell}>
                         <Chips state={true} />
                     </td>,)
                 } else if(props[key] === 'Неактивна'  || props[key] === false) {
                     ar.push(<td key={key}
+                      data-label={label(key)}
                       className={styles.tableCell}>
                         <Chips state={false} />
                     </td>,)
                 } else if(key === 'status') {
                     ar.push(<td key={key}
+                      data-label={label(key)}
                       className={styles.tableCell}>
                         <Status variant={props[key]} />
+                    </td>,)
+                } else if(props[key] === null) {
+                    ar.push(<td key={key}
+                      data-label={label(key)}
+                      className={styles.tableCell}>
+
                     </td>,)
                 } else {
                     if (key !== 'id' && key !== 'companyId') {
@@ -166,7 +175,7 @@ const RowData = (props: any) => {
             {(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
                 <SvgChevron/>
             </td>}
-            {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
+            {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
         </tr>
     )
 }

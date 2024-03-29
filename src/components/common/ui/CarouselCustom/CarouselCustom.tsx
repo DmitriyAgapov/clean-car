@@ -16,13 +16,14 @@ const CarouselCustom = ({items}:{items:any []}) => {
 	const [opened, { close, open }] = useDisclosure(false)
 
 	const itemsMemoized = React.useMemo(() => {
-		return items.map((i:any) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} onClick={(event) => {
+		return items.map((i:any) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} style={{aspectRatio: "1/1"}} onClick={(event) => {
 			open()
 			}}>
-			<BidImg item={i}  mih={'10rem'} mah={'10rem'} miw={'100%'} h={'100%'} style={{objectFit: "cover", cursor: "pointer"}} maw={'10rem'} />
+			<BidImg item={i}  mih={'10rem'}  miw={'100%'} h={'100%'} style={{objectFit: "cover", cursor: "pointer", aspectRatio: "1/1"}} maw={'10rem'} />
 			</SwiperSlide>
 		)
 	}, [items])
+
 	const MemoFullImg = () => {
 		const swiper = useSwiper()
 
@@ -78,14 +79,14 @@ const CarouselCustom = ({items}:{items:any []}) => {
 	if(items && items.length !==0) return (
 		<>
 			<Swiper spaceBetween={20}
-				slidesPerView={3}
+				slidesPerView={1}
 				modules={[Controller]}
 				onSlideChange={() => console.log('slide change')}
 				onSwiper={setControlledSwiper}>
 				{itemsMemoized}
 				{opened && <MemoFullImg />}
 			</Swiper>
-			{controlledSwiper && <div className={'text-xs font-medium mx-auto mt-4'}  style={{letterSpacing: '0.05em'}}>
+			{controlledSwiper && <div className={'text-xs font-medium mx-auto mt-4 tablet-max:text-center'}  style={{letterSpacing: '0.05em'}}>
 				<span className={'text-accent'}>{controlledSwiper.activeIndex + 1}/</span>
 				<span className={'text-gray-2'}>{controlledSwiper.slides?.length}</span>
 			</div>}

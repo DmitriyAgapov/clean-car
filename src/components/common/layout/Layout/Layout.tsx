@@ -66,7 +66,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
       {/*   overlay: 'bg-black/80 backdrop-blur-xl' */}
       {/* }} visible={store.appStore.AppState } loaderProps={{ children: <SvgCleanCarLoader/> }} /> */}
       <main className={'!contents'}>{children}</main>
-      <Footer>
+      <Footer className={'desktop:block hidden'}>
         {footerContent}
         <div>2023 (c.)</div>
         <div>Политика конфиденциальности</div>

@@ -46,8 +46,9 @@ module.exports = withMT({
       },
       screens: {
         tablet: '744px',
+        "tablet-max": {'max': '743px'},
         // => @media (min-width: 640px) { ... }
-
+        "desktop-max": {'max': '1299px'},
         desktop: '1300px',
       },
       letterSpacing: {
