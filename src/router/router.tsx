@@ -13,7 +13,6 @@ import {
     groupsIdLoader,
     groupsLoader, priceLoader,
     profileLoader,
-    referencesLoader,
     userLoader,
     usersLoader
 } from "routes/loaders/loaders";
@@ -59,6 +58,7 @@ import { companiesLoader } from "routes/loaders/companiesLoader";
 import PriceEditPage from "routes/price/priceEdit";
 import PriceHistory from "routes/price/priceHistory";
 import PricesHistoryPage from "routes/price/priceHistory";
+import { referencesLoader } from "routes/loaders/referenceLoader";
 
 const router = createBrowserRouter([
     {

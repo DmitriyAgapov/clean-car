@@ -200,14 +200,13 @@ const TableWithSortNew = ({
     const initCount = props.total || 0
     const store = useStore()
 
-    let [searchParams, setSearchParams] = useSearchParams()
+    let [searchParams, setSearchParams] = useSearchParams([['page', '1'], ['page_size', '10']])
 
     // @ts-ignore
     const [sortedField, setSortedField] = useState<null | string>(null)
-    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [currentPage, setCurrentPage] = useState<number>(1);
 
     const handleCurrentPage = React.useCallback((value: any) => {
-        console.log(searchParams.toString() , 'searchParams');
         if(withOutLoader) {
             // console.log('withyout', searchParams);
             searchParams.set('page', String(value))
@@ -215,11 +214,8 @@ const TableWithSortNew = ({
             setSearchParams(searchParams.toString())
 
         } else  {
-            console.log('withyout', searchParams.get('page'));
-            searchParams.set('page', String(value))
-            // store.paramsStore.setParams({page: encodeURIComponent(value)});
+            searchParams.set('page', String(value));
             setSearchParams(searchParams.toString())
-
         }
         setCurrentPage(Number(value))
     }, [sortedField, currentPage, searchParams])

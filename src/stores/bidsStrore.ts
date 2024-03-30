@@ -10,21 +10,19 @@ import userStore from "stores/userStore";
 import appStore from "stores/appStore";
 import paramsStore from "stores/paramStore";
 import authStore from "stores/authStore";
-import { defer } from "react-router-dom";
-import * as fs from "fs";
-import { AxiosResponse } from "axios";
 
-export enum BidsStatus  {
-	'Новая' = 1,
-  'Обрабатывается'= 2,
-  'В работе' = 3,
-  'Ждет подтверждение'= 4,
-  'Подтверждена'= 5,
-	'Отменена' = 6,
-  'Завершена' = 7,
-  'Разбор'= 8,
-	'Выполнено' = 9
+export enum BidsStatus {
+    'Новая' = 1,
+    'Обрабатывается' = 2,
+    'Ждет подтверждение' = 3,
+    'Подтверждена' = 4,
+    'В работе' = 5,
+    'Выполнено' = 6,
+    'Разбор' = 7,
+    'Отменена' = 8,
+    'Завершена' = 9
 }
+
 export type ReverseEnum = {[K in keyof typeof BidsStatus as typeof BidsStatus[K]]: K}
 type EnumKeyFromValue = typeof BidsStatus[ReverseEnum[1]]
 const clone = (obj:any) => JSON.parse(JSON.stringify(obj))

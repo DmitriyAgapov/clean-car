@@ -9,7 +9,12 @@ import UserPortal from 'components/common/layout/UserMenu/UserPortal'
 import { useOutsideClick } from 'utils/utils'
 import { useInterval } from "@mantine/hooks";
 import { Link } from "react-router-dom";
-
+type UserProps = {
+  name?: string
+  status?: string
+  photoUrl?: string
+  action: (event: any) => void
+}
 const Notification = observer(() => {
   const store = useStore()
   const interval = useInterval(() => {
@@ -33,12 +38,7 @@ const Notification = observer(() => {
 
   )
 })
-type UserProps = {
-  name?: string
-  status?: string
-  photoUrl?: string
-  action: (event: any) => void
-}
+
 // @ts-ignore
 const UserMenuStyled = styled(UserPortal)`
   border: 1px solid var(--borderPanelColor);
@@ -84,8 +84,6 @@ const UserMenuStyled = styled(UserPortal)`
     font-weight: 500;
   }
 `
-
-const notificationCount = 2
 
 const User = ({ name, status, photoUrl, action }: UserProps) => {
   return (
