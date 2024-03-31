@@ -6,7 +6,7 @@ import RestorePasswordPage from 'routes/restore/restorePasswordPage'
 import RegisterSuccessPage from 'routes/register/registerSucces'
 import {
     authUser,
-    companyLoader,
+    // companyLoader,
     filialLoader,
     filialsLoader,
     groupsCreatLoader,
@@ -58,7 +58,13 @@ import { companiesLoader } from "routes/loaders/companiesLoader";
 import PriceEditPage from "routes/price/priceEdit";
 import PriceHistory from "routes/price/priceHistory";
 import PricesHistoryPage from "routes/price/priceHistory";
-import { referencesLoader } from "routes/loaders/referenceLoader";
+import { referencesLoader } from 'routes/loaders/referenceLoader'
+import RefCarsPage from 'routes/reference/Cars/cars'
+import ReferenceCarPage from "routes/reference/Cars/car";
+import ReferenceCarPageCreate from "routes/reference/Cars/referenceCarPageCreate";
+import RefCitiesPage from "routes/reference/City/cities";
+import ReferenceCityPage from "routes/reference/City/city";
+import ReferenceCityPageCreate from "routes/reference/City/referenceCityPageCreate";
 
 const router = createBrowserRouter([
     {
@@ -166,17 +172,17 @@ const router = createBrowserRouter([
                     {
                         path: ':company_type/:id',
                         element: <CompanyPage />,
-                        loader: companyLoader,
+                        // loader: companyLoader,
                     },
                     {
                         path: ':company_type/:id/edit',
                         element: <CompanyPageEditAction />,
-                        loader: companyLoader,
+                        // loader: companyLoader,
                     },
                     {
                         path: 'create',
                         element: <CompanyPageCreateAction />,
-                        loader: companyLoader,
+                        // loader: companyLoader,
                     },
                 ],
             },
@@ -232,49 +238,46 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: 'car_brands',
-                        element: <ReferencesPage />,
-                        loader: referencesLoader,
+                        element: <RefCarsPage />,
+                        // loader: referencesLoader,
                         children: [
                             {
                                 path: ':id',
-                                element: <ReferencePage />,
-                                loader: referencesLoader,
+                                element: <ReferenceCarPage />,
+                                // loader: referencesLoader,
                                 children: [
                                     {
                                         path: 'edit',
-                                        element: <ReferencePageCreate edit={true}/>,
-                                        loader: referencesLoader,
+                                        element: <ReferenceCarPageCreate edit={true}/>,
+                                        // loader: referencesLoader,
                                     },
                                 ],
                             },
                             {
                                 path: 'create',
-                                element: <ReferencePageCreate />,
-                                loader: referencesLoader,
+                                element: <ReferenceCarPageCreate  edit={false}/>
                             }
                         ],
                     },
                     {
                         path: 'cities',
-                        element: <ReferencesPage />,
-                        loader: referencesLoader,
+                        element: <RefCitiesPage />,
+                        // loader: referencesLoader,
                         children: [
                             {
                                 path: ':id',
-                                element: <ReferencePage />,
-                                loader: referencesLoader,
+                                element: <ReferenceCityPage />,
                                 children: [
                                     {
                                         path: 'edit',
-                                        element: <ReferencePageCreate edit={true}/>,
-                                        loader: referencesLoader,
+                                        element: <ReferenceCityPageCreate edit={true}/>
                                     },
                                 ],
                             },
                             {
                                 path: 'create',
-                                element: <ReferencePageCreate />,
-                                loader: referencesLoader
+                                element: <ReferenceCityPageCreate />,
+                                // loader: referencesLoader
                             },
                         ],
                     },

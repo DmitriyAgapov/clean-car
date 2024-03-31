@@ -109,16 +109,16 @@ export const priceLoader = async (props: any) => {
     //     // dataModels: dataModels
     // })
 }
-
-export const companyLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
-    // const pathAr = props.request.url.split('/');
-    // const actionName:string = pathAr[pathAr.length - 1] || 'read'
-
-
-    await companyStore.loadCompanies()
-    // await catalogStore.getAllCities()
-    return defer({ id: id, type: company_type, data: await companyStore.loadCompanyWithTypeAndId(company_type, id) })
-}
+//
+// export const companyLoader = async ({ params: { id, company_type, action, company_id }, ...props }: any) => {
+//     // const pathAr = props.request.url.split('/');
+//     // const actionName:string = pathAr[pathAr.length - 1] || 'read'
+//
+//
+//     await companyStore.loadCompanies()
+//     // await catalogStore.getAllCities()
+//     return defer({ id: id, type: company_type, data: await companyStore.loadCompanyWithTypeAndId(company_type, id) })
+// }
 
 export const filialsLoader = async (props: any) => {
     const url = new URL(props.request.url)

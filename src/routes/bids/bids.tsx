@@ -12,8 +12,21 @@ import { dateTransformShort } from 'utils/utils'
 import userStore from 'stores/userStore'
 import agent from 'utils/agent'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
-import { useInterval } from "@mantine/hooks";
+import { useInterval } from '@mantine/hooks'
+import { SWRConfig, SWRHook } from 'swr'
+export function logger(useSWRNext: SWRHook) {
+	return (key: any, fetcher: (arg0: any) => any, config: any) => {
+        // Add logger to the original fetcher.
+        const extendedFetcher = (...args: any[]) => {
+            console.log('SWR Request:', key)
+            // @ts-ignore
+	        return fetcher(...args)
+        }
 
+        // Execute the hook with the new fetcher.
+        return useSWRNext(key, extendedFetcher, config)
+    }
+}
 const BidsPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
@@ -21,20 +34,22 @@ const BidsPage = () => {
 	const location = useLocation()
 	let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
 	const {isLoading, data, error} = agent.Bids.getAllBidsNew(searchParams.toString())
-	const interval = useInterval(() => {
-				store.bidsStore.loadAllBids()
-	}, 10000);
-
-	useEffect(() => {
-		if (location.pathname.includes('bids') && !location.pathname.includes('bids/')) {
-			interval.start();
-		}
-		return interval.stop;
-	}, []);
+	console.log(data);
+	// const interval = useInterval(() => {
+	// 			store.bidsStore.loadAllBids()
+	// }, 10000);
+	//
+	// useEffect(() => {
+	// 	if (location.pathname.includes('bids') && !location.pathname.includes('bids/')) {
+	// 		interval.start();
+	// 	}
+	// 	return interval.stop;
+	// }, []);
 
 	const textData = store.bidsStore.text
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
+	// @ts-ignore
 	return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}
@@ -52,6 +67,10 @@ const BidsPage = () => {
 						}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
+			<SWRConfig value={{
+				//@ts-ignore
+
+			}}>
 		<TableWithSortNew total={data?.count}
 					variant={PanelVariant.dataPadding}
 					search={true}
@@ -79,7 +98,7 @@ const BidsPage = () => {
 					state={isLoading}
 					ar={textData.tableHeaders}
 		/>
-
+			</SWRConfig>
 		</Section>
 	)
 }

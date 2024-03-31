@@ -7,7 +7,7 @@ import { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import agent from "utils/agent";
 import { CarType } from "stores/carStore";
-
+import { textDataCars } from 'routes/reference/Cars/cars'
 import { values as val } from 'mobx'
 import { Select, TextInput } from '@mantine/core'
 import { yupResolver } from "mantine-form-yup-resolver";
@@ -62,7 +62,6 @@ export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
 
 const FormCreateUpdateCarBrand = (props: any) => {
   const store = useStore()
-  const { textData }: any = useLoaderData()
   const params = useParams()
   const brand = store.catalogStore.getCurrentCarModelWithBrand
   const navigate = useNavigate()
@@ -203,7 +202,7 @@ const FormCreateUpdateCarBrand = (props: any) => {
             <Await resolve={brand}>
               <p>{
                 // @ts-ignore
-                store.catalogStore.getCurrentCarModelWithBrand && store.catalogStore.getCurrentCarModelWithBrand.name ? textData.editPageDesc : textData.createPageDesc}</p>
+                store.catalogStore.getCurrentCarModelWithBrand && store.catalogStore.getCurrentCarModelWithBrand.name ? textDataCars.editPageDesc : textDataCars.createPageDesc}</p>
             </Await>
           }
         >

@@ -11,7 +11,7 @@ import bidsStore, { BidsStatus } from 'stores/bidsStrore'
 import Status from 'components/common/ui/Status/Status'
 import { PermissionNames } from 'stores/permissionStore'
 import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
-import BidActions, { BidAdminActions } from "routes/bids/BidActions/BidActions";
+import BidActions, { BidAdminActions } from "components/common/ui/BidActions/BidActions";
 import appStore from "stores/appStore";
 import { observer } from "mobx-react-lite";
 import paramsStore from "stores/paramStore";

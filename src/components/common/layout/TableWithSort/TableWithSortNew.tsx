@@ -1,13 +1,13 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./TableWithSort.module.scss";
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import { SvgChevron, SvgCleanCarLoader, SvgLoading, SvgSort } from "components/common/ui/Icon";
 import Chips from "components/common/ui/Chips/Chips";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { LoadingOverlay, Pagination } from "@mantine/core";
+import { LoadingOverlay, Menu, Pagination, Paper, Divider } from "@mantine/core";
 import DataFilter, { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import TableSearch from "components/common/layout/TableWithSort/TableSearch";
-import { useDebouncedState } from "@mantine/hooks";
+import { useDebouncedState, useIntersection, useInViewport, useViewportSize, useWindowScroll } from "@mantine/hooks";
 import label from "utils/labels";
 import { useWindowDimensions } from "utils/utils";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
@@ -16,6 +16,8 @@ import Status from "components/common/ui/Status/Status";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { useStore } from "stores/store";
 import { observer } from "mobx-react-lite";
+import useSWR, { useSWRConfig } from "swr";
+
 
 type TableWithSortProps = {
     data?: any[]
@@ -196,15 +198,18 @@ const TableWithSortNew = ({
     initFilterParams,
     ...props
 }: TableWithSortProps) => {
+    const [mobileData, setMobileData] = useState<any>([])
 
     const initCount = props.total || 0
     const store = useStore()
-
+    const config = useSWRConfig()
+    // console.log(config);
     let [searchParams, setSearchParams] = useSearchParams([['page', '1'], ['page_size', '10']])
 
     // @ts-ignore
     const [sortedField, setSortedField] = useState<null | string>(null)
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const {width, height} = useViewportSize();
 
     const handleCurrentPage = React.useCallback((value: any) => {
         if(withOutLoader) {
@@ -219,30 +224,44 @@ const TableWithSortNew = ({
         }
         setCurrentPage(Number(value))
     }, [sortedField, currentPage, searchParams])
-
+    useEffect(() => {
+        data && setMobileData((prev:any[]) => [...prev, ...data])
+    }, [data])
     React.useEffect(() => {
         console.log(currentPage, 'currentPage');
-        const pageParams = searchParams.get('page');
+        const pageParams = searchParams.get('page')
         searchParams.has('page') ? setCurrentPage(Number(pageParams)) : setCurrentPage(1)
     }, [currentPage, searchParams])
-
-
-    const RowDataMemoized = React.useMemo(() => {
-        if(withOutLoader) {
-            let initPage = (currentPage === 1) ? currentPage - 1 : (currentPage - 1) * pageSize
-            if (data && data.length > 0) return data.slice(initPage, initPage + pageSize).map((item: any, index: number) => <RowData {...item} key={item.id + '_00' + index} />)
-        }
-        //* TODO Сделать прелоадер *//
-
-        // return <tr className={' !-mb-48'}><td colSpan={100}><LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{
-        //     overlay: 'bg-black/80 backdrop-blur-xl z-9999',
-        //     loader: 'w-8 h-8'
-        // }} visible={true}  loaderProps={{ children: <SvgCleanCarLoader className={'!w-16 !h-16 !m-0'}/> }} />
-        // </td>
-        // </tr>
-        if(data && data.length > 0) return data.map((item: any, index: number) => <RowData  {...item} key={item.id + '_00' + index} />)
-
-    }, [data, currentPage])
+    const { ref, inViewport } = useInViewport();
+    console.log('view:' , inViewport);
+    // const RowDataMemoized = React.useMemo(() => {
+    //     const _ar: any[] | undefined = []
+    //     if(width < 740  && data) {
+    //         const _mobileData: any = mobileData ? mobileData : new Map()
+    //         data && data.forEach((e:any) => {
+    //             _mobileData.set(e.id, e)
+    //         })
+    //         setMobileData(_mobileData)
+    //         mobileData && mobileData.forEach((e:any) => {
+    //             _ar.push(e)
+    //         })
+    //         data = _ar
+    //     }
+    //     if(withOutLoader) {
+    //         let initPage = (currentPage === 1) ? currentPage - 1 : (currentPage - 1) * pageSize
+    //         if (data && data.length > 0) return data.slice(initPage, initPage + pageSize).map((item: any, index: number) => <RowData  {...item} key={item.id + '_00' + index} />)
+    //     }
+    //     //* TODO Сделать прелоадер *//
+    //
+    //     // return <tr className={' !-mb-48'}><td colSpan={100}><LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{
+    //     //     overlay: 'bg-black/80 backdrop-blur-xl z-9999',
+    //     //     loader: 'w-8 h-8'
+    //     // }} visible={true}  loaderProps={{ children: <SvgCleanCarLoader className={'!w-16 !h-16 !m-0'}/> }} />
+    //     // </td>
+    //     // </tr>
+    //     if(data && data.length > 0) return data.map((item: any, index: number) => <RowData  ref={ref}  {...item} key={item.id + '_00' + index} />)
+    //
+    // }, [data, currentPage, mobileData, width, ref])
 
     const handleHeaderAction = React.useCallback((e: any) => {
         // @ts-ignore
@@ -259,16 +278,17 @@ const TableWithSortNew = ({
 
             setSortedField(ar[e.index].name)
         }
-        console.log('searchParams', searchParams.toString());
         setSearchParams(searchParams.toString())
     }, [sortedField, currentPage, searchParams])
 
 
     // if (state) return <SvgLoading className={'m-auto'} />
-
+    console.log(mobileData);
     return (
+
         <Panel
-            background={background ? background : PanelColor.glass}
+
+          background={background ? background : PanelColor.glass}
             className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto]'}
             routeStyle={style}
             variant={variant ? variant : PanelVariant.dataPadding}
@@ -283,6 +303,7 @@ const TableWithSortNew = ({
             footer={
              ( Math.ceil(initCount / pageSize)) > 1 && (
                     <Pagination
+
                         classNames={{
                             control:
                                 'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
@@ -296,14 +317,18 @@ const TableWithSortNew = ({
                 )
             }
             {...props}
-        >       {(initCount === 0 && props.total ) ? <Heading className={'min-h-[40vh] flex items-center justify-center'} text={'Нет данных'} variant={HeadingVariant.h3} />:
-          <table className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
+        >      {(initCount === 0 && props.total ) ? <Heading className={'min-h-[40vh] flex items-center justify-center'} text={'Нет данных'} variant={HeadingVariant.h3} />:
+
+          <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
 
                 <RowHeading action={handleHeaderAction} total={initCount} ar={ar} />
 
-                <tbody>{RowDataMemoized}</tbody>
+                <tbody>{mobileData && mobileData.map((item: any, index: number) => <RowData  ref={ref}  {...item} key={item.id + '_00' + index} />)}</tbody>
+
             </table>}
+            <Divider          ref={ref}  data-inview={inViewport ? "inview" : "notInview"}/>
         </Panel>
+
     )
 }
 

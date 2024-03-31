@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { forwardRef, ReactNode } from "react";
 import styles from './Panel.module.scss'
 
 export enum PanelVariant {
@@ -54,7 +54,7 @@ export type PanelProps = {
     action?: (event: any) => void | any
 }
 
-const Panel = ({
+const Panel = forwardRef(function Panel({
     children,
     search = false,
     action,
@@ -68,8 +68,8 @@ const Panel = ({
     variant = PanelVariant.default,
     background = PanelColor.default,
     className = '',
-}: PanelProps) => {
-    if (state) return <></>
+}: PanelProps, ref){
+    if (state) return null
     return (
         <div
             onClick={action}
@@ -94,6 +94,6 @@ const Panel = ({
             )}
         </div>
     )
-}
+})
 
 export default Panel;

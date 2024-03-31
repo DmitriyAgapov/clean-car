@@ -22,6 +22,7 @@ import { TransferList } from 'components/common/ui/TransferList/TransferList'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import company from "routes/company/company";
+import { useSWRConfig } from "swr";
 
 interface InitValues {
     address: string | null
@@ -52,7 +53,7 @@ export const createCompanyFormActions = createFormActions<InitValues>('createCom
 
 const FormCreateUpdateCompany = ({ company, edit }: any) => {
     const store = useStore()
-
+    const { mutate } = useSWRConfig()
     let initValues: InitValues = {
         address: '',
         type: CompanyType.customer,
@@ -157,7 +158,6 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     const navigate = useNavigate()
     const momentFormat = 'HH:mm'
     const handleSubmit = React.useCallback((values:any) => {
-        console.log(values);
         if (values.type === CompanyType.performer) {
             const data: Company<CompanyType.performer> = {
                 company_type: values.type,
@@ -180,13 +180,17 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             }
             if(edit) {
                 store.companyStore.editCompany(data, CompanyType.performer, values.id).then((r) => {
-                    !r.status ? navigate(`/account/companies/performer/${values.id}`) : 'Ошибка'
-                })
+                  navigate(`/account/companies/performer/${values.id}`)
+                }).catch((e) => {
+                    console.log('error');
+                }).finally(() => store.companyStore.loadCompanies())
             } else {
                 store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
                     formData.setFieldValue('id', r.id)
                     changeStep(3)
-                })
+                }).catch((e) => {
+                    console.log('error');
+                }).finally(() => store.companyStore.loadCompanies())
             }
         }
         if (values.type === CompanyType.customer) {
@@ -212,14 +216,20 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             if(edit) {
                 store.companyStore.editCompany(data, CompanyType.customer, values.id).then((r) => {
                     !r.status ? navigate(`/account/companies/customer/${values.id}`) : 'Ошибка'
-                })
+                }).catch((e) => {
+                    console.log('error');
+                }).finally(() => store.companyStore.loadCompanies())
             } else {
                 store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
                     values.id = r.id
                     changeStep(3)
-                })
+                }).catch((e) => {
+                    console.log('error');
+                }).finally(() => store.companyStore.loadCompanies())
             }
         }
+        store.companyStore.loadCompanies()
+        mutate('/companies/only_companies/list/?page=1&page_size=10')
     }, [])
     // @ts-ignore
     return (

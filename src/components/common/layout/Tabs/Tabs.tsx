@@ -34,6 +34,7 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
   }, [aTab]);
 
   const TabPanels = observer(()=> {
+    console.log(data);
       const result:any = []
         if(type == TabsType.bid) {
           data.forEach((item: any, index: number) => {
@@ -72,7 +73,7 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
           return result
         }
         if(type == TabsType.company) {
-          // console.log(data);
+          console.log(items);
           data.forEach((item: any, index: number) => {
             result.push(
               <TabsVariants   key={`var-${item.label}`}

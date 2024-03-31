@@ -3,7 +3,7 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
@@ -12,19 +12,41 @@ import CarHelper from 'components/common/layout/CarHelper/CarHelper'
 import { useDisclosure } from '@mantine/hooks'
 import { PriceCopy } from 'components/common/layout/Modal/PriceCopy'
 import { CarClasses } from 'components/common/layout/Modal/CarClasses'
-
-const ReferencesPage = () => {
+import agent from "utils/agent";
+import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
+export const textDataCars = {
+  path: 'car_brands',
+  labelsForItem: ['Марка', 'Класс', 'Модель'],
+  title: 'Автомобили',
+  create: 'Добавить',
+  referenceTitle: 'Марка автомобиля',
+  createPage: 'Добавить автомобиль',
+  editPage: 'Редактировать марку автомобиля',
+  tableHeaders: [{label: 'Марка', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_type'}],
+  createPageDesc: 'Укажите основную информацию о модели автомобиля, для добавления в справочник',
+  editPageDesc: 'Укажите основную информацию о модели автомобиля, для добавления в справочник',
+  // createPageForm: FormCreateUpdateCarBrand.bind(props),
+  createPageBack: 'Назад к списку марок автомобилей',
+  createAction:  agent.Catalog.createCarBrandWithExistBrand,
+  editAction:  agent.Catalog.editCity,
+  // editPageForm: FormCreateUpdateCarBrand.bind(props, { ...data, edit:true }),
+}
+const RefCarsPage = () => {
+  const location = useLocation()
+  if (location.pathname !== `/account/references/car_brands`) return <Outlet />
     const store = useStore()
     const navigate = useNavigate()
-    const location = useLocation()
+
     const [opened, { open, close }] = useDisclosure(false)
-    const { data, page, textData }: any = useLoaderData();
+
+    let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
+    const {isLoading, data, error} = agent.Catalog.getCarModelsNew(searchParams.toString())
     console.log(data);
     const memoModal = React.useMemo(() => {
         return <CarClasses opened={opened} onClose={close} />
     }, [opened])
 
-    // if (location.pathname !== `/account/references/${textData.path}`) return <Outlet />
+
     return (
         <Section type={SectionType.default}>
             <Panel
@@ -48,14 +70,14 @@ const ReferencesPage = () => {
                                 variant={ButtonVariant.text}
                             />
                             <Heading
-                                text={textData.title}
+                                text={textDataCars.title}
                                 variant={HeadingVariant.h1}
                                 className={'inline-block !mb-0'}
                                 color={HeadingColor.accent}
                             />
                         </div>
                         <div className={'flex gap-6'}>
-                            {page === 'car_brands' && (
+
                                 <>
                                     <Button
                                         text={'Классификация автомобилей'}
@@ -68,10 +90,10 @@ const ReferencesPage = () => {
                                     />{' '}
                                     {memoModal}
                                 </>
-                            )}
+
                             {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (
                                 <Button
-                                    text={textData.create}
+                                    text={textDataCars.create}
                                     action={() => navigate('create')}
                                     trimText={true}
                                     className={'inline-flex'}
@@ -83,22 +105,26 @@ const ReferencesPage = () => {
                     </>
                 }
             />
-
             <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
                 <TableWithSortNew
-                    total={data.count}
+                    total={data?.count}
                     variant={PanelVariant.dataPadding}
                     search={true}
-                    style={page === 'car_brands' ? PanelRouteStyle.refcars : PanelRouteStyle.default}
+                    style={PanelRouteStyle.refcars}
                     background={PanelColor.glass}
                     className={'col-span-full table-groups  h-full'}
                     filter={false}
-                    data={data?.results}
-                    state={false}
-                    ar={textData.tableHeaders}
+                    data={data?.results.map((c:any) => ({
+                      id: c.id,
+                      brand: c.brand.name,
+                      car_type: c.car_type,
+                      modelName: c.name
+                    }))}
+                    state={isLoading}
+                    ar={textDataCars.tableHeaders}
                 />
             </Panel>
         </Section>
     )
 }
-export default ReferencesPage
+export default RefCarsPage

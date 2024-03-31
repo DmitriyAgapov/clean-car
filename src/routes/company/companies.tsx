@@ -11,9 +11,12 @@ import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSo
 import agent from "utils/agent";
 
 const CompaniesPage = () => {
-  const store = useStore()
+
   const location = useLocation()
+
+  const store = useStore()
   const navigate = useNavigate()
+
   let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
   const {isLoading, data, error} = agent.Companies.getOnlyAllCompaniesNew(searchParams.toString())
   if ('/account/companies' !== location.pathname) return <Outlet />

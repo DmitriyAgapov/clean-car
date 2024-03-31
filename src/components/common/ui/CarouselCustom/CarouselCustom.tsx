@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
 import 'swiper/css';
 import { observer } from "mobx-react-lite";
 import BidImg from "components/common/layout/Modal/BidImg";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import styles from "components/common/layout/Modal/Modal.module.scss";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { SvgBackArrow, SvgClose } from "components/common/ui/Icon";
@@ -14,7 +14,7 @@ const CarouselCustom = ({items}:{items:any []}) => {
 
 	const [controlledSwiper, setControlledSwiper] = useState<any>(null);
 	const [opened, { close, open }] = useDisclosure(false)
-
+	const { height, width } = useViewportSize();
 	const itemsMemoized = React.useMemo(() => {
 		return items.map((i:any) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} style={{aspectRatio: "1/1"}} onClick={(event) => {
 			open()
@@ -79,7 +79,7 @@ const CarouselCustom = ({items}:{items:any []}) => {
 	if(items && items.length !==0) return (
 		<>
 			<Swiper spaceBetween={20}
-				slidesPerView={1}
+				slidesPerView={width < 739 ? 1 : 3}
 				modules={[Controller]}
 				onSlideChange={() => console.log('slide change')}
 				onSwiper={setControlledSwiper}>

@@ -10,6 +10,8 @@ import { BidsStatus } from "stores/bidsStrore";
 import { notifications } from "@mantine/notifications";
 import useSWR from "swr";
 import { KeysBidCreate } from "stores/types/bidTypes";
+import * as url from "url";
+import { logger } from "routes/bids/bids";
 
 export type PaginationProps = {
   name?: string | number | URLSearchParams,
@@ -48,7 +50,7 @@ const axiosUpload = axios.create({
 
 //Константа для запросов
 export const API_ROOT = process.env.REACT_APP_PUBLIC_API
-
+export const fetcherNew = async (url:string) => requests.getNew(url).then(r => ({...r.data, url: url}))
 
 //Объект запросов
 export const requests = {
@@ -70,7 +72,6 @@ export const requests = {
   .then((response:any) => response)
   .catch(handleErrors),
   getNew: (url: string) => {
-    console.log(url);
     return axios.get(`${API_ROOT}${url}`,{
       // headers: tokenPlugin(),
       method: 'GET'
@@ -227,9 +228,11 @@ const Img = {
   }),
   deleteBidPhoto: (company_id: number|string, id: number|string) => requests.delete(`/bid_photos/${company_id}/${id}/delete/`),
 }
+// @ts-ignore
 const Bids = {
   getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', params),
-  getAllBidsNew: (params: string) =>  useSWR(`${userStore.isAdmin ? `/bids/all_bids/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/bids/${userStore.myProfileData.company?.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`,(url) => requests.getNew(url).then(r => r.data)),
+  //@ts-ignore
+  getAllBidsNew: (params: string) =>  useSWR(`${userStore.isAdmin ? `/bids/all_bids/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/bids/${userStore.myProfileData.company?.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`, fetcherNew, {refreshInterval: 10000, use: [logger]}),
   getAvailablePerformers: (company_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/bid_performers/`, data),
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`),
@@ -289,7 +292,7 @@ const Companies = {
     editCompany: ( data: CreateCompanyPerformerFormData, type: string, id:number ) => requests.put(`/companies/${type}/${id}/update/`, data),
 
     getCompanyData: (type: string, id: number ) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
-    getCompanyDataNew: (type: string, id: number) => useSWR(`/companies/${type}/${id}/retrieve/`, (url) => requests.getNew(url).then(r => r.data)),
+    getCompanyDataNew: (type: string, id: string) => useSWR(`/companies/${type}/${id}/retrieve/`, (url) => requests.getNew(url).then(r => r.data)),
     // createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
     //   return  requests.post('/companies/performer/create/', data)
     // },
@@ -299,7 +302,9 @@ const Companies = {
     getListCompanyPerformer: (pagination?: PaginationProps) => requests.get('/companies/performer/list/', pagination),
     getAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/all_companies/list/', pagination),
     getOnlyAllCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_companies/list/', pagination),
-    getOnlyAllCompaniesNew: (params: string, pagination?: PaginationProps) => useSWR(`/companies/only_companies/list${params ? `?${params}` : '?page=1&page_size=10'}`, (url) => requests.getNew(url).then(r => r.data)),
+    getOnlyAllCompaniesNew: (params: string, pagination?: PaginationProps) => useSWR(`/companies/only_companies/list${params ? `?${params}` : '?page=1&page_size=10'}`, (url) => requests.getNew(url).then(r => r.data), {
+       revalidateOnMount: true
+    }),
     getOnlyBranchesCompanies: (pagination?: PaginationProps) => requests.get('/companies/only_branches/list/', pagination),
 }
 const Permissions = {
@@ -346,6 +351,7 @@ const Profile = {
 const Catalog = {
     getCarBrands: (params?: PaginationProps) => requests.get('/catalog/car_brands', params),
     getCarModelWithBrand: (id: number) => requests.get(`/catalog/car_models/${id}/retrieve`),
+    getCarModelWithBrandNew: (id:string) =>  useSWR(`/catalog/car_models/${id}/retrieve`, (url) => requests.getNew(url).then(r => r.data)),
     createCarBrandWithNewBrand: (brand_name: string, car_class: string, model: string) =>
         requests.post('/catalog/car_models/create_with_new_brand/', {
             name: model,
@@ -372,12 +378,14 @@ const Catalog = {
         }),
     getCarBrandModels: (brand_id: number, params?: PaginationProps) =>
         requests.get(`/catalog/car_brands/${brand_id}/car_models/list`, params),
-    getCarModels: (params?: PaginationProps) =>
-        requests.get(`/catalog/car_models/list`, params),
+    getCarModels: (params?: PaginationProps) => requests.get(`/catalog/car_models/list`, params),
+    getCarModelsNew: (params: string) =>  useSWR(`/catalog/car_models/list${params ? `?${params}` : '?page=1&page_size=10'}`,(url) => requests.getNew(url).then(r => r.data)),
     getCarBrandsWithModels: (params?: PaginationProps | undefined) =>
         requests.get(`/catalog/car_brands_with_models`, params),
     getCities: (params?: PaginationProps) => requests.get('/catalog/cities/', params),
+    getCitiesNew: (params: string) =>  useSWR(`/catalog/cities${params ? `?${params}` : '?page=1&page_size=10'}`, (url) =>  requests.getNew(url).then(r => r.data)),
     getCity: (id: number) => requests.get(`/catalog/cities/${id}/retrieve/`),
+    getCityNew: (id: string) => useSWR(`/catalog/cities/${id}/retrieve/`, (url) => requests.getNew(url).then(r => r.data)),
     createCity: (name: string, is_active: boolean, timezone: string)  =>
         requests.post('/catalog/cities/create/', { name: name, is_active: is_active, timezone: timezone}),
     deleteCity: (id: number) => requests.delete(`/catalog/cities/${id}/delete`),

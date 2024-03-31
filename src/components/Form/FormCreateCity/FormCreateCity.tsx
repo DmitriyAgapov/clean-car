@@ -14,6 +14,7 @@ import FormActions from "routes/reference/FormActions/FormActions";
 import agent from "utils/agent";
 import { observer } from "mobx-react-lite";
 import { Select } from "@mantine/core";
+import { textDataCities } from "routes/reference/City/cities";
 const dataCreate = {
     initValues: {
       id: 0,
@@ -59,17 +60,15 @@ const dataCreate = {
     ],
 }
 const FormCreateCity = (props: any) => {
-
-  const { data, page, pageRequest, textData }: any = useLoaderData()
   const location = useLocation()
   const navigate = useNavigate()
   const store = useStore()
   const editStatus = props?.edit ?? false
   const  editInitValues = {
-          id: data.results.id,
-          city: data.results.name,
-          timezone: data.results.timezone,
-          status: data.results.is_active ? "true" : "false",
+          id: props.id,
+          city: props.name,
+          timezone: props.timezone,
+          status: props.is_active,
   }
   let revalidator = useRevalidator();
 
@@ -77,7 +76,7 @@ const FormCreateCity = (props: any) => {
       <Formik initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
         onSubmit={(values, isSubmitting) => {
             if(location.pathname.includes('edit')) {
-              textData.editAction(values.id, values.city, values.status === "true", values.timezone)
+              textDataCities.editAction(values.id, values.city, values.status === "true", values.timezone)
               .then((r: any) => {
                 if(r.status === 200) {
                   revalidator.revalidate()
@@ -85,7 +84,7 @@ const FormCreateCity = (props: any) => {
                 }
               })
             } else {
-              textData.createAction(values.city, values.status === "true", values.timezone)
+              textDataCities.createAction(values.city, values.status === "true", values.timezone)
               .then((r: any) => {
                 if(r.status === 201) {
                   revalidator.revalidate()
@@ -116,7 +115,7 @@ const FormCreateCity = (props: any) => {
                           <Button
                             text={'Удалить'}
                             action={async () => {
-                              agent.Catalog.deleteCity(data.results.id).then(() => {
+                              agent.Catalog.deleteCity(props.id).then(() => {
                                 navigate('/account/references/cities', { replace: false })
                               })
                                 .finally(          () => store.appStore.closeModal())
@@ -124,7 +123,7 @@ const FormCreateCity = (props: any) => {
                             variant={ButtonVariant['accent-outline']}
                           />,
                         ],
-                        text: `Вы уверены, что хотите удалить ${data.results.name}`,
+                        text: `Вы уверены, что хотите удалить ${props.name}`,
                         state: true,
                       })
 
@@ -151,7 +150,7 @@ const FormCreateCity = (props: any) => {
             headerClassName={'flex gap-10'}
 
             header={
-              <p>{data.results.name ? textData.editPageDesc : textData.createPageDesc}</p>
+              <p>{props.name ? textDataCities.editPageDesc : textDataCities.createPageDesc}</p>
             }
           >
               <CreateInput

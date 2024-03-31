@@ -21,80 +21,46 @@ export const referencesLoader = async (props: any) => {
 		let data :any[] | any = []
 		let dataMeta
 		switch (refUrlsRoot) {
-			case 'car_brands':
-				if(props.params.id) {
-					try {
-						const { data: dataModel, status: statusDataModel } = await agent.Catalog.getCarModelWithBrand(props.params.id);
-						if(statusDataModel === 200) data = {
-							id: dataModel.id,
-							brand: dataModel.brand.name,
-							car_type: dataModel.car_type,
-							modelName: dataModel.name
-						}
-					} catch (e) {
-						console.log(e);
-					}
-				} else {
-					try {
-						const { data: dataResults, status } = await agent.Catalog.getCarModels({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10} as PaginationProps)
-						dataResults.results.forEach((e: any) => data.push({ id: e.id, name: e.brand.name, model: e.name, car_type: e.car_type }))
-						dataMeta = dataResults
-
-					} catch (e) {
-						console.log(e);
-					}
-				}
-				textData = {
-					path: 'car_brands',
-					labelsForItem: ['Марка', 'Класс', 'Модель'],
-					title: 'Автомобили',
-					create: 'Добавить',
-					referenceTitle: 'Марка автомобиля',
-					createPage: 'Добавить автомобиль',
-					editPage: 'Редактировать марку автомобиля',
-					tableHeaders: [{label: 'Марка', name: 'brand'},{label: 'Модель', name: 'name'}, {label: 'Тип', name: 'car_type'}],
-					createPageDesc: 'Укажите основную информацию о модели автомобиля, для добавления в справочник',
-					editPageDesc: 'Укажите основную информацию о модели автомобиля, для добавления в справочник',
-					createPageForm: FormCreateUpdateCarBrand.bind(props),
-					createPageBack: 'Назад к списку марок автомобилей',
-					createAction:  agent.Catalog.createCarBrandWithExistBrand,
-					editAction:  agent.Catalog.editCity,
-					editPageForm: FormCreateUpdateCarBrand.bind(props, { ...data, edit:true }),
-				}
-				break
-			case 'cities':
-				if(props.params.id) {
-					const { data: dataCities, status: statusCities } = await agent.Catalog.getCity(props.params.id);
-					if(statusCities === 200) data = dataCities
-				}
-				else {
-					const { data: dataCities, status: statusCities } = await agent.Catalog.getCities({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
-					data = dataCities.results.map((item:any) => ({id: item.id, status: item.is_active, name: item.name, timezone: item.timezone ?? ''}))
-					dataMeta = dataCities
-				}
-
-				textData = {
-					path: 'cities',
-					title: 'Города',
-					create: 'Добавить',
-					labelsForItem: ['Город', 'Часовой пояс', 'Статус'],
-					referenceTitle: 'Город',
-					createPage: 'Добавить город',
-					editPage: 'Редактировать город',
-					tableHeaders: [
-						{ label: 'Статус', name: 'is_active' },
-						{ label: 'Город', name: 'name' },
-						{ label: 'Часовой пояс', name: 'timezone' },
-					],
-					createPageDesc: 'Добавьте новый город',
-					editPageDesc: 'Вы можете изменить город или удалить его из системы',
-					createPageForm: FormCreateCity.bind(props),
-					createPageBack: 'Назад к списку городов',
-					createAction: agent.Catalog.createCity,
-					editAction: agent.Catalog.editCity,
-					editPageForm: FormCreateCity.bind(props, { ...data, edit:true }),
-				}
-				break;
+			// case 'car_brands':
+			// 	if(props.params.id) {
+			// 		try {
+			// 			const { data: dataModel, status: statusDataModel } = await agent.Catalog.getCarModelWithBrand(props.params.id);
+			// 			if(statusDataModel === 200) data = {
+			// 				id: dataModel.id,
+			// 				brand: dataModel.brand.name,
+			// 				car_type: dataModel.car_type,
+			// 				modelName: dataModel.name
+			// 			}
+			// 		} catch (e) {
+			// 			console.log(e);
+			// 		}
+			// 	}
+			// 	// else {
+			// 	// 	try {
+			// 	// 		const { data: dataResults, isLoading } = agent.Catalog.getCarModelsNew(searchParams.toString())
+			// 	//
+			// 	// 		!isLoading && dataResults.results.forEach((e: any) => data.push({ id: e.id, name: e.brand.name, model: e.name, car_type: e.car_type }))
+			// 	// 		dataMeta = dataResults
+			// 	//
+			// 	// 	} catch (e) {
+			// 	// 		console.log(e);
+			// 	// 	}
+			// 	// }
+			//
+			// 	break
+			// case 'cities':
+			// 	if(props.params.id) {
+			// 		const { data: dataCities, status: statusCities } = await agent.Catalog.getCity(props.params.id);
+			// 		if(statusCities === 200) data = dataCities
+			// 	}
+			// 	else {
+			// 		const { data: dataCities, status: statusCities } = await agent.Catalog.getCities({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
+			// 		data = dataCities.results.map((item:any) => ({id: item.id, status: item.is_active, name: item.name, timezone: item.timezone ?? ''}))
+			// 		dataMeta = dataCities
+			// 	}
+			//
+			//
+			// 	break;
 			case 'services':
 				if(props.params.subtype_id) {
 					const { data: dataServiceSubtype, status: statusServiceSubtype } = await agent.Catalog.getServiceSubtype(props.params.subtype_id);
@@ -151,7 +117,6 @@ export const referencesLoader = async (props: any) => {
 				return
 		}   console.log();
 		return ({
-			...dataMeta,
 			results: data,
 		})
 	}

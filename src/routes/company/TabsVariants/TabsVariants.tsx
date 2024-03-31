@@ -90,7 +90,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
     case 'Сотрудники':
 
       result = (<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
-        {data.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={false} filter={false}
+        {props[2].data?.length !== 0 ? <TableWithSort  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default} search={false} filter={false}
           data={props[2].data.map((item: User & any & {rootRoute?: string} ) => ({
             state: item.employee.is_active,
             name: item.employee.first_name + ' ' + item.employee.last_name,
@@ -111,9 +111,9 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
       break;
     case 'Автомобили':
       result = (<Tabs.Panel  state={state} name={'cars'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
-        {props[1].data.length !== 0 ? <TableWithSortNew  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default}
+        {props[1].data?.length !== 0 ? <TableWithSortNew  className={'!rounded-none  !bg-none overflow-visible !border-0'} bodyClassName={'!bg-none !rounded-none !bg-transparent'} background={PanelColor.default}
           // search={true} filter={true}
-          total={props[1].data.count}
+          total={props[1].data?.count}
           data={props[1].data?.results.map((item: User & any & {rootRoute?: string} ) => ({
             state: item.is_active,
             brand: item.brand.name,
