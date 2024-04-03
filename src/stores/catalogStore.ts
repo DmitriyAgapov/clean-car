@@ -1,5 +1,5 @@
 import { autorun, computed, flow, get, makeAutoObservable, observable, ObservableMap, reaction, runInAction, set, values } from "mobx";
-import agent, { PaginationProps } from 'utils/agent'
+import agent, { client, PaginationProps } from "utils/agent";
 import { hydrateStore, makePersistable } from "mobx-persist-store";
 import authStore from "stores/authStore";
 import bidsStore from "stores/bidsStrore";
@@ -177,6 +177,9 @@ export class CatalogStore {
             return this.subtypesByService.get(String(service_id))
         }
         return []
+    }
+    async getAllRefCarModels(params?:any) {
+        return client.catalogCarModelsList(params)
     }
     async getCarBrandModels(id: number, params?: PaginationProps) {
         if (id) {

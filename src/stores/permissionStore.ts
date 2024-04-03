@@ -351,7 +351,12 @@ export class PermissionStore {
         .then((r) => r)
         .finally(() => (this.loadingPermissions = false))
   }
+  async loadPermissions() {
+    // if(appStore.appType === "admin") {
+      return agent.Permissions.getAllCompanyPermissions(userStore.myProfileData.company.id)
+    // }
 
+  }
   setPermissionStoreAdmin(id: number, data: any) {
     this.loadingPermissions = true
     agent.PermissionsAdmin.putUpdateAdminPermissions(data.id, data)

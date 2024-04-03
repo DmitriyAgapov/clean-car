@@ -49,6 +49,9 @@
           font-size: .625rem;
           @apply text-gray-2;
         }
+        &[data-label="status"]:before {
+          content: none;
+        }
 
         &:nth-child(2) {
           grid-column: 1/-3;
@@ -106,6 +109,7 @@
           }
 
         }
+
 
       }
 
@@ -303,28 +307,28 @@
       max-width: 8rem;
       overflow: hidden;
       position: relative;
-
-      & p {
-        margin: 0;
-        background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: block;
-        line-height: 14px;
-        vertical-align: middle;
-        position: relative;
-        overflow: hidden;
-        font-weight: 600;
-      }
-
-      & p:after {
-        //content: "";
-        position: absolute;
-        right: 0px;
-        width: 50%;
-        top: 0;
-        bottom: 0;
-        background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
+      @screen desktop {
+        & p {
+          margin: 0;
+          background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          display: block;
+          line-height: 14px;
+          vertical-align: middle;
+          position: relative;
+          overflow: hidden;
+          font-weight: 600;
+        }
+        & p:after {
+          //content: "";
+          position: absolute;
+          right: 0px;
+          width: 50%;
+          top: 0;
+          bottom: 0;
+          background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
+        }
       }
       &:first-child {
         padding-left: 2rem;
@@ -358,6 +362,46 @@
       &:last-child {
         padding-right: 1rem;
         width: 6rem;
+      }
+    }
+    @screen tablet-max {
+      [data-state-mobile] {
+        grid-template-columns: repeat(6, 1fr) 4rem 1.5rem;
+
+      }
+      [data-label] {
+        grid-column: 1/-1;
+        max-width: initial !important;
+        width: initial !important;
+      }
+      [data-label="idnum"] {
+        display: none;
+      }
+      [data-label="state"] {
+        grid-row: 1/2;
+        grid-column: -3/-2;
+        &:before {
+          content: none;
+        }
+      }
+
+      [data-label="Заказчик"] {
+        grid-row: 1/2;
+        grid-column: 1/-3;
+        height: initial;
+        &:before {
+          content: none;
+        }
+      }
+      [data-position="button-mobile"] {
+        grid-column: 1/-1;
+        max-width: initial !important;
+        width: initial !important;
+        padding: 0 !important;
+      }
+      [data-label="status"] {
+        grid-row: 1/2;
+        grid-column: -3/-2;
       }
     }
   }
@@ -520,7 +564,7 @@
 }
 
 .TableWithSortPanel {
-  overflow: hidden;
+  //overflow: hidden;
 
 
   header {

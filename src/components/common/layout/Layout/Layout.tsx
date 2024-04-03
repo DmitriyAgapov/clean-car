@@ -62,9 +62,9 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
       {/* {!store.appStore.loaderBlocked && <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{ */}
       {/*   overlay: 'bg-black/80 backdrop-blur-xl z-9999' */}
       {/* }} visible={store.appStore.getAppState ? store.appStore.getAppState :  (navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true )} loaderProps={{ children: <SvgCleanCarLoader/> }} />} */}
-      {/* <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }} classNames={{ */}
-      {/*   overlay: 'bg-black/80 backdrop-blur-xl' */}
-      {/* }} visible={store.appStore.AppState } loaderProps={{ children: <SvgCleanCarLoader/> }} /> */}
+      <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }} classNames={{
+        overlay: 'bg-black/80 backdrop-blur-xl'
+      }} visible={store.appStore.AppState } loaderProps={{ children: <SvgCleanCarLoader/> }} />
       <main className={'!contents'}>{children}</main>
       <Footer className={'desktop:block hidden'}>
         {footerContent}

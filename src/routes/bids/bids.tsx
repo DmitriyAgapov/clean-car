@@ -6,49 +6,56 @@ import { useStore } from 'stores/store'
 import { Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import { observer } from 'mobx-react-lite'
-import { dateTransformShort } from 'utils/utils'
+import TableWithSortNew  from "components/common/layout/TableWithSort/TableWithSortNew";
+import { observer, useLocalStore } from "mobx-react-lite";
+import {  dateTransformShort } from "utils/utils";
 import userStore from 'stores/userStore'
-import agent from 'utils/agent'
+import  { client } from "utils/agent";
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
-import { useInterval } from '@mantine/hooks'
-import { SWRConfig, SWRHook } from 'swr'
-export function logger(useSWRNext: SWRHook) {
-	return (key: any, fetcher: (arg0: any) => any, config: any) => {
-        // Add logger to the original fetcher.
-        const extendedFetcher = (...args: any[]) => {
-            console.log('SWR Request:', key)
-            // @ts-ignore
-	        return fetcher(...args)
-        }
+import useSWR from "swr";
 
-        // Execute the hook with the new fetcher.
-        return useSWRNext(key, extendedFetcher, config)
-    }
-}
+import {  LocalRootStore } from "stores/localStore";
+
+const localRootStore =  new LocalRootStore()
+
 const BidsPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
-	const params = useParams()
 	const location = useLocation()
-	let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
-	const {isLoading, data, error} = agent.Bids.getAllBidsNew(searchParams.toString())
-	console.log(data);
-	// const interval = useInterval(() => {
-	// 			store.bidsStore.loadAllBids()
-	// }, 10000);
-	//
-	// useEffect(() => {
-	// 	if (location.pathname.includes('bids') && !location.pathname.includes('bids/')) {
-	// 		interval.start();
-	// 	}
-	// 	return interval.stop;
-	// }, []);
-
 	const textData = store.bidsStore.text
+	const params = useParams()
+	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+	const {isLoading, data, error} = useSWR(['bids', localStore.params.getSearchParams] , ([url, args]) => client.bidsAllBidsList(args),
+		{refreshInterval: 10000}
+	)
+
+	useEffect(() => {
+		console.log('updating');
+		localStore.setData = {
+			...data,
+			results: data?.results?.map((r:any) => ({
+			idnum: r.id,
+			id: r.id,
+			status: r.status,
+			created: dateTransformShort(r.created).date,
+			customer: r.company.name,
+			performer: r.performer.name,
+			conductor: ((r.conductor && r.conductor?.first_name) && (r.conductor && r.conductor?.first_name)) ? r.conductor && r.conductor?.first_name + ' ' + r.conductor?.last_name[0] + '.' : "",
+			executor: ((r.executor && r.executor?.first_name) && (r.executor && r.executor?.first_name))  ? r.executor?.first_name + ' ' + r.executor?.last_name[0] + '.' : "",
+			number: r.car?.number,
+			city: r.company.city.name,
+			service_type: r.service_type.name,
+			query: {
+				company_id: userStore.isAdmin ? r.company.id : userStore.myProfileData.company.id,
+			}
+		}))}
+		localStore.setIsLoading = isLoading
+		return
+	},[data])
+
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
+
 	// @ts-ignore
 	return (
 		<Section type={SectionType.default}>
@@ -67,38 +74,19 @@ const BidsPage = () => {
 						}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
-			<SWRConfig value={{
-				//@ts-ignore
 
-			}}>
-		<TableWithSortNew total={data?.count}
-					variant={PanelVariant.dataPadding}
-					search={true}
-					style={PanelRouteStyle.bids}
-					background={PanelColor.glass}
-					className={'col-span-full table-groups table-bids'}
-					filter={true}
-					data={data?.results?.map((r:any) => ({
-						idnum: r.id,
-						id: r.id,
-						status: r.status,
-						created: dateTransformShort(r.created).date,
-						customer: r.company.name,
-						performer: r.performer.name,
-						conductor: r.conductor.first_name + ' ' + r.conductor.last_name[0] + '.',
-						executor: r.executor ? r.executor.first_name + ' ' + r.executor.last_name[0] + '.' : "",
-						number: r.car?.number,
-						city: r.company.city.name,
-						service_type: r.service_type.name,
-						query: {
-							company_id: userStore.isAdmin ? r.company.id : userStore.myProfileData.company.id,
-						}
-					}))}
-					initFilterParams={[FilterData.city, FilterData.is_active, FilterData.service_type, FilterData.start_date, FilterData.end_date]}
-					state={isLoading}
-					ar={textData.tableHeaders}
-		/>
-			</SWRConfig>
+				<TableWithSortNew
+							store={localRootStore}
+							variant={PanelVariant.dataPadding}
+							search={true}
+							style={PanelRouteStyle.bids}
+							background={PanelColor.glass}
+							className={'col-span-full table-groups table-bids'}
+							filter={true}
+							initFilterParams={[FilterData.city, FilterData.is_active, FilterData.service_type, FilterData.start_date, FilterData.end_date]}
+							state={localStore.setIsLoading}
+							ar={textData.tableHeaders}
+				/>
 		</Section>
 	)
 }

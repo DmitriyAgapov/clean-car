@@ -3,22 +3,34 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useLoaderData, useLocation, useNavigate, useNavigation } from "react-router-dom";
+import { useLoaderData, useLocation, useNavigate, useNavigation, useParams } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgBackArrow, SvgCleanCarLoader } from "components/common/ui/Icon";
 import { PermissionNames } from 'stores/permissionStore'
-import Tabs from 'components/common/layout/Tabs/Tabs'
+import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import { Loader } from "@mantine/core";
-import { CompanyType } from "stores/companyStore";
+import { CompanyType, CompanyTypeRus } from "stores/companyStore";
+import agent from "utils/agent";
+import useSWR from "swr";
 
 const CarPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const { data,  company_type }: any = useLoaderData()
   const navigation = useNavigation();
-  console.log(data);
+  const params = useParams()
+  const {isLoading, data} = useSWR(`car_${params.company_id}`,() => store.carStore.getCarByCompanyId(String(params.company_id), Number(params.id)))
+  console.log(data, CompanyTypeRus(data?.company?.company_type));
+  const tabedData = React.useMemo(() => {
+    store.appStore.setAppState(isLoading)
+    return [
+      { label: 'Основная информация', data: data, company_type: CompanyTypeRus(data?.company?.company_type)},
+      { label: 'Сотрудники', data: data, company_type: CompanyTypeRus(data?.company?.company_type)  }
+      // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
+      // { label: 'История заявок', data: data, company_type: params.company_type  }
+    ]
+  }, [isLoading])
 
   const [state, setState] = useState(navigation.state)
 
@@ -86,7 +98,7 @@ const dataMap = new Map([])
             {store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update') && <Button
               trimText={true}
               text={'Редактировать'}
-              action={() => navigate(`/account/cars/${data.results.id}/edit`)}
+              action={() => navigate(`/account/cars/${params.company_id}/${params.id}/edit`)}
               // className={'inline-flex'}
 
             />}
@@ -94,7 +106,7 @@ const dataMap = new Map([])
         }
       />
       <Panel
-        state={false}
+        state={isLoading}
         className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
@@ -103,7 +115,7 @@ const dataMap = new Map([])
         headerClassName={'border-bottom-none'}
         header={
           <>
-            <Heading text={data.results.number} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+            <Heading text={data?.number} variant={HeadingVariant.h2} color={HeadingColor.accent} />
             <div className={'flex items-baseline justify-between'}>
               <div className={'text-xs text-gray-2'}>
                 {/* Дата и время регистрации: <span>{dateTransform(data.results.company.updated).date}</span> */}
@@ -111,38 +123,42 @@ const dataMap = new Map([])
               <div className={'flex flex-1 justify-around'}>
                 <Heading
                   className={'!m-0'}
-                  text={data.results.is_active ? 'Активен' : 'Не активна'}
-                  color={data.results.is_active ? HeadingColor.active : HeadingColor.notActive}
+                  text={data?.is_active ? 'Активен' : 'Не активна'}
+                  color={data?.is_active ? HeadingColor.active : HeadingColor.notActive}
                   variant={HeadingVariant.h4}
                 />
                 <Heading
                   className={'!m-0'}
-                  text={company_type == 'Компания-Заказчик'
-                    ? data.results.number
-                    : data.results.number}
+                  text={data?.company?.company_type == 'Компания-Заказчик'
+                    ? data?.number
+                    : data?.number}
                   variant={HeadingVariant.h4}
                   directory={
-                    company_type == 'Компания-Заказчик'
+                    data?.company?.company_type == 'Компания-Заказчик'
                       ? HeadingDirectory.customer
                       : HeadingDirectory.performer
                   }
                 />
-                <Heading className={'!m-0'} text={data.results.company.city.name} variant={HeadingVariant.h4} />
+                <Heading className={'!m-0'} text={data?.company?.city.name} variant={HeadingVariant.h4} />
               </div>
             </div>
           </>
         }
       >
-        <Tabs data={[
-          {
-            label: 'Основная информация',
-            data: data.results,
-          },
-          {
-            label: 'Сотрудники',
-            data: data.results,
-          },
-        ]} items={true} />
+        <Tabs
+          data={tabedData}
+          type={TabsType.car}
+        />
+        {/* <Tabs data={[ */}
+        {/*   { */}
+        {/*     label: 'Основная информация', */}
+        {/*     data: data.results, */}
+        {/*   }, */}
+        {/*   { */}
+        {/*     label: 'Сотрудники', */}
+        {/*     data: data.results, */}
+        {/*   }, */}
+        {/* ]} items={true} /> */}
       </Panel>
     </Section>
   )

@@ -142,6 +142,7 @@ export class PriceStore {
     copyPrice(company_id: number, price_id: number) {
         return agent.Price.priceDoubling(company_id, price_id)
     }
+
     async getCurrentPrice(props:any, history: boolean) {
         action(() => this.loading = true);
         const mapEd = (ar:[], compareField:string) => {
@@ -379,6 +380,13 @@ export class PriceStore {
                 }
             }
 
+        }
+    }
+    async getAllPrices({company_id, params}: {company_id:number, params:any}) {
+        if(appStore.appType === "admin") {
+            return agent.Price.getAllPrice(params).then(res => res.data)
+        } else {
+            return agent.Price.getAllCompanyPrices(company_id, params).then(res => res.data)
         }
     }
     async updatePriceWash() {

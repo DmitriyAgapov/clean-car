@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -8,7 +8,10 @@ import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import agent from "utils/agent";
+import agent, { client } from "utils/agent";
+import useSWR from "swr";
+import { LocalRootStore } from "stores/localStore";
+import { observer, useLocalStore } from "mobx-react-lite";
 export const textDataCities= {
   path: 'cities',
   title: 'Города',
@@ -30,16 +33,22 @@ export const textDataCities= {
   editAction: agent.Catalog.editCity,
   // editPageForm: FormCreateCity.bind(props, { ...data, edit:true }),
 }
+const localRootStore =  new LocalRootStore()
 const RefCitiesPage = () => {
   const location = useLocation()
-  if (location.pathname !== `/account/references/cities`) return <Outlet />
+
+  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+
     const store = useStore()
     const navigate = useNavigate()
-
-    let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
-    const {isLoading, data, error} = agent.Catalog.getCitiesNew(searchParams.toString())
-
-
+    const {isLoading, data, error} = useSWR(['refCities', localStore.params.getSearchParams] , ([url, args]) => agent.Catalog.getCities(args).then((res) => res.data))
+    useEffect(() => {
+      localStore.setData = {
+        ...data,
+        results: data?.results?.map((item:any) => ({id: item.id, status: item.is_active, name: item.name, timezone: item.timezone ?? ''}))}
+      localStore.setIsLoading = isLoading
+    },[data])
+  if (location.pathname !== `/account/references/cities`) return <Outlet />
     return (
         <Section type={SectionType.default}>
             <Panel
@@ -87,20 +96,19 @@ const RefCitiesPage = () => {
                 }
             />
             <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
-                <TableWithSortNew
-                    total={data?.count}
-                    variant={PanelVariant.dataPadding}
-                    search={true}
-                    style={PanelRouteStyle.refcars}
-                    background={PanelColor.glass}
-                    className={'col-span-full table-groups  h-full'}
-                    filter={false}
-                    data={data?.results.map((item:any) => ({id: item.id, status: item.is_active, name: item.name, timezone: item.timezone ?? ''}))}
-                    state={isLoading}
-                    ar={textDataCities.tableHeaders}
-                />
+              <TableWithSortNew
+                store={localRootStore}
+                variant={PanelVariant.dataPadding}
+                search={true}
+                style={PanelRouteStyle.refcars}
+                background={PanelColor.glass}
+                className={'col-span-full table-groups  h-full'}
+                filter={false}
+                state={isLoading}
+                ar={textDataCities.tableHeaders}
+              />
             </Panel>
         </Section>
     )
 }
-export default RefCitiesPage
+export default observer(RefCitiesPage)

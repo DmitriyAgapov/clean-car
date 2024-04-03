@@ -11,6 +11,7 @@ export enum TabsType {
   user = 'user',
   price = 'price',
   priceEdit = 'priceEdit',
+  car = 'car',
 }
 export type TabsProps = {
   data?: any
@@ -34,7 +35,7 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
   }, [aTab]);
 
   const TabPanels = observer(()=> {
-    console.log(data);
+
       const result:any = []
         if(type == TabsType.bid) {
           data.forEach((item: any, index: number) => {
@@ -60,23 +61,24 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
           return result
         }
 
-        if(items) {
+        if(type == TabsType.car) {
           data.forEach((item: any, index: number) => {
-            result.push(<TabsVariantsCars key={`tab_${index}`} state={state == item.label} data={item.data} label={item.label} props={items}/>)
+            result.push(<TabsVariantsCars  company_type={data[0].company_type}
+              companyId={data[0].data.id}  key={`tab_${index}`} state={state == item.label} data={item.data} label={item.label} props={items}/>)
           })
           return result
         }
         if(type == TabsType.filial) {
+
           data.forEach((item: any, index: number) => {
             result.push(<TabsVariantsFilial key={`tab_${index}`} state={state == item.label} parentCompany={item.parent} company_type={data[0].company_type} data={item.data} label={item.label} props={data}/>)
           })
           return result
         }
         if(type == TabsType.company) {
-          console.log(items);
           data.forEach((item: any, index: number) => {
             result.push(
-              <TabsVariants   key={`var-${item.label}`}
+              <TabsVariants key={`var-${item.label}`}
                 company_type={data[0].company_type}
                 companyId={data[0].data.id} content_type={item.label} state={state == item.label} data={item.data} label={item.label} props={items} className={'!pb-0'}/>
             )

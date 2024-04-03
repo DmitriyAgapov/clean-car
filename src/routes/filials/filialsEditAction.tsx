@@ -19,7 +19,7 @@ export default function FilialsPageEditAction(props: any) {
   const { company_type, id } = useParams();
   // @ts-ignore
   const {data: loaderData, type, parent} = useLoaderData()
-  console.log('parent', parent);
+
   const  company = {
     id: id,
     company_id: parent.data.id,

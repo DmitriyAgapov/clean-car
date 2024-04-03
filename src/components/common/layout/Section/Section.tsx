@@ -17,6 +17,7 @@ type SectionProps = {
 }
 
 const Section = ({ children, type = SectionType.default }: SectionProps) => {
+
   return (
     <section data-variant={type} className={styles.Section}>
       {children}

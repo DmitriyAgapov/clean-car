@@ -27,7 +27,7 @@ const dataCreate = {
     modelName: Yup.string(),
     car_type: Yup.string().required('Выберите тип'),
   }),
-  submitAction: () => console.log('sumbit brands'),
+
   inputs: [
     {
       label: 'Марка',

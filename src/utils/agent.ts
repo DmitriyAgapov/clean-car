@@ -10,8 +10,8 @@ import { BidsStatus } from "stores/bidsStrore";
 import { notifications } from "@mantine/notifications";
 import useSWR from "swr";
 import { KeysBidCreate } from "stores/types/bidTypes";
-import * as url from "url";
-import { logger } from "routes/bids/bids";
+import { logger } from "utils/utils";
+import { Client } from "utils/schema";
 
 export type PaginationProps = {
   name?: string | number | URLSearchParams,
@@ -51,7 +51,7 @@ const axiosUpload = axios.create({
 //Константа для запросов
 export const API_ROOT = process.env.REACT_APP_PUBLIC_API
 export const fetcherNew = async (url:string) => requests.getNew(url).then(r => ({...r.data, url: url}))
-
+export const client = new Client(API_ROOT, axios)
 //Объект запросов
 export const requests = {
   delete: (url: string) =>
@@ -62,7 +62,7 @@ export const requests = {
     })
     .then((response) => response.data)
     .catch(handleErrors),
-  get: (url: string, body?: any, pagination?:PaginationProps) =>
+  get: (url: string,  pagination?:PaginationProps) =>
      axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
@@ -131,7 +131,7 @@ export const requests = {
 
 //Обработка ошибок
 const handleErrors = (err: AxiosError) => {
-    console.log(err && err.response && (err.response.status === 400 || err.response.status === 405));
+    // console.log(err && err.response && (err.response.status === 400 || err.response.status === 405));
 
     //create notification
 
@@ -142,8 +142,8 @@ const handleErrors = (err: AxiosError) => {
       notifications.show({
         id: 'bid-created',
         withCloseButton: true,
-        onClose: () => console.log('unmounted'),
-        onOpen: () => console.log('mounted'),
+        // onClose: () => console.log('unmounted'),
+        // onOpen: () => console.log('mounted'),
         autoClose: 4000,
         // title: "Ошибка",
         message: errMsg,
@@ -179,7 +179,7 @@ const Price = {
     priceDoubling: (company_id: number, id: number) => requests.post(`/price/${company_id}/${id}/doubling/`, {}),
     getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list/', pagination),
     getAllCompanyPrices: (company_id: number | string, pagination?: PaginationProps) => requests.get(`/price/${company_id}/active_list/`, pagination),
-    getHistoryPrice: (company_id:number, pagination?: PaginationProps) => requests.get(`/price/${company_id}/history/`, pagination),
+    getHistoryPrice: (company_id:number, pagination?: any) => requests.get(`/price/${company_id}/history/`, pagination),
     getCurentCompanyPriceEvac: (company_id: number) => requests.get(`/price/${company_id}/active_evacuation`, {}),
     getCompanyPriceEvac: (company_id: number, id: number) => requests.get(`/price/${company_id}/${id}/evacuation/`, {}),
     getCurentCompanyPriceTire: (company_id: number) => requests.get(`/price/${company_id}/active_tire`, {}),
@@ -236,6 +236,7 @@ const Bids = {
   getAvailablePerformers: (company_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/bid_performers/`, data),
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`),
+  getBidNew: (company_id: string, id: string) => useSWR(`/bids/${company_id}/${id}/retrieve/`, fetcherNew),
   getAllCompanyBids: (company_id: number|string, params: PaginationProps) => requests.get(`/bids/${company_id}/list`, params),
   updateBidStatus: (company_id: number|string, bid_id: number|string, status:BidsStatus, fotos?: number[]) => requests.put(`/bids/${company_id}/${bid_id}/status/`, {status: status, fotos: fotos}),
   loadBidPhotos: (company_id:  number|string, bid_id:  number|string) => requests.get(`/bid_photos/${company_id}/${bid_id}/list/`),

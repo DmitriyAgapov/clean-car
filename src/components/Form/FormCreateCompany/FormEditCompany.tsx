@@ -137,7 +137,7 @@ const FormEditCompany = ({data}:any) => {
                   <FormStepTwo step={step} animate={animate}
                     action={() => changeStep(1)}
                     values={values}
-                    action1={() => console.log()}
+
                     errors={errors}
                     touched={touched}
                     store={store}  prop8={(o: any) => ({

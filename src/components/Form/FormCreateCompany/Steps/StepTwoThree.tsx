@@ -10,9 +10,9 @@ import { useStore } from "stores/store";
 export function FormStepTwo(props: {
   step: any
   animate: any
-  action: () => any
+  action?: () => any
   values: any
-  action1: () => void
+  action1?: () => void
   errors: any
   touched: any
   store: any

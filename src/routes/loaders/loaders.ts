@@ -203,10 +203,10 @@ export const usersLoader = async ({ request, params }:any) => {
     return null
 }
 export const userLoader = async ({ params: { company_type, id, company_id } }: any) => {
-    console.log(company_type);
+
     if(appStore.appType === "admin") {
         let user = await usersStore.getUser(company_id, id, company_type);
-        console.log('userLoaderIsAdmin', user)
+
 
         return defer({
             user: user,
@@ -240,7 +240,7 @@ export const groupsIdLoader = async ({ params: { company_type, id } }: any) => {
     return null
 }
 export const profileLoader = async () => {
-    console.log('profileLoader');
+
     await userStore.loadMyProfile()
     return null
 }

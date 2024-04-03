@@ -370,7 +370,6 @@ export class CompanyStore {
         filials: []
     })
     getAllFilials = flow(function* (this: CompanyStore, params?: PaginationProps) {
-
         let result
         try {
             if (appStore.appType !== "admin") {

@@ -12,13 +12,16 @@ import label from "utils/labels";
 import agent from "utils/agent";
 import { Loader } from "@mantine/core";
 import { textDataCities } from "routes/reference/City/cities";
+import useSWR from "swr";
+import { observer } from "mobx-react-lite";
 
 const ReferenceCityPage = ():JSX.Element => {
+  const store = useStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const store = useStore()
   const params = useParams()
-  const {isLoading, data, error} = agent.Catalog.getCityNew(params.id as string)
+  const {isLoading, data, error} = useSWR([`refCity_${params.id}`, params.id], ([url, id]) => agent.Catalog.getCity(Number(id)).then((res) => res.data))
+
   console.log(data,'car');
   const items = React.useMemo(() => {
 
@@ -27,7 +30,6 @@ const ReferenceCityPage = ():JSX.Element => {
         let counter = 0
         for (let key in obj) {
             if (key !== 'id') {
-
                 if (typeof obj[key] === 'boolean') {
                     itemsAr.push(
                         <DList
@@ -62,7 +64,8 @@ const ReferenceCityPage = ():JSX.Element => {
 
   return (
     <Section type={SectionType.default}>
-      <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
+      <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'}
+        state={isLoading}
         header={<>
           <div>
             <Button text={<><SvgBackArrow />{textDataCities.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />

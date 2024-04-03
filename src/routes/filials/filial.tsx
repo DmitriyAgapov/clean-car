@@ -6,27 +6,39 @@ import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
+import agent, { client } from "utils/agent";
+import useSWR from "swr";
 
 const FilialPage = () => {
   const store = useStore()
   const location = useLocation()
+  const params = useParams()
   const navigate = useNavigate()
-  // @ts-ignore
-  const { data, type, company_id, parent } = useLoaderData()
-
-  const { company, cars, users, limits } = data
-  const arData = [{ ...company, parent: parent, company_id:company_id, company_type: type}, cars, users, limits]
+  const {isLoading, data} = useSWR(`filial_${params.id}`, (url) => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
+  console.log(isLoading, data);
+  const tabedData = React.useMemo(() => {
+    store.appStore.setAppState(isLoading)
+    return [
+      { label: 'Основная информация', data: data, company_type: params.company_type  },
+      { label: 'Филиалы', company_type: params.company_type  },
+      { label: 'Сотрудники', data: data, company_type: params.company_type  },
+      { label: 'Автомобили',  company_type: params.company_type  },
+      // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
+      // { label: 'История заявок', data: data, company_type: params.company_type  }
+    ]
+  }, [isLoading])
 
   if (location.pathname.includes('edit')) return <Outlet />
   return (
       <Section type={SectionType.default}>
           <Panel
+              state={isLoading}
               variant={PanelVariant.withGapOnly}
               header={<><div>
                 <Button text={<><SvgBackArrow />Назад к списку филиалов{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
@@ -35,6 +47,7 @@ const FilialPage = () => {
           />
 
           <Panel
+            state={isLoading}
               className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
               variant={PanelVariant.textPadding}
               background={PanelColor.glass}
@@ -43,37 +56,37 @@ const FilialPage = () => {
               headerClassName={'border-bottom-none'}
               header={
                   <>
-                      <Heading text={company.data.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+                      <Heading text={data?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
                       <div className={'flex items-baseline justify-between'}>
                           <div className={'text-xs text-gray-2'}>
-                              Дата и время регистрации: <span>{dateTransform(company.data.updated).date}</span>
+                              Дата и время регистрации: <span>{dateTransform(data?.updated).date}</span>
                           </div>
                           <div className={'flex flex-1 justify-around'}>
                               <Heading
                                   className={'!m-0'}
-                                  text={company.data.is_active ? 'Активен' : 'Не активна'}
-                                  color={company.data.is_active ? HeadingColor.active : HeadingColor.notActive}
+                                  text={data?.is_active ? 'Активен' : 'Не активна'}
+                                  color={data?.is_active ? HeadingColor.active : HeadingColor.notActive}
                                   variant={HeadingVariant.h4}
                               />
                               <Heading
                                   className={'!m-0'}
-                                  text={type == 'customer'
+                                  text={params.company_type == 'customer'
                                     ? CompanyType.customer
                                     : CompanyType.performer}
                                   variant={HeadingVariant.h4}
                                   directory={
-                                    type == 'customer'
+                                    params.company_type == 'customer'
                                           ? HeadingDirectory.customer
                                           : HeadingDirectory.performer
                                   }
                               />
-                              <Heading className={'!m-0'} text={company.data.city.name} variant={HeadingVariant.h4} />
+                              <Heading className={'!m-0'} text={data?.city.name} variant={HeadingVariant.h4} />
                           </div>
                       </div>
                   </>
               }
           >
-              <Tabs data={arData}  type={TabsType.filial}/>
+              <Tabs data={tabedData}  type={TabsType.filial}/>
           </Panel>
       </Section>
 

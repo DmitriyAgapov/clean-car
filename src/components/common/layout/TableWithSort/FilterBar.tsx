@@ -9,6 +9,9 @@ import dayjs from "dayjs";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import { useStore } from "stores/store";
 import { useSearchParams } from "react-router-dom";
+import { useLocalStore } from "stores/localStore";
+import { entries } from "mobx";
+import { observer } from "mobx-react-lite";
 
 interface FilterBarProps {
   state: boolean
@@ -29,7 +32,7 @@ const SelectStyles = {
 }
 const FilterElements = ({ filters }:{filters: any}) => {
     const params = React.useContext(ctx)
-    console.log(params, 'ctx')
+
     const store = useStore()
     const elements: JSX.Element[] = []
     filters && filters.forEach((el: FilterData) => {
@@ -193,8 +196,9 @@ const FilterElements = ({ filters }:{filters: any}) => {
     return <>{elements}</>
 }
 
-export default function FilterBar({ filters, state = false }: FilterBarProps) {
-  let [searchParams, setSearchParams] = useSearchParams();
+const FilterBar = ({ filters, state = false }: FilterBarProps) => {
+  const localStore = useLocalStore()
+
   const [params, setParams] = useState<{
     company__city?: string
     status?: string
@@ -203,27 +207,34 @@ export default function FilterBar({ filters, state = false }: FilterBarProps) {
     service_type?: string
   }>(() => {
     const data = {}
-    searchParams.has('service_type') && Object.assign(data, {service_type: searchParams.get('service_type')})
-    searchParams.has('company__city') && Object.assign(data, {company__city: searchParams.get('company__city')})
-    searchParams.has('start_date') && Object.assign(data, {start_date: searchParams.get('start_date')})
-    searchParams.has('end_date') && Object.assign(data, {end_date: searchParams.get('end_date')})
-    searchParams.has('status') && Object.assign(data, {status: searchParams.get('status')})
+    for (const key in localStore.params.getSearchParams) {
+      if (key === 'company__city') {
+        Object.assign(data, {company__city: localStore.params.searchParams.company__city})
+      }
+      if (key === 'status') {
+        Object.assign(data, {status: localStore.params.searchParams.status})
+      }
+      if (key === 'service_type') {
+        Object.assign(data, {service_type: localStore.params.searchParams.service_type})
+      }
+      if (key === 'start_date') {
+        Object.assign(data, {start_date: localStore.params.searchParams.start_date})
+      }
+      if (key === 'end_date') {
+        Object.assign(data, {end_date: localStore.params.searchParams.end_date})
+      }
+    }
     return data
   })
+
   const handleAction = React.useCallback(() => {
-      searchParams.set('page', '1')
-      searchParams.set('page_size', '10')
-      params.company__city ? searchParams.set('company__city', params.company__city) : searchParams.delete('company__city')
-      params.status ? searchParams.set('status', params.status) : searchParams.delete('status')
-      params.service_type ? searchParams.set('service_type', params.service_type) : searchParams.delete('service_type')
-      params.start_date ? searchParams.set('start_date', params.start_date) : searchParams.delete('start_date')
-      params.end_date ? searchParams.set('end_date', params.end_date) : searchParams.delete('end_date')
-      setSearchParams((prev) => {
-        return searchParams
-      })
+      localStore.params.clearParams()
+      localStore.params.setSearchParams(params)
   }, [params])
+
   const handleClearAction = React.useCallback(() => {
-      setSearchParams({page: "1", page_size: "10"})
+    localStore.params.clearParams()
+    setParams({})
   }, [params])
 
 
@@ -251,3 +262,5 @@ export default function FilterBar({ filters, state = false }: FilterBarProps) {
     </div>
   )
 }
+
+export default observer(FilterBar)

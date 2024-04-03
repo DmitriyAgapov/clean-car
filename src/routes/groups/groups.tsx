@@ -1,21 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
-import {  observer } from "mobx-react-lite";
+import { observer, useLocalStore } from "mobx-react-lite";
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import moment from 'moment'
 import { PermissionNames } from "stores/permissionStore";
-
+import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
+import { LocalRootStore } from "stores/localStore";
+import useSWR from "swr";
+import { client } from "utils/agent";
+const localRootStore =  new LocalRootStore()
 const GroupsPage = () => {
     const store = useStore()
+
+  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const {isLoading, data, error} = useSWR(['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
     const navigate = useNavigate()
     const location = useLocation()
+  console.log(data);
   // const data = useLoaderData()
-    const {loading, groups, errors} = store.permissionStore.allPermissionsState
+  //   const {loading, groups, errors} = store.permissionStore.allPermissionsState
+  useEffect(() => {
+    localStore.setData = {
+      ...data,
+      results: data?.results?.map((item: any) => ({
+        date: moment(item.created).format('DD.MM.YYYY HH:mm'),
+        name: item.name,
+        id: item.id,
+        query:{
+          group: store.appStore.appType
+        }
+      }))}
+    localStore.setIsLoading = isLoading
+  },[data])
   // console.log(data);
   if ('/account/groups' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
@@ -53,22 +74,17 @@ const GroupsPage = () => {
                     чтобы управлять доступом к различным ресурсам системы{' '}
                 </p>
             </Panel>
-          {groups.length > 0 && <TableWithSort
-            background={PanelColor.glass}
-            filter={false}
+          <TableWithSortNew
+            store={localRootStore}
+            variant={PanelVariant.dataPadding}
             search={true}
-            className={'table-groups'}
-            ar={['дата и время', 'Название группы']}
-            data={groups.map((item: any) => ({
-              date: moment(item.created).format('DD.MM.YYYY HH:mm'),
-              name: item.name,
-              id: item.id,
-              query:{
-                group: store.appStore.appType
-              }
-            }))}
-            state={groups.length === 0}
-          />}
+            style={PanelRouteStyle.company}
+            background={PanelColor.glass}
+            className={'col-span-full table-groups'}
+            filter={true}
+            state={isLoading}
+            ar={[{ label: "дата и время", name: "created" }, {label: 'Название группы', name: 'name'}]}
+          />
         </Section>
     )
 }

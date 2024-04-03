@@ -24,21 +24,9 @@ export class ParamStore {
 	constructor() {
 		makeAutoObservable(this, {}, { autoBind: true })
 		makePersistable(this, { storage: localStorage, name: 'paramStore', properties: ['params']} )
-		// autorun(() => console.log(this.params))
-		autorun(() => {
-			console.log(location.pathname);
-			console.log(this.getLocation());
-			if(this.getLocation()) {
-				console.log('paramsLocation', location.pathname)
-			}
-		})
-		autorun(() => {
-			toJS(location) // runs every time browser location changes
-		})
 	}
 	location: string = ''
 	@computed getLocation() {
-		console.log('loc', location.pathname)
 		return location
 	}
 	params:any = {
@@ -64,7 +52,6 @@ export class ParamStore {
 		this.params = initParams
 	}
 	setParams(params:any) {
-		console.log(params);
 		this.params = {
 			...this.params,
 			...params

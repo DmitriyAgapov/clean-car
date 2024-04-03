@@ -134,12 +134,12 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             }
             if (payload.field === 'overdraft_sum') {
                 return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3',
+                    className: 'mb-2  flex-grow  tablet:!flex-[0_0_11rem] !flex-[1_0_20rem] col-span-3',
                 }
             }
             if (payload.field === 'overdraft') {
                 return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3',
+                    className: 'mb-2  flex-grow  tablet:!flex-[0_0_11rem] !flex-[1_0_20rem] col-span-3',
                 }
             }
             if (payload.field === 'height') {
@@ -408,7 +408,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
 
                             disabled={edit}
                             defaultValue={formData.values.type}
-                            className={'!flex-initial'}
+                            className={'tablet:!flex-initial !flex-[1_0_20rem]'}
                             data={[
                                 { label: 'Заказчик', value: CompanyType.customer },
                                 { label: 'Партнер', value: CompanyType.performer },
@@ -480,31 +480,31 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         <Select
                             label={'Оплата'}
                             {...formData.getInputProps('payment')}
-                            className={' w-fit  !flex-[0_0_auto]'}
+                            className={' w-fit   tablet:!flex-[0_0_auto] !flex-[1_0_20rem]'}
                             data={[
                                 { label: 'Постоплата', value: Payment.postoplata },
                                 { label: 'Предоплата', value: Payment.predoplata },
                             ]}
                         />
 
-                        <Select label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'} onOptionSubmit={(value: any) => {
+                        <Select label={'Овердрафт'} className={' w-fit    tablet:!flex-[0_1_4rem] !flex-[1_0_20rem]'} onOptionSubmit={(value: any) => {
                             if(value === "2") {
                                 formData.setFieldValue('overdraft_sum', 0);
                             }
                         }}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
-                        <NumberInput onClick={() => console.log(formData.errors)} disabled={formData.values.overdraft === "2"}    label={'Сумма'}     thousandSeparator=" " suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} min={1}  className={formData.errors.overdraft_sum ? ' filter grayscale' : ''}/>
+                        <NumberInput onClick={() => console.log(formData.errors)} disabled={formData.values.overdraft === "2"}    label={'Сумма'}     thousandSeparator=" " suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} min={1}  className={formData.errors.overdraft_sum ? ' filter grayscale' : '' + ' tablet:!flex-[0_0_11rem] !flex-[1_0_20rem]'}/>
 
                         <Select
                             label={'Список Партнеров'}
                             {...formData.getInputProps('performers_list')}
-                            className={' w-fit  !flex-[0_0_auto]'}
+                            className={' w-fit  tablet:!flex-[0_0_auto]  !flex-[1_0_20rem]'}
                             data={[
                                 { label: 'Да', value: '1' },
                                 { label: 'Нет', value: '2' },
                             ]}
                         />
                         <hr className={'mt-0 mb-2 flex-[1_0_100%] w-full border-gray-2'} />
-                        {formData.values.performers_list === '1' && <TransferList />}
+                        {/* {formData.values.performers_list === '1' && <TransferList />} */}
                     </PanelForForms>
                     <PanelForForms state={step !== 3}
                       animate={animate}
@@ -527,7 +527,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                       }
 
                     >
-                        <div className={'mt-10 flex flex-wrap gap-6'}>
+                        <div className={'mt-10 flex flex-wrap gap-6 flex-1'}>
                             <CreateField title={'Создать прайс-лист'} />
                             <CreateField title={'Создать лимиты'} />
                         </div>

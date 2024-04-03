@@ -130,9 +130,8 @@ const router = createBrowserRouter([
                 // loader: carsLoader,
                 children: [
                     {
-                        path: ':id',
-                        element: <CarPage />,
-                        loader: carsLoader
+                        path: ':company_id/:id',
+                        element: <CarPage />
                     },
                     {
                         path: 'create',
@@ -153,7 +152,7 @@ const router = createBrowserRouter([
                   {
                       path: ':company_id/:id',
                       element: <BidPage/>,
-                      loader: bidLoader,
+                      // loader: bidLoader,
                   },
                   {
                       path: 'create',
@@ -195,7 +194,6 @@ const router = createBrowserRouter([
                     {
                         path: ':company_type/:company_id/:id',
                         element: <FilialPage />,
-                        loader: filialLoader,
                         children: [
                             {
                                 path: 'edit',
@@ -314,7 +312,7 @@ const router = createBrowserRouter([
             {
                 path: 'price',
                 element: <PricesPage />,
-                loader: priceLoader,
+                // loader: priceLoader,
                 children: [
                     {
                         path: ':id',

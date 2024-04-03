@@ -362,6 +362,7 @@ export class BidsStore {
     currentBidPhotos = observable.array([])
     justCreatedBid:any = {}
     eventCounts: any = observable.object({})
+    eventCountsState: boolean = false
     constructor() {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, {
@@ -475,18 +476,21 @@ export class BidsStore {
             },
         )
     }
-
+    setEventCount(value:boolean) {
+        this.eventCountsState = value
+    }
     get getEventCount() {
-        return this.eventCounts
+        return ({
+            data: this.eventCounts,
+            isLoading: this.eventCountsState
+        })
     }
     async loadEventCount() {
         if(authStore.userIsLoggedIn && appStore.token !== "") {
-            console.log('startCount');
+            this.setEventCount(true)
             try {
                 if(appStore.appType === "admin") {
-                    console.log('startCountadmin');
                     const {data, status}:any = await agent.Bids.getBidCountAdmin()
-                    console.log(data);
                     this.eventCounts = data
                 }
                 if(appStore.appType === "customer") {
@@ -500,6 +504,7 @@ export class BidsStore {
             } catch (e) {
                 console.log(e);
             }
+            this.setEventCount(true)
         }
     }
     get ActiveTab() {
@@ -526,17 +531,13 @@ export class BidsStore {
             runInAction(() => {
                 if(this.currentBid.status !== data.status && this.currentBid.id === data.id) {
                     this.currentBid = data
-                    console.log(company_id && bid_id);
                     if(company_id && bid_id) {
-                        console.log('loadBidPhotos', company_id, bid_id);
                         this.loadBidPhotos(company_id, bid_id)
                     }
                 }
                 if(this.currentBid.id !== data.id) {
                     this.currentBid = data
-                    console.log(company_id && bid_id);
                     if(company_id && bid_id) {
-                        console.log('loadBidPhotos', company_id, bid_id);
                         this.loadBidPhotos(company_id, bid_id)
                     }
                 }

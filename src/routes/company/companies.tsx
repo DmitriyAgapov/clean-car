@@ -1,26 +1,45 @@
-import React from 'react'
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { observer } from 'mobx-react-lite'
-import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { observer, useLocalStore } from "mobx-react-lite";
+import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import agent from "utils/agent";
+import agent, { client } from "utils/agent";
+import useSWR from "swr";
+import { createParams, dateTransformShort } from "utils/utils";
+import { TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
+import {  LocalRootStore } from "stores/localStore";
+import userStore from "stores/userStore";
+
+const localRootStore =  new LocalRootStore()
 
 const CompaniesPage = () => {
-
   const location = useLocation()
-
+  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
 
-  let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
-  const {isLoading, data, error} = agent.Companies.getOnlyAllCompaniesNew(searchParams.toString())
+  const {isLoading, data, error} = useSWR(['companies', localStore.params.getSearchParams] , ([url, args]) => client.companiesOnlyCompaniesList(args))
+  useEffect(() => {
+    localStore.setData = {
+      ...data,
+      results: data?.results?.map((item:any) => ({
+        status: item.is_active as boolean,
+        company: item.name,
+        type: item.company_type,
+        city: item.city.name,
+        id: item.id
+      }))}
+    localStore.setIsLoading = isLoading
+  },[data])
+
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
+
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -47,21 +66,13 @@ const CompaniesPage = () => {
         }
       />
       <TableWithSortNew
-        total={data?.count}
+        store={localRootStore}
         variant={PanelVariant.dataPadding}
         search={true}
         style={PanelRouteStyle.company}
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
         filter={false}
-        data={data?.results?.filter((item:any) => item.parent === null).map((item: any) => ({
-          status: item.is_active as boolean,
-          company: item.name,
-          type: item.company_type,
-          city: item.city.name,
-          id: item.id
-        }))}
-
         state={isLoading}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'}, {label: 'Тип', name: 'company_type'},{ label: 'Город', name: 'city' }]}
       />

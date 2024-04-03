@@ -32,7 +32,7 @@ const Notification = observer(() => {
     <div className={styles.notification}>
       <Link to={'/account/bids'} >
       <SvgNotification />
-      {store.bidsStore.getEventCount.bid_count ? <span>{store.bidsStore.getEventCount.bid_count}</span> : null}
+      {(store.bidsStore.getEventCount.data && store.bidsStore.getEventCount?.data.bid_count) ? <span>{store.bidsStore.getEventCount.data.bid_count}</span> : null}
       </Link>
     </div>
 

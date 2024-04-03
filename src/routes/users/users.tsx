@@ -5,21 +5,43 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useStore } from 'stores/store'
-import { observer } from 'mobx-react-lite'
+import { observer, useLocalStore } from "mobx-react-lite";
 import { Company } from 'stores/companyStore'
 import { User } from 'stores/usersStore'
 import { UserTypeEnum } from 'stores/userStore'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import agent from "utils/agent";
-
+import agent, { client } from "utils/agent";
+import useSWR from "swr";
+import { LocalRootStore } from "stores/localStore";
+const localRootStore =  new LocalRootStore()
 const UsersPage = () => {
   const store = useStore()
   const location = useLocation()
-  const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10');
-  const {isLoading, data, error} = agent.Users.getAllUsersTest(searchParams.toString())
 
+  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const navigate = useNavigate()
+  const {isLoading, data, error} = useSWR(['users', localStore.params.getSearchParams] , ([url, args]) => client.accountsAllUsers(args))
+  useEffect(() => {
+    localStore.setData = {
+      ...data,
+      results: data?.results?.map((item:any) => ({
+        state: item.employee.is_active,
+        name: item.employee.first_name + ' ' + item.employee.last_name,
+        phone: item.employee.phone ? item.employee.phone : " ",
+        email: item.employee.email,
+        group: item.company.company_type,
+        company: item.company.name,
+        city: item.company.city.name,
+        id: item.employee.id,
+        query: {
+          type: item.company.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : item.company.company_type === "Компания-Партнер" ? UserTypeEnum.performer : "admin",
+          company_id: item.company.id,
+
+        },
+      }))}
+    localStore.setIsLoading = isLoading
+  },[data])
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -48,33 +70,17 @@ const UsersPage = () => {
           </>
         }
       ></Panel>
-     <TableWithSortNew
-        state={isLoading}
-        total={data?.count}
-        background={PanelColor.glass}
-        filter={false}
+      <TableWithSortNew
+        store={localRootStore}
+        variant={PanelVariant.dataPadding}
         search={true}
-        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city__name'}]}
-        // @ts-ignore
-        data={data?.results?.map((item: { company: Company; group: number; employee: User }) => {
-          // console.log(item.company.company_type === "Компания-Заказчик");
-          return ({
-          state: item.employee.is_active,
-          name: item.employee.first_name + ' ' + item.employee.last_name,
-          phone: item.employee.phone,
-          email: item.employee.email,
-          group: item.company.company_type,
-          company: item.company.name,
-          city: item.company.city.name,
-          id: item.employee.id,
-          query: {
-            type: item.company.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : item.company.company_type === "Компания-Партнер" ? UserTypeEnum.performer : "admin",
-            company_id: item.company.id,
-
-          },
-        })})}
         style={PanelRouteStyle.users}
+        background={PanelColor.glass}
+        filter={true}
+        state={isLoading}
+        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city__name'}]}
       />
+
     </Section>
   )
 }

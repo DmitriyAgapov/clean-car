@@ -1,6 +1,6 @@
 import { action, flow, IObservableValue, makeAutoObservable, observable, reaction, runInAction, values } from "mobx";
 import { makePersistable } from "mobx-persist-store";
-import agent, { PaginationProps } from "utils/agent";
+import agent, { client, PaginationProps } from 'utils/agent'
 import appStore from "stores/appStore";
 import userStore, { UserTypeEnum } from "stores/userStore";
 import authStore from "stores/authStore";
@@ -153,6 +153,17 @@ export class CarStore {
     }
     return this.cars
   })
+  async getAllCars(params: any) {
+      if (appStore.appType === UserTypeEnum.admin) {
+          return client.carsAdminList(params)
+      }
+      if(appStore.appType !== UserTypeEnum.admin) {
+        return client.carsList({ company_id: userStore.myProfileData.company.id, ...params })
+      }
+  }
+  async getCarByCompanyId(company_id:string, id: number) {
+    return client.carsRetrieve({company_id: company_id, id: id})
+  }
 
   async getCarsByCompony(company_id:number) {
     this.loadingCars = true

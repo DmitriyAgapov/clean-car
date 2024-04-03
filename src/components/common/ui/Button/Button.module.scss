@@ -50,7 +50,7 @@ user-select: none ;
 	font-weight: 500;
 	font-family: Montserrat, sans-serif !important;
 	text-transform: initial !important;
-	color: black;
+
 	@screen lg-max {
 	  padding: 0 1.125rem;
 	  font-size: .75rem;
@@ -215,6 +215,7 @@ user-select: none ;
 
   &[data-directory="directory"] {
 	border: 0;
+	color: black;
 	background: var(--gradient-directory-200);
 	background-size: 200%;
 	background-position: 0 50%;

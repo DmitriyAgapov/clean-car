@@ -5,23 +5,19 @@ import { observer } from "mobx-react-lite";
 import { useSearchParams } from "react-router-dom";
 import { useDebouncedState, useDebouncedValue } from "@mantine/hooks";
 import { runInAction } from "mobx";
+import { useLocalStore } from "stores/localStore";
 
 const TableSearch = ({ inputProps, action }: { inputProps?: { list?: string }; action?: (e: any) => void }) => {
-  const store = useStore()
-  let [searchParams, setSearchParams] = useSearchParams()
+  const localStore = useLocalStore()
   const [value, setValue] = useState("");
   const [debounced, cancel] = useDebouncedValue(value, 500);
   const ref = useRef(null)
+
  React.useEffect(() => {
     if(debounced !== "") {
-      // store.paramsStore.setParams({ page: 1, q: debounced})
-      searchParams.set('q', String(debounced))
-      searchParams.set('page', "1")
-      setSearchParams(searchParams.toString())
+      localStore.params.setSearchParams({page: 1, q: debounced})
     } else {
-      searchParams.delete('q')
-      store.paramsStore.removeQParams();
-      setSearchParams(searchParams.toString())
+      localStore.params.setSearchParams({page: 1, q: null})
     }
   }, [debounced])
 

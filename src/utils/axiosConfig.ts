@@ -37,7 +37,7 @@ axios.interceptors.response.use(
 				if(tokenRefresh && tokenRefresh !== "undefined" && tokenRefresh !== undefined) {
 				   return agent.Auth.tokenRefresh(tokenRefresh)
 				    .then((response: any) => {
-					   console.log(response);
+					   // console.log(response);
 							runInAction(() => {
 									localStorage.setItem("jwt", response.data.access)
 									appStore.setToken(response.data.access)

@@ -45,6 +45,7 @@ module.exports = withMT({
         xss: '17rem',
       },
       screens: {
+        mobile:  {'max': '743px'},
         tablet: '744px',
         "tablet-max": {'max': '743px'},
         // => @media (min-width: 640px) { ... }

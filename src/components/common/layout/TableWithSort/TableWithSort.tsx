@@ -280,7 +280,7 @@ const TableWithSort = ({
     return (
         <Panel
             background={background ? background : PanelColor.glass}
-            className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto]'}
+            className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto]  overflow-hidden'}
             routeStyle={style}
             variant={variant ? variant : PanelVariant.dataPadding}
             footerClassName={'px-6 pt-2 pb-6 flex  justify-end'}

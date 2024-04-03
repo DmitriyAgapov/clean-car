@@ -15,22 +15,30 @@ import BidActions, { BidAdminActions } from "components/common/ui/BidActions/Bid
 import appStore from "stores/appStore";
 import { observer } from "mobx-react-lite";
 import paramsStore from "stores/paramStore";
+import agent, { client } from "utils/agent";
+import useSWR from "swr";
+import { Loader } from "@mantine/core";
+import { useViewportSize } from "@mantine/hooks";
 
 const BidPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
 	const location = useLocation()
-	const params = useParams()
 	let revalidator = useRevalidator()
 	const bid = store.bidsStore.CurrentBid
+	const params = useParams()
+	const {isLoading, data, error} = useSWR(['bid', {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => client.bidsRetrieve(args.company_id, args.id))
+
 	const textData = store.bidsStore.text
-	console.log(params);
-	const tabedData = React.useMemo(() => [
-		{ label: 'Основная информация', data: bid },
-		{ label: 'Услуги', data: bid },
-		{ label: 'Фото', data: bid },
-		{ label: 'История заявки', data: bid }
-	], [bid.status])
+	const tabedData = React.useMemo(() => {
+		store.appStore.setAppState(isLoading)
+		return [
+			{ label: 'Основная информация', data: data },
+			{ label: 'Услуги', data: data },
+			{ label: 'Фото', data: data },
+			{ label: 'История заявки', data: data }
+		]
+	}, [isLoading])
 
 	React.useEffect(() => {
 		if(bid.status === BidsStatus["Новая"] && store.appStore.appType === "performer") {
@@ -42,13 +50,12 @@ const BidPage = () => {
 			})()
 		}
 	}, [bid.status])
-	console.log('Управление заявками', store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update'));
+
 	const [tick, setTick] = useState(0)
 
 	React.useEffect(() => {
 		if(location.pathname.includes('bids') && location.pathname.includes('bids/')) {
 			setTimeout(() => {
-				console.log('tick', tick);
 				const id = location.pathname.split('/')[location.pathname.split('/').length - 1];
 				const company_id = location.pathname.split('/')[location.pathname.split('/').length - 2];
 				store.bidsStore.loadBidByCompanyAndBidId(Number(company_id), Number(id))
@@ -63,9 +70,11 @@ const BidPage = () => {
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	// if (location.pathname !== `/account/references/${textData.path}/`) return <Outlet />
+	const { height, width } = useViewportSize();
 	return (
         <Section type={SectionType.default}>
             <Panel
+	            state={isLoading}
                 variant={PanelVariant.withGapOnly}
                 headerClassName={'flex justify-between gap-4'}
                 header={
@@ -103,12 +112,16 @@ const BidPage = () => {
                 }
             ></Panel>
             <Panel
+                state={isLoading}
                 className={'col-span-full grid grid-rows-[auto_1fr_auto] tablet-max:-mx-6'}
                 variant={PanelVariant.textPadding}
                 background={PanelColor.glass}
                 bodyClassName={''}
-                footerClassName={'flex  justify-end'}
+                footerClassName={'flex  justify-end mobile:!justify-center'}
                 headerClassName={'grid grid-cols-4 gap-4 border-bottom-none'}
+	              footer={width && width < 740 && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
+		              <BidActions status={bid.status as BidsStatus} />
+	              )}
                 header={
                     <>
                         <div className={'flex col-span-2 tablet-max:col-span-full justify-between'}>
@@ -134,13 +147,14 @@ const BidPage = () => {
                             </div>
                         </div>
 
-                        {store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
+                        {(width && width >740) && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
                             <BidActions status={bid.status as BidsStatus} />
                         )}
                     </>
                 }
             >
                 <Tabs variant={'bid-tabs'} data={tabedData} type={TabsType.bid} className={'!grid grid-rows-[auto_1fr] max-h-fit h-full panel__tabs'}/>
+
             </Panel>
         </Section>
     )

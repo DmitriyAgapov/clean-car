@@ -24,7 +24,10 @@
 .bidtext {
   @apply text-accent text-xs font-medium text-right row-span-2 col-start-3 col-span-2 justify-self-end flex gap-2.5;
   @screen tablet-max {
-	@apply flex mt-4 col-start-1;
+	@apply flex mt-4 col-start-1 flex-1;
+	a {
+	  flex: 1 0 20rem;
+	}
   }
   p {
 	@apply text-accent max-w-80 py-0;

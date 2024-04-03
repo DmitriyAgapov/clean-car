@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -12,8 +12,11 @@ import CarHelper from 'components/common/layout/CarHelper/CarHelper'
 import { useDisclosure } from '@mantine/hooks'
 import { PriceCopy } from 'components/common/layout/Modal/PriceCopy'
 import { CarClasses } from 'components/common/layout/Modal/CarClasses'
-import agent from "utils/agent";
+import agent, { client } from "utils/agent";
 import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
+import { LocalRootStore } from "stores/localStore";
+import { observer, useLocalStore } from "mobx-react-lite";
+import useSWR from "swr";
 export const textDataCars = {
   path: 'car_brands',
   labelsForItem: ['Марка', 'Класс', 'Модель'],
@@ -31,22 +34,38 @@ export const textDataCars = {
   editAction:  agent.Catalog.editCity,
   // editPageForm: FormCreateUpdateCarBrand.bind(props, { ...data, edit:true }),
 }
+
+
+const localRootStore =  new LocalRootStore()
+
 const RefCarsPage = () => {
   const location = useLocation()
+
+  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+
+  const store = useStore()
+  const navigate = useNavigate()
+
+  const [opened, { open, close }] = useDisclosure(false)
+  const {isLoading, data, error} = useSWR(['refCars', localStore.params.getSearchParams] , ([url, args]) => store.catalogStore.getAllRefCarModels(args))
+  useEffect(() => {
+    localStore.setData = {
+      ...data,
+      results: data?.results?.map((item:any) => ({
+        id: item.id,
+        brand: item.brand.name,
+        car_type:item.car_type,
+        modelName: item.name
+      }))}
+    localStore.setIsLoading = isLoading
+  },[data])
+
+  const memoModal = React.useMemo(() => {
+      return <CarClasses opened={opened} onClose={close} />
+  }, [opened])
+
+
   if (location.pathname !== `/account/references/car_brands`) return <Outlet />
-    const store = useStore()
-    const navigate = useNavigate()
-
-    const [opened, { open, close }] = useDisclosure(false)
-
-    let [searchParams, setSearchParams] = useSearchParams('page=1&page_size=10')
-    const {isLoading, data, error} = agent.Catalog.getCarModelsNew(searchParams.toString())
-    console.log(data);
-    const memoModal = React.useMemo(() => {
-        return <CarClasses opened={opened} onClose={close} />
-    }, [opened])
-
-
     return (
         <Section type={SectionType.default}>
             <Panel
@@ -105,26 +124,22 @@ const RefCarsPage = () => {
                     </>
                 }
             />
-            <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
-                <TableWithSortNew
-                    total={data?.count}
-                    variant={PanelVariant.dataPadding}
-                    search={true}
-                    style={PanelRouteStyle.refcars}
-                    background={PanelColor.glass}
-                    className={'col-span-full table-groups  h-full'}
-                    filter={false}
-                    data={data?.results.map((c:any) => ({
-                      id: c.id,
-                      brand: c.brand.name,
-                      car_type: c.car_type,
-                      modelName: c.name
-                    }))}
-                    state={isLoading}
-                    ar={textDataCars.tableHeaders}
-                />
+            <Panel
+
+              variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
+              <TableWithSortNew
+                store={localRootStore}
+                variant={PanelVariant.dataPadding}
+                search={true}
+                style={PanelRouteStyle.refcars}
+                background={PanelColor.glass}
+                className={'col-span-full table-groups  h-full'}
+                filter={true}
+                state={isLoading}
+                ar={textDataCars.tableHeaders}
+              />
             </Panel>
         </Section>
     )
 }
-export default RefCarsPage
+export default observer(RefCarsPage)

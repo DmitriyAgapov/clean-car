@@ -1,14 +1,15 @@
-import { observer } from "mobx-react-lite";
-import { useStore } from "stores/store";
-import React from "react";
-import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useParams, useRevalidator } from "react-router-dom";
-import { BidsStatus } from "stores/bidsStrore"
-import { Menu, Button as Btn, Modal, Text } from "@mantine/core";
-import { SvgMenu } from "components/common/ui/Icon";
-import styles from "./BidActions.module.scss"
-import { useDisclosure } from "@mantine/hooks";
-import { BidModal } from "components/common/layout/Modal/BidModal";
+import { observer } from 'mobx-react-lite'
+import { useStore } from 'stores/store'
+import React from 'react'
+import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import { useParams, useRevalidator } from 'react-router-dom'
+import { BidsStatus } from 'stores/bidsStrore'
+import { Button as Btn, Menu } from '@mantine/core'
+import { SvgMenu } from 'components/common/ui/Icon'
+import styles from './BidActions.module.scss'
+import { useDisclosure, useViewportSize } from '@mantine/hooks'
+import { BidModal } from 'components/common/layout/Modal/BidModal'
+
 const BidText = {
   CustomerVObrabotke: <p>Исполнитель открыл заявку.Ожидается обратная связь</p>,
   CustomerOzhidaet: <p>Исполнитель внес изменения. Пожалуйста ознакомьтесь с ними и примите решение по заявке.</p>,
@@ -26,7 +27,9 @@ const BidText = {
 
 }
 export const BidAdminActions = () => {
+
     const store = useStore()
+  const { height, width } = useViewportSize();
     let revalidator = useRevalidator()
     const params = useParams()
     const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
@@ -73,14 +76,17 @@ export const BidAdminActions = () => {
 
 const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
   const [opened, { open, close }] = useDisclosure(false);
-
+  const { height, width } = useViewportSize();
   const params = useParams()
   const store = useStore()
   const memoModal = React.useMemo(() => {
     return  <BidModal opened={store.bidsStore.modalCurrentState}
       onClose={() => store.bidsStore.setModalCurrentState(false)} />
   }, [store.bidsStore.modalCurrentState]);
-
+  const btnSize = React.useMemo(() => {
+    if((width && width < 740)) return ButtonSizeType.lg
+    return ButtonSizeType.sm
+  }, [width])
   let revalidator = useRevalidator()
   const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
     (async () => {
@@ -97,7 +103,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
             case BidsStatus["Новая"]:
               return (<Button text={"Отменить заявку"}
                   variant={ButtonVariant.accent}
-                  size={ButtonSizeType.sm}
+                  size={btnSize}
                   action={() => handleChangeBidStatus(BidsStatus["Отменена"])} />
               )
             case BidsStatus["Разбор"]:
@@ -105,11 +111,11 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                 <>
                   <Button text={"Отменить"}
                     variant={ButtonVariant["accent-outline"]}
-                    size={ButtonSizeType.sm}
+                    size={btnSize}
                     action={() => handleChangeBidStatus(BidsStatus["Отменена"])} />
                   <Button text={"Завершить"}
                     variant={ButtonVariant.accent}
-                    size={ButtonSizeType.sm}
+                    size={btnSize}
                     action={() => handleChangeBidStatus(BidsStatus["Завершена"])} />
                 </>
               )
@@ -128,7 +134,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                         <Button
                             text={"Отменить заявку"}
                             variant={ButtonVariant.accent}
-                            size={ButtonSizeType.sm}
+                            size={btnSize}
                             action={() => handleChangeBidStatus(BidsStatus["Отменена"])}
                         />
                     )
@@ -144,13 +150,13 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                             <Button
                                 text={"Отказаться"}
                                 variant={ButtonVariant["accent-outline"]}
-                                size={ButtonSizeType.sm}
+                                size={btnSize}
                                 action={() => handleChangeBidStatus(BidsStatus["Разбор"])}
                             />
                             <Button
                                 text={"Принять работу"}
                                 variant={ButtonVariant.accent}
-                                size={ButtonSizeType.sm}
+                                size={btnSize}
                                 action={() => handleChangeBidStatus(BidsStatus["Завершена"])}
                             />
                         </>
@@ -183,14 +189,14 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                             <Button
                                 text={"Отказаться"}
                                 variant={ButtonVariant["accent-outline"]}
-                                size={ButtonSizeType.sm}
+                                size={btnSize}
                                 action={() => handleChangeBidStatus(BidsStatus["Разбор"])}
                             />
 
                             <Button
                                 text={"Принять заявку"}
                                 variant={ButtonVariant.accent}
-                                size={ButtonSizeType.sm}
+                                size={btnSize}
                                 action={() => handleChangeBidStatus(BidsStatus["В работе"])}
                             />
                         </>
@@ -205,14 +211,14 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                       <Button
                         text={"Отказаться"}
                         variant={ButtonVariant["accent-outline"]}
-                        size={ButtonSizeType.sm}
+                        size={btnSize}
                         action={() => handleChangeBidStatus(BidsStatus["Разбор"])}
                       />
 
                       <Button
                         text={"Принять заявку"}
                         variant={ButtonVariant.accent}
-                        size={ButtonSizeType.sm}
+                        size={btnSize}
                         action={() => handleChangeBidStatus(BidsStatus["В работе"])}
                       />
                     </>
@@ -225,7 +231,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                                 variant={ButtonVariant.accent}
                                 type={'button'}
 
-                                size={ButtonSizeType.sm}
+                                size={btnSize}
                                 action={() => {
                                   console.log(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0);
                                   if(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0) {
@@ -248,14 +254,14 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
                       <Button
                         text={"Отказаться"}
                         variant={ButtonVariant["accent-outline"]}
-                        size={ButtonSizeType.sm}
+                        size={btnSize}
                         action={() => handleChangeBidStatus(BidsStatus["Разбор"])}
                       />
 
                       <Button
                         text={"Принять заявку"}
                         variant={ButtonVariant.accent}
-                        size={ButtonSizeType.sm}
+                        size={btnSize}
                         action={() => handleChangeBidStatus(BidsStatus["В работе"])}
                       />
                     </>
@@ -273,7 +279,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
             return result
         }
         return null
-    }, [store.appStore.appType, status])
+    }, [store.appStore.appType, status, width])
     return <div className={styles.bidtext}>{currentActions}{memoModal}</div>
 }
 

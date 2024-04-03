@@ -19,7 +19,7 @@ const ReferencesPage = () => {
     const location = useLocation()
     const [opened, { open, close }] = useDisclosure(false)
     const { data, page, textData }: any = useLoaderData();
-    console.log(data);
+
     const memoModal = React.useMemo(() => {
         return <CarClasses opened={opened} onClose={close} />
     }, [opened])
