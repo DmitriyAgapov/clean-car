@@ -366,20 +366,20 @@ const Catalog = {
             brand: brand,
         }),
     updateCarBrandWithNewBrand: (id: number, brand_name: string, car_class: string, model: string) =>
-        requests.put(`/catalog/car_models/${id}/update_with_new_brand`, {
+        requests.put(`/catalog/car_models/${id}/update_with_new_brand/`, {
             name: model,
             car_type: car_class,
             brand_name: brand_name,
         }),
     updateCarBrandWithExistBrand: (id: number, brand: number, car_class: string, model: string) =>
-        requests.put(`/catalog/car_models/${id}/update_with_exist_brand`, {
+        requests.put(`/catalog/car_models/${id}/update_with_exist_brand/`, {
             name: model,
             car_type: car_class,
             brand: brand,
         }),
     getCarBrandModels: (brand_id: number, params?: PaginationProps) =>
-        requests.get(`/catalog/car_brands/${brand_id}/car_models/list`, params),
-    getCarModels: (params?: PaginationProps) => requests.get(`/catalog/car_models/list`, params),
+        requests.get(`/catalog/car_brands/${brand_id}/car_models/list/`, params),
+    getCarModels: (params?: PaginationProps) => requests.get(`/catalog/car_models/list/`, params),
     getCarModelsNew: (params: string) =>  useSWR(`/catalog/car_models/list${params ? `?${params}` : '?page=1&page_size=10'}`,(url) => requests.getNew(url).then(r => r.data)),
     getCarBrandsWithModels: (params?: PaginationProps | undefined) =>
         requests.get(`/catalog/car_brands_with_models`, params),
