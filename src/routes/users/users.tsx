@@ -21,7 +21,7 @@ const UsersPage = () => {
 
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const navigate = useNavigate()
-  const {isLoading, data, error} = useSWR(['users', localStore.params.getSearchParams] , ([url, args]) => client.accountsAllUsers(args))
+  const {isLoading, data, error} = useSWR(['users', localStore.params.getSearchParams] , ([url, args]) => store.usersStore.loadUserList(args))
   useEffect(() => {
     localStore.setData = {
       ...data,

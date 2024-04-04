@@ -1787,7 +1787,8 @@ export class Client implements IClient {
      * @param page (optional) A page number within the paginated result set.
      * @param page_size (optional) Number of results to return per page.
      */
-    bidsList(company_id: string, q?: string | null | undefined, company__city?: string | null | undefined, status?: Status2 | null | undefined, service_type?: string | null | undefined, start_date?: string | null | undefined, end_date?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken): Promise<Anonymous6> {
+    bidsList(params: {company_id: string, q?: string | null | undefined, company__city?: string | null | undefined, status?: Status2 | null | undefined, service_type?: string | null | undefined, start_date?: string | null | undefined, end_date?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous6> {
+        const {company_id, q, company__city, status, page, ordering, page_size, cancelToken, service_type, end_date, start_date} = params
         let url_ = this.baseUrl + "/bids/{company_id}/list/?";
         if (company_id === undefined || company_id === null)
             throw new Error("The parameter 'company_id' must be defined.");

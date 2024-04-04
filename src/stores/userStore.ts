@@ -1,5 +1,5 @@
 import { action, computed, makeAutoObservable, observable, ObservableMap, reaction, runInAction } from "mobx";
-import agent from 'utils/agent'
+import agent, { client } from "utils/agent";
 import { AccountProps, CRUD,  PermissionNames } from "stores/permissionStore";
 import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'

@@ -25,7 +25,7 @@ const BidsPage = () => {
 	const textData = store.bidsStore.text
 	const params = useParams()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	const {isLoading, data, error} = useSWR(['bids', localStore.params.getSearchParams] , ([url, args]) => client.bidsAllBidsList(args),
+	const {isLoading, data, error} = useSWR(['bids', localStore.params.getSearchParams] , ([url, args]) => store.bidsStore.loadBids(args),
 		{refreshInterval: 10000}
 	)
 

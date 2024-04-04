@@ -17,7 +17,7 @@ const FilialsPage = () => {
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const location = useLocation()
-  const {isLoading, data, error} = useSWR(['filials', localStore.params.getSearchParams] , ([url, args]) => client.companiesOnlyBranchesList(args))
+  const {isLoading, data, error} = useSWR(['filials', localStore.params.getSearchParams] , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
   useEffect(() => {
     localStore.setData = {
       ...data,

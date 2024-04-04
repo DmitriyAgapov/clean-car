@@ -21,13 +21,11 @@ const GroupsPage = () => {
   const {isLoading, data, error} = useSWR(['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
     const navigate = useNavigate()
     const location = useLocation()
-  console.log(data);
-  // const data = useLoaderData()
-  //   const {loading, groups, errors} = store.permissionStore.allPermissionsState
+
   useEffect(() => {
     localStore.setData = {
       ...data,
-      results: data?.results?.map((item: any) => ({
+        results: data?.results?.map((item: any) => ({
         date: moment(item.created).format('DD.MM.YYYY HH:mm'),
         name: item.name,
         id: item.id,

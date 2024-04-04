@@ -1,5 +1,5 @@
 import { flow, makeAutoObservable, set, observable, action, computed, runInAction, reaction } from "mobx";
-import agent from 'utils/agent'
+import agent, { client } from "utils/agent";
 import companyStore, { CompanyType } from "stores/companyStore";
 import { makePersistable, hydrateStore  } from 'mobx-persist-store';
 import userStore from "stores/userStore";
@@ -221,6 +221,13 @@ export class UsersStore {
     }
     return user
   })
+  async loadUserList(args:any) {
+    if(appStore.appType === "admin") {
+      return client.accountsAllUsers(args)
+    } else {
+      return client.accountsUsersList({company_id: userStore.myProfileData.company.id, ...args})
+    }
+  }
   async createNewUser( edit:boolean, values:any) {
     let res: any
     if(edit) {

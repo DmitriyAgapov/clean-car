@@ -165,7 +165,13 @@ export class CompanyStoreNew {
     async loadCompanyUsers(company_type:string, company_id:number, params:any ) {
          return client.accountsUsersList({company_id: company_id, ...params}).then((res) => res)
     }
-
+    async loadFilialsList(args: any) {
+        if(appStore.appType === "admin") {
+            return client.companiesOnlyBranchesList(args)
+        } else {
+            return this.loadCompanyFiliales(userStore.myProfileData.company.company_type === "Компания-заказчик" ? "customer" : "performer", userStore.myProfileData.company.id, args)
+        }
+    }
     get getLoadingState() {
         return this.isLoading
     }

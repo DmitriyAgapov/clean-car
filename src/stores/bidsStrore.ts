@@ -1,5 +1,5 @@
 import { action, autorun, flow, makeAutoObservable, observable, reaction, runInAction, values as val, values, when } from "mobx";
-import agent, {   PaginationProps } from "utils/agent";
+import agent, { client, PaginationProps } from "utils/agent";
 import catalogStore from "stores/catalogStore";
 import { makePersistable } from "mobx-persist-store";
 import usersStore from "stores/usersStore";
@@ -777,6 +777,13 @@ export class BidsStore {
         this.formResult = {
             ...this.formResult,
             ...value,
+        }
+    }
+    loadBids(args:any) {
+        if(appStore.appType === "admin") {
+            return client.bidsAllBidsList(args)
+        } else {
+            return client.bidsList({company_id: userStore.myProfileData.company.id, ...args})
         }
     }
 
