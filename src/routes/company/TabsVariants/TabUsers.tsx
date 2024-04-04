@@ -37,7 +37,7 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 				},
 			}))}
 		localStoreF.setIsLoading = isLoading
-	},[data, localStoreF.params.getSearchParams])
+	},[data])
 
 	return	<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
 		<TableWithSortNew	store={localRootStoreF}

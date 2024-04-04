@@ -16,22 +16,10 @@ import { Loader } from "@mantine/core";
 
 export default function CompanyPageEditAction(props: any) {
   const store = useStore()
-  const location = useLocation()
-  const { company_type, id } = useParams();
   const navigate = useNavigate()
-  // @ts-ignore
-  const [changes, setChanges] = useState({})
   const params = useParams()
-  const handleChangeName = (event: any) => {
-    setChanges((prevState: any) => ({
-      ...prevState,
-      name: event.target.value,
-    }))
-  }
-  // @ts-ignore
-  const {isLoading, data:loaderData} = agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string)
 
-  console.log(isLoading, loaderData);
+  const {isLoading, data:loaderData} = agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string)
   if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
   if(isLoading) return <Loader/>
   return (
@@ -55,7 +43,7 @@ export default function CompanyPageEditAction(props: any) {
         }
       />
       <FormCreateUpdateCompany edit company={{
-        id: id,
+        id: params.id,
         company_name: loaderData.name,
         address: loaderData[`${params.company_type}profile`].address ? loaderData[`${params.company_type}profile`].address : "Нет адреса",
         city: String(loaderData.city.id),

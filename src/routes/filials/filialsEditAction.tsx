@@ -11,63 +11,82 @@ import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateFilial from "components/Form/FormCreateFilials/FormCreateUpdateFilial";
 import { CompanyType, Payment } from "stores/companyStore";
+import useSWR from "swr";
+import agent from "utils/agent";
 
 export default function FilialsPageEditAction(props: any) {
   const store = useStore()
 
+  const params = useParams()
   const navigate = useNavigate()
   const { company_type, id } = useParams();
-  // @ts-ignore
-  const {data: loaderData, type, parent} = useLoaderData()
 
-  const  company = {
-    id: id,
-    company_id: parent.data.id,
-    is_active: loaderData.company.data?.is_active,
-    company_name: loaderData.company.data?.name,
-    address: loaderData.company.data[`${company_type}profile`].address ? loaderData.company.data[`${company_type}profile`].address : "Нет адреса",
-    city: String(loaderData.company.data.city.id),
-    inn: loaderData.company.data[`${company_type}profile`].inn,
-    ogrn: loaderData.company.data[`${company_type}profile`].ogrn,
-    legal_address: loaderData.company.data[`${company_type}profile`].legal_address,
-    height: loaderData.company.data[`${company_type}profile`].height,
-    parent: parent.data.parent,
-    // @ts-ignore
-    type: CompanyType[type],
-    lat: loaderData.company.data[`${company_type}profile`].lat,
-    lon: loaderData.company.data[`${company_type}profile`].lon,
-    working_time: loaderData.company.data[`${company_type}profile`].working_time,
-    contacts: loaderData.company.data[`${company_type}profile`].contacts,
-    service_percent: loaderData.company.data[`${company_type}profile`].service_percent | 0,
-    overdraft_sum: loaderData.company.data[`${company_type}profile`].overdraft_sum,
-    payment: Payment.postoplata,
-    overdraft: loaderData.company.data[`${company_type}profile`].overdraft ? "1" : "2",
-    performers_list: '1',
-    performer_company: loaderData.company.data[`${company_type}profile`].performer_company,
-    bill: loaderData.company.data[`${company_type}profile`].bill,
-  }
+  const {isLoading, data:loaderData} = useSWR<any>(`filial_${params.id}`, () => agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string) )
+React.useEffect(() => {
+  console.log('loaderData', loaderData);
+}, [isLoading])
   if(!store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'update')) return <Navigate to={'/account'}/>
   return (
-    <Section type={SectionType.default}>
-      <Panel
-        className={'col-span-full'}
-        header={
-          <>
-            <Button text={<><SvgBackArrow />Назад к компании</>}
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
-              action={() => navigate(-1)}
-              variant={ButtonVariant.text}
-            />
-            <Heading
-              text={'Редактирование компании'}
-              variant={HeadingVariant.h1}
-              className={'!mb-2 block'}
-              color={HeadingColor.accent}
-            />
-          </>
-        }
-      />
-      <FormCreateUpdateFilial edit company={company}/>
-    </Section>
+      <Section type={SectionType.default}>
+          <Panel
+              className={'col-span-full'}
+              header={
+                  <>
+                      <Button
+                          text={
+                              <>
+                                  <SvgBackArrow />
+                                  Назад к компании
+                              </>
+                          }
+                          className={
+                              'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
+                          }
+                          action={() => navigate(-1)}
+                          variant={ButtonVariant.text}
+                      />
+                      <Heading
+                          text={'Редактирование компании'}
+                          variant={HeadingVariant.h1}
+                          className={'!mb-2 block'}
+                          color={HeadingColor.accent}
+                      />
+                  </>
+              }
+          />
+          {!isLoading &&
+              <FormCreateUpdateFilial
+                  edit
+                  company={{
+                      id: params.id,
+                      company_id: params.company_id,
+                      is_active: loaderData?.is_active,
+                      company_name: loaderData?.name,
+                      address: loaderData[`${company_type}profile`].address
+                          ? loaderData[`${company_type}profile`].address
+                          : 'Нет адреса',
+                      city: String(loaderData?.city.id),
+                      inn: loaderData[`${company_type}profile`].inn,
+                      ogrn: loaderData[`${company_type}profile`].ogrn,
+                      legal_address: loaderData[`${company_type}profile`].legal_address,
+                      height: loaderData[`${company_type}profile`].height,
+                      parent: loaderData.parent.parent_id,
+                      // @ts-ignore
+                      type: CompanyType[params.company_type],
+                      lat: loaderData[`${company_type}profile`].lat,
+                      lon: loaderData[`${company_type}profile`].lon,
+                      working_time: loaderData[`${company_type}profile`].working_time,
+                      contacts: loaderData[`${company_type}profile`].contacts,
+                      service_percent: loaderData[`${company_type}profile`].service_percent | 0,
+                      overdraft_sum: loaderData[`${company_type}profile`].overdraft_sum,
+                      payment: Payment.postoplata,
+                      overdraft: loaderData[`${company_type}profile`].overdraft ? '1' : '2',
+                      performers_list: '1',
+                      performer_company: loaderData[`${company_type}profile`].performer_company,
+                      bill: loaderData[`${company_type}profile`].bill,
+                  }}
+              />
+          }
+      </Section>
   )
 }

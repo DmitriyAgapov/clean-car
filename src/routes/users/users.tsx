@@ -27,6 +27,7 @@ const UsersPage = () => {
     revalidateOnMount: true,
     revalidateIfStale: false,
   })
+
   useDidUpdate(
     () => {
       if(location.pathname === '/account/users') {
@@ -35,6 +36,7 @@ const UsersPage = () => {
     },
     [location.pathname]
   );
+
   useEffect(() => {
     localStore.setData = {
       ...data,

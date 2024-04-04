@@ -665,6 +665,9 @@ export class CompanyStore {
         return this.companies as any[]
     }
     get getFilialsAll() {
+        if(this.companies.length === 0) {
+            this.getAllFilials()
+        }
         return this.filials as any[]
     }
 

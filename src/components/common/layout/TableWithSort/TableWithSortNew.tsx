@@ -62,11 +62,11 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
         setCurrentPage(Number(value))
     }, [sortedField, currentPage, searchParams, localStore.params.searchParams])
 
-    React.useEffect(() => {
-        console.log(currentPage, 'currentPage');
-        const pageParams = searchParams.get('page')
-        searchParams.has('page') ? setCurrentPage(Number(pageParams)) : setCurrentPage(1)
-    }, [currentPage, searchParams]);
+    // React.useEffect(() => {
+    //     console.log(currentPage, 'currentPage');
+    //     const pageParams = searchParams.get('page')
+    //     searchParams.has('page') ? setCurrentPage(Number(pageParams)) : setCurrentPage(1)
+    // }, [currentPage, searchParams]);
 
     const RowDataMemoized = React.useMemo(() => {
         if(withOutLoader) {
@@ -96,8 +96,12 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
     }, [sortedField, currentPage, searchParams])
     useEffect(() => {
         console.log('data', noData);
-        store.appStore.setAppState(localStore.isLoading)
+        // store.appStore.setAppState(localStore.isLoading)
     }, [localStore.isLoading]);
+ useEffect(() => {
+        console.log('rows', rows);
+        // store.appStore.setAppState(localStore.isLoading)
+    }, [rows, localStore.isLoading]);
 
     return (
         <Panel
@@ -107,12 +111,12 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
             variant={variant ? variant : PanelVariant.dataPadding}
             footerClassName={'px-6 pt-2 pb-6 flex mobile:!justify-center'}
             headerClassName={''}
-            header={!noData && (search || filter ?
+            header={search || filter ?
                 <>
                     {search && <TableSearch/>}
                     {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
                 </> : null
-            )}
+            }
             footer={
              (Math.ceil(initCount / pageSize)) > 1 && (
                <Pagination
@@ -132,7 +136,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
         >
 
             <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
-                <RowHeading action={handleHeaderAction} total={initCount} ar={ar} />
+                <RowHeading total={initCount} ar={ar} />
                 <tbody>
                 {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData    {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
                 </tbody>

@@ -18,7 +18,7 @@ const PricesPage = () => {
 	const store = useStore()
 	const location = useLocation()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	const {isLoading, data, mutate} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
+	const {isLoading, data, mutate, isValidating} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
 
 	useEffect(() => {
 		localStore.setData = {
@@ -27,7 +27,9 @@ const PricesPage = () => {
 		}
 		localStore.setIsLoading = isLoading
 	},[data])
-
+	useEffect(() => {
+		console.log('PricesPage', isValidating, isLoading, data)
+	},[isLoading, data, isValidating])
 	useDidUpdate(
 		() => {
 			if(location.pathname === '/account/prices') {
@@ -51,14 +53,14 @@ const PricesPage = () => {
 						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
 					</div>
 					{store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'create') && (<>
-						<Button text={textData.create} action={async () => {
+						<Button text={textData.create} action={() => (async() => {
 							store.appStore.setModal({
 								className: "!px-10 gap-4 !justify-stretch",
 								component: <FormModalCreatePrice />,
 								text: `Вы уверены, что хотите удалить ${"name"}`,
 								state: true
 							});
-						}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
+						})()} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
 			<TableWithSortNew
@@ -68,7 +70,6 @@ const PricesPage = () => {
 				background={PanelColor.glass}
 				className={'col-span-full table-groups h-full'}
 				filter={false}
-				state={isLoading}
 				ar={store.priceStore.allPrices.textData.tableHeaders}
 			/>
 

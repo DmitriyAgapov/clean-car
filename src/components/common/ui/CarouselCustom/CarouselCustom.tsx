@@ -50,7 +50,7 @@ const CarouselCustom = ({items}:{items:any []}) => {
 			setImg(items[ind])
 		}, [ind]);
 
-		return <Modal.Root size={'auto'} style={{aspectRatio: 4/3, background: 'none'}} opened={opened} onClose={close}  centered={true}>
+		return <Modal.Root size={"lg"} style={{ background: 'none'}} opened={opened} onClose={close}  centered={true}>
 			<Modal.Overlay className={'bg-black/80'}/>
 			<Modal.Content radius={20} className={styles.ModalBidFullImg} bg={'transparent !important'}	h={500}>
 

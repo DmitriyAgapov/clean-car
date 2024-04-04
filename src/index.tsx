@@ -7,18 +7,20 @@ import { MantineProvider } from '@mantine/core'
 import newTheme  from "theme/theme";
 import router from 'router/router'
 import { DatesProvider } from '@mantine/dates';
+import { SWRDevTools } from "swr-devtools";
 import 'dayjs/locale/ru';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <React.StrictMode>
+
   <StoreProvider>
     <MantineProvider theme={newTheme} defaultColorScheme={'dark'}>
       <DatesProvider settings={{ locale: 'ru' }}>
     {/* <ThemeProvider value={theme}> */}
       <Notifications  position="top-right" zIndex={1000}/>
 
-        <RouterProvider router={router}  future={{}}/>
+        <RouterProvider router={router}/>
 
     {/* </ThemeProvider> */}
       </DatesProvider>

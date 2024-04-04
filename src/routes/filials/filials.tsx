@@ -45,7 +45,7 @@ const FilialsPage = () => {
   },[data])
 
   if ('/account/filials' !== location.pathname) return <Outlet />
-
+  if (location.pathname.includes('edit')) return <Outlet />
   return (
     <Section type={SectionType.default}>
       <Panel

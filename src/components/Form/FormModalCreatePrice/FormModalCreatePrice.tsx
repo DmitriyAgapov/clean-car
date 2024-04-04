@@ -11,8 +11,10 @@ import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import {  runInAction } from "mobx";
 import agent from "utils/agent";
 import { useRevalidator } from "react-router-dom";
+import useSWR from "swr";
 const FormInputs = () => {
   const store = useStore()
+
   const { values, setFieldValue}:any = useFormikContext()
   const [id, setId] = useState({
     company_id: 0,
@@ -55,7 +57,8 @@ const SignupSchema = Yup.object().shape({
 })
 const FormModalCreatePrice =  () => {
     const store = useStore()
-    const initValues = {
+  const {mutate} = useSWR('prices')
+  const initValues = {
       company_id: 0,
       filial_id: 0
     }
@@ -95,7 +98,11 @@ const FormModalCreatePrice =  () => {
                             .then(r => {
                               if(r.status === 201) {
                                 revalidator.revalidate();
-                                store.appStore.closeModal()
+                                mutate().then(() => {
+                                  console.log('mutate')
+                                    store.appStore.closeModal()
+                                  }
+                                )
                               }
                           })
                         }}

@@ -306,30 +306,30 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 loading: false,
               })
             } else {
-              notifications.show({
-                id: 'bid-created',
-                withCloseButton: true,
-                onClose: () => console.log('unmounted'),
-                onOpen: () => console.log('mounted'),
-                autoClose: 3000,
-                title: 'Заявка создана',
-                message: 'Успешное создание',
-                // color: 'red',
-                className: 'my-notification-class z-[9999]',
-                // style: { backgroundColor: 'red' },
-                loading: false,
-              })
-              // if(store.bidsStore.photo.photosPreviewAr.length !== 0) {
-              //   store.bidsStore.uploadPhotos(true).then((res: any) => {
-              //     if (res.status < 300) {
-              //       changeStep()
-              //     }
-              //   }).finally(() => {store.bidsStore.formResultsClear()})
-              // } else {
+                notifications.show({
+                    id: 'bid-created',
+                    withCloseButton: true,
+                    onClose: () => console.log('unmounted'),
+                    onOpen: () => console.log('mounted'),
+                    autoClose: 3000,
+                    title: 'Заявка создана',
+                    message: 'Успешное создание',
+                    // color: 'red',
+                    className: 'my-notification-class z-[9999]',
+                    // style: { backgroundColor: 'red' },
+                    loading: false,
+                })
+                // if(store.bidsStore.photo.photosPreviewAr.length !== 0) {
+                //   store.bidsStore.uploadPhotos(true).then((res: any) => {
+                //     if (res.status < 300) {
+                //       changeStep()
+                //     }
+                //   }).finally(() => {store.bidsStore.formResultsClear()})
+                // } else {
                 store.bidsStore.formResultsClear()
                 changeStep()
                 store.bidsStore.clearPhotos()
-              // }
+                // }
             }
           })
 
@@ -338,7 +338,28 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     changeStep()
   }
   }, [formData.values.service_type, step])
+    const conductorsData = React.useMemo(() => {
+        let result: any[] = []
+        const users:any[] = store.usersStore.currentCompanyUsers.filter((cond:any) => cond.company.id === Number(formData.values.company))
+        if(users.length === 1) {
+          formData.values.conductor = String(users[0].employee.id)
+          store.bidsStore.formResultSet({ conductor: Number(users[0].employee.id) })
+          result =  users.map((c: any) => ({
+            label: c.employee.first_name + " " + c.employee.last_name,
+            value: String(c.employee.id),
+          }))
+        }
+        if(users.length === 0) {
+          result =  []
+        } else {
 
+         result =  users.map((c: any) => ({
+          label: c.employee.first_name + " " + c.employee.last_name,
+          value: String(c.employee.id),
+        }))
+      }
+      return result
+    }, [formData.values.company, store.usersStore.currentCompanyUsers])
     return (
       <FormProvider form={formData}>
         <PanelForForms
@@ -444,10 +465,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   store.bidsStore.formResult.company === 0 ||
                   store.usersStore.currentCompanyUsers.length === 0
                 }
-                data={store.usersStore.currentCompanyUsers.filter((cond:any) => cond.company.id === Number(formData.values.company) ).map((c: any) => ({
-                  label: c.employee.first_name + " " + c.employee.last_name,
-                  value: String(c.employee.id),
-                }))}
+                data={conductorsData}
               />
 
               <InputBase

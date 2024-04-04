@@ -196,13 +196,10 @@ const router = createBrowserRouter([
                     {
                         path: ':company_type/:company_id/:id',
                         element: <FilialPage />,
-                        children: [
-                            {
-                                path: 'edit',
-                                element: <FilialsPageEditAction />,
-                                // loader: filialLoader,
-                            },
-                        ]
+                    },
+                    {
+                        path: ':company_type/:company_id/:id/edit',
+                        element: <FilialsPageEditAction />,
                     },
                     {
                         path: 'create',

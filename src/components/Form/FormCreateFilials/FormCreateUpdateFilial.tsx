@@ -45,7 +45,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     console.log(company);
     let initValues: InitValues = {
         address: '',
-        type: store.userStore.myProfileData.company.company_type ? store.userStore.myProfileData.company.company_type : null,
+        type: store.userStore.myProfileData.company.company_type !== CompanyType.admin ? store.userStore.myProfileData.company.company_type : CompanyType.customer,
         city: '',
         city_name: '',
         company_id: null,
@@ -292,7 +292,10 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           allowDeselect={false}
                           {...formData.getInputProps('type')}
                           label={'Тип'}
-                          onOptionSubmit={() => console.log(store.companyStore.getFilialsAll)}
+                          onOptionSubmit={(value) => {
+                              formData.setFieldValue('company_id', null);
+                              formData.setFieldValue('company_filials', 'filials');
+                          }}
 
                           defaultValue={formData.values.type}
 
@@ -345,6 +348,9 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           defaultValue={formData.values.company_filials}
                           allowDeselect={false}
                           label={'Принадлежит'}
+                          onOptionSubmit={(value) => {
+                              formData.setFieldValue('company_id', null);
+                          }}
                           data={[
                               { label: 'Компании', value: 'company' },
                               { label: 'Филиалу', value: 'filials' },
@@ -355,10 +361,13 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
 
                           searchable
                           clearable
+                          onOptionSubmit={(value) => {
+                              console.log(formData.values);
+                          }}
                           defaultValue={formData.values.company_id}
                           label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
                           {...formData.getInputProps('company_id')}
-                            data={formData.values.company_filials === 'filials' ? store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.values.type ? formData.values.type : store.userStore.myProfileData.company.company_type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.values.type ? formData.values.type : store.userStore.myProfileData.company.company_type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))}
+                            data={formData.values.company_filials === 'filials' ? store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.values.type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.values.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))}
                         />
                     </PanelForForms>
                     <PanelForForms

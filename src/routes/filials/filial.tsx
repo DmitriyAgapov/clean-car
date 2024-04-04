@@ -20,21 +20,21 @@ const FilialPage = () => {
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
-  const {isLoading, data} = useSWR(`filial_${params.id}`, (url) => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
+  const {isLoading, data} = useSWR(`/filial/${params.company_type}/${params.id}/retrieve`, () => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
   console.log(isLoading, data);
   const tabedData = React.useMemo(() => {
-    store.appStore.setAppState(isLoading)
+
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },
-      { label: 'Филиалы', company_type: params.company_type  },
-      { label: 'Сотрудники', data: data, company_type: params.company_type  },
-      params.company_type !== "performer" && { label: 'Автомобили',  company_type: params.company_type  },
+      { label: 'Филиалы', company_type: params.company_type , company_id: params.id  },
+      { label: 'Сотрудники', data: data, company_type: params.company_type, company_id: params.id  },
+      params.company_type !== "performer" && { label: 'Автомобили',  company_type: params.company_type , company_id: params.id  },
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
-  }, [isLoading])
+  }, [data])
 
-  if (location.pathname.includes('edit')) return <Outlet />
+
   return (
       <Section type={SectionType.default}>
           <Panel

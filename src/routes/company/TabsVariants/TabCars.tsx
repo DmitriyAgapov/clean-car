@@ -31,7 +31,7 @@ const TabCars = ({companyId, company_type, state }:any) => {
 				id: item.id,
 				query: {
 					company_id: companyId,
-					rootRoute: `/account/cars/${item.id}`,
+					rootRoute: `/account/cars/${companyId}/${item.id}`,
 				},
 			}))}
 		localStoreF.setIsLoading = isLoading

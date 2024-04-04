@@ -27,7 +27,7 @@ const BidPage = () => {
 	let revalidator = useRevalidator()
 	const bid = store.bidsStore.CurrentBid
 	const params = useParams()
-	const {isLoading, data, mutate} = useSWR([`bid_${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => client.bidsRetrieve(args.company_id, args.id))
+	const {isLoading, data, mutate}:any = useSWR([`bid_${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => client.bidsRetrieve(args.company_id, args.id))
 
 	const textData = store.bidsStore.text
 	const tabedData = React.useMemo(() => {
@@ -49,20 +49,7 @@ const BidPage = () => {
 				}
 			})()
 		}
-	}, [bid.status])
-
-	const [tick, setTick] = useState(0)
-
-	React.useEffect(() => {
-		if(location.pathname.includes('bids') && location.pathname.includes('bids/')) {
-			setTimeout(() => {
-				const id = location.pathname.split('/')[location.pathname.split('/').length - 1];
-				const company_id = location.pathname.split('/')[location.pathname.split('/').length - 2];
-				store.bidsStore.loadBidByCompanyAndBidId(Number(company_id), Number(id))
-				setTick(prevState => prevState + 1)
-			}, 10000)
-		}
-	}, [tick])
+	}, [data])
 
 	useEffect(() => {
 		store.bidsStore.clearPhotos()
@@ -127,7 +114,7 @@ const BidPage = () => {
                         <div className={'flex col-span-2 tablet-max:col-span-full justify-between'}>
                             <Heading
                                 className={'col-span-1 row-start-1 !mb-0'}
-                                text={bid.company?.name}
+                                text={data?.company?.name}
                                 variant={HeadingVariant.h2}
                                 color={HeadingColor.accent}
                             />
@@ -135,10 +122,10 @@ const BidPage = () => {
                         <div className={'flex  items-end gap-12 justify-start col-span-2 tablet-max:col-span-full tablet-max:block row-start-2'}>
                             <div className={'text-xs text-gray-2'}>
                                 Дата и время регистрации:{' '}
-                                <p className={'py-0'}>{dateTransformShort(bid.company?.updated).date}</p>
+                                <p className={'py-0'}>{(data && data.company.updated) && dateTransformShort(data.company.updated).date}</p>
                             </div>
                             <div className={'flex gap-6 items-center justify-around tablet-max:inline-flex'}>
-                                <Status variant={bid.status  as BidsStatus} size={ButtonSizeType.base} />
+	                            {(data && data.status) && <Status variant={data.status as BidsStatus} size={ButtonSizeType.base} />}
                                 <Heading
                                     className={'!m-0'}
                                     text={bid.company?.city?.name}

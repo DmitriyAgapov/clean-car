@@ -384,9 +384,19 @@ export class PriceStore {
     }
     async getAllPrices({company_id, params}: {company_id:number, params:any}) {
         if(appStore.appType === "admin") {
-            return agent.Price.getAllPrice(params).then(res => res.data)
+            return agent.Price.getAllPrice(params).then(res => ({...res.data, results: res.data.results.map((i: any) => ({
+                    name: i.name,
+                    company_type: i.company_type,
+                    id: i.id,
+                    root_company: i.root_company ? i.root_company : '-',
+            }))}))
         } else {
-            return agent.Price.getAllCompanyPrices(company_id, params).then(res => res.data)
+            return agent.Price.getAllCompanyPrices(company_id, params).then(res => ({...res.data, results: res.data.results.map((i: any) => ({
+                    name: i.name,
+                    company_type: i.company_type,
+                    id: i.id,
+                    root_company: i.root_company ? i.root_company : '-',
+                }))}))
         }
     }
     async updatePriceWash() {

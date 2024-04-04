@@ -335,6 +335,7 @@ export const TabsVariantBids = observer(({
     ...props
 }: TabsVariantsProps) => {
     const store = useStore()
+  const params = useParams()
     let result
     switch (label) {
         case 'Основная информация':
@@ -533,42 +534,46 @@ export const TabsVariantBids = observer(({
             )
             break
         case 'Фото':
+          const {isLoading, data: photos} = useSWR(`/bids/${data.id}/photos/`, () => agent.Bids.loadBidPhotos(params.company_id as string, params.id as string).then((r) => r.data), {revalidateOnFocus: false})
+          console.log(photos);
           const ph = store.bidsStore.CurrentBidPhotosAll
-          result = (<Tabs.Panel className={"pt-8 grid !grid-cols-5  !gap-y-3 !grid-flow-row  gap-x-12 content-start !py-8" + " " + className}
-            state={state}
-            name={"bidService"}
-            variant={PanelVariant.default}
-            company_type={company_type}>
-            <div className={"col-span-2  pr-12"}>
-              <Heading text={"Фотографии До"}
-                variant={HeadingVariant.h3}
-                color={HeadingColor.accent} />
-              <p>Фотографии до оказания услуги. Загрузил Заказчик</p>
+          if(!isLoading && photos.results.length > 0) {
+            result = (<Tabs.Panel className={"pt-8 grid !grid-cols-5  !gap-y-3 !grid-flow-row  gap-x-12 content-start !py-8" + " " + className}
+                state={state}
+                name={"bidService"}
+                variant={PanelVariant.default}
+                company_type={company_type}>
+                <div className={"col-span-2  pr-12"}>
+                  <Heading text={"Фотографии До"}
+                    variant={HeadingVariant.h3}
+                    color={HeadingColor.accent} />
+                  <p>Фотографии до оказания услуги. Загрузил Заказчик</p>
 
-            </div>
-            <div className={"col-span-3"}>
-              <CarouselCustom items={ph.filter((e:any) => e.is_before)}/>
-            </div>
-              <hr className={"col-span-full border-gray-4/70 border"} />
-            <div className={"col-span-2   pr-12"}>
-              <Heading text={"Фотографии После"}
-                variant={HeadingVariant.h3}
-                color={HeadingColor.accent} />
-              <p>После оказания услуги загрузите пожалуйста фотографии</p>
-                {(store.appStore.appType === "performer" && data.status !== BidsStatus["Выполнено"] && data.status !== BidsStatus["Завершена"]) && <Button type={"button"}
+                </div>
+                <div className={"col-span-3"}>
+                  <CarouselCustom items={photos.results.filter((e:any) => e.is_before)}/>
+                </div>
+                <hr className={"col-span-full border-gray-4/70 border"} />
+                <div className={"col-span-2   pr-12"}>
+                  <Heading text={"Фотографии После"}
+                    variant={HeadingVariant.h3}
+                    color={HeadingColor.accent} />
+                  <p>После оказания услуги загрузите пожалуйста фотографии</p>
+                  {(store.appStore.appType === "performer" && data.status !== BidsStatus["Выполнено"] && data.status !== BidsStatus["Завершена"]) && <Button type={"button"}
 
-                  action={() => store.bidsStore.setModalCurrentState(true)}
+                    action={() => store.bidsStore.setModalCurrentState(true)}
 
 
 
-                  disabled={data.status !== BidsStatus["В работе"]} text={'Загрузить'} variant={ButtonVariant["accent-outline"]} className={'mt-7'} size={ButtonSizeType.sm}/>}
-            </div>
-            <div className={"col-span-3"}>
-              <CarouselCustom items={ph.filter((e:any) => !e.is_before)}/>
-            </div>
+                    disabled={data.status !== BidsStatus["В работе"]} text={'Загрузить'} variant={ButtonVariant["accent-outline"]} className={'mt-7'} size={ButtonSizeType.sm}/>}
+                </div>
+                <div className={"col-span-3"}>
+                  <CarouselCustom items={photos.results.filter((e:any) => !e.is_before)}/>
+                </div>
 
-          </Tabs.Panel>
-        )
+              </Tabs.Panel>
+            )
+          } else result = null
         break;
         default:
             return null
