@@ -11,15 +11,16 @@ import FormModalCreatePrice from "components/Form/FormModalCreatePrice/FormModal
 import { LocalRootStore } from "stores/localStore";
 import { observer, useLocalStore } from "mobx-react-lite";
 import useSWR from "swr";
+import { useDidUpdate } from "@mantine/hooks";
 
 const localRootStore =  new LocalRootStore()
 const PricesPage = () => {
 	const store = useStore()
+	const location = useLocation()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	const {isLoading, data} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
+	const {isLoading, data, mutate} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
 
 	useEffect(() => {
-		console.log(isLoading, data);
 		localStore.setData = {
 			...data,
 			results: data?.results
@@ -27,8 +28,16 @@ const PricesPage = () => {
 		localStore.setIsLoading = isLoading
 	},[data])
 
-	const location = useLocation()
+	useDidUpdate(
+		() => {
+			if(location.pathname === '/account/prices') {
+				mutate()
+			}
+		},
+		[location.pathname]
+	);
 	const { textData }:any = store.priceStore.allPrices
+
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname !== `/account/price`) return <Outlet />
 

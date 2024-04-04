@@ -14,6 +14,7 @@ import { createParams, dateTransformShort } from "utils/utils";
 import { TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
 import {  LocalRootStore } from "stores/localStore";
 import userStore from "stores/userStore";
+import { useDidUpdate } from "@mantine/hooks";
 
 const localRootStore =  new LocalRootStore()
 
@@ -23,7 +24,7 @@ const CompaniesPage = () => {
   const store = useStore()
   const navigate = useNavigate()
 
-  const {isLoading, data, error} = useSWR(['companies', localStore.params.getSearchParams] , ([url, args]) => client.companiesOnlyCompaniesList(args))
+  const {isLoading, data, mutate} = useSWR(['companies', localStore.params.getSearchParams] , ([url, args]) => client.companiesOnlyCompaniesList(args))
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -36,7 +37,14 @@ const CompaniesPage = () => {
       }))}
     localStore.setIsLoading = isLoading
   },[data])
-
+  useDidUpdate(
+    () => {
+      if(location.pathname === '/account/companies') {
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
 

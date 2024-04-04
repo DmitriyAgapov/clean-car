@@ -18,7 +18,7 @@ root.render(
     {/* <ThemeProvider value={theme}> */}
       <Notifications  position="top-right" zIndex={1000}/>
 
-        <RouterProvider router={router} />
+        <RouterProvider router={router}  future={{}}/>
 
     {/* </ThemeProvider> */}
       </DatesProvider>

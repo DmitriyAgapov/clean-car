@@ -3,7 +3,7 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
@@ -21,7 +21,7 @@ const UserPage = () => {
 
   const companyType = params.company_type;
   const company = companyType !== "admin" ? user.company : store.userStore.myProfileData.company;
-  console.log(companyType);
+
   const userData = React.useMemo(() => {
     return (
         <>
@@ -51,6 +51,7 @@ const UserPage = () => {
         </>
     )
   }, [])
+  if (location.pathname.includes('edit')) return <Outlet />
   return (
     <Section
       type={SectionType.default}

@@ -72,6 +72,9 @@ export class AuthStore {
    }
    return null
  }
+ get isLoggedIn() {
+    return this.userIsLoggedIn
+ }
   setFirstname(first_name: string) {
     this.values.first_name = first_name
   }

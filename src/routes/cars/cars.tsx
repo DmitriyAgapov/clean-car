@@ -16,14 +16,15 @@ import agent, { client } from "utils/agent";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
+import { useDidUpdate } from "@mantine/hooks";
 const localRootStore =  new LocalRootStore()
 const CarsPage = () => {
   const store = useStore()
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const location = useLocation()
   const navigate = useNavigate()
-  const {isLoading, data, error} =useSWR(['cars', localStore.params.getSearchParams] , ([url, args]) => store.carStore.getAllCars(args))
-  console.log(isLoading, data);
+  const {isLoading, data, mutate} =useSWR(['cars', localStore.params.getSearchParams] , ([url, args]) => store.carStore.getAllCars(args))
+
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -43,6 +44,14 @@ const CarsPage = () => {
     localStore.setIsLoading = isLoading
   },[data])
 
+  useDidUpdate(
+    () => {
+      if(location.pathname === '/account/cars') {
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   if ('/account/cars' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>

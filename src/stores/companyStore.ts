@@ -115,6 +115,8 @@ export class CompanyStore {
         // })
         reaction(() => this.filials,
           (filials) => {
+              console.log('userIsLoggedIn', authStore.isLoggedIn);
+              console.log('get filials', (filials.length === 0 && this.loadingState.filials))
             if(filials.length === 0 && authStore.userIsLoggedIn && !this.loadingState.filials) {
                 console.log('get filials')
                 this.getAllFilials()

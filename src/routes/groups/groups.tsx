@@ -13,12 +13,13 @@ import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSo
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { client } from "utils/agent";
+import { useDidUpdate } from "@mantine/hooks";
 const localRootStore =  new LocalRootStore()
 const GroupsPage = () => {
     const store = useStore()
 
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-  const {isLoading, data, error} = useSWR(['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
+  const {isLoading, data, mutate} = useSWR(['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -35,6 +36,14 @@ const GroupsPage = () => {
       }))}
     localStore.setIsLoading = isLoading
   },[data])
+  useDidUpdate(
+    () => {
+      if(location.pathname === '/account/groups') {
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   // console.log(data);
   if ('/account/groups' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />

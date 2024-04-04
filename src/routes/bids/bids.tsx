@@ -15,6 +15,7 @@ import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import useSWR from "swr";
 
 import {  LocalRootStore } from "stores/localStore";
+import { useDidUpdate } from "@mantine/hooks";
 
 const localRootStore =  new LocalRootStore()
 
@@ -25,12 +26,18 @@ const BidsPage = () => {
 	const textData = store.bidsStore.text
 	const params = useParams()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	const {isLoading, data, error} = useSWR(['bids', localStore.params.getSearchParams] , ([url, args]) => store.bidsStore.loadBids(args),
+	const {isLoading, data, mutate} = useSWR(['bids', localStore.params.getSearchParams] , ([url, args]) => store.bidsStore.loadBids(args),
 		{refreshInterval: 10000}
 	)
-
+	useDidUpdate(
+		() => {
+			if(location.pathname === '/account/companies') {
+				mutate()
+			}
+		},
+		[location.pathname]
+	);
 	useEffect(() => {
-		console.log('updating');
 		localStore.setData = {
 			...data,
 			results: data?.results?.map((r:any) => ({

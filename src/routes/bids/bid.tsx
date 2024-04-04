@@ -27,7 +27,7 @@ const BidPage = () => {
 	let revalidator = useRevalidator()
 	const bid = store.bidsStore.CurrentBid
 	const params = useParams()
-	const {isLoading, data, error} = useSWR(['bid', {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => client.bidsRetrieve(args.company_id, args.id))
+	const {isLoading, data, mutate} = useSWR([`bid_${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => client.bidsRetrieve(args.company_id, args.id))
 
 	const textData = store.bidsStore.text
 	const tabedData = React.useMemo(() => {
@@ -45,7 +45,7 @@ const BidPage = () => {
 			(async () => {
 				if (params.company_id && params.id) {
 					await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus['Обрабатывается'])
-					revalidator.revalidate()
+					mutate()
 				}
 			})()
 		}

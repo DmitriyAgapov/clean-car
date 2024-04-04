@@ -106,22 +106,24 @@ const router = createBrowserRouter([
             {
                 path: 'users',
                 element: <UsersPage />,
-                // loader: usersLoader,
+                loader: usersLoader,
                 children: [
                     {
                         path: ':company_type/:company_id/:id',
                         element: <UserPage />,
                         loader: userLoader,
+                        children: [
+                            {
+                                path: 'edit',
+                                element: <UsersPageEditAction />,
+                                loader: userLoader,
+                            },
+                          ]
                     },
                     {
                         path: 'create',
                         element: <UsersPageCreateAction />,
-                    },
-                    {
-                        path: ':company_type/:company_id/:id/edit',
-                        element: <UsersPageEditAction />,
-                        loader: userLoader,
-                    },
+                    }
                 ],
             },
             {
@@ -138,7 +140,7 @@ const router = createBrowserRouter([
                         element: <CarsPageCreateAction />,
                     },
                     {
-                        path: ':id/edit',
+                        path: ':company_id/:id/edit',
                         element: <CarsPageEditAction />,
                         loader: carsLoader,
                     },
@@ -198,7 +200,7 @@ const router = createBrowserRouter([
                             {
                                 path: 'edit',
                                 element: <FilialsPageEditAction />,
-                                loader: filialLoader,
+                                // loader: filialLoader,
                             },
                         ]
                     },

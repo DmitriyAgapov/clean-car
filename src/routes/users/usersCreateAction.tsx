@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -12,6 +12,11 @@ import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCre
 export default function UsersPageCreateAction() {
   const store = useStore()
   const navigate = useNavigate()
+  useEffect(() => {
+    store.companyStore.loadCompanies()
+    store.companyStore.loadAllFilials()
+  }, [])
+
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>

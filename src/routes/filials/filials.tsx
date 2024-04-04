@@ -12,12 +12,21 @@ import { observer, useLocalStore } from "mobx-react-lite";
 import agent, { client } from "utils/agent";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
+import { useDidUpdate } from "@mantine/hooks";
 const localRootStore =  new LocalRootStore()
 const FilialsPage = () => {
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const location = useLocation()
-  const {isLoading, data, error} = useSWR(['filials', localStore.params.getSearchParams] , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
+  const {isLoading, data, mutate} = useSWR(['filials', localStore.params.getSearchParams] , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
+  useDidUpdate(
+    () => {
+      if(location.pathname === '/account/filials') {
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -36,7 +45,6 @@ const FilialsPage = () => {
   },[data])
 
   if ('/account/filials' !== location.pathname) return <Outlet />
-  if (location.pathname.includes('edit')) return <Outlet />
 
   return (
     <Section type={SectionType.default}>

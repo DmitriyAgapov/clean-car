@@ -28,7 +28,7 @@ const FilialPage = () => {
       { label: 'Основная информация', data: data, company_type: params.company_type  },
       { label: 'Филиалы', company_type: params.company_type  },
       { label: 'Сотрудники', data: data, company_type: params.company_type  },
-      { label: 'Автомобили',  company_type: params.company_type  },
+      params.company_type !== "performer" && { label: 'Автомобили',  company_type: params.company_type  },
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]

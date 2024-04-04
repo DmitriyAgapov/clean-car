@@ -104,7 +104,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             working_time: company.working_time ?? "",
             lon: company.lon,
             id: Number(company.id),
-            performer_company: company.performer_company && values(company.performer_company),
+            performer_company: company.performer_company,
             type: company.type,
             legal_address: company.legal_address,
             overdraft: company.overdraft,

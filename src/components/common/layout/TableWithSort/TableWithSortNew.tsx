@@ -1,19 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./TableWithSort.module.scss";
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import { SvgChevron, SvgCleanCarLoader, SvgLoading, SvgSort } from "components/common/ui/Icon";
-import Chips from "components/common/ui/Chips/Chips";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { LoadingOverlay, Menu, Pagination, Paper, Divider } from "@mantine/core";
+import { useSearchParams } from "react-router-dom";
+import { Pagination } from "@mantine/core";
 import DataFilter, { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import TableSearch from "components/common/layout/TableWithSort/TableSearch";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { observer } from "mobx-react-lite";
-import { LocalRootStore, LocalStoreProvider, useLocalStore } from 'stores/localStore'
-import { TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
+import { LocalRootStore, LocalStoreProvider, useLocalStore } from "stores/localStore";
 import RowHeading from "components/common/layout/TableWithSort/TableParts/RowHeading";
 import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
+import { useStore } from "stores/store";
 
 
 type TableWithSortProps = {
@@ -38,10 +36,11 @@ type TableWithSortProps = {
 const TableWithSortNew = observer(({ variant, withOutLoader, search = false, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
 }: TableWithSortProps) => {
     const localStore = useLocalStore<LocalRootStore>()
+    const store =useStore()
     const rows = toJS(localStore.getData)?.results
     const initCount = localStore.getData?.count || 0
     const {data, params: {getSearchParams: {page_size: pageSize}}} = localStore
-
+    const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading
     let [searchParams, setSearchParams] = useSearchParams([['page', '1'], ['page_size', '10']])
 
     // @ts-ignore
@@ -95,6 +94,10 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
         }
         setSearchParams(searchParams.toString())
     }, [sortedField, currentPage, searchParams])
+    useEffect(() => {
+        console.log('data', noData);
+        store.appStore.setAppState(localStore.isLoading)
+    }, [localStore.isLoading]);
 
     return (
         <Panel
@@ -104,12 +107,12 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
             variant={variant ? variant : PanelVariant.dataPadding}
             footerClassName={'px-6 pt-2 pb-6 flex mobile:!justify-center'}
             headerClassName={''}
-            header={search || filter ?
+            header={!noData && (search || filter ?
                 <>
                     {search && <TableSearch/>}
                     {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
                 </> : null
-            }
+            )}
             footer={
              (Math.ceil(initCount / pageSize)) > 1 && (
                <Pagination
@@ -127,13 +130,13 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
             }
             {...props}
         >
-            {(rows && rows.length === 0) ? <Heading className={'min-h-[40vh] flex items-center justify-center'} text={'Нет данных'} variant={HeadingVariant.h3} />:
+
             <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
                 <RowHeading action={handleHeaderAction} total={initCount} ar={ar} />
                 <tbody>
-                {(rows && rows.length > 0)  && rows.map((item: any, index: number) => <RowData    {...item} key={item.id + '_00' + index} />)}
+                {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData    {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
                 </tbody>
-            </table>}
+            </table>
         </Panel>
     )
 })

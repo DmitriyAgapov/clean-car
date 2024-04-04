@@ -166,26 +166,31 @@ export class UsersStore {
   removeFromSelectedUsers(id:number) {
     this.companyUsersSelected.delete(String(id))
   }
-  get allUsers() {
 
+  get allUsers() {
     return this.usersMap
   }
+
   setToCompanyUsersSelected(ar: any) {
     this.companyUsersSelected = observable.map(ar.map((el:any) => [el, this.companyUsers.filter((e: any) => e.employee.id == el)[0]]))
   }
+
   addTocompanyUsersSelected(id:number, data: any) {
     // @ts-ignore
     this.companyUsersSelected.set(id, data)
   }
+
   getUsers = flow(function *(this: UsersStore, company_id: any) {
     const {data, status} = yield agent.Account.getCompanyUsers(Number(company_id))
     runInAction(() => this.companyUsers = data.results)
     action(() => this.companyUsers = data.results)
     return data.results
   })
+
   get currentCompanyUsers() {
     return this.companyUsers
   }
+
   getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type: CompanyType) {
     let user: any = {}
     if(companyid && company_type && id) {
@@ -221,6 +226,7 @@ export class UsersStore {
     }
     return user
   })
+
   async loadUserList(args:any) {
     if(appStore.appType === "admin") {
       return client.accountsAllUsers(args)

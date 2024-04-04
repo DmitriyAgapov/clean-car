@@ -208,7 +208,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             changeStep(3)
       }
       if(step === 3) {
-        navigate(`/account/cars/${form.values.id}`)
+        console.log(form.values);
+        navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
       }
       // changeStep()
     }, [form])

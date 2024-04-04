@@ -23,7 +23,6 @@ const CompanyPage = () => {
   const {isLoading, data, error} = agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string)
 
   const tabedData = React.useMemo(() => {
-    store.appStore.setAppState(isLoading)
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },
       { label: 'Филиалы', company_type: params.company_type  },
