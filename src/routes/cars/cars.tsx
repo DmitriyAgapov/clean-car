@@ -64,28 +64,28 @@ const CarsPage = () => {
       <Panel
         variant={PanelVariant.withGapOnly}
         className={'col-span-full'}
-        headerClassName={'flex justify-between'}
+        headerClassName={'md:flex justify-between'}
         header={
           <>
           <div>
             <Heading text={"Автомобили"}
               variant={HeadingVariant.h1}
-              className={"inline-block mr-auto flex-1"}
+              className={"inline-block mr-auto tablet-max:flex-1"}
               color={HeadingColor.accent} />
           </div>
-            <div className={"flex gap-6"}>
+            <div className={"flex gap-6 tablet-max:max-w-96"}>
               <Button text={"Классификация автомобилей"}
                 action={open}
                 trimText={true}
                 /* action={() => store.companyStore.addCompany()} */
-                className={"inline-flex"}
+                className={"inline-flex tablet-max:flex-1"}
                 variant={ButtonVariant["accent-outline"]}
                 size={ButtonSizeType.sm} />{" "}
               {memoModal}
               {store.userStore.getUserCan(PermissionNames["Управление автомобилями"], "create") && <Button trimText={true}
                 text={"Добавить"}
                 action={() => navigate("/account/cars/create")}
-                className={"inline-flex"}
+                className={"inline-flex tablet-max:flex-1"}
                 directory={ButtonDirectory.directory}
                 size={ButtonSizeType.sm} />}
             </div>

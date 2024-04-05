@@ -10,10 +10,6 @@ import { useStore } from "stores/store";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { client } from "utils/agent";
 import dayjs from "dayjs";
-import { dateTransformShort } from "utils/utils";
-import { Status } from "utils/schema";
-import { BidsStatus, ReverseEnum } from "stores/bidsStrore";
-
 const localRootStoreF = new LocalRootStore()
 
 const TabBidHistory = ({companyId, company_type, state }:any) => {

@@ -30,11 +30,10 @@ const BidText = {
 export const BidAdminActions = () => {
 
     const store = useStore()
-  const { height, width } = useViewportSize();
     let revalidator = useRevalidator()
     const params = useParams()
     const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
-        ;(async () => {
+        (async () => {
             if (params.company_id && params.id) {
                 await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
                 revalidator.revalidate()
@@ -75,7 +74,7 @@ export const BidAdminActions = () => {
 }
 
 
-const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
+const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void}): JSX.Element => {
   const [opened, { open, close }] = useDisclosure(false);
 
   const { height, width } = useViewportSize();
@@ -102,7 +101,7 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
       console.log('status changed');
 
 
-    })
+    }).finally(update)
     mutate(`bids/${params.company_id}/${params.id}`)
     mutate(`/bids/${params.id}/photos/`)
   }, [])

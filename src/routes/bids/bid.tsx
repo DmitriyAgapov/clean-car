@@ -137,7 +137,7 @@ const BidPage = () => {
                         </div>
 
                         {(width && width >740) && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
-                            <BidActions status={data?.status as BidsStatus} />
+                            <BidActions status={data?.status as BidsStatus} update={() => mutate()}/>
                         )}
                     </>
                 }
