@@ -112,7 +112,7 @@ const RowData = observer((props: any) => {
 		<tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : () => setOpen(prevState => !prevState)} data-state-mobile={open}>
 			{propsRender()}
 			{(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
-        <SvgChevron/>
+        <SvgChevron  onClick={() => setOpen(prevState => !prevState)}/>
       </td>}
 			{(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
 		</tr>

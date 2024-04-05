@@ -23,7 +23,6 @@ const TabBidHistory = ({companyId, company_type, state }:any) => {
 	const {isLoading, data} = useSWR([`bid_${params.company_id}_${params.id}-history`,  params.company_id, params.id, localStoreF.params.getSearchParams] , ([url,  company_id,id, args]) => client.bidsHistory({company_id: company_id as string, id: Number(id), ...args}))
 
 	useEffect(() => {
-		console.log(data && data.results?.length > 0 && dayjs(data.results?.[0].created).format('DD-MM-YYYY hh:mm'));
 		localStoreF.setData = {
 			...data,
 			results: data?.results?.map((item: any & {rootRoute?: string} ) => ({

@@ -129,7 +129,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
                         value={localStore.params.searchParams.page}
                         onChange={value => localStore.params.setSearchParams({page: Number(value)})}
                         // boundaries={2}
-                        defaultValue={10}
+                        defaultValue={5}
                     />
                 )
             }
