@@ -27,10 +27,10 @@ export const UploadedPhotosFirstStep = () => {
 	return <div className={`flex flex-col col-span-full ${!(store.bidsStore.formResult.company !== 0 && store.bidsStore.formResult.company !== null && store.bidsStore.formResult.company !== "0") ? 'pointer-events-none grayscale' : ""}`}>
 			<InputLabel className={'col-span-2'}>Фотографии До</InputLabel>
 
-			<div className={'flex-1 flex col-span-full -mx-3'}>
+			<div className={'flex-1 flex col-span-full -mx-3 mobile:flex-wrap'}>
 				{store.bidsStore.getPhotos.map(
 					(item: any, index: number) => <BidImg  h={"100%"}
-						 key={index} item={item} containerClassName={'max-h-[12rem]  max-w-[12.5%]  p-3'} className={'aspect-video hover:outline-accent hover:outline rounded cursor-pointer'}/>,
+						 key={index} item={item} containerClassName={'max-h-[12rem] mobile:max-w-[50%] tablet:max-w-[33%]  desktop:max-w-[12.5%]  p-3'} className={'aspect-video hover:outline-accent hover:outline rounded cursor-pointer'}/>,
 				)}
 			</div>
 		{store.bidsStore.getPhotos.length < 2 && <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>}

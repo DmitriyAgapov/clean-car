@@ -1,12 +1,15 @@
 import { makeAutoObservable, observable } from "mobx";
 import { Status } from "utils/schema";
-
+export type TableSearchParams = { page: number | any; page_size: number| any, q?: string, service_type?: string,
+	company__city?:string
+	start_date?:string
+	car_type?:string
+	brand?:string
+	end_date?:string
+	status?: Status | null | undefined
+}
 export class TableWithSortStore {
-	searchParams: { page: number; page_size: number, q?: string, service_type?: string,
-		company__city?:string
-		start_date?:string
-		end_date?:string
-		status?: Status | null | undefined } = observable.object({
+	searchParams: TableSearchParams = observable.object({
 		page: 1,
 		page_size: 10
 	})

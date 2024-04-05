@@ -1,9 +1,18 @@
 .Burger {
-  width: 1.625rem;
-  height: 1.625rem;
-  margin: .375rem;
-  display: grid;
-  gap: .375rem;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  display: flex;
+	border: 2px solid var(--accentColor);
+  border-radius: 100%;
+
+}
+.Burger_inner {
+  width: 1rem;
+  height: 1.25rem;
+  display: block;
+  gap: .25rem;
+  margin: auto;
   align-self: center;
   justify-items: end;
   transform: rotate(0deg);
@@ -26,19 +35,19 @@
 	transition: .25s ease-in-out;
 	transform-origin: left;
 	&:nth-child(1) {
-	  top: .375rem;
+	  top: .25rem;
 	  transform-origin: left;
 	}
 
 	&:nth-child(2) {
-	  top: calc(.375rem + .125rem + .375rem);
+	  top: calc(.25rem + .125rem + .25rem);
 	  width: 66%;
 	  right: 0;
 	  left: initial;
 	}
 
 	&:nth-child(3) {
-	  top: calc(.375rem + .125rem + .375rem + .125rem + .375rem);
+	  top: calc(.25rem + .125rem + .25rem + .125rem + .25rem);
 	  //transform-origin: left;
 	}
   }

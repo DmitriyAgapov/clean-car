@@ -335,7 +335,7 @@ export const TabsVariantBids = observer(({
     ...props
 }: TabsVariantsProps) => {
     const store = useStore()
-  const params = useParams()
+    const params = useParams()
     let result
     switch (label) {
         case 'Основная информация':

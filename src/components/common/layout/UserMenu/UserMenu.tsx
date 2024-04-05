@@ -10,7 +10,8 @@ import { useOutsideClick } from 'utils/utils'
 import { useInterval } from "@mantine/hooks";
 import { Link } from "react-router-dom";
 type UserProps = {
-  name?: string
+  first_name?: string
+  last_name?: string
   status?: string
   photoUrl?: string
   action: (event: any) => void
@@ -29,7 +30,7 @@ const Notification = observer(() => {
 
   return (
 
-    <div className={styles.notification}>
+    <div className={styles.notification} data-msg={store.bidsStore.getEventCount.data.bid_count !== 0}>
       <Link to={'/account/bids'} >
       <SvgNotification />
       {(store.bidsStore.getEventCount.data && store.bidsStore.getEventCount?.data.bid_count) ? <span>{store.bidsStore.getEventCount.data.bid_count}</span> : null}
@@ -85,14 +86,17 @@ const UserMenuStyled = styled(UserPortal)`
   }
 `
 
-const User = ({ name, status, photoUrl, action }: UserProps) => {
+const User = ({ last_name, first_name, status, photoUrl, action }: UserProps) => {
   return (
     <div className={styles.user} onClick={action}>
       <div className={styles.photo}>
         <img src={photo} width={40} height={40} alt={''} loading={'lazy'} />
       </div>
       <div className={styles.menuName}>
-        <div className={styles.name}>{name}</div>
+        <div className={styles.name}>
+          <div className={styles.first_name}>{first_name}</div>
+          <div className={styles.last_name}>{(last_name && last_name.length !== 0) && last_name[0]}.</div>
+        </div>
         <div className={styles.status}>Администратор</div>
       </div>
       <SvgChevron className={styles.svg} />
@@ -113,7 +117,8 @@ const UserMenu = () => {
       <User
         action={() => setState((prevState) => !prevState)}
         // @ts-ignore
-        name={store.userStore.currentUser?.first_name + ' ' + store.userStore.currentUser?.last_name}
+        first_name={store.userStore.currentUser?.first_name}
+        last_name={store.userStore.currentUser?.last_name}
       />
       <UserMenuStyled
         state={state}

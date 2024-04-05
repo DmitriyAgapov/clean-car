@@ -9,10 +9,12 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import { useParams, useRevalidator } from "react-router-dom";
 import BidImg from "components/common/layout/Modal/BidImg";
 import { BidsStatus } from "stores/bidsStrore";
+import { useSWRConfig } from "swr";
 
 export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 	const store = useStore()
 	let revalidator = useRevalidator()
+	const { mutate } = useSWRConfig()
 	const params = useParams()
 	const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
 
@@ -20,7 +22,10 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 			console.log('status', store.bidsStore.PhotoId)
 			if (params.company_id && params.id) {
 				await store.bidsStore.updateBitStatus(params.company_id, params.id, status, store.bidsStore.PhotoId).finally(() => store.bidsStore.clearPhotos())
+				console.log(`bids/${params.company_id}/${params.id}`);
+				await mutate(`bids/${params.company_id}/${params.id}`)
 				revalidator.revalidate()
+
 			}
 		})()
 	}, [])

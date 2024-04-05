@@ -21,7 +21,7 @@ export default function FilialsPageEditAction(props: any) {
   const navigate = useNavigate()
   const { company_type, id } = useParams();
 
-  const {isLoading, data:loaderData} = useSWR<any>(`filial_${params.id}`, () => agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string) )
+  const {isLoading, data:loaderData} = useSWR(`/filial/${params.company_type}/${params.id}/retrieve`, () => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
 React.useEffect(() => {
   console.log('loaderData', loaderData);
 }, [isLoading])
@@ -54,7 +54,7 @@ React.useEffect(() => {
                   </>
               }
           />
-          {!isLoading &&
+          {(!isLoading && loaderData) &&
               <FormCreateUpdateFilial
                   edit
                   company={{

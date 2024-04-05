@@ -109,7 +109,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
             className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto] overflow-hidden'}
             routeStyle={style}
             variant={variant ? variant : PanelVariant.dataPadding}
-            footerClassName={'px-6 pt-2 pb-6 flex mobile:!justify-center'}
+            footerClassName={'px-6 pt-2 pb-6'}
             headerClassName={''}
             header={search || filter ?
                 <>

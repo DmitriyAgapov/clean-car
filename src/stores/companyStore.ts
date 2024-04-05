@@ -668,6 +668,10 @@ export class CompanyStore {
         if(this.companies.length === 0) {
             this.getAllFilials()
         }
+        runInAction(() =>     {
+            console.log('load filials get');
+            this.loadAllFilials()
+        })
         return this.filials as any[]
     }
 

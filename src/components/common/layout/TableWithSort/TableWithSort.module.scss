@@ -10,7 +10,7 @@
   }
   tr {
     width: 100%;
-    @screen lg-max {
+    @screen desktop-max {
       display: grid;
       width: initial;
       grid-template-columns: repeat(6, 1fr) 3rem 1.5rem;
@@ -247,7 +247,7 @@
         width: 8rem;
       }
     }
-    @screen tablet-max {
+    @screen desktop-max {
       [data-state-mobile] {
         grid-template-columns: repeat(6, 1fr) 4rem 1.5rem;
 
@@ -364,7 +364,7 @@
         width: 6rem;
       }
     }
-    @screen tablet-max {
+    @screen desktop-max {
       [data-state-mobile] {
         grid-template-columns: repeat(6, 1fr) 4rem 1.5rem;
 
@@ -797,7 +797,7 @@
   thead {
     background-color: rgba(36, 37, 41, 1);
 
-    @screen lg-max {
+    @screen desktop-max {
       display: none;
     }
   }
@@ -852,7 +852,7 @@
   }
   tr {
     width: 100%;
-    @screen lg-max {
+    @screen desktop-max {
       display: grid;
       width: initial;
       grid-template-columns: repeat(6, 1fr) 3rem 1.5rem;
@@ -1035,19 +1035,19 @@
     }
 
     th:nth-child(1), td:nth-child(1), {
-      @screen lg {
+      @screen desktop {
         max-width: 7rem;
       }
     }
 
     th:nth-child(2), td:nth-child(2), {
-      @screen lg {
+      @screen desktop {
         min-width: 10rem;
       }
     }
 
     th:nth-child(2), td:nth-child(2), {
-      @screen lg {
+      @screen desktop {
         width: auto;
         max-width: fit-content;
       }

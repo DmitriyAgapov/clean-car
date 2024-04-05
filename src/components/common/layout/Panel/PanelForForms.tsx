@@ -41,7 +41,7 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
     return <Panel
       {...props}
         routeStyle={PanelRouteStyle.default_form}
-      className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto] items-start  overflow-x-hidden'}
+      className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto]  overflow-x-hidden'}
       bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} grid  grid-cols-9 items-start gap-4 gap-y-4`}
       variant={props.variant ?? PanelVariant.textPadding}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
@@ -52,7 +52,7 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
                   <div className={'mr-auto'}> {actionCancel}</div>
                   <div className={'flex gap-5'}>
                       {actionBack}
-                     {actionNext}
+                      {actionNext}
                   </div>
               </div>
           // </div>

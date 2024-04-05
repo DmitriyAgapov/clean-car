@@ -11,7 +11,7 @@ export const referencesLoader = async (props: any) => {
 	const paramsOrdering = url.searchParams.get('ordering')
 	const paramsSearchString = url.searchParams.get('searchString')
 	const refUrlsRoot = url.pathname.split('/')[url.pathname.split('/').indexOf('references') + 1]
-
+	console.log(props, 'props');
 	let textData: any = {
 		title: '',
 		description: null,
@@ -48,19 +48,21 @@ export const referencesLoader = async (props: any) => {
 			// 	// }
 			//
 			// 	break
-			// case 'cities':
-			// 	if(props.params.id) {
-			// 		const { data: dataCities, status: statusCities } = await agent.Catalog.getCity(props.params.id);
-			// 		if(statusCities === 200) data = dataCities
-			// 	}
-			// 	else {
-			// 		const { data: dataCities, status: statusCities } = await agent.Catalog.getCities({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
-			// 		data = dataCities.results.map((item:any) => ({id: item.id, status: item.is_active, name: item.name, timezone: item.timezone ?? ''}))
-			// 		dataMeta = dataCities
-			// 	}
-			//
-			//
-			// 	break;
+			case 'cities':
+				if(props.params.id) {
+					console.log('city', props.params.id);
+					const { data: dataCities, status: statusCities } = await agent.Catalog.getCity(props.params.id);
+					if(statusCities === 200) data = dataCities
+				}
+				else {
+					console.log('cities');
+					const { data: dataCities, status: statusCities } = await agent.Catalog.getCities({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering } as PaginationProps)
+					data = dataCities.results.map((item:any) => ({id: item.id, status: item.is_active, name: item.name, timezone: item.timezone ?? ''}))
+					dataMeta = dataCities
+				}
+
+
+				break;
 			case 'services':
 				if(props.params.subtype_id) {
 					const { data: dataServiceSubtype, status: statusServiceSubtype } = await agent.Catalog.getServiceSubtype(props.params.subtype_id);

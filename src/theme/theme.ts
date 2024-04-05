@@ -27,6 +27,7 @@ const themeOverride = createTheme({
         }),
         Input: Input.extend({
             classNames: {
+                wrapper: "",
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3',
             },
         }),
@@ -37,7 +38,7 @@ const themeOverride = createTheme({
             classNames: {
                 label: 'font-semibold',
                 error: 'form-error block',
-                root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
+                root: '*:data-[error=true]:text-error relative !mb-0 pb-4 wrapper-custom tablet-max:!flex-1',
                 wrapper: ' !mb-0 ',
                 input: ' bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
                 dropdown: '!bg-white rounded-[0.625rem]',
@@ -46,13 +47,17 @@ const themeOverride = createTheme({
         }),
         Combobox: Combobox.extend({
             classNames: {
+
                 header: 'text-gray-3',
                 search: 'bg-white focus:filter-none',
                 dropdown: '!bg-white rounded-[0.625rem]',
                 footer: 'text-gray-2 border-0',
                 option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent focus:!bg-transparent focus:!text-accent',
-            }
-        }),
+            },
+            defaultProps: {
+              transitionProps: { transition: 'fade', duration: 200 },
+                 withinPortal: false,
+        }}),
 
         TextInput: TextInput.extend({
             classNames: {

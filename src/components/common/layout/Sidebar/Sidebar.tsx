@@ -104,13 +104,13 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       url: 'bids',
     }
     ]
-    // if(process.env.NODE_ENV === "development") {
-    //   routeWithPermissions.push({
-    //     icon: <img src={'/icons/zayavki.png'} alt={''} />,
-    //     title: 'Дэш',
-    //     url: 'dashboard',
-    //   })
-    // }
+    if(process.env.NODE_ENV === "development") {
+      routeWithPermissions.push({
+        icon: <img src={'/icons/zayavki.png'} alt={''} />,
+        title: 'Дэш',
+        url: 'dashboard',
+      })
+    }
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
         if(store.userStore.myProfileData.company.company_type === "Компания-Партнер" && el.url === "cars") {

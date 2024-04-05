@@ -9,6 +9,7 @@ import authStore from "stores/authStore";
 import carStore from "stores/carStore";
 import { defer } from "react-router-dom";
 import company from "routes/company/company";
+import companyStore from "stores/companyStore";
 
 export enum Payment {
     postoplata = 'Постоплата',
@@ -169,7 +170,18 @@ export class CompanyStoreNew {
         if(appStore.appType === "admin") {
             return client.companiesOnlyBranchesList(args)
         } else {
-            return this.loadCompanyFiliales(userStore.myProfileData.company.company_type === "Компания-заказчик" ? "customer" : "performer", userStore.myProfileData.company.id, args)
+            return this.loadCompanyFiliales(userStore.myProfileData.company.company_type === "Компания-заказчик" ? "customer" : "performer", userStore.myProfileData.company.id, args).then((res) => {
+                runInAction(() => {
+                    if(res && res.results) {
+                        companyStore.filials = res.results.map((f:any) => ({
+                            ...f,
+                            company_type: userStore.myProfileData.company.company_type
+                        })) as any
+                    }
+                })
+
+                return res
+            })
         }
     }
     get getLoadingState() {

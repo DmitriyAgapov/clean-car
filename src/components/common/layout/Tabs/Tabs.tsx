@@ -96,8 +96,8 @@ const TabPanels = observer(({ data, type, items, state }:{data:any, type:any, it
         data.forEach((item: any, index: number) => {
             result.push(
                 <TabsVariantsCars
-                    company_type={data[0].company_type}
-                    companyId={data[0].data.id}
+                    company_type={item.company_type}
+                    companyId={item.company_id}
                     key={`tab_${index}`}
                     state={state == item.label}
                     data={item.data}

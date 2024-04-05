@@ -13,16 +13,15 @@ import { textDataCities } from "routes/reference/City/cities";
 import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
 import agent from "utils/agent";
 import FormCreateCity from "components/Form/FormCreateCity/FormCreateCity";
+import useSWR from "swr";
 function ReferenceCityPageCreate(props: any) {
 
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const {isLoading, data, error} = agent.Catalog.getCityNew(params.id as string)
+  const {isLoading, data, mutate, isValidating} = useSWR(`ref_city_${params.id}`,() => agent.Catalog.getCity(Number(params.id)).then((res) => res.data))
 
-  // const { textDataCars }: any = useLoaderData()
-  console.log(data);
   if(!store.userStore.getUserCan(PermissionNames["Управление справочниками"], 'create')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
@@ -31,13 +30,13 @@ function ReferenceCityPageCreate(props: any) {
         header={<><div>
           <Button text={<>
           <SvgBackArrow />{textDataCities.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
-          <Heading text={!props.edit ? textDataCities.createPage : textDataCities.editPage} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /></div></>}>
+          <Heading text={!location.pathname.includes('edit') ? textDataCities.createPage : textDataCities.editPage} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} /></div></>}>
       </Panel>
-      {!isLoading && <FormCreateCity edit={props.edit} {...props.edit ? ({
+      {!isLoading && <FormCreateCity edit={location.pathname.includes('edit')} {...location.pathname.includes('edit') ? ({
         id: data.id,
         city: data.name,
-        timezone: data.name,
-        is_active: data.car_type
+        timezone: data.timezone,
+        is_active: data.is_active ? 'true' : 'false',
       }) : null}/>}
       {/* {!location.pathname.includes('edit') ? textDataCars.createPageForm() : textDataCars.editPageForm(props)} */}
 

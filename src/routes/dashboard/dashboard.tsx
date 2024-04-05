@@ -14,6 +14,7 @@ import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import { useStore } from 'stores/store'
 import { observer } from "mobx-react-lite";
 import { Carousel } from "@mantine/carousel";
+import MapWithDots from "components/common/Map/Map";
 
 const testWashData = {
   "id": 29,
@@ -52,24 +53,7 @@ export default function DashboardPage() {
         }
       />
       <div className={'col-span-full'}>
-        <Carousel      withIndicators
-
-          slideSize="50%"
-          slideGap="md"
-          loop
-          align="start"
-          slidesToScroll={2}>{store.bidsStore.CurrentBid.photos.length !==0 ? store.bidsStore.CurrentBid.photos.map((item: any) => {
-          return (
-            <Carousel.Slide className={'flex'}><img
-              key={item.id}
-              src={item.img}
-              alt={item.id}
-              width={"10rem"}
-              className={'flex-1'}
-
-            /></Carousel.Slide>
-          )
-        }) : null}</Carousel>
+        <MapWithDots />
       </div>
     </Section>
     </>

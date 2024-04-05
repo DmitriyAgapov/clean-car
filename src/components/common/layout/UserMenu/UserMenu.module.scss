@@ -2,21 +2,30 @@
 	display: flex;
   align-items: flex-start;
   gap: 1.25rem;
+  max-width: 20rem;
+  width: 100%;
   @screen lg-max {
 	flex-direction: row-reverse;
 	flex: 1;
   }
 
 }
+
 .notification {
   //padding: .75rem;
-  background-color: #181818;
   position: relative;
-  width: 2.5rem;
-  height: 2.5rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
   border-radius: .625rem;
-  display: inline-flex;
+  border: 1px solid transparent;
+  background-color: #181818;
+  &[data-msg="true"] {
+	border: 1px solid #FBFF4A;
+  }
+
+  display: flex;
   a {
+	margin: 2px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -42,16 +51,19 @@
   display: flex;
   align-items: flex-start;
   gap: .625rem;
-  flex: 1;
+  flex: 1 100%;
 }
 .menuName {
-  display: inline-block;
+  display: block;
+  flex: 1 1 auto;
   flex-flow: column;
 }
 .svg {
   width: 1.125rem;
   height: 1.125rem;
   rotate: 180deg;
+  flex: 0 1 auto;
+  margin: auto 1rem auto .25rem;
   color: rgba(220, 220, 220, 0.5);
 }
 .photo {
@@ -63,7 +75,27 @@
 }
 .name {
   line-height: 1.29;
+  display: flex;
+  flex: 1;
   color: var(--accentColor);
+
+}
+.first_name {
+	flex: 0 1 fit-content;
+  white-space: nowrap;
+  margin-right: .5rem;
+
+  background: -webkit-linear-gradient(360deg, var(--accentColor) 60%, rgba(0, 253, 173, 0.02) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  vertical-align: middle;
+  position: relative;
+  overflow: hidden;
+}
+.last_name {
+	flex: 0 2ch;
+  white-space: nowrap;
 }
 .status {
   color: rgba(220, 220, 220, 0.5);

@@ -8,6 +8,7 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import DList from "components/common/ui/DList/DList";
 import { values } from "mobx";
 import { createBidFormActions } from "components/Form/FormCreateBid/FormCreateUpdateBid";
+import { observer } from "mobx-react-lite";
 // type MapProps = {}
 const ElMapPanel = (item:any) => {
     const store = useStore()
@@ -66,7 +67,7 @@ const MapWithDots = () => {
   const displayMap = useMemo(
     () => (
       // @ts-ignore
-      <MapContainer/* @ts-ignore */ ref={setMap} attributionControl={false} center={[centerLon, centerLat]} className={styles.Map} style={{ width: '100%', height: '100%' }} scrollWheelZoom={false} zoom={12}>
+      <MapContainer/* @ts-ignore */ ref={setMap} attributionControl={false} center={[centerLon, centerLat]} className={styles.Map} style={{ width: '100%', height: '100%' }} scrollWheelZoom={true} zoom={14}>
 
         <TileLayer/* attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' */ url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         {performers.map((item: any, index: number) => (
@@ -83,4 +84,4 @@ const MapWithDots = () => {
     return null
 }
 
-export default MapWithDots
+export default observer(MapWithDots)

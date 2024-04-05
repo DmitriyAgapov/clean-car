@@ -14,14 +14,24 @@ import { Loader } from "@mantine/core";
 import { textDataCities } from "routes/reference/City/cities";
 import useSWR from "swr";
 import { observer } from "mobx-react-lite";
+import { useDidUpdate } from "@mantine/hooks";
 
 const ReferenceCityPage = ():JSX.Element => {
   const store = useStore()
   const navigate = useNavigate()
   const location = useLocation()
-  const params = useParams()
-  const {isLoading, data, error} = useSWR([`refCity_${params.id}`, params.id], ([url, id]) => agent.Catalog.getCity(Number(id)).then((res) => res.data))
 
+  const params = useParams()
+  const {isLoading, data, mutate, isValidating} = useSWR(`ref_city_${params.id}`,() => agent.Catalog.getCity(Number(params.id)).then((res) => res.data))
+  useDidUpdate(
+    () => {
+      if(location.pathname === `/account/references/cities/${params.id}`) {
+        console.log('mutate');
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   console.log(data,'car');
   const items = React.useMemo(() => {
 
@@ -57,7 +67,7 @@ const ReferenceCityPage = ():JSX.Element => {
     }
 
     return <>{itemsAr}</>
-  }, [isLoading, data])
+  }, [data])
 
   if (location.pathname.includes('edit')) return <Outlet />
   if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />

@@ -12,6 +12,7 @@ import agent, { client } from "utils/agent";
 import useSWR from "swr";
 import { LocalRootStore } from "stores/localStore";
 import { observer, useLocalStore } from "mobx-react-lite";
+import { useDidUpdate } from "@mantine/hooks";
 export const textDataCities= {
   path: 'cities',
   title: 'Города',
@@ -41,7 +42,16 @@ const RefCitiesPage = () => {
 
     const store = useStore()
     const navigate = useNavigate()
-    const {isLoading, data, error} = useSWR(['refCities', localStore.params.getSearchParams] , ([url, args]) => agent.Catalog.getCities(args).then((res) => res.data))
+    const {isLoading, data, mutate} = useSWR(['refCities', localStore.params.getSearchParams] , ([url, args]) => agent.Catalog.getCities(args).then((res) => res.data))
+    useDidUpdate(
+      () => {
+        if(location.pathname === `/account/references/cities`) {
+          console.log('mutate');
+          mutate()
+        }
+      },
+      [location.pathname]
+    );
     useEffect(() => {
       localStore.setData = {
         ...data,

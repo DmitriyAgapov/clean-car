@@ -12,13 +12,14 @@ import { useMap } from "react-leaflet";
 import { textDataCars } from "routes/reference/Cars/cars";
 import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
 import agent from "utils/agent";
+import useSWR from "swr";
 function ReferenceCarPageCreate(props: any) {
 
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const {isLoading, data, error} = agent.Catalog.getCarModelWithBrandNew(params.id as string)
+  const {isLoading, data, mutate} = useSWR([`refCar_${params.id}`, params.id], ([url, id]) => agent.Catalog.getCarModelWithBrand(Number(id)).then((res) => res.data))
 
   // const { textDataCars }: any = useLoaderData()
   console.log(data);

@@ -12,6 +12,8 @@ import dayjs from "dayjs";
 import { DateInput, DateTimePicker } from "@mantine/dates";
 export enum FilterData {
   city= 'city',
+  car_type= 'car_type',
+  brand= 'brand',
   service_type= 'service_type',
   is_active= 'is_active',
   start_date = 'start_date',

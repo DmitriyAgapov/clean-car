@@ -59,6 +59,12 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         company_filials: store.userStore.myProfileData.company.parent === null ? 'company' : 'filials',
       }
       if(edit) {
+        console.log(car);
+        car.employees.forEach((item: any) => {
+          (async () =>   store.usersStore.getUsers(car.company_id).then(() => {
+            store.usersStore.addToSelectedUsers(Number(item))
+          }).finally(() => console.log(store.usersStore.selectedUsers)))()
+        })
         store.formStore.setFormDataCreateCar({
           id: car.id,
           number: car.number,
@@ -177,7 +183,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             is_active: form.values.is_active === "true",
             brand: Number(form.values.brand),
             model: Number(form.values.model),
-            employees: val(store.usersStore.selectedUsers).map((item: any) => item.employee.id),
+            employees: edit ? form.values.employees :  (store.usersStore.selectedUsers && store.usersStore.selectedUsers.size !== 0) ? val(store.usersStore.selectedUsers).map((item: any) => item.employee.id) : [],
           });
           changeStep();
       }
@@ -315,11 +321,13 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               <NumberInput  {...form.getInputProps('height')}
                 label={'Высота автомобиля, cм'}
                 hideControls
+                allowDecimal={false}
                 allowNegative={false}
                 placeholder={'Введите высоту'}/>
               <Select
                 {...form.getInputProps('radius')}
                 label={'Радиус колес, дюймы'}
+
                 data={Array.from(Object.keys(CAR_RADIUSTEXT))}
                 placeholder={'Радиус колес, дюймы'}
               />
@@ -384,23 +392,24 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             >
            <Observer children={(): any =>
                         //@ts-ignore
-                        <div className={'asd order-2 flex-[1_100%]'}><Heading text={'Добавленные:'}
+                        <div className={'asd order-2 flex-[1_100%]'}>
+                          <Heading text={'Добавленные:'}
                           variant={HeadingVariant.h4} />
                           <div className={'grid grid-cols-3 gap-6'}>  {store.usersStore.selectedUsers.size > 0 && store.usersStore.selectedUsers.toJSON().map((el: any) => {
                             return <FormCard actions={null}
                               className={'relative'}
-                              title={el[1].employee.first_name}
+                              title={el[1].employee?.first_name}
                               children={<><CloseButton style={{ position: "absolute", right: '1rem', top: '1rem' }}
                                 onClick={() => {
 
-                                  store.usersStore.removeFromSelectedUsers(el[1].employee.id)
+                                  store.usersStore.removeFromSelectedUsers(el[1].employee?.id)
                                 }} />
                                 <div className={'text-xs -mt-3 pb-4 uppercase text-gray-2'}>{el[1].group.name}</div>
                                 <ul>
-                                  <li>{el[1].employee.phone}</li>
-                                  <li>{el[1].employee.email}</li>
+                                  <li>{el[1].employee?.phone}</li>
+                                  <li>{el[1].employee?.email}</li>
                                 </ul>
-                                <div> {el[1].employee.is_active ? <span className={'text-accent  mt-5 block'}>Активен</span> : <span className={'text-red-500 mt-5 block'}>Не активен</span>}</div>
+                                <div> {el[1].employee?.is_active ? <span className={'text-accent  mt-5 block'}>Активен</span> : <span className={'text-red-500 mt-5 block'}>Не активен</span>}</div>
                               </>}
                               titleColor={HeadingColor.accent}
                               titleVariant={HeadingVariant.h5} />
@@ -462,7 +471,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                 </>
               }
             >
-              <CreateField title={"Создать прайс-лист"} />
+              {/* <CreateField title={"Создать прайс-лист"} /> */}
             </PanelForForms>
           </form>
         </PanelForForms>

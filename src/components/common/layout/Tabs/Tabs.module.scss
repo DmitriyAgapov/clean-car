@@ -36,7 +36,7 @@
 
 }
 .tabHeader {
-  @apply list-none text-xss uppercase text-gray-2 font-medium pb-3.5 border-b-2 border-transparent;
+  @apply list-none text-xss uppercase text-gray-2 font-medium py-3.5 -mt-3.5 border-b-2 border-transparent;
   letter-spacing: 0.05em;
   cursor: pointer;
   &[data-state="true"] {

@@ -1,6 +1,6 @@
 import { Form, Formik, FormikHelpers } from "formik";
 import React from 'react'
-import { Await, useLoaderData, useLocation, useNavigate, useRevalidator } from "react-router-dom";
+import { Await, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import * as Yup from "yup";
 import catalogStore from "stores/catalogStore";
 import SelectCustom from "components/common/ui/Select/Select";
@@ -15,6 +15,8 @@ import agent from "utils/agent";
 import { observer } from "mobx-react-lite";
 import { Select } from "@mantine/core";
 import { textDataCities } from "routes/reference/City/cities";
+import { mutate, useSWRConfig } from "swr";
+import { backToUrlLevel } from "utils/utils";
 const dataCreate = {
     initValues: {
       id: 0,
@@ -63,32 +65,41 @@ const FormCreateCity = (props: any) => {
   const location = useLocation()
   const navigate = useNavigate()
   const store = useStore()
+  const params = useParams()
   const editStatus = props?.edit ?? false
   const  editInitValues = {
           id: props.id,
-          city: props.name,
+          city: props.city,
           timezone: props.timezone,
           status: props.is_active,
   }
-  let revalidator = useRevalidator();
-
+  console.log(`refCity_${params.id}`);
+  const {mutate} = useSWRConfig()
   return (
-      <Formik initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
-        onSubmit={(values, isSubmitting) => {
+      <Formik  initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
+        onSubmit={async (values, isSubmitting) => {
+          console.log(values, 'values');
             if(location.pathname.includes('edit')) {
               textDataCities.editAction(values.id, values.city, values.status === "true", values.timezone)
               .then((r: any) => {
                 if(r.status === 200) {
-                  revalidator.revalidate()
-                  navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`, {replace: false})
+
+                  mutate(`@"refCity_2","2"`, {name: r.data.name}).then(r => {
+                    console.log('mutate', `@"refCity_2","2"`);
+                    console.log('mutated', `/catalog/cities/${params.id}/retrieve/`);
+                  })
+
+                  // revalidator.revalidate()
+                  navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`)
                 }
               })
             } else {
               textDataCities.createAction(values.city, values.status === "true", values.timezone)
               .then((r: any) => {
                 if(r.status === 201) {
-                  revalidator.revalidate()
-                  navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`, {replace: false})
+                  // revalidator.revalidate()
+                  mutate(`/catalog/cities/${params.id}/retrieve/`)
+                  mutate(`refCity_${params.id}`).then(r => navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`))
                 }
               })
             }

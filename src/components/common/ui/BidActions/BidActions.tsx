@@ -9,6 +9,7 @@ import { SvgMenu } from 'components/common/ui/Icon'
 import styles from './BidActions.module.scss'
 import { useDisclosure, useViewportSize } from '@mantine/hooks'
 import { BidModal } from 'components/common/layout/Modal/BidModal'
+import { useSWRConfig } from "swr";
 
 const BidText = {
   CustomerVObrabotke: <p>Исполнитель открыл заявку.Ожидается обратная связь</p>,
@@ -76,7 +77,9 @@ export const BidAdminActions = () => {
 
 const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
   const [opened, { open, close }] = useDisclosure(false);
+
   const { height, width } = useViewportSize();
+  const { mutate } = useSWRConfig()
   const params = useParams()
   const store = useStore()
   const memoModal = React.useMemo(() => {
@@ -89,12 +92,19 @@ const BidActions = ({ status }: {status: BidsStatus}): JSX.Element => {
   }, [width])
   let revalidator = useRevalidator()
   const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
+
     (async () => {
       if (params.company_id && params.id) {
         await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
-        revalidator.revalidate()
+
       }
-    })()
+    })().then(() => {
+      console.log('status changed');
+
+
+    })
+    mutate(`bids/${params.company_id}/${params.id}`)
+    mutate(`/bids/${params.id}/photos/`)
   }, [])
     const currentActions = React.useMemo(() => {
         if (store.appStore.appType === "admin") {

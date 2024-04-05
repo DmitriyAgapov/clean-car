@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
+import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useStore } from 'stores/store'
@@ -16,15 +16,21 @@ import agent, { client } from "utils/agent";
 import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
-import { useDidUpdate } from "@mantine/hooks";
+import { useDidUpdate, useDisclosure } from "@mantine/hooks";
+import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
+import { CarClasses } from "components/common/layout/Modal/CarClasses";
 const localRootStore =  new LocalRootStore()
 const CarsPage = () => {
   const store = useStore()
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const location = useLocation()
   const navigate = useNavigate()
-  const {isLoading, data, mutate} =useSWR(['cars', localStore.params.getSearchParams] , ([url, args]) => store.carStore.getAllCars(args))
 
+  const [opened, { open, close }] = useDisclosure(false)
+  const {isLoading, data, mutate} =useSWR(['cars', localStore.params.getSearchParams] , ([url, args]) => store.carStore.getAllCars(args))
+  const memoModal = React.useMemo(() => {
+    return <CarClasses opened={opened} onClose={close} />
+  }, [opened])
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -61,34 +67,42 @@ const CarsPage = () => {
         headerClassName={'flex justify-between'}
         header={
           <>
-            <Heading
-              text={'Автомобили'}
+          <div>
+            <Heading text={"Автомобили"}
               variant={HeadingVariant.h1}
-              className={'inline-block mr-auto flex-1'}
-              color={HeadingColor.accent}
-            />
-
-            {store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'create') && <Button
-              trimText={true}
-              text={'Добавить'}
-              action={() => navigate('/account/cars/create')}
-              className={'inline-flex'}
-              directory={ButtonDirectory.directory}
-              size={ButtonSizeType.sm}
-            />}
+              className={"inline-block mr-auto flex-1"}
+              color={HeadingColor.accent} />
+          </div>
+            <div className={"flex gap-6"}>
+              <Button text={"Классификация автомобилей"}
+                action={open}
+                trimText={true}
+                /* action={() => store.companyStore.addCompany()} */
+                className={"inline-flex"}
+                variant={ButtonVariant["accent-outline"]}
+                size={ButtonSizeType.sm} />{" "}
+              {memoModal}
+              {store.userStore.getUserCan(PermissionNames["Управление автомобилями"], "create") && <Button trimText={true}
+                text={"Добавить"}
+                action={() => navigate("/account/cars/create")}
+                className={"inline-flex"}
+                directory={ButtonDirectory.directory}
+                size={ButtonSizeType.sm} />}
+            </div>
           </>
-        }
-      >
+          }
+          >
 
-      </Panel>
-      <TableWithSortNew
-        store={localRootStore}
+          </Panel>
+          <TableWithSortNew
+          store={localRootStore}
         variant={PanelVariant.dataPadding}
         search={true}
         style={PanelRouteStyle.cars}
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
-        filter={false}
+        filter={true}
+        initFilterParams={[FilterData.car_type, FilterData.brand]}
         state={isLoading}
         ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
       />

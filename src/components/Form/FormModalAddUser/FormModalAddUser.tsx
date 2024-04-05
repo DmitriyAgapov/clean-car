@@ -167,13 +167,14 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                                 if(res.data.id) {
                                   console.log(res.data.id);
                                   store.usersStore.addToSelectedUsers(res.data.id)
+
                                 }
-                              })
+                              }).finally(() => store.appStore.closeModal())
                             }
                           })
                             .finally(() => {
-                          // store.appStore.closeModal()
-                        })
+                          store.appStore.closeModal()
+                        }).finally(() => store.appStore.closeModal())
                     }}
                     disabled={!form.isValid()}
                     // action={async () => {

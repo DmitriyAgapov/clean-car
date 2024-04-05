@@ -169,8 +169,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   disabled: payload.form.values.conductor === '0' || carsData === null,
               }
           }
-          if (payload.field === 'conductor') {
-          }
+
           if (payload.field === 'conductor') {
               if (
                   formData.values.conductor !== '0' &&
@@ -178,15 +177,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   formData.values.company !== null &&
                   formData.values.company !== '0'
               ) {
-                  const car = store.carStore.cars?.results.filter(
-                      (c: any) => c.employees.filter((e: any) => e.id === Number(formData.values.conductor))[0],
+                if (store.carStore.cars && store.carStore.cars.results?.length !== 0) {
+                  const car = store.carStore.cars?.results?.filter(
+                    (c: any) => c.employees.filter((e: any) => e.id === Number(formData.values.conductor))[0],
                   )
-                  if (car.length === 1) {
-                      formData.values.car = String(car[0].id)
-                      if (store.bidsStore.formResult.car === 0) {
-                          store.bidsStore.formResultSet({ car: car[0].id })
-                      }
+                  if (car && car.length === 1) {
+                    formData.values.car = String(car[0].id)
+                    if (store.bidsStore.formResult.car === 0) {
+                      store.bidsStore.formResultSet({ car: car[0].id })
+                    }
                   }
+                }
               }
           }
           if (payload.field !== 'company')
@@ -340,30 +341,32 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [formData.values.service_type, step])
     const conductorsData = React.useMemo(() => {
         let result: any[] = []
-        const users:any[] = store.usersStore.currentCompanyUsers.filter((cond:any) => cond.company.id === Number(formData.values.company))
-        if(users.length === 1) {
+      if(store.usersStore.currentCompanyUsers && store.usersStore.currentCompanyUsers.length !== 0) {
+        const users: any[] = store.usersStore.currentCompanyUsers.filter((cond: any) => cond.company.id === Number(formData.values.company))
+        if (users.length === 1) {
           formData.values.conductor = String(users[0].employee.id)
           store.bidsStore.formResultSet({ conductor: Number(users[0].employee.id) })
-          result =  users.map((c: any) => ({
+          result = users.map((c: any) => ({
             label: c.employee.first_name + " " + c.employee.last_name,
             value: String(c.employee.id),
           }))
         }
-        if(users.length === 0) {
-          result =  []
+        if (users.length === 0) {
+          result = []
         } else {
 
-         result =  users.map((c: any) => ({
-          label: c.employee.first_name + " " + c.employee.last_name,
-          value: String(c.employee.id),
-        }))
+          result = users.map((c: any) => ({
+            label: c.employee.first_name + " " + c.employee.last_name,
+            value: String(c.employee.id),
+          }))
+        }
       }
       return result
     }, [formData.values.company, store.usersStore.currentCompanyUsers])
     return (
       <FormProvider form={formData}>
         <PanelForForms
-          footerClassName={'px-8 pb-8 pt-2'}
+          footerClassName={'px-8 tablet-max:px-5 pb-8 pt-2  tablet-max:pb-24'}
           // className={'self-stretch'}
           bodyClassName={'self-stretch'}
           variant={PanelVariant.default}
@@ -395,7 +398,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               navigate(-1)
             }}
             variant={ButtonVariant.cancel} />: null}
-          actionNext={step === 5 ?  <Button type={'button'}
+            actionNext={step === 5 ?  <Button type={'button'}
             action={() => navigate('/account/bids')}
             text={'Закрыть'}
             className={'float-right'}
@@ -489,7 +492,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               />
               </Group>
               <hr className={'col-span-full border-transparent my-2'} />
-              <Group grow  className={'col-span-full flex-1 gap-0'} align={'stretch'}>
+              <Group grow  className={'col-span-full flex-1 gap-0 tablet-max:pt-4 pb-6'} align={'stretch'}>
               <UploadedPhotosFirstStep/>
               </Group>
             </PanelForForms>
@@ -913,10 +916,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
             <PanelForForms
               state={step !== 4}
               animate={animate}
-              className={'!bg-transparent'}
+              className={'!bg-transparent  self-stretch auto-rows-[min-content_1fr] desktop:grid-rows-[auto_1fr]'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
-              bodyClassName={'grid !grid-cols-4 grid-rows-[auto_1fr] gap-y-8  gap-x-12 content-start'}
+              bodyClassName={'mobile:!grid grid !grid-cols-4   gap-y-8  gap-x-12 content-start content-stretch items-stretch'}
               footerClassName={'flex-1 w-full justify-stretch'}
               header={
                 <>
@@ -930,7 +933,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               }
             >
               {(store.bidsStore.AvailablePerformers.size === 0) ? <><Heading className={'col-span-full'} text={'Исполнители не найдены'} variant={HeadingVariant.h3}/></> :
-                    (<><Select
+                    (<div className={'col-span-full subgrid contents'}><div     className={'col-span-2  relative z-[999] mobile:mb-8'}>
+                        <Select
                       className={'col-span-2'}
                       required
                       label={step4.fields[0].label}
@@ -958,8 +962,9 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         value: String(i.id),
                       }))}
                     />
-                <MapWithDots />
-                    </>
+                    </div>
+                        <MapWithDots />
+                    </div>
                     )
               }
 

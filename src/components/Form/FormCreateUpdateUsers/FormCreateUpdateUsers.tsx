@@ -162,7 +162,14 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		// }
 		},[form.values])
 	// @ts-ignore
-	const companyVar = React.useMemo(() => form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll.filter((c) => c.company_type === CompanyType[form.values.type]),
+	const companyVar = React.useMemo(() => {
+// @ts-ignore
+			console.log(store.companyStore.getFilialsAll);
+			// @ts-ignore
+			console.log(CompanyType[form.values.type]);
+			// @ts-ignore
+			return form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll.filter((c) => c.company_type === CompanyType[form.values.type])
+		},
 		[form.values.depend_on, form.values.type])
 	useEffect(() => {
 		store.permissionStore.loadCompanyPermissionsResults(form.values.company_id)
@@ -263,7 +270,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                             />
                             <Select
                                 searchable
-                                label={'Компании'}
+                                label={form.values.depend_on === "company" ? 'Компании' : 'Филиал'}
                                 {...form.getInputProps('company_id', { dependOn: 'type' })}
                                 onOptionSubmit={(e) => {
 	                                form.setValues({...form.values, group: null})

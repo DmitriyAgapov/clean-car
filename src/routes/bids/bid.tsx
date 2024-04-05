@@ -24,10 +24,8 @@ const BidPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
 	const location = useLocation()
-	let revalidator = useRevalidator()
-	const bid = store.bidsStore.CurrentBid
 	const params = useParams()
-	const {isLoading, data, mutate}:any = useSWR([`bid_${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => client.bidsRetrieve(args.company_id, args.id))
+	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => client.bidsRetrieve(args.company_id, args.id))
 
 	const textData = store.bidsStore.text
 	const tabedData = React.useMemo(() => {
@@ -38,16 +36,21 @@ const BidPage = () => {
 			{ label: 'Фото', data: data },
 			{ label: 'История заявки', data: data }
 		]
-	}, [isLoading])
+	}, [data, isLoading])
 
 	React.useEffect(() => {
-		if(bid.status === BidsStatus["Новая"] && store.appStore.appType === "performer") {
-			(async () => {
-				if (params.company_id && params.id) {
-					await store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus['Обрабатывается'])
-					mutate()
-				}
-			})()
+		if(data && data.status && data.status === BidsStatus["Новая"]) {
+			console.log('data.status', data.status === BidsStatus["Новая"]);
+			if (store.appStore.appType === "performer") {
+				(async () => {
+					if (params.company_id && params.id) {
+						store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus['Обрабатывается']).then(() => {
+							console.log('status updated');
+							mutate()
+						} )
+					}
+				})()
+			}
 		}
 	}, [data])
 
@@ -104,10 +107,9 @@ const BidPage = () => {
                 variant={PanelVariant.textPadding}
                 background={PanelColor.glass}
                 bodyClassName={''}
-                footerClassName={'flex  justify-end mobile:!justify-center'}
                 headerClassName={'grid grid-cols-4 gap-4 border-bottom-none'}
 	              footer={width && width < 740 && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
-		              <BidActions status={bid.status as BidsStatus} />
+		              <BidActions status={data?.status as BidsStatus} />
 	              )}
                 header={
                     <>
@@ -122,20 +124,20 @@ const BidPage = () => {
                         <div className={'flex  items-end gap-12 justify-start col-span-2 tablet-max:col-span-full tablet-max:block row-start-2'}>
                             <div className={'text-xs text-gray-2'}>
                                 Дата и время регистрации:{' '}
-                                <p className={'py-0'}>{(data && data.company.updated) && dateTransformShort(data.company.updated).date}</p>
+                                <p className={'py-0'}>{(data && data?.company?.updated) && dateTransformShort(data?.company.updated).date}</p>
                             </div>
                             <div className={'flex gap-6 items-center justify-around tablet-max:inline-flex'}>
-	                            {(data && data.status) && <Status variant={data.status as BidsStatus} size={ButtonSizeType.base} />}
+	                            {(data && data?.status) && <Status variant={data?.status as BidsStatus} size={ButtonSizeType.base} />}
                                 <Heading
                                     className={'!m-0'}
-                                    text={bid.company?.city?.name}
+                                    text={data?.company?.city?.name}
                                     variant={HeadingVariant.h4}
                                 />
                             </div>
                         </div>
 
                         {(width && width >740) && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
-                            <BidActions status={bid.status as BidsStatus} />
+                            <BidActions status={data?.status as BidsStatus} />
                         )}
                     </>
                 }

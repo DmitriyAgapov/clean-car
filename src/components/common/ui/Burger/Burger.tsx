@@ -10,15 +10,17 @@ type BurgerProps = {
 const Burger = ({ className, action, ...props }: BurgerProps) => {
   const store = useStore()
   return (
+    <div className={styles.Burger  + ' ' + className}   data-state={store.appStore.burgerState}>
     <a
-      className={styles.Burger + ' ' + className}
+      className={styles.Burger_inner}
       onClick={action}
-      data-state={store.appStore.burgerState}
+
     >
       <span />
       <span />
       <span />
     </a>
+    </div>
   )
 }
 

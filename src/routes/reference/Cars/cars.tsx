@@ -9,7 +9,7 @@ import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'componen
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import CarHelper from 'components/common/layout/CarHelper/CarHelper'
-import { useDisclosure } from '@mantine/hooks'
+import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { PriceCopy } from 'components/common/layout/Modal/PriceCopy'
 import { CarClasses } from 'components/common/layout/Modal/CarClasses'
 import agent, { client } from "utils/agent";
@@ -47,15 +47,24 @@ const RefCarsPage = () => {
   const navigate = useNavigate()
 
   const [opened, { open, close }] = useDisclosure(false)
-  const {isLoading, data, error} = useSWR(['refCars', localStore.params.getSearchParams] , ([url, args]) => store.catalogStore.getAllRefCarModels(args))
+  const {isLoading, data, mutate} = useSWR(['refCars', localStore.params.getSearchParams] , ([url, args]) => store.catalogStore.getAllRefCarModels(args))
+  useDidUpdate(
+    () => {
+      if(location.pathname === `/account/references/car_brands`) {
+        console.log('mutate');
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   useEffect(() => {
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
         id: item.id,
         brand: item.brand.name,
+        modelName: item.name,
         car_type:item.car_type,
-        modelName: item.name
       }))}
     localStore.setIsLoading = isLoading
   },[data])
@@ -97,7 +106,6 @@ const RefCarsPage = () => {
                         </div>
                         <div className={'flex gap-6'}>
 
-                                <>
                                     <Button
                                         text={'Классификация автомобилей'}
                                         action={open}
@@ -108,7 +116,7 @@ const RefCarsPage = () => {
                                         size={ButtonSizeType.sm}
                                     />{' '}
                                     {memoModal}
-                                </>
+
 
                             {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (
                                 <Button

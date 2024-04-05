@@ -22,6 +22,7 @@ import agent from "utils/agent";
 import { Loader } from "@mantine/core";
 import { textDataCars } from "routes/reference/Cars/cars";
 import useSWR from "swr";
+import { useDidUpdate } from "@mantine/hooks";
 
 const ReferenceCarPage = ():JSX.Element => {
   const navigate = useNavigate()
@@ -32,8 +33,16 @@ const ReferenceCarPage = ():JSX.Element => {
   //TODO Resolved path
   // const path = useResolvedPath(`/${params.id}`)
   // console.log(path);
-  const {isLoading, data, error} = useSWR([`refCar_${params.id}`, params.id], ([url, id]) => agent.Catalog.getCarModelWithBrand(Number(id)).then((res) => res.data))
-  console.log(data,'car');
+  const {isLoading, data, mutate} = useSWR([`refCar_${params.id}`, params.id], ([url, id]) => agent.Catalog.getCarModelWithBrand(Number(id)).then((res) => res.data))
+  useDidUpdate(
+    () => {
+      if(location.pathname === `/account/references/car_brands/${params.id}`) {
+        console.log('mutate');
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   const items = React.useMemo(() => {
 
     let itemsAr: JSX.Element[] = []

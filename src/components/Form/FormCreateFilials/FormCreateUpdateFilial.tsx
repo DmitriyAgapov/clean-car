@@ -147,13 +147,13 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                     values.id = r.id
                     revalidate.revalidate()
                     navigate(`/account/filials/performer/${values.company_id}/${company.id}`)
-                })
+                }).then(() => store.companyStore.getAllFilials())
             } else {
                 store.companyStore.createFilial(data, 'performer', values.company_id).then((r) => {
                     values.id = r.id
                     revalidate.revalidate()
                     navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
-                })
+                }).then(() => store.companyStore.getAllFilials())
             }
         }
         if (values.type == CompanyType.customer) {
@@ -173,15 +173,16 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                     values.id = r.id
                     revalidate.revalidate()
                     navigate(`/account/filials/customer/${values.company_id}/${company.id}`)
-                })
+                }).then(() => store.companyStore.getAllFilials())
             } else {
                 store.companyStore.createFilial(data, 'customer', values.company_id).then((r) => {
                     values.id = r.id
                     revalidate.revalidate()
                     navigate(`/account/filials/customer/${values.company_id}/${r.id}`)
-                })
+                }).then(() => store.companyStore.getAllFilials())
             }
         }
+
     }, [])
     // @ts-ignore
     return (
