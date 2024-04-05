@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Navigate, Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Navigate, Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
 import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
@@ -13,13 +13,27 @@ import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreat
 import { CompanyType, Payment } from "stores/companyStore";
 import agent from "utils/agent";
 import { Loader } from "@mantine/core";
+import useSWR from "swr";
+import { useDidUpdate } from "@mantine/hooks";
 
 export default function CompanyPageEditAction(props: any) {
   const store = useStore()
   const navigate = useNavigate()
   const params = useParams()
+  const revalidator = useRevalidator()
+  const {isLoading, data:loaderData, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
+    revalidateOnMount: true
+  })
+  useDidUpdate(
+    () => {
+      if(location.pathname.includes('companies')) {
 
-  const {isLoading, data:loaderData} = agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string)
+        mutate()
+        revalidator.revalidate()
+      }
+    },
+    [location.pathname]
+  );
   if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
   if(isLoading) return <Loader/>
   return (

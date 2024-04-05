@@ -209,19 +209,6 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           header: 'Пополнить счет',
           state: true,
       }
-      const Performers =() => {
-        const items = store.companyStore.companies.filter((c: any) =>
-            data[`${company_type}profile`].performer_company.includes(c.id),
-        )
-        console.log(items)
-        console.log(data[`${company_type}profile`].performer_company)
-
-        return <>{items.map((item: any, index ) => (
-            <span key={item.id} className={'text-xs font-normal'}>
-                {item.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '}
-            </span>))}</>
-
-      }
       console.log(data);
       result = (<Tabs.Panel state={state}
         name={"info"}
@@ -231,7 +218,12 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
         <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
         {company_type === 'customer' && <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}>
-          <DList label={'Исполнители'} title={<Performers/>} />
+          <DList label={'Исполнители'} title={store.companyStore.companies.filter((c: any) =>
+            data[`${company_type}profile`].performer_company.includes(c.id)).map((item: any, index ) => (
+            <span key={item.id} className={'text-xs font-normal'}>
+                {item.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '}
+            </span>))} />
+
           <CardSimple.Footer>
             <LinkStyled variant={ButtonVariant.text} style={{color: 'var(--accentColor)'}} text={'Подробнее'} to={'#'} />
           </CardSimple.Footer>

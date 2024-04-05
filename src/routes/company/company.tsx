@@ -6,7 +6,7 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import { useStore } from 'stores/store'
 import { observer, useLocalStore } from "mobx-react-lite";
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from 'stores/companyStore'
@@ -14,6 +14,7 @@ import { PermissionNames } from 'stores/permissionStore'
 import dayjs from 'dayjs'
 import agent from "utils/agent";
 import { useDidUpdate } from "@mantine/hooks";
+import useSWR from "swr";
 
 const CompanyPage = () => {
   const store = useStore()
@@ -21,11 +22,17 @@ const CompanyPage = () => {
   const navigate = useNavigate()
 
   const params = useParams()
-  const {isLoading, data, mutate} = agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string)
+  const revalidator = useRevalidator()
+  const {isLoading, data, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
+    revalidateOnMount: true
+  })
+  console.log(data);
   useDidUpdate(
     () => {
-      if(location.pathname === `/account/companies/${params.company_type}/${params.id}`) {
+      if(location.pathname.includes('companies')) {
+
         mutate()
+        revalidator.revalidate()
       }
     },
     [location.pathname]
@@ -121,7 +128,7 @@ const CompanyPage = () => {
                                           : HeadingDirectory.performer
                                   }
                               />
-                              <Heading className={'!m-0'} text={data?.city.name} variant={HeadingVariant.h4} />
+                              <Heading className={'!m-0'} text={data?.city?.name} variant={HeadingVariant.h4} />
                           </div>
                       </div>
                   </>

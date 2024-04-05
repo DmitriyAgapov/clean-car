@@ -25,6 +25,7 @@ import company from "routes/company/company";
 import { useSWRConfig } from "swr";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 import data from "utils/getData";
+import TransferListNew from "components/common/ui/TransferList/TransferListNew";
 
 interface InitValues {
     address: string | null
@@ -510,7 +511,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
                         <hr className={'mt-0 mb-2 flex-[1_0_100%] w-full border-gray-2'} />
-                        {formData.values.performers_list === '1' && <TransferList active={formData.values.performer_company}/>}
+                        {formData.values.performers_list === '1' && <TransferListNew active={formData.values.performer_company}/>}
                     </PanelForForms>
                     <PanelForForms state={step !== 3}
                       animate={animate}
