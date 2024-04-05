@@ -36,6 +36,7 @@ const CompanyPage = () => {
       { label: 'Филиалы', company_type: params.company_type  },
       { label: 'Сотрудники', data: data, company_type: params.company_type  },
       { label: 'Автомобили',  company_type: params.company_type  },
+      (params.company_type === "customer") && { label: 'Партнеры',  company_type: params.company_type  },
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
@@ -84,7 +85,7 @@ const CompanyPage = () => {
 
           <Panel
               state={isLoading}
-              className={'col-span-full grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-6'}
+              className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-6'}
               variant={PanelVariant.textPadding}
               background={PanelColor.glass}
               bodyClassName={''}
@@ -127,6 +128,7 @@ const CompanyPage = () => {
           >
               <Tabs
                   data={tabedData}
+                variant={'bid-tabs'}
                   type={TabsType.company}
               />
           </Panel>

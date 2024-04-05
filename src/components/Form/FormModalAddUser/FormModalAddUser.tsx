@@ -110,8 +110,8 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
         <form
             onSubmit={form.onSubmit((props) => console.log('form', props))}
             onReset={form.onReset}
-          className={'grid grid-cols-2 gap-4'}
-            style={{ display: 'grid grid' }}
+          className={'tablet:grid grid-cols-2 gap-4'}
+
         >
             <Heading
                 text={'Добавление нового сотрудника'}
@@ -203,7 +203,7 @@ export const FormModalSelectUsers = observer(({ company_id, users }: { company_i
   })
   return (
 
-        <form style={{ display: "grid", gap: "1rem" }}>
+        <form className={'tablet:grid'} style={{  gap: "1rem" }}>
           <Heading text={"Выбрать сотрудника из списка пользователей"}
             // className={"!mb-0"}
             variant={HeadingVariant.h2}

@@ -22,6 +22,7 @@ import FormBidResult from 'routes/bids/FormBidResult/FormBidResult'
 import UploadedPhotos, { UploadedPhotosFirstStep } from "components/common/layout/Modal/UploadedPhotos";
 import {  DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
+import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 
 interface InitValues {
     address: string | null
@@ -78,6 +79,11 @@ export const [FormProvider, useFormContext, useForm] = createFormContext<any>();
 export const createBidFormActions = createFormActions<InitValues>('createBidForm');
 
 const FormCreateUpdateBid = ({ bid, edit }: any) => {
+    const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+      offset: 60,
+
+    });
+    const {width} = useViewportSize()
     const store = useStore()
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
@@ -90,6 +96,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
             setAnimate(false)
             setStep((prevState) => (step ? step : prevState + 1))
         }, 1200)
+        width < 940 ? scrollIntoView() : null
     }
 
   const initData = React.useMemo(() => {
@@ -363,9 +370,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       }
       return result
     }, [formData.values.company, store.usersStore.currentCompanyUsers])
+
     return (
       <FormProvider form={formData}>
-        <PanelForForms
+        <PanelForForms ref={targetRef}
           footerClassName={'px-8 tablet-max:px-5 pb-8 pt-2  tablet-max:pb-24'}
           // className={'self-stretch'}
           bodyClassName={'self-stretch'}

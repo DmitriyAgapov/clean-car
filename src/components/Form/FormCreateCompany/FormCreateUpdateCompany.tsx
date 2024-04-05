@@ -23,6 +23,7 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import company from "routes/company/company";
 import { useSWRConfig } from "swr";
+import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 
 interface InitValues {
     address: string | null
@@ -77,7 +78,11 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         working_time: '',
         performer_company: []
     }
+    const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+        offset: 60,
 
+    });
+    const {width} = useViewportSize()
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
 
@@ -88,6 +93,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             store.companyStore.loadingCompanies = false
             setStep(step ? step : 2)
         }, 1200)
+        width < 940 ? scrollIntoView() : null
     }
     if(edit) {
         initValues = {
@@ -235,6 +241,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     return (
         <FormProvider form={formData}>
             <PanelForForms
+              ref={targetRef}
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
                 actionBack={step === 2 ? (<Button

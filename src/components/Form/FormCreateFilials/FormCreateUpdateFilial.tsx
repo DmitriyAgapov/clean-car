@@ -18,6 +18,7 @@ import Progress from 'components/common/ui/Progress/Progress'
 import { TransferList } from 'components/common/ui/TransferList/TransferList'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import agent from "utils/agent";
+import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 
 interface InitValues {
     address: string | null
@@ -60,7 +61,11 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         service_percent: 1,
         performer_company: []
     }
+    const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+        offset: 60,
 
+    });
+    const {width} = useViewportSize()
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
 
@@ -71,6 +76,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             store.companyStore.loadingCompanies = false
             setStep(step ? step : 2)
         }, 1200)
+        width < 940 ? scrollIntoView() : null
     }
     if(edit) {
         initValues = {
@@ -188,6 +194,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     return (
         <FormProvider form={formData}>
             <PanelForForms
+              ref={targetRef}
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
                 actionCancel={

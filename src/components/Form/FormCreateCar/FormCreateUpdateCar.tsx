@@ -19,6 +19,7 @@ import { createFormActions, createFormContext } from "@mantine/form";
 import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
 import { CompanyTypeRus } from 'stores/companyStore'
+import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 
 interface CarCreateUpdate  {
     number: string
@@ -39,6 +40,11 @@ export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
 export const createUpdateCarActions = createFormActions<CarCreateUpdate>('createUpdateCar')
 
 const FormCreateUpdateCar = ({ car, edit }: any) => {
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+    offset: 60,
+
+  });
+  const {width} = useViewportSize()
     const store = useStore()
     const memoizedInitValues = React.useMemo(() => {
       let initValues:CarCreateUpdate & any = {
@@ -140,7 +146,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
       })
     },
   })
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(2)
     const [animate, setAnimate] = useState(false)
 
     const changeStep = (step?: number) => {
@@ -149,6 +155,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             setAnimate(false)
             setStep((prevState) => step ? step : prevState += 1)
         }, 1200)
+      width < 940 ? scrollIntoView() : null
     }
     const companyVar = React.useMemo(() => {
       const  res = form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Компания-Заказчик" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => store.appStore.appType === "admin" ? c.company_type === "Компания-Заказчик" : c)
@@ -221,7 +228,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     }, [form])
     return (
       <FormProvider form={form}>
-        <PanelForForms
+        <PanelForForms ref={targetRef}
           state={false}
           footerClassName={'px-8 pb-8 pt-2'}
           variant={PanelVariant.default}
@@ -374,7 +381,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               state={step !== 2}
               animate={animate}
               className={'!bg-transparent'}
-              bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
+              bodyClassName={'md:!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
               header={
@@ -418,6 +425,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                       <Observer children={() => <FormCard title={"Добавить нового сотрудника"}
                         titleColor={HeadingColor.accent}
                         titleVariant={HeadingVariant.h4}
+                        className={'mobile:mb-4'}
                         actions={<Button text={"Добавить сотрудника"}
                           size={ButtonSizeType.sm}
                           variant={ButtonVariant.accent}

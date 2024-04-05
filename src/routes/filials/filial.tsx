@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
@@ -52,21 +52,22 @@ const FilialPage = () => {
               header={<><div>
                 <Button text={<><SvgBackArrow />Назад к списку филиалов{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
                 <Heading text={'Филиал'} variant={HeadingVariant.h1} className={'!mb-0 inline-block'} color={HeadingColor.accent} /></div>
-              {store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'update') && <LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right'} variant={ButtonVariant.default} />}</>}
+              {store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'update') && <LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right mt-auto '}     size={ButtonSizeType.sm} variant={ButtonVariant.default} />}</>}
           />
 
           <Panel
             state={isLoading}
-              className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+              className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-6'}
               variant={PanelVariant.textPadding}
               background={PanelColor.glass}
               bodyClassName={''}
               footerClassName={'flex  justify-end'}
               headerClassName={'border-bottom-none'}
               header={
-                  <>
+                  <><div className={'flex col-span-2  tablet-max:col-span-full justify-between'}>
                       <Heading text={data?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
-                      <div className={'flex items-baseline justify-between'}>
+                  </div>
+                      <div className={'flex items-baseline justify-between  tablet-max:col-span-full tablet-max:block row-start-2'}>
                           <div className={'text-xs text-gray-2'}>
                               Дата и время регистрации: <span>{dateTransform(data?.updated).date}</span>
                           </div>
@@ -95,7 +96,7 @@ const FilialPage = () => {
                   </>
               }
           >
-              <Tabs data={tabedData}  type={TabsType.filial}/>
+              <Tabs variant={'bid-tabs'} data={tabedData}  type={TabsType.filial} />
           </Panel>
       </Section>
 
