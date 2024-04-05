@@ -13,6 +13,7 @@ import { CompanyType } from 'stores/companyStore'
 import { PermissionNames } from 'stores/permissionStore'
 import dayjs from 'dayjs'
 import agent from "utils/agent";
+import { useDidUpdate } from "@mantine/hooks";
 
 const CompanyPage = () => {
   const store = useStore()
@@ -20,8 +21,15 @@ const CompanyPage = () => {
   const navigate = useNavigate()
 
   const params = useParams()
-  const {isLoading, data, error} = agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string)
-
+  const {isLoading, data, mutate} = agent.Companies.getCompanyDataNew(params.company_type as string, params.id as string)
+  useDidUpdate(
+    () => {
+      if(location.pathname === `/account/companies/${params.company_type}/${params.id}`) {
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   const tabedData = React.useMemo(() => {
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },

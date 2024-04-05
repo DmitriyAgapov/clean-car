@@ -85,7 +85,7 @@ const GroupsPage = () => {
             store={localRootStore}
             variant={PanelVariant.dataPadding}
             search={true}
-            style={PanelRouteStyle.company}
+            style={PanelRouteStyle.groups}
             background={PanelColor.glass}
             className={'col-span-full table-groups'}
             filter={true}

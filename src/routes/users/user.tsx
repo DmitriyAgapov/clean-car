@@ -11,6 +11,8 @@ import DList from 'components/common/ui/DList/DList'
 import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
 import label from "utils/labels";
+import useSWR from "swr";
+import agent from "utils/agent";
 
 const UserPage = () => {
   const store = useStore()
@@ -18,6 +20,8 @@ const UserPage = () => {
   const navigate = useNavigate()
   const { user }: any = useLoaderData()
   const params = useParams()
+
+  const {isLoading, data} = useSWR(`user_${params.company_id}_${params.id}`,() => agent.Account.getCompanyUser(Number(params.company_id), Number(params.id)))
 
   const companyType = params.company_type;
   const company = companyType !== "admin" ? user.company : store.userStore.myProfileData.company;
@@ -50,7 +54,9 @@ const UserPage = () => {
           {company.city.name && <DList label={'Филиал'} title={company.city.name} />}
         </>
     )
-  }, [])
+  }, [data])
+
+
   if (location.pathname.includes('edit')) return <Outlet />
   return (
     <Section

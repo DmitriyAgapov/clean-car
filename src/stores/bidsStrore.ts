@@ -121,7 +121,7 @@ export class BidsStore {
         create: 'Создать',
         loadExcel: 'Загрузить Excel',
         tableHeaders: [
-            { label: '№', name: 'id' },
+            { label: '№', name: 'idnum' },
             { label: 'Статус', name: 'status' },
             { label: 'Дата/Время', name: 'created' },
             { label: 'Заказчик', name: 'company' },

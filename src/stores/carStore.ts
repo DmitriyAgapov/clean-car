@@ -24,7 +24,7 @@ export const carHelperTable = [
 ['CO3','Коммерческий', '8 класс', 'От 2 тонн']
 ]
 
-export enum  CarType {
+export enum CarType {
   "A" = "A",
   "B" = "B",
   "C" = "C",

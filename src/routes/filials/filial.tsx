@@ -14,14 +14,23 @@ import { CompanyType } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
 import agent, { client } from "utils/agent";
 import useSWR from "swr";
+import { useDidUpdate } from "@mantine/hooks";
 
 const FilialPage = () => {
   const store = useStore()
   const location = useLocation()
   const params = useParams()
   const navigate = useNavigate()
-  const {isLoading, data} = useSWR(`/filial/${params.company_type}/${params.id}/retrieve`, () => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
-  console.log(isLoading, data);
+  const {isLoading, data, mutate} = useSWR(`/filial/${params.company_type}/${params.id}/retrieve`, () => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
+  useDidUpdate(
+    () => {
+      if(location.pathname === `/account/filials/${params.company_type}/${params.company_id}/${params.id}`) {
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
+
   const tabedData = React.useMemo(() => {
 
     return [

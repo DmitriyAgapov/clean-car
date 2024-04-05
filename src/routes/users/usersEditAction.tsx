@@ -46,20 +46,21 @@ const UsersPageEditAction = () => {
                           className={'!mb-0 inline-block mr-auto flex-1'}
                           color={HeadingColor.accent}
                       />
+                    {store.appStore.appType === "admin" && <><Button
+                      text={'Скачать шаблон'}
+                      variant={ButtonVariant["accent-outline"]}
+                      action={() => navigate('/account/users/create')}
+                      className={'inline-flex mr-5'}
+                      size={ButtonSizeType.sm}
+                    />
                       <Button
-                          text={'Скачать шаблон'}
-                          variant={ButtonVariant['accent-outline']}
-                          action={() => navigate('/account/users/create')}
-                          className={'inline-flex mr-5'}
-                          size={ButtonSizeType.sm}
+                        text={'Загрузить файл'}
+                        action={() => navigate('/account/users/create')}
+                        className={'inline-flex mr-5'}
+                        directory={ButtonDirectory.directory}
+                        size={ButtonSizeType.sm}
                       />
-                      <Button
-                          text={'Загрузить файл'}
-                          action={() => navigate('/account/users/create')}
-                          className={'inline-flex mr-5'}
-                          directory={ButtonDirectory.directory}
-                          size={ButtonSizeType.sm}
-                      />
+                    </>}
                   </>
               }
           ></Panel>

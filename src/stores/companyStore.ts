@@ -398,7 +398,7 @@ export class CompanyStore {
             const { data: dataCars, status } = yield agent.Companies.getOnlyBranchesCompanies(params)
             console.log(dataCars);
             if (status === 200) {
-                this.allFilials = dataCars
+                this.allFilials = dataCars.results
                 data = dataCars.results
                 dataMeta = dataCars
             }
@@ -406,8 +406,7 @@ export class CompanyStore {
             try {
                 const type = userStore.myProfileData.company.company_type;
                 const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id, params)
-                console.log(dataCars);
-                if (status === 200) {
+                console.log(dataCars);        if (status === 200) {
                     this.allFilials = dataCars
                     data = dataCars.results
                     dataMeta = dataCars
@@ -594,6 +593,7 @@ export class CompanyStore {
     }
 
     getAllCompanies (params?: PaginationProps) {
+        if(authStore.isLoggedIn) {
         console.log('All companies');
         this.loadingCompanies = true
         // if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
@@ -618,6 +618,7 @@ export class CompanyStore {
                  return this.stateMyCompany.company
             }
         // }
+            }
     }
     loadCompanyData(company_type: string, id: number) {
         this.loadingCompanies = true
@@ -672,7 +673,7 @@ export class CompanyStore {
             console.log('load filials get');
             this.loadAllFilials()
         })
-        return this.filials as any[]
+        return this.allFilials as any[]
     }
 
     getCompanyOrFilials(type:string) {

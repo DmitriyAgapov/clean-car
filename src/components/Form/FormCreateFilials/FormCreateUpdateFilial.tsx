@@ -52,7 +52,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         company_name: '',
         id: 0,
         height: null,
-        company_filials: 'filials',
+        company_filials: 'company',
         lat: 0,
         lon: 0,
         is_active: 'true',

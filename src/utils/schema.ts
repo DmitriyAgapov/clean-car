@@ -1988,7 +1988,8 @@ export class Client implements IClient {
      * @param page (optional) A page number within the paginated result set.
      * @param page_size (optional) Number of results to return per page.
      */
-    bidsHistory(company_id: string, id: number, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken): Promise<Anonymous7> {
+    bidsHistory(params: {company_id: string, id: number, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous7> {
+        const {company_id, id, ordering, page, page_size, cancelToken} = params
         let url_ = this.baseUrl + "/bids/{company_id}/{id}/history/?";
         if (company_id === undefined || company_id === null)
             throw new Error("The parameter 'company_id' must be defined.");

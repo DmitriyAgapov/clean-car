@@ -27,9 +27,7 @@ const PricesPage = () => {
 		}
 		localStore.setIsLoading = isLoading
 	},[data])
-	useEffect(() => {
-		console.log('PricesPage', isValidating, isLoading, data)
-	},[isLoading, data, isValidating])
+
 	useDidUpdate(
 		() => {
 			if(location.pathname === '/account/prices') {

@@ -13,6 +13,7 @@ import { Loader } from "@mantine/core";
 import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import agent from "utils/agent";
 import useSWR from "swr";
+import { useDidUpdate } from "@mantine/hooks";
 
 const CarPage = () => {
   const store = useStore()
@@ -20,8 +21,17 @@ const CarPage = () => {
   const navigate = useNavigate()
   const navigation = useNavigation();
   const params = useParams()
-  const {isLoading, data} = useSWR(`car_${params.company_id}`,() => store.carStore.getCarByCompanyId(String(params.company_id), Number(params.id)))
-  console.log(data, CompanyTypeRus(data?.company?.company_type));
+  const {isLoading, data, mutate} = useSWR(`car_${params.company_id}`,() => store.carStore.getCarByCompanyId(String(params.company_id), Number(params.id)))
+
+  useDidUpdate(
+    () => {
+      if(location.pathname === `/account/cars/${params.company_id}/${params.id}`) {
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
+
   const tabedData = React.useMemo(() => {
     store.appStore.setAppState(isLoading)
     return [

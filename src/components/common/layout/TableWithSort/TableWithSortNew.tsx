@@ -95,11 +95,12 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
         setSearchParams(searchParams.toString())
     }, [sortedField, currentPage, searchParams])
     useEffect(() => {
-        console.log('data', noData);
+        console.log('pageSize', localStore.params.searchParams.page_size);
+        console.log('initCount', localStore.getData?.count);
         // store.appStore.setAppState(localStore.isLoading)
-    }, [localStore.isLoading]);
+    }, [localStore.params.searchParams]);
  useEffect(() => {
-        console.log('rows', rows);
+
         // store.appStore.setAppState(localStore.isLoading)
     }, [rows, localStore.isLoading]);
 
@@ -118,17 +119,17 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
                 </> : null
             }
             footer={
-             (Math.ceil(initCount / pageSize)) > 1 && (
+             (Math.ceil(initCount / localStore.params.searchParams.page_size)) > 1 && (
                <Pagination
                         classNames={{
                             control:
                                 'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
                         }}
-                        total={Math.ceil(initCount / pageSize)}
+                        total={Math.ceil(initCount / localStore.params.searchParams.page_size)}
                         value={localStore.params.searchParams.page}
                         onChange={value => localStore.params.setSearchParams({page: Number(value)})}
                         // boundaries={2}
-                        defaultValue={1}
+                        defaultValue={10}
                     />
                 )
             }

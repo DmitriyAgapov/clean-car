@@ -111,7 +111,7 @@ export function InputAutocompleteNew(props:any) {
               combobox.closeDropdown()
           }}
           {...props}
-          withinPortal={false}
+          withinPortal={true}
           store={combobox}
       >
           <Combobox.Target>

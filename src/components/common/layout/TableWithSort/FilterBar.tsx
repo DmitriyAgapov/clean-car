@@ -11,6 +11,7 @@ import { useLocalStore } from 'stores/localStore'
 import { observer } from 'mobx-react-lite'
 import { TableSearchParams } from 'components/common/layout/TableWithSort/TableWithSort.store'
 import { Status } from 'utils/schema'
+import { CarType } from "stores/carStore";
 
 interface FilterBarProps {
   state: boolean
@@ -24,6 +25,7 @@ const SelectStyles = {
     input: 'h-8 rounded-sm !bg-gray-2/20 border-gray-2/80 text-white focus:border-white/40 focus:filter-none',
 }
 const FilterElements = ({ filters }:{filters: any}) => {
+
     const params = React.useContext(ctx)
 
     const store = useStore()
@@ -113,22 +115,22 @@ const FilterElements = ({ filters }:{filters: any}) => {
               defaultValue={params.car_type}
               onChange={(value) => {
                 if (value !== null) {
-                  params.service_type = value
+                  params.car_type = value
                   // setParams((prevState) => ({...prevState, service_type: value}))
                 } else {
                   let newParams: any = params
-                  delete params.service_type
+                  delete params.car_type
                   // setParams(newParams)
                 }
               }}
               classNames={SelectStyles}
               comboboxProps={{ withinPortal: false }}
-              data={store.catalogStore.allServices.map((service: any) => ({
-                label: service.name,
-                value: service.id.toString(),
+              data={Object.keys(CarType).map((type: any, index: number) => ({
+                label: type,
+                value: index.toString(),
               }))} />,
           )
-          break
+          break;
         case FilterData.start_date:
           elements.push(
             <DateInput classNames={{

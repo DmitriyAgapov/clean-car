@@ -56,7 +56,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
       <Header>
         {(width  && width > 960) && <Logo className={' logo-header'}/>}
         {headerContent}
-        <Burger className={'lg:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
+        <Burger className={'desktop:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
       </Header>
       <MobileMenu items={sidebarMenu} />
       {/* {!store.appStore.loaderBlocked && <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{ */}

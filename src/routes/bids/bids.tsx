@@ -38,6 +38,7 @@ const BidsPage = () => {
 		[location.pathname]
 	);
 	useEffect(() => {
+
 		localStore.setData = {
 			...data,
 			results: data?.results?.map((r:any) => ({
@@ -47,8 +48,8 @@ const BidsPage = () => {
 			created: dateTransformShort(r.created).date,
 			customer: r.company.name,
 			performer: r.performer.name,
-			conductor: ((r.conductor && r.conductor?.first_name) && (r.conductor && r.conductor?.first_name)) ? r.conductor && r.conductor?.first_name + ' ' + r.conductor?.last_name[0] + '.' : "",
-			executor: ((r.executor && r.executor?.first_name) && (r.executor && r.executor?.first_name))  ? r.executor?.first_name + ' ' + r.executor?.last_name[0] + '.' : "",
+			conductor: (r.conductor && r.conductor?.first_name &&  r.conductor?.last_name) ? r.conductor?.first_name + ' ' + r.conductor?.last_name[0] + '.' : " ",
+			executor: (r.executor && r.executor?.first_name &&  r.executor?.last_name)  ? r.executor?.first_name + ' ' + r.executor?.last_name[0] + '.' : " ",
 			number: r.car?.number,
 			city: r.company.city.name,
 			service_type: r.service_type.name,

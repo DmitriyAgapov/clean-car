@@ -30,6 +30,7 @@ import { toJS } from "mobx";
 import TabFilials from "routes/company/TabsVariants/TabFilials";
 import TabCars from "routes/company/TabsVariants/TabCars";
 import TabUsers from "routes/company/TabsVariants/TabUsers";
+import TabBidHistory from "routes/company/TabsVariants/TabBidHistory";
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -575,6 +576,10 @@ export const TabsVariantBids = observer(({
             )
           } else result = null
         break;
+
+        case 'История заявки':
+          result = (<TabBidHistory state={state} companyId={companyId} company_type={company_type} />)
+          break;
         default:
             return null
     }

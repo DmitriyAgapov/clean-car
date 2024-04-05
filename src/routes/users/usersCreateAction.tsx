@@ -42,7 +42,7 @@ export default function UsersPageCreateAction() {
               className={'!mb-0 inline-block mr-auto flex-1'}
               color={HeadingColor.accent}
             />
-            <Button
+            {store.appStore.appType === "admin" && <><Button
               text={'Скачать шаблон'}
               variant={ButtonVariant["accent-outline"]}
               action={() => navigate('/account/users/create')}
@@ -56,7 +56,8 @@ export default function UsersPageCreateAction() {
               directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}
             />
-          </>
+            </>}
+              </>
         }
       />
 

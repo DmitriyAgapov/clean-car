@@ -9,6 +9,8 @@ import { useWindowDimensions } from "utils/utils";
 import { SvgChevron } from "components/common/ui/Icon";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { observer } from "mobx-react-lite";
+import { BidStatus } from "utils/schema";
+import { BidsStatus } from "stores/bidsStrore";
 
 const RowData = observer((props: any) => {
 	const navigate = useNavigate()
@@ -63,6 +65,26 @@ const RowData = observer((props: any) => {
 						data-label={label(key)}
 						className={styles.tableCell}>
 						<Status variant={props[key]} />
+					</td>,)
+				} else if( key === 'old_status') {
+					// @ts-ignore
+					ar.push(<td key={key}
+						data-label={label(key)}
+						className={styles.tableCell}>
+
+						<Status
+							// @ts-ignore
+							variant={props[key]} variantForw={props[key]}>{props[key]}</Status>
+					</td>,)
+				} else if( key === 'new_status') {
+					// @ts-ignore
+					ar.push(<td key={key}
+						data-label={label(key)}
+						className={styles.tableCell}>
+
+						<Status
+							// @ts-ignore
+							variant={props[key]} variantForw={props[key]}>{props[key]}</Status>
 					</td>,)
 				} else if(props[key] === null) {
 					ar.push(<td key={key}

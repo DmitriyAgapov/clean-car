@@ -9,7 +9,7 @@
 	opacity: 1;
 	transition:  0.25s 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
   }
-  @media screen and (max-width: 960px){
+  @screen desktop-max {
 
 
 
@@ -26,7 +26,7 @@
 	background: linear-gradient(180.45deg, rgba(24, 25, 28, 1) 0%, rgba(24, 25, 28, 1) 65%, rgba(24, 25, 28, 1) 100%);
 
   }
-  @media screen and (min-width: 961px) {
+  @screen desktop {
 	& + section {
 	  grid-column: 4/-2;
 	  grid-row: span 2;
