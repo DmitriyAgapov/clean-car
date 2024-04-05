@@ -146,7 +146,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
       })
     },
   })
-    const [step, setStep] = useState(2)
+    const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
 
     const changeStep = (step?: number) => {
