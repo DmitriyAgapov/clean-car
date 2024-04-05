@@ -24,7 +24,7 @@ const UsersPageEditAction = () => {
       <Section type={SectionType.default}>
           <Panel
               className={'col-span-full'}
-              headerClassName={'flex justify-between flex-wrap'}
+              headerClassName={'tablet:flex justify-between flex-wrap'}
               header={
                   <>
                       <Button
@@ -43,24 +43,24 @@ const UsersPageEditAction = () => {
                       <Heading
                           text={'Редактировать пользователя'}
                           variant={HeadingVariant.h1}
-                          className={'!mb-0 inline-block mr-auto flex-1'}
+                          className={'tablet:!mb-0 inline-block mr-auto flex-1'}
                           color={HeadingColor.accent}
                       />
-                    {store.appStore.appType === "admin" && <><Button
+                    {store.appStore.appType === "admin" && <div className={'flex gap-8 tablet-max:max-w-96'}><Button
                       text={'Скачать шаблон'}
                       variant={ButtonVariant["accent-outline"]}
                       action={() => navigate('/account/users/create')}
-                      className={'inline-flex mr-5'}
+                      className={'inline-flex tablet-max:flex-1'}
                       size={ButtonSizeType.sm}
                     />
                       <Button
                         text={'Загрузить файл'}
                         action={() => navigate('/account/users/create')}
-                        className={'inline-flex mr-5'}
+                        className={'inline-flex tablet-max:flex-1'}
                         directory={ButtonDirectory.directory}
                         size={ButtonSizeType.sm}
                       />
-                    </>}
+                    </div>}
                   </>
               }
           ></Panel>

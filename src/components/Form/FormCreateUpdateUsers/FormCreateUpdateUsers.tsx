@@ -168,7 +168,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			// @ts-ignore
 			console.log(CompanyType[form.values.type]);
 			// @ts-ignore
-			return form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll.filter((c) => c.company_type === CompanyType[form.values.type])
+			return form.values.depend_on === "company" ? store.companyStore.getCompaniesAll?.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll?.filter((c) => c.company_type === CompanyType[form.values.type])
 		},
 		[form.values.depend_on, form.values.type])
 	useEffect(() => {
@@ -179,6 +179,9 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 
         <FormProvider form={form}>
             <PanelForForms
+	            className={' tablet-max:-mx-6'}
+	            bodyClassName={'tablet-max:block '}
+	            footerClassName={'tablet-max:child:flex tablet-max:child:flex-col tablet-max:child:w-full tablet-max:child:*:flex-1 tablet-max:child:*:w-full  tablet-max:-mx-2'}
                 actionCancel={
                     <><Button
 	                      type={'button'}

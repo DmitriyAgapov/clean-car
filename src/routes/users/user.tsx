@@ -13,6 +13,7 @@ import { PermissionNames } from "stores/permissionStore";
 import label from "utils/labels";
 import useSWR from "swr";
 import agent from "utils/agent";
+import { useDidUpdate } from "@mantine/hooks";
 
 const UserPage = () => {
   const store = useStore()
@@ -21,8 +22,16 @@ const UserPage = () => {
   const { user }: any = useLoaderData()
   const params = useParams()
 
-  const {isLoading, data} = useSWR(`user_${params.company_id}_${params.id}`,() => agent.Account.getCompanyUser(Number(params.company_id), Number(params.id)))
-
+  const {isLoading, data, mutate} = useSWR(`user_${params.company_id}_${params.id}`,() => agent.Account.getCompanyUser(Number(params.company_id), Number(params.id)))
+  useDidUpdate(
+    () => {
+      if(location.pathname === `/account/users/${params.company_type}/${params.company_id}/${params.id}`) {
+        console.log('mutate');
+        mutate()
+      }
+    },
+    [location.pathname]
+  );
   const companyType = params.company_type;
   const company = companyType !== "admin" ? user.company : store.userStore.myProfileData.company;
 
