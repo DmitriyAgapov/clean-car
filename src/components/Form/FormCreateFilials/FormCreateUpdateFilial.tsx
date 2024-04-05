@@ -15,7 +15,6 @@ import { values, values as val } from "mobx";
 import InputAutocompleteNew from 'components/common/ui/InputAutocomplete/InputAutocompleteNew'
 import moment, { MomentInput } from 'moment'
 import Progress from 'components/common/ui/Progress/Progress'
-import { TransferList } from 'components/common/ui/TransferList/TransferList'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import agent from "utils/agent";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";

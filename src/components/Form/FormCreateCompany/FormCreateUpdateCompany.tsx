@@ -18,12 +18,13 @@ import Progress from 'components/common/ui/Progress/Progress'
 import SelectCustom from 'components/common/ui/Select/Select'
 import { Field } from 'formik'
 import SelectFromList from 'components/common/SelectFromList/SelectFromList'
-import { TransferList } from 'components/common/ui/TransferList/TransferList'
+import TransferList  from 'components/common/ui/TransferList/TransferList'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import company from "routes/company/company";
 import { useSWRConfig } from "swr";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
+import data from "utils/getData";
 
 interface InitValues {
     address: string | null
@@ -47,6 +48,7 @@ interface InitValues {
     performers_list: string
     working_time: string
     performer_company: number[] | any
+    performer_companies: number[] | any
 }
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
@@ -76,7 +78,8 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         performers_list: '1',
         service_percent: 15,
         working_time: '',
-        performer_company: []
+        performer_company: [],
+        performer_companies: []
     }
     const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
         offset: 60,
@@ -111,6 +114,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             lon: company.lon,
             id: Number(company.id),
             performer_company: company.performer_company,
+            performer_companies: company.performer_company,
             type: company.type,
             legal_address: company.legal_address,
             overdraft: company.overdraft,
@@ -120,14 +124,13 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             payment: company.payment
         }
     }
-
     const formData = useForm({
             name: 'createCompanyForm',
             initialValues: initValues,
             validateInputOnBlur: true,
             // onValuesChange: (values, previous) => console.log(values),
             validate: yupResolver(CreateCompanySchema),
-        enhanceGetInputProps: (payload) => {
+            enhanceGetInputProps: (payload) => {
             if (payload.field === 'working_time') {
                 return {
                     className: 'mb-2 w-full flex-grow  !flex-[0_0_16rem] col-span-3',
@@ -222,20 +225,16 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             if(edit) {
                 store.companyStore.editCompany(data, CompanyType.customer, values.id).then((r) => {
                     !r.status ? navigate(`/account/companies/customer/${values.id}`) : 'Ошибка'
-                }).catch((e) => {
-                    console.log('error');
                 }).finally(() => store.companyStore.loadCompanies())
             } else {
                 store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
                     values.id = r.id
                     changeStep(3)
-                }).catch((e) => {
-                    console.log('error');
                 }).finally(() => store.companyStore.loadCompanies())
             }
         }
         store.companyStore.loadCompanies()
-        mutate('/companies/only_companies/list/?page=1&page_size=10')
+        mutate(`/account/companies/${values.company_type}/${values.company_id}`).then(r => console.log(`/account/companies/${values.company_type}/${values.id}/retrieve/`, r))
     }, [])
     // @ts-ignore
     return (
@@ -511,7 +510,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
                         <hr className={'mt-0 mb-2 flex-[1_0_100%] w-full border-gray-2'} />
-                        {/* {formData.values.performers_list === '1' && <TransferList />} */}
+                        {formData.values.performers_list === '1' && <TransferList active={formData.values.performer_company}/>}
                     </PanelForForms>
                     <PanelForForms state={step !== 3}
                       animate={animate}

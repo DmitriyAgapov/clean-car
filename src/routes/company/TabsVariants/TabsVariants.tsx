@@ -26,7 +26,7 @@ import useSWR from "swr";
 import agent from "utils/agent";
 import { LocalRootStore } from "stores/localStore";
 import userStore from "stores/userStore";
-import { toJS } from "mobx";
+import { toJS, values } from "mobx";
 import TabFilials from "routes/company/TabsVariants/TabFilials";
 import TabCars from "routes/company/TabsVariants/TabCars";
 import TabUsers from "routes/company/TabsVariants/TabUsers";
@@ -209,26 +209,29 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           header: 'Пополнить счет',
           state: true,
       }
-      const performers = React.useMemo(() => {
-        const result: any[] = [];
-        if(data[`${company_type}profile`].performer_company && data[`${company_type}profile`].performer_company.length > 0) {        data[`${company_type}profile`].performer_company.forEach((item: any, index:number) => {
-          const el:any = store.companyStore.companies.filter((c: any) => c.id === item)[0];
+      const Performers =() => {
+        const items = store.companyStore.companies.filter((c: any) =>
+            data[`${company_type}profile`].performer_company.includes(c.id),
+        )
+        console.log(items)
+        console.log(data[`${company_type}profile`].performer_company)
 
-          if(el && el.name) {
-            result.push(<span key={el.id} className={'text-xs font-normal'}>{el.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '} </span>)
-          }
+        return <>{items.map((item: any, index ) => (
+            <span key={item.id} className={'text-xs font-normal'}>
+                {item.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '}
+            </span>))}</>
 
-        })
-        return <>{result}</>}
-        return null
-      }, [data[`${company_type}profile`].performer_company])
-
-      result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
-         {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />}
+      }
+      console.log(data);
+      result = (<Tabs.Panel state={state}
+        name={"info"}
+        className={"pt-8"}
+        company_type={company_type}>
+        {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />}
         <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
         <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
         {company_type === 'customer' && <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}>
-          <DList label={'Исполнители'} title={<>{performers}</>} />
+          <DList label={'Исполнители'} title={<Performers/>} />
           <CardSimple.Footer>
             <LinkStyled variant={ButtonVariant.text} style={{color: 'var(--accentColor)'}} text={'Подробнее'} to={'#'} />
           </CardSimple.Footer>

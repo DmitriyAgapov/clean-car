@@ -29,6 +29,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
 	}, [formData]);
 
 	const memoFileUpload = React.useMemo(() => {
+
 		const availableFilials = store.appStore.appType === "admin" ? store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getFilialsAll.map((f:any) => ({label: f.name, value: f.id.toString()}))
 		const availableCompanies = store.appStore.appType === "admin" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.id !== store.userStore.myProfileData.company.id).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))
 		return (

@@ -179,7 +179,7 @@ export class CompanyStore {
     companies: IObservableArray<Companies> = [] as any
     companiesMap: IObservableArray<Companies> = [] as any
     filials: IObservableArray<Companies> = [] as any
-    allFilials:any = null
+    allFilials:IObservableArray = [] as any
     companiesCustomer:IObservableArray<Companies> = [] as any
     companiesPerformers:IObservableArray<Companies> = [] as any
     customersCompany = new Map([])
@@ -673,7 +673,7 @@ export class CompanyStore {
             console.log('load filials get');
             this.loadAllFilials()
         })
-        return this.allFilials as any[]
+        return this.allFilials
     }
 
     getCompanyOrFilials(type:string) {

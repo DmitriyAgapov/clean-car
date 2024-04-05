@@ -30,6 +30,7 @@ const CompanyPage = () => {
     },
     [location.pathname]
   );
+  console.log(location.pathname === `/account/companies/${params.company_type}/${params.id}`);
   const tabedData = React.useMemo(() => {
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },
