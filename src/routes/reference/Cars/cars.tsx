@@ -47,7 +47,7 @@ const RefCarsPage = () => {
   const navigate = useNavigate()
 
   const [opened, { open, close }] = useDisclosure(false)
-  const {isLoading, data, mutate} = useSWR(['refCars', localStore.params.getSearchParams] , ([url, args]) => store.catalogStore.getAllRefCarModels(args))
+  const {isLoading, data, mutate} = useSWR(['refCars', {ordering: "brand", ...localStore.params.getSearchParams}] , ([url, args]) => store.catalogStore.getAllRefCarModels(args))
   useDidUpdate(
     () => {
       if(location.pathname === `/account/references/car_brands`) {
