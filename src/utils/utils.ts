@@ -13623,6 +13623,173 @@ export const tires = {
 export function translite(str:any){let sp = '_';let text = str.toLowerCase();let transl = { '\u0430': 'a', '\u0431': 'b', '\u0432': 'v', '\u0433': 'g', '\u0434': 'd', '\u0435': 'e', '\u0451': 'e', '\u0436': 'zh', '\u0437': 'z', '\u0438': 'i', '\u0439': 'j', '\u043a': 'k', '\u043b': 'l', '\u043c': 'm', '\u043d': 'n', '\u043e': 'o', '\u043f': 'p', '\u0440': 'r', '\u0441': 's', '\u0442': 't', '\u0443': 'u', '\u0444': 'f', '\u0445': 'h', '\u0446': 'c', '\u0447': 'ch', '\u0448': 'sh', '\u0449': 'shch', '\u044a': '\'', '\u044b': 'y', '\u044c': '', '\u044d': 'e', '\u044e': 'yu', '\u044f': 'ya', '\u00AB':'_', '\u00BB':'_', /* «» */ ' ': sp, '_': sp, '`': sp, '~': sp, '!': sp, '@': sp, '#': sp, '$': sp, '%': sp, '^': sp, '&': sp, '*': sp, '(': sp, ')': sp, '-': sp, '\=': sp, '+': sp, '[': sp, ']': sp, '\\': sp, '|': sp, '/': sp, '.': sp, ',': sp, '{': sp, '}': sp, '\'': sp, '"': sp, ';': sp, ':': sp, '?': sp, '<': sp, '>': sp, '№': sp }; let result = '';let curent_sim = '';for(let i=0; i < text.length; i++) if(transl[text[i]] != undefined) {      if(curent_sim != transl[text[i]] || curent_sim != sp){        result += transl[text[i]];        curent_sim = transl[text[i]];      }    } else {      result += text[i];      curent_sim = text[i];}result = result.replace(/^_/, '').replace(/_$/, ''); /* trim */return result}
 export const Ctx = React.createContext<any>(null)
 
+export function modifyPermissions(group: any, modificationSchema: any, appType: string) {
+    return group.permissions.map((item: any) => {
+        const matchedItem = modificationSchema[appType].find((el: any) => el.name === item.name);
+        if (matchedItem) {
+            return { ...item, ...matchedItem };
+        }
+        return item;
+    });
+}
+
+export const modificationSchema = {
+    admin: [
+        {
+            "name": "Компании",
+            "delete": null
+        },
+        {
+            "name": "Управление пользователями",
+            "delete": null
+        },
+        {
+            "name": "Управление автомобилями",
+            "delete": null
+        },
+        {
+            "name": "Управление заявками",
+            "delete": null
+        },
+        {
+            "name": "Управление прайс-листом",
+            "delete": null
+        },
+        {
+            "name": "Финансовый блок",
+            "delete": null
+        },
+        {
+            "name": "Расчетный блок",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        },
+
+        {
+            "name": "Индивидуальный расчет",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        }
+    ],
+    customer: [
+        {
+            "name": "Компании",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Управление пользователями",
+            "delete": null
+        },
+        {
+            "name": "Управление автомобилями",
+            "delete": null
+        },
+        {
+            "name": "Управление заявками",
+            "delete": null
+        },
+        {
+            "name": "Управление прайс-листом",
+            "create": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Управление справочниками",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Финансовый блок",
+            "create": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Расчетный блок",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Индивидуальный расчет",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        }
+    ],
+    performer: [
+        {
+            "name": "Компании",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Управление пользователями",
+            "delete": null
+        },
+        {
+            "name": "Управление автомобилями",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Управление заявками",
+            "create": null,
+            "delete": null
+        },
+        {
+            "name": "Управление лимитами",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        },
+
+        {
+            "name": "Управление прайс-листом",
+            "create": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Управление справочниками",
+            "create": null,
+            "read": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Финансовый блок",
+            "create": null,
+            "update": null,
+            "delete": null
+        },
+        {
+            "name": "Расчетный блок",
+            "delete": null
+        },
+        {
+            "name": "Индивидуальный расчет",
+            "delete": null
+        }
+    ]
+}
 export const createParams = function(params?: any) {
   function createObjectFromSearchParams(searchParams: any) {
     let obj:any = {};

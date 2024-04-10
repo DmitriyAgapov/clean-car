@@ -11,6 +11,8 @@ import PermissionTable from 'components/common/layout/PermissionTable/Permission
 import { observer } from 'mobx-react-lite'
 import moment from 'moment'
 import { PermissionNames } from "stores/permissionStore";
+import { modificationSchema, modifyPermissions } from "utils/utils";
+
 
 const GroupPage = () => {
   const store = useStore()
@@ -18,6 +20,13 @@ const GroupPage = () => {
   const navigate = useNavigate()
   // @ts-ignore
   const { group } = useLoaderData()
+
+  const memoizedAndModificatedGroup = React.useMemo(() => {
+    let modifCatedData = { ...group };
+    modifCatedData.permissions = modifyPermissions(group, modificationSchema, store.appStore.appType);
+    return modifCatedData;
+  }, [group]);
+
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -83,7 +92,7 @@ const GroupPage = () => {
       >
         <div className={'accounts-group_body text-[#606163] py-6'}>
           <Heading className={'px-8'} text={'Права группы'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
-          <PermissionTable data={group.permissions} />
+          <PermissionTable data={memoizedAndModificatedGroup.permissions} />
         </div>
       </Panel>
     </Section>

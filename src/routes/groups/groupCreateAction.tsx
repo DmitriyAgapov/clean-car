@@ -9,6 +9,7 @@ import { SvgBackArrow } from 'components/common/ui/Icon'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { toJS } from 'mobx'
 import { PermissionNames } from "stores/permissionStore";
+import { modificationSchema, modifyPermissions } from "utils/utils";
 
 export default function GroupPageCreateAction(props: any) {
   const store = useStore()
@@ -18,7 +19,13 @@ export default function GroupPageCreateAction(props: any) {
   const navigate = useNavigate()
   // @ts-ignore
   const { group } = useLoaderData()
-  const [changes, setChanges] = useState(group)
+  const memoizedAndModificatedGroup = React.useMemo(() => {
+    let modifCatedData = { ...group };
+    modifCatedData.permissions = modifyPermissions(group, modificationSchema, store.appStore.appType);
+    return modifCatedData;
+  }, [group]);
+
+  const [changes, setChanges] = useState(memoizedAndModificatedGroup)
   const handleChangeName = (event: any) => {
     setChanges((prevState: any) => ({
       ...prevState,
