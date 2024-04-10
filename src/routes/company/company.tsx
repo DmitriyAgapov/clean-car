@@ -37,7 +37,6 @@ const CompanyPage = () => {
     },
     [location.pathname]
   );
-  console.log(location.pathname === `/account/companies/${params.company_type}/${params.id}`);
   const tabedData = React.useMemo(() => {
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },
@@ -53,11 +52,11 @@ const CompanyPage = () => {
   return (
       <Section type={SectionType.default}>
           <Panel
-              // state={isLoading}
+            headerClassName={'justify-between gap-4 flex'}
               variant={PanelVariant.withGapOnly}
               header={
                   <>
-                      <div className={'mr-auto'}>
+                      <div>
                           <Button
                               text={
                                   <>
@@ -78,6 +77,7 @@ const CompanyPage = () => {
                               color={HeadingColor.accent}
                           />
                       </div>
+
                       {store.userStore.getUserCan(PermissionNames['Компании'], 'update') && (
                           <LinkStyled
                               text={'Редактировать'}

@@ -80,7 +80,7 @@ const RefCarsPage = () => {
             <Panel
                 variant={PanelVariant.withGapOnly}
                 state={false}
-                headerClassName={'flex justify-between'}
+              headerClassName={'justify-between gap-4'}
                 header={
                     <>
                         <div>
@@ -104,26 +104,23 @@ const RefCarsPage = () => {
                                 color={HeadingColor.accent}
                             />
                         </div>
-                        <div className={'flex gap-6'}>
-
-                                    <Button
-                                        text={'Классификация автомобилей'}
-                                        action={open}
-                                        trimText={true}
-                                        /* action={() => store.companyStore.addCompany()} */
-                                        className={'inline-flex'}
-                                        variant={ButtonVariant['accent-outline']}
-                                        size={ButtonSizeType.sm}
-                                    />{' '}
-                                    {memoModal}
-
-
+                        <div className={'flex gap-6 tablet-max:max-w-96 mobile:mt-6'}>
+                            <Button
+                                text={'Классификация автомобилей'}
+                                action={open}
+                                trimText={true}
+                                /* action={() => store.companyStore.addCompany()} */
+                              className={"inline-flex tablet-max:flex-1"}
+                                variant={ButtonVariant['accent-outline']}
+                                size={ButtonSizeType.sm}
+                            />{' '}
+                            {memoModal}
                             {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (
                                 <Button
                                     text={textDataCars.create}
                                     action={() => navigate('create')}
                                     trimText={true}
-                                    className={'inline-flex'}
+                                  className={"inline-flex tablet-max:flex-1"}
                                     directory={ButtonDirectory.directory}
                                     size={ButtonSizeType.sm}
                                 />
@@ -132,20 +129,18 @@ const RefCarsPage = () => {
                     </>
                 }
             />
-            <Panel
-
-              variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
-              <TableWithSortNew
-                store={localRootStore}
-                variant={PanelVariant.dataPadding}
-                search={true}
-                style={PanelRouteStyle.refcars}
-                background={PanelColor.glass}
-                className={'col-span-full table-groups  h-full'}
-                filter={true}
-                state={isLoading}
-                ar={textDataCars.tableHeaders}
-              />
+            <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
+                <TableWithSortNew
+                    store={localRootStore}
+                    variant={PanelVariant.dataPadding}
+                    search={true}
+                    style={PanelRouteStyle.refcars}
+                    background={PanelColor.glass}
+                    className={'col-span-full table-groups  h-full'}
+                    filter={true}
+                    state={isLoading}
+                    ar={textDataCars.tableHeaders}
+                />
             </Panel>
         </Section>
     )

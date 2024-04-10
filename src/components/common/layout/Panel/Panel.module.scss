@@ -139,7 +139,7 @@
 	display: grid;
 
 	header {
-	  @apply flex justify-between;
+	  @apply md:flex justify-between items-end;
 	  & > h1, & > h2 {
 		margin: 0;
 		line-height: 1;

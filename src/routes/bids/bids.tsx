@@ -67,24 +67,40 @@ const BidsPage = () => {
 	// @ts-ignore
 	return (
 		<Section type={SectionType.default}>
-			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}
+			<Panel variant={PanelVariant.withGapOnly} headerClassName={'justify-between gap-4'}
 
 				header={<>
-					<div className={'mr-auto'}>
-						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
-					</div>
-					{store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<>
-						<Button text={textData.loadExcel} action={() => navigate('create')} trimText={true} className={'inline-flex'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} />
-						<Button text={textData.create} action={() => {
-							store.bidsStore.justCreatedBid = {}
-							store.bidsStore.formResultsClear()
-							navigate('create')
-						}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
-					</>)}</>}>
-			</Panel>
+				<div>
+					<Heading text={textData.title}
+						variant={HeadingVariant.h1}
+						className={"inline-block !mb-0"}
+						color={HeadingColor.accent} />
+				</div>
+				<div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
+					{store.userStore.getUserCan(PermissionNames["Управление заявками"], "create") && (<>
+						<Button text={textData.loadExcel}
+							action={() => navigate("create")}
+							trimText={true}
+							className={"inline-flex tablet-max:flex-1"}
+							variant={ButtonVariant["accent-outline"]}
+							size={ButtonSizeType.sm} />
+						<Button text={textData.create}
+							action={() => {
+								store.bidsStore.justCreatedBid = {};
+								store.bidsStore.formResultsClear();
+								navigate("create");
+							}}
+							trimText={true}
+							className={"inline-flex tablet-max:flex-1"}
+							directory={ButtonDirectory.directory}
+							size={ButtonSizeType.sm} />
 
-				<TableWithSortNew
-							store={localRootStore}
+					</>)}			</div></>
+				}>
+				</Panel>
+
+					<TableWithSortNew
+					store={localRootStore}
 							variant={PanelVariant.dataPadding}
 							search={true}
 							style={PanelRouteStyle.bids}

@@ -42,39 +42,6 @@ const CarPage = () => {
     ]
   }, [isLoading])
 
-  const [state, setState] = useState(navigation.state)
-
-const dataMap = new Map([])
-  const userData = React.useMemo(() => {
-    return (
-        <>
-
-          {/*   <DList label={'Пользователь'} title={user.employee.first_name + ' ' + user.employee.last_name} /> */}
-          {/*   <DList label={'Номер телефона'} title={user.employee.phone} /> */}
-          {/*   <DList label={'E-mail'} title={user.employee.email} /> */}
-          {/*   <DList */}
-          {/*       label={'Тип'} */}
-          {/*       title={user.company.company_type} */}
-          {/*       directory={user.company.company_type === CompanyType.customer ? 'customer' : 'performers'} */}
-          {/*   /> */}
-
-          {/*   <DList label={'Группа'} title={user.group.name} /> */}
-          {/*   <DList */}
-
-          {/*       label={'Статус'} */}
-          {/*       title={ */}
-          {/*           <span className={user.employee.is_active ? 'text-active' : 'text-error'}> */}
-          {/*               {user.employee.is_active ? 'Активный' : 'Не активный'} */}
-          {/*           </span> */}
-          {/*       } */}
-          {/*   /> */}
-          {/*   {user.company.id && <hr className={'mt-0 col-span-2'}/>} */}
-          {/* {user.company.name && <DList label={'Компания'} title={user.company.name} />} */}
-          {/* {user.company.city.name && <DList label={'Город'} title={user.company.city.name} />} */}
-          {/* {user.company.city.name && <DList label={'Филиал'} title={user.company.city.name} />} */}
-        </>
-    )
-  }, [])
   if(navigation.state === 'loading') return <SvgCleanCarLoader/>
   return (
     <Section
@@ -82,8 +49,9 @@ const dataMap = new Map([])
 
     >
       <Panel
+        variant={PanelVariant.withGapOnly}
         className={'col-span-full'}
-        headerClassName={'flex justify-between flex-wrap items-end'}
+        headerClassName={'justify-between gap-4 flex'}
         header={
           <>
             <div>
@@ -105,13 +73,15 @@ const dataMap = new Map([])
                 color={HeadingColor.accent}
               />
             </div>
+            <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
             {store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update') && <Button
               trimText={true}
               text={'Редактировать'}
+              size={ButtonSizeType.sm}
               action={() => navigate(`/account/cars/${params.company_id}/${params.id}/edit`)}
               // className={'inline-flex'}
 
-            />}
+            />}</div>
           </>
         }
       />

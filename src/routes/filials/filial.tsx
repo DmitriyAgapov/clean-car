@@ -47,6 +47,7 @@ const FilialPage = () => {
   return (
       <Section type={SectionType.default}>
           <Panel
+            headerClassName={'justify-between gap-4 flex'}
               state={isLoading}
               variant={PanelVariant.withGapOnly}
               header={<><div>

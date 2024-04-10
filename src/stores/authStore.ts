@@ -110,7 +110,7 @@ export class AuthStore {
       .then((resolve: any) =>  {
         if(resolve && resolve.response && resolve.response.status > 299) {
           notifications.show({
-            id: 'bid-created',
+            id: 'notlogged in',
             withCloseButton: true,
             // onClose: () => console.log('unmounted'),
             // onOpen: () => console.log('mounted'),

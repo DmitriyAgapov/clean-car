@@ -3,17 +3,11 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Outlet,useLocation, useNavigate } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer, useLocalStore } from "mobx-react-lite";
-import { Company, CompanyType } from "stores/companyStore";
-import { User } from 'stores/usersStore'
-import { UserTypeEnum } from "stores/userStore";
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import agent, { client } from "utils/agent";
-import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
@@ -21,6 +15,7 @@ import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import { CarClasses } from "components/common/layout/Modal/CarClasses";
 const localRootStore =  new LocalRootStore()
 const CarsPage = () => {
+
   const store = useStore()
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const location = useLocation()
