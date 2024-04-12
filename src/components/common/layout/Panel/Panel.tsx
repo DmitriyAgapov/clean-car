@@ -20,6 +20,7 @@ export enum PanelColor {
 export enum PanelRouteStyle {
     default = 'default',
     default_form = 'default_form',
+    limits = 'limits',
     bids = 'bids',
     auth = 'auth',
     company = 'company',

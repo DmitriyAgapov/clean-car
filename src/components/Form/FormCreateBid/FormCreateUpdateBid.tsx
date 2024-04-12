@@ -99,23 +99,23 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         width < 940 ? scrollIntoView() : null
     }
 
-  const initData = React.useMemo(() => {
-    let initValues = InitValues
-    if(!edit) {
-      store.bidsStore.formResultsClear()
-    }
-    if (edit) {
-      initValues = {
-        ...InitValues
+    const initData = React.useMemo(() => {
+      let initValues = InitValues
+      if(!edit) {
+        store.bidsStore.formResultsClear()
       }
-    }
-    if(store.appStore.appType === "customer") {
-      initValues.company = String(store.userStore.myProfileData.company.id);
-      initValues.city = String(store.userStore.myProfileData.company.city.id);
-    }
-    return initValues
+      if (edit) {
+        initValues = {
+          ...InitValues
+        }
+      }
+      if(store.appStore.appType === "customer") {
+        initValues.company = String(store.userStore.myProfileData.company.id);
+        initValues.city = String(store.userStore.myProfileData.company.city.id);
+      }
+      return initValues
 
-  }, [edit, bid])
+    }, [edit, bid])
   const formData = useForm({
       name: 'createBidForm',
       initialValues: initData,
@@ -203,11 +203,14 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               }
       },
   })
+
   React.useEffect(() => {
     if(formData.values.company !== '0') {
       store.bidsStore.formResultSet({ company: Number(formData.values.company) })
     }
   }, [formData.values.company])
+
+
 
    const carsData = React.useMemo(() => {
      //@ts-ignore

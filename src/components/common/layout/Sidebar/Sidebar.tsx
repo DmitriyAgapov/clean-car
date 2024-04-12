@@ -68,12 +68,12 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       url: 'price',
       urlMap: 'Управление прайс-листом',
     },
-    // {
-    //   icon: <img src={'/icons/limits.png'} alt={''} />,
-    //   title: 'Лимиты',
-    //   url: 'limits',
-    //   urlMap: 'Управление лимитами',
-    // },
+    {
+      icon: <img src={'/icons/limits.png'} alt={''} />,
+      title: 'Лимиты',
+      url: 'limits',
+      urlMap: 'Управление лимитами',
+    },
     // {
     //   icon: <img src={'/icons/budget.png'} alt={''} />,
     //   title: 'Бюджет',

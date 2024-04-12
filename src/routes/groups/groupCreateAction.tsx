@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Navigate, useLoaderData, useLocation, useNavigate, useRevalidator } from "react-router-dom";
+import { Navigate, useLoaderData,  useNavigate, useRevalidator } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { toJS } from 'mobx'
@@ -13,7 +13,6 @@ import { modificationSchema, modifyPermissions } from "utils/utils";
 
 export default function GroupPageCreateAction(props: any) {
   const store = useStore()
-  const location = useLocation()
 
   const revalidator = useRevalidator()
   const navigate = useNavigate()

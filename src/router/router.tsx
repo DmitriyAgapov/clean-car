@@ -41,22 +41,17 @@ import GroupPageCreateAction from 'routes/groups/groupCreateAction'
 import GroupPage from 'routes/groups/group'
 import GroupPageEditAction from 'routes/groups/groupEditAction'
 import React from 'react'
-import ReferencesPage from 'routes/reference/references'
-import ReferencePage from 'routes/reference/reference'
 import ReferencePageCreate from 'routes/reference/referencePageCreate'
 import ReferenceIndex from "routes/reference/referenceIndex";
 import ServicesPage from "routes/reference/Services/references";
 import ServicePage from "routes/reference/Services/reference";
 import ServicesSubTypePage from "routes/reference/Services/subtype";
 import BidsPage from "routes/bids/bids";
-import { bidLoader, bidsLoader } from "routes/loaders/bidsLoader";
 import BidsCreatePage from "routes/bids/BidsCreatePage";
 import PricesPage from "routes/price/prices";
 import BidPage from "routes/bids/bid";
 import PricePage from "routes/price/price";
-import { companiesLoader } from "routes/loaders/companiesLoader";
 import PriceEditPage from "routes/price/priceEdit";
-import PriceHistory from "routes/price/priceHistory";
 import PricesHistoryPage from "routes/price/priceHistory";
 import { referencesLoader } from 'routes/loaders/referenceLoader'
 import RefCarsPage from 'routes/reference/Cars/cars'
@@ -65,6 +60,10 @@ import ReferenceCarPageCreate from "routes/reference/Cars/referenceCarPageCreate
 import RefCitiesPage from "routes/reference/City/cities";
 import ReferenceCityPage from "routes/reference/City/city";
 import ReferenceCityPageCreate from "routes/reference/City/referenceCityPageCreate";
+import LimitsPage from "routes/limits/limits";
+import LimitPageCreateAction from "routes/limits/limitCreateAction";
+import LimitPage from "routes/limits/limit";
+import LimitPageEditAction from "routes/limits/limitEditAction";
 
 const router = createBrowserRouter([
     {
@@ -166,9 +165,6 @@ const router = createBrowserRouter([
             {
                 path: 'companies',
                 element: <CompaniesPage />,
-                // loader: companiesLoader,
-                // errorElement: <Navigate to='/account' replace={true} />,
-                // errorElement: <ErrorPage />,
                 children: [
                     {
                         path: ':company_type/:id',
@@ -187,6 +183,28 @@ const router = createBrowserRouter([
                     },
                 ],
             },
+            {
+                path: 'limits',
+                element: <LimitsPage />,
+                children: [
+                    {
+                        path: ':company_id/:id',
+                        element: <LimitPage />,
+                        // loader: companyLoader,
+                    },
+                    {
+                        path: ':company_id/:id/edit',
+                        element: <LimitPageEditAction  />,
+                        // loader: companyLoader,
+                    },
+                    {
+                        path: 'create',
+                        element: <LimitPageCreateAction />,
+                        // loader: companyLoader,
+                    },
+                ],
+            },
+
             {
                 path: 'filials',
                 element: <FilialsPage />,

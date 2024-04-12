@@ -431,6 +431,13 @@ const Cars = {
   createCompanyCar: (company_id: number, data: any) => requests.post(`/cars/${company_id}/create/`, data),
   editCompanyCar: (company_id: number, id: number, data: any) => requests.put(`/cars/${company_id}/${id}/update/`, data),
 }
+const Limits = {
+  createLimit: ({company_id, data }:{company_id: number, data:{ amount?: number, is_day?: boolean, service_type: number, employee?: number, company: number, car?: number }}) => requests.post(`/limits/${company_id}/create/`, data),
+  getAllLimitsByAdmin: (params?: { q?: string, is_day?: string, ordering?: string, page?: string, page_size?: string }) => requests.get('/limits/all/list/', params),
+  getAllLimitsByCustomer: (params: { company_id: string, q?: string, is_day?: string, ordering?: string, page?: string, page_size?: string }) => requests.get(`/limits/${params.company_id}/list/`, params),
+  deleteLimit: (company_id: number, id: number) => requests.delete(`/limits/${company_id}/${id}/delete/`),
+  getLimit: (company_id: number, id: number) => requests.get(`/limits/${company_id}/${id}/retrieve/`),
+}
 const Account = {
   getCompanyUsers: (company_id:number) => requests.get(`/accounts/${company_id}/users/list/`),
   getCompanyUser: (company_id: number, id: number) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
@@ -449,6 +456,7 @@ const Filials = {
 }
 const agent = {
   Img,
+  Limits,
   Price,
   Bids,
   Utils,

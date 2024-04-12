@@ -347,15 +347,6 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                 { label: 'Неактивен', value: 'false' },
               ]} placeholder={'Выбрать статус'}
               />
-              {/* <Select */}
-              {/*   {...form.getInputProps('city')} */}
-              {/*   label={'Город'} allowDeselect={false} */}
-              {/*   data={val(store.catalogStore.cities).filter((c:any) => c.is_active).map((o: any) => ({ */}
-              {/*     label: o.name, */}
-              {/*     value: String(o.id), */}
-              {/*   }))} */}
-              {/*   placeholder={'Выбрать город'} */}
-              {/* /> */}
               <hr className={'col-span-full flex-[1_100%]'}/>
               <Select
 

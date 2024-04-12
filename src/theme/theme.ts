@@ -5,7 +5,6 @@ import {
     Combobox,
     Select,
     DEFAULT_THEME,
-
     mergeMantineTheme,
     Checkbox,
     Textarea,
@@ -14,6 +13,7 @@ import {
     InputBase,
     NumberInput,
     Modal,
+    Radio,
 } from '@mantine/core'
 import { TimeInput } from '@mantine/dates';
 
@@ -58,7 +58,20 @@ const themeOverride = createTheme({
               transitionProps: { transition: 'fade', duration: 200 },
                  withinPortal: false,
         }}),
+        Radio: Radio.extend({
+            classNames: {
+                label: 'font-semibold cursor-pointer ',
+                error: 'form-error block',
+                radio: 'p-0 bg-gray-3 border-transparent checked:border-accent',
+                icon: 'text-accent',
 
+            }
+        }),
+        RadioGroup: Radio.Group.extend({
+           classNames: {
+               label: 'font-semibold text-accent font-sans',
+           }
+        }),
         TextInput: TextInput.extend({
             classNames: {
                 label: 'font-semibold',

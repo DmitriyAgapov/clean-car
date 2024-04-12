@@ -171,3 +171,7 @@ export const CreateBidSchemaStep3 = Yup.object().shape({
 export const CreateBidSchemaStep4 = Yup.object().shape({
 	performer: Yup.number().required('Обязательное поле')
 })
+export const CreateLimitSchema = Yup.object().shape({
+	company: Yup.string().required('Обязательное поле'),
+	service_type: Yup.string().required('Обязательное поле'),
+})
