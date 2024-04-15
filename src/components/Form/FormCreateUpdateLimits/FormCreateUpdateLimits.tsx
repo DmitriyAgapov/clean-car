@@ -11,7 +11,7 @@ import { useNavigate, useRevalidator } from 'react-router-dom'
 import { type Company, CompanyType, Payment } from "stores/companyStore";
 import PanelForForms, { PanelColor, PanelVariant } from 'components/common/layout/Panel/PanelForForms'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import { values, values as val } from "mobx";
+import { set, values, values as val } from "mobx";
 import InputAutocompleteNew from 'components/common/ui/InputAutocomplete/InputAutocompleteNew'
 import moment, { MomentInput } from 'moment'
 import Progress from 'components/common/ui/Progress/Progress'
@@ -23,10 +23,12 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import company from "routes/company/company";
 import { useSWRConfig } from "swr";
-import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
+import { useDisclosure, useScrollIntoView, useViewportSize } from "@mantine/hooks";
 import data from "utils/getData";
 import TransferListNew from "components/common/ui/TransferList/TransferListNew";
 import agent from "utils/agent";
+import { CarClasses } from "components/common/layout/Modal/CarClasses";
+import { LimitDelete } from "components/common/layout/Modal/LimitDelete";
 
 interface InitValues {
     company: string | null
@@ -59,18 +61,21 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
     });
     const {width} = useViewportSize()
     const [step, setStep] = useState(1)
-    const [animate, setAnimate] = useState(false)
+
+    const [opened, { open, close }] = useDisclosure(false)
+    const memoModal = React.useMemo(() => {
+        return <LimitDelete opened={opened} onClose={close} />
+    }, [opened])
 
     const changeStep = (step?: number) => {
-        setAnimate((prevState) => !prevState)
+        // setAnimate((prevState) => !prevState)
         setTimeout(() => {
-            setAnimate(false)
+            // setAnimate(false)
             store.companyStore.loadingCompanies = false
             setStep(step ? step : 2)
         }, 1200)
         width < 940 ? scrollIntoView() : null
     }
-    console.log(String(company.employee.id), 'company');
     if(edit) {
         initValues = {
             company: String(company.company),
@@ -82,12 +87,11 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
             amount: String(company.amount)
         }
     }
-    console.log(initValues, 'initValues');
     const formData = useForm({
             name: 'createLimitForm',
             initialValues: initValues,
             validateInputOnBlur: true,
-            // onValuesChange: (values, previous) => console.log(values),
+            onValuesChange: (values, previous) => console.log(values, 'values'),
             validate: yupResolver(CreateLimitSchema),
             enhanceGetInputProps: (payload) => {
             return {
@@ -99,12 +103,12 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
     const carsData = React.useMemo(() => {
         //@ts-ignore
         const car = store.carStore.getCompanyCars.cars?.results?.filter((car) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
-
+        console.log(car, 'car');
         if(car?.length > 0) {
             return car
         }
         return null
-    }, [formData.values.conductor])
+    }, [formData.values.conductor, formData.values.company, formData.values.filials])
 
     const conductorsData = React.useMemo(() => {
         let result: any[] = []
@@ -130,20 +134,88 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
         return result
     }, [formData.values.company, store.usersStore.currentCompanyUsers])
 
+    const [filials, setFilials] = React.useState<any | null>(null)
+    // const filialsData = React.useMemo( ():any|null => {
+    //
+    //     (() => {
+    //         if(formData.values.company === '0') {
+    //             agent.Filials.getFilials('customer', Number(formData.values.company)).then(r => setFilials(r.data))
+    //         } else setFilials(null)
+    //     })()
+    //     if(filials && filials?.results.length > 0) {
+    //
+    //         return
+    //     }
+    //     return null
+    //
+    // }, [formData.values.company])
+    const [conductors, setConductors] = React.useState<any | null>(null)
+    // const conductorsDataNew = React.useMemo( ():any|null => {
+    //     (() => {
+    //         if(formData.values.company === '0') {
+    //             agent.Account.getCompanyUsers(Number(formData.values.company)).then(r => setConductors(r.data))
+    //         } else setConductors(null)
+    //     })()
+    //     if(conductors && conductors?.results.length > 0) {
+    //
+    //         return
+    //     }
+    //     return null
+    //
+    // }, [formData.values.company])
+
+    const [cars, setCars] = React.useState<any | null>(null)
+    // const carsDataNew = React.useMemo( ():any|null => {
+    //
+    //
+    //     return null
+    //
+    // }, [formData.values.company])
+    // useEffect(() => {
+    //     console.log(formData.values.company);
+    //     console.log(cars, 'cars')
+    // }, [formData.values.company, cars])
+
     const handleChangeCompany = React.useCallback((e:any) => {
-        if(e === null) {
-            formData.values.company = '0'
-            store.bidsStore.formResultSet({company: 0})
+        console.log('e', e);
+        console.log('e === null || formData.values.company === null', e === null && formData.values.company === null);
+            if(e === null && formData.values.company === null) {
+                formData.values.company = null
+                store.bidsStore.formResultSet({company: 0})
+                setFilials(null)
+                setCars(null)
+                setConductors(null)
+            } else if(e) {
+                console.log('!==0');
+                formData.setFieldValue('company', e);
+                // store.bidsStore.formResultSet({ company: Number(e) })
 
-        }
-        if(e !== "0") {
-            formData.setFieldValue('company', e);
-            store.bidsStore.formResultSet({ company: Number(e) })
-        } else {
-            store.bidsStore.formResultSet({ company: 0 })
-        }
+                (() => {
+                    console.log('load company data', e, typeof e);
+                    if(e && e !== '0') {
+                        console.log('load company data')
+                        agent.Cars.getCompanyCars(Number(e)).then(r => setCars(r.data))
+                        agent.Account.getCompanyUsers(Number(e)).then(r => setConductors(r.data))
+                        agent.Filials.getFilials('customer', Number(e)).then(r => setFilials(r.data))
+                    } else {
+                        setCars(null)
+                        setFilials(null)
+                        setConductors(null)
+                    }
+                })()
+
+            } else {
+                console.log('clearRes');
+                store.bidsStore.formResultSet({ company: 0 })
+                setFilials(null)
+                setCars(null)
+                setConductors(null)
+            }
+
     },[formData.values.company])
-
+    useEffect(() => {
+      console.log('form', formData.values.company);
+    },[formData.values.company] )
     const navigate = useNavigate()
 
     const handleSubmit = React.useCallback(async (values: any) => {
@@ -157,66 +229,90 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                 car: values.car ? Number(values.car) : undefined,
                 company: Number(values.company),
             },
-        }).then(r => console.log('r', r)).finally(() => mutate(`limits`).then(r => console.log(`/account/limits`, r)))
+        }).then((r:any) => {
+            mutate(`limits`)
+            navigate(`/account/limits/${r.data.company}/${r.data.id}`)
+        })
 
     }, [])
     // @ts-ignore
     return (
         <FormProvider form={formData}>
             <PanelForForms
-              ref={targetRef}
+                ref={targetRef}
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
-                actionBack={step === 2 ? (<Button
-                  type={'button'}
-                  text={'Назад'}
-                  action={() => {
-                     changeStep(1)
-                  }}
-                  className={'float-right'}
-                  variant={ButtonVariant['accent-outline']}
-                />) : undefined}
-                actionCancel={
-                  step !== 3 ? (<Button
-                        type={'button'}
-                        text={'Отменить'}
-                        action={(e) => {
-                            e.preventDefault()
-                            navigate(-1)
-                        }}
-                        className={'float-right'}
-                    variant={ButtonVariant.cancel}
-                    />) : undefined
-                }
-                actionNext={step !== 3 ? (formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
-                      <Button
-                        type={'button'}
-                        action={() => {
-                            formData.validate()
-                            if(step === 2) {
-                                handleSubmit(formData.values)
-                            } else {
-                                changeStep()
-                            }
-                        }}
-                        disabled={!formData.isValid()}
-                        text={step === 1 ? 'Далее' : 'Сохранить'}
-                        className={'float-right'}
-                        variant={ButtonVariant.accent}
-                      />
-                        ) : (
-                          <Button
-                            action={() => handleSubmit(formData.values)}
-                            type={'submit'}
-                            disabled={!formData.isValid()}
-                            text={'Сохранить'}
+                actionBack={
+                    step === 2 ? (
+                        <Button
+                            type={'button'}
+                            text={'Назад'}
+                            action={() => {
+                                changeStep(1)
+                            }}
                             className={'float-right'}
+                            variant={ButtonVariant['accent-outline']}
+                        />
+                    ) : undefined
+                }
+                actionCancel={
+                    edit ? (
+                        <Button
+                            type={'button'}
+                            text={'Удалить'}
+                            action={open}
+                            className={'float-right'}
+                            variant={ButtonVariant.cancel}
+                        />
+                    ) : (
+                        <Button
+                            type={'button'}
+                            text={'Отменить'}
+                            action={(e) => {
+                                e.preventDefault()
+                                navigate(-1)
+                            }}
+                            className={'float-right'}
+                            variant={ButtonVariant.cancel}
+                        />
+                    )
+                }
+                actionNext={
+                    step !== 3 ? (
+                        formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
+                            <Button
+                                type={'button'}
+                                action={() => {
+                                    formData.validate()
+                                    if (step === 2) {
+                                        handleSubmit(formData.values)
+                                    } else {
+                                        changeStep()
+                                    }
+                                }}
+                                disabled={!formData.isValid()}
+                                text={step === 1 ? 'Далее' : 'Сохранить'}
+                                className={'float-right'}
+                                variant={ButtonVariant.accent}
+                            />
+                        ) : (
+                            <Button
+                                action={() => handleSubmit(formData.values)}
+                                type={'submit'}
+                                disabled={!formData.isValid()}
+                                text={'Сохранить'}
+                                className={'float-right'}
+                                variant={ButtonVariant.accent}
+                            />
+                        )
+                    ) : (
+                        <LinkStyled
+                            text={'перейти к компании'}
+                            to={`/account/companies/${formData.values.type == CompanyType.performer ? 'performer' : 'customer'}/${formData.values.id}`}
+                            className={'float-right col-start-2 justify-self-end'}
                             variant={ButtonVariant.accent}
-                          />
-                        )) : <LinkStyled text={'перейти к компании'}
-                  to={`/account/companies/${formData.values.type == CompanyType.performer ? 'performer' : 'customer'}/${formData.values.id}`}
-                  className={'float-right col-start-2 justify-self-end'}
-                  variant={ButtonVariant.accent} />
+                        />
+                    )
                 }
             >
                 <form
@@ -224,7 +320,6 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                     onReset={formData.onReset}
                     style={{ display: 'contents' }}
                 >
-
                     <PanelForForms
                         state={false}
                         className={'!bg-transparent'}
@@ -244,92 +339,122 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                             </>
                         }
                     >
-                        <Group grow  className={'col-span-6'}>
+                        <Group grow className={'col-span-6'}>
                             <Select
-                              {...formData.getInputProps('company')}
-                              clearable
-                              comboboxProps={{ withinPortal: true }}
-                              label={'Компания'}
-                              onLoad={handleChangeCompany}
-                              onOptionSubmit={handleChangeCompany}
-                              searchable
-                              data={store.companyStore.companies.filter((c: any) => c.company_type === 'Компания-Заказчик').filter((c: any) => c.parent === null).map((c: any) => ({ label: c.name, value: String(c.id), }))}
+                                {...formData.getInputProps('company')}
+                                clearable
+                                comboboxProps={{ withinPortal: true }}
+                                label={'Компания'}
+                                clearButtonProps={{
+                                    onClick: () => {
+                                        setCars(null)
+                                        setFilials(null)
+                                        setConductors(null)
+                                    },
+                                }}
+                                onLoad={handleChangeCompany}
+                                onOptionSubmit={handleChangeCompany}
+                                searchable
+                                data={store.companyStore.companies
+                                    .filter((c: any) => c.company_type === 'Компания-Заказчик')
+                                    .filter((c: any) => c.parent === null)
+                                    .map((c: any) => ({ label: c.name, value: String(c.id) }))}
                             />
                             <Select
-                              {...formData.getInputProps('filiial')}
-                              clearable
-                              label={'Филиал'}
-                              comboboxProps={{ withinPortal: true }}
-                              onLoad={handleChangeCompany}
-                              onOptionSubmit={handleChangeCompany}
-                              searchable
-                              data={store.companyStore.companies.filter((c: any) => c.company_type === 'Компания-Заказчик').filter((c: any) => c.parent !== null).map((c: any) => ({ label: c.name, value: String(c.id), }))}
-                            />
-                        </Group>
-
-
-                        <Group grow  className={'col-span-6'}>
-                            <Select
-                              {...formData.getInputProps('conductor')}
-                              label={'Пользователь'}
-                              searchable
-                              className={'self-start'}
-                              onOptionSubmit={(value) => {
-                                  formData.values.car = null
-                                  formData.values.phone = null
-                                  store.bidsStore.formResultSet({ conductor: Number(value) })
-                              }}
-                              disabled={
-                                store.bidsStore.formResult.company === 0 ||
-                                store.usersStore.currentCompanyUsers.length === 0
-                              }
-                              data={conductorsData}
-                            />
-
-                            <Select
-                              {...formData.getInputProps('car')}
-                              className={'self-start'}
-                              clearable
-                              onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
-                              //@ts-ignore
-                              label={'Автомобиль, марка'} searchable data={store.carStore.cars && store.carStore.cars.length !== 0 && carsData !== null ? carsData.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']}
+                                {...formData.getInputProps('filial')}
+                                clearable
+                                disabled={!filials || filials?.results?.length === 0}
+                                label={'Филиал'}
+                                comboboxProps={{ withinPortal: true }}
+                                onLoad={handleChangeCompany}
+                                onOptionSubmit={handleChangeCompany}
+                                searchable
+                                data={filials?.results?.map((c: any) => ({ label: c.name, value: String(c.id) }))}
                             />
                         </Group>
-                        <Group grow  className={'col-span-6'}>
+                        <p className={'col-span-full'}>Выберите Пользователя или Автомобиль</p>
+                        <Group grow wrap={'wrap'} className={'col-span-6'}>
+                            <Select
+                                {...formData.getInputProps('conductor')}
+                                label={'Пользователь'}
+                                searchable
+                                clearable
+                                className={'self-start'}
+                                // onOptionSubmit={(value) => {
+                                //     formData.values.car = null
+                                //     formData.values.phone = null
+                                //     store.bidsStore.formResultSet({ conductor: Number(value) })
+                                // }}
+                                disabled={!conductors || conductors.results.length === 0}
+                                data={
+                                    conductors
+                                        ? conductors?.results?.map((c: any) => ({
+                                              label: c.employee.first_name + ' ' + c.employee.last_name,
+                                              value: String(c.employee.id),
+                                          }))
+                                        : null
+                                }
+                            />
+
+                            <Select
+                                {...formData.getInputProps('car')}
+                                className={'self-start'}
+                                clearable
+                                disabled={!cars || cars.results.length === 0}
+                                // onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
+                                //@ts-ignore
+                                label={'Автомобиль, марка'}
+                                searchable
+                                data={cars?.results.map((c: any) => ({
+                                    label: `${c.brand.name}  ${c.model.name}  ${c.number}`,
+                                    value: String(c.id),
+                                }))}
+                            />
+                        </Group>
+                        <Group grow className={'col-span-6'}>
                             <Radio.Group
-                              name="limitType"
-                              label="Выберите тип лимита"
-                              {...formData.getInputProps('is_day')}
+                                name='limitType'
+                                label='Выберите тип лимита'
+                                {...formData.getInputProps('is_day')}
                             >
-                                <Group mt="xs">
-                                    <Radio value="true" label="Дневной" />
-                                    <Radio checked value="false" label="Месячный" />
+                                <Group mt='xs'>
+                                    <Radio value='true' label='Дневной' />
+                                    <Radio checked value='false' label='Месячный' />
                                 </Group>
                             </Radio.Group>
                         </Group>
-                        <Group grow  className={'col-span-6'}>
+                        <Group grow className={'col-span-6'}>
                             <Select
-                              {...formData.getInputProps('service_type')}
-                              className={'self-start'}
-                              clearable
-                              comboboxProps={{ withinPortal: true }}
-                              // onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
-                              //@ts-ignore
-                              label={'Услуга'} searchable data={values(store.catalogStore.services) && values(store.catalogStore.services).length !== 0 ? values(store.catalogStore.services).map((c: any) => ({ label: c.name, value: String(c.id), })) : ['']}
+                                {...formData.getInputProps('service_type')}
+                                className={'self-start'}
+                                clearable
+                                comboboxProps={{ withinPortal: true }}
+                                // onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
+                                //@ts-ignore
+                                label={'Услуга'}
+                                searchable
+                                data={
+                                    values(store.catalogStore.services) &&
+                                    values(store.catalogStore.services).length !== 0
+                                        ? values(store.catalogStore.services).map((c: any) => ({
+                                              label: c.name,
+                                              value: String(c.id),
+                                          }))
+                                        : ['']
+                                }
                             />
                             <NumberInput
-                              label="Лимит, усл.единица"
-                              {...formData.getInputProps('amount')}
-                              min={1}
-                              hideControls
-                              allowDecimal={false}
-                              allowNegative={false}
-                              max={100}
+                                label='Лимит, усл.единица'
+                                {...formData.getInputProps('amount')}
+                                min={1}
+                                hideControls
+                                allowDecimal={false}
+                                allowNegative={false}
+                                max={100}
                             />
                         </Group>
-
+                        {memoModal}
                     </PanelForForms>
-
                 </form>
             </PanelForForms>
         </FormProvider>

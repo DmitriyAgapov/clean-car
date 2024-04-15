@@ -30,8 +30,9 @@ const LimitsPage = () => {
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
+        status: item.is_active,
         company:  item.company.parent ? item.company.parent.name : item.company.name,
-        // type: item.company_type,
+
         city: item.city ? item.city.name : ' - ',
         company__parent: item.company.parent ? item.company.name : ' - ',
         employee: item.employee ? `${item.employee.first_name} ${item.employee.last_name}`  : ' - ',
@@ -48,7 +49,7 @@ const LimitsPage = () => {
 
   useDidUpdate(
     () => {
-      if(location.pathname === '/account/companies') {
+      if(location.pathname === '/account/limits') {
         mutate()
       }
     },
@@ -70,7 +71,7 @@ const LimitsPage = () => {
               className={'inline-block'}
               color={HeadingColor.accent}
             />
-            {store.userStore.getUserCan(PermissionNames["Компании"], 'create') && <Button
+            {store.userStore.getUserCan(PermissionNames["Управление лимитами"], 'create') && <Button
               text={'Создать лимит'}
               action={() => navigate('create')}
               trimText={true}
@@ -91,7 +92,7 @@ const LimitsPage = () => {
         className={'col-span-full table-groups'}
         filter={false}
         state={isLoading}
-        ar={[{ label: 'Компания', name: 'company' }, {label: 'Город', name: 'city'},{ label: 'Филиал', name: 'company__parent' }, {label: 'Пользователь', name: 'employee'},{ label: 'Услуга', name: 'service_type' }, {label: 'Тип лимита', name: 'is_day'}, {label: 'Факт/Лимит', name: 'amount'}]}
+        ar={[{ label: 'Статус', name: 'is_active' },{ label: 'Компания', name: 'company' }, {label: 'Город', name: 'city'},{ label: 'Филиал', name: 'company__parent' }, {label: 'Пользователь', name: 'employee'},{ label: 'Услуга', name: 'service_type' }, {label: 'Тип лимита', name: 'is_day'}, {label: 'Факт/Лимит', name: 'amount'}]}
       />
     </Section>
   )

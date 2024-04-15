@@ -3,6 +3,7 @@ import { makePersistable } from "mobx-persist-store";
 import authStore from "stores/authStore";
 import appStore from "stores/appStore";
 import agent from "utils/agent";
+import userStore from "stores/userStore";
 
 export class LimitStore {
 	constructor() {
@@ -18,7 +19,7 @@ export class LimitStore {
 			return await agent.Limits.getAllLimitsByAdmin(params)
 		}
 		if(appStore.appType === "customer") {
-			return await agent.Limits.getAllLimitsByCustomer(params)
+			return await agent.Limits.getAllLimitsByCustomer({company_id: userStore.myProfileData.company.id, ...params})
 		}
 
 	}

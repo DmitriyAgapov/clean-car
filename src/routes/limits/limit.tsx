@@ -27,7 +27,7 @@ const LimitPage = () => {
   const {isLoading, data, mutate} = useSWR(`limit_${params.company_id}_${params.id}`, () => client.limitsRetrieve(params.company_id as string, Number(params.id)), {
     revalidateOnMount: true
   })
-  console.log('data', data, isLoading);
+
   useDidUpdate(
     () => {
       if(location.pathname.includes('limits')) {
@@ -38,7 +38,6 @@ const LimitPage = () => {
     },
     [location.pathname]
   );
-
 
   return (
       <Section type={SectionType.default}>
@@ -58,7 +57,7 @@ const LimitPage = () => {
                               className={
                                   'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                               }
-                              action={() => navigate(-1)}
+                              action={() => navigate('/account/limits')}
                               variant={ButtonVariant.text}
                           />
                           <Heading
@@ -74,7 +73,7 @@ const LimitPage = () => {
                               text={'Редактировать'}
                               to={'edit'}
                               size={ButtonSizeType.sm}
-                              /* action={() => store.companyStore.addCompany()} */ className={'float-right mobile:mt-auto'}
+                          className={'float-right mobile:mt-auto'}
                               variant={ButtonVariant.default}
                           />
                       )}
@@ -84,11 +83,11 @@ const LimitPage = () => {
 
           <Panel
               state={isLoading}
-              className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-6'}
+              className={'col-span-full grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-6'}
               variant={PanelVariant.textPadding}
               background={PanelColor.glass}
               bodyClassName={''}
-              footerClassName={'flex  justify-end mobile:!justify-center'}
+              footerClassName={'flex  !justify-start mobile:!justify-center'}
               headerClassName={'border-bottom-none'}
               header={
                   <>
@@ -126,6 +125,18 @@ const LimitPage = () => {
                       </div>
                   </>
               }
+            footer={<div className={'flex gap-4 justify-start'}><DList
+              className={'child:dt:text-accent'}
+              label={'Факт/лимит'}
+              title={
+                <Heading
+                  variant={HeadingVariant.h3}
+                  // @ts-ignore
+                  className={'text-gray-2 !text-2xl !mb-0'}
+                  text={<><span className={'text-accent'}>{data?.amount}/</span>100</>}
+                />
+              }
+            /></div>}
           >
             <Divider />
             <Box my={'xl'}>
@@ -152,6 +163,66 @@ const LimitPage = () => {
                 />
               }
             />}
+              {                  // @ts-ignore
+              data?.service_type && <DList
+              label={'Услуга'}
+              title={
+                <Heading
+                  variant={HeadingVariant.h4}
+                  color={HeadingColor.accent}
+                  // @ts-ignore
+                  text={store.catalogStore.services.get(String(data?.service_type)).name}
+                />
+              }
+            />}
+              {                  // @ts-ignore
+              <DList
+              className={'child:dt:text-accent'}
+              label={'Тип лимита'}
+              title={
+                <Heading
+                  variant={HeadingVariant.h4}
+                  // @ts-ignore
+                  text={data?.is_day ? 'Дневной' : 'Месячный'}
+                />
+              }
+            />}
+              {data?.car && (<> <DList
+                className={'child:dt:text-accent'}
+                label={'Марка автомобиля'}
+                title={
+                  <Heading
+                    variant={HeadingVariant.h4}
+                    // @ts-ignore
+                    text={`${data?.car.brand.name} ${data?.car.model.name}`}
+                  />
+                }
+              />
+              <DList
+                className={'child:dt:text-accent'}
+                label={'Гос. номер'}
+                title={
+                  <Heading
+                    variant={HeadingVariant.h4}
+                    // @ts-ignore
+                    text={data?.car?.number}
+                  />
+                }
+              />
+              <DList
+                className={'child:dt:text-accent'}
+                label={'Тип'}
+                title={
+                  <Heading
+                    variant={HeadingVariant.h4}
+                    // @ts-ignore
+                    text={data?.car.model.car_type}
+                  />
+                }
+              />
+          </>)}
+
+
 
               {/* <Tabs */}
               {/*     data={tabedData} */}

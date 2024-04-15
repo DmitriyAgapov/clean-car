@@ -212,7 +212,7 @@ export class UserStore {
 
     // console.log(`userIsLoggedIn : ${authStore.userIsLoggedIn},  getUserCan -------`, authStore.userIsLoggedIn, 'Ключ--', key);
     if(authStore.userIsLoggedIn && appStore.token !== "") {
-      try {
+      // try {
         // if (this.isAdmin) {
           if (this.currentUserPermissions && this.currentUserPermissions.has(key)) {
             // console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
@@ -223,9 +223,9 @@ export class UserStore {
             return this.currentUserPermissions.get(key)[action]
           }
         // }
-      } catch (e) {
-        console.log(e);
-      }
+      // } catch (e) {
+      //   console.log(e);
+      // }
     }
     // if(this.myProfileData.permissions && this.myProfileData.permissions.permissions.has(key)) {
     //   console.log('Все ок с  правами')

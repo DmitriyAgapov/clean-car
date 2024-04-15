@@ -46,7 +46,6 @@ const RefCarsPage = () => {
   const store = useStore()
   const navigate = useNavigate()
 
-  const [opened, { open, close }] = useDisclosure(false)
   const {isLoading, data, mutate} = useSWR(['refCars', {ordering: "brand", ...localStore.params.getSearchParams}] , ([url, args]) => store.catalogStore.getAllRefCarModels(args))
   useDidUpdate(
     () => {
@@ -69,6 +68,7 @@ const RefCarsPage = () => {
     localStore.setIsLoading = isLoading
   },[data])
 
+  const [opened, { open, close }] = useDisclosure(false)
   const memoModal = React.useMemo(() => {
       return <CarClasses opened={opened} onClose={close} />
   }, [opened])
