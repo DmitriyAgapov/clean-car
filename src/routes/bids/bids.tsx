@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import TableWithSortNew  from "components/common/layout/TableWithSort/TableWithSortNew";
 import { observer, useLocalStore } from "mobx-react-lite";
 import {  dateTransformShort } from "utils/utils";
 import userStore from 'stores/userStore'
-import  { client } from "utils/agent";
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import useSWR from "swr";
 
@@ -64,7 +63,6 @@ const BidsPage = () => {
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
 
-	// @ts-ignore
 	return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'justify-between gap-4'}

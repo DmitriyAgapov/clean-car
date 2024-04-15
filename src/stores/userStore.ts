@@ -118,9 +118,9 @@ export class UserStore {
     return roles
   }
 
-  loadMyProfile() {
+  async loadMyProfile() {
     this.loadingUser = true
-    return agent.Profile.getMyAccount()
+    return await agent.Profile.getMyAccount()
       .then((response:any) => response.data)
       .then(((data:any) => {
         runInAction(() => {

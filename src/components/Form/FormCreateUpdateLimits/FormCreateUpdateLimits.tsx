@@ -175,42 +175,38 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
     //     console.log(formData.values.company);
     //     console.log(cars, 'cars')
     // }, [formData.values.company, cars])
+    const handleClear = React.useCallback(() => {
+        console.log('cleared');
+        setFilials(null)
+        setCars(null)
+        setConductors(null)
+        formData.setFieldValue('car', null)
+        formData.setFieldValue('filial', null)
+        formData.setFieldValue('conductor', null)
 
+    }, []   )
     const handleChangeCompany = React.useCallback((e:any) => {
-        console.log('e', e);
-        console.log('e === null || formData.values.company === null', e === null && formData.values.company === null);
-            if(e === null && formData.values.company === null) {
-                formData.values.company = null
-                store.bidsStore.formResultSet({company: 0})
-                setFilials(null)
-                setCars(null)
-                setConductors(null)
-            } else if(e) {
-                console.log('!==0');
-                formData.setFieldValue('company', e);
-                // store.bidsStore.formResultSet({ company: Number(e) })
+        handleClear()
+        if(e) {
+            console.log('!==0');
+            formData.setFieldValue('company', e);
+            // store.bidsStore.formResultSet({ company: Number(e) })
 
-                (() => {
-                    console.log('load company data', e, typeof e);
-                    if(e && e !== '0') {
-                        console.log('load company data')
-                        agent.Cars.getCompanyCars(Number(e)).then(r => setCars(r.data))
-                        agent.Account.getCompanyUsers(Number(e)).then(r => setConductors(r.data))
-                        agent.Filials.getFilials('customer', Number(e)).then(r => setFilials(r.data))
-                    } else {
-                        setCars(null)
-                        setFilials(null)
-                        setConductors(null)
-                    }
-                })()
+            (() => {
+                console.log('load company data', e, typeof e);
+                if(e && e !== '0') {
+                    console.log('load company data')
+                    agent.Cars.getCompanyCars(Number(e)).then(r => setCars(r.data))
+                    agent.Account.getCompanyUsers(Number(e)).then(r => setConductors(r.data))
+                    agent.Filials.getFilials('customer', Number(e)).then(r => setFilials(r.data))
+                } else {
+                    setCars(null)
+                    setFilials(null)
+                    setConductors(null)
+                }
+            })()
 
-            } else {
-                console.log('clearRes');
-                store.bidsStore.formResultSet({ company: 0 })
-                setFilials(null)
-                setCars(null)
-                setConductors(null)
-            }
+        }
 
     },[formData.values.company])
     useEffect(() => {
@@ -220,18 +216,20 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
 
     const handleSubmit = React.useCallback(async (values: any) => {
         await agent.Limits.createLimit({
-            company_id: Number(values.company),
+            company_id: values.filial ? Number(values.filial) : Number(values.company),
             data: {
                 amount: values.amount ? Number(values.amount) : undefined,
                 is_day: values.is_day === 'true',
                 service_type: Number(values.service_type),
                 employee: values.conductor ?  Number(values.conductor)  : undefined,
                 car: values.car ? Number(values.car) : undefined,
-                company: Number(values.company),
+                company:  values.filial ? Number(values.filial) : Number(values.company),
             },
         }).then((r:any) => {
-            mutate(`limits`)
-            navigate(`/account/limits/${r.data.company}/${r.data.id}`)
+            if(r.status === 201) {
+                mutate(`limits`)
+                navigate(`/account/limits/${r.data?.company}/${r.data?.id}`)
+            }
         })
 
     }, [])
@@ -366,8 +364,24 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                                 disabled={!filials || filials?.results?.length === 0}
                                 label={'Филиал'}
                                 comboboxProps={{ withinPortal: true }}
-                                onLoad={handleChangeCompany}
-                                onOptionSubmit={handleChangeCompany}
+                                  clearButtonProps={{
+                                      onClick: () => {
+                                          setCars(null)
+                                          setConductors(null)
+                                          agent.Cars.getCompanyCars(Number(formData.values.company)).then(r => setCars(r.data))
+                                          agent.Account.getCompanyUsers(Number(formData.values.company)).then(r => setConductors(r.data))
+                                      },
+                                  }}
+                                // onLoad={handleChangeCompany}
+                                onOptionSubmit={(e) => {
+                                    if(e && e !== '0') {
+                                        agent.Cars.getCompanyCars(Number(e)).then(r => setCars(r.data))
+                                        agent.Account.getCompanyUsers(Number(e)).then(r => setConductors(r.data))
+                                    } else {
+                                        setCars(null)
+                                        setConductors(null)
+                                    }
+                                }}
                                 searchable
                                 data={filials?.results?.map((c: any) => ({ label: c.name, value: String(c.id) }))}
                             />

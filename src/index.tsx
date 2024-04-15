@@ -17,7 +17,7 @@ root.render(
     <MantineProvider theme={newTheme} defaultColorScheme={'dark'}>
       <DatesProvider settings={{ locale: 'ru' }}>
     {/* <ThemeProvider value={theme}> */}
-      <Notifications  position="top-right" zIndex={1000}/>
+        <Notifications  position="top-right" zIndex={1000}/>
 
         <RouterProvider router={router}/>
 

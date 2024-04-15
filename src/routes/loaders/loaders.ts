@@ -24,11 +24,11 @@ export const authUser = async ({ request, params }:any) => {
     // const paramsSearchString = url.searchParams.get('searchString')
     // paramsStore.setParams({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering })
     // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
-    if (!appStore.token) {
-        return redirect('/')
-    } else {
-        if (!userStore.currentUser) await userStore.pullUser()
-    }
+    // if (!appStore.token) {
+    //     return redirect('/')
+    // } else {
+    //     if (!userStore.currentUser) await userStore.pullUser()
+    // }
     return null
 }
 

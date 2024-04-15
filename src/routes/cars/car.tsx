@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
+import React from "react";
+import Section, { SectionType } from 'components/common/layout/Section/Section';
+import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel';
+import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading';
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useLoaderData, useLocation, useNavigate, useNavigation, useParams } from "react-router-dom";
-import { useStore } from 'stores/store'
-import { observer } from 'mobx-react-lite'
+import {  useLocation, useNavigate, useNavigation, useParams } from "react-router-dom";
+import { useStore } from 'stores/store';
+import { observer } from 'mobx-react-lite';
 import { SvgBackArrow, SvgCleanCarLoader } from "components/common/ui/Icon";
 import { PermissionNames } from 'stores/permissionStore'
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
-import { Loader } from "@mantine/core";
-import { CompanyType, CompanyTypeRus } from "stores/companyStore";
-import agent from "utils/agent";
+import { CompanyTypeRus } from "stores/companyStore";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
 

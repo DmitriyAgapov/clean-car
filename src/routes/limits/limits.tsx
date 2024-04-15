@@ -5,7 +5,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer, useLocalStore } from "mobx-react-lite";
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator, useSearchParams } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import agent, { client } from "utils/agent";
@@ -23,7 +23,7 @@ const LimitsPage = () => {
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
-
+  const revalidator =     useRevalidator()
   const {isLoading, data, mutate} = useSWR(['limits', localStore.params.getSearchParams] , ([url, args]) => store.limitStore.getAllLimits(args).then((res) => res.data))
 
   useEffect(() => {
@@ -50,7 +50,8 @@ const LimitsPage = () => {
   useDidUpdate(
     () => {
       if(location.pathname === '/account/limits') {
-        mutate()
+        mutate().then(r => console.log('updated', r))
+        revalidator.revalidate()
       }
     },
     [location.pathname]

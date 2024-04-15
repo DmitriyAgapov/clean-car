@@ -5,15 +5,15 @@ import Panel, { PanelColor,  PanelVariant } from 'components/common/layout/Panel
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import FormAuth from 'components/Form/FormAuth/FormAuth'
 import { useStore } from 'stores/store'
-import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { observer } from 'mobx-react-lite'
 import { Navigate } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 
 function AuthPage() {
   const store = useStore()
-  
+  if (store.appStore.appType !== "") {
+    return <Navigate to={'/account'} />
+  }
   return (
     <Layout
       className={'page-intro'}
@@ -44,7 +44,7 @@ function AuthPage() {
             <strong>Вас приветствует CleanCar</strong>
           </p>
         </Panel>
-        {!store.appStore.token ? (
+
           <Panel
             bodyClassName={'!py-12'}
             className={
@@ -55,9 +55,7 @@ function AuthPage() {
           >
             <FormAuth />
           </Panel>
-        ) : (
-          <Navigate to='/account' replace={true} />
-        )}
+
       </Section>
       <SvgAuthBg className={'authBg'} />
       <SvgAuthBgSec className={'authBgSec'} />

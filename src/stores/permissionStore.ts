@@ -160,12 +160,14 @@ export class PermissionStore {
     let company_id = userStore.myProfileData.company.id;
     if (company_id) {
       try {
-        const response = yield agent.Permissions.putUpdatePermissions(company_id, data.id, data)
-      if (response.status === 200) {
-        const { data } = response
-        userStore.loadMyProfile()
-        return response
-      }
+        return  yield agent.Permissions.putUpdatePermissions(company_id, data.id, data).then((r) => {
+          if (r.status === 200) {
+
+            userStore.loadMyProfile()
+            return r
+          }
+        })
+
 
       } catch (error) {
         this.errors = 'error'
@@ -185,11 +187,7 @@ export class PermissionStore {
     let company_id = userStore.myProfileData.company.id;
     if (company_id) {
       try {
-        const response = yield agent.Permissions.deletePermission(company_id, id)
-        if (response.status === 200) {
-          const { data } = response
-          return response
-        }
+        return  yield agent.Permissions.deletePermission(company_id, id)
 
       } catch (error) {
         this.errors = 'error'
@@ -322,7 +320,7 @@ export class PermissionStore {
     this.loadingPermissions = true
     // @ts-ignore
     try {
-      const data = yield agent.PermissionsAdmin.getAllAdminPermissions()
+      const data:any = yield agent.PermissionsAdmin.getAllAdminPermissions()
       if (data.status === 200) {
         //@ts-ignore
         const { results } = data.data

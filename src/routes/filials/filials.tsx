@@ -5,15 +5,16 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import companyStore from "stores/companyStore";
 import { observer, useLocalStore } from "mobx-react-lite";
-import agent, { client } from "utils/agent";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
+
+
 const localRootStore =  new LocalRootStore()
+
 const FilialsPage = () => {
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
@@ -62,7 +63,6 @@ const FilialsPage = () => {
             <LinkStyled
               text={'Создать филиал'}
               to={'create'}
-              // action={() => store.companyStore.addCompany()}
               className={'inline-flex'}
               directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}
@@ -79,8 +79,6 @@ const FilialsPage = () => {
         filter={true}
         state={isLoading}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'company_type'},{ label: 'Принадлежит', name: 'parent'}]}     />
-
-
     </Section>
   )
 }

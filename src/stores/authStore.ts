@@ -65,8 +65,8 @@ export class AuthStore {
        },
      ).catch(
        action((err: AxiosError) => {
-         this.errors = err.response && err.response.data
-         throw err
+         this.errors = err
+         // throw err
        }),
      )
    }
@@ -103,39 +103,43 @@ export class AuthStore {
     this.values.password = ''
   }
 
-  login() {
+  async login() {
     this.inProgress = true
     this.errors = undefined
-    agent.Auth.login(this.values.email, this.values.password)
+    return await agent.Auth.login(this.values.email, this.values.password)
       .then((resolve: any) =>  {
         if(resolve && resolve.response && resolve.response.status > 299) {
           notifications.show({
-            id: 'notlogged in',
+            id: 'notlogged_in',
             withCloseButton: true,
             // onClose: () => console.log('unmounted'),
             // onOpen: () => console.log('mounted'),
-            autoClose: 3000,
+            autoClose: 5000,
             title: "Error",
             message: `${resolve.response.data.detail}`,
             color: 'red',
             className: 'my-notification-class z-[9999] absolute top-12 right-12',
             loading: false,
           })
+          return resolve
         } else {
           const { access, refresh } = resolve.data
 
           appStore.setToken(access)
           appStore.setTokenRefresh(refresh)
           this.userIsLoggedIn = true
+          return resolve
         }
       }
       )
-      .catch(
-        action((err: AxiosError) => {
-          this.errors = err.response && err.response.data
-          console.log(err);
-        }),
-      )
+      // .catch((err: AxiosError) => {
+      //     runInAction(() => {
+      //
+      //       console.log(err);
+      //       // this.errors = err.response && err.response.data
+      //     })
+      //   },
+      // )
       .finally(
         () => {
           this.inProgress = false

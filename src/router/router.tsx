@@ -91,7 +91,7 @@ const router = createBrowserRouter([
         path: '/account',
         element: <AccountPage />,
         // errorElement: <ErrorPage />,
-        loader: authUser,
+        // loader: authUser,
         children: [
             {
                 path: 'profile',
@@ -228,7 +228,7 @@ const router = createBrowserRouter([
             {
                 path: 'groups',
                 element: <GroupsPage />,
-                loader: groupsLoader,
+                // loader: groupsLoader,
                 children: [
                     {
                         path: 'create',

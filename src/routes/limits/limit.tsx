@@ -194,7 +194,7 @@ const LimitPage = () => {
                   <Heading
                     variant={HeadingVariant.h4}
                     // @ts-ignore
-                    text={`${data?.car.brand.name} ${data?.car.model.name}`}
+                    text={`${data?.car?.brand.name} ${data?.car?.model.name}`}
                   />
                 }
               />
