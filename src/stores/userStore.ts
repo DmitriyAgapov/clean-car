@@ -69,7 +69,7 @@ export class UserStore {
       })
     reaction(() => this.myProfileData.company,
       (company) => {
-        if(authStore.userIsLoggedIn) {
+        if(authStore.userIsLoggedIn && appStore.token !== "") {
           if (company && companyStore.companies.length === 0) {
             companyStore.getAllCompanies()
             (appStore.appType !== UserTypeEnum.performer && appStore.appType !== "") && carStore.getCars(company.id)
@@ -78,7 +78,7 @@ export class UserStore {
       })
     reaction(() => this.currentUserPermissions,
       (currentUserPermissions) => {
-          if(authStore.userIsLoggedIn && currentUserPermissions.size === 0) {
+          if(authStore.userIsLoggedIn && appStore.token !== "" && currentUserPermissions.size === 0) {
             console.log('create Permissions if it is not created:)');
             this.createUserPermissions()
           }
@@ -216,11 +216,12 @@ export class UserStore {
         // if (this.isAdmin) {
           if (this.currentUserPermissions && this.currentUserPermissions.has(key)) {
             // console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
-            return this.currentUserPermissions.get(key)[action]
+
+            if(this.currentUserPermissions.has(key)) return this.currentUserPermissions.get(key)[action]
           } else {
             // console.log('Нет прав, создаем')
             this.createUserPermissions()
-            return this.currentUserPermissions.get(key)[action]
+            if(this.currentUserPermissions.has(key)) return this.currentUserPermissions.get(key)[action]
           }
         // }
       // } catch (e) {

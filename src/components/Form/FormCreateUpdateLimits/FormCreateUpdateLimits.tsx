@@ -372,7 +372,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                                 data={filials?.results?.map((c: any) => ({ label: c.name, value: String(c.id) }))}
                             />
                         </Group>
-                        <p className={'col-span-full'}>Выберите Пользователя или Автомобиль</p>
+                        {(!formData.values.conductor && !formData.values.car) && <div className={'tablet:col-start-7 tablet:col-end-10 tablet:row-start-2 self-center'}>Выберите<br/> <span className={'text-accent'}>Пользователя</span> или <span className={'text-accent'}>Автомобиль</span></div>}
                         <Group grow wrap={'wrap'} className={'col-span-6'}>
                             <Select
                                 {...formData.getInputProps('conductor')}
