@@ -33,7 +33,7 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
 		}
 		setCount(newVal)
 		// action(newVal)
-		localStore.params.setSearchParams({ordering: newVal.reversed ? `-${ar[index].name}` : ar[index].name})
+		localStore.params.setSearchParams({page: 1, ordering: newVal.reversed ? `-${ar[index].name}` : ar[index].name})
 
 	}, [count, ar, localStore.params.searchParams])
 	return (

@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useEffect } from "react";
 import styles from './Layout.module.scss'
 import { useStore } from 'stores/store'
-import { Observer, observer } from "mobx-react-lite";
+import {  observer } from "mobx-react-lite";
 import Logo from 'components/common/layout/Logo/Logo'
 import Header from 'components/common/layout/Header/Header'
 import Footer from 'components/common/layout/Footer/Footer'
@@ -10,7 +10,6 @@ import '../../../../assets/styles.scss'
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
 import { useWindowDimensions } from "utils/utils";
-import { useNavigation, useSearchParams } from "react-router-dom";
 import { LoadingOverlay } from "@mantine/core";
 import { SvgCleanCarLoader } from "components/common/ui/Icon";
 
@@ -46,8 +45,6 @@ interface ChildrenProps {
 
 const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent }) => {
   const store = useStore()
-  let [searchParams, setSearchParams] = useSearchParams()
-  const navigation = useNavigation();
   const {width} = useWindowDimensions();
   // console.log('st', (navigation.state === "idle" || store.appStore.getAppState) ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true );
   const { appStore, userStore, authStore } = store;
