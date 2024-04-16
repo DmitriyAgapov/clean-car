@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import styles from './Sidebar.module.scss'
 import { SectionType } from '../Section/Section'
 import { useStore } from "stores/store";
-import { observer } from 'mobx-react-lite';
+import { Observer, observer } from "mobx-react-lite";
 import { useWindowDimensions } from "utils/utils";
 import Logo from "components/common/layout/Logo/Logo";
 
@@ -14,8 +14,10 @@ type SidebarProps = {
     items?: { icon: React.ReactNode | never; title: string; url: string }[]
 }
 
-function BackDrop({action}:any) {
-    return <div className={styles.backdrop} onClick={action}></div>
+const BackDrop = () => {
+   const store = useStore()
+   if(store.appStore.asideState) return <Observer children={() => <div className={styles.backdrop} onClick={() => store.appStore.setAsideClose()}></div>}/>
+   return null
 }
 
 const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
@@ -104,13 +106,13 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       url: 'bids',
     }
     ]
-    if(process.env.NODE_ENV === "development") {
-      routeWithPermissions.push({
-        icon: <img src={'/icons/zayavki.png'} alt={''} />,
-        title: 'Дэш',
-        url: 'dashboard',
-      })
-    }
+    // if(process.env.NODE_ENV === "development") {
+    //   routeWithPermissions.push({
+    //     icon: <img src={'/icons/zayavki.png'} alt={''} />,
+    //     title: 'Дэш',
+    //     url: 'dashboard',
+    //   })
+    // }
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
         if(store.userStore.myProfileData.company.company_type === "Компания-Партнер" && el.url === "cars") {
@@ -127,7 +129,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   }, [store.userStore.currentUserPermissions.size])
   return (
     <>
-      {store.appStore.asideState && <BackDrop action={() => store.appStore.setAsideClose()}/>}
+      <BackDrop/>
     <aside  className={styles.Sidebar} {...props} data-state={appStore.asideState}>
       {(width && width < 960) && <Logo position={'aside'}/>}
 

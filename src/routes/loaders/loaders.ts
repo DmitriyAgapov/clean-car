@@ -256,6 +256,7 @@ export const groupsCreatLoader = async ({ params: { id } }: any) => {
         // @ts-ignore
         ar.push(permissionNameKey)
     }
+    console.log(ar);
     return {
         group: {
             id: Math.random(),
@@ -263,7 +264,7 @@ export const groupsCreatLoader = async ({ params: { id } }: any) => {
             permissions: ar.map((item: string) => ({
                 create: false,
                 delete: false,
-                id: Math.random(),
+                // id: Math.random(),
                 name: item,
                 read: false,
                 update: false,

@@ -21,8 +21,15 @@ export default function GroupPageEditAction(props: any) {
 
   const memoizedAndModificatedGroup = React.useMemo(() => {
     let modifCatedData = { ...group };
-    const except= store.appStore.appType === "admin" ? [null] : ["Компании", 'Управление справочниками', 'Компании']
-    modifCatedData.permissions = modifyPermissions(group, modificationSchema, store.appStore.appType, except );
+    const except= store.appStore.appType === "admin" ? [null] : ["Компании", 'Управление справочниками']
+    const _ar:any[] = []
+    modifyPermissions(group, modificationSchema, store.appStore.appType, except ).forEach((item: any) => {
+      if(item) {
+        _ar.push(item)
+      }
+    })
+
+    modifCatedData.permissions = _ar;
 
     return modifCatedData;
   }, [group]);
@@ -34,8 +41,12 @@ export default function GroupPageEditAction(props: any) {
       name: event.target.value,
     }))
   }
-  const handlePermissions = (event: any, id: number) => {
-    const indexAr = changes.permissions.findIndex((value: any) => value.id === id)
+  const handlePermissions = (event: any, id: string) => {
+    const indexAr = changes.permissions.findIndex((value: any) => {
+      if(value) {
+        return  value.name === id
+      }
+    })
     const newArrayItem = {
       ...changes.permissions[indexAr],
       [event.target.name]: event.target.checked,

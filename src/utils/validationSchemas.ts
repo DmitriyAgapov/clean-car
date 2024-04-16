@@ -105,7 +105,7 @@ export const CreateBidSchema = Yup.object().shape({
 	company: Yup.string().required('Обязательное поле'),
 	conductor: Yup.string().required('Обязательное поле'),
 	car: Yup.string().min(1).required('Обязательное поле'),
-	phone: Yup.string().required('Обязательное поле'),
+	phone: Yup.string()
 })
 export const CreateBidSchemaStep2 = Yup.object().shape({
 	service_type: Yup.string().required('Обязательное поле'),

@@ -220,7 +220,7 @@ export class UserStore {
             if(this.currentUserPermissions.has(key)) return this.currentUserPermissions.get(key)[action]
           } else {
             // console.log('Нет прав, создаем')
-            this.createUserPermissions()
+            // this.createUserPermissions()
             if(this.currentUserPermissions.has(key)) return this.currentUserPermissions.get(key)[action]
           }
         // }

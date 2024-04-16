@@ -23,6 +23,7 @@ import UploadedPhotos, { UploadedPhotosFirstStep } from "components/common/layou
 import {  DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
+import { PermissionNames } from "stores/permissionStore";
 
 interface InitValues {
     address: string | null
@@ -113,6 +114,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         initValues.company = String(store.userStore.myProfileData.company.id);
         initValues.city = String(store.userStore.myProfileData.company.city.id);
       }
+      if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read')) {
+        initValues.phone = store.userStore.myProfileData.user.phone
+        initValues.conductor = String(store.userStore.myProfileData.user.id)
+        initValues.car = store.userStore.myProfileData.user.cars.length === 1 ? String(store.userStore.myProfileData.user.cars[0].id) : null
+        store.bidsStore.formResultSet({car: store.userStore.myProfileData.user.cars.length === 1 ? store.userStore.myProfileData.user.cars[0].id : null, conductor: store.userStore.myProfileData.user.id, phone: store.userStore.myProfileData.user.phone})
+      }
       return initValues
 
     }, [edit, bid])
@@ -120,7 +127,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       name: 'createBidForm',
       initialValues: initData,
       validateInputOnBlur: true,
-      // onValuesChange: (values, previous) => console.log(values),
+      onValuesChange: (values, previous) => console.log(values),
     // @ts-ignore
       validate: values => {
         if(step === 1) {
@@ -173,7 +180,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           if (payload.field === 'car') {
               return {
                   //@ts-ignore
-                  disabled: payload.form.values.conductor === '0' || carsData === null,
+                  disabled: payload.form.values.conductor === null || carsData === null || carsData.length === 0,
               }
           }
 
@@ -210,17 +217,33 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }
   }, [formData.values.company])
 
+  // React.useEffect(() => {
+  //   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read')) {
+  //     const initDrivers = {
+  //       car: store.userStore.myProfileData.user.cars.length === 1 ? String(store.userStore.myProfileData.user.cars[0].id) : null,
+  //       conductor: String(store.userStore.myProfileData.user.id),
+  //       phone: store.userStore.myProfileData.user.phone,
+  //     }
+  //     store.bidsStore.formResultSet(initDrivers)
+  //     console.log({...initData, ...initDrivers}, 'initDrivers');
+  //     formData.initialize({...initData, ...initDrivers})
+  //     formData.setTouched({car: true, conductor: true, phone: true})
+  //   }
+  // }, [])
 
+ const carsData = React.useMemo(() => {
+   //@ts-ignore
+   const car = store.carStore.getCompanyCars.cars?.results?.filter((car) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
 
-   const carsData = React.useMemo(() => {
-     //@ts-ignore
-     const car = store.carStore.getCompanyCars.cars?.results?.filter((car) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
+   if(car?.length > 0) {
+      return car.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), }))
+   }
 
-     if(car?.length > 0) {
-        return car
-     }
-     return null
-    }, [formData.values.conductor])
+   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'read') && store.userStore.myProfileData.user.cars.length > 0) {
+     return store.userStore.myProfileData.user.cars.map((c: any) => ({ label: `${c.brand}  ${c.model}  ${c.number}`, value: String(c.id), }))
+   }
+   return null
+  }, [formData.values.conductor, formData.values.car])
 
   const handleChangeCompany = React.useCallback((e:any) => {
     if(e === null) {
@@ -247,7 +270,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       store.bidsStore.clearPhotos()
     } else  {
       formData.setFieldValue('city', String(store.bidsStore.formResultsAll.city))
-      formData.values.phone = String(store.bidsStore.formResultsAll.phone);
+
+      // store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read') ? formData.values.phone = String(store.bidsStore.formResultsAll.phone) : void null;
       // formData.values.car = String(store.bidsStore.formResultsAll.car);
       formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
       store.bidsStore.clearPhotos()
@@ -256,6 +280,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
   React.useEffect(() => {
     if(formData.values.conductor === null) {
+      console.log('null');
       formData.setFieldValue('conductor', null)
       formData.setFieldValue('car', null)
       formData.setFieldValue('phone', null)
@@ -263,10 +288,18 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     } else  {
 
       const value = store.usersStore.companyUsers.filter((c: any) => c.employee.id === Number(formData.values.conductor))[0]
-      //@ts-ignore
-      formData.setFieldValue('phone', value && value.employee && value.employee?.phone)
-      //@ts-ignore
-      store.bidsStore.formResultSet({ phone: value && value.employee && value.employee?.phone })
+      if(store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read')) {
+        //@ts-ignore
+        formData.setFieldValue('phone', value && value.employee && value.employee?.phone)
+        //@ts-ignore
+        store.bidsStore.formResultSet({ phone: value && value.employee && value.employee?.phone })
+      } else {
+        formData.setFieldValue('phone', store.userStore.myProfileData.user.phone)
+        store.bidsStore.formResultSet({ phone: store.userStore.myProfileData.user.phone })
+      }
+
+
+
       // formData.values.car = String(store.bidsStore.formResultsAll.car);
       // formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
     }
@@ -291,7 +324,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           subtype_id: store.bidsStore.formResult.service_subtype,
           options_idx: store.bidsStore.formResult.service_option
         }).then((res:any) => {
-          console.log(res);
+          // console.log(res);
           if (formData.values.service_type === '1') {
           changeStep(4)
           } else {
@@ -303,7 +336,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         (async () => {
           store.bidsStore.formCreateBid()
           .then((res) => {
-            console.log(res, 'res');
+            // console.log(res, 'res');
             if (res.status !== 201) {
               notifications.show({
                 id: 'bid-created',
@@ -371,6 +404,21 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           }))
         }
       }
+      if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read')) {
+
+
+        result = [{
+          label: store.userStore.myProfileData.user.first_name + " " + store.userStore.myProfileData.user.last_name,
+          value: String(store.userStore.myProfileData.user.id)
+        }]
+
+        // formData.values.conductor =  String(store.userStore.myProfileData.user.id)
+
+        // formData.setValues({phone:store.userStore.myProfileData.user.phone})
+        // formData.setDirty({phone: true})
+
+        // formData.setTouched({conductor: true})
+      }
       return result
     }, [formData.values.company, store.usersStore.currentCompanyUsers])
 
@@ -389,7 +437,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               variant={ButtonVariant['accent-outline']}
             />
            )}
-            {step === 1 && <FileButton onChange={(e) => store.bidsStore.sendFiles(e, true)} multiple accept='image/png,image/jpeg'>
+            {step === 1 && <><FileButton onChange={(e) => store.bidsStore.sendFiles(e, true)} multiple accept='image/png,image/jpeg'>
           {(props) => (
             <Button
               className={'col-span-1'}
@@ -400,7 +448,15 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               text={'Добавить фото'}
             ></Button>
           )}
-        </FileButton>}
+        </FileButton><Button
+              text={'Назад'}
+            action={() => {
+              console.log(formData.errors);
+              formData.validate()
+            }}
+            className={'lg:mb-0 mr-auto'}
+            variant={ButtonVariant['accent-outline']}
+          /></>}
             </>}
           actionCancel={step !== 5 ? <Button type={'button'}
             text={'Отменить'}
@@ -477,7 +533,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 }}
                 disabled={
                   store.bidsStore.formResult.company === 0 ||
-                  store.usersStore.currentCompanyUsers.length === 0
+                  store.usersStore.currentCompanyUsers.length === 0 && conductorsData.length === 0
                 }
                 data={conductorsData}
               />
@@ -493,13 +549,16 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 // defaultValue={formData.values.phone !== "" ? formData.values.phone : store.bidsStore.formResult.phone}
                 label={step1.fields[3].label} component={IMaskInput} mask='+7 000 000 0000' placeholder='+7 000 000 0000'
               />
+
               <Select
                 {...formData.getInputProps('car')}
                 className={'self-start'}
                 clearable
                 onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
                 //@ts-ignore
-                label={step1.fields[4].label} searchable data={store.carStore.cars && store.carStore.cars.length !== 0 && carsData !== null ? carsData.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), })) : ['']}
+                label={step1.fields[4].label} searchable data={
+                  // store.carStore.cars && store.carStore.cars.length !== 0 &&
+                  carsData !== null ? carsData : ['']}
               />
               </Group>
               <hr className={'col-span-full border-transparent my-2'} />
@@ -528,7 +587,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                           formData.setFieldValue(step2.fields[1].name, '0')
                           formData.setFieldValue(step2.fields[0].name, '0')
                         } else {
-                          console.log('set service_type');
+                          // console.log('set service_type');
                           formData.setFieldValue(step2.fields[1].name, null);
                           action(() => {
                             store.catalogStore.currentService = Number(value);
@@ -563,7 +622,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                               service_subtype: Number(value),
                             })
                             formData.setFieldValue('service_option', []);
-                            console.log('setTouched');
+                            // console.log('setTouched');
                             formData.setTouched({ 'service_option': true });
                           }
                         }}
@@ -595,7 +654,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                           )}
 
                           onChange={(vals) => {
-                            console.log(formData.values);
+                            // console.log(formData.values);
                             store.bidsStore.formResultSet({
                               service_option: vals.map((e) => Number(e)),
                             })
@@ -617,9 +676,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                   <Checkbox
                                     key={i.id}
                                     value={String(i.id)}
-                                    onClick={(values: any) =>
-                                      console.log(values.target.checked)
-                                    }
+
                                     label={i.name}
                                   />
                                 ),
@@ -714,7 +771,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 <Select
                   {...formData.getInputProps('important')}
                   onOptionSubmit={(values) => {
-                    console.log(values);
+                    // console.log(values);
                     if(values !== 'time') {
                     formData.setFieldValue('time', '')
                     store.bidsStore.formResultSet({
@@ -829,7 +886,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   <Select
                     {...formData.getInputProps('important')}
                     onOptionSubmit={(values) => {
-                      console.log(values);
+                      // console.log(values);
                       if(values === 'fast') {
                         formData.setFieldValue('time', '')
                         store.bidsStore.formResultSet({
@@ -964,7 +1021,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                       searchable
                       clearable
                       onOptionSubmit={(val: any) => {
-                        console.log(val);
+                        // console.log(val);
                         store.bidsStore.formResultSet({ performer: Number(val) })
                       }
                       }

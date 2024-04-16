@@ -570,7 +570,7 @@ export const TabsVariantBids = observer(({
             )
             break
         case 'Фото':
-          const {isLoading, data: photos} = useSWR(`/bids/${data.id}/photos/`, () => agent.Bids.loadBidPhotos(params.company_id as string, params.id as string).then((r) => r.data), {revalidateOnFocus: false})
+          const {isLoading, data: photos} = useSWR(`/bids/${params.company_id}/photos/`, () => agent.Bids.loadBidPhotos(params.company_id as string, params.id as string).then((r) => r.data), {revalidateOnFocus: false})
           console.log(photos);
           const ph = store.bidsStore.CurrentBidPhotosAll
           if(!isLoading && photos.results.length > 0) {

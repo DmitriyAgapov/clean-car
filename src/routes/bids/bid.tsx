@@ -29,7 +29,7 @@ const BidPage = () => {
 
 	const textData = store.bidsStore.text
 	const tabedData = React.useMemo(() => {
-		store.appStore.setAppState(isLoading)
+		// store.appStore.setAppState(isLoading)
 		return [
 			{ label: 'Основная информация', data: data },
 			{ label: 'Услуги', data: data },
@@ -64,7 +64,7 @@ const BidPage = () => {
 	return (
         <Section type={SectionType.default}>
             <Panel
-	            state={isLoading}
+	            state={false}
                 variant={PanelVariant.withGapOnly}
                 headerClassName={'flex justify-between gap-4'}
                 header={
