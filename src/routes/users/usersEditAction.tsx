@@ -69,4 +69,4 @@ const UsersPageEditAction = () => {
       </Section>
   )
 }
-export default UsersPageEditAction
+export default observer(UsersPageEditAction)

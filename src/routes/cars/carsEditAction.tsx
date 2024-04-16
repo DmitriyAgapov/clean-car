@@ -10,8 +10,9 @@ import { useStore } from "stores/store";
 import { PermissionNames } from "stores/permissionStore";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
+import { observer } from "mobx-react-lite";
 
-export default function CarsPageEditAction() {
+const CarsPageEditAction = () => {
   const store = useStore()
   const navigate = useNavigate()
   const { data, page, pageRequest, textData, company_type }: any = useLoaderData()
@@ -38,8 +39,9 @@ export default function CarsPageEditAction() {
         header={<>
           <LinkStyled text={<><SvgBackArrow />Назад к списку автомобилей{' '}</>} className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} to={location.pathname.split('/').slice(0, -1).join('/')} variant={ButtonVariant.text} />
           <Heading text={'Редактировать автомобиль'} variant={HeadingVariant.h1} className={'!mb-0 inline-block mr-auto flex-1'} color={HeadingColor.accent} />
-          <LinkStyled text={'Скачать шаблон'} variant={ButtonVariant["accent-outline"]} to={'/account/cars/create'} className={'inline-flex mr-5'} size={ButtonSizeType.sm} />
+          {store.appStore.appType === "admin" && <> <LinkStyled text={'Скачать шаблон'} variant={ButtonVariant["accent-outline"]} to={'/account/cars/create'} className={'inline-flex mr-5'} size={ButtonSizeType.sm} />
           <LinkStyled text={'Загрузить файл'} to={'/account/cars/create'} className={'inline-flex mr-5'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
+            </>}
         </>
         }
       >
@@ -64,3 +66,4 @@ export default function CarsPageEditAction() {
     </Section>
   )
 }
+export default observer(CarsPageEditAction)

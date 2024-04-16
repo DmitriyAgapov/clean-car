@@ -65,7 +65,7 @@ const CarsPage = () => {
           <div>
             <Heading text={"Автомобили"}
               variant={HeadingVariant.h1}
-              className={"inline-block mr-auto tablet-max:flex-1"}
+              className={"inline-block mr-auto tablet-max:flex-1 !mb-0  "}
               color={HeadingColor.accent} />
           </div>
             <div className={"flex gap-6 tablet-max:max-w-96"}>
