@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import DList from 'components/common/ui/DList/DList'
 import CardSimple from 'components/common/layout/Cards/CardSimple/CardSimple'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
@@ -178,7 +178,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
   }
   return  result
 }
-
+const localRootStore =  new LocalRootStore()
 const TabsVariants = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
   const store = useStore()
   let result
@@ -225,7 +225,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
             </span>))} />
 
           <CardSimple.Footer>
-            <LinkStyled variant={ButtonVariant.text} style={{color: 'var(--accentColor)'}} text={'Подробнее'} to={'#'} />
+            <Button variant={ButtonVariant.text} className={'text-accent'} text={'Подробнее'} action={ () => store.bidsStore.setActiveTab("Партнеры")} />
           </CardSimple.Footer>
         </CardSimple>}
 
@@ -266,6 +266,47 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
     case 'Автомобили':
       result = (<TabCars state={state} companyId={companyId} company_type={company_type} />)
       break;
+    case 'Партнеры':
+
+      const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+
+      // const memoizedPerf = React.useMemo(() => {
+      //   const perAr:any[] = []
+      //   data.customerprofile.performer_company.forEach((el:number) => {
+      //     const _company = store.companyStore.getCompanyById(el)
+      //     perAr.push(_company)
+      //   })
+      //   return perAr
+      // }, [data])
+      // console.log(memoizedPerf);
+      useEffect(() => {
+        localStore.setData = {
+          canSort: false,
+          results: data?.map((item:any) => ({
+            status: item.is_active as boolean,
+            company: item.name,
+            type: item.company_type,
+            city: item.city.name,
+            id: item.id
+          }))}
+      },[data])
+      console.log(localStore);
+      result = (<Tabs.Panel state={state}> <TableWithSortNew
+        store={localRootStore}
+        canSort={false}
+        className={'!rounded-none  !bg-none overflow-visible !border-0'}
+        bodyClassName={'!bg-none !rounded-none !bg-transparent'}
+        background={PanelColor.default}
+        variant={PanelVariant.default}
+        footer={false}
+        search={false}
+        // headerBar={false}
+        style={PanelRouteStyle.company}
+        filter={false}
+        state={state}
+        ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'}, {label: 'Тип', name: 'company_type'},{ label: 'Город', name: 'city' }]}
+      /></Tabs.Panel>)
+      break;
 
 
     default:
@@ -294,7 +335,6 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
       break;
 
     case 'Сотрудники':
-      console.log(companyId, company_type);
       result = (<TabUsers state={state} companyId={companyId} company_type={company_type} />)
       break;
     // case 'Филиалы':

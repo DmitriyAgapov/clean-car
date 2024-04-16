@@ -18,9 +18,12 @@ export default function GroupPageEditAction(props: any) {
   const navigate = useNavigate()
   // @ts-ignore
   const { group } = useLoaderData()
+
   const memoizedAndModificatedGroup = React.useMemo(() => {
     let modifCatedData = { ...group };
-    modifCatedData.permissions = modifyPermissions(group, modificationSchema, store.appStore.appType);
+    const except= store.appStore.appType === "admin" ? [null] : ["Компании", 'Управление справочниками', 'Компании']
+    modifCatedData.permissions = modifyPermissions(group, modificationSchema, store.appStore.appType, except );
+
     return modifCatedData;
   }, [group]);
 

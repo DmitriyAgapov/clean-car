@@ -580,9 +580,9 @@ export class CompanyStore {
         .catch((errors:any) => this.errors = errors)
     }
 
-    getPerformersCompany (params?: PaginationProps) {
+    async getPerformersCompany (params?: PaginationProps) {
         this.companiesPerformers.clear()
-        return agent.Companies.getListCompanyPerformer(params)
+        return await agent.Companies.getListCompanyPerformer(params)
         .then((response:any) => response)
         .then((response:any) => response.data)
         .then((data:any) => runInAction(() =>{

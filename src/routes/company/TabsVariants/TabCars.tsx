@@ -40,11 +40,11 @@ const TabCars = ({companyId, company_type, state }:any) => {
 	return	<Tabs.Panel  state={state} name={'cars'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
 <TableWithSortNew		store={localRootStoreF}
 	state={isLoading}
+
+	search={true} filter={true}
 	className={'!rounded-none  !bg-none overflow-visible !border-0'}
 	bodyClassName={'!bg-none !rounded-none !bg-transparent'}
 	background={PanelColor.default}
-	search={true} filter={true}
-
 	variant={PanelVariant.default}
 	footer={false}
 	ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}/>

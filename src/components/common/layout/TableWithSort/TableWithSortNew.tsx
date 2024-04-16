@@ -18,6 +18,7 @@ type TableWithSortProps = {
     data?: any[]
     state?: boolean
     className?: string
+    headerBar?: boolean
     background?: PanelColor
     ar: { label: string, name: string }[]
     style?: PanelRouteStyle
@@ -33,7 +34,7 @@ type TableWithSortProps = {
 
 
 
-const TableWithSortNew = observer(({ variant, withOutLoader, search = false, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
+const TableWithSortNew = observer(({ variant, withOutLoader, search = false,headerBar = true, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
 }: TableWithSortProps) => {
     const localStore = useLocalStore<LocalRootStore>()
     const store =useStore()
@@ -42,7 +43,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
     const {data, params: {getSearchParams: {page_size: pageSize}}} = localStore
     const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading
     let [searchParams, setSearchParams] = useSearchParams([['page', '1'], ['page_size', '10']])
-
+    console.log(localStore);
     // @ts-ignore
     const [sortedField, setSortedField] = useState<null | string>(null)
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -50,9 +51,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
     const handleCurrentPage = React.useCallback((value: any) => {
         localStore.params.setSearchParams({page: value})
         if(withOutLoader) {
-            // console.log('withyout', searchParams);
             searchParams.set('page', String(value))
-            // store.paramsStore.setParams({page: encodeURIComponent(value)});
             setSearchParams(searchParams.toString())
 
         } else  {
@@ -62,11 +61,6 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
         setCurrentPage(Number(value))
     }, [sortedField, currentPage, searchParams, localStore.params.searchParams])
 
-    // React.useEffect(() => {
-    //     console.log(currentPage, 'currentPage');
-    //     const pageParams = searchParams.get('page')
-    //     searchParams.has('page') ? setCurrentPage(Number(pageParams)) : setCurrentPage(1)
-    // }, [currentPage, searchParams]);
 
     const RowDataMemoized = React.useMemo(() => {
         if(withOutLoader) {
@@ -94,15 +88,6 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
         }
         setSearchParams(searchParams.toString())
     }, [sortedField, currentPage, searchParams])
-    useEffect(() => {
-        console.log('pageSize', localStore.params.searchParams.page_size);
-        console.log('initCount', localStore.getData?.count);
-        // store.appStore.setAppState(localStore.isLoading)
-    }, [localStore.params.searchParams]);
- useEffect(() => {
-
-        // store.appStore.setAppState(localStore.isLoading)
-    }, [rows, localStore.isLoading]);
 
     return (
         <Panel
@@ -137,7 +122,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false, fil
         >
 
             <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
-                <RowHeading total={initCount} ar={ar} />
+                {headerBar && <RowHeading total={initCount} ar={ar} />}
                 <tbody>
                 {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData    {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
                 </tbody>

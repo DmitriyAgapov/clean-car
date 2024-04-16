@@ -17,6 +17,7 @@ import {  LocalRootStore } from "stores/localStore";
 import { useDidUpdate } from "@mantine/hooks";
 
 const localRootStore =  new LocalRootStore()
+localRootStore.params.setSearchParams({ordering: 'status'})
 
 const BidsPage = () => {
 	const store = useStore()
@@ -25,7 +26,8 @@ const BidsPage = () => {
 	const textData = store.bidsStore.text
 	const params = useParams()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	const {isLoading, data, mutate} = useSWR(['bids', localStore.params.getSearchParams] , ([url, args]) => store.bidsStore.loadBids(args),
+
+	const {isLoading, data, mutate} = useSWR(['bids', {...localStore.params.getSearchParams}] , ([url, args]) => store.bidsStore.loadBids(args),
 		{refreshInterval: 10000}
 	)
 	useDidUpdate(
@@ -98,7 +100,7 @@ const BidsPage = () => {
 				</Panel>
 
 					<TableWithSortNew
-					store={localRootStore}
+							store={localRootStore}
 							variant={PanelVariant.dataPadding}
 							search={true}
 							style={PanelRouteStyle.bids}

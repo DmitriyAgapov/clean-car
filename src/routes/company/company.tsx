@@ -20,34 +20,35 @@ const CompanyPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-
+  console.log(location);
   const params = useParams()
+
+  console.log(location.pathname === `/account/companies/${params.company_type}/${params.id}`);
   const revalidator = useRevalidator()
   const {isLoading, data, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
     revalidateOnMount: true
   })
-  console.log(data);
   useDidUpdate(
     () => {
-      if(location.pathname.includes('companies')) {
-
-        mutate()
+      if(location.pathname === `/account/companies/${params.company_type}/${params.id}`) {
+        mutate().then(r => console.log('updated', r))
         revalidator.revalidate()
       }
     },
     [location.pathname]
   );
+
   const tabedData = React.useMemo(() => {
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },
       { label: 'Филиалы', company_type: params.company_type  },
       { label: 'Сотрудники', data: data, company_type: params.company_type  },
       { label: 'Автомобили',  company_type: params.company_type  },
-      (params.company_type === "customer") && { label: 'Партнеры',  company_type: params.company_type  },
+      (params.company_type === "customer") && { label: 'Партнеры', data: data?.customerprofile?.performer_company.map((el:number) => store.companyStore.getCompanyById(el)),  company_type: params.company_type  },
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
-  }, [isLoading])
+  }, [data])
 
   return (
       <Section type={SectionType.default}>
@@ -67,7 +68,7 @@ const CompanyPage = () => {
                               className={
                                   'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                               }
-                              action={() => navigate(-1)}
+                              action={() => navigate('/account/companies')}
                               variant={ButtonVariant.text}
                           />
                           <Heading

@@ -31,7 +31,7 @@ const PermissionTable = ({ data, editable = false, action }: PermissionTableProp
         <div className={'flex justify-center'}>Добавление</div>
         <div className={'flex justify-center'}>Удаление</div>
       </div>
-      {data.map((row: PermissionTableRowProps) => (
+      {data.map((row: PermissionTableRowProps) => row && (
         <div key={row.id} className={styles.PermissionTableRow}>
           <div>{row.name}</div>
           <div className={'flex justify-center items-center'}>

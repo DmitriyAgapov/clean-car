@@ -14,7 +14,9 @@ axios.interceptors.request
 			if (window.localStorage.getItem('jwt')) {
 				// @ts-ignore
 				config.headers = {
+					...config.headers,
 					Authorization: `Bearer ${window.localStorage.getItem('jwt')}`
+
 				};
 			}
 			return config;

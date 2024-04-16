@@ -61,7 +61,7 @@ const CarPage = () => {
                   </>
                 }
                 className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'}
-                action={() => navigate(-1)}
+                action={() => navigate('/account/cars')}
                 variant={ButtonVariant.text}
               />
               <Heading

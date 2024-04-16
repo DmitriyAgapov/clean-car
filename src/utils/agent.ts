@@ -105,10 +105,11 @@ export const requests = {
   // .then((response) => response)
   // .catch(handleErrors),
 
-  post: (url: string, body: any) =>
+  post: (url: string, body: any, headers?: any) =>
     axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
+      headers: headers,
       method: 'POST',
       data: body,
     })
@@ -443,7 +444,12 @@ const Account = {
   getCompanyUser: (company_id: number, id: number) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
   createCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/users/create/`, data),
   updateCompanyUser: (company_id: number, data:any) => requests.put(`/accounts/${company_id}/profile/${data.id}/update/`, data),
-  createAdminUser: (data: any) => requests.post('/accounts_admin/user/create/', data)
+  createAdminUser: (data: any) => requests.post('/accounts_admin/user/create/', data),
+  uploadUsers: (data: any) => requests.post('/accounts_admin/upload_users/', data, {
+    // 'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  }),
+
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),

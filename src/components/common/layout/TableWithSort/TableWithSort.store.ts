@@ -4,6 +4,7 @@ export type TableSearchParams = { page: number; page_size: number, q?: string, s
 	company__city?:string
 	start_date?:string
 	car_type?:string
+	ordering?:string
 	brand?:string
 	end_date?:string
 	status?: Status | null | undefined

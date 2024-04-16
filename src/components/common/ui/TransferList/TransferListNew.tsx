@@ -75,10 +75,12 @@ const TransferListComponent = observer(({ active = [] }: { active?: number[] }) 
 
     const store = useStore()
     const localStore = useTransferStore<TransferComponentStore>()
+    const performers  = store.companyStore.getCompaniesPerformers
     useEffect(() => {
-        localStore.loadUnSelected(store.companyStore.getCompaniesPerformers.filter((el:any) => !active.includes(el.id)))
-        localStore.loadSelected(store.companyStore.getCompaniesPerformers.filter((el:any) => active.includes(el.id)))
-    }, []);
+        localStore.loadUnSelected(performers.filter((el:any) => !active.includes(el.id)))
+        localStore.loadSelected(performers.filter((el:any) => active.includes(el.id)))
+    }, [performers]);
+
     return (
         <>
             <RenderList

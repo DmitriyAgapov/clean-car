@@ -22,9 +22,7 @@ export default function FilialsPageEditAction(props: any) {
   const { company_type, id } = useParams();
 
   const {isLoading, data:loaderData} = useSWR(`/filial/${params.company_type}/${params.id}/retrieve`, () => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
-React.useEffect(() => {
-  console.log('loaderData', loaderData);
-}, [isLoading])
+
   if(!store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'update')) return <Navigate to={'/account'}/>
   return (
       <Section type={SectionType.default}>
@@ -42,7 +40,7 @@ React.useEffect(() => {
                           className={
                               'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                           }
-                          action={() => navigate(-1)}
+                        action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))}
                           variant={ButtonVariant.text}
                       />
                       <Heading

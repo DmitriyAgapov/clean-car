@@ -1,4 +1,4 @@
-import { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import Tabs from "components/common/layout/Tabs/Tabs";
 import React, { useEffect } from "react";
@@ -46,7 +46,7 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 			bodyClassName={'!bg-none !rounded-none !bg-transparent'}
 			background={PanelColor.default}
 			search={true} filter={true}
-
+			style={PanelRouteStyle.users}
 			variant={PanelVariant.default}
 			footer={false}  ar={[
 			{ label: 'Статус', name: 'employee__is_active' },
