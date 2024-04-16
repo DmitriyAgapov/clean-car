@@ -431,6 +431,10 @@ const Cars = {
   getCompanyCar: (company_id: number , id: number)  => requests.get(`/cars/${company_id}/${id}/retrieve/`),
   createCompanyCar: (company_id: number, data: any) => requests.post(`/cars/${company_id}/create/`, data),
   editCompanyCar: (company_id: number, id: number, data: any) => requests.put(`/cars/${company_id}/${id}/update/`, data),
+  uploadCars: (data: any) => requests.post('/cars_admin/upload_cars/', data, {
+    // 'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  }),
 }
 const Limits = {
   createLimit: ({company_id, data }:{company_id: number, data:{ amount?: number, is_day?: boolean, service_type: number, employee?: number, company: number, car?: number }}) => requests.post(`/limits/${company_id}/create/`, data),

@@ -31,7 +31,15 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
 	const memoFileUpload = React.useMemo(() => {
 		console.log(store.companyStore.getFilialsAll);
 		// @ts-ignore
-		const availableFilials = store.appStore.appType === "admin" ? store.companyStore.getFilialsAll.results?.filter((c:any) => c.company_type === formData.type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getFilialsAll.results?.map((f:any) => ({label: f.name, value: f.id.toString()}))
+		const availableFilials = React.useMemo(async ():any => {
+			if(store.appStore.appType === "admin") {
+			// @ts-ignore
+				return await store.companyStore.getFilialsAll.results?.filter((c:any) => c.company_type === formData.type).map((f:any) => ({label: f.name, value: f.id.toString()}))
+			} else {
+				// @ts-ignore
+				return await	store.companyStore.getFilialsAll.results?.map((f:any) => ({label: f.name, value: f.id.toString()}))
+			}
+		}, [formData])
 		const availableCompanies = store.appStore.appType === "admin" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.id !== store.userStore.myProfileData.company.id).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))
 		return (
             <Observer
@@ -76,7 +84,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
                                 data={availableCompanies}
                             />
                             <Select
-                                disabled={availableFilials.length === 0}
+                                disabled={availableFilials && availableFilials?.length === 0}
                                 searchable
                                 clearable
                                 onChange={(e) =>

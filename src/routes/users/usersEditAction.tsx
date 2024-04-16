@@ -46,21 +46,21 @@ const UsersPageEditAction = () => {
                           className={'tablet:!mb-0 inline-block mr-auto flex-1'}
                           color={HeadingColor.accent}
                       />
-                    {store.appStore.appType === "admin" && <div className={'flex gap-8 tablet-max:max-w-96'}><Button
-                      text={'Скачать шаблон'}
-                      variant={ButtonVariant["accent-outline"]}
-                      action={() => navigate('/account/users/create')}
-                      className={'inline-flex tablet-max:flex-1'}
-                      size={ButtonSizeType.sm}
-                    />
-                      <Button
-                        text={'Загрузить файл'}
-                        action={() => navigate('/account/users/create')}
-                        className={'inline-flex tablet-max:flex-1'}
-                        directory={ButtonDirectory.directory}
-                        size={ButtonSizeType.sm}
-                      />
-                    </div>}
+                    {/* {store.appStore.appType === "admin" && <div className={'flex gap-8 tablet-max:max-w-96'}><Button */}
+                    {/*   text={'Скачать шаблон'} */}
+                    {/*   variant={ButtonVariant["accent-outline"]} */}
+                    {/*   action={() => navigate('/account/users/create')} */}
+                    {/*   className={'inline-flex tablet-max:flex-1'} */}
+                    {/*   size={ButtonSizeType.sm} */}
+                    {/* /> */}
+                    {/*   <Button */}
+                    {/*     text={'Загрузить файл'} */}
+                    {/*     action={() => navigate('/account/users/create')} */}
+                    {/*     className={'inline-flex tablet-max:flex-1'} */}
+                    {/*     directory={ButtonDirectory.directory} */}
+                    {/*     size={ButtonSizeType.sm} */}
+                    {/*   /> */}
+                    {/* </div>} */}
                   </>
               }
           ></Panel>

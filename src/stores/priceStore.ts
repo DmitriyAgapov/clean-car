@@ -429,41 +429,41 @@ export class PriceStore {
         return Promise.all([this.updatePriceWash(), this.updatePriceTire(), this.updatePriceEvac()])
     }
     async handleSavePrice() {
-        this.updatePrices()
-        .then((r) => {
-            console.log('success', r)
-            r.forEach((r: any) => {
-                setTimeout(() => {
-                    if(r) {
-                        if(r.status === 201) {
-                            notifications.show({
-                                id: 'car-created',
-                                withCloseButton: true,
-                                autoClose: 5000,
-                                title: "Прайс обновлен",
-                                message: 'Возвращаемся на страницу прайса',
-                                className: 'my-notification-class z-[9999] absolute top-12 right-12',
-                                loading: false,
-                            });
-                            this.clearPriceOnChange()
-                        } else {
-                            notifications.show({
-                                id: 'car-created',
-                                withCloseButton: true,
-                                // onClose: () => console.log('unmounted'),
-                                // onOpen: () => console.log('mounted'),
-                                autoClose: 5000,
-                                title: "Ошибка",
-                                message: 'Прайс не удалось обновить',
-                                color: 'red',
-                                className: 'my-notification-class z-[9999]',
-                                style: { backgroundColor: 'red' },
-                                loading: false,
-                            });
-                        }}
-                    }, 2000)})
+        return await this.updatePrices()
+            .then((r) => {
+                console.log('success', r)
+                r.forEach((r: any) => {
+                    setTimeout(() => {
+                        if(r) {
+                            if(r.status === 201) {
+                                notifications.show({
+                                    id: 'car-created',
+                                    withCloseButton: true,
+                                    autoClose: 5000,
+                                    title: "Прайс обновлен",
+                                    message: 'Возвращаемся на страницу прайса',
+                                    className: 'my-notification-class z-[9999] absolute top-12 right-12',
+                                    loading: false,
+                                });
+                                this.clearPriceOnChange()
+                            } else {
+                                notifications.show({
+                                    id: 'car-created',
+                                    withCloseButton: true,
+                                    // onClose: () => console.log('unmounted'),
+                                    // onOpen: () => console.log('mounted'),
+                                    autoClose: 5000,
+                                    title: "Ошибка",
+                                    message: 'Прайс не удалось обновить',
+                                    color: 'red',
+                                    className: 'my-notification-class z-[9999]',
+                                    style: { backgroundColor: 'red' },
+                                    loading: false,
+                                });
+                            }}
+                        }, 50)})
 
-        })}
+    })}
     // @ts-ignore
     handleChangeAmount({label, price_id, company_id, initValue, amount, id}) {
 

@@ -318,10 +318,11 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                 component={IMaskInput}
                 //@ts-ignore
                 {...{
-                  mask: "a 000 aa 000 ", alwaysShowMask: true, formatChars: { "9": "[0-9]", "a": "[A-Za-z]", "*": "[A-Za-z0-9]" },
+                  mask: "a 000 aa 000 ",
+                  // alwaysShowMask: true,
+                  // formatchars: { "9": "[0-9]", "a": "[A-Za-z]", "*": "[A-Za-z0-9]" },
                 }}
-                //@ts-ignore
-                showMask={true}
+
                 {...form.getInputProps('number')}
                 label={'Гос. номер'}
                 placeholder={'А 100 ТТ 777'}/>

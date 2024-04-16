@@ -21,15 +21,13 @@ const PriceEditPage = ():JSX.Element => {
   const  {data} = store.priceStore.currentPriceById;
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
-  console.log(company);
+
   const revalidator = useRevalidator();
   useEffect(() => {
     console.log('params changed, priceOnChange cleared');
     store.priceStore.clearPriceOnChange()
   }, [params.id])
-  useEffect(() => {
-    console.log('navState', navigation.state);
-  }, [navigation.state]);
+
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
@@ -63,13 +61,15 @@ const PriceEditPage = ():JSX.Element => {
                 navigate(location.pathname.split('/').slice(0, -1).join('/'))
                 store.priceStore.clearPriceOnChange()
                 }
-              } size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/> <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={() => {
+              } size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/> <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={async () => {
 
-                store.priceStore.handleSavePrice()
+                await store.priceStore.handleSavePrice()
                 .then(() => {
+                  revalidator.revalidate()
                   navigate(location.pathname.split('/edit')[0])
+                  revalidator.revalidate()
                 })
-                revalidator.revalidate()
+
               }} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/></>
 
               }

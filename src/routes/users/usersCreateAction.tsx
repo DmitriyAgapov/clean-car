@@ -22,7 +22,7 @@ export default function UsersPageCreateAction() {
     store.companyStore.loadAllFilials()
   }, [])
   const handleFileChange = React.useCallback((files: File) => {
-    setFile(files);
+    // setFile(files);
     const formData = new FormData();
     formData.append("users_xlsx", new Blob(["Name"], { type: "text/plain" }));
     formData.append('users_xlsx', new File([files], files.name, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }) )

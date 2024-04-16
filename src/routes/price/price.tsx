@@ -54,7 +54,7 @@ const PricePage = ():JSX.Element => {
       </Panel>
 
       <Panel
-        state={false}
+        state={currentPriceById.loading}
         className={'col-span-full grid grid-rows-[auto_1fr] px-5 py-8 !gap-10 '}
         variant={PanelVariant.withGapOnly}
         background={PanelColor.glass}
@@ -66,9 +66,7 @@ const PricePage = ():JSX.Element => {
             <div className={'flex w-full  col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
               {(store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && !location.pathname.includes('history')) && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-              <Button action={() => {
-                open()
-              }} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+              <Button action={open} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>}
             </div>
             <div className={'flex items-baseline  gap-6'}>
