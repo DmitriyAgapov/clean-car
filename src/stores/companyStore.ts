@@ -375,7 +375,6 @@ export class CompanyStore {
         let result
         try {
             if (appStore.appType !== "admin") {
-                console.log('start');
                 const { data, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type),
                     userStore.myProfileData.company.id,
                     params,
@@ -520,6 +519,9 @@ export class CompanyStore {
         this.loadingCompanies = false
         return this.filials
     })
+    get getFilialsAr() {
+        return this.filials
+    }
     get getFillialsData() {
         let filials: any[] = []
         if(this.companies.length === 0) {

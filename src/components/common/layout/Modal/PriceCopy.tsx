@@ -8,6 +8,7 @@ import { SvgCleanCarLoader, SvgClose } from "components/common/ui/Icon";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { CompanyType } from "stores/companyStore";
 import { useNavigation } from "react-router-dom";
+import agent from "utils/agent";
 
 export function PriceCopy(props: { opened: boolean; onClose: () => void; id: number, title: string}) {
 	const store = useStore()
@@ -27,20 +28,55 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
 			})
 		}
 	}, [formData]);
+	const [filials, setFilials] = useState<any[]|null>(null)
+	const {data, isLoading} = agent.Filials.getFilialsNew(`page_size=100`)
+	const {data:dataC, isLoading:isLoadingC} = agent.Companies.getOnlyAllCompaniesNew(`page_size=100`)
+	console.log(dataC, isLoadingC);
+	console.log(data, isLoading);
+	//  React.useEffect(    () => {
+	// 	 setFilials(null);
+	// 	 (async () => {
+	//
+	// 		 if (store.appStore.appType === "admin") {
+	// 			 // const { data, status } = await agent.Filials.getFilialsNew(`?page_size=1000`)
+	// 			 // console.log(data.results.filter((c: any) => c.company_type === formData.type));
+	// 			 console.log(store.companyStore.getFilialsAr);
+	// 			 // if (status === 200) {
+	// 				//  setFilials(data.results)
+	// 			 // }
+	// 			 // @ts-ignore
+	// 			 // return filials.filter((c: any) => c.company_type === formData.type).map((f: any) => ({ label: f.name, value: String(f.id) }))
+	// 		 } else {
+	// 			 console.log(store.companyStore.getFilialsAr);
+	// 			 setFilials(store.companyStore.getFilialsAr)
+	// 		 }
+	// 	 })()
+	// }, [formData.type])
+
+	// const [companies, setCompanies] = useState<any[]|null>(null)
+	//  React.useEffect( ():any => {
+	//
+	// 	 // (async () => {
+	// 		 setCompanies(null)
+	// 	if(store.appStore.appType === "admin") {
+	//
+	// 		// @ts-ignore
+	// 		console.log(formData.type);
+	// 		setCompanies(store.companyStore.allCompanies.companies.filter((c: any) => c.company_type === formData.type).filter((c: any) => c.parent === null))
+	// 	} else {
+	// 		// @ts-ignore
+	// 		setCompanies([store.userStore.myProfileData.company])
+	//
+	// 		// }})()
+	// 	}
+	// }, [formData.type])
 
 	const memoFileUpload = React.useMemo(() => {
-		console.log(store.companyStore.getFilialsAll);
+
 		// @ts-ignore
-		const availableFilials = React.useMemo(async ():any => {
-			if(store.appStore.appType === "admin") {
-			// @ts-ignore
-				return await store.companyStore.getFilialsAll.results?.filter((c:any) => c.company_type === formData.type).map((f:any) => ({label: f.name, value: f.id.toString()}))
-			} else {
-				// @ts-ignore
-				return await	store.companyStore.getFilialsAll.results?.map((f:any) => ({label: f.name, value: f.id.toString()}))
-			}
-		}, [formData])
-		const availableCompanies = store.appStore.appType === "admin" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.id !== store.userStore.myProfileData.company.id).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))
+
+
+		// @ts-ignore
 		return (
             <Observer
                 children={() => (
@@ -54,13 +90,15 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
                                 allowDeselect={false}
                                 label={'Тип'}
                                 disabled={store.appStore.appType !== 'admin'}
-                                onOptionSubmit={(e) =>
+                                onOptionSubmit={(e) => {
+
                                     setFormData((prevState: any) => ({
                                         company: null,
                                         company_filials: null,
                                         type: e,
                                     }))
-                                }
+
+                                }}
                                 defaultValue={formData.type}
                                 className={'!flex-initial'}
                                 data={[
@@ -70,29 +108,32 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
                             />
 
                             <Select
-                                disabled={availableCompanies.length === 0}
+                                disabled={!dataC || dataC.results.length === 0}
                                 searchable
                                 clearable
-                                onChange={(e) =>
+                                onOptionSubmit={(e) =>
                                     setFormData((prevState: any) => ({
                                         ...prevState,
                                         company: e,
                                     }))
                                 }
-                                value={formData.company}
+                                // value={formData.company}
                                 label={'Компания'}
-                                data={availableCompanies}
+                                data={dataC &&  dataC.results.length > 0 ? dataC.results.filter((c: any) => c.company_type === formData.type).map((f: any) => ({ label: f.name, value: f.id.toString() })): []}
                             />
                             <Select
-                                disabled={availableFilials && availableFilials?.length === 0}
+	                            //@ts-ignore
+                                disabled={!data || data.results.length === 0}
                                 searchable
                                 clearable
-                                onChange={(e) =>
+	                            onOptionSubmit={(e) =>
                                     setFormData((prevState: any) => ({ ...prevState, company_filials: e }))
                                 }
                                 // defaultValue={formData.values.company_id}
                                 label={'Филиал'}
-                                data={availableFilials}
+	                            //@ts-ignore
+
+                                data={(!isLoading && data && data.results.length > 0) ? store.appStore.appType === "admin" ? data.results.filter((c: any) => c.company_type === formData.type).map((f: any) => ({ label: f.name, value: f.id.toString() })) : data.results.map((f: any) => ({ label: f.name, value: f.id.toString() }))  : []}
                             />
                         </div>
 
@@ -118,7 +159,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
                 )}
             />
         )
-	}, [formData])
+	}, [formData, dataC, data])
 
 	return (
 		<Modal.Root size={685} opened={props.opened} onClose={props.onClose} centered>
