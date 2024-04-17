@@ -21,17 +21,17 @@ export default function LimitPageEditAction(props: any) {
   const {isLoading, data, mutate} = useSWR(`limit_${params.company_id}_${params.id}`, () => client.limitsRetrieve(params.company_id as string, Number(params.id)), {
     revalidateOnMount: true
   })
+
   useDidUpdate(
     () => {
       if(location.pathname.includes('limits')) {
-
         mutate()
         revalidator.revalidate()
       }
     },
     [location.pathname]
   );
-  console.log(isLoading, data)
+
   if(!store.userStore.getUserCan(PermissionNames["Управление лимитами"], 'update')) return <Navigate to={'/account'}/>
   if(isLoading) return <Loader/>
 

@@ -156,7 +156,7 @@ const FormCreateUpdateCarBrand = (props: any) => {
                   <Button
                     text={'Удалить'}
                     action={async () => {
-                      agent.Catalog.deleteCarModel(props.id)
+                      await agent.Catalog.deleteCarModel(Number(params.id))
                       .then((r) => {
                         console.log(r)
                       })

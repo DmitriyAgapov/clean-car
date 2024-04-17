@@ -116,7 +116,7 @@ const BidPage = () => {
                         <div className={'flex col-span-2 tablet-max:col-span-full justify-between'}>
                             <Heading
                                 className={'col-span-1 row-start-1 !mb-0'}
-                                text={data?.company?.name}
+                                text={`Заявка ${data?.id}`}
                                 variant={HeadingVariant.h2}
                                 color={HeadingColor.accent}
                             />

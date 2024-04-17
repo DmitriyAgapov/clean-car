@@ -374,6 +374,7 @@ export const TabsVariantBids = observer(({
     let result
     switch (label) {
         case 'Основная информация':
+          console.log(data);
             result = (
                 <Tabs.Panel
                     className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !py-8' + ' ' + className}
@@ -468,7 +469,6 @@ export const TabsVariantBids = observer(({
                 </Tabs.Panel>
             )
             break
-
         case 'Услуги':
           console.log(data);
             result = (
@@ -610,7 +610,6 @@ export const TabsVariantBids = observer(({
             )
           } else result = null
         break;
-
         case 'История заявки':
           result = (<TabBidHistory state={state} companyId={companyId} company_type={company_type} />)
           break;

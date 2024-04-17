@@ -2,6 +2,7 @@ import { useLocalObservable } from 'mobx-react-lite'
 import React from 'react'
 import { TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
 import { makeAutoObservable, observable, ObservableMap, values } from "mobx";
+import agent from "utils/agent";
 
 const storeContext = React.createContext(null)
 
@@ -55,7 +56,12 @@ export class LocalRootStore  {
     return this.data
   }
 }
-
+// export class EditPage extends LocalRootStore {
+//   constructor() {super();}
+//   async loadCompanies() {
+//     return agent.Companies
+//   }
+// }
 export class TransferComponentStore {
   selected: ObservableMap = observable.map([])
   unSelected: ObservableMap = observable.map([])
