@@ -19,7 +19,7 @@ const PricesPage = () => {
 	const location = useLocation()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
 	const {isLoading, data, mutate, isValidating} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
-
+	console.log(data);
 	useEffect(() => {
 		localStore.setData = {
 			...data,

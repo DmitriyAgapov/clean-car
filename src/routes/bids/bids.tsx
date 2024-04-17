@@ -15,6 +15,7 @@ import useSWR from "swr";
 
 import {  LocalRootStore } from "stores/localStore";
 import { useDidUpdate } from "@mantine/hooks";
+import dayjs from "dayjs";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({ordering: 'status'})
@@ -46,7 +47,7 @@ const BidsPage = () => {
 			idnum: r.id,
 			id: r.id,
 			status: r.status,
-			created: dateTransformShort(r.created).date,
+			created: dayjs(r.created).format('DD.MM.YYYY hh:mm'),
 			customer: r.company.name,
 			performer: r.performer.name,
 			conductor: (r.conductor && r.conductor?.first_name &&  r.conductor?.last_name) ? r.conductor?.first_name + ' ' + r.conductor?.last_name[0] + '.' : " ",

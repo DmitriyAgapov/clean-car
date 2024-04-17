@@ -21,8 +21,6 @@ function ReferenceCarPageCreate(props: any) {
   const params = useParams()
   const {isLoading, data, mutate} = useSWR([`refCar_${params.id}`, params.id], ([url, id]) => agent.Catalog.getCarModelWithBrand(Number(id)).then((res) => res.data))
 
-  // const { textDataCars }: any = useLoaderData()
-  console.log(data);
   if(!store.userStore.getUserCan(PermissionNames["Управление справочниками"], 'create')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>

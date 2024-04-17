@@ -9,24 +9,23 @@ import { observer, useLocalStore } from "mobx-react-lite";
 import dayjs from 'dayjs'
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
-import agent, { PaginationProps } from "utils/agent";
-import paramsStore from "stores/paramStore";
+import agent from "utils/agent";
+import Button, { ButtonVariant } from "components/common/ui/Button/Button";
+import { SvgBackArrow } from "components/common/ui/Icon";
 
 const localRootStore =  new LocalRootStore()
+
 const PricesHistoryPage = () => {
 	const store = useStore()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
 	const params = useParams()
 	const {isLoading, data} = useSWR([`price_history_${params.id}`, Number(params.id), localStore.params.getSearchParams] , ([url,id, args]) => agent.Price.getHistoryPrice(id, args).then(r => r.data))
-	console.log(data, isLoading);
+
 	const navigate = useNavigate()
-	// useEffect(() => {
-	// 	if(store.appStore.appType === "performer") navigate(`/account/price/${store.userStore.myProfileData.company.id}`, {replace: true})
-	// }, [store.appStore.appType]);
+
 	const location = useLocation()
-	// const { data }:any = useLoaderData()
 	const  company = store.companyStore.getCompanyById(Number(params.id));
-	const { textData }:any = store.priceStore.allPrices
+
 	useEffect(() => {
 		localStore.setData = {
 			...data,
@@ -46,6 +45,7 @@ const PricesHistoryPage = () => {
 				state={false}
 				header={<>
 					<div className={'mr-auto'}>
+						<Button text={<><SvgBackArrow />{'Вернуться к прайс-листу'}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'), {})} variant={ButtonVariant.text} />
 						<Heading text={`История ${company?.name}`} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
 					</div>
 				</>}>

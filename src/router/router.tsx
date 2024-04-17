@@ -141,7 +141,7 @@ const router = createBrowserRouter([
                     {
                         path: ':company_id/:id/edit',
                         element: <CarsPageEditAction />,
-                        loader: carsLoader,
+                        // loader: carsLoader,
                     },
                 ],
             },

@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import { useDisclosure } from "@mantine/hooks";
 import { PriceCopy } from "components/common/layout/Modal/PriceCopy";
 import { observer } from "mobx-react-lite";
+import { CarClasses } from "components/common/layout/Modal/CarClasses";
 
 const PricePage = ():JSX.Element => {
   const navigate = useNavigate()
@@ -39,6 +40,11 @@ const PricePage = ():JSX.Element => {
     return null
   }, [opened]);
 
+  const [openedCar, { open:openCar, close:closeCar }] = useDisclosure(false)
+  const memoModalCarClasses = React.useMemo(() => {
+    return <CarClasses opened={openedCar} onClose={closeCar} />
+  }, [openedCar])
+
   if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -48,7 +54,18 @@ const PricePage = ():JSX.Element => {
             <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
             <Heading text={(isHistory && isCreate) ? `Прайс лист ${dayjs(isCreate.created).format('DD.MM.YY')} - ${dayjs(isCreate.expired).format('DD.MM.YY')}` : company?.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
           </div>
-
+          <div className={'flex gap-6 tablet-max:max-w-96 mobile:mt-6'}>
+            <Button
+              text={'Классификация автомобилей'}
+              action={openCar}
+              trimText={true}
+              /* action={() => store.companyStore.addCompany()} */
+              className={"inline-flex tablet-max:flex-1"}
+              variant={ButtonVariant['accent-outline']}
+              size={ButtonSizeType.sm}
+            />{' '}
+            {memoModalCarClasses}
+          </div>
         </>}>
 
       </Panel>

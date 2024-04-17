@@ -53,7 +53,6 @@ type TabsVariantsProps = {
   content_type?: string
   parentCompany?: string
   props?: any
-
 } & TabsProps & {className?: string, children?: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps
 export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, className, companyId, company_type, props}:TabsVariantsProps) => {
   const store = useStore()
@@ -780,7 +779,7 @@ export const TabsVariantPrice = ({
           <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
             <Heading text={item.label} variant={HeadingVariant.h6} className={`text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 ${item.data[0].label === null ? 'px-6 sticky top-0 z-10  bg-[#090909]' : ''}`}/>
             {item.data.map((item: any, index: number) => {
-              console.log('item', item);
+
               return (
                 <div key={translite(item.label ?? `null_${index}`)}>
                   {item.label && <Heading
@@ -849,15 +848,6 @@ export const TabsVariantPrice = ({
                           value: it.data[0].data
                         }) as any,
                     )}
-                    // data={item.data.map((it: any) => {
-                    //   const ad = it.data.map((i: any) => ({
-                    //     [i.label]: i.data
-                    //   }))
-                    //   ad.push({service: item.label})
-                    //   console.log(ad);
-                    //   return ad
-                    //   })}
-
                     initFilterParams={[
                       { label: 'Статус', value: 'status' },
                       { label: 'Город', value: 'city' },

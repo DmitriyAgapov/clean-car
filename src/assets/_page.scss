@@ -91,4 +91,7 @@
   &:before {
 	content: none !important;
   }
+  &.success {
+	border-color: var(--mantine-color-green-filled) !important;
+  }
 }

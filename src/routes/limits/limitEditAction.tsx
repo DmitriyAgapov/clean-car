@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Navigate, Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
+import { Navigate,  useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
-import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
 import { PermissionNames } from "stores/permissionStore";
-import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
-import { CompanyType, Payment } from "stores/companyStore";
-import agent, { client } from "utils/agent";
+import  { client } from "utils/agent";
 import { Loader } from "@mantine/core";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";

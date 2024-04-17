@@ -4,28 +4,32 @@ import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { Navigate, useLoaderData, useNavigate } from 'react-router-dom'
+import { Navigate, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import 'yup-phone-lite'
 import { useStore } from "stores/store";
 import { PermissionNames } from "stores/permissionStore";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
 import { observer } from "mobx-react-lite";
+import useSWR from "swr";
 
 const CarsPageEditAction = () => {
   const store = useStore()
   const navigate = useNavigate()
-  const { data, page, pageRequest, textData, company_type }: any = useLoaderData()
-  const values = data.results
+  // const { data, page, pageRequest, textData, company_type }: any = useLoaderData()
+  // const values = data.results
 
-
+  const params = useParams()
+  const {isLoading, data, mutate}:any = useSWR(`car_${params.company_id}`,() => store.carStore.getCarByCompanyId(String(params.company_id), Number(params.id)))
+  console.log(data);
   React.useEffect(() => {
+
     store.catalogStore.getAllCities()
     store.usersStore.clearSelectedUsers()
     store.formStore.formClear('formCreateCar')
-    store.carStore.setBrand(values.model.brand);
-    store.usersStore.getUsers(values.company.id);
-    values.employees.forEach((i:any) => {
+    store.carStore.setBrand(data?.model.brand);
+    store.usersStore.getUsers(data?.company.id);
+    data?.employees.forEach((i:any) => {
       store.usersStore.addToSelectedUsers(i.id);
     })
   }, [])
@@ -33,7 +37,7 @@ const CarsPageEditAction = () => {
   return (
     <Section type={SectionType.default}>
       <Panel
-        state={false}
+        state={isLoading}
         className={'col-span-full'}
         headerClassName={'flex justify-between flex-wrap'}
         header={<>
@@ -47,21 +51,21 @@ const CarsPageEditAction = () => {
       >
       </Panel>
 
-      <FormCreateUpdateCar edit={true} car={{
-        id: values.id,
-        number: values.number,
-        height: values.height,
-        radius: values.radius,
-        city: String(values.company.city.id),
-        company_id: String(values.company.id),
-        company_type: values.company.company_type,
-        is_active: values.is_active ? "true" : "false",
-        depend_on: values.company.parent === null ? 'company' : 'filials',
-        brand: String(values.model.brand),
-        model: String(values.model.id),
-        car_type: values.model.car_type,
-        employees: values.employees.map((e:any) => e.id),
-      }}/>
+      {!isLoading && <FormCreateUpdateCar edit={true} car={{
+        id: params.id,
+        number: data?.number,
+        height: data?.height,
+        radius: data?.radius,
+        city: String(data?.company.city.id),
+        company_id: String(data?.company.id),
+        company_type: data?.company.company_type,
+        is_active: data?.is_active ? "true" : "false",
+        depend_on: data?.company.parent === null ? 'company' : 'filials',
+        brand: String(data?.model.brand),
+        model: String(data?.model.id),
+        car_type: data?.model.car_type,
+        employees: data?.employees.map((e:any) => e.id),
+      }}/>}
 
     </Section>
   )

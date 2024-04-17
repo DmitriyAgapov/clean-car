@@ -12,12 +12,13 @@ import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
 import { ActionIcon, FileButton } from "@mantine/core";
 import agent from "utils/agent";
+import { notifications } from "@mantine/notifications";
 
 export default function CarsPageCreateAction() {
   const store = useStore()
   const [loading, setLoading] = useState(false)
   const [success, setSucces] = useState(false)
-
+  const navigate = useNavigate()
   const handleFileChange = React.useCallback((files: File) => {
     // setFile(files);
     const formData = new FormData();
@@ -26,19 +27,53 @@ export default function CarsPageCreateAction() {
     if (files) {
       (async () => {
         setLoading(true)
+
         agent.Cars.uploadCars(formData)
         .then(r => {
           if(r.status === 201) {
             setSucces(true)
+            notifications.show({
+              id: 'file-cars-uploaded',
+              withCloseButton: true,
+              onClose: () => navigate('/account/cars'),
+              // onOpen: () => console.log('mounted'),
+              autoClose: 3000,
+              // title: "Ошибка",
+              message: 'Файл успешно загружен',
+              // color: 'red',
+              // icon: <SvgClose />,
+              className:
+                'my-notification-class z-[9999]  notification_cleancar success',
+              // style: { backgroundColor: 'red' },
+              loading: false,
+            })
+          } else {
+            notifications.show({
+              id: 'file-cars-not-uploaded',
+              withCloseButton: true,
+              // onClose: () => navigate('/account/cars'),
+              // onOpen: () => console.log('mounted'),
+              autoClose: 3000,
+              // title: "Ошибка",
+              message: 'Ошибка',
+              // color: 'red',
+              // icon: <SvgClose />,
+              className:
+                'my-notification-class z-[9999]  notification_cleancar',
+              // style: { backgroundColor: 'red' },
+              loading: false,
+            })
           }
+
         })
-        .catch(e => console.log(e))
+        // .catch(e => console.log(e))
         .finally(() =>
           setLoading(false)
         )
       })()
     }
   }, [])
+
   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
   store.usersStore.clearSelectedUsers()
   store.formStore.formClear('formCreateCar')
