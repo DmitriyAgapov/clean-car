@@ -5,6 +5,7 @@ import { makePersistable, hydrateStore  } from 'mobx-persist-store';
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
 import paramsStore from "stores/paramStore";
+import { defer } from "react-router-dom";
 
 
 enum UserTypeEnum {
@@ -194,8 +195,50 @@ export class UsersStore {
   get currentCompanyUsers() {
     return this.companyUsers
   }
+  async userLoader({company_type, id, company_id}: any) {
+    let user:{
+      group?: any
+      company?:any
+      employee?: any
+    } = {}
+    const _employee = await agent.Account.getCompanyUser(Number(company_id), Number(id)).then((r:any) => {
+      if(r.status === 200) {
+        user.employee = r.data
+        return r.data
+      }
+    })
+    const _company = (async () => {
+      if(appStore.appType === "admin") {
+        return agent.Companies.getCompanyData(company_type, Number(company_id)).then((r:any) => {
+          if(r.status === 200) {
+            user.company = r.data
+            return r.data
+          }
+        })
+      } else {
+        return user.company = userStore.myProfileData.company
+      }
+    })()
 
-  getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type: CompanyType) {
+    const _group = agent.Permissions.getUserPermissions(Number(company_id), Number(user.employee.group)).then((r:any) => {
+      if(r.status === 200) {
+        user.group = r.data
+        return r.data
+      }
+    });
+
+    return await Promise.all([_company, _employee, _group]).then((r) => {
+
+      if(r) {
+        return {
+          employee: r[1],
+          company: r[0],
+          group: r[2],
+        }
+      }
+    })
+  }
+  getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type?: CompanyType) {
     let user: any = {}
     if(companyid && company_type && id) {
       try {

@@ -395,7 +395,7 @@ export class CompanyStore {
         let dataMeta
         if(appStore.appType === "admin") {
             const { data: dataCars, status } = yield agent.Companies.getOnlyBranchesCompanies(params)
-            console.log(dataCars);
+
             if (status === 200) {
                 this.allFilials = dataCars.results
                 data = dataCars.results
@@ -405,7 +405,7 @@ export class CompanyStore {
             try {
                 const type = userStore.myProfileData.company.company_type;
                 const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id, params)
-                console.log(dataCars);        if (status === 200) {
+                if (status === 200) {
                     this.allFilials = dataCars
                     data = dataCars.results
                     dataMeta = dataCars
@@ -671,10 +671,13 @@ export class CompanyStore {
         if(this.companies.length === 0) {
             this.getAllFilials()
         }
-        runInAction(() =>     {
-            console.log('load filials get');
-            this.loadAllFilials()
-        })
+        if(this.allFilials.length === 0) {
+            runInAction(() =>     {
+                console.log('load filials get');
+
+                this.loadAllFilials()
+            })
+        }
         return this.allFilials
     }
 

@@ -105,7 +105,7 @@ const router = createBrowserRouter([
             {
                 path: 'users',
                 element: <UsersPage />,
-                loader: usersLoader,
+                // loader: usersLoader,
                 children: [
                     {
                         path: ':company_type/:company_id/:id',

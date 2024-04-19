@@ -206,8 +206,6 @@ export const userLoader = async ({ params: { company_type, id, company_id } }: a
 
     if(appStore.appType === "admin") {
         let user = await usersStore.getUser(company_id, id, company_type);
-
-
         return defer({
             user: user,
         })

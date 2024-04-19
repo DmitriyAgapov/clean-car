@@ -19,10 +19,12 @@ const UserPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const { user }: any = useLoaderData()
+  // const { user }: any = useLoaderData()
   const params = useParams()
-
-  const {isLoading, data, mutate} = useSWR(`user_${params.company_id}_${params.id}`,() => agent.Account.getCompanyUser(Number(params.company_id), Number(params.id)))
+  // console.log(user, 'user');
+  const {isLoading, data, mutate}:any = useSWR(`users_${params.company_id}_${params.id}`,() => store.usersStore.userLoader({company_type : params.company_type, id:Number(params.id), company_id:Number(params.company_id)}))
+  // const {isLoading:userLoading, data:userDatas, mutate:mutateData} = useSWR(`users_${params.company_id}_${params.id}`,() => store.usersStore.userLoader({company_type : params.company_type, id:Number(params.id), company_id:Number(params.company_id)}))
+  // console.log(userDatas,userLoading, 'usersDatas');
   useDidUpdate(
     () => {
       if(location.pathname === `/account/users/${params.company_type}/${params.company_id}/${params.id}`) {
@@ -32,38 +34,41 @@ const UserPage = () => {
     },
     [location.pathname]
   );
+  // console.log(userDatas, 'userdata');
   const companyType = params.company_type;
-  const company = companyType !== "admin" ? user.company : store.userStore.myProfileData.company;
+  // const company = companyType !== "admin" ? data.company : store.userStore.myProfileData.company;
 
   const userData = React.useMemo(() => {
-    return (
+    console.log(data);
+    if(!isLoading) return (
         <>
-            <DList label={'Пользователь'} title={user.employee?.first_name + ' ' + user.employee?.last_name} />
-            <DList label={'Номер телефона'} title={user.employee?.phone} />
-            <DList label={'E-mail'} title={user.employee?.email} />
+            <DList label={'Пользователь'} title={data.employee?.first_name + ' ' + data?.employee?.last_name} />
+            <DList label={'Номер телефона'} title={data?.employee?.phone} />
+            <DList label={'E-mail'} title={data?.employee?.email} />
           <DList
                 label={'Тип'}
                 title={label(companyType ? companyType : "admin")}
                 directory={companyType}
             />
 
-          {user.group && user.group.name && <DList label={'Группа'} title={user.group.name} />}
+          {data?.group && data?.group.name && <DList label={'Группа'} title={data?.group.name} />}
             <DList
 
                 label={'Статус'}
                 title={
-                    <span className={user.employee.is_active ? 'text-active' : 'text-error'}>
-                        {user.employee.is_active ? 'Активный' : 'Не активный'}
+                    <span className={data?.employee?.is_active ? 'text-active' : 'text-error'}>
+                        {data?.employee?.is_active ? 'Активный' : 'Не активный'}
                     </span>
                 }
             />
-          {company.id && <hr className={'mt-0 col-span-2'}/>}
-          {company.name && <DList label={'Компания'} title={company.name} />}
-          {company.city.name && <DList label={'Город'} title={company.city.name} />}
-          {company.city.name && <DList label={'Филиал'} title={company.city.name} />}
+          {data?.company.id && <hr className={'mt-0 col-span-2'}/>}
+          {data?.company.name && <DList label={'Компания'} title={data?.company.name} />}
+          {data?.company.city.name && <DList label={'Город'} title={data?.company.city.name} />}
+          {data?.company.parent && <DList label={'Филиал'} title={data?.company.parent.name ?? data?.company.name} />}
         </>
     )
-  }, [data])
+    return null
+  }, [data, isLoading])
 
 
   if (location.pathname.includes('edit')) return <Outlet />
@@ -106,7 +111,7 @@ const UserPage = () => {
         }
       />
       <Panel
-        state={store.usersStore.loadingUsers}
+        state={isLoading}
         className={'col-span-full grid grid-rows-[auto_1fr_auto] tablet-max:-mx-6'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
@@ -120,8 +125,8 @@ const UserPage = () => {
             data-app-type={'admin'}
           >
             <span className={'text-black font-sans uppercase text-3xl leading-none m-auto'}>
-              {user.employee.first_name[0]}
-              {user.employee.last_name[0]}
+              {data?.employee.first_name[0]}
+              {data?.employee.last_name[0]}
             </span>
           </div>
           <DList label={'Дата и время регистрации'} title={'08.10.23 07:14'} />

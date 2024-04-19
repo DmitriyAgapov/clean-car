@@ -111,11 +111,11 @@ export default function GroupPageCreateAction(props: any) {
                               // @ts-ignore
                               store.permissionStore.createPermission(changes)
                               .then(() => {
-                                mutate('groups')
-                                revalidator.revalidate()
+                                mutate('groups').then(() => navigate('/account/groups'))
+
                               })
                               .finally(() => {
-                                navigate('/account/groups')
+
                               })
                               // navigate('/account/groups')
                           }}

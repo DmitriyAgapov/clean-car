@@ -81,6 +81,7 @@ export const CreateFilialSchema = Yup.object().shape({
 	type: Yup.string(),
 	company_id: Yup.string().required('Обязательное поле'),
 	working_time: Yup.string().when('type', (type, schema) => {
+
 		if(type[0] === CompanyType.performer)
 			return schema.min(16, 'Укажите время работы правильно').max(16, 'Укажите время работы правильно').required("Обязательное поле")
 		return schema

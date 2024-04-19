@@ -9,7 +9,7 @@ import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
 import label from "utils/labels";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
-import { useNavigate, useRevalidator } from "react-router-dom";
+import { useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import agent from "utils/agent";
@@ -33,6 +33,8 @@ export const createUserFormActions= createFormActions<InitValues>('createUserFor
 
 const FormCreateUpdateUsers =({ user, edit }: any) => {
 	const store = useStore()
+	const params = useParams()
+	console.log(params);
 	const initData = React.useMemo(() => {
 		let initValues: InitValues = {
 			id: 0,
@@ -145,7 +147,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 						const userId = edit ? form.values.id : res.data.id
 						revalidator.revalidate()
 						// @ts-ignore
-						navigate(`/account/users/${form.values.type}/${compId}/${userId}`)
+						navigate(`/account/users/${params.company_type}/${compId}/${userId}`)
 					}})
 			} else {
 				agent.Account.createCompanyUser(senData.company_id, senData).then((res) => {
@@ -154,7 +156,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 						const userId = edit ? form.values.id : res.data.id
 						revalidator.revalidate()
 						// @ts-ignore
-						navigate(`/account/users/${form.values.type}/${compId}/${userId}`)
+						navigate(`/account/users/${params.company_type}/${compId}/${userId}`)
 						}
 					}
 				)

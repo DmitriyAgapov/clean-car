@@ -42,7 +42,6 @@ export const createCompanyFormActions = createFormActions<InitValues>('createCom
 
 const FormCreateUpdateFilial = ({ company, edit }: any) => {
     const store = useStore()
-    console.log(company);
     let initValues: InitValues = {
         address: '',
         type: store.userStore.myProfileData.company.company_type !== CompanyType.admin ? store.userStore.myProfileData.company.company_type : CompanyType.customer,
@@ -96,7 +95,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             is_active: company.is_active ? 'true' : 'false'
         }
     }
-    console.log(company);
     const formData = useForm({
         name: 'createFilialsForm',
         initialValues: initValues,
@@ -189,6 +187,18 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         }
 
     }, [])
+    const filialsCompanyData = React.useMemo(() => {
+
+            store.companyStore.loadAllFilials()
+            if (formData.values.company_filials === 'filials') {
+                const _data = store.companyStore.getFilialsAll.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+
+                return _data
+            } else {
+                return store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+            }
+
+    }, [formData.values.type, formData.values.company_filials])
     // @ts-ignore
     return (
         <FormProvider form={formData}>
@@ -371,10 +381,14 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                           onOptionSubmit={(value) => {
                               console.log(formData.values);
                           }}
+                          onFocus={() => {
+                              console.log('on focus');
+                              store.companyStore.loadAllFilials()
+                          }}
                           defaultValue={formData.values.company_id}
                           label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
                           {...formData.getInputProps('company_id')}
-                            data={formData.values.company_filials === 'filials' ? store.companyStore.getFilialsAll.filter((c:any) => c.company_type === formData.values.type).map((f:any) => ({label: f.name, value: f.id.toString()})) : store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === formData.values.type).filter((c:any) => c.parent === null).map((f:any) => ({label: f.name, value: f.id.toString()}))}
+                            data={filialsCompanyData}
                         />
                     </PanelForForms>
                     <PanelForForms

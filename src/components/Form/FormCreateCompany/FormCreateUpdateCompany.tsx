@@ -129,7 +129,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             name: 'createCompanyForm',
             initialValues: initValues,
             validateInputOnBlur: true,
-            // onValuesChange: (values, previous) => console.log(values),
+            onValuesChange: (values, previous) => console.log(values),
             validate: yupResolver(CreateCompanySchema),
             enhanceGetInputProps: (payload) => {
             if (payload.field === 'working_time') {
@@ -196,8 +196,11 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                 }).finally(() => store.companyStore.loadCompanies())
             } else {
                 store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
-                    formData.setFieldValue('id', r.id)
-                    changeStep(3)
+                    if(r.status > 299) {}
+                    else {
+                        formData.setFieldValue('id', r.id)
+                        changeStep(3)
+                    }
                 }).catch((e) => {
                     console.log('error');
                 }).finally(() => store.companyStore.loadCompanies())
