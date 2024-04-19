@@ -8,11 +8,9 @@ import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import DList from 'components/common/ui/DList/DList'
-import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
 import label from "utils/labels";
 import useSWR from "swr";
-import agent from "utils/agent";
 import { useDidUpdate } from "@mantine/hooks";
 
 const UserPage = () => {
@@ -39,7 +37,7 @@ const UserPage = () => {
   // const company = companyType !== "admin" ? data.company : store.userStore.myProfileData.company;
 
   const userData = React.useMemo(() => {
-    console.log(data);
+
     if(!isLoading) return (
         <>
             <DList label={'Пользователь'} title={data.employee?.first_name + ' ' + data?.employee?.last_name} />
@@ -61,10 +59,10 @@ const UserPage = () => {
                     </span>
                 }
             />
-          {data?.company.id && <hr className={'mt-0 col-span-2'}/>}
-          {data?.company.name && <DList label={'Компания'} title={data?.company.name} />}
-          {data?.company.city.name && <DList label={'Город'} title={data?.company.city.name} />}
-          {data?.company.parent && <DList label={'Филиал'} title={data?.company.parent.name ?? data?.company.name} />}
+          {data?.company?.id && <hr className={'mt-0 col-span-2'}/>}
+          {data?.company?.name && <DList label={'Компания'} title={data?.company.name} />}
+          {data?.company?.city.name && <DList label={'Город'} title={data?.company.city.name} />}
+          {data?.company?.parent && <DList label={'Филиал'} title={data?.company.parent.name ?? data?.company.name} />}
         </>
     )
     return null
