@@ -94,9 +94,10 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
             onValuesChange: (values, previous) => console.log(values, 'values'),
             validate: yupResolver(CreateLimitSchema),
             enhanceGetInputProps: (payload) => {
-            return {
-                className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
-            }
+
+                return {
+                    className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
+                }
         },
     })
 
@@ -399,7 +400,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                                 //     formData.values.phone = null
                                 //     store.bidsStore.formResultSet({ conductor: Number(value) })
                                 // }}
-                                disabled={!conductors || conductors.results.length === 0}
+                                disabled={!conductors || conductors.results.length === 0 || formData.values.car !== null}
                                 data={
                                     conductors
                                         ? conductors?.results?.map((c: any) => ({
@@ -414,7 +415,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                                 {...formData.getInputProps('car')}
                                 className={'self-start'}
                                 clearable
-                                disabled={!cars || cars.results.length === 0}
+                                disabled={!cars || cars.results.length === 0 || formData.values.conductor !== null}
                                 // onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
                                 //@ts-ignore
                                 label={'Автомобиль, марка'}

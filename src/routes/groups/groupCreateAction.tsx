@@ -10,9 +10,11 @@ import PermissionTable from 'components/common/layout/PermissionTable/Permission
 import { toJS } from 'mobx'
 import { PermissionNames } from "stores/permissionStore";
 import { modificationSchema, modifyPermissions } from "utils/utils";
+import { useSWRConfig } from "swr";
 
 export default function GroupPageCreateAction(props: any) {
   const store = useStore()
+  const { mutate } = useSWRConfig()
 
   const revalidator = useRevalidator()
   const navigate = useNavigate()
@@ -41,7 +43,6 @@ export default function GroupPageCreateAction(props: any) {
       name: event.target.value,
     }))
   }
-  console.log(changes);
   const handlePermissions = (event: any, id: string) => {
     const indexAr = changes.permissions.findIndex((value: any) => {
       if(value) {
@@ -60,6 +61,7 @@ export default function GroupPageCreateAction(props: any) {
       permissions: newArray,
     }))
   }
+
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create')) return <Navigate to={'/account'}/>
   return (
       <Section type={SectionType.default}>
@@ -108,7 +110,10 @@ export default function GroupPageCreateAction(props: any) {
                           action={async () => {
                               // @ts-ignore
                               store.permissionStore.createPermission(changes)
-                              .then(() => revalidator.revalidate())
+                              .then(() => {
+                                mutate('groups')
+                                revalidator.revalidate()
+                              })
                               .finally(() => {
                                 navigate('/account/groups')
                               })
