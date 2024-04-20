@@ -110,6 +110,7 @@ export class AppStore {
   burgerState: boolean = false
   asideState: boolean = false
   appType: UserTypeEnum | string = ''
+  networkStatus: boolean = true
   appState: boolean = false
   sublevel: boolean = false
   bodyRef = document.body
@@ -173,7 +174,12 @@ export class AppStore {
       actions: null,
     }
   }
-
+  setNetWorkStatus(state: boolean) {
+    this.networkStatus = state
+  }
+  get getNetWorkStatus() {
+    return this.networkStatus
+  }
   setToken(token: string | null) {
     this.token = token
   }

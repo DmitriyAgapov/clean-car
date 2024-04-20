@@ -92,7 +92,7 @@ const router = createBrowserRouter([
     {
         path: '/account',
         element: <AccountPage />,
-        // errorElement: <ErrorPage />,
+        errorElement: <ErrorPage />,
         // loader: authUser,
         children: [
             {

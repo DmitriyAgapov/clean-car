@@ -12,18 +12,17 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <React.StrictMode>
+    <StoreProvider>
+      <MantineProvider theme={newTheme} defaultColorScheme={'dark'}>
+        <DatesProvider settings={{ locale: 'ru' }}>
+      {/* <ThemeProvider value={theme}> */}
+          <Notifications  position="top-right" zIndex={1000}/>
 
-  <StoreProvider>
-    <MantineProvider theme={newTheme} defaultColorScheme={'dark'}>
-      <DatesProvider settings={{ locale: 'ru' }}>
-    {/* <ThemeProvider value={theme}> */}
-        <Notifications  position="top-right" zIndex={1000}/>
+          <RouterProvider router={router}/>
 
-        <RouterProvider router={router}/>
-
-    {/* </ThemeProvider> */}
-      </DatesProvider>
-    </MantineProvider>
-  </StoreProvider>
+      {/* </ThemeProvider> */}
+        </DatesProvider>
+      </MantineProvider>
+    </StoreProvider>
   </React.StrictMode>
 )

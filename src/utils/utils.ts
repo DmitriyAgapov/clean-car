@@ -13842,7 +13842,29 @@ export function addPaginationParams(useSWRNext: SWRHook) {
     return useSWRNext(key, extendedFetcher, config)
   }
 }
+const getOnLineStatus = () =>
+  typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean'
+    ? navigator.onLine
+    : true;
 
+export const useNavigatorOnLine = () => {
+    const [status, setStatus] = React.useState(getOnLineStatus());
+
+    const setOnline = () => setStatus(true);
+    const setOffline = () => setStatus(false);
+
+    React.useEffect(() => {
+        window.addEventListener('online', setOnline);
+        window.addEventListener('offline', setOffline);
+
+        return () => {
+            window.removeEventListener('online', setOnline);
+            window.removeEventListener('offline', setOffline);
+        };
+    }, []);
+
+    return status;
+};
 export interface SearchParams { q: string | null | undefined, ordering: string | null | undefined, page: number | null | undefined, page_size: number | null | undefined, cancelToken?: CancelToken, init: () => any}
 export const backToUrlLevel = location.pathname.split('/').slice(0, -1).join('/')
 

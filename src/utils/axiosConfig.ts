@@ -30,8 +30,15 @@ axios.interceptors.response.use(
 		(response) => response,
 		 (error) => {
 			const config = error.config;
-
+			 // if(error.code === "ERR_NETWORK") {
+				//  console.log('setted to network status false');
+				//  appStore.setNetWorkStatus(false)
+			 // } else if(!appStore.networkStatus && error.code !== "ERR_NETWORK") {
+				//  console.log('setted to network status true');
+				//  appStore.setNetWorkStatus(true)
+			 // }
 			// console.log('/token/refresh/', config.url.includes('/token/refresh/'));
+
 			if (error.response.status === 401 && !config.url.includes('/token/refresh/')) {
 				const tokenRefresh = localStorage.getItem('jwt_refresh')
 				console.log('tokenRefresh', tokenRefresh);

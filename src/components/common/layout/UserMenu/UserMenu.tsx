@@ -30,10 +30,10 @@ const Notification = observer(() => {
 
   return (
 
-    <div className={styles.notification} data-msg={store.bidsStore.getEventCount.data.bid_count !== 0}>
+    <div className={styles.notification} data-msg={store.bidsStore.getEventCount.data?.bid_count !== 0}>
       <Link to={'/account/bids'} >
       <SvgNotification />
-      {(store.bidsStore.getEventCount.data && store.bidsStore.getEventCount?.data.bid_count) ? <span>{store.bidsStore.getEventCount.data.bid_count}</span> : null}
+      {(store.bidsStore.getEventCount.data && store.bidsStore.getEventCount?.data?.bid_count) ? <span>{store.bidsStore.getEventCount.data.bid_count}</span> : null}
       </Link>
     </div>
 

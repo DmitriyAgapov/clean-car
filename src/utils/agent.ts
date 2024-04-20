@@ -132,10 +132,13 @@ export const requests = {
 
 //Обработка ошибок
 const handleErrors = (err: AxiosError) => {
-    // console.log(err && err.response && (err.response.status === 400 || err.response.status === 405));
 
-    //create notification
-
+    if (!err.status) {
+      // We have a network error
+      appStore.setNetWorkStatus(false)
+    } else if(!appStore.getNetWorkStatus) {
+      appStore.setNetWorkStatus(true)
+    }
     if(err && err.response && (err.response.status === 400 || err.response.status === 405)) {
 
       // @ts-ignore
