@@ -1,5 +1,5 @@
 import React from 'react'
-import { Await, useLoaderData, useNavigate, useParams, useRevalidator } from "react-router-dom";
+import { Await,  useNavigate, useParams, useRevalidator } from "react-router-dom";
 import * as Yup from "yup";
 import { useStore } from "stores/store";
 import { SelectCreatable } from "components/common/ui/CreatableSelect/CreatableSelect";
@@ -25,7 +25,6 @@ const dataCreate = {
     modelName: Yup.string(),
     car_type: Yup.string(),
   }),
-  submitAction: () => console.log('sumbit brands'),
   inputs: [
     {
       label: 'Марка',

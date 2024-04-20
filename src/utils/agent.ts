@@ -4,7 +4,7 @@ import authStore from 'stores/authStore'
 import  { decodeToken } from 'utils/getData'
 import  'utils/axiosConfig'
 import userStore, { User } from 'stores/userStore'
-import { runInAction, toJS } from "mobx";
+import {  toJS } from "mobx";
 import { Company, CompanyType, CompanyTypeRus } from "stores/companyStore";
 import { BidsStatus } from "stores/bidsStrore";
 import { notifications } from "@mantine/notifications";
@@ -455,6 +455,9 @@ const Account = {
   }),
 
 }
+const Balance = {
+  getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params)
+}
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),
   getFilialsNew: (params: string, pagination?: PaginationProps) => useSWR(`${userStore.isAdmin ? `/companies/only_branches/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/${CompanyTypeRus(userStore.myProfileData.company?.company_type)}_branches/${userStore.myProfileData.company?.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`, (url) => requests.getNew(url).then(r => r.data)),
@@ -472,6 +475,7 @@ const agent = {
   Utils,
   Cars,
   Auth,
+  Balance,
   Profile,
   Permissions,
   Account,

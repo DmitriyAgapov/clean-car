@@ -4,6 +4,7 @@ import styles from './Section.module.scss'
 export enum SectionType {
   centered = 'centered',
   default = 'default',
+  withSuffix = 'withSuffix'
 }
 
 export enum SectionPosition {

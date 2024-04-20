@@ -26,6 +26,7 @@
   &[data-style="default"] {
 	@apply col-span-full;
   }
+
   &[data-style="default_form"]:not([data-variant="textPadding"]) {
 	@apply col-span-full;
 	@screen tablet-max {
@@ -118,6 +119,43 @@
 	  @apply px-0 py-0;
 	}
   }
+  &[data-variant="dataPaddingWithoutFooter"] {
+	border-bottom-left-radius: 0;
+	border-bottom: 0 !important;
+	border-bottom-right-radius: 0;
+	@apply border border-gray-2;
+	> header {
+	  @apply lg:px-8 pt-8 pb-4;
+	}
+
+	> footer {
+	  @apply px-8 pb-16 pt-4 flex gap-6 justify-end items-end;
+	}
+
+	> [data-panel="body"] {
+	  @apply px-0 py-0;
+	}
+  }
+  &[data-variant="suffixFooter"] {
+	margin-top: -2.5rem;
+	border-top-left-radius: 0;
+	border-top: 0 !important;
+	border-top-right-radius: 0;
+	@apply border border-gray-2;
+	> header {
+	  @apply lg:px-8 pt-8 pb-4;
+	}
+
+	> footer {
+	  @apply px-8 pb-8 pt-4 flex gap-6 justify-end items-end;
+	}
+
+	> [data-panel="body"] {
+	  @apply lg:px-8 pt-5 pb-8 grid grid-cols-6;
+	}
+  }
+
+
   //&[data-variant="dataPadding"] {
 	//header {
 	//  @apply lg:px-8 pt-8 pb-4;
@@ -193,4 +231,53 @@
 	@apply bg-gray-4/70;
 	backdrop-filter: blur(2px);
   }
+  &[data-background="withSuffix"] {
+	border: 0.0625rem solid var(--borderPanelColor);
+
+
+
+	@apply bg-gray-4/70;
+	backdrop-filter: blur(2px);
+	[data-directory] {
+	  width: .75rem;
+	  height: .75rem;
+	  display: inline-block;
+	  border-radius: 50%;
+	  margin-right: .625rem;
+	}
+	[data-directory="customer"] {
+	  --color: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
+	  background: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
+	  border: 0;
+	}
+	[data-directory="performer"] {
+	  border: 0;
+	  background: linear-gradient(-90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
+	  --color: linear-gradient(-90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
+	}
+
+	ul {
+	  display: grid;
+	  gap: .625rem;
+	  font-weight: 500;
+	  align-content: center;
+	}
+	[data-panel="body"] {
+	  background: linear-gradient(182.19deg, rgba(9, 9, 9, 0.5) 2.89%, rgba(9, 9, 9, 0.14) 101.32%);
+	}
+	[data-content-type="values"] {
+	  text-align: right;
+		border-top-left-radius: 1.5rem;
+		border-top-right-radius: 1.5rem;
+	  background: linear-gradient(182.19deg, #090909 2.89%, rgba(9, 9, 9, 0.28) 101.32%);
+	  border: 1px solid rgba(255, 255, 255, 0.15);
+	  margin: -3rem 1rem calc(-2rem - 1px) 0;
+	  padding: 3rem 1.25rem 2rem;
+	  border-bottom: 0;
+	  &:last-child {
+		margin-right: 0;
+	  }
+	}
+  }
+
 }

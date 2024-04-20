@@ -1,20 +1,11 @@
 import React, { ReactNode } from 'react'
-import Panel, { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 
-export enum PanelVariant {
-    default = 'default',
-    textPadding = 'textPadding',
-    dataPadding = 'dataPadding',
-    withGapOnly = 'withGapOnly',
-    modal = 'modal',
-    // withPaddingSm = 'withPaddingSm',
-    withPaddingSmWithBody = 'withPaddingSmWithBody',
-    // 'withPadding_1_2' = 'withPadding_1_2',
-}
 
 export enum PanelColor {
     default = 'default',
     glass = 'glass',
+    withSuffix = 'withSuffix',
 }
 
 export type PanelProps = {

@@ -2,9 +2,7 @@ import { Form, Formik } from 'formik'
 import React from 'react'
 import { Await, useLoaderData, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import * as Yup from "yup";
-import SelectCustom from "components/common/ui/Select/Select";
 import { useStore } from "stores/store";
-import CreateInput from "components/common/ui/CreateInput/CreateInput";
 import { SelectCreatable } from "components/common/ui/CreatableSelect/CreatableSelect";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
@@ -13,7 +11,6 @@ import { CarType } from "stores/carStore";
 
 import { values as val } from 'mobx'
 import { Select, TextInput } from '@mantine/core'
-import ComboboxCustom from 'components/common/ui/Combobox/Combobox';
 const dataCreate = {
   initValues: {
     brandId: 0,
@@ -70,7 +67,7 @@ const FormCreateCarBrand = (props: any) => {
   const navigate = useNavigate()
   const edit = props?.edit ?? false
   const result = (Object.keys(CarType) as (keyof typeof CarType)[]).map(
-    (key, index) => {
+    (key) => {
       return {
         label: CarType[key],
         value: CarType[key]
@@ -113,7 +110,7 @@ const FormCreateCarBrand = (props: any) => {
 
       }
     }} >
-      {({ errors, touched, setFieldValue, values, submitForm,isValid }) => (
+      {({ setFieldValue, values,isValid }) => (
         <Form  style={{display: 'contents'}}>
           <Panel
             className={'col-span-full grid grid-rows-[auto_1fr_auto]'}

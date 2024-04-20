@@ -1,33 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { yupResolver } from 'mantine-form-yup-resolver'
-import { CreateCompanySchema, CreateLimitSchema } from "utils/validationSchemas";
-import { Group, InputBase, NumberInput, Radio, Select, TextInput } from '@mantine/core'
+import {  CreateLimitSchema } from "utils/validationSchemas";
+import { Group,  NumberInput, Radio, Select, TextInput } from '@mantine/core'
 import { createFormActions, createFormContext } from '@mantine/form'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
-import { IMask, IMaskInput } from 'react-imask'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useNavigate, useRevalidator } from 'react-router-dom'
 import { type Company, CompanyType, Payment } from "stores/companyStore";
-import PanelForForms, { PanelColor, PanelVariant } from 'components/common/layout/Panel/PanelForForms'
+import PanelForForms, { PanelColor } from 'components/common/layout/Panel/PanelForForms'
+import { PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { set, values, values as val } from "mobx";
-import InputAutocompleteNew from 'components/common/ui/InputAutocomplete/InputAutocompleteNew'
-import moment, { MomentInput } from 'moment'
-import Progress from 'components/common/ui/Progress/Progress'
-import SelectCustom from 'components/common/ui/Select/Select'
-import { Field } from 'formik'
-import SelectFromList from 'components/common/SelectFromList/SelectFromList'
-import TransferList  from 'components/common/ui/TransferList/TransferList'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
-import company from "routes/company/company";
 import { useSWRConfig } from "swr";
 import { useDisclosure, useScrollIntoView, useViewportSize } from "@mantine/hooks";
-import data from "utils/getData";
-import TransferListNew from "components/common/ui/TransferList/TransferListNew";
 import agent from "utils/agent";
-import { CarClasses } from "components/common/layout/Modal/CarClasses";
 import { LimitDelete } from "components/common/layout/Modal/LimitDelete";
 
 interface InitValues {
@@ -41,7 +29,7 @@ interface InitValues {
 }
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
-export const createCompanyFormActions = createFormActions<InitValues>('createCompanyForm')
+export const createLimitFormActions = createFormActions<InitValues>('createLimitForm')
 
 const FormCreateUpdateLimits = ({ company, edit }: any) => {
     const store = useStore()

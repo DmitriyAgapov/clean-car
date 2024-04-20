@@ -9,18 +9,22 @@ export enum PanelVariant {
     modal = 'modal',
     // withPaddingSm = 'withPaddingSm',
     withPaddingSmWithBody = 'withPaddingSmWithBody',
+    dataPaddingWithoutFooter = 'dataPaddingWithoutFooter',
+    suffixFooter = 'suffixFooter'
     // 'withPadding_1_2' = 'withPadding_1_2',
 }
 
 export enum PanelColor {
     default = 'default',
     glass = 'glass',
+    withSuffix = 'withSuffix',
 }
 
 export enum PanelRouteStyle {
     default = 'default',
     default_form = 'default_form',
     limits = 'limits',
+    finance = 'finance',
     bids = 'bids',
     auth = 'auth',
     company = 'company',

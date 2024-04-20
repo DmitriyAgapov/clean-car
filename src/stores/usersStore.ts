@@ -120,7 +120,7 @@ export class UsersStore {
     this.loadingErrors = ''
     let result;
     try {
-      const datas = yield agent.Account.createCompanyUser(companyid, data)
+      const datas:any = yield agent.Account.createCompanyUser(companyid, data)
       result = datas
       if(datas.response.status > 299) {
         this.loadingErrors = datas.response.data

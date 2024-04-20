@@ -9,7 +9,7 @@ import { IMask, IMaskInput } from 'react-imask'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useNavigate, useRevalidator } from 'react-router-dom'
 import { type Company, CompanyType, Payment } from "stores/companyStore";
-import PanelForForms, { PanelColor, PanelVariant } from 'components/common/layout/Panel/PanelForForms'
+import PanelForForms, { PanelColor } from 'components/common/layout/Panel/PanelForForms'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { values, values as val } from "mobx";
 import InputAutocompleteNew from 'components/common/ui/InputAutocomplete/InputAutocompleteNew'
@@ -18,6 +18,7 @@ import Progress from 'components/common/ui/Progress/Progress'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import agent from "utils/agent";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
+import { PanelVariant } from "components/common/layout/Panel/Panel";
 
 interface InitValues {
     address: string | null

@@ -10,6 +10,10 @@
 	align-self: center;
 	align-items: center;
   }
+  &[data-variant="withSuffix"] {
+	grid-template-rows: min-content 1fr;
+  }
+
 
   //> *[class^="Panel"] {
 	//grid-column: 2/-2;

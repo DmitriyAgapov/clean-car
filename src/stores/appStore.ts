@@ -111,7 +111,7 @@ export class AppStore {
   asideState: boolean = false
   appType: UserTypeEnum | string = ''
   appState: boolean = false
-
+  sublevel: boolean = false
   bodyRef = document.body
   modal: {
     component?: ReactNode
@@ -196,7 +196,18 @@ export class AppStore {
     }
     this.burgerState = !this.burgerState
   }
-
+  get subLevel() {
+    return this.sublevel
+  }
+  setSublevelOpen() {
+    this.sublevel = true
+  }
+  setSublevelToggle() {
+    this.sublevel = !this.sublevel
+  }
+  setSublevelClose() {
+    this.sublevel = false
+  }
   setAsideClose() {
     if (!this.asideState && this.bodyRef.clientWidth < 960) {
       this.bodyRef.style.overflow = 'hidden'

@@ -64,6 +64,8 @@ import LimitsPage from "routes/limits/limits";
 import LimitPageCreateAction from "routes/limits/limitCreateAction";
 import LimitPage from "routes/limits/limit";
 import LimitPageEditAction from "routes/limits/limitEditAction";
+import FinacePage from "routes/finance/finance";
+import TransactionPage from "routes/finance/transaction";
 
 const router = createBrowserRouter([
     {
@@ -225,6 +227,16 @@ const router = createBrowserRouter([
                     },
                 ],
             },
+            {
+              path: 'finance/report',
+              element: <FinacePage/>,
+            },
+            {
+                path: 'finance/transaction',
+                element: <TransactionPage/>,
+            },
+
+
             {
                 path: 'groups',
                 element: <GroupsPage />,

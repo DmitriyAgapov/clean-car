@@ -14,12 +14,13 @@ import { CloseButton, InputBase, NumberInput, Select } from "@mantine/core";
 import { CAR_RADIUS, CAR_RADIUSTEXT } from "stores/priceStore";
 import { yupResolver } from "mantine-form-yup-resolver";
 import { CreateCarSchema} from "utils/validationSchemas";
-import PanelForForms, { PanelColor, PanelVariant } from "components/common/layout/Panel/PanelForForms";
+import PanelForForms, { PanelColor } from "components/common/layout/Panel/PanelForForms";
 import { createFormActions, createFormContext } from "@mantine/form";
 import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
 import { CompanyTypeRus } from 'stores/companyStore'
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
+import { PanelVariant } from "components/common/layout/Panel/Panel";
 
 interface CarCreateUpdate  {
     number: string
