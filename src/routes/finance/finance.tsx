@@ -37,17 +37,17 @@ const testData = {
       "tire": {
         "name": "Шиномонтаж",
         "count": 30,
-        "total_sum": 4000
+        "total_sum": 10000
       },
       "wash": {
         "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
+        "count": 55,
+        "total_sum": 3000
       },
       "evac": {
         "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
+        "count": 32,
+        "total_sum": 40000
       },
       //Итог можно и тут считать. Не факт что нужен
       "total": {
@@ -359,7 +359,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Компания-Партнер",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -367,23 +367,23 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Компания-Партнер"
           }
       },
       "tire": {
         "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
+        "count": 31,
+        "total_sum": 4400
       },
       "wash": {
         "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
+        "count": 77,
+        "total_sum": 120000
       },
       "evac": {
         "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
+        "count": 12,
+        "total_sum": 41000
       },
       //Итог можно и тут считать. Не факт что нужен
       "total": {
@@ -476,7 +476,7 @@ const FinacePage = () => {
 
     const customer = testData.results.filter((el:any) => el.company.company_type === "Компания-Заказчик")
     const performer = testData.results.filter((el:any) => el.company.company_type === "Компания-Партнер")
-    console.log(performer);
+
     function calcTotal(ar:any[]) {
        const _totalTire = ar.reduce((acc, value):any => {
          return ({ count: acc.count + value.tire.count, total_sum: Number(acc.total_sum) + Number(value.tire.total_sum) })}, { count: 0, total_sum: 0 }
@@ -490,15 +490,22 @@ const FinacePage = () => {
        return ({
          tire: _totalTire,
          wash: _totalWash,
-         evac: _totalEvac
+         evac: _totalEvac,
+         total: ({
+           count: _totalTire.count + _totalWash.count + _totalEvac.count,
+           total_sum: _totalTire.total_sum + _totalWash.total_sum + _totalEvac.total_sum,
+         })
        })
    }
+   const _resCustomer = calcTotal(customer)
+   const _resPerformer = calcTotal(performer)
+
    return ({
-     customer: calcTotal(customer),
-     performer: calcTotal(performer)
+     customer: _resCustomer,
+     performer: _resPerformer
    })
   }, [testData])
-  console.log(total);
+
   return (
       <Section type={SectionType.withSuffix}>
           <Panel
@@ -580,8 +587,8 @@ const FinacePage = () => {
                   <li className={'text-accent uppercase'}>1 000 ₽</li>
               </ul>
               <ul className={'finance_total'} data-content-type={'values'}>
-                  <li>90/ 14 000 ₽</li>
-                  <li>90/ 14 000 ₽</li>
+                  <li> {total.customer.total.count}/ {total.customer.total.total_sum} ₽</li>
+                  <li>{total.performer.total.count}/ {total.performer.total.total_sum} ₽</li>
                   <li className={'text-accent uppercase'}>1 000 ₽</li>
               </ul>
           </Panel>
