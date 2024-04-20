@@ -77,7 +77,7 @@ const TransactionPage = () => {
       />
       <TableWithSortNew
         store={localRootStore}
-        variant={PanelVariant.dataPaddingWithoutFooter}
+        variant={PanelVariant.dataPadding}
         search={true}
 
         style={PanelRouteStyle.finance}

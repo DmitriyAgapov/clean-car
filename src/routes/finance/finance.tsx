@@ -401,7 +401,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Компания-Партнер",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -409,7 +409,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Компания-Партнер"
           }
       },
       "tire": {
@@ -472,7 +472,33 @@ const FinacePage = () => {
     },
     [location.pathname]
   );
+  const total = React.useMemo(() => {
 
+    const customer = testData.results.filter((el:any) => el.company.company_type === "Компания-Заказчик")
+    const performer = testData.results.filter((el:any) => el.company.company_type === "Компания-Партнер")
+    console.log(performer);
+    function calcTotal(ar:any[]) {
+       const _totalTire = ar.reduce((acc, value):any => {
+         return ({ count: acc.count + value.tire.count, total_sum: Number(acc.total_sum) + Number(value.tire.total_sum) })}, { count: 0, total_sum: 0 }
+       )
+       const _totalWash = ar.reduce((acc, value):any => {
+         return ({ count: acc.count + value.wash.count, total_sum: Number(acc.total_sum) + Number(value.wash.total_sum) })}, { count: 0, total_sum: 0 }
+       )
+       const _totalEvac = ar.reduce((acc, value):any => {
+         return ({ count: acc.count + value.evac.count, total_sum: Number(acc.total_sum) + Number(value.evac.total_sum) })}, { count: 0, total_sum: 0 }
+       )
+       return ({
+         tire: _totalTire,
+         wash: _totalWash,
+         evac: _totalEvac
+       })
+   }
+   return ({
+     customer: calcTotal(customer),
+     performer: calcTotal(performer)
+   })
+  }, [testData])
+  console.log(total);
   return (
       <Section type={SectionType.withSuffix}>
           <Panel
@@ -527,24 +553,36 @@ const FinacePage = () => {
                   <li className={'text-accent uppercase'}>Прибыль</li>
               </ul>
               <ul className={'finance_total_tire'} data-content-type={'values'}>
-                  <li>90/ 14 000 ₽</li>
-                  <li>90/ 14 000 ₽</li>
-                  <li  className={'text-accent uppercase'}>1 000 ₽</li>
+                  <li>
+                      {total.customer.tire.count}/ {total.customer.tire.total_sum} ₽
+                  </li>
+                  <li>
+                      {total.performer.tire.count}/ {total.performer.tire.total_sum} ₽
+                  </li>
+                  <li className={'text-accent uppercase'}>1 000 ₽</li>
               </ul>
               <ul className={'finance_total_wash'} data-content-type={'values'}>
-                  <li>90/ 14 000 ₽</li>
-                  <li>90/ 14 000 ₽</li>
-                  <li  className={'text-accent uppercase'}>1 000 ₽</li>
+                  <li>
+                      {total.customer.wash.count}/ {total.customer.wash.total_sum} ₽
+                  </li>
+                  <li>
+                      {total.performer.wash.count}/ {total.performer.wash.total_sum} ₽
+                  </li>
+                  <li className={'text-accent uppercase'}>1 000 ₽</li>
               </ul>
               <ul className={'finance_total_evac'} data-content-type={'values'}>
-                  <li>90/ 14 000 ₽</li>
-                  <li>90/ 14 000 ₽</li>
-                  <li  className={'text-accent uppercase'}>1 000 ₽</li>
+                  <li>
+                      {total.customer.evac.count}/ {total.customer.evac.total_sum} ₽
+                  </li>
+                  <li>
+                      {total.performer.evac.count}/ {total.performer.evac.total_sum} ₽
+                  </li>
+                  <li className={'text-accent uppercase'}>1 000 ₽</li>
               </ul>
               <ul className={'finance_total'} data-content-type={'values'}>
                   <li>90/ 14 000 ₽</li>
                   <li>90/ 14 000 ₽</li>
-                  <li  className={'text-accent uppercase'}>1 000 ₽</li>
+                  <li className={'text-accent uppercase'}>1 000 ₽</li>
               </ul>
           </Panel>
       </Section>
