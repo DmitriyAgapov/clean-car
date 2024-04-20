@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import AuthPage from 'routes/auth'
 import ErrorPage from 'error-page'
 import RegisterPage from 'routes/register/register'
@@ -6,17 +6,12 @@ import RestorePasswordPage from 'routes/restore/restorePasswordPage'
 import RegisterSuccessPage from 'routes/register/registerSucces'
 import {
     authUser,
-    // companyLoader,
-    filialLoader,
-    filialsLoader,
     groupsCreatLoader,
     groupsIdLoader,
-    groupsLoader, priceLoader,
+    priceLoader,
     profileLoader,
     userLoader,
-    usersLoader
 } from "routes/loaders/loaders";
-import { carsLoader } from 'routes/loaders/carsLoader'
 import AccountPage from 'routes/account/account'
 import MyProfilePage from 'routes/account/myProfile'
 import DashboardPage from 'routes/dashboard/dashboard'

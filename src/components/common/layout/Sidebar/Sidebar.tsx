@@ -68,7 +68,7 @@ const sidebarMenu: { icon: React.ReactNode; title: string; url: string, urlMap: 
     urlMap: 'Управление прайс-листом',
   },
   {
-    icon: <img src={'/icons/ruble.png'} alt={''} />,
+    icon: <img src={'/icons/rouble.png'} alt={''} />,
     title: 'Финансы',
     url: 'finance/report',
     urlMap: 'Финансовый блок',

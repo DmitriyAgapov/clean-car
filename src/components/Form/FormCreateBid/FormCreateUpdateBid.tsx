@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import 'yup-phone-lite'
 import { useStore } from 'stores/store'
-import { useNavigate, useRevalidator } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Button, {  ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Progress from 'components/common/ui/Progress/Progress'
 import { observer } from 'mobx-react-lite'
 import { Checkbox,  FileButton, Group,  InputBase,   Select, Textarea } from "@mantine/core";
 import { action, values as val } from 'mobx'
-import { IMask, IMaskInput } from 'react-imask'
+import {IMaskInput } from 'react-imask'
 import { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import { yupResolver } from 'mantine-form-yup-resolver'
 import { CreateBidSchema, CreateBidSchemaStep2, CreateBidSchemaStep3, CreateBidSchemaStep4 } from "utils/validationSchemas";
@@ -19,7 +19,7 @@ import { SvgClose } from 'components/common/ui/Icon'
 import MapWithDots from 'components/common/Map/Map'
 import InputAutocompleteWithCity from 'components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency'
 import FormBidResult from 'routes/bids/FormBidResult/FormBidResult'
-import UploadedPhotos, { UploadedPhotosFirstStep } from "components/common/layout/Modal/UploadedPhotos";
+import { UploadedPhotosFirstStep } from "components/common/layout/Modal/UploadedPhotos";
 import {  DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
@@ -217,20 +217,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }
   }, [formData.values.company])
 
-  // React.useEffect(() => {
-  //   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read')) {
-  //     const initDrivers = {
-  //       car: store.userStore.myProfileData.user.cars.length === 1 ? String(store.userStore.myProfileData.user.cars[0].id) : null,
-  //       conductor: String(store.userStore.myProfileData.user.id),
-  //       phone: store.userStore.myProfileData.user.phone,
-  //     }
-  //     store.bidsStore.formResultSet(initDrivers)
-  //     console.log({...initData, ...initDrivers}, 'initDrivers');
-  //     formData.initialize({...initData, ...initDrivers})
-  //     formData.setTouched({car: true, conductor: true, phone: true})
-  //   }
-  // }, [])
-
  const carsData = React.useMemo(() => {
    //@ts-ignore
    const car = store.carStore.getCompanyCars.cars?.results?.filter((car) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
@@ -270,9 +256,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       store.bidsStore.clearPhotos()
     } else  {
       formData.setFieldValue('city', String(store.bidsStore.formResultsAll.city))
-
-      // store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read') ? formData.values.phone = String(store.bidsStore.formResultsAll.phone) : void null;
-      // formData.values.car = String(store.bidsStore.formResultsAll.car);
       formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
       store.bidsStore.clearPhotos()
     }
@@ -284,7 +267,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       formData.setFieldValue('conductor', null)
       formData.setFieldValue('car', null)
       formData.setFieldValue('phone', null)
-      // formikReset.resetForm()
+
     } else  {
 
       const value = store.usersStore.companyUsers.filter((c: any) => c.employee.id === Number(formData.values.conductor))[0]
@@ -297,11 +280,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         formData.setFieldValue('phone', store.userStore.myProfileData.user.phone)
         store.bidsStore.formResultSet({ phone: store.userStore.myProfileData.user.phone })
       }
-
-
-
-      // formData.values.car = String(store.bidsStore.formResultsAll.car);
-      // formData.values.conductor = String(store.bidsStore.formResultsAll.conductor);
     }
   }, [formData.values.conductor])
 
@@ -324,7 +302,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           subtype_id: store.bidsStore.formResult.service_subtype,
           options_idx: store.bidsStore.formResult.service_option
         }).then((res:any) => {
-          // console.log(res);
+
           if (formData.values.service_type === '1') {
           changeStep(4)
           } else {
@@ -336,7 +314,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         (async () => {
           store.bidsStore.formCreateBid()
           .then((res) => {
-            // console.log(res, 'res');
             if (res.status !== 201) {
               notifications.show({
                 id: 'bid-created',
@@ -363,17 +340,11 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     // style: { backgroundColor: 'red' },
                     loading: false,
                 })
-                // if(store.bidsStore.photo.photosPreviewAr.length !== 0) {
-                //   store.bidsStore.uploadPhotos(true).then((res: any) => {
-                //     if (res.status < 300) {
-                //       changeStep()
-                //     }
-                //   }).finally(() => {store.bidsStore.formResultsClear()})
-                // } else {
+
                 store.bidsStore.formResultsClear()
                 changeStep()
                 store.bidsStore.clearPhotos()
-                // }
+
             }
           })
 
@@ -412,12 +383,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           value: String(store.userStore.myProfileData.user.id)
         }]
 
-        // formData.values.conductor =  String(store.userStore.myProfileData.user.id)
-
-        // formData.setValues({phone:store.userStore.myProfileData.user.phone})
-        // formData.setDirty({phone: true})
-
-        // formData.setTouched({conductor: true})
       }
       return result
     }, [formData.values.company, store.usersStore.currentCompanyUsers])
@@ -426,7 +391,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       <FormProvider form={formData}>
         <PanelForForms ref={targetRef}
           footerClassName={'px-8 tablet-max:px-5 pb-8 pt-2  tablet-max:pb-24'}
-          // className={'self-stretch'}
+
           bodyClassName={'self-stretch'}
           variant={PanelVariant.default}
           actionBack={<>{step === 5 || step === 1 ? null
@@ -448,15 +413,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               text={'Добавить фото'}
             ></Button>
           )}
-        </FileButton><Button
-              text={'Назад'}
-            action={() => {
-              console.log(formData.errors);
-              formData.validate()
-            }}
-            className={'lg:mb-0 mr-auto'}
-            variant={ButtonVariant['accent-outline']}
-          /></>}
+        </FileButton></>}
             </>}
           actionCancel={step !== 5 ? <Button type={'button'}
             text={'Отменить'}
@@ -486,8 +443,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               state={step !== 1}
               animate={animate}
               className={'!bg-transparent h-full !flex flex-col'}
-              // bodyClassName={''}
-              // style={{    flex: "1 100%",alignSelf: "stretch"}}
               bodyClassName={'grid  flex-col !grid-cols-3 !grid-rows-[auto_auto_auto_auto_1fr] !gap-0 !pb-2 flex-[1_100%] !self-stretch !items-stretch'}
               variant={PanelVariant.textPadding}
               background={PanelColor.default}
@@ -546,7 +501,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   store.bidsStore.formResultSet({ phone: value })
                 }}
                 //@ts-ignore
-                // defaultValue={formData.values.phone !== "" ? formData.values.phone : store.bidsStore.formResult.phone}
+
                 label={step1.fields[3].label} component={IMaskInput} mask='+7 000 000 0000' placeholder='+7 000 000 0000'
               />
 
@@ -652,21 +607,13 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                           value={store.bidsStore.formResult.service_option.map((o: number) =>
                             String(o),
                           )}
-
                           onChange={(vals) => {
-                            // console.log(formData.values);
                             store.bidsStore.formResultSet({
                               service_option: vals.map((e) => Number(e)),
                             })
                             formData.values.service_option = val(
                               store.bidsStore.formResultsAll.service_option,
                             )
-                            // @ts-ignore
-                            // if(store.bidsStore.formResultsAll.service_option.length > 0) {
-                            // formData.values.service_option = val(
-                            //   store.bidsStore.formResultsAll.service_option,
-                            // )
-                          // }
                         }}
                           label='Выберите дополнительные опции (при необходимости)'
                         >
@@ -785,7 +732,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   }
                   }}
                   defaultValue={null}
-                  // value={store.bidsStore.formResult.important}
                   label={step3.fields[3].label}
                   data={step3.fields[3].options}
                 />
@@ -932,52 +878,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     placeholder=""
                   />
 
-                  {/* <InputBase */}
-                  {/*   component={IMaskInput} */}
-
-                  {/*   label={step3.fields[4].label} */}
-                  {/*   {...formData.getInputProps('time')} */}
-                  {/*   mask={Date} */}
-                  {/*   classNames={{ */}
-                  {/*     section: 'mr-1 text-sm', */}
-                  {/*     // input: 'pl-7', */}
-                  {/*   }} */}
-                  {/*   onInput={(values) => { */}
-                  {/*     console.log(formData.values.time); */}
-                  {/*     formData.setFieldValue('time', values.currentTarget.value); */}
-                  {/*     store.bidsStore.formResultSet({ */}
-                  {/*       time: { label: step3.fields[4].label, value: values.currentTarget.value }, */}
-                  {/*     }) */}
-                  {/*   }} */}
-
-                  {/*   blocks={{ */}
-                  {/*     YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 }, */}
-                  {/*     MM: { mask: IMask.MaskedRange, from: 1, to: 12 }, */}
-                  {/*     DD: { mask: IMask.MaskedRange, from: 1, to: 31 }, */}
-                  {/*     HH: { mask: IMask.MaskedRange, from: 0, to: 23 }, */}
-                  {/*     mm: { mask: IMask.MaskedRange, from: 0, to: 59 }, */}
-                  {/*   }} */}
-                  {/*   pattern={`c ${momentFormat} до ${momentFormat}0`} */}
-                  {/*   format={(date: MomentInput) => moment(date).format(momentFormat)} */}
-                  {/*   parse={(str) => moment(str, momentFormat)} */}
-                  {/*   autofix */}
-                  {/*   overwrite */}
-                  {/*   placeholder='c 00:00 до 23:59' */}
-                  {/* /> */}
-                  {/* <TimeInput */}
-                  {/*   {...formData.getInputProps('time')} */}
-                  {/*   onTouchEnd={(values) => */}
-                  {/*     store.bidsStore.formResultSet({ */}
-                  {/*       time: { label: step3.fields[4].label, value: values.currentTarget.value }, */}
-                  {/*     }) */}
-                  {/*   } */}
-                  {/*   classNames={{ */}
-                  {/*     section: 'mr-1 text-sm', */}
-                  {/*     input: 'pl-7', */}
-                  {/*   }} */}
-                  {/*   leftSection={<span>C</span>} */}
-                  {/*   label={step3.fields[4].label} */}
-                  {/* /> */}
                 </>
               </PanelForForms>
             )}
@@ -1021,7 +921,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                       searchable
                       clearable
                       onOptionSubmit={(val: any) => {
-                        // console.log(val);
                         store.bidsStore.formResultSet({ performer: Number(val) })
                       }
                       }

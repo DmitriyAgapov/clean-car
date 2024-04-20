@@ -17,7 +17,7 @@ export type PaginationProps = {
   name?: string | number | URLSearchParams,
   ordering?: string | number | URLSearchParams,
   page?: string | number | URLSearchParams,
-  page_size?: number | string | number | URLSearchParams
+  page_size?: number | string | URLSearchParams
   q?: string | number | URLSearchParams
   searchString?: string | number | URLSearchParams
 }
@@ -77,14 +77,6 @@ export const requests = {
       method: 'GET'
     }).then((response: any) => response).catch(handleErrors)
   },
-  getNewFetch: (url: string) => {
-    console.log(url);
-    return axios({
-      url: `${API_ROOT}${url}`,
-      // headers: tokenPlugin(),
-      method: 'GET'
-    }).then((response: any) => response).catch(handleErrors)
-  },
 
   put: (url: string, body: any) =>
     axios({
@@ -133,7 +125,7 @@ export const requests = {
 //Обработка ошибок
 const handleErrors = (err: AxiosError) => {
 
-    if (!err.status) {
+    if (!err.response) {
       // We have a network error
       appStore.setNetWorkStatus(false)
     } else if(!appStore.getNetWorkStatus) {
