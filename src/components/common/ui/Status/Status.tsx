@@ -10,7 +10,7 @@ type StatusProps = {
 	children?: ReactNode
 }
 const Status = ({ variant, size = ButtonSizeType.sm, variantForw, children}:StatusProps) => {
-	console.log(variant);
+
     return (
         <span className={styles.Status} data-size={size} data-variant={BidsStatus[variant]} data-rev-varian={variantForw}>
             {variantForw ? variantForw : BidsStatus[variant]}

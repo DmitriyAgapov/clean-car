@@ -43,7 +43,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
     const {data, params: {getSearchParams: {page_size: pageSize}}} = localStore
     const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading
     let [searchParams, setSearchParams] = useSearchParams([['page', '1'], ['page_size', '10']])
-    console.log(localStore);
+    // console.log(localStore);
     // @ts-ignore
     const [sortedField, setSortedField] = useState<null | string>(null)
     const [currentPage, setCurrentPage] = useState<number>(1);

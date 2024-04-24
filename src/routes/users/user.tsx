@@ -23,6 +23,7 @@ const UserPage = () => {
   const {isLoading, data, mutate}:any = useSWR(`users_${params.company_id}_${params.id}`,() => store.usersStore.userLoader({company_type : params.company_type, id:Number(params.id), company_id:Number(params.company_id)}))
   // const {isLoading:userLoading, data:userDatas, mutate:mutateData} = useSWR(`users_${params.company_id}_${params.id}`,() => store.usersStore.userLoader({company_type : params.company_type, id:Number(params.id), company_id:Number(params.company_id)}))
   // console.log(userDatas,userLoading, 'usersDatas');
+  console.log(data, isLoading);
   useDidUpdate(
     () => {
       if(location.pathname === `/account/users/${params.company_type}/${params.company_id}/${params.id}`) {

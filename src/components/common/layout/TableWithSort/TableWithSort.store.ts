@@ -1,6 +1,10 @@
 import { makeAutoObservable, observable } from "mobx";
 import { Status } from "utils/schema";
-export type TableSearchParams = { page: number; page_size: number, q?: string, service_type?: string,
+export type TableSearchParams = { page: number; page_size: number, q?: string,
+	service_type?: string,
+	company_type?: string,
+	employee__is_active?: string,
+	company__company_type?: string,
 	company__city?:string
 	start_date?:string
 	car_type?:string

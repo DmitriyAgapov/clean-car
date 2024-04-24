@@ -26,13 +26,16 @@
   --gridinner: repeat(var(--totalCol), 1fr);
   --centered: 2/-2;
   --full_centered: 1/-1;
+
   //forms and inputs
   --formBorder: #B6C1BE;
   --formBorderSelected: var(--accentColor);
+
   //Panel
   --bgPanelColor: rgba(36, 37, 41, 0.60);
   --borderPanelColor: rgba(96, 97, 99, 0.60);
   --scaling-font: 16px;
+
   @media screen and (max-width: 1299px) {
 	--container: 44.375rem;
 	--gridGap: .625rem;
@@ -43,10 +46,10 @@
 	--grid: var(--sideGutter) repeat(var(--totalCol), 1fr) var(--sideGutter);
   }
   @media screen and (min-width: 1440px) {
-	--scaling-font: calc(100vh / 64);
+	--scaling-font:  clamp(16px, calc(100vh / 64), 24px);
   }
   @media screen and (max-width: 743px) {
-	--sideGutter: 1.25rem;
+	--sideGutter: 0.75rem;
 	--container: 350px;
 	--gridGap: 0px;
 	--totalCol: 6;

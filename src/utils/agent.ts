@@ -123,7 +123,7 @@ export const requests = {
 }
 
 //Обработка ошибок
-const handleErrors = (err: AxiosError) => {
+const handleErrors = (err: AxiosError & any) => {
 
     if (!err.response) {
       // We have a network error
@@ -135,21 +135,23 @@ const handleErrors = (err: AxiosError) => {
 
       // @ts-ignore
       const errMsg = typeof err.response.data === "string" ? err.response.data : err.response.data.error_message
-      notifications.show({
-        id: 'bid-created',
-        withCloseButton: true,
-        // onClose: () => console.log('unmounted'),
-        // onOpen: () => console.log('mounted'),
-        autoClose: 4000,
-        // title: "Ошибка",
-        message: errMsg,
-        // color: 'red',
-        // icon: <SvgClose />,
-        className:
-          'my-notification-class z-[9999] absolute top-12 right-12 notification_cleancar',
-        // style: { backgroundColor: 'red' },
-        loading: false,
-      })
+      if(err && err.response && err.response?.data?.error_message) {
+        notifications.show({
+          id: 'global-error',
+          withCloseButton: true,
+          // onClose: () => console.log('unmounted'),
+          // onOpen: () => console.log('mounted'),
+          autoClose: 4000,
+          // title: "Ошибка",
+          message: errMsg,
+          // color: 'red',
+          // icon: <SvgClose />,
+          className:
+            'my-notification-class z-[9999] absolute top-12 right-12 notification_cleancar',
+          // style: { backgroundColor: 'red' },
+          loading: false,
+        })
+      }
     }
     // if (err && err.response && err.response.status === 401) {
     //     const refr = window.localStorage.getItem('jwt_refresh')
@@ -241,7 +243,10 @@ const Bids = {
   getBidCountPerformer: (company_id: number) => requests.get(`/bids/${company_id}/count/performer/`)
 }
 const Utils = {
-  suggest: (props:{query: any, location: any[], restrict_value: boolean}) => requests.postSuggest(props)
+  suggest: (props:{query: any, location: any[], restrict_value: boolean,
+
+  }
+  ) => requests.postSuggest({...props,bounds: "city-house"})
 }
 const Auth = {
   current: () => {
@@ -439,6 +444,8 @@ const Limits = {
   getLimit: (company_id: number, id: number) => requests.get(`/limits/${company_id}/${id}/retrieve/`),
 }
 const Account = {
+  accountsAllUsers: (params: PaginationProps) => requests.get('/accounts/all_users/', params),
+  accountsUsersList: (company_id:number, params: PaginationProps) => requests.get(`/accounts/${company_id}/users/list/`, params),
   getCompanyUsers: (company_id:number) => requests.get(`/accounts/${company_id}/users/list/`),
   getCompanyUser: (company_id: number, id: number) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
   createCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/users/create/`, data),
@@ -451,7 +458,8 @@ const Account = {
 
 }
 const Balance = {
-  getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params)
+  getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params),
+  getTransactionListAdmin: (params?: PaginationProps) => requests.get('/balance/all_transactions/', params)
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),
@@ -459,26 +467,24 @@ const Filials = {
   getFilial: (company_type: string, company_id: number, id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/${id}/retrieve/`, params),
   createFilial: (company_type: string, company_id: number, data: any) => requests.post(`/${company_type}_branches/${company_id}/create/`, data),
   editFilial: ( data: any, company_id: number, type: string, id:number ) => requests.put(`/${type}_branches/${company_id}/${id}/update/`, data),
-
-
 }
 const agent = {
-  Img,
-  Limits,
-  Price,
-  Bids,
-  Utils,
-  Cars,
+  Account,
   Auth,
   Balance,
-  Profile,
-  Permissions,
-  Account,
-  PermissionsAdmin,
+  Bids,
+  Cars,
+  Catalog,
   Companies,
   Filials,
+  Img,
+  Limits,
+  Permissions,
+  PermissionsAdmin,
+  Price,
+  Profile,
   Users,
-  Catalog,
+  Utils
 }
 
 export default agent

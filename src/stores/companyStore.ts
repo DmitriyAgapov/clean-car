@@ -189,6 +189,7 @@ export class CompanyStore {
     targetCompanyId:null | number = null
     targetCompany = {}
     fullCompanyData = new Map([])
+    companiesAndFilials: IObservableArray<any> = observable.array([])
     get getCompaniesPerformers() {
         if(this.companiesPerformers.length === 0) {
             this.getPerformersCompany()
@@ -222,7 +223,69 @@ export class CompanyStore {
     async hydrateStoreFull() {
         await hydrateStore(this);
     }
+    get getCompaniesAndFilials() {
+        return this.companiesAndFilials
+    }
+    loadFilialsAndCompaniesByAdminAndNot = flow( function *(this: CompanyStore, company_type:string, companyOrFilial: string, company_id:number) {
+        if(companyOrFilial === "company") {
+            if (appStore.appType === "admin") {
+                if (company_type === "customer") {
+                    return yield  agent.Companies.getOnlyAllCompanies().then(r => r && r.data).then(r => {
+                        this.companiesAndFilials = r.results.filter((i:any) => i.company_type === "Компания-Заказчик")
+                        return r.results
+                    })
+                }
+                if (company_type === "performer") {
+                    return yield  agent.Companies.getOnlyAllCompanies().then(r => r.data).then(r => {
+                        this.companiesAndFilials = r.results.filter((i:any) => i.company_type === "Компания-Партнер")
+                        return r.results
+                    })
+                }
+            }
+            if (appStore.appType !== "admin") {
+                if(company_id === userStore.myProfileData.company.id) {
 
+                    this.companiesAndFilials = [userStore.myProfileData.company] as IObservableArray
+
+                    return yield  [userStore.myProfileData.company]
+                } else {
+                    return yield  agent.Filials.getFilials(company_type, userStore.myProfileData.company.id).then(r => {
+                        this.companiesAndFilials = r.results
+                        return r.results
+                    })
+                }
+            }
+        }
+        if(companyOrFilial === 'filials') {
+            if (appStore.appType === "admin") {
+                // if (company_type === "customer") {
+                    return yield  agent.Companies.getOnlyBranchesCompanies().then(r => r && r.data).then(r => {
+                        this.companiesAndFilials = r.results
+                        return r.results
+                    })
+                // }
+                // if (company_type === "performer") {
+                //     return agent.Companies.getOnlyBranchesCompanies().then(r => r.data).then(r => r.results)
+                // }
+            }
+            if (appStore.appType !== "admin") {
+                console.log('homeNotAdmin');
+                if(company_id !== userStore.myProfileData.company.id) {
+                    console.log("r.data.results, !==");
+                    this.companiesAndFilials = [userStore.myProfileData.company] as IObservableArray
+
+                    return yield  [userStore.myProfileData.company]
+                } else {
+                    console.log('homeF');
+                    return yield  agent.Filials.getFilials(company_type, company_id).then(r => {
+                        console.log(r.data.results);
+                        this.companiesAndFilials = r.data.results
+                        return r.data.results
+                    })
+                }
+            }
+        }
+    })
     getCompanyById(id:number) {
         let company:any;
         if(this.companies.length !== 0) {
@@ -406,7 +469,7 @@ export class CompanyStore {
                 const type = userStore.myProfileData.company.company_type;
                 const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id, params)
                 if (status === 200) {
-                    this.allFilials = dataCars
+                    this.allFilials = dataCars.results
                     data = dataCars.results
                     dataMeta = dataCars
                 }

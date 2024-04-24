@@ -107,11 +107,13 @@ export default function GroupPageCreateAction(props: any) {
 
                       <Button
                           text={'Сохранить'}
-                          action={async () => {
+                          action={ () => {
                               // @ts-ignore
-                              store.permissionStore.createPermission(changes)
+                               store.permissionStore.createPermission(changes)
                               .then(() => {
-                                mutate('groups').then(() => navigate('/account/groups'))
+                                revalidator.revalidate()
+                                mutate('groups')
+                                  .then(() => navigate('/account/groups'))
 
                               })
                               .finally(() => {

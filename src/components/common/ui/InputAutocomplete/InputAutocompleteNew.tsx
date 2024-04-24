@@ -27,12 +27,22 @@ export function InputAutocompleteNew(props:any) {
           {
             // region: "Челябинская область",
             city: props.city,
+            flat: null
+
 
           }
         ],
-        restrict_value: true }
+        type: "address",
+        restrict_value: true,
+        from_bound:{
+          value: "street"
+        },
+        to_bound:{
+        value:"house"},
+      }
       // @ts-ignore
       const response = await agent.Utils.suggest(dataToform)
+
       // @ts-ignore
       setData(response)
 
@@ -94,6 +104,16 @@ export function InputAutocompleteNew(props:any) {
       values.address = item.value
 
       setPrefix(item.label)
+      if(item.data.street_with_type) {
+        values.street = item.data.street_with_type
+      }
+      //Точность 7 - улица, точность 8 - дом.
+      if(item.data.fias_level >= 8) {
+        values.address_ready = true
+
+      } else {
+        values.address_ready = false
+      }
       if(item.data.geo_lat && item.data.geo_lon) {
           values.lat = item.data.geo_lat;
           values.lon = item.data.geo_lon;
@@ -128,27 +148,35 @@ export function InputAutocompleteNew(props:any) {
                   <TextInput
                       ref={ref}
                       disabled={!values.city}
+                    {...props.ctx.getInputProps('address')}
                       placeholder='Введите адрес'
                       value={value}
+
                       onChange={(event: { currentTarget: { value: React.SetStateAction<string> } }) => {
+                          values.address_ready = false
                           setValue(event.currentTarget.value)
-                          console.log(values.city_name.length)
                           values.address = event.currentTarget.value
                           // @ts-ignore
                           fetchOptions(event.currentTarget.value)
                           combobox.resetSelectedOption()
                           combobox.openDropdown()
                       }}
-                      onClick={() => combobox.openDropdown()}
+                      onClick={() => {
+                        if(!values.address_ready) {
+                          combobox.openDropdown()
+                        }
+                      }}
                       onFocus={() => {
                           if (data && data.length !== 0) {
+                            if(!values.address_ready) {
                               combobox.openDropdown()
+                            }
                           }
                           if (data === null) {
                               fetchOptions(value)
                           }
                       }}
-                    error={errors.address && isTouched('address')}
+                      error={errors.address && isTouched('address')}
                       // leftSectionWidth={widthLeftProp}
                       // //@ts-ignore
                       // leftSection={<>{values.city_name}, </>}
@@ -158,7 +186,9 @@ export function InputAutocompleteNew(props:any) {
                       //   style: {fontSize: '.875rem', lineHeight: 'normal', fontWeight: 500, color: 'rgb(96 97 99 / 1)', fontFamily: "Montserrat, sans-serif"}
                       //
                       // }}
-                      onBlur={() => combobox.closeDropdown()}
+                      onBlur={() => {
+                        combobox.closeDropdown()
+                      }}
                       rightSection={loading && <Loader size={18} />}
                   />
                   {errors.address && isTouched('address') ? <div className={'form-error'}>{errors.address}</div> : null}

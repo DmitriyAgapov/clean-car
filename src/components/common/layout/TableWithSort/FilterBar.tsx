@@ -107,6 +107,51 @@ const FilterElements = ({ filters }:{filters: any}) => {
               }))} />,
           )
           break
+        case FilterData.company_type:
+          elements.push(
+            <Select clearable
+              label={'Тип компании'}
+              size={'xs'}
+              defaultValue={params.company__company_type}
+              onChange={(value) => {
+                if (value !== null) {
+                  params.company__company_type = value
+                  // setParams((prevState) => ({...prevState, service_type: value}))
+                } else {
+                  let newParams: any = params
+                  delete params.company__company_type
+                  // setParams(newParams)
+                }
+              }}
+              classNames={SelectStyles}
+              comboboxProps={{ withinPortal: false }}
+              data={['Компания-Заказчик', "Компания-Партнер", "Физическое лицо", "Администратор системы"].map((el:string) => ({
+                label: el,
+                value: el
+              }))} />,
+          )
+          break
+        case FilterData.employee__is_active:
+          elements.push(
+            <Select clearable
+              label={'Статус'}
+              size={'xs'}
+              defaultValue={params.company__company_type}
+              onChange={(value) => {
+                if (value !== null) {
+                  params.employee__is_active = value
+                  // setParams((prevState) => ({...prevState, service_type: value}))
+                } else {
+                  let newParams: any = params
+                  delete params.employee__is_active
+                  // setParams(newParams)
+                }
+              }}
+              classNames={SelectStyles}
+              comboboxProps={{ withinPortal: false }}
+              data={[{label: 'Активен', value: "true"},{label: "Неактивен", value: "false"}]} />,
+          )
+          break
         case FilterData.car_type:
           elements.push(
             <Select clearable
@@ -221,7 +266,7 @@ const FilterBar = ({ filters, state = false }: FilterBarProps) => {
 
   const handleClearAction = React.useCallback(() => {
     localStore.params.clearParams()
-    setParams(null)
+    // setParams()
   }, [params])
 
 

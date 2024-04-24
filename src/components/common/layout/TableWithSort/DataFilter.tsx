@@ -13,8 +13,10 @@ import { DateInput, DateTimePicker } from "@mantine/dates";
 export enum FilterData {
   city= 'city',
   car_type= 'car_type',
+  employee__is_active= 'employee__is_active',
   brand= 'brand',
   service_type= 'service_type',
+  company_type= 'company_type',
   is_active= 'is_active',
   start_date = 'start_date',
   end_date = 'end_date'

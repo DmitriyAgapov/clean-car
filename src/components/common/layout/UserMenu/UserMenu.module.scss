@@ -2,8 +2,8 @@
 	display: flex;
   align-items: flex-start;
   gap: 1.25rem;
-  max-width: 20rem;
-  width: 100%;
+  //max-width: 20rem;
+  //width: 100%;
   @screen lg-max {
 	flex-direction: row-reverse;
 	flex: 1;
@@ -48,8 +48,9 @@
 }
 .user {
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: flex-start;
+  grid-template-columns: 40px 1fr;
   gap: .625rem;
   flex: 1 100%;
 }
@@ -65,10 +66,13 @@
   flex: 0 1 auto;
   margin: auto 1rem auto .25rem;
   color: rgba(220, 220, 220, 0.5);
+  @screen mobile {
+	display: none;
+  }
 }
 .photo {
   background: var(--gradient-admin);
-
+  flex: 0 0 40px;
   border-radius: 1.25rem;
   display: inline-block;
   border: 1px solid transparent;
@@ -77,24 +81,25 @@
   line-height: 1.29;
   display: flex;
   flex: 1;
+
+  max-width: calc(100vw - 10rem);
+  vertical-align: middle;
+  position: relative;
+  overflow: hidden;
   color: var(--accentColor);
-
-}
-.first_name {
-	flex: 0 1 fit-content;
-  white-space: nowrap;
-  margin-right: .5rem;
-
   background: -webkit-linear-gradient(360deg, var(--accentColor) 60%, rgba(0, 253, 173, 0.02) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
-  vertical-align: middle;
-  position: relative;
-  overflow: hidden;
+}
+.first_name {
+	//flex: 0 1 fit-content;
+  white-space: nowrap;
+  margin-right: .5rem;
+
 }
 .last_name {
-	flex: 0 2ch;
+	//flex: 0 2ch;
   white-space: nowrap;
 }
 .status {

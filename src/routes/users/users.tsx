@@ -14,6 +14,7 @@ import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSo
 import { useDidUpdate, useForceUpdate } from '@mantine/hooks'
 import useSWR from "swr";
 import { LocalRootStore } from "stores/localStore";
+import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 const localRootStore =  new LocalRootStore()
 const UsersPage = () => {
   const store = useStore()
@@ -21,13 +22,13 @@ const UsersPage = () => {
   const location = useLocation()
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const navigate = useNavigate()
-  const {isLoading, data, isValidating, mutate} = useSWR(['users', localStore.params.getSearchParams] , ([url, args]) => store.usersStore.loadUserList(args), {
+  const {isLoading, data, isValidating, mutate} = useSWR(['users', {...localStore.params.getSearchParams}] , ([url, args]) => store.usersStore.loadUserList(args), {
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
     revalidateOnMount: true,
     revalidateIfStale: false,
   })
-
+  console.log(data);
   useDidUpdate(
     () => {
       if(location.pathname === '/account/users') {
@@ -36,7 +37,7 @@ const UsersPage = () => {
     },
     [location.pathname]
   );
-
+  console.log(data);
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -52,6 +53,7 @@ const UsersPage = () => {
         query: {
           type: item.company.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : item.company.company_type === "Компания-Партнер" ? UserTypeEnum.performer : "admin",
           company_id: item.company.id,
+
 
         },
       }))}
@@ -93,6 +95,7 @@ const UsersPage = () => {
         style={PanelRouteStyle.users}
         background={PanelColor.glass}
         filter={true}
+        initFilterParams={[FilterData.company_type, FilterData.employee__is_active]}
         state={isValidating}
         ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city__name'}]}
       />

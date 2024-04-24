@@ -15,6 +15,7 @@ import { TableWithSortStore } from "components/common/layout/TableWithSort/Table
 import {  LocalRootStore } from "stores/localStore";
 import userStore from "stores/userStore";
 import { useDidUpdate } from "@mantine/hooks";
+import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 
 const localRootStore =  new LocalRootStore()
 
@@ -80,7 +81,8 @@ const CompaniesPage = () => {
         style={PanelRouteStyle.company}
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
-        filter={false}
+        filter={true}
+        initFilterParams={[FilterData.city, ]}
         state={isLoading}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'}, {label: 'Тип', name: 'company_type'},{ label: 'Город', name: 'city' }]}
       />

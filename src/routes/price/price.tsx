@@ -31,7 +31,7 @@ const PricePage = ():JSX.Element => {
   const isHistory = location.pathname.includes('history');
   // @ts-ignore
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
-
+  console.log(currentPriceById.data.tabs);
   const memoModal = React.useMemo(() => {
     if(!isHistory) {
     return  <PriceCopy opened={opened} id={isCreate.id} title={company.name}

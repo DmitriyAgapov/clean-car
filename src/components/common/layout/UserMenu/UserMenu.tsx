@@ -94,8 +94,8 @@ const User = ({ last_name, first_name, status, photoUrl, action }: UserProps) =>
       </div>
       <div className={styles.menuName}>
         <div className={styles.name}>
-          <div className={styles.first_name}>{first_name}</div>
-          <div className={styles.last_name}>{(last_name && last_name.length !== 0) && last_name[0]}.</div>
+          {/* <span className={styles.first_name}></span> */}
+          <span className={styles.last_name}>{first_name} {(last_name && last_name.length !== 0) && last_name}</span>
         </div>
         <div className={styles.status}>Администратор</div>
       </div>

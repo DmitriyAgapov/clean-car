@@ -21,18 +21,16 @@ const TransactionPage = () => {
   const store = useStore()
   const navigate = useNavigate()
 
-  const {isLoading, data, mutate} = useSWR(['transaction', localStore.params.getSearchParams] , ([url, args]) => agent.Balance.getTransactionList(2,args).then(r => r.data))
-  console.log(data);
+  const {isLoading, data, mutate} = useSWR(['transaction', localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getTransactions(args).then(r => r.data))
+
   useEffect(() => {
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
         created: dayjs(item.created).format('DD.MM.YY hh:mm'),
-        //TODO Добавить компанию, название
-        company: "ООО \"Компания-Заказчик\"",
-        //TODO Добавить тип компании
-        company_type: "Компания-Заказчик",
-        amount: String(item.amount).includes('-') ? `- ${String(item.amount).split('-')[1]} ₽` : `+ ${String(item.amount).split('-')[1]} ₽`,
+        company: item.balance.company.name,
+        company_type: item.balance.company.company_type,
+        amount: String(item.amount).includes('-') ? `- ${String(item.amount).split('-')[1]} ₽` : `+ ${String(item.amount)} ₽`,
         ts_maker: item.ts_maker,
         bid: item.bid,
         purpose: item.purpose
@@ -85,7 +83,7 @@ const TransactionPage = () => {
         className={'col-span-full table-groups'}
         filter={false}
         state={isLoading}
-        ar={[{ label: 'Дата', name: 'created' }, {label: 'Компания', name: 'company'}, {label: 'Тип компании', name: 'company_type'}, { label: 'Сумма', name: 'amount' }, { label: 'Пользователь', name: 'ts_maker' }, { label: 'Заявка №', name: 'bid' }, {label: 'Платеж', name: 'purpose'} ]}
+        ar={[{ label: 'Дата', name: 'created' }, {label: 'Компания', name: 'balance__company'}, {label: 'Тип компании', name: 'balance__company__company_type'}, { label: 'Сумма', name: 'amount' }, { label: 'Пользователь', name: 'ts_maker' }, { label: 'Заявка №', name: 'bid' }, {label: 'Платеж', name: 'purpose'} ]}
       />
     </Section>
   )

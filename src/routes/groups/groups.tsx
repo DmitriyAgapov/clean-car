@@ -22,7 +22,9 @@ const GroupsPage = () => {
   const {isLoading, data, mutate} = useSWR(['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
     const navigate = useNavigate()
     const location = useLocation()
-
+  useEffect(() => {
+    console.log(isLoading, data);
+  }, [data, isLoading]);
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -39,7 +41,7 @@ const GroupsPage = () => {
   useDidUpdate(
     () => {
       if(location.pathname === '/account/groups') {
-        mutate()
+        mutate().then(r => console.log(r))
       }
     },
     [location.pathname]

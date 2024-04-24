@@ -217,6 +217,7 @@ export class AppStore {
   setAsideClose() {
     if (!this.asideState && this.bodyRef.clientWidth < 960) {
       this.bodyRef.style.overflow = 'hidden'
+
     } else {
       this.bodyRef.style.overflow = 'initial'
     }

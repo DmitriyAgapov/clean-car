@@ -25,6 +25,10 @@ import TransferListNew from "components/common/ui/TransferList/TransferListNew";
 
 interface InitValues {
     address: string | null
+    address_ready: boolean
+    qc?: string | null
+    house: string | null
+    street: string | null
     legal_address: string | null
     type: "Компания-Заказчик" | "Компания-исполнитель"
     bill: string | number
@@ -56,6 +60,10 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     const { mutate } = useSWRConfig()
     let initValues: InitValues = {
         address: '',
+        address_ready: false,
+        street: '',
+        qc: null,
+        house: '',
         type: CompanyType.customer,
         bill: '100',
         city: '',
@@ -97,7 +105,10 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     }
     if(edit) {
         initValues = {
+            address_ready: true,
             address: company.address,
+            street: company.address,
+            house: company.address,
             inn: company.inn,
             ogrn: company.ogrn,
             city: company.city,

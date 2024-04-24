@@ -116,7 +116,7 @@ export class PermissionStore {
       //    agent.PermissionsAdmin.createAdminPermission(data)
       // }
       if(userStore.myProfileData.company.id) {
-         agent.Permissions.createPermission(userStore.myProfileData.company.id, data)
+        return  yield agent.Permissions.createPermission(userStore.myProfileData.company.id, data)
       }
 
     } catch (error) {

@@ -6,7 +6,6 @@ import { useStore } from "stores/store";
 import { Observer, observer } from "mobx-react-lite";
 import { useWindowDimensions } from "utils/utils";
 import Logo from "components/common/layout/Logo/Logo";
-import { useClickOutside } from "@mantine/hooks";
 
 
 const BackDrop = () => {

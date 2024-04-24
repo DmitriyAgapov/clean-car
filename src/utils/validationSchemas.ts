@@ -46,13 +46,20 @@ export const SelectModalUserSchema = Yup.object().shape({
 
 export const CreateCompanySchema = Yup.object().shape({
 	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	address: Yup.string().when('address_ready', (address_ready, schema) => {
+		if(!address_ready[0]) {
+			return schema.oneOf([],'Адрес распознан неверно, уточните адрес').required('Обязательное поле')
+		} else {
+			return schema
+		}
+	}),
 	legal_address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
 	inn: Yup.string().length(10, 'Длина ИНН должна быть 10 символов').required('Обязательное поле'),
 	ogrn: Yup.string().length(13, 'Длина ОГРН должна быть 13 символов').required('Обязательное поле'),
 	contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
 	city: Yup.string().required('Обязательное поле'),
 	type: Yup.string(),
+	address_ready: Yup.boolean().required('Введите верный адрес'),
 	overdraft: Yup.string(),
 	overdraft_sum: Yup.number().when('overdraft', (overdraft, schema) => {
 
@@ -76,7 +83,14 @@ export const CreateCompanySchema = Yup.object().shape({
 })
 export const CreateFilialSchema = Yup.object().shape({
 	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	address: Yup.string().when('address_ready', (address_ready, schema) => {
+		if(!address_ready[0]) {
+			return schema.oneOf([],'Адрес распознан неверно, уточните адрес').required('Обязательное поле')
+		} else {
+			return schema
+		}
+	}),
+	address_ready: Yup.boolean().required('Введите верный адрес'),
 	city: Yup.string().required('Обязательное поле'),
 	type: Yup.string(),
 	company_id: Yup.string().required('Обязательное поле'),
@@ -124,7 +138,6 @@ export const CreateBidSchemaStep2 = Yup.object().shape({
 })
 export const CreateBidSchemaStep3 = Yup.object().shape({
 	address_from: Yup.string().when('service_type', (service_type, schema) => {
-
 		if(service_type[0] === "3") {
 			return schema.required("Обязательное поле")
 		}
