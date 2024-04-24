@@ -11,6 +11,7 @@ export type TableSearchParams = { page: number; page_size: number, q?: string,
 	ordering?:string
 	brand?:string
 	end_date?:string
+	is_active?: string
 	status?: Status | null | undefined
 }
 export class TableWithSortStore {

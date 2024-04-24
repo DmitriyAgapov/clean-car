@@ -18,6 +18,7 @@ export enum FilterData {
   service_type= 'service_type',
   company_type= 'company_type',
   is_active= 'is_active',
+  bidStatus= 'bidStatus',
   start_date = 'start_date',
   end_date = 'end_date'
 }

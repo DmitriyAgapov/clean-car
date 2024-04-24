@@ -13,6 +13,7 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import AddType from "routes/reference/Services/addType";
 import AddOption from "routes/reference/Services/addOption";
 import { Pagination } from "@mantine/core";
+import agent from "utils/agent";
 
 const ServicePage = () => {
     const store = useStore()
@@ -130,43 +131,47 @@ const ServicePage = () => {
                 headerClassName={'flex justify-between'}
                 state={false}
                 header={
-                    <>
-                        <div>
-                            <LinkStyled
-                                text={
-                                    <>
-                                        <SvgBackArrow />
-                                        {textData.createPageBack}
-                                    </>
-                                }
-                                className={
-                                    'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                                }
-                              to={location.pathname.split('/').slice(0, -1).join('/')}
-                                variant={ButtonVariant.text}
-                            />
-                            <Heading
-                                text={textData.referenceTitle}
-                                variant={HeadingVariant.h1}
-                                className={'inline-block !mb-0'}
-                                color={HeadingColor.accent}
-                            />
-                        </div>
-                    </>
-                }
-            ></Panel>
-            <Panel
-                className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
-                variant={PanelVariant.textPadding}
-                background={PanelColor.glass}
-                bodyClassName={'grid grid-cols-3 items-start content-start gap-8'}
-                headerClassName={'flex gap-10'}
-                header={
-                    <>
-                        <div className={'flex items-baseline justify-between flex-1 '}>
-                            <div className={'flex-1'}>
-                                <Heading
-                                    text={data.results.name}
+                  <>
+                    <div>
+                      <LinkStyled text={
+                        <>
+                          <SvgBackArrow />
+                          {textData.createPageBack}
+                        </>
+                      }
+                        className={
+                          "flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4"
+                        }
+                        to={location.pathname.split("/").slice(0, -1).join("/")}
+                        variant={ButtonVariant.text} />
+                      <Heading text={textData.referenceTitle}
+                        variant={HeadingVariant.h1}
+                        className={"inline-block !mb-0"}
+                        color={HeadingColor.accent} />
+                    </div>
+                    <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
+                      <Button text={"Обновить прайс-листы"}
+                        action={() => {
+                          agent.Price.updatePrice().then(() => console.log("Price updated"));
+                        }}
+                        // trimText={true}
+                        /* action={() => store.companyStore.addCompany()} */
+                        className={"inline-flex tablet-max:flex-1"}
+                        variant={ButtonVariant["accent-outline"]}
+                        size={ButtonSizeType.sm} />
+                    </div>
+                  </>
+                }></Panel>
+          <Panel className={"col-span-full grid grid-rows-[auto_1fr_auto]"}
+            variant={PanelVariant.textPadding}
+            background={PanelColor.glass}
+            bodyClassName={"grid grid-cols-3 items-start content-start gap-8"}
+            headerClassName={"flex gap-10"}
+            header={
+              <>
+                <div className={"flex items-baseline justify-between flex-1 "}>
+                  <div className={"flex-1"}>
+                    <Heading text={data.results.name}
                                     variant={HeadingVariant.h2}
                                     color={HeadingColor.accent}
                                 />

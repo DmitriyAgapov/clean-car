@@ -66,7 +66,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         company_filials: store.userStore.myProfileData.company.parent === null ? 'company' : 'filials',
       }
       if(edit) {
-        console.log(car);
+
         car.employees.forEach((item: any) => {
           (async () =>   store.usersStore.getUsers(car.company_id).then(() => {
             store.usersStore.addToSelectedUsers(Number(item))
@@ -109,6 +109,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     name: 'createUpdateCar',
     initialValues: memoizedInitValues,
     validateInputOnBlur: true,
+    onValuesChange: (values) => console.log('val', values.number.length),
     validate: yupResolver(CreateCarSchema),
     enhanceGetInputProps: (payload) => {
       if (payload.field === "model") {
@@ -317,6 +318,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                 input: 'uppercase'
               }}
                 component={IMaskInput}
+
                 //@ts-ignore
                 {...{
                   mask: "a 000 aa 000 ",

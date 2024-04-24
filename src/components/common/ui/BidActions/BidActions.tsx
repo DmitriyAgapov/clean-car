@@ -8,7 +8,7 @@ import { Button as Btn, Menu } from '@mantine/core'
 import { SvgMenu } from 'components/common/ui/Icon'
 import styles from './BidActions.module.scss'
 import { useDisclosure, useViewportSize } from '@mantine/hooks'
-import { BidModal } from 'components/common/layout/Modal/BidModal'
+import  BidModal  from 'components/common/layout/Modal/BidModal'
 import { useSWRConfig } from "swr";
 
 const BidText = {
@@ -32,14 +32,19 @@ export const BidAdminActions = () => {
     const store = useStore()
     let revalidator = useRevalidator()
     const params = useParams()
+    const { mutate } = useSWRConfig()
+
     const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
         (async () => {
             if (params.company_id && params.id) {
                 await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
+                  .then(() => mutate('bids')
+                    .then(() => console.log('updated')))
                 revalidator.revalidate()
             }
         })()
     }, [])
+
     const items = React.useMemo(() => {
         const ar = new Set()
         for (let it in BidsStatus) {
@@ -60,6 +65,7 @@ export const BidAdminActions = () => {
         )
         return <>{res}</>
     }, [])
+
     return (
         <Menu shadow='md' width={200}>
             <Menu.Target>
@@ -75,27 +81,28 @@ export const BidAdminActions = () => {
 
 
 const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void}): JSX.Element => {
-  const [opened, { open, close }] = useDisclosure(false);
 
   const { height, width } = useViewportSize();
   const { mutate } = useSWRConfig()
   const params = useParams()
   const store = useStore()
+
   const memoModal = React.useMemo(() => {
-    return  <BidModal opened={store.bidsStore.modalCurrentState}
+    // @ts-ignore
+    return  <BidModal update={update} opened={store.bidsStore.modalCurrentState}
       onClose={() => store.bidsStore.setModalCurrentState(false)} />
   }, [store.bidsStore.modalCurrentState]);
+
   const btnSize = React.useMemo(() => {
     if((width && width < 740)) return ButtonSizeType.lg
     return ButtonSizeType.sm
   }, [width])
-  let revalidator = useRevalidator()
+
   const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
 
     (async () => {
       if (params.company_id && params.id) {
         await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
-
       }
     })().then(() => {
       console.log('status changed');

@@ -1000,7 +1000,9 @@ export const TabsVariantPrice = ({
       default:
           return null
   }
-  return <ScrollArea.Autosize offsetScrollbars  mah={'52vh'}>
+  return <ScrollArea.Autosize offsetScrollbars={'x'}  mah={'52vh'} classNames={{
+    scrollbar: 'z-50'
+  }}>
     {result}
   </ScrollArea.Autosize>
 }

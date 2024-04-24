@@ -173,6 +173,7 @@ const handleErrors = (err: AxiosError & any) => {
     return err
 }
 const Price = {
+    updatePrice: () => requests.post('/price/update_catalog/', {}),
     createPrice: (company_id: number) => requests.post(`/price/${company_id}/create/`, {}),
     priceDoubling: (company_id: number, id: number) => requests.post(`/price/${company_id}/${id}/doubling/`, {}),
     getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list', pagination),
@@ -458,6 +459,7 @@ const Account = {
 
 }
 const Balance = {
+  getReport: (params?: PaginationProps) => requests.get(`/balance/report/`, params),
   getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params),
   getTransactionListAdmin: (params?: PaginationProps) => requests.get('/balance/all_transactions/', params)
 }

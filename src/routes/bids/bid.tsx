@@ -14,10 +14,8 @@ import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import BidActions, { BidAdminActions } from "components/common/ui/BidActions/BidActions";
 import appStore from "stores/appStore";
 import { observer } from "mobx-react-lite";
-import paramsStore from "stores/paramStore";
 import agent, { client } from "utils/agent";
 import useSWR from "swr";
-import { Loader } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 
 const BidPage = () => {
@@ -25,7 +23,7 @@ const BidPage = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const params = useParams()
-	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => client.bidsRetrieve(args.company_id, args.id))
+	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => agent.Bids.getBid(Number(params.company_id), Number(params.id)).then(r => r.data))
 
 	const textData = store.bidsStore.text
 	const tabedData = React.useMemo(() => {
@@ -57,6 +55,10 @@ const BidPage = () => {
 	useEffect(() => {
 		store.bidsStore.clearPhotos()
 	}, [params.bid_id])
+	//
+	// useEffect(() => {
+	// 	store.bidsStore.clearPhotos()
+	// }, [data?.status])
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	// if (location.pathname !== `/account/references/${textData.path}/`) return <Outlet />

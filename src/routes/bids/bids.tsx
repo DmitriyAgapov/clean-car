@@ -108,7 +108,7 @@ const BidsPage = () => {
 							background={PanelColor.glass}
 							className={'col-span-full table-groups table-bids'}
 							filter={true}
-							initFilterParams={[FilterData.city, FilterData.is_active, FilterData.service_type, FilterData.start_date, FilterData.end_date]}
+							initFilterParams={[FilterData.city, FilterData.bidStatus, FilterData.service_type, FilterData.start_date, FilterData.end_date]}
 							state={localStore.setIsLoading}
 							ar={textData.tableHeaders}
 				/>

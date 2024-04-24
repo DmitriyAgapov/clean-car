@@ -14,7 +14,7 @@ root.render(
   <React.StrictMode>
     <StoreProvider>
       <MantineProvider theme={newTheme} defaultColorScheme={'dark'}>
-        <DatesProvider settings={{ locale: 'ru' }}>
+        <DatesProvider settings={{ locale: 'ru',  timezone: 'UTC'  }}>
       {/* <ThemeProvider value={theme}> */}
           <Notifications  position="top-right" zIndex={1000}/>
 

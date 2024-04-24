@@ -14,6 +14,7 @@ import { LoadingOverlay } from '@mantine/core'
 import { SvgCleanCarLoader, SvgDisconnect } from "components/common/ui/Icon";
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
+import { Navigate, useLocation } from "react-router-dom";
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -48,6 +49,7 @@ interface ChildrenProps {
 const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent }) => {
   const store = useStore()
   const isOnline = useNavigatorOnLine()
+  const loc = useLocation()
   const {width} = useWindowDimensions();
   // console.log('st', (navigation.state === "idle" || store.appStore.getAppState) ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true );
   const { appStore, userStore, authStore } = store;
@@ -70,6 +72,9 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               }}
           />
       )
+  if(!store.appStore.token && loc.pathname !== "/") {
+    return (<Navigate to={'/'}/>)
+  }
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
           <Header>

@@ -10,7 +10,7 @@ export function CarClasses(props: { opened: boolean; onClose: () => void}) {
 	const store = useStore()
 
 	return (
-		<Modal.Root size={685} opened={props.opened} onClose={props.onClose} centered>
+		<Modal.Root size={747} opened={props.opened} onClose={props.onClose} centered>
 			<Modal.Overlay className={'bg-black/80'}/>
 			<Modal.Content radius={20} className={styles.ModalBid}>
 				<Modal.Header className={'static '}>

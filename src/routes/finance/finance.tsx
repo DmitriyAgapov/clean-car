@@ -7,7 +7,7 @@ import { useStore } from 'stores/store'
 import { observer, useLocalStore } from 'mobx-react-lite'
 import { useLocation, useNavigate } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import { client } from 'utils/agent'
+import agent, { client } from 'utils/agent'
 import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate } from '@mantine/hooks'
@@ -447,8 +447,8 @@ const FinacePage = () => {
   const store = useStore()
   const navigate = useNavigate()
 
-  const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams] , ([url, args]) => client.companiesOnlyCompaniesList(args))
-
+  const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams] , ([url, args]) => agent.Balance.getReport(args))
+  console.log(data);
   useEffect(() => {
     localStore.setData = {
       ...testData,

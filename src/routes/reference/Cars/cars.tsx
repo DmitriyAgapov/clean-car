@@ -3,20 +3,18 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import CarHelper from 'components/common/layout/CarHelper/CarHelper'
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
-import { PriceCopy } from 'components/common/layout/Modal/PriceCopy'
 import { CarClasses } from 'components/common/layout/Modal/CarClasses'
 import agent, { client } from "utils/agent";
-import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
 import { LocalRootStore } from "stores/localStore";
 import { observer, useLocalStore } from "mobx-react-lite";
 import useSWR from "swr";
+import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 export const textDataCars = {
   path: 'car_brands',
   labelsForItem: ['Марка', 'Класс', 'Модель'],
@@ -138,6 +136,7 @@ const RefCarsPage = () => {
                     background={PanelColor.glass}
                     className={'col-span-full table-groups  h-full'}
                     filter={true}
+                  initFilterParams={[FilterData.brand, FilterData.car_type]}
                     state={isLoading}
                     ar={textDataCars.tableHeaders}
                 />

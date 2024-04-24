@@ -1,6 +1,6 @@
 import { CloseIcon, FileButton, Image, Modal, Text } from "@mantine/core";
 import React from "react";
-import { Observer } from "mobx-react-lite";
+import { observer, Observer } from "mobx-react-lite";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from "stores/store";
 import styles from "./Modal.module.scss";
@@ -10,31 +10,47 @@ import { useParams, useRevalidator } from "react-router-dom";
 import BidImg from "components/common/layout/Modal/BidImg";
 import { BidsStatus } from "stores/bidsStrore";
 import { useSWRConfig } from "swr";
+import { mutate } from "swr"
 
-export function BidModal(props: { opened: boolean; onClose: () => void;}) {
+const BidModal = (props: { opened: boolean; onClose: () => void; update?: () => void}) => {
 	const store = useStore()
 	let revalidator = useRevalidator()
-	const { mutate } = useSWRConfig()
+	// const { mutate } = useSWRConfig()
 	const params = useParams()
 	const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
 
 		(async () => {
-			console.log('status', store.bidsStore.PhotoId)
 			if (params.company_id && params.id) {
-				await store.bidsStore.updateBitStatus(params.company_id, params.id, status, store.bidsStore.PhotoId).finally(() => store.bidsStore.clearPhotos())
-				console.log(`bids/${params.company_id}/${params.id}`);
-				await mutate(`bids/${params.company_id}/${params.id}`)
-				revalidator.revalidate()
-
+				await store.bidsStore.updateBitStatus(params.company_id, params.id, status, store.bidsStore.PhotoId)
 			}
-		})()
+		})().then(() => {
+			console.log('status changed');
+			store.bidsStore.clearPhotos()
+
+		}).finally(props.update)
+		mutate(`bids/${params.company_id}/${params.id}`)
+		mutate(`/bids/${params.id}/photos/`)
 	}, [])
+	// const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
+	// 		if (params.company_id && params.id) {
+	// 			 store.bidsStore.updateBitStatus(params.company_id, params.id, status, store.bidsStore.PhotoId)
+	// 			.then((r) => {
+	// 				 console.log(`bids/${params.company_id}/${params.id}`, r);
+	// 				 mutate(`bids/${params.company_id}/${params.id}`).then((r) => console.log('updated finished bids withId', r))
+	// 				 mutate(`bids`).then((r) => console.log('updated finished', r))
+	// 				 revalidator.revalidate()
+	// 			})
+	// 			.finally(() => store.bidsStore.clearPhotos())
+	//
+	//
+	//
+	//
+	// 		}
+	// }, [])
 	const memoFileUpload = React.useMemo(() => {
-		console.log(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0);
+
 		return <Observer
 			children={() => (<div className={'grid grid-cols-3  gap-4 col-span-full'}>
-
-
 				<div className={'flex col-span-2  gap-3 items-center col-span-full justify-items-center my-8'}>
 					{store.bidsStore.getPhotos.map(
 						(item: any, index: number) => <BidImg company_id={params.company_id} h={'4rem'}
@@ -70,7 +86,7 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 						></Button>
 					)}
 				</FileButton>
-					<Button type={'button'} text={'Завершить заявку'} variant={ButtonVariant.accent}  disabled={store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0} action={() => {
+					<Button type={'button'} text={'Завершить заявку'} variant={ButtonVariant.accent}  disabled={store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length < 2} action={() => {
 						handleChangeBidStatus(BidsStatus["Выполнено"])
 						props.onClose()
 					}}/>
@@ -94,3 +110,4 @@ export function BidModal(props: { opened: boolean; onClose: () => void;}) {
 		</Modal.Root>
 	)
 }
+export default observer(BidModal)

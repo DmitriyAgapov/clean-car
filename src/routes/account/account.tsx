@@ -10,7 +10,6 @@ import UserMenu from 'components/common/layout/UserMenu/UserMenu'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { ButtonVariant } from 'components/common/ui/Button/Button'
 import { observer } from 'mobx-react-lite'
-import { Loader, LoadingOverlay } from "@mantine/core";
 
 const AccountPage = () => {
     const store = useStore()

@@ -12,6 +12,7 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { dateTransform } from "utils/utils";
 import AddType from "routes/reference/Services/addType";
 import AddOption from "routes/reference/Services/addOption";
+import agent from "utils/agent";
 
 const ServicesSubTypePage = () => {
     const store = useStore()
@@ -27,44 +28,48 @@ const ServicesSubTypePage = () => {
                 headerClassName={'flex justify-between'}
 
                 header={
-                    <>
-                        <div>
-                            <LinkStyled
-                                text={
-                                    <>
-                                        <SvgBackArrow />
-                                        Назад к справочнику{' '}
-                                    </>
-                                }
-                                className={
-                                    'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                                }
-                              to={location.pathname.split('/').slice(0, -1).join('/')}
-                                variant={ButtonVariant.text}
-                            />
-                            <Heading
-                                text={data.results.parent.name}
-                                variant={HeadingVariant.h1}
-                                className={'inline-block !mb-0'}
-                                color={HeadingColor.accent}
-                            />
-                        </div>
-
-                    </>
-                }
-            ></Panel>
-          <Panel headerClassName={'!pb-2'} header={
-            <>
-              <div className={'flex items-baseline justify-between flex-1 '}>
-                <div className={'flex-1'}>
-                  <Heading
-                    text={data.results.name}
-                    variant={HeadingVariant.h2}
-                    color={HeadingColor.accent}
-                  />
-                  <div className={'flex flex-1 items-end gap-12'}>
-                    <div className={'text-xs text-gray-2'}>
-                      Дата и время регистрации: <span>{dateTransform(data.updated).date}</span>
+                  <>
+                    <div>
+                      <LinkStyled text={
+                        <>
+                          <SvgBackArrow />
+                          Назад к справочнику{" "}
+                        </>
+                      }
+                        className={
+                          "flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4"
+                        }
+                        to={location.pathname.split("/").slice(0, -1).join("/")}
+                        variant={ButtonVariant.text} />
+                      <Heading text={data.results.parent.name}
+                        variant={HeadingVariant.h1}
+                        className={"inline-block !mb-0"}
+                        color={HeadingColor.accent} />
+                    </div>
+                    <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
+                      <Button text={"Обновить прайс-листы"}
+                        action={() => {
+                          agent.Price.updatePrice().then(() => console.log("Price updated"));
+                        }}
+                        // trimText={true}
+                        /* action={() => store.companyStore.addCompany()} */
+                        className={"inline-flex tablet-max:flex-1"}
+                        variant={ButtonVariant["accent-outline"]}
+                        size={ButtonSizeType.sm} />
+                    </div>
+                  </>
+                }></Panel>
+          <Panel headerClassName={"!pb-2"}
+            header={
+              <>
+                <div className={"flex items-baseline justify-between flex-1 "}>
+                  <div className={"flex-1"}>
+                    <Heading text={data.results.name}
+                      variant={HeadingVariant.h2}
+                      color={HeadingColor.accent} />
+                    <div className={"flex flex-1 items-end gap-12"}>
+                      <div className={"text-xs text-gray-2"}>
+                        Дата и время регистрации: <span>{dateTransform(data.updated).date}</span>
                     </div>
                     <Heading
                       className={'!m-0'}

@@ -340,19 +340,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     // style: { backgroundColor: 'red' },
                     loading: false,
                 })
-
                 store.bidsStore.formResultsClear()
                 changeStep()
                 store.bidsStore.clearPhotos()
-
             }
           })
-
         })()
     } else {
-    changeStep()
-  }
+      changeStep()
+    }
   }, [formData.values.service_type, step])
+
     const conductorsData = React.useMemo(() => {
         let result: any[] = []
       if(store.usersStore.currentCompanyUsers && store.usersStore.currentCompanyUsers.length !== 0) {

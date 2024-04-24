@@ -179,7 +179,7 @@ export class CatalogStore {
         return []
     }
     async getAllRefCarModels(params?:any) {
-        return client.catalogCarModelsList(params)
+        return agent.Catalog.getCarModels(params).then(r => r.data)
     }
     async getCarBrandModels(id: number, params?: PaginationProps) {
         if (id) {

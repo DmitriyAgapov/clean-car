@@ -59,7 +59,7 @@ const FilterElements = ({ filters }:{filters: any}) => {
               }))} />,
           )
           break
-        case FilterData.is_active:
+        case FilterData.bidStatus:
           elements.push(
             <Select label={'Статус'}
               size={'xs'}
@@ -83,6 +83,58 @@ const FilterElements = ({ filters }:{filters: any}) => {
               }))} />,
           )
           break
+        case FilterData.brand:
+          // @ts-ignore
+          elements.push(
+            <Select label={'Марка'}
+              size={'xs'}
+              clearable
+              defaultValue={params.brand}
+              onChange={(value) => {
+                if (value !== null) {
+                  params.brand = value
+                  // setParams((prevState) => ({...prevState, status: value}))
+                } else {
+                  let newParams: any = params
+                  delete params.brand
+                  // setParams(newParams)
+                }
+              }}
+              classNames={SelectStyles}
+              comboboxProps={{ withinPortal: false }}
+              //@ts-ignore
+              data={(() => {
+                const _data = store.catalogStore.carBrandsCurrent
+                return _data.map((brand:any) => ({
+                  label: brand.name,
+                  value: brand.id.toString(),
+                }))
+              })()
+              } />,
+          )
+          break
+        case FilterData.is_active:
+          elements.push(
+            <Select label={'Статус'}
+              size={'xs'}
+              clearable
+              defaultValue={params.is_active}
+              onChange={(value) => {
+                if (value !== null) {
+                  params.is_active = value
+                  // setParams((prevState) => ({...prevState, status: value}))
+                } else {
+                  let newParams: any = params
+                  delete params.is_active
+                  // setParams(newParams)
+                }
+              }}
+              classNames={SelectStyles}
+              comboboxProps={{ withinPortal: false }}
+              data={[{label: 'Активен', value: "true"}, {label: "Неактивен", value: "false"}]} />,
+          )
+          break
+
         case FilterData.service_type:
           elements.push(
             <Select clearable
@@ -172,7 +224,7 @@ const FilterElements = ({ filters }:{filters: any}) => {
               comboboxProps={{ withinPortal: false }}
               data={Object.keys(CarType).map((type: any, index: number) => ({
                 label: type,
-                value: index.toString(),
+                value: type.toString(),
               }))} />,
           )
           break;
@@ -256,7 +308,7 @@ const FilterElements = ({ filters }:{filters: any}) => {
 
 const FilterBar = ({ filters, state = false }: FilterBarProps) => {
   const localStore = useLocalStore()
-
+  console.log(localStore);
   const [params, setParams] = useState<TableSearchParams | null>(localStore.params.getSearchParams)
 
   const handleAction = React.useCallback(() => {

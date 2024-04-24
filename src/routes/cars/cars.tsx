@@ -13,7 +13,9 @@ import useSWR from "swr";
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import { CarClasses } from "components/common/layout/Modal/CarClasses";
+
 const localRootStore =  new LocalRootStore()
+
 const CarsPage = () => {
 
   const store = useStore()
@@ -22,11 +24,14 @@ const CarsPage = () => {
   const navigate = useNavigate()
 
   const [opened, { open, close }] = useDisclosure(false)
-  const {isLoading, data, mutate} =useSWR(['cars', localStore.params.getSearchParams] , ([url, args]) => store.carStore.getAllCars(args))
+  const {isLoading, data, mutate} =useSWR(['cars', {...localStore.params.getSearchParams}] , ([url, args]) => store.carStore.getAllCars(args))
+
   const memoModal = React.useMemo(() => {
     return <CarClasses opened={opened} onClose={close} />
   }, [opened])
+
   useEffect(() => {
+    console.log(data);
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
@@ -34,7 +39,7 @@ const CarsPage = () => {
         is_active: item.is_active,
         brand: item.brand.name,
         model: item.model.name,
-        car_type: item.model.car_type,
+        model__car_type: item.model.car_type,
         number: item.number,
         company: item.company.name,
         city: item.company.city.name,
@@ -97,7 +102,7 @@ const CarsPage = () => {
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
         filter={true}
-        initFilterParams={[FilterData.car_type, FilterData.brand]}
+        initFilterParams={[FilterData.is_active, FilterData.city]}
         state={isLoading}
         ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
       />

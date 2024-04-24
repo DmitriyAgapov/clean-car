@@ -113,7 +113,7 @@ export const CreateCarSchema = Yup.object().shape({
 	height: Yup.number().typeError('Введите число').required('Обязательное поле'),
 	radius: Yup.string().required('Обязательное поле'),
 	company_id: Yup.string().required('Обязательное поле'),
-	number: Yup.string().required("Обязательное поле")
+	number: Yup.string().min(11, 'Неверный номер').required("Обязательное поле")
 })
 export const CreateBidSchema = Yup.object().shape({
 	city: Yup.string().required('Обязательное поле'),
