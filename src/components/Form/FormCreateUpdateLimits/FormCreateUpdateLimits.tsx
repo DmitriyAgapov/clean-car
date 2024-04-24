@@ -41,7 +41,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
         car: null,
         is_day: 'false',
         service_type: null,
-        amount: '1'
+        amount: ''
     }
     const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
         offset: 60,
