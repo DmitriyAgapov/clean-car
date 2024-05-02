@@ -795,15 +795,15 @@
       th, td {
         @screen lg {
           &:nth-child(1) {
-            width: 14rem;
+            width: 33%;
           }
 
           &:nth-child(2) {
-            width: 14rem;
+            width: 33%;
           }
 
           &:nth-child(3) {
-            width: auto;
+            width: 33%;
           }
         }
         @screen lg-max {

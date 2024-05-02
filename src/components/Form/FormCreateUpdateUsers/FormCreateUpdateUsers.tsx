@@ -219,42 +219,45 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	});
 	// @ts-ignore
 	return (
-
         <FormProvider form={form}>
             <PanelForForms
-	            className={' tablet-max:-mx-6'}
-	            bodyClassName={'tablet-max:block '}
-	            footerClassName={'tablet-max:child:flex tablet-max:child:flex-col tablet-max:child:w-full tablet-max:child:*:flex-1 tablet-max:child:*:w-full  tablet-max:-mx-2'}
+                className={' tablet-max:-mx-6'}
+                bodyClassName={'tablet-max:block '}
+                footerClassName={
+                    'tablet-max:child:flex tablet-max:child:flex-col tablet-max:child:w-full tablet-max:child:*:flex-1 tablet-max:child:*:w-full  tablet-max:-mx-2'
+                }
                 actionCancel={
-                    <><Button
-	                      type={'button'}
-                        text={'Отменить'}
-                        action={(e) => {
-													e.preventDefault()
-													navigate(-1)}}
-                        className={'float-right'}
-	                    variant={ButtonVariant.cancel}
-                    />
-	                  {/*   <Button */}
-	                  {/*     type={'button'} */}
-                    {/*     text={'Чек'} */}
-                    {/*     action={(e) => { */}
-										{/* 			e.preventDefault() */}
-	                  {/*       console.log(form.errors) */}
-	                  {/*       console.log(form.values) */}
-	                  {/*       form.validate() */}
-	                  {/*       console.log(form.isValid()) */}
+                    <>
+                        <Button
+                            type={'button'}
+                            text={'Отменить'}
+                            action={(e) => {
+                                e.preventDefault()
+                                navigate(-1)
+                            }}
+                            className={'float-right'}
+                            variant={ButtonVariant.cancel}
+                        />
+                        {/*   <Button */}
+                        {/*     type={'button'} */}
+                        {/*     text={'Чек'} */}
+                        {/*     action={(e) => { */}
+                        {/* 			e.preventDefault() */}
+                        {/*       console.log(form.errors) */}
+                        {/*       console.log(form.values) */}
+                        {/*       form.validate() */}
+                        {/*       console.log(form.isValid()) */}
 
-										{/* 		}} */}
-                    {/*     className={'float-right'} */}
-                    {/*     variant={ButtonVariant['accent-outline']} */}
-                    {/* /> */}
+                        {/* 		}} */}
+                        {/*     className={'float-right'} */}
+                        {/*     variant={ButtonVariant['accent-outline']} */}
+                        {/* /> */}
                     </>
                 }
                 actionNext={
                     <Button
                         type={'submit'}
-	                      action={handleCreateUser}
+                        action={handleCreateUser}
                         disabled={!form.isValid()}
                         text={'Сохранить'}
                         className={'float-right'}
@@ -267,54 +270,13 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     onReset={form.onReset}
                     style={{ display: 'contents' }}
                 >
-                    <TextInput   label={'Имя'} {...form.getInputProps('first_name')} />
-                    <TextInput   label={'Фамилия'} {...form.getInputProps('last_name')} />
-                    <InputBase
-	                      // onPaste={(value) => {
-		                    //   console.log(formatPhone(value.clipboardData.getData('text/plain')));
-												// 	return formatPhone(value.clipboardData.getData('text/plain'))
-												// 	// console.log(value.clipboardData.getData('text/plain'), 'paste')
-												// }}
-                        {...form.getInputProps('phone')}
-                        label={'Телефон'} component={IMaskInput} {...masked}  placeholder='+7 000 000 0000'
-                    />
-                    <TextInput   label={'E-mail'} {...form.getInputProps('email')} />
-                    <Select label={'Тип'}
-	                    allowDeselect={false}
-	                    onOptionSubmit={(e) => {
-
-		                    e === "admin" && store.permissionStore.loadCompanyPermissionsResults(1)
-
-											form.setValues({...form.values, company_id: null, group: null})}
-										}
-                        {...form.getInputProps('type')}
-	                      defaultValue={form.values.type}
-                        data={Object.entries(UserTypeEnum).map((item: any) => ({
-                            label: label(item[0]),
-                            value: item[1],
-                        }))}
-                    />
-                    <Select clearable label={'Группа'}
-	                      disabled={!groupData}
-                        {...form.getInputProps('group', { dependOn: 'company_id' })}
-                        data={store.permissionStore.getCompanyPermissions.map((p:any) => ({
-	                        label: p.name,
-	                        value: String(p.id),
-                        })) as any ?? [{label: '1', value: 'null'}]}
-                    />
-                    <Select
-                        label={'Статус'}
-                        {...form.getInputProps('is_active')}
-                        data={[{ label: 'Активен', value: 'true' }, { label: 'Неактивен', value: 'false' },]}
-                    />
                     {!(form.values.type === null || form.values.type === UserTypeEnum.admin) && (
                         <>
-                            <hr className={'col-span-full'} />
                             <Select
-	                              onOptionSubmit={() => form.setValues({...form.values, company_id: null, group: null})}
+                                onOptionSubmit={() => form.setValues({ ...form.values, company_id: null, group: null })}
                                 label={'Относится к'}
                                 {...form.getInputProps('depend_on', { dependOn: 'type' })}
-	                              defaultValue={form.values.depend_on}
+                                defaultValue={form.values.depend_on}
                                 data={[
                                     { label: 'Компании', value: 'company' },
                                     { label: 'Филиалы', value: 'filials' },
@@ -322,20 +284,70 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                             />
                             <Select
                                 searchable
-                                label={form.values.depend_on === "company" ? 'Компании' : 'Филиал'}
+                                label={form.values.depend_on === 'company' ? 'Компании' : 'Филиал'}
                                 {...form.getInputProps('company_id', { dependOn: 'type' })}
                                 onOptionSubmit={(e) => {
-	                                form.setValues({...form.values, group: null})
-	                                store.permissionStore.loadCompanyPermissionsResults(Number(e))
+                                    form.setValues({ ...form.values, group: null })
+                                    store.permissionStore.loadCompanyPermissionsResults(Number(e))
                                 }}
-                                data={companyVar.map((item:any) => ({ label: item.name, value: String(item.id) }))}
+                                data={companyVar.map((item: any) => ({ label: item.name, value: String(item.id) }))}
                             />
+                            <hr className={'col-span-full'} />
                         </>
                     )}
-								</form>
+                    <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
+                    <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
+                    <InputBase
+                        // onPaste={(value) => {
+                        //   console.log(formatPhone(value.clipboardData.getData('text/plain')));
+                        // 	return formatPhone(value.clipboardData.getData('text/plain'))
+                        // 	// console.log(value.clipboardData.getData('text/plain'), 'paste')
+                        // }}
+                        {...form.getInputProps('phone')}
+                        label={'Телефон'}
+                        component={IMaskInput}
+                        {...masked}
+                        placeholder='+7 000 000 0000'
+                    />
+                    <TextInput label={'E-mail'} {...form.getInputProps('email')} />
+                    <Select
+                        label={'Тип'}
+                        allowDeselect={false}
+                        onOptionSubmit={(e) => {
+                            e === 'admin' && store.permissionStore.loadCompanyPermissionsResults(1)
+
+                            form.setValues({ ...form.values, company_id: null, group: null })
+                        }}
+                        {...form.getInputProps('type')}
+                        defaultValue={form.values.type}
+                        data={Object.entries(UserTypeEnum).map((item: any) => ({
+                            label: label(item[0]),
+                            value: item[1],
+                        }))}
+                    />
+                    <Select
+                        clearable
+                        label={'Группа'}
+                        disabled={!groupData}
+                        {...form.getInputProps('group', { dependOn: 'company_id' })}
+                        data={
+                            (store.permissionStore.getCompanyPermissions.map((p: any) => ({
+                                label: p.name,
+                                value: String(p.id),
+                            })) as any) ?? [{ label: '1', value: 'null' }]
+                        }
+                    />
+                    <Select
+                        label={'Статус'}
+                        {...form.getInputProps('is_active')}
+                        data={[
+                            { label: 'Активен', value: 'true' },
+                            { label: 'Неактивен', value: 'false' },
+                        ]}
+                    />
+                </form>
             </PanelForForms>
         </FormProvider>
-
     )
 };
 

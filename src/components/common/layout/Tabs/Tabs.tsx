@@ -42,7 +42,7 @@ const HeadersTabs = ({
     }
     return result
 }
-const TabPanels = observer(({ data, type, items, state }:{data:any, type:any, items:any[], state: string}) => {
+const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[], state: string}) => {
     const result: any = []
     if (type == TabsType.bid) {
         data.forEach((item: any, index: number) => {
@@ -60,7 +60,7 @@ const TabPanels = observer(({ data, type, items, state }:{data:any, type:any, it
         return result
     }
     if (type == TabsType.price) {
-        data.forEach((item: any, index: number) => {
+        (data && data.length > 0) && data.forEach((item: any, index: number) => {
             result.push(
                 <TabsVariantPrice
                     key={`tab_${index}`}
@@ -158,11 +158,17 @@ const TabPanels = observer(({ data, type, items, state }:{data:any, type:any, it
         }
     }
     return result
-})
+}
 const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
-  const [state, setState] = useState(data[0].label);
+  const [state, setState] = useState('');
+
+  React.useEffect(() => {
+    if(data && data.length > 0) {
+      setState(data[0]?.label)
+    }
+  }, [])
 
   const  handleChangeTabState = React.useCallback((event: Event, label: string) => {
     setState(label);
@@ -175,6 +181,12 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
     store.bidsStore.setActiveTab(null);
   }, [aTab]);
 
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
 
 
 

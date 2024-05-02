@@ -53,8 +53,67 @@ export const paginationParams = (urlData:string) => {
 export const priceLoader = async (props: any) => {
     // const paginationData = paginationParams(props.request.url as string)
     const is_history = props.request.url.includes('history')
+    console.log(props);
+    await priceStore.getCurrentPrice(props, false);
 
-    await priceStore.getCurrentPrice(props, is_history);
+    // console.log('loader', !userStore.isAdmin);
+    // async function fillData() {
+    //     let data: any[] | any = []
+    //     if (!userStore.isAdmin) {
+    //         const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
+    //         const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
+    //         const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
+    //         if (props.params.id) {
+    //             data = {
+    //                 tabs: await Promise.all([{
+    //                     label: 'Мойка', data: dataWash,
+    //                     dataTable: dataWash
+    //                 }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }])
+    //             }
+    //         } else {
+    //             data = await Promise.all([dataWash, dataTire, dataEvac])
+    //             console.log(data);
+    //         }
+    //
+    //     } else {
+    //         const { data: dataResults, status } = await agent.Price.getAllPrice(paginationData as PaginationProps)
+    //         console.log(dataResults);
+    //         if(status === 200) {
+    //             data = {...dataResults, results: dataResults.results.map((i: any) => {
+    //                     let obj:any;
+    //                     for(const key in i) {
+    //                         if(i[key] === null) {
+    //                             obj = {
+    //                                 ...obj,
+    //                                 [key]: '-'
+    //                             }
+    //                         } else {
+    //                             obj = {
+    //                                 ...obj,
+    //                                 [key]: i[key]
+    //                             }
+    //                         }
+    //                     }
+    //                     return obj;
+    //                 })}
+    //         }
+    //     }
+    //     return data
+    // }
+    return null
+    // return defer({
+    //     data: await fillData(),
+    //     pageRequest: { page: paginationData.page ?? 1, page_size: paginationData.page_size ?? 10, searchString: paginationData.searchString},
+    //     // page: refUrlsRoot,
+    //     // textData: textData,
+    //     // dataModels: dataModels
+    // })
+}
+export const priceHistoryLoader = async (props: any) => {
+    // const paginationData = paginationParams(props.request.url as string)
+    const is_history = props.request.url.includes('history')
+    console.log(props);
+     await priceStore.getCurrentPrice(props, true);
 
     // console.log('loader', !userStore.isAdmin);
     // async function fillData() {

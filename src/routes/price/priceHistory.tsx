@@ -14,12 +14,12 @@ import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import { SvgBackArrow } from "components/common/ui/Icon";
 
 const localRootStore =  new LocalRootStore()
-
+localRootStore.params.setSearchParams({ordering: 'expires'})
 const PricesHistoryPage = () => {
 	const store = useStore()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
 	const params = useParams()
-	const {isLoading, data} = useSWR([`price_history_${params.id}`, Number(params.id), localStore.params.getSearchParams] , ([url,id, args]) => agent.Price.getHistoryPrice(id, args).then(r => r.data))
+	const {isLoading, data} = useSWR([`price_history_${params.id}`, Number(params.id), { ...localStore.params.getSearchParams}] , ([url,id, args]) => agent.Price.getHistoryPrice(id, args).then(r => r.data))
 
 	const navigate = useNavigate()
 
@@ -45,7 +45,7 @@ const PricesHistoryPage = () => {
 				state={false}
 				header={<>
 					<div className={'mr-auto'}>
-						<Button text={<><SvgBackArrow />{'Вернуться к прайс-листу'}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'), {})} variant={ButtonVariant.text} />
+						<Button text={<><SvgBackArrow />{'Вернуться к прайс-листу'}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'), {replace: true})} variant={ButtonVariant.text} />
 						<Heading text={`История ${company?.name}`} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
 					</div>
 				</>}>
@@ -54,6 +54,7 @@ const PricesHistoryPage = () => {
 				store={localRootStore}
 				variant={PanelVariant.dataPadding}
 				search={true}
+
 				style={PanelRouteStyle.price_history}
 				background={PanelColor.glass}
 				className={'col-span-full table-groups h-full'}

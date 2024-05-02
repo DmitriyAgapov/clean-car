@@ -1,10 +1,8 @@
-import { action, makeAutoObservable, observable, reaction, runInAction, toJS, values } from "mobx";
+import { action, makeAutoObservable, observable, runInAction,  values } from "mobx";
 import { makePersistable } from 'mobx-persist-store'
 import agent, { PaginationProps } from 'utils/agent'
 import paramsStore from 'stores/paramStore'
 import { notifications } from "@mantine/notifications";
-import { SvgClose } from "components/common/ui/Icon";
-import React from "react";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
 export enum CAR_RADIUS {
@@ -144,7 +142,11 @@ export class PriceStore {
     }
 
     async getCurrentPrice(props:any, history: boolean) {
-        action(() => this.loading = true);
+        action(() => {
+            this.loading = true
+            this.currentPrice = {}
+        });
+
         const mapEd = (ar:[], compareField:string) => {
             let newMap = new Map([])
             if(ar && ar.length > 0) {
@@ -158,13 +160,121 @@ export class PriceStore {
             })
             return result
         }
-        console.log(props, history);
+        const mapEdWast = (ar: any[]) => {
+
+            let newMap:any = new Map(ar.map((item: any) => [item.service_subtype.name,  ar.filter((it:any) => item.service_subtype.name === it.service_subtype.name)]));
+
+            newMap.forEach((value:any, key: any) => {
+                const newAr = new Map([])
+                const  curVal = value;
+                const  curKey = key;
+
+                value.forEach((value:any, key: any) => {
+                      if(value.service_option && value.service_option.name) {
+                          newAr.set(value.service_option.name, curVal.filter((i: any) => i.service_option?.name == value.service_option?.name).sort((a:any, b:any) => {const nameA = a.car_class.toUpperCase();const nameB = b.car_class.toUpperCase();if (nameA < nameB) return -1;if (nameA > nameB) return 1;return 0;}).map((i:any) => ({id: i.id, label: i.car_class, value: i.amount})))
+                      } else {
+                          newAr.set('Мойка', curVal.filter((i: any) => !i.service_option).sort((a:any, b:any) => {const nameA = a.car_class.toUpperCase();const nameB = b.car_class.toUpperCase();if (nameA < nameB) return -1;if (nameA > nameB) return 1;return 0;}).map((i:any) => ({id: i.id, label: i.car_class, value: i.amount})))
+                      }
+                  }
+                )
+                newMap.set(key, newAr)
+            })
+            let result:any[] = []
+            newMap.forEach((value: any, key: any) => {
+                let resultInner: any[] = []
+                value.forEach((value: any, key: any) => {
+                    let resultInnerAr: any[] = []
+                    value.forEach((value: any, key: any) => {
+                        resultInnerAr.push(value)
+                    })
+                    resultInner.push({
+                        service_option: key,
+                        class1: resultInnerAr[0]?.value,
+                        class2: resultInnerAr[1]?.value,
+                        class3: resultInnerAr[2]?.value,
+                        class4: resultInnerAr[3]?.value,
+                        class5: resultInnerAr[4]?.value,
+                        class6: resultInnerAr[5]?.value,
+                        class7: resultInnerAr[6]?.value,
+                        class8: resultInnerAr[7]?.value,
+                    })
+                })
+                result.push({ label: key, data: resultInner })
+            })
+            console.log(result);
+            return result
+        }
+        const mapEdTire = (ar: any[], edit: boolean) => {
+            let meta = {
+                car_type: [],
+                service_subtype: []
+
+            }
+
+            function innerData(ar: any[], propKey: string, propValue: any) {
+                let at = ar.filter((i: any) => i[propKey].name == propValue)
+                meta = {
+                    ...meta,
+                    [propKey]: at
+                }
+                return at
+            }
+
+            let newMap: any = new Map(ar.map((item: any) => [item.service_subtype.name, innerData(ar, 'service_subtype', item.service_subtype.name)]))
+
+            newMap.forEach((value: any, key: any) => {
+                const newAr = new Map([])
+                const curVal = value;
+
+                value.forEach((value: any, key: any) => {
+                      const filtered = curVal.filter((i: any) => i.car_type == value.car_type)
+                      const newArFC = new Map([])
+
+                      filtered.forEach((value: any, key: any) => {
+                          const filteredS = filtered.filter((i: any) => i.service_option.name == value.service_option.name)
+                          const newArF = new Map([])
+
+                          filteredS.forEach((value: any, key: any) => {
+                              newArF.set(value.radius, value)
+                          })
+                          newArFC.set(value.service_option.name, newArF)
+                      })
+                      newAr.set(value.car_type, newArFC)
+                  }
+                )
+                newMap.set(key, newAr)
+            })
+
+            let result: any[] = []
+            newMap.forEach((value: any, key: any) => {
+                let resultInner: any[] = []
+                value.forEach((value: any, key: any) => {
+                    let resultInnerAr: any[] = []
+                    value.forEach((value: any, key: any) => {
+                        let resultInnerCartypes: any[] = []
+                        value.forEach((value: any, key: any) => {
+                            let resultInnerOptions: any[] = []
+                            // value.forEach((value:any, key: any) => {
+                            //   resultInnerOptions.push
+                            // })
+                            resultInnerCartypes.push({ label: key, data: value.amount })
+                        })
+                        resultInnerAr.push({ label: key, data: resultInnerCartypes })
+                    })
+                    resultInner.push({ label: key, data: resultInnerAr })
+                })
+                result.push({ label: key, data: resultInner })
+            })
+
+            return result
+        }
+        // console.log(props, history);
         let data: any[] | any = []
         if (!userStore.isAdmin) {
             console.log('not admin');
 
             if (props.params.id && !history) {
-                console.log(props);
+                // console.log(props);
                 let tempId = props.params.id || userStore.myProfileData.company?.id
                 const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(tempId);
                 const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(tempId);
@@ -174,13 +284,14 @@ export class PriceStore {
                 // const { data: dataWash } = await agent.Price.getCompanyPriceWash(userStore.myProfileData.company?.id, props.params.id);
                 console.log('есть ID', props.params.id);
                 const tempAr:any[] = []
-                console.log(dataTire);
+                console.log(mapEdWast(dataWash.wash_positions));
                 runInAction(() => {
                     this.currentPrice = {
                         tabs: [{
                             label: 'Мойка', data: dataWash,
-                            dataTable: dataWash
-                        }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }]
+                            dataTable: dataWash,
+                            test: mapEdWast(dataWash.wash_positions)
+                        }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option'), test: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire,  test: mapEdTire(dataTire.tire_positions, false) }]
                     }
                     this.loading = false
                 })
@@ -393,7 +504,7 @@ export class PriceStore {
         } else {
             return agent.Price.getAllCompanyPrices(company_id, params).then(res => ({...res.data, results: res.data.results.map((i: any) => ({
                     name: i.name,
-                    company_type: i.company_type,
+                    // company_type: i.company_type,
                     id: i.id,
                     root_company: i.root_company ? i.root_company : '-',
                 }))}))

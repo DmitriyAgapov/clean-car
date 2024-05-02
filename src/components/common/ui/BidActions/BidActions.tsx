@@ -106,9 +106,11 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
       }
     })().then(() => {
       console.log('status changed');
+      // @ts-ignore
+      update()
 
-
-    }).finally(update)
+      // @ts-ignore
+    }).finally(() => update())
     mutate(`bids/${params.company_id}/${params.id}`)
     mutate(`/bids/${params.id}/photos/`)
   }, [])

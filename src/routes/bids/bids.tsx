@@ -40,14 +40,14 @@ const BidsPage = () => {
 		[location.pathname]
 	);
 	useEffect(() => {
-
+		console.log(data?.results[0].created);
 		localStore.setData = {
 			...data,
 			results: data?.results?.map((r:any) => ({
 			idnum: r.id,
 			id: r.id,
 			status: r.status,
-			created: dayjs(r.created).format('DD.MM.YYYY hh:mm'),
+			created: dayjs(r.created).locale('ru').format('DD.MM.YYYY HH:mm'),
 			customer: r.company.name,
 			performer: r.performer.name,
 			conductor: (r.conductor && r.conductor?.first_name &&  r.conductor?.last_name) ? r.conductor?.first_name + ' ' + r.conductor?.last_name[0] + '.' : " ",

@@ -125,14 +125,8 @@ export const requests = {
 //Обработка ошибок
 const handleErrors = (err: AxiosError & any) => {
 
-    if (!err.response) {
-      // We have a network error
-      appStore.setNetWorkStatus(false)
-    } else if(!appStore.getNetWorkStatus) {
-      appStore.setNetWorkStatus(true)
-    }
-    if(err && err.response && (err.response.status === 400 || err.response.status === 405)) {
 
+    if(err && err.response && (err.response.status === 400 || err.response.status === 405)) {
       // @ts-ignore
       const errMsg = typeof err.response.data === "string" ? err.response.data : err.response.data.error_message
       if(err && err.response && err.response?.data?.error_message) {
@@ -153,6 +147,12 @@ const handleErrors = (err: AxiosError & any) => {
         })
       }
     }
+  if (!err.response) {
+    // We have a network error
+    appStore.setNetWorkStatus(false)
+  } else if(!appStore.getNetWorkStatus) {
+    appStore.setNetWorkStatus(true)
+  }
     // if (err && err.response && err.response.status === 401) {
     //     const refr = window.localStorage.getItem('jwt_refresh')
     //     if (refr) {

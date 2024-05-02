@@ -56,7 +56,7 @@ const RowHeadingPure = ({ ar,total }: any) => {
 }
 
 const RowDataPure = observer(({edit, meta, ...props}: any) => {
-
+  // console.log(props);
     const store = useStore()
     const {width} = useWindowDimensions()
     const [open, setOpen] = useState(false);

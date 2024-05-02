@@ -8,6 +8,7 @@ import { makePersistable, clearPersistedStore } from 'mobx-persist-store';
 import label from 'utils/labels';
 import authStore from "stores/authStore";
 import carStore from "stores/carStore";
+import bidsStore from "stores/bidsStrore";
 
 
 export enum UserTypeEnum {
@@ -127,6 +128,7 @@ export class UserStore {
           this.myProfileData.company = data.account_bindings[0].company
           this.myProfileData.permissions = data.account_bindings[0].group.permissions
           this.createUserPermissions()
+          bidsStore.loadEventCount()
         })
       }))
       .catch((error:any) => runInAction(() =>this.myProfileData.error = error))

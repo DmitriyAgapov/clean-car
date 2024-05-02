@@ -208,7 +208,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           header: 'Пополнить счет',
           state: true,
       }
-      console.log(data);
+      // console.log(data);
       result = (<Tabs.Panel state={state}
         name={"info"}
         className={"pt-8"}
@@ -569,44 +569,50 @@ export const TabsVariantBids = observer(({
             )
             break
         case 'Фото':
-          const {isLoading, data: photos} = useSWR(`/bids/${params.company_id}/photos/`, () => agent.Bids.loadBidPhotos(params.company_id as string, params.id as string).then((r) => r.data), {revalidateOnFocus: false})
-          console.log(photos);
+
           const ph = store.bidsStore.CurrentBidPhotosAll
-          if(!isLoading && photos.results.length > 0) {
-            result = (<Tabs.Panel className={"pt-8 grid !grid-cols-5  !gap-y-3 !grid-flow-row  gap-x-12 content-start !py-8" + " " + className}
-                state={state}
-                name={"bidService"}
-                variant={PanelVariant.default}
-                company_type={company_type}>
-                <div className={"col-span-2  pr-12"}>
-                  <Heading text={"Фотографии До"}
-                    variant={HeadingVariant.h3}
-                    color={HeadingColor.accent} />
-                  <p>Фотографии до оказания услуги. Загрузил Заказчик</p>
-
-                </div>
-                <div className={"col-span-3"}>
-                  <CarouselCustom items={photos.results.filter((e:any) => e.is_before)}/>
-                </div>
-                <hr className={"col-span-full border-gray-4/70 border"} />
-                <div className={"col-span-2   pr-12"}>
-                  <Heading text={"Фотографии После"}
-                    variant={HeadingVariant.h3}
-                    color={HeadingColor.accent} />
-                  <p>После оказания услуги загрузите пожалуйста фотографии</p>
-                  {(store.appStore.appType === "performer" && data.status !== BidsStatus["Выполнено"] && data.status !== BidsStatus["Завершена"]) && <Button type={"button"}
-
-                    action={() => store.bidsStore.setModalCurrentState(true)}
-
-
-
-                    disabled={data.status !== BidsStatus["В работе"]} text={'Загрузить'} variant={ButtonVariant["accent-outline"]} className={'mt-7'} size={ButtonSizeType.sm}/>}
-                </div>
-                <div className={"col-span-3"}>
-                  <CarouselCustom items={photos.results.filter((e:any) => !e.is_before)}/>
-                </div>
-
-              </Tabs.Panel>
+          if(data.photos.results.length > 0) {
+            result = (
+                <Tabs.Panel
+                    className={
+                        'pt-8 grid !grid-cols-5  !gap-y-3 !grid-flow-row  gap-x-12 content-start !py-8' +
+                        ' ' +
+                        className
+                    }
+                    state={state}
+                    name={'bidService'}
+                    variant={PanelVariant.default}
+                    company_type={company_type}
+                >
+                    <div className={'col-span-2  pr-12'}>
+                        <Heading text={'Фотографии До'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
+                        <p>Фотографии до оказания услуги. Загрузил Заказчик</p>
+                    </div>
+                    <div className={'col-span-3'}>
+                        <CarouselCustom items={data.photos.results.filter((e: any) => e.is_before)} />
+                    </div>
+                    <hr className={'col-span-full border-gray-4/70 border'} />
+                    <div className={'col-span-2   pr-12'}>
+                        <Heading text={'Фотографии После'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
+                        <p>После оказания услуги загрузите пожалуйста фотографии</p>
+                        {store.appStore.appType === 'performer' &&
+                            data.status !== BidsStatus['Выполнено'] &&
+                            data.status !== BidsStatus['Завершена'] && (
+                                <Button
+                                    type={'button'}
+                                    action={() => store.bidsStore.setModalCurrentState(true)}
+                                    disabled={data.status !== BidsStatus['В работе']}
+                                    text={'Загрузить'}
+                                    variant={ButtonVariant['accent-outline']}
+                                    className={'mt-7'}
+                                    size={ButtonSizeType.sm}
+                                />
+                            )}
+                    </div>
+                    <div className={'col-span-3'}>
+                        <CarouselCustom items={data.photos.results.filter((e: any) => !e.is_before)} />
+                    </div>
+                </Tabs.Panel>
             )
           } else result = null
         break;
@@ -729,7 +735,7 @@ export const TabsVariantPrice = ({
         return at
       }
       let newMap:any = new Map(ar.map((item: any) => [item.service_subtype.name,  innerData(ar, 'service_subtype', item.service_subtype.name)]))
-    console.log('newMap', newMap);
+    // console.log('newMap', newMap);
       newMap.forEach((value:any, key: any) => {
         const newAr = new Map([])
         const  curVal = value;
@@ -879,7 +885,6 @@ export const TabsVariantPrice = ({
 
 
   switch (label) {
-
       case 'Мойка':
           result = (
               <Tabs.PanelPure

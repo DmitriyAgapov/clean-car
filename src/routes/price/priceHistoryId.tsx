@@ -1,31 +1,33 @@
-import React, { JSX, useEffect } from 'react'
+import React, { JSX } from "react";
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from "stores/store";
-import { Outlet, useLocation, useNavigate, useParams, useRevalidator } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SvgBackArrow } from "components/common/ui/Icon";
 import { PermissionNames } from "stores/permissionStore";
 import { dateTransformShort } from "utils/utils";
 import { CompanyType } from "stores/companyStore";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import dayjs from 'dayjs'
-import { useDidUpdate, useDisclosure } from '@mantine/hooks'
+import dayjs from "dayjs";
+import { useDisclosure } from "@mantine/hooks";
 import { PriceCopy } from "components/common/layout/Modal/PriceCopy";
 import { observer } from "mobx-react-lite";
 import { CarClasses } from "components/common/layout/Modal/CarClasses";
 
-const PricePage = ():JSX.Element => {
+const PriceHistoryIdPage = ():JSX.Element => {
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
   const store = useStore()
   const  textData  : any = store.priceStore.TextData
+
   const [opened, { open, close }] = useDisclosure(false);
 
   const  currentPriceById = store.priceStore.currentPriceById;
+
   const  company = store.companyStore.getCompanyById(Number(params.id)) ?? store.userStore.myProfileData.company;
   const isHistory = location.pathname.includes('history');
   // @ts-ignore
@@ -43,16 +45,7 @@ const PricePage = ():JSX.Element => {
   const memoModalCarClasses = React.useMemo(() => {
     return <CarClasses opened={openedCar} onClose={closeCar} />
   }, [openedCar])
-  useDidUpdate(
-    () => {
-      if(location.pathname === `/account/price/${params.id}`) {
-        store.appStore.setAppState(false)
-      }
-    },
-    [location.pathname]
-  );
 
-  if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
@@ -127,4 +120,4 @@ const PricePage = ():JSX.Element => {
     </Section>
   )
 }
-export default observer(PricePage)
+export default observer(PriceHistoryIdPage)

@@ -779,6 +779,15 @@ export class BidsStore {
             ...value,
         }
     }
+    async loadBid(company_id: number, bid_id: number) {
+        const photos = await agent.Bids.loadBidPhotos(company_id, bid_id).then(r => r.data)
+        const bid = await agent.Bids.getBid(company_id, bid_id).then(r => r.data)
+        const _res = {
+            ...bid,
+            photos: photos,
+        }
+        return _res
+    }
     loadBids(args:any) {
         if(appStore.appType === "admin") {
             return client.bidsAllBidsList(args)

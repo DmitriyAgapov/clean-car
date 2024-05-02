@@ -108,7 +108,7 @@ export function InputAutocompleteNew(props:any) {
         values.street = item.data.street_with_type
       }
       //Точность 7 - улица, точность 8 - дом.
-      if(item.data.fias_level >= 8) {
+      if(item.data.fias_level >= 7) {
         values.address_ready = true
 
       } else {

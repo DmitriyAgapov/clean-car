@@ -23,7 +23,8 @@ const BidPage = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const params = useParams()
-	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => agent.Bids.getBid(Number(params.company_id), Number(params.id)).then(r => r.data))
+	// const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => agent.Bids.getBid(Number(params.company_id), Number(params.id)).then(r => r.data))
+	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => store.bidsStore.loadBid(Number(params.company_id), Number(params.id)))
 
 	const textData = store.bidsStore.text
 	const tabedData = React.useMemo(() => {
@@ -38,7 +39,6 @@ const BidPage = () => {
 
 	React.useEffect(() => {
 		if(data && data.status && data.status === BidsStatus["Новая"]) {
-			console.log('data.status', data.status === BidsStatus["Новая"]);
 			if (store.appStore.appType === "performer") {
 				(async () => {
 					if (params.company_id && params.id) {

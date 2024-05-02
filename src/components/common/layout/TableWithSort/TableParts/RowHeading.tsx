@@ -6,7 +6,7 @@ import { SvgSort } from "components/common/ui/Icon";
 
 const RowHeading = ({ ar, sort, action, total }: any) => {
 	const localStore = useLocalStore()
-	console.log(localStore.params.getSearchParams.ordering && localStore.params.getSearchParams.ordering.length > 0)
+	// console.log(localStore.params.getSearchParams.ordering && localStore.params.getSearchParams.ordering.length > 0)
 
 	const [count, setCount] = useState({
 		index: 0,
@@ -16,13 +16,14 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
 	React.useEffect(() => {
 		if(localStore.params.getSearchParams.ordering && localStore.params.getSearchParams.ordering.length > 0) {
 			ar.findIndex((item: { name: string }, index: number) => {
-				console.log(localStore.params.getSearchParams.ordering?.replace('-', ''));
-				console.log(item.name === localStore.params.getSearchParams.ordering?.replace('-', ''));
-				if(item.name === localStore.params.getSearchParams.ordering?.replace('-', ''))
+				// console.log(localStore.params.getSearchParams.ordering?.replace('-', ''));
+				// console.log(item.name === localStore.params.getSearchParams.ordering?.replace('-', ''));
+				if(item.name === localStore.params.getSearchParams.ordering?.replace('-', '')) {
 					setCount({
 						...count,
 						index: index
 					})
+				}
 					return			console.log(index, 'index');
 
 			})

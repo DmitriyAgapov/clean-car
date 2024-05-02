@@ -62,13 +62,12 @@ const PriceEditPage = ():JSX.Element => {
                 store.priceStore.clearPriceOnChange()
                 }
               } size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/> <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={async () => {
-
+                store.appStore.setAppState(true)
                 await store.priceStore.handleSavePrice()
-                .then(() => {
-                  revalidator.revalidate()
-                  navigate(location.pathname.split('/edit')[0])
-                  revalidator.revalidate()
-                })
+                  .then(() => {
+                    revalidator.revalidate()
+                    navigate(location.pathname.split('/edit')[0])
+                  })
 
               }} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/></>
 

@@ -19,8 +19,9 @@ const PricesPage = () => {
 	const location = useLocation()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
 	const {isLoading, data, mutate, isValidating} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
-	console.log(data);
+
 	useEffect(() => {
+		console.log(data);
 		localStore.setData = {
 			...data,
 			results: data?.results
@@ -68,7 +69,12 @@ const PricesPage = () => {
 				background={PanelColor.glass}
 				className={'col-span-full table-groups h-full'}
 				filter={false}
-				ar={store.priceStore.allPrices.textData.tableHeaders}
+				ar={(() => {
+					if(store.appStore.appType === "admin") {
+						return store.priceStore.allPrices.textData.tableHeaders
+					} return [{ label: 'Компания', name: 'name' },
+						{ label: 'Филиал', name: 'company__parent__name' }]})()
+				}
 			/>
 
 		</Section>
