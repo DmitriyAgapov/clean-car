@@ -1,5 +1,6 @@
-import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+
 import { CompanyType } from "stores/companyStore";
 import label from "utils/labels";
 import styles from "components/common/layout/TableWithSort/TableWithSort.module.scss";
@@ -10,7 +11,8 @@ import { SvgChevron } from "components/common/ui/Icon";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { observer } from "mobx-react-lite";
 import { BidStatus } from "utils/schema";
-import { BidsStatus } from "stores/bidsStrore";
+import { BidsStatus } from 'stores/bidsStrore'
+
 
 const RowData = observer((props: any) => {
 	const navigate = useNavigate()
@@ -47,7 +49,8 @@ const RowData = observer((props: any) => {
 	const propsRender = React.useCallback(() => {
 		const ar = []
 		for (const key in props) {
-			if (typeof props[key] !== 'object') {
+
+			if (key == "bid"  || typeof props[key] !== 'object' ) {
 				if (props[key] === 'Активна' || props[key] === true) {
 					ar.push(<td key={key}
 						data-label={label(key)}
@@ -60,7 +63,22 @@ const RowData = observer((props: any) => {
 						className={styles.tableCell}>
 						<Chips state={false} />
 					</td>,)
-				} else if(key === 'status') {
+				}  else if(key === 'amount') {
+					ar.push(<td key={key}
+						data-label={label(key)}
+						className={styles.tableCell}>
+						<p className={`m-0 cancel-bg ${props[key][0] === "+" ? "text-accent" : ""}`}>{props[key]}</p>
+					</td>)
+				}  else if(key === 'bid') {
+					console.log(props[key]);
+					ar.push(<td key={key}
+						data-label={label(key)}
+						className={styles.tableCell}>
+						<Link to={`/account/bids/${props[key].company}/${props[key].bidId}`} className={`-my-4 h-12 text-center flex items-center justify-center hover:underline hover:text-accent `}>{props[key].bidId}</Link>
+					</td>)
+				}
+
+				else if (key === "status") {
 					ar.push(<td key={key}
 						data-label={label(key)}
 						className={styles.tableCell}>
@@ -96,7 +114,7 @@ const RowData = observer((props: any) => {
 					if (key !== 'id' && key !== 'companyId') {
 						ar.push(<td key={key}
 							className={styles.tableCell} data-label={label(key)}>
-							{' '}
+
 							<p className={'m-0'}>{props[key]}{' '}</p>
 						</td>,)
 					}

@@ -638,9 +638,9 @@ export const TabsVariantPrice = ({
 }:any) => {
   let result
   //Разбор массива для Мойка
-  const mapEdWast = (ar: any[]) => React.useMemo(() => {
+  const mapEdWast =  React.useMemo(() => {
 
-    let newMap:any = new Map(ar.map((item: any) => [item.service_subtype.name,  ar.filter((it:any) => item.service_subtype.name === it.service_subtype.name)]));
+    let newMap:any = new Map(data.wash_positions?.map((item: any) => [item.service_subtype.name,  data.wash_positions.filter((it:any) => item.service_subtype.name === it.service_subtype.name)]));
 
     newMap.forEach((value:any, key: any) => {
       const newAr = new Map([])
@@ -717,10 +717,10 @@ export const TabsVariantPrice = ({
             </div>
         )
     })
-  }, [ar])
+  }, [data.wash_positions])
 
   //Разбор массива для Шиномонтажа
-  const mapEdTire = (ar: any[], edit: boolean) => React.useMemo(() => {
+  const mapEdTire  = React.useMemo(() => {
     let meta = {
       car_type: [],
       service_subtype: []
@@ -734,7 +734,7 @@ export const TabsVariantPrice = ({
         }
         return at
       }
-      let newMap:any = new Map(ar.map((item: any) => [item.service_subtype.name,  innerData(ar, 'service_subtype', item.service_subtype.name)]))
+      let newMap:any = new Map(data.tire_positions?.map((item: any) => [item.service_subtype.name,  innerData(data.tire_positions, 'service_subtype', item.service_subtype.name)]))
     // console.log('newMap', newMap);
       newMap.forEach((value:any, key: any) => {
         const newAr = new Map([])
@@ -793,7 +793,7 @@ export const TabsVariantPrice = ({
                     className={'text-xs capitalize  !mb-0 py-2  px-6 sticky top-0 z-10 bg-[#090909]'}
                   />}
                   <TableWithSortNewPure
-                    edit={edit}
+                    edit={false}
                     total={item.data.length}
                     variant={PanelVariant.default}
                     search={false}
@@ -881,7 +881,7 @@ export const TabsVariantPrice = ({
           </div>
         )
       })
-    }, [ar, edit])
+    }, [data.tire_positions])
 
 
   switch (label) {
@@ -895,7 +895,7 @@ export const TabsVariantPrice = ({
                 className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
                 bodyClassName={'!bg-transparent'}
               >
-                {!props.edit ? mapEdWast(data.wash_positions) : <TableWithSortNewPure
+                {!props.edit ? mapEdWast : <TableWithSortNewPure
                   meta={{company_id: data.company, price_id: data.id, label: label}}
                   edit={true}
                   offsetSticky={-1}
@@ -930,7 +930,7 @@ export const TabsVariantPrice = ({
               className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start  table-price h-full' + ' ' + className}
               bodyClassName={'!bg-transparent'}
             >
-              {!props.edit ? mapEdTire(data.tire_positions, false):
+              {!props.edit ? mapEdTire :
                 <TableWithSortNewPure
                   meta={{company_id: data.company, price_id: data.id, label: label}}
                 edit={true}

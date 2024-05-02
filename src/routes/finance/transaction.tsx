@@ -28,12 +28,12 @@ const TransactionPage = () => {
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
-        created: dayjs(item.created).format('DD.MM.YY hh:mm'),
+        created: dayjs(item.created).format('DD.MM.YY HH:mm'),
         company: store.appStore.appType === "admin" ? item.balance.company.name : store.userStore.myProfileData.company.name,
         company_type: store.appStore.appType === "admin" ? item.balance.company.company_type : store.userStore.myProfileData.company.company_type,
         amount: String(item.amount).includes('-') ? `- ${String(item.amount).split('-')[1]} ₽` : `+ ${String(item.amount)} ₽`,
         ts_maker: item.ts_maker.first_name + " " + item.ts_maker.last_name,
-        bid: item.bid,
+        bid: {bidId: item.bid, company: store.appStore.appType === "admin" ? item.balance.company.id : store.userStore.myProfileData.company.id},
         purpose: item.purpose
       }))
     }

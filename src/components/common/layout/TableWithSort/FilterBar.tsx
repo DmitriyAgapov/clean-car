@@ -308,7 +308,7 @@ const FilterElements = ({ filters }:{filters: any}) => {
 
 const FilterBar = ({ filters, state = false }: FilterBarProps) => {
   const localStore = useLocalStore()
-  console.log(localStore);
+
   const [params, setParams] = useState<TableSearchParams | null>(localStore.params.getSearchParams)
 
   const handleAction = React.useCallback(() => {

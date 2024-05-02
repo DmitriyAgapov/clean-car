@@ -106,7 +106,7 @@ export class AuthStore {
   async login() {
     this.inProgress = true
     this.errors = undefined
-    return await agent.Auth.login(this.values.email, this.values.password)
+    return await agent.Auth.login(this.values.email.toLowerCase(), this.values.password)
       .then((resolve: any) =>  {
         if(resolve && resolve.response && resolve.response.status > 299) {
           notifications.show({
