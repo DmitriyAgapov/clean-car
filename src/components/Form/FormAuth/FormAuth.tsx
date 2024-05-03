@@ -34,7 +34,7 @@ const FormAuth = () => {
         <Form className={styles.FormAuth} onSubmit={(event) => {
           event.preventDefault()
         }}>
-          <div className={styles.inputGroup + " pb-4"} data-form_error={(errors.cleanm && touched.cleanm) ? 'error' : ''}>
+          <div className={styles.inputGroup + " "} data-form_error={(errors.cleanm && touched.cleanm) ? 'error' : ''}>
             <label htmlFor='email'>Ваш email</label>
             <Field autoComplete='off' id='cleanm' name='cleanm' type='email' />
             {(errors.cleanm && touched.cleanm) ? <div data-error={errors.cleanm && touched.cleanm} className={'form-error'}>{errors.cleanm}</div> : ''}

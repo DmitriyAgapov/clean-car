@@ -174,6 +174,131 @@
     }
 
   }
+
+  &[data-style="prices"] {
+    th,td {
+      //width: 2rem;
+      overflow: hidden;
+      position: relative;
+      @screen lg {
+        & p {
+          margin: 0;
+          background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          display: block;
+          line-height: 14px;
+          vertical-align: middle;
+          position: relative;
+          overflow: hidden;
+          font-weight: 600;
+        }
+        & p:after {
+          //content: "";
+          position: absolute;
+          right: 0px;
+          width: 50%;
+          top: 0;
+          bottom: 0;
+          background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
+        }
+      }
+      &:first-child {
+        padding-left: 2rem;
+        width: 22rem;
+        max-width: 22rem;
+      }
+      &:nth-child(2){
+        //padding-left: 2rem;
+        width: 22rem;
+        max-width: 22rem;
+
+
+      }
+      &:nth-child(3){
+        //padding-left: 2rem;
+        width: 22rem;
+        max-width: 22rem;
+        @screen lg-max {
+          border-top: none !important;
+          --tw-border-opacity: 1;
+          border-color: transparent;
+        }
+      }
+      &:nth-child(4){
+        //padding-left: 2rem;
+        width: 22rem;
+        max-width: 22rem;
+      }
+    }
+    @screen lg-max {
+      [data-state-mobile] {
+        grid-template-columns: repeat(6, 1fr) 4rem 1.5rem;
+
+      }
+      [data-state-mobile="true"] {
+        height: initial;
+
+        & > td {
+          display: flex;
+          height: initial !important;
+          padding: .375rem 0;
+        }
+        th, td {
+          @screen lg-max {
+            &:nth-child(2) {
+              border-top: 1px solid;
+              --tw-border-opacity: 1;
+              border-color: rgb(96 97 99 / var(--tw-border-opacity));
+            }
+          }
+        }
+      }
+      [data-label] {
+        grid-column: 1/-1;
+        overflow: hidden;
+        max-width: initial !important;
+        width: initial !important;
+      }
+      [data-label="idnum"] {
+        display: none;
+      }
+      [data-label="Филиал"] {
+        grid-row: 3/4;
+        height: 0;
+        overflow: hidden;
+        &:before {
+          content: attr(data-label);
+          font-size: .625rem;
+          @apply text-gray-2;
+        }
+      }
+      [data-label="Тип"] {
+        grid-row: 2/3;
+        height: 0;
+        &:before {
+          content: attr(data-label);
+          font-size: .625rem;
+          @apply text-gray-2;
+        }
+      }
+      [data-label="Компания"] {
+        grid-row: 1/2;
+        grid-column: 1/-3;
+        height: initial;
+        &:before {
+          content: none;
+        }
+      }
+      [data-position="button-mobile"] {
+        grid-column: 1/-1;
+        max-width: initial !important;
+        width: initial !important;
+        padding: 0 !important;
+      }
+
+    }
+  }
   &[data-style="limits"] {
     th,td {
       //width: 2rem;
@@ -552,32 +677,37 @@
       }
       &:first-child {
         padding-left: 2rem;
-        width: 20%;
-        max-width: 20%;
+        width: 8rem;
+        max-width: 8rem;
       }
       &:nth-child(2){
         //padding-left: 2rem;
-        width: 12%;
-        max-width: 12%;
+        width: 12rem;
+        max-width: 12rem;
       }
       &:nth-child(3){
         //padding-left: 2rem;
-        width: 16.66%;
-        max-width: 16.66%;
+        width: 10rem;
+        max-width: 10rem;
       }
       &:nth-child(4){
         //padding-left: 2rem;
-        width: 16.66%;
-        max-width: 16.66%;
+        width: 6rem;
+        max-width: 6rem;
       }
       &:nth-child(5){
-        width: 16.66%;
-        max-width: 16.66%;
+        width: 10rem;
+        max-width: 10rem;
       }
       &:nth-child(6){
-        width: 16.66%;
-        max-width: 16.66%;
+        width:6rem;
+        max-width: 6rem;
       }
+      &:nth-child(7){
+        width: 14rem;
+        max-width: 14rem;
+      }
+
     }
     @screen lg-max {
       [data-state-mobile] {
@@ -1033,14 +1163,14 @@
   border-radius: 12px;
   display: grid;
   border: 2px solid transparent;
-  gap: 1.25rem;
+  gap: .75rem 1.25rem;
   position: absolute;
   z-index: -1;
   max-height: 0;
   opacity: 0;
   top: 3rem;
   right: 0;
-
+  min-width: 12rem;
   &[data-state="true"] {
     z-index: 999;
     max-height: initial;
@@ -1230,36 +1360,7 @@
     }
 
   }
-  &[data-style="price_tire"] {
-    th {
-      @apply text-xss font-medium px-1;
-      padding-top: .375rem;
-      padding-bottom: .375rem;
-      letter-spacing: 0.05em;
-      line-height: 1;
-      width: 4rem  !important;
-
-      &:first-child {
-        padding-left: 1.625rem;
-        width: 12rem !important;
-      }
-
-      &:last-child {
-        padding-right: .625rem;
-        width: initial;
-      }
-
-    }
-    tr {
-      &:first-child {
-        padding-left: 2rem;
-        width: 12rem !important;
-      }
-      td {
-        width: calc((100% - 12rem) / 10) !important;
-      }
-    }
-  }
+  
   tr {
     width: 100%;
     @screen desktop-max {
@@ -1268,7 +1369,7 @@
       grid-template-columns: repeat(6, 1fr) 3rem 1.5rem;
       margin: .625rem 1.25rem ;
       border: 1px solid gray;
-      padding: .625rem .625rem;
+      padding: 0 .625rem;
 
       gap: 0 .5rem;
       border-radius: 1rem;
@@ -1285,17 +1386,17 @@
       }
 
       td {
-        padding-left: 0 !important;
-        padding: .375rem 0;
+
         grid-column: 1/-1;
         display: flex;
         justify-content: space-between;
         font-size: .75rem;
-        height: 0;
-        padding: 0;
+        height: 100%;
+
+
         overflow: hidden;
         white-space: nowrap;
-
+        width: 100% !important;
         &:before {
           content: attr(data-label);
           font-size: .625rem;
@@ -1303,12 +1404,14 @@
         }
 
         &:nth-child(2) {
-          grid-column: 1/-3;
-          grid-row: 1/2;
+          grid-column: 1/-1;
+          //grid-row: 1/2;
+
           //padding-bottom: 1rem;
-          height: initial;
+          //height: initial;
           //padding: initial !important;
-          overflow: initial;
+          //overflow: initial;
+
 
           &:before {
             content: none;
@@ -1318,14 +1421,13 @@
         &:nth-child(1) {
           grid-column: -3/-2;
           grid-row: 1/2;
-          height: initial;
-          //padding: initial !important;
+          padding: 0.75rem 0;
           overflow: initial;
           //padding-bottom: 1rem;
         }
 
         &:nth-child(3) {
-
+          border-top: none !important;
         }
 
         &[data-position="icon-open"] {
@@ -1352,7 +1454,7 @@
         }
 
         &[data-position="button-mobile"] {
-
+          margin-bottom: .5rem;
           &:before {
             content: none;
           }
@@ -1361,25 +1463,50 @@
 
       }
 
+      &[data-state-mobile="false"] {
+        grid-template-rows: auto repeat(10, 0);
+        overflow: hidden;
+        position: relative;
+        td:not(:first-child):not([data-position="icon-open"]) {
+          max-height: 0;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+
+        }
+        td {
+          &:nth-child(2) {
+            border-top: 1px solid transparent;
+            opacity: 0;
+            transition: opacity 0.25s ease-in-out;
+          }
+        }
+      }
       &[data-state-mobile="true"] {
         height: initial;
 
         td {
+
           display: flex;
-          height: initial;
-          padding: .375rem 0;
-          overflow: initial;
+          &:not(:first-child) {
+            padding: .25rem 0 ;
+          }
 
           &:nth-child(3) {
             border-top: 1px solid;
             @apply border-gray-2;
-            padding-top: 1rem;
+
           }
 
           &:nth-child(1), &:nth-child(2) {
-            padding: .75rem 0;
-          }
 
+          }
+          &:nth-child(2) {
+            border-top: 1px solid;
+            @apply border-gray-2;
+            padding-top: 1rem;
+            opacity: 1;
+            transition: opacity 0.25s ease-in-out;
+          }
           svg {
             rotate: 0deg;
           }

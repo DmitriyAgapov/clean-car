@@ -30,7 +30,8 @@ import { toJS, values } from "mobx";
 import TabFilials from "routes/company/TabsVariants/TabFilials";
 import TabCars from "routes/company/TabsVariants/TabCars";
 import TabUsers from "routes/company/TabsVariants/TabUsers";
-import TabBidHistory from "routes/company/TabsVariants/TabBidHistory";
+import TabBidHistory from 'routes/company/TabsVariants/TabBidHistory'
+import { useViewportSize } from "@mantine/hooks";
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -358,17 +359,7 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
   return  result
 };
 
-export const TabsVariantBids = observer(({
-    label,
-    content_type,
-    data,
-    state,
-    name,
-    className,
-    companyId,
-    company_type,
-    ...props
-}: TabsVariantsProps) => {
+export const TabsVariantBids = observer(({ label, content_type, data, state, name, className, companyId, company_type, ...props }: TabsVariantsProps) => {
     const store = useStore()
     const params = useParams()
     let result
@@ -625,18 +616,9 @@ export const TabsVariantBids = observer(({
     return result
 })
 
-export const TabsVariantPrice = ({
-    label,
-    content_type,
-    data,
-    state,
-    name,
-    className,
-    companyId,
-    company_type,
-    ...props
-}:any) => {
+export const TabsVariantPrice = ({ label, content_type, data, state, name, className, companyId, company_type, ...props }:any) => {
   let result
+  const { height, width } = useViewportSize();
   //Разбор массива для Мойка
   const mapEdWast =  React.useMemo(() => {
 
@@ -682,11 +664,11 @@ export const TabsVariantPrice = ({
     return result.map((item: any) => {
 
         return (
-            <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label)}>
+            <div className={'col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4'} key={translite(item.label)}>
               <Heading
                 text={item.label}
                 variant={HeadingVariant.h6}
-                className={'text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 sticky top-0 z-10 bg-[#090909]'}
+                className={'text-xs uppercase !mb-0 py-2  px-6 mobile:px-3 border-b border-gray-4/70 sticky top-0 z-10 bg-[#090909]'}
 
               />
               <TableWithSortNewPure
@@ -781,7 +763,7 @@ export const TabsVariantPrice = ({
       })
       return result.map((item: any, index: number) => {
         return (
-          <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
+          <div className={'col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4'} key={translite(item.label ?? `null_${index}`)}>
             <Heading text={item.label} variant={HeadingVariant.h6} className={`text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 ${item.data[0].label === null ? 'px-6 sticky top-0 z-10  bg-[#090909]' : ''}`}/>
             {item.data.map((item: any, index: number) => {
 
@@ -940,7 +922,7 @@ export const TabsVariantPrice = ({
                 search={false}
                 background={PanelColor.default}
                 state={false}
-                className={'col-span-full table-groups'}
+                className={'col-span-full table-groups mobile:mx-4'}
                 filter={false}
                 data={data.tire_positions.map((item:any) => ({
                   id: item.id,
@@ -966,21 +948,19 @@ export const TabsVariantPrice = ({
                   className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
                   bodyClassName={'!bg-transparent'}
               >
-                {!props.edit ? <TableWithSortNewPure
+                {!props.edit ? <div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}><TableWithSortNewPure
 
                   offsetSticky={0}
                   total={data.length}
                   variant={PanelVariant.default}
                   search={false}
                   background={PanelColor.default}
-                  className={'col-span-full table-groups'}
+                  className={"col-span-full table-groups"}
                   filter={false}
                   data={data}
-                  initFilterParams={[{ label: 'Статус', value: 'status' }, { label: 'Город', value: 'city' }]}
+                  initFilterParams={[{ label: "Статус", value: "status" }, { label: "Город", value: "city" }]}
                   state={false}
-                  ar={[{ label: 'Тип услуги', name: 'service_option' }, {label: 'До 2 тонн', name: 'service_option'}, { label: 'от 2 тонн', name: 'service_option_1' }]}
-                /> : <TableWithSortNewPure
-                  meta={{company_id: data.company, price_id: data.id, label: label}}
+                  ar={[{ label: "Тип услуги", name: "service_option" }, { label: "До 2 тонн", name: "service_option" }, { label: "от 2 тонн", name: "service_option_1" }]} /></div> :<div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}> <TableWithSortNewPure meta={{ company_id: data.company, price_id: data.id, label: label}}
                   edit={true}
                   offsetSticky={-1}
                   total={data.evacuation_positions.length}
@@ -997,7 +977,7 @@ export const TabsVariantPrice = ({
                     amount: item.amount
                   }))}
                   ar={[{label: 'Тип услуги', name: 'service_subtype'}, {label: 'Доп. опции', name: 'service_option'}, {label: 'Cтоимость', name: 'amount'}, ]}
-                />}
+                /></div>}
 
               </Tabs.PanelPure>
           )
@@ -1005,7 +985,7 @@ export const TabsVariantPrice = ({
       default:
           return null
   }
-  return <ScrollArea.Autosize offsetScrollbars={'x'}  mah={'52vh'} classNames={{
+  return <ScrollArea.Autosize offsetScrollbars={'x'} data-position={"tabs-panel-container"}  mah={width > 1024 ? '52vh' : '95lvh'} classNames={{
     scrollbar: 'z-50'
   }}>
     {result}

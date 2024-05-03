@@ -328,20 +328,20 @@ const FilterBar = ({ filters, state = false }: FilterBarProps) => {
       <ctx.Provider value={params}>
         <FilterElements filters={filters}/>
       </ctx.Provider>
-      <Button
-        text={'Применить'}
-        type={'button'}
-        action={handleAction}
-        variant={ButtonVariant.accent}
-        size={ButtonSizeType.sm}
-        className={'!rounded-xl'}
-      />
+      {/* <Button */}
+      {/*   text={'Применить'} */}
+      {/*   type={'button'} */}
+      {/*   action={handleAction} */}
+      {/*   variant={ButtonVariant.accent} */}
+      {/*   size={ButtonSizeType.sm} */}
+      {/*   className={'!rounded-xl'} */}
+      {/* /> */}
       <Button
         text={'Сбросить'}
         action={handleClearAction}
-        variant={ButtonVariant['accent-outline']}
+        variant={ButtonVariant['cancel']}
         size={ButtonSizeType.sm}
-        className={'!rounded-xl'}
+        className={'!rounded-md mt-5 !text-sm !font-normal'}
       />
     </div>
   )

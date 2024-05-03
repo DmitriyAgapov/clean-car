@@ -110,7 +110,7 @@ const UserMenu = () => {
   const ref = useOutsideClick(() => {
     setState(false)
   })
-
+  console.log(store.userStore.myProfileData.user.account_bindings[0].group.name);
   return (
     <div className={styles.UserMenu} ref={ref}>
       <Notification />
@@ -124,7 +124,7 @@ const UserMenu = () => {
         state={state}
         // @ts-ignore
         name={store.userStore.currentUser?.first_name + ' ' + store.userStore.currentUser?.last_name}
-        company={'Администратор'}
+        company={store.userStore.myProfileData.user.account_bindings[0].group.name}
         accounts={['admin', 'user']}
       />
     </div>

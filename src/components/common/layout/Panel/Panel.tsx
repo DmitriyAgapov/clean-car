@@ -24,6 +24,8 @@ export enum PanelRouteStyle {
     default = 'default',
     default_form = 'default_form',
     limits = 'limits',
+    prices = 'prices',
+    price = 'price',
     finance = 'finance',
     bids = 'bids',
     auth = 'auth',

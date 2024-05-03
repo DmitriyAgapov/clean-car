@@ -21,10 +21,9 @@ const PricesPage = () => {
 	const {isLoading, data, mutate, isValidating} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
 
 	useEffect(() => {
-		console.log(data);
 		localStore.setData = {
 			...data,
-			results: data?.results
+			results: data?.results.map((item:any) => ({id: item.id, company_name: item.name,  company_type: item.company_type, root_company: item.root_company}))
 		}
 		localStore.setIsLoading = isLoading
 	},[data])
@@ -66,6 +65,7 @@ const PricesPage = () => {
 				store={localRootStore}
 				variant={PanelVariant.dataPadding}
 				search={true}
+				style={PanelRouteStyle.prices}
 				background={PanelColor.glass}
 				className={'col-span-full table-groups h-full'}
 				filter={false}

@@ -227,7 +227,7 @@ Tabs.PanelPure = observer(({ children, state, name, className = " ", company_typ
 })
 
 Tabs.TabHeaderContainer = ({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string}) => (
-  <div className={styles.tabHeaderWrapper}>
+  <div className={styles.tabHeaderWrapper} data-tab-position={"header"}>
     <ul className={styles.containerHeader}>{children}</ul>
   </div>
   )

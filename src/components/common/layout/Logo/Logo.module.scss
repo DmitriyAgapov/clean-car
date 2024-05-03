@@ -4,7 +4,8 @@
   user-select: none;
   &[data-position="aside"] {
 
-	padding: 0 1.25rem 2.5rem 1.25rem;
+	padding: 0 1.25rem 1.125rem 1.25rem;
+	align-self: flex-start;
 	a {
 	  color: var(--accentColor);
 	  font-size: 1.625rem;

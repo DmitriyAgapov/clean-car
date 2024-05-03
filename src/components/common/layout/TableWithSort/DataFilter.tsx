@@ -1,6 +1,7 @@
 import { useOutsideClick } from "utils/utils";
 import styles from "components/common/layout/TableWithSort/TableWithSort.module.scss";
 import { SvgFilter } from "components/common/ui/Icon";
+import icon from "assets/icons/filter.png"
 import FilterBar from 'components/common/layout/TableWithSort/FilterBar'
 import { useState } from 'react'
 import React from 'react'
@@ -10,6 +11,7 @@ import { useClickOutside } from "@mantine/hooks";
 import { BidsStatus } from "stores/bidsStrore";
 import dayjs from "dayjs";
 import { DateInput, DateTimePicker } from "@mantine/dates";
+import Image from "components/common/ui/Image/Image";
 export enum FilterData {
   city= 'city',
   car_type= 'car_type',
@@ -34,7 +36,8 @@ export default function DataFilter({ filterData}: {filterData: any[] | undefined
     return (
         <div className={styles.btnFilter} ref={ref}>
             <a className={'flex-1 flex justify-center items-center'} onClick={(event) => handleState(event)}>
-                <SvgFilter />
+                {/* <SvgFilter /> */}
+              <Image src={icon} alt={''} className={'w-5 h-6'}/>
             </a>
             {state && <FilterBar state={state} filters={filterData} />}
         </div>

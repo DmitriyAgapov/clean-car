@@ -1,6 +1,6 @@
 import React, { JSX, useEffect } from 'react'
 import Section, { SectionType } from "components/common/layout/Section/Section";
-import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from "stores/store";
@@ -79,21 +79,22 @@ const PricePage = ():JSX.Element => {
 
       <Panel
         state={currentPriceById.loading}
-        className={'col-span-full grid grid-rows-[auto_1fr] px-5 py-8 !gap-10 '}
+        className={'col-span-full grid grid-rows-[auto_1fr] px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-10 '}
         variant={PanelVariant.withGapOnly}
         background={PanelColor.glass}
+        routeStyle={PanelRouteStyle.price}
         bodyClassName={'flex'}
         footerClassName={'flex  justify-end'}
         headerClassName={'border-bottom-none !grid gap-5 !justify-normal'}
         header={
           <>
-            <div className={'flex w-full  col-span-full gap-2.5'}>
+            <div className={'flex mobile:flex-wrap w-full  col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
               {(store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && !location.pathname.includes('history')) && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <Button action={open} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
               <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>}
             </div>
-            <div className={'flex items-baseline  gap-6'}>
+            <div className={'flex  mobile:flex-wrap  items-baseline  gap-6'}>
               <div className={'text-xs text-gray-2'}>
                 Дата и время регистрации: <span>{dateTransformShort(company.updated).date}</span>
               </div>

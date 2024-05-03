@@ -115,12 +115,12 @@ const UserPortal = ({
       >
         <div className={'user__photo'}>
           <Image src={photo} alt={''} width={80} height={80} />
-          <Button
-            className={'bg-accent rounded-full p-1.5 inline-block'}
-            text={<SvgPencil />}
-            action={() =>  console.log('edit click')}
-            variant={ButtonVariant.icon}
-          />
+          {/* <Button */}
+          {/*   className={'bg-accent rounded-full p-1.5 inline-block'} */}
+          {/*   text={<SvgPencil />} */}
+          {/*   action={() =>  console.log('edit click')} */}
+          {/*   variant={ButtonVariant.icon} */}
+          {/* /> */}
         </div>
         <div className={'user__name'}>{name}</div>
         <div className={'user__company'}>{company}</div>

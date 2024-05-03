@@ -6,6 +6,9 @@ import { useStore } from "stores/store";
 import { Observer, observer } from "mobx-react-lite";
 import { useWindowDimensions } from "utils/utils";
 import Logo from "components/common/layout/Logo/Logo";
+import Footer from "components/common/layout/Footer/Footer";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
+import { ButtonVariant } from "components/common/ui/Button/Button";
 
 
 const BackDrop = () => {
@@ -187,28 +190,33 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   }, [store.userStore.currentUserPermissions.size])
 
   return (
-    <>
-      <BackDrop/>
-    <aside  className={styles.Sidebar} {...props} data-state={appStore.asideState}>
-      {(width && width < 960) && <Logo position={'aside'}/>}
+      <>
+          <BackDrop />
+          <aside className={styles.Sidebar} {...props} data-state={appStore.asideState}>
+              {width && width < 960 && <Logo position={'aside'} />}
 
-      <nav>
-        <ul>
-          {routes.map((i, index) => {
-            if (i.url === location.pathname) {
-            }
-            return (
-              <ListItem key={`item-${index}`}
-                i={i}
-              />
-            )
-          })}
-        </ul>
-      </nav>
-      {children}
-    </aside>
+              <nav>
+                  <ul>
+                      {routes.map((i, index) => {
+                          if (i.url === location.pathname) {
+                          }
+                          return <ListItem key={`item-${index}`} i={i} />
+                      })}
+                  </ul>
+              </nav>
+              {children}
+              <Footer className={'block desktop:!hidden pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+                  <div>
 
-  </>
+                      <LinkStyled className={'!text-sm font-medium'} to={'#'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
+                  </div>
+
+                  <hr className={'mt-3 mb-2 -mr-8 border-accent'} />
+
+                  <div className={'text-xs'}>Политика конфиденциальности</div>
+              </Footer>
+          </aside>
+      </>
   )
 }
 

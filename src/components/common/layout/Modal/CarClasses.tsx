@@ -10,7 +10,7 @@ export function CarClasses(props: { opened: boolean; onClose: () => void}) {
 	const store = useStore()
 
 	return (
-		<Modal.Root size={747} opened={props.opened} onClose={props.onClose} centered>
+		<Modal.Root size={959} opened={props.opened} onClose={props.onClose} centered>
 			<Modal.Overlay className={'bg-black/90'}/>
 			<Modal.Content radius={20} className={styles.ModalBid}>
 				<Modal.Header className={'static '}>
@@ -22,7 +22,7 @@ export function CarClasses(props: { opened: boolean; onClose: () => void}) {
 					/></Modal.Title>
 					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
 				</Modal.Header>
-				<Modal.Body>
+				<Modal.Body className={'!p-0'}>
 				<CarHelper/>
 
 				</Modal.Body>
