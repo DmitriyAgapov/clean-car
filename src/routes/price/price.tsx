@@ -1,27 +1,80 @@
-import React, { JSX, useEffect } from 'react'
+import React, { JSX, useEffect, useState } from 'react'
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from "stores/store";
 import { Outlet, useLocation, useNavigate, useParams, useRevalidator } from 'react-router-dom'
-import { SvgBackArrow } from "components/common/ui/Icon";
+import { PriceOptionsSVG, SvgBackArrow } from "components/common/ui/Icon";
 import { PermissionNames } from "stores/permissionStore";
 import { dateTransformShort } from "utils/utils";
 import { CompanyType } from "stores/companyStore";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import dayjs from 'dayjs'
-import { useDidUpdate, useDisclosure } from '@mantine/hooks'
+import { useDidUpdate, useDisclosure, useViewportSize, useWindowScroll } from '@mantine/hooks'
 import { PriceCopy } from "components/common/layout/Modal/PriceCopy";
 import { observer } from "mobx-react-lite";
-import { CarClasses } from "components/common/layout/Modal/CarClasses";
+import { CarClasses } from 'components/common/layout/Modal/CarClasses'
+import { ActionIcon, Affix, Overlay, Transition } from '@mantine/core'
+
+function PriceActions(props: {  action: any }) {
+  const store = useStore()
+  const location = useLocation()
+  const [state, setState] = useState(false)
+  const [scroll, scrollTo] = useWindowScroll();
+  const {width} = useViewportSize();
+  if(width > 1024) return store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'update') &&
+    !location.pathname.includes('history') && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+    <Button action={open} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+    <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>
+  return store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'update') &&
+          !location.pathname.includes('history') && ( <>{state && <Overlay color="#000" onClick={() => setState(false)} top={ "-50vh"} left={ "-50vw"} bottom={ "-50vh"} right={ "-50vw"} backgroundOpacity={0.85} zIndex={9999}/> }  <Affix position={{ bottom: 20, right: 10 }} className={'flex flex-col items-end gap-6'}>
+        {state && <Transition transition="slide-up" mounted={state} >
+            {(transitionStyles) => (
+              <div className={'flex flex-col gap-3 !items-end'} style={transitionStyles}>
+
+
+                <LinkStyled
+                  to={`history`}
+                  text={'История'}
+                  className={'!self-end '}
+                  size={ButtonSizeType.sm}
+                  variant={ButtonVariant['accent-outline']}
+                />
+                <Button
+                  trimText={true}
+                  action={props.action}
+                  type={'button'}
+                  className={'!self-end '}
+                  text={'Дублировать'}
+                  size={ButtonSizeType.sm}
+                  variant={ButtonVariant['accent-outline']}
+                />
+                <LinkStyled
+                  to={'edit'}
+                  className={'!self-end '}
+                  text={'Редактировать'}
+                  size={ButtonSizeType.sm}
+                  variant={ButtonVariant['accent-outline']}
+                />
+
+
+              </div>   )}
+          </Transition>}
+          <ActionIcon variant="outline" className={'border-2 border-accent bg-black/80'}  size="xl" radius="xl" aria-label="Settings" bg={""} onClick={() => setState((prevState) => !prevState)} >
+            <PriceOptionsSVG style={{ width: '24px', height: '24px', fill: 'rgb(0, 255, 174)' }} stroke={"1.5"} />
+          </ActionIcon>
+          </Affix></>
+    )
+}
 
 const PricePage = ():JSX.Element => {
   const navigate = useNavigate()
+  const store = useStore()
   const location = useLocation()
   const params = useParams()
-  const store = useStore()
+
   const  textData  : any = store.priceStore.TextData
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -59,7 +112,7 @@ const PricePage = ():JSX.Element => {
         header={<>
           <div>
             <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'), {})} variant={ButtonVariant.text} />
-            <Heading text={(isHistory && isCreate) ? `Прайс лист ${dayjs(isCreate.created).format('DD.MM.YY')} - ${dayjs(isCreate.expired).format('DD.MM.YY')}` : company?.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
+            <Heading text={(isHistory && isCreate) ? `Прайс лист ${dayjs(isCreate.created).format('DD.MM.YY')} - ${dayjs(isCreate.expired).format('DD.MM.YY')}` : 'Прайс компании'} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
           </div>
           <div className={'flex gap-6 tablet-max:max-w-96 mobile:mt-6'}>
             <Button
@@ -79,7 +132,7 @@ const PricePage = ():JSX.Element => {
 
       <Panel
         state={currentPriceById.loading}
-        className={'col-span-full grid grid-rows-[auto_1fr] px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-10 '}
+        className={'col-span-full grid grid-rows-[auto_1fr] px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-6 '}
         variant={PanelVariant.withGapOnly}
         background={PanelColor.glass}
         routeStyle={PanelRouteStyle.price}
@@ -89,24 +142,23 @@ const PricePage = ():JSX.Element => {
         header={
           <>
             <div className={'flex mobile:flex-wrap w-full  col-span-full gap-2.5'}>
-              <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
-              {(store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && !location.pathname.includes('history')) && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-              <Button action={open} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-              <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>}
+              <Heading text={company.name}
+                variant={HeadingVariant.h2}
+                color={HeadingColor.accent}
+                className={'mr-auto'} />
+              <PriceActions
+                action={open} />
             </div>
             <div className={'flex  mobile:flex-wrap  items-baseline  gap-6'}>
               <div className={'text-xs text-gray-2'}>
                 Дата и время регистрации: <span>{dateTransformShort(company.updated).date}</span>
               </div>
               <div className={'flex flex-1 gap-6'}>
-                {isCreate && isCreate.is_active && <Heading
-                  className={'!m-0'}
+                {isCreate && isCreate.is_active && <Heading className={'!m-0'}
                   text={isCreate.is_active ? 'Активен' : 'Не активна'}
                   color={company.is_active ? HeadingColor.active : HeadingColor.notActive}
-                  variant={HeadingVariant.h4}
-                />}
-                <Heading
-                  className={'!m-0'}
+                  variant={HeadingVariant.h4} />}
+                <Heading className={'!m-0'}
                   text={company.company_type == 'customer'
                     ? CompanyType.customer
                     : CompanyType.performer}
@@ -115,8 +167,7 @@ const PricePage = ():JSX.Element => {
                     company.company_type == 'customer'
                       ? HeadingDirectory.customer
                       : HeadingDirectory.performer
-                  }
-                />
+                  } />
 
               </div>
             </div>

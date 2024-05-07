@@ -3,7 +3,8 @@ import styles from './Tabs.module.scss'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
 import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import { Observer, observer } from "mobx-react-lite";
-import { useStore } from "stores/store";
+import { useStore } from 'stores/store'
+import { useScrollIntoView, useViewportSize } from '@mantine/hooks'
 export enum TabsType {
   bid = 'bid',
   company = 'company',
@@ -163,15 +164,24 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
   const [state, setState] = useState('');
-
+  const { height, width } = useViewportSize();
   React.useEffect(() => {
     if(data && data.length > 0) {
       setState(data[0]?.label)
     }
   }, [])
-
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
+    // offset: 50,
+    axis: "y",
+    duration: 0.25,
+    easing:(t) => (t < 0.5 ? 16 * t ** 5 : 1 - (-2 * t + 2) ** 5 / 2),
+  });
   const  handleChangeTabState = React.useCallback((event: Event, label: string) => {
+
     setState(label);
+    if(width < 1025) {
+      scrollIntoView()
+    }
   }, [])
 
   React.useEffect(() => {
@@ -181,17 +191,10 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
     store.bidsStore.setActiveTab(null);
   }, [aTab]);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-  useEffect(() => {
-    console.log(state);
-  }, [state]);
-
 
 
     return (
-        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant}>
+        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} ref={targetRef}>
             <Tabs.TabHeaderContainer>
               <HeadersTabs data={data} state={state} setState={handleChangeTabState}/>
             </Tabs.TabHeaderContainer>

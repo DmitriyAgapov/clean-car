@@ -103,12 +103,12 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
     }, [props])
 
   return (
-    <Table.Tr className={styles.tableRowPure} onClick={(width && width > 961) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={open}>
+    <Table.Tr className={styles.tableRowPure} onClick={(width && width > 1023) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={open}>
           {propsRender}
-          {(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
+          {(width && width < 1024) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
               <SvgChevron/>
           </td>}
-          {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm}/></td>}
+          {/* {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm}/></td>} */}
       </Table.Tr>
     )
 })

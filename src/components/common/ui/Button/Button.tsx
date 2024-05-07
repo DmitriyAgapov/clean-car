@@ -78,7 +78,7 @@ const Button = ({
       onClick={action}
       {...props}
     >
-      {(width && width < 960 && trimText && typeof text === "string") ? text.split(' ')[0] : text}
+      {(width && width < 1025 && trimText && typeof text === "string") ? text.split(' ')[0] : text}
     </a>
   )
 }

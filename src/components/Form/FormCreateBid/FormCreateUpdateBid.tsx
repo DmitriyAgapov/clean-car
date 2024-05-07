@@ -97,7 +97,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
             setAnimate(false)
             setStep((prevState) => (step ? step : prevState + 1))
         }, 1200)
-        width < 940 ? scrollIntoView() : null
+        width < 1025 ? scrollIntoView() : null
     }
 
     const initData = React.useMemo(() => {

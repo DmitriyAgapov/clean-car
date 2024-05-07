@@ -157,7 +157,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             setAnimate(false)
             setStep((prevState) => step ? step : prevState += 1)
         }, 1200)
-      width < 940 ? scrollIntoView() : null
+      width < 1025 ? scrollIntoView() : null
     }
     const companyVar = React.useMemo(() => {
       const  res = form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Компания-Заказчик" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => store.appStore.appType === "admin" ? c.company_type === "Компания-Заказчик" : c)
@@ -214,18 +214,23 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               store.formStore.sendCarFormDataEdit()
             } else {
               store.formStore.setFormDataCreateCar(data)
-              store.formStore.sendCarFormData().then(r => {
+              store.formStore.sendCarFormData()
+              .then(r => {
                 console.log(r);
                 form.values.id = r.data.id
               })
+                .then(() =>  {
+                  // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
+                  navigate(`/account/cars`)
+              })
             }
 
-            changeStep(3)
+            // changeStep(3)
       }
-      if(step === 3) {
-        console.log(form.values);
-        navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
-      }
+      // if(step === 3) {
+      //   console.log(form.values);
+      //   navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
+      // }
       // changeStep()
     }, [form])
     return (

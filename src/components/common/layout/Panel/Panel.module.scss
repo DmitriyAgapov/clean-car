@@ -23,7 +23,7 @@
 
   }
   &[data-style="price_tire"] {
-	@screen tablet {
+	@screen desktop {
 	  th {
 		@apply text-xss font-medium px-1;
 		padding-top: .375rem;

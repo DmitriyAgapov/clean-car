@@ -804,7 +804,7 @@
         width: 6rem;
       }
     }
-    @screen tablet-max {
+    @screen tablet-big-max {
       [data-state-mobile] {
         grid-template-columns: repeat(6, 1fr) 4rem 1.5rem;
 
@@ -1360,10 +1360,10 @@
     }
 
   }
-  
+
   tr {
     width: 100%;
-    @screen desktop-max {
+    @screen tablet-big-max {
       display: grid;
       width: initial;
       grid-template-columns: repeat(6, 1fr) 3rem 1.5rem;
@@ -1467,6 +1467,7 @@
         grid-template-rows: auto repeat(10, 0);
         overflow: hidden;
         position: relative;
+        max-height: 2.75rem;
         td:not(:first-child):not([data-position="icon-open"]) {
           max-height: 0;
           padding-top: 0 !important;

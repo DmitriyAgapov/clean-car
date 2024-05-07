@@ -101,7 +101,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             store.companyStore.loadingCompanies = false
             setStep(step ? step : 2)
         }, 1200)
-        width < 940 ? scrollIntoView() : null
+        width < 1025 ? scrollIntoView() : null
     }
     if(edit) {
         initValues = {
@@ -164,6 +164,23 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     className: 'mb-2  flex-grow  !flex-[0_0_22rem] col-span-3',
                 }
             }
+            if (payload.field === 'address') {
+                return {
+                    className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
+                }
+            }
+            if (payload.field === 'inn') {
+                return {
+                    className: 'mb-2 w-full flex-grow  !flex-[1_0_25rem] col-span-3',
+                }
+            }
+            if (payload.field === 'ogrn') {
+                return {
+                    className: 'mb-2 w-full flex-grow  !flex-[1_0_25rem] col-span-3',
+                }
+            }
+
+
 
             return {
                 className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
@@ -251,59 +268,72 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     return (
         <FormProvider form={formData}>
             <PanelForForms
-              ref={targetRef}
+                ref={targetRef}
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
-                actionBack={step === 2 ? (<Button
-                  type={'button'}
-                  text={'Назад'}
-                  action={() => {
-                     changeStep(1)
-                  }}
-                  className={'float-right'}
-                  variant={ButtonVariant['accent-outline']}
-                />) : undefined}
-                actionCancel={
-                  step !== 3 ? (<Button
-                        type={'button'}
-                        text={'Отменить'}
-                        action={(e) => {
-                            e.preventDefault()
-                            navigate(-1)
-                        }}
-                        className={'float-right'}
-                    variant={ButtonVariant.cancel}
-                    />) : undefined
-                }
-                actionNext={step !== 3 ? (formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
-                      <Button
-                        type={'button'}
-                        action={() => {
-                            formData.validate()
-                            if(step === 2) {
-                                handleSubmit(formData.values)
-                            } else {
-                                changeStep()
-                            }
-                        }}
-                        disabled={!formData.isValid()}
-                        text={step === 1 ? 'Далее' : 'Сохранить'}
-                        className={'float-right'}
-                        variant={ButtonVariant.accent}
-                      />
-                        ) : (
-                          <Button
-                            action={() => handleSubmit(formData.values)}
-                            type={'submit'}
-                            disabled={!formData.isValid()}
-                            text={'Сохранить'}
+                actionBack={
+                    step === 2 ? (
+                        <Button
+                            type={'button'}
+                            text={'Назад'}
+                            action={() => {
+                                changeStep(1)
+                            }}
                             className={'float-right'}
+                            variant={ButtonVariant['accent-outline']}
+                        />
+                    ) : undefined
+                }
+                actionCancel={
+                    step !== 3 ? (
+                        <Button
+                            type={'button'}
+                            text={'Отменить'}
+                            action={(e) => {
+                                e.preventDefault()
+                                navigate(-1)
+                            }}
+                            className={'float-right'}
+                            variant={ButtonVariant.cancel}
+                        />
+                    ) : undefined
+                }
+                actionNext={
+                    step !== 3 ? (
+                        formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
+                            <Button
+                                type={'button'}
+                                action={() => {
+                                    formData.validate()
+                                    if (step === 2) {
+                                        handleSubmit(formData.values)
+                                    } else {
+                                        changeStep()
+                                    }
+                                }}
+                                disabled={!formData.isValid()}
+                                text={step === 1 ? 'Далее' : 'Сохранить'}
+                                className={'float-right'}
+                                variant={ButtonVariant.accent}
+                            />
+                        ) : (
+                            <Button
+                                action={() => handleSubmit(formData.values)}
+                                type={'submit'}
+                                disabled={!formData.isValid()}
+                                text={'Сохранить'}
+                                className={'float-right'}
+                                variant={ButtonVariant.accent}
+                            />
+                        )
+                    ) : (
+                        <LinkStyled
+                            text={'перейти к компании'}
+                            to={`/account/companies/${formData.values.type == CompanyType.performer ? 'performer' : 'customer'}/${formData.values.id}`}
+                            className={'float-right col-start-2 justify-self-end'}
                             variant={ButtonVariant.accent}
-                          />
-                        )) : <LinkStyled text={'перейти к компании'}
-                  to={`/account/companies/${formData.values.type == CompanyType.performer ? 'performer' : 'customer'}/${formData.values.id}`}
-                  className={'float-right col-start-2 justify-self-end'}
-                  variant={ButtonVariant.accent} />
+                        />
+                    )
                 }
             >
                 <form
@@ -316,7 +346,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         state={step !== 1}
                         animate={animate}
                         className={'!bg-transparent'}
-                        bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+                        bodyClassName={'tablet:flex flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
                         background={PanelColor.default}
                         header={
@@ -332,97 +362,10 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             </>
                         }
                     >
-                        <TextInput
-
-                            label={'Название'}
-                            {...formData.getInputProps('company_name')}
-                        />
-                        <Select
-                            withCheckIcon={false}
-                            label={'Город'}
-                            searchable={true}
-                            {...formData.getInputProps('city')}
-                            className={'!flex-auto'}
-                            onOptionSubmit={props => {
-                               formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name);
-                               formData.setFieldValue('address', '');
-                            }}
-                            data={val(store.catalogStore.cities).filter((c:any) => c.is_active).map((o: any) => ({
-                                label: o.name,
-                                value: String(o.id),
-                            }))}
-                        />
-                        <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
-                        <NumberInput
-                          allowLeadingZeros
-                            type={'text'}
-                            label={'ИНН'}
-                            {...formData.getInputProps('inn')}
-                            hideControls
-                            maxLength={10}
-                            placeholder={'Введите ИНН'}
-                        />
-                        <NumberInput
-                          allowLeadingZeros
-                            type={'text'}
-                            label={'ОГРН'}
-                            {...formData.getInputProps('ogrn')}
-                            hideControls
-                            maxLength={13}
-                            placeholder={'Введите ОГРН'}
-                        />
-                        {formData.values.type === CompanyType.performer && (
-                          <InputBase
-                            component={IMaskInput}
-
-                            label={'Часы работы'}
-                            {...formData.getInputProps('working_time')}
-                            mask={Date}
-                            className={'!flex-[1_0_10rem]'}
-                            /*@ts-ignore*/
-                            blocks={{
-                                YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
-                                MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
-                                DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
-                                HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
-                                mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
-                            }}
-                            pattern={`c ${momentFormat} до ${momentFormat}0`}
-                            format={(date: MomentInput) => moment(date).format(momentFormat)}
-                            parse={(str) => moment(str, momentFormat)}
-                            autofix
-                            overwrite
-                            placeholder='c 00:00 до 23:59'
-                          />
-                        )}
-
-                        <TextInput
-                          className={'!flex-[1_0_100%]'}
-
-                            label={'Юридический адрес'}
-                            {...formData.getInputProps('legal_address')}
-                            placeholder={'Введите Юридический адрес'}
-                        />
-                        {formData.values.type === CompanyType.performer && (
-                            <NumberInput
-                                defaultValue={1}
-                              className={'!flex-[1_1_4rem]'}
-
-                              step={1}
-                              hideControls
-                              allowNegative={false}
-                              allowDecimal={false}
-                                label={'Макс. высота транспорта в см'}
-                                {...formData.getInputProps('height')}
-
-                            />
-                        )}
-                        <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
                         <Select
                             allowDeselect={false}
                             {...formData.getInputProps('type')}
                             label={'Тип'}
-
                             disabled={edit}
                             defaultValue={formData.values.type}
                             className={'tablet:!flex-initial !flex-[1_0_20rem]'}
@@ -431,6 +374,91 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 { label: 'Партнер', value: CompanyType.performer },
                             ]}
                         />
+                        <TextInput label={'Название'} {...formData.getInputProps('company_name')} />
+                        <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
+                        <Select
+                            withCheckIcon={false}
+                            label={'Город'}
+                            searchable={true}
+                            {...formData.getInputProps('city')}
+                            className={'!flex-auto'}
+                            onOptionSubmit={(props) => {
+                                formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name)
+                                formData.setFieldValue('address', '')
+                            }}
+                            data={val(store.catalogStore.cities)
+                                .filter((c: any) => c.is_active)
+                                .map((o: any) => ({
+                                    label: o.name,
+                                    value: String(o.id),
+                                }))}
+                        />
+                        <InputAutocompleteNew
+                            {...formData.getInputProps('address')}
+                            city={formData.values.city_name}
+                            ctx={formData}
+                        />
+                        <NumberInput
+                            allowLeadingZeros
+                            type={'text'}
+                            label={'ИНН'}
+                            {...formData.getInputProps('inn')}
+                            hideControls
+                            maxLength={10}
+                            placeholder={'Введите ИНН'}
+                        />
+                        <NumberInput
+                            allowLeadingZeros
+                            type={'text'}
+                            label={'ОГРН'}
+                            {...formData.getInputProps('ogrn')}
+                            hideControls
+                            maxLength={13}
+                            placeholder={'Введите ОГРН'}
+                        />
+                        {formData.values.type === CompanyType.performer && (
+                            <InputBase
+                                component={IMaskInput}
+                                label={'Часы работы'}
+                                {...formData.getInputProps('working_time')}
+                                mask={Date}
+                                className={'!flex-[1_0_10rem]'}
+                                /*@ts-ignore*/
+                                blocks={{
+                                    YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
+                                    MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
+                                    DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
+                                    HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
+                                    mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
+                                }}
+                                pattern={`c ${momentFormat} до ${momentFormat}0`}
+                                format={(date: MomentInput) => moment(date).format(momentFormat)}
+                                parse={(str) => moment(str, momentFormat)}
+                                autofix
+                                overwrite
+                                placeholder='c 00:00 до 23:59'
+                            />
+                        )}
+
+                        <TextInput
+                            className={'!flex-[1_0_100%]'}
+                            label={'Юридический адрес'}
+                            {...formData.getInputProps('legal_address')}
+                            placeholder={'Введите Юридический адрес'}
+                        />
+                        {formData.values.type === CompanyType.performer && (
+                            <NumberInput
+                                defaultValue={1}
+                                className={'!flex-[1_1_4rem]'}
+                                step={1}
+                                hideControls
+                                allowNegative={false}
+                                allowDecimal={false}
+                                label={'Макс. высота транспорта в см'}
+                                {...formData.getInputProps('height')}
+                            />
+                        )}
+
                         {formData.values.type === CompanyType.performer && (
                             <NumberInput
                                 type={'text'}
@@ -467,7 +495,6 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             />
                         )}
                         <TextInput
-
                             label={'Контактные данные'}
                             {...formData.getInputProps('contacts')}
                             placeholder={'Введите Контактные данные'}
@@ -479,7 +506,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         className={'!bg-transparent'}
                         bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
-                          footerClassName={''}
+                        footerClassName={''}
                         background={PanelColor.default}
                         header={
                             <>
@@ -504,12 +531,36 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
 
-                        <Select label={'Овердрафт'} className={' w-fit    tablet:!flex-[0_1_4rem] !flex-[1_0_20rem]'} onOptionSubmit={(value: any) => {
-                            if(value === "2") {
-                                formData.setFieldValue('overdraft_sum', 0);
+                        <Select
+                            label={'Овердрафт'}
+                            className={' w-fit    tablet:!flex-[0_1_4rem] !flex-[1_0_20rem]'}
+                            onOptionSubmit={(value: any) => {
+                                if (value === '2') {
+                                    formData.setFieldValue('overdraft_sum', 0)
+                                }
+                            }}
+                            {...formData.getInputProps('overdraft')}
+                            data={[
+                                { label: 'Да', value: '1' },
+                                { label: 'Нет', value: '2' },
+                            ]}
+                        />
+                        <NumberInput
+                            onClick={() => console.log(formData.errors)}
+                            disabled={formData.values.overdraft === '2'}
+                            label={'Сумма'}
+                            thousandSeparator=' '
+                            suffix={' ₽'}
+                            hideControls
+                            {...formData.getInputProps('overdraft_sum')}
+                            allowNegative={false}
+                            min={1}
+                            className={
+                                formData.errors.overdraft_sum
+                                    ? ' filter grayscale'
+                                    : '' + ' tablet:!flex-[0_0_11rem] !flex-[1_0_20rem]'
                             }
-                        }}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
-                        <NumberInput onClick={() => console.log(formData.errors)} disabled={formData.values.overdraft === "2"}    label={'Сумма'}     thousandSeparator=" " suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} min={1}  className={formData.errors.overdraft_sum ? ' filter grayscale' : '' + ' tablet:!flex-[0_0_11rem] !flex-[1_0_20rem]'}/>
+                        />
 
                         <Select
                             label={'Список Партнеров'}
@@ -521,28 +572,32 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
                         <hr className={'mt-0 mb-2 flex-[1_0_100%] w-full border-gray-2'} />
-                        {formData.values.performers_list === '1' && <TransferListNew active={formData.values.performer_company}/>}
+                        {formData.values.performers_list === '1' && (
+                            <TransferListNew active={formData.values.performer_company} />
+                        )}
                     </PanelForForms>
-                    <PanelForForms state={step !== 3}
-                      animate={animate}
-                      className={'!bg-transparent'}
-                      bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
-                      variant={PanelVariant.textPadding}
-                      background={PanelColor.default}
-                      header={
-                          <>
-                              <Heading text={`Шаг ${formData.values.type == 'Компания-Партнер' && '2'|| '3'}
+                    <PanelForForms
+                        state={step !== 3}
+                        animate={animate}
+                        className={'!bg-transparent'}
+                        bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+                        variant={PanelVariant.textPadding}
+                        background={PanelColor.default}
+                        header={
+                            <>
+                                <Heading
+                                    text={`Шаг ${(formData.values.type == 'Компания-Партнер' && '2') || '3'}
                                .
                                   Компания создана `}
-                                color={HeadingColor.accent}
-                                variant={HeadingVariant.h2}
-                              />
-                              <div className={''}>
-                                  Вы можете добавить Прайсы и Лимиты для компании или добавить их позже в соответствующем разделе
-                              </div>
-                          </>
-                      }
-
+                                    color={HeadingColor.accent}
+                                    variant={HeadingVariant.h2}
+                                />
+                                <div className={''}>
+                                    Вы можете добавить Прайсы и Лимиты для компании или добавить их позже в
+                                    соответствующем разделе
+                                </div>
+                            </>
+                        }
                     >
                         <div className={'mt-10 flex flex-wrap gap-6 flex-1'}>
                             <CreateField title={'Создать прайс-лист'} />

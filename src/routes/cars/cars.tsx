@@ -31,7 +31,6 @@ const CarsPage = () => {
   }, [opened])
 
   useEffect(() => {
-    console.log(data);
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
@@ -96,15 +95,15 @@ const CarsPage = () => {
           </Panel>
           <TableWithSortNew
           store={localRootStore}
-        variant={PanelVariant.dataPadding}
-        search={true}
-        style={PanelRouteStyle.cars}
-        background={PanelColor.glass}
-        className={'col-span-full table-groups'}
-        filter={true}
-        initFilterParams={[FilterData.is_active, FilterData.city]}
-        state={isLoading}
-        ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
+          variant={PanelVariant.dataPadding}
+          search={true}
+          style={PanelRouteStyle.cars}
+          background={PanelColor.glass}
+          className={'col-span-full table-groups'}
+          filter={true}
+          initFilterParams={[FilterData.is_active, FilterData.city]}
+          state={isLoading}
+          ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
       />
 
     </Section>

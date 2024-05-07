@@ -54,11 +54,7 @@ const testData = {
         "name": "Всего",
         "count": 30,
         "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
+      }
     },
     {
       "id": 3,
