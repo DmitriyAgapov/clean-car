@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/com
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from "stores/store";
-import { Outlet, useLocation, useNavigate, useParams, useRevalidator } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PriceOptionsSVG, SvgBackArrow } from "components/common/ui/Icon";
 import { PermissionNames } from "stores/permissionStore";
 import { dateTransformShort } from "utils/utils";
@@ -22,7 +22,6 @@ function PriceActions(props: {  action: any }) {
   const store = useStore()
   const location = useLocation()
   const [state, setState] = useState(false)
-  const [scroll, scrollTo] = useWindowScroll();
   const {width} = useViewportSize();
   if(width > 1024) return store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'update') &&
     !location.pathname.includes('history') && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
@@ -174,7 +173,8 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-       <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>{memoModal}
+       <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>
+        {memoModal}
       </Panel>
     </Section>
   )

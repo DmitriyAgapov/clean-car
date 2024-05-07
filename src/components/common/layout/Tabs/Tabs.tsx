@@ -4,7 +4,7 @@ import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/P
 import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import { Observer, observer } from "mobx-react-lite";
 import { useStore } from 'stores/store'
-import { useScrollIntoView, useViewportSize } from '@mantine/hooks'
+import { useElementSize, useScrollIntoView, useViewportSize } from '@mantine/hooks'
 export enum TabsType {
   bid = 'bid',
   company = 'company',
@@ -43,7 +43,7 @@ const HeadersTabs = ({
     }
     return result
 }
-const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[], state: string}) => {
+const TabPanels = ({ data, type, items, state, height }:{data:any, type:any, items:any[], state: string, height?: number | undefined}) => {
     const result: any = []
     if (type == TabsType.bid) {
         data.forEach((item: any, index: number) => {
@@ -61,6 +61,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
         return result
     }
     if (type == TabsType.price) {
+      console.log(height);
         (data && data.length > 0) && data.forEach((item: any, index: number) => {
             result.push(
                 <TabsVariantPrice
@@ -69,6 +70,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
                     data={item.dataTable}
                     label={item.label}
                     props={items}
+                    height={height}
                     className={'!pb-0'}
                 />,
             )
@@ -77,6 +79,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
     }
     if (type == TabsType.priceEdit) {
         // console.log(data);
+
         data.forEach((item: any, index: number) => {
             result.push(
                 <TabsVariantPrice
@@ -84,6 +87,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
                     edit={type == TabsType.priceEdit}
                     state={state == item.label}
                     data={item.data}
+                    height={height}
                     label={item.label}
                     props={items}
                     className={'!pb-0'}
@@ -164,14 +168,14 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
   const [state, setState] = useState('');
-  const { height, width } = useViewportSize();
+  const { width } = useViewportSize();
   React.useEffect(() => {
     if(data && data.length > 0) {
       setState(data[0]?.label)
     }
   }, [])
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
-    // offset: 50,
+    // offset: 90,
     axis: "y",
     duration: 0.25,
     easing:(t) => (t < 0.5 ? 16 * t ** 5 : 1 - (-2 * t + 2) ** 5 / 2),
@@ -190,15 +194,15 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
     }
     store.bidsStore.setActiveTab(null);
   }, [aTab]);
-
+  const { ref, width:wElSize, height:hElSize } = useElementSize();
 
 
     return (
-        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} ref={targetRef}>
-            <Tabs.TabHeaderContainer>
-              <HeadersTabs data={data} state={state} setState={handleChangeTabState}/>
+        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} ref={ref}>
+            <Tabs.TabHeaderContainer  ref={targetRef}>
+              <HeadersTabs data={data} state={state} setState={handleChangeTabState} />
             </Tabs.TabHeaderContainer>
-           <TabPanels data={data} state={state} items={items} type={type}/>
+           <TabPanels data={data} state={state} items={items} type={type} height={hElSize}/>
         </div>
     )
   }
@@ -229,9 +233,9 @@ Tabs.PanelPure = observer(({ children, state, name, className = " ", company_typ
   return null
 })
 
-Tabs.TabHeaderContainer = ({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string}) => (
-  <div className={styles.tabHeaderWrapper} data-tab-position={"header"}>
+Tabs.TabHeaderContainer = React.forwardRef(({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string}, ref:any) => (
+  <div className={styles.tabHeaderWrapper} data-tab-position={"header"} ref={ref}>
     <ul className={styles.containerHeader}>{children}</ul>
   </div>
-  )
+  ))
 export default observer(Tabs);
