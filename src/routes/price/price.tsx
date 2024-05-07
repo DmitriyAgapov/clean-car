@@ -24,8 +24,9 @@ function PriceActions(props: {  action: any }) {
   const [state, setState] = useState(false)
   const {width} = useViewportSize();
   if(width > 1024) return store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'update') &&
-    !location.pathname.includes('history') && <><LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-    <Button action={open} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+    !location.pathname.includes('history') && <>
+      <LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+      <Button action={open} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
     <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>
   return store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'update') &&
           !location.pathname.includes('history') && ( <>{state && <Overlay color="#000" onClick={() => setState(false)} top={ "-50vh"} left={ "-50vw"} bottom={ "-50vh"} right={ "-50vw"} backgroundOpacity={0.85} zIndex={9999}/> }  <Affix position={{ bottom: 20, right: 10 }} className={'flex flex-col items-end gap-6'}>
@@ -38,7 +39,7 @@ function PriceActions(props: {  action: any }) {
                   to={`history`}
                   text={'История'}
                   className={'!self-end '}
-                  size={ButtonSizeType.sm}
+                  size={ButtonSizeType.base}
                   variant={ButtonVariant['accent-outline']}
                 />
                 <Button
@@ -47,14 +48,14 @@ function PriceActions(props: {  action: any }) {
                   type={'button'}
                   className={'!self-end '}
                   text={'Дублировать'}
-                  size={ButtonSizeType.sm}
+                  size={ButtonSizeType.base}
                   variant={ButtonVariant['accent-outline']}
                 />
                 <LinkStyled
                   to={'edit'}
                   className={'!self-end '}
                   text={'Редактировать'}
-                  size={ButtonSizeType.sm}
+                  size={ButtonSizeType.base}
                   variant={ButtonVariant['accent-outline']}
                 />
 
@@ -106,7 +107,7 @@ const PricePage = ():JSX.Element => {
 
   if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
-    <Section type={SectionType.default}>
+    <Section type={SectionType.default} noScroll={true}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
         header={<>
           <div>

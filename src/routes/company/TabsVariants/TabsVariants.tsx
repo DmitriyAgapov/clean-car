@@ -616,9 +616,9 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
     return result
 })
 
-export const TabsVariantPrice = ({ label, content_type, data, state, name, className, companyId, height, company_type, ...props }:any) => {
+export const TabsVariantPrice = ({ label, content_type, data, state, name, className, companyId, company_type, ...props }:any) => {
   let result
-  const {  width } = useViewportSize();
+  const { height, width } = useViewportSize();
   //Разбор массива для Мойка
   const mapEdWast =  React.useMemo(() => {
 
@@ -742,6 +742,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
       })
 
       let result:any[] = []
+
       newMap.forEach((value:any, key: any) => {
         let resultInner:any[] = []
         value.forEach((value:any, key: any) => {
@@ -902,7 +903,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
           break
 
       case 'Шиномонтаж':
-
+        console.log(mapEdTire);
           result = (
             <Tabs.PanelPure
               state={state}
@@ -945,72 +946,47 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   name={'evacuation'}
                   variant={PanelVariant.default}
                   background={PanelColor.default}
-                  className={
-                      'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className
-                  }
+                  className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
                   bodyClassName={'!bg-transparent'}
               >
-                  {!props.edit ? (
-                      <div className={'col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4'}>
-                          <TableWithSortNewPure
-                              offsetSticky={0}
-                              total={data.length}
-                              variant={PanelVariant.default}
-                              search={false}
-                              background={PanelColor.default}
-                              className={'col-span-full table-groups'}
-                              filter={false}
-                              data={data}
-                              initFilterParams={[
-                                  { label: 'Статус', value: 'status' },
-                                  { label: 'Город', value: 'city' },
-                              ]}
-                              state={false}
-                              ar={[
-                                  { label: 'Тип услуги', name: 'service_option' },
-                                  { label: 'До 2 тонн', name: 'service_option' },
-                                  { label: 'от 2 тонн', name: 'service_option_1' },
-                              ]}
-                          />
-                      </div>
-                  ) : (
-                      <div className={'col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4'}>
-                          {' '}
-                          <TableWithSortNewPure
-                              meta={{ company_id: data.company, price_id: data.id, label: label }}
-                              edit={true}
-                              offsetSticky={-1}
-                              total={data.evacuation_positions.length}
-                              variant={PanelVariant.default}
-                              search={false}
-                              background={PanelColor.default}
-                              state={false}
-                              className={'col-span-full table-groups'}
-                              filter={false}
-                              data={data.evacuation_positions.map((item: any) => ({
-                                  id: item.id,
-                                  service_subtype: item.service_subtype.name,
-                                  service_option: item.service_option ? item.service_option.name : null,
-                                  amount: item.amount,
-                              }))}
-                              ar={[
-                                  { label: 'Тип услуги', name: 'service_subtype' },
-                                  { label: 'Доп. опции', name: 'service_option' },
-                                  { label: 'Cтоимость', name: 'amount' },
-                              ]}
-                          />
-                      </div>
-                  )}
+                {!props.edit ? <div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}><TableWithSortNewPure
+
+                  offsetSticky={0}
+                  total={data.length}
+                  variant={PanelVariant.default}
+                  search={false}
+                  background={PanelColor.default}
+                  className={"col-span-full table-groups"}
+                  filter={false}
+                  data={data}
+                  initFilterParams={[{ label: "Статус", value: "status" }, { label: "Город", value: "city" }]}
+                  state={false}
+                  ar={[{ label: "Тип услуги", name: "service_option" }, { label: "До 2 тонн", name: "service_option" }, { label: "от 2 тонн", name: "service_option_1" }]} /></div> :<div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}> <TableWithSortNewPure meta={{ company_id: data.company, price_id: data.id, label: label}}
+                  edit={true}
+                  offsetSticky={-1}
+                  total={data.evacuation_positions.length}
+                  variant={PanelVariant.default}
+                  search={false}
+                  background={PanelColor.default}
+                  state={false}
+                  className={'col-span-full table-groups'}
+                  filter={false}
+                  data={data.evacuation_positions.map((item:any) => ({
+                    id: item.id,
+                    service_subtype: item.service_subtype.name,
+                    service_option: item.service_option ? item.service_option.name : null,
+                    amount: item.amount
+                  }))}
+                  ar={[{label: 'Тип услуги', name: 'service_subtype'}, {label: 'Доп. опции', name: 'service_option'}, {label: 'Cтоимость', name: 'amount'}, ]}
+                /></div>}
+
               </Tabs.PanelPure>
           )
           break;
       default:
           return null
   }
-  useEffect(() => {
-    console.log('height', height);
-  }, [height]);
-  return <ScrollArea.Autosize offsetScrollbars={'x'} data-position={"tabs-panel-container"}  mah={width > 1024 ? height : 'calc(100lvh - 3.5rem)'} classNames={{
+  return <ScrollArea.Autosize offsetScrollbars={false} data-position={"tabs-panel-container"}  mah={width > 1024 ? '52vh' : 'calc(100lvh - 2rem)'} classNames={{
     scrollbar: 'z-50'
   }}>
     {result}

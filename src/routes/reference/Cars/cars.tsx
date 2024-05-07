@@ -7,11 +7,11 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
+import TableWithSortNew, { PaginationComponent } from "components/common/layout/TableWithSort/TableWithSortNew";
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { CarClasses } from 'components/common/layout/Modal/CarClasses'
 import agent, { client } from "utils/agent";
-import { LocalRootStore } from "stores/localStore";
+import { LocalRootStore, LocalStoreProvider } from 'stores/localStore'
 import { observer, useLocalStore } from "mobx-react-lite";
 import useSWR from "swr";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
@@ -64,7 +64,7 @@ const RefCarsPage = () => {
         car_type:item.car_type,
       }))}
     localStore.setIsLoading = isLoading
-  },[data])
+  }, [data])
 
   const [opened, { open, close }] = useDisclosure(false)
   const memoModal = React.useMemo(() => {
@@ -78,7 +78,7 @@ const RefCarsPage = () => {
             <Panel
                 variant={PanelVariant.withGapOnly}
                 state={false}
-              headerClassName={'justify-between gap-4'}
+                headerClassName={'justify-between gap-4'}
                 header={
                     <>
                         <div>
@@ -136,7 +136,7 @@ const RefCarsPage = () => {
                     background={PanelColor.glass}
                     className={'col-span-full table-groups  h-full'}
                     filter={true}
-                  initFilterParams={[FilterData.brand, FilterData.car_type]}
+                    initFilterParams={[FilterData.brand, FilterData.car_type]}
                     state={isLoading}
                     ar={textDataCars.tableHeaders}
                 />

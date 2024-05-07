@@ -23,7 +23,7 @@ const PricesPage = () => {
 	useEffect(() => {
 		localStore.setData = {
 			...data,
-			results: data?.results.map((item:any) => ({id: item.id, company_name: item.name,  company_type: item.company_type, root_company: item.root_company}))
+			results: data?.results.map((item:any) => ({...{id: item.id, company_name: item.name,   root_company: item.root_company}, ...store.appStore.appType === "admin" && {company_type: item.company_type}}))
 		}
 		localStore.setIsLoading = isLoading
 	},[data])

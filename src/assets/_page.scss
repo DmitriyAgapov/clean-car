@@ -73,8 +73,8 @@
   //max-height: 50vh;
   //overflow: hidden;
   //overflow-y: scroll;
-  //max-height: calc(100lvh - 27rem);
-  //overflow-y: auto;
+  max-height: calc(100lvh - 10rem);
+  overflow-y: auto;
 }
 .table-price {
   background: linear-gradient(182.19deg, #090909 2.89%, rgba(9, 9, 9, 0.28) 101.32%);

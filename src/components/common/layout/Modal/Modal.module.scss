@@ -49,7 +49,7 @@
   }
 }
 
-.ModalBid {
+.ModalBid, .ModalCarClasses {
   //display: flex;
   ////position: fixed;
   //left: 0;
@@ -81,14 +81,22 @@
 	}
   }
   section {
-	@apply  py-8;
-	background-color: transparent !important;
+	@apply px-10 py-12 border-gray-2 border;
+	background: rgba(36, 37, 41, .6);
 	header {
 	  @apply pt-0 bg-none;
 	  background: none !important;
 	}
   }
 
-
-
+}
+.ModalCarClasses {
+  section {
+	@apply  py-8 border-0;
+	background-color: transparent !important;
+	header {
+	  @apply pt-0 bg-none;
+	  background: none !important;
+	}
+  }
 }

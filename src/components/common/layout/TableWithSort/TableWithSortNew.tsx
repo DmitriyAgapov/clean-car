@@ -11,7 +11,8 @@ import { LocalRootStore, LocalStoreProvider, useLocalStore } from "stores/localS
 import RowHeading from "components/common/layout/TableWithSort/TableParts/RowHeading";
 import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
-import { useStore } from "stores/store";
+import { useStore } from 'stores/store'
+import { useDidUpdate } from "@mantine/hooks";
 
 
 type TableWithSortProps = {
@@ -32,7 +33,21 @@ type TableWithSortProps = {
 } & PanelProps
 
 
+export const PaginationComponent = observer(():any => {
+    const localStore = useLocalStore<LocalRootStore>()
 
+  const initCount = localStore.countData
+return <Pagination classNames={{
+    control:
+      'hover:border-accent data-[active=true]:border-accent data-[active]:bg-transparent data-[active=true]:text-accent',
+  }}
+    total={(initCount &&  Math.ceil(initCount / localStore.params.searchParams.page_size) > 1) ? Math.ceil(initCount / localStore.params.searchParams.page_size) : 0}
+    value={localStore.params.searchParams.page}
+    onChange={value => localStore.params.setSearchParams({ page: Number(value) })}
+    // boundaries={2}
+    defaultValue={5} />
+
+})
 
 const TableWithSortNew = observer(({ variant, withOutLoader, search = false,headerBar = true, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
 }: TableWithSortProps) => {
@@ -58,28 +73,15 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
                     {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
                 </> : null
             }
-            footer={
-             (Math.ceil(initCount / localStore.params.searchParams.page_size)) > 1 && (
-               <Pagination
-                        classNames={{
-                            control:
-                                'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
-                        }}
-                        total={Math.ceil(initCount / localStore.params.searchParams.page_size)}
-                        value={localStore.params.searchParams.page}
-                        onChange={value => localStore.params.setSearchParams({page: Number(value)})}
-                        // boundaries={2}
-                        defaultValue={5}
-                    />
-                )
-            }
+footer={
+  <PaginationComponent />}
             {...props}
         >
 
             <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
                 {headerBar && <RowHeading total={initCount} ar={ar} />}
                 <tbody>
-                {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData    {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
+                {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData    style={style}  {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
                 </tbody>
             </table>
         </Panel>

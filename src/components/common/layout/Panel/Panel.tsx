@@ -27,6 +27,7 @@ export enum PanelRouteStyle {
     prices = 'prices',
     price = 'price',
     finance = 'finance',
+    financeId = 'financeId',
     bids = 'bids',
     auth = 'auth',
     company = 'company',
@@ -49,7 +50,7 @@ export type PanelProps = {
     search?: boolean
     children?: ReactNode | ReactNode[]
     header?: ReactNode | ReactNode[]
-    footer?: ReactNode | ReactNode[]
+    footer?: ReactNode | ReactNode[] | JSX.Element
     routeStyle?: PanelRouteStyle
     variant?: PanelVariant
     background?: PanelColor

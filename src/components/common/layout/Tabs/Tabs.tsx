@@ -4,7 +4,7 @@ import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/P
 import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import { Observer, observer } from "mobx-react-lite";
 import { useStore } from 'stores/store'
-import { useElementSize, useScrollIntoView, useViewportSize } from '@mantine/hooks'
+import { useScrollIntoView, useViewportSize } from '@mantine/hooks'
 export enum TabsType {
   bid = 'bid',
   company = 'company',
@@ -43,7 +43,7 @@ const HeadersTabs = ({
     }
     return result
 }
-const TabPanels = ({ data, type, items, state, height }:{data:any, type:any, items:any[], state: string, height?: number | undefined}) => {
+const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[], state: string}) => {
     const result: any = []
     if (type == TabsType.bid) {
         data.forEach((item: any, index: number) => {
@@ -61,7 +61,6 @@ const TabPanels = ({ data, type, items, state, height }:{data:any, type:any, ite
         return result
     }
     if (type == TabsType.price) {
-      console.log(height);
         (data && data.length > 0) && data.forEach((item: any, index: number) => {
             result.push(
                 <TabsVariantPrice
@@ -70,7 +69,6 @@ const TabPanels = ({ data, type, items, state, height }:{data:any, type:any, ite
                     data={item.dataTable}
                     label={item.label}
                     props={items}
-                    height={height}
                     className={'!pb-0'}
                 />,
             )
@@ -79,7 +77,6 @@ const TabPanels = ({ data, type, items, state, height }:{data:any, type:any, ite
     }
     if (type == TabsType.priceEdit) {
         // console.log(data);
-
         data.forEach((item: any, index: number) => {
             result.push(
                 <TabsVariantPrice
@@ -87,7 +84,6 @@ const TabPanels = ({ data, type, items, state, height }:{data:any, type:any, ite
                     edit={type == TabsType.priceEdit}
                     state={state == item.label}
                     data={item.data}
-                    height={height}
                     label={item.label}
                     props={items}
                     className={'!pb-0'}
@@ -168,7 +164,7 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
   const [state, setState] = useState('');
-  const { width } = useViewportSize();
+  const { height, width } = useViewportSize();
   React.useEffect(() => {
     if(data && data.length > 0) {
       setState(data[0]?.label)
@@ -194,15 +190,15 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
     }
     store.bidsStore.setActiveTab(null);
   }, [aTab]);
-  const { ref, width:wElSize, height:hElSize } = useElementSize();
+
 
 
     return (
-        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} ref={ref}>
+        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant}>
             <Tabs.TabHeaderContainer  ref={targetRef}>
               <HeadersTabs data={data} state={state} setState={handleChangeTabState} />
             </Tabs.TabHeaderContainer>
-           <TabPanels data={data} state={state} items={items} type={type} height={hElSize}/>
+           <TabPanels data={data} state={state} items={items} type={type}/>
         </div>
     )
   }

@@ -62,6 +62,8 @@ import LimitPageEditAction from "routes/limits/limitEditAction";
 import FinacePage from "routes/finance/finance";
 import TransactionPage from "routes/finance/transaction";
 import PriceHistoryIdPage from "routes/price/priceHistoryId";
+import FinanceId from "routes/finance/financeId";
+import FinaceIdPage from "routes/finance/financeId";
 
 const router = createBrowserRouter([
     {
@@ -202,7 +204,6 @@ const router = createBrowserRouter([
                     },
                 ],
             },
-
             {
                 path: 'filials',
                 element: <FilialsPage />,
@@ -225,14 +226,16 @@ const router = createBrowserRouter([
             },
             {
               path: 'finance/report',
-              element: <FinacePage/>,
+              element: <FinacePage/>
+            },
+            {
+              path: 'finance/report/:company_id',
+                element: <FinaceIdPage/>
             },
             {
                 path: 'finance/transaction',
                 element: <TransactionPage/>,
             },
-
-
             {
                 path: 'groups',
                 element: <GroupsPage />,

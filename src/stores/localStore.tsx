@@ -36,12 +36,21 @@ export const useTransferStore = <T extends TransferComponentStore>(): T  => {
 export class LocalRootStore  {
   params: TableWithSortStore  = new TableWithSortStore()
   data: any | undefined | null  = null
+  count_data: number | null = null
   isLoading: boolean  = true
   constructor() {
     makeAutoObservable(this)
+
   }
+
   set setData(data: any) {
+    if(data && data.count && this.count_data !== data.count) {
+      this.count_data = data.count
+    }
     this.data = data
+  }
+  get countData() {
+    return this.count_data
   }
   set initParams(args: any) {
     this.params.clearParams()

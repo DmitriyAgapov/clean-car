@@ -72,7 +72,7 @@ const CarsPage = () => {
               className={"inline-block mr-auto tablet-max:flex-1 !mb-0  "}
               color={HeadingColor.accent} />
           </div>
-            <div className={"flex gap-6 tablet-max:max-w-96"}>
+            <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
               <Button text={"Классификация автомобилей"}
                 action={open}
                 trimText={true}

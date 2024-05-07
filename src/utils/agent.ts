@@ -460,6 +460,7 @@ const Account = {
 }
 const Balance = {
   getReport: (params?: PaginationProps) => requests.get(`/balance/report/`, params),
+  getReportByCompanyId: (company_id: number, params?: PaginationProps) => requests.get(`/balance/report/${company_id}`),
   getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params),
   getTransactionListAdmin: (params?: PaginationProps) => requests.get('/balance/all_transactions/', params)
 }

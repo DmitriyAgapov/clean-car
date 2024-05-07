@@ -12,6 +12,7 @@ import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Butt
 import { observer } from "mobx-react-lite";
 import { BidStatus } from "utils/schema";
 import { BidsStatus } from 'stores/bidsStrore'
+import { PanelRouteStyle } from "components/common/layout/Panel/Panel";
 
 
 const RowData = observer((props: any) => {
@@ -29,7 +30,7 @@ const RowData = observer((props: any) => {
 		return ''
 	}, [])
 
-	const queryCompanyType = React.useCallback(() => {
+	const queryCompanyType = React.useMemo(() => {
 		let queryString = ''
 		if (props.type) {
 			return props.type == CompanyType.performer ? '/performer' : props.type == CompanyType.customer ? '/customer' : '/admin'
@@ -41,16 +42,18 @@ const RowData = observer((props: any) => {
 		if (props.query && props.query.rootRoute) {
 			return navigate(props.query.rootRoute)
 		}
-		const route = location.pathname + queryCompanyType() +  querys() + `/${props.id}`
+		const route = props.style === PanelRouteStyle.financeId ? `/account/finance/report/${props.id}` : location.pathname +  queryCompanyType +  querys() + `/${props.id}`
 
 		props.id ? navigate(route) : void null
 	},[])
 
-	const propsRender = React.useCallback(() => {
+	const propsRender = React.useMemo(() => {
 		const ar = []
 		for (const key in props) {
 
 			if (key == "bid"  || typeof props[key] !== 'object' ) {
+
+
 				if (props[key] === 'Активна' || props[key] === true) {
 					ar.push(<td key={key}
 						data-label={label(key)}
@@ -110,6 +113,8 @@ const RowData = observer((props: any) => {
 						className={styles.tableCell}>
 
 					</td>,)
+				} 	else 			if (key == "style") {
+
 				} else {
 					if (key !== 'id' && key !== 'companyId') {
 						ar.push(<td key={key}
@@ -123,12 +128,13 @@ const RowData = observer((props: any) => {
 		}
 		return ar
 	}, [props])
+
 	const {width} = useWindowDimensions()
 	const [open, setOpen] = useState(false);
 
 	return (
 		<tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : () => setOpen(prevState => !prevState)} data-state-mobile={open}>
-			{propsRender()}
+			{propsRender}
 			{(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
         <SvgChevron  onClick={() => setOpen(prevState => !prevState)}/>
       </td>}

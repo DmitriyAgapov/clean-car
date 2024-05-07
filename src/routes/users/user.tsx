@@ -11,7 +11,8 @@ import DList from 'components/common/ui/DList/DList'
 import { PermissionNames } from "stores/permissionStore";
 import label from "utils/labels";
 import useSWR from "swr";
-import { useDidUpdate } from "@mantine/hooks";
+import { useDidUpdate } from '@mantine/hooks'
+import dayjs from 'dayjs';
 
 const UserPage = () => {
   const store = useStore()
@@ -69,7 +70,7 @@ const UserPage = () => {
     return null
   }, [data, isLoading])
 
-
+  console.log(data);
   if (location.pathname.includes('edit')) return <Outlet />
   return (
     <Section
@@ -126,9 +127,10 @@ const UserPage = () => {
             <span className={'text-black font-sans uppercase text-3xl leading-none m-auto'}>
               {data?.employee.first_name[0]}
               {data?.employee.last_name[0]}
+              {data?.employee.last_name[0]}
             </span>
           </div>
-          <DList label={'Дата и время регистрации'} title={'08.10.23 07:14'} />
+          <DList label={'Дата и время регистрации'} title={dayjs(data?.employee.date_joined).format('DD.MM.YYYY HH:mm')} />
         </>
         }
       >

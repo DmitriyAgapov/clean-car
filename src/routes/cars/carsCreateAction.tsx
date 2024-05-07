@@ -98,12 +98,9 @@ export default function CarsPageCreateAction() {
               //@ts-ignore
               onChange={handleFileChange} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
               {(props) => <Button
-                text={<ActionIcon w={"fit-content"} loading={loading} classNames={{
-                  loader: 'bg-transparent',
-                  root: 'text-black',
-                }}>
+                text={
                   <span style={{ display: "block", width: 'fit-content' , color: 'black !important'}}>{!success ? 'Загрузить файл' : 'Загружено'}</span>
-                </ActionIcon>}
+             }
 
                 className={'inline-flex mr-5'}
                 directory={ButtonDirectory.directory}
