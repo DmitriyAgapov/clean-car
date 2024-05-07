@@ -26,3 +26,4 @@ yarn-error.log*
 !/.env.production
 !/src/components/Form/FormCreateBid/FormCreateBid.tsx
 !/sorting
+/temp/
