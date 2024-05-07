@@ -103,3 +103,112 @@
   -webkit-background-clip: initial !important;
   -webkit-text-fill-color: initial !important;
 }
+
+.mobile_total_block {
+  position: fixed !important;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  /* Color/Gray/1/60% */
+  background: rgba(36, 37, 41, 0.6) !important;
+  /* Color/Gray/2 */
+  border: 1px solid #606163;
+  backdrop-filter: blur(2.5px);
+  /* Note: backdrop-filter has minimal browser support */
+  border-radius: 14px;
+
+  top: auto;
+	*{
+	  @apply uppercase;
+	}
+  overflow: hidden;
+ 	border-top-left-radius: 1rem !important;
+ 	border-top-right-radius: 1rem !important;
+  li.finance_part__header {
+	li {
+	font-size: .625rem !important;
+	  @apply text-gray-200/50 #{!important};
+	}
+  }
+  .finance_part {
+	&:first-child ul {
+	  margin-top: .25rem !important;
+	  margin-bottom: .25rem !important;
+	}
+	&:nth-child(2) {
+	  .finance_part__title:before {
+
+		content: '';
+		width: .625rem;
+		height: .625rem;
+		display: inline-block;
+		background: var(--gradient-customer);
+		margin-right: .5rem;
+		border-radius: 50% !important;
+	  }
+	}
+	&:nth-child(3) {
+	  .finance_part__title:before {
+		content: '';
+		width: .625rem;
+		height: .625rem;
+		display: inline-block;
+		background: var(--gradient-performer);
+		margin-right: .5rem;
+		border-radius: 50% !important;
+	  }
+	}
+	&:nth-child(2n) {
+	  background: linear-gradient(182.19deg, #090909 2.89%, rgba(9, 9, 9, 0.28) 101.32%);
+
+	}
+	> ul {
+	  margin: .5rem 1.25rem;
+	  display: grid;
+
+	  grid-template-columns: 1fr 1fr 1fr;
+	  .finance_part__title {
+		@apply text-white text-xs capitalize;
+
+
+	  }
+	  li:first-child:not(.finance_part__title) {
+		@apply text-gray-500 text-xss;
+	  }
+	  li {
+		@apply text-white text-xs;
+	  }
+
+	}
+	&:last-child {
+	  ul:first-child {
+		* {
+		  color: #3FECAE !important;
+		}
+
+	  }
+	  li:nth-child(2) {
+		grid-column: 3;
+	  }
+	}
+  }
+  &.close-state {
+	.finance_part {
+	  ul:first-child {
+		max-height: initial !important;
+		overflow: hidden !important;
+	  }
+	  ul:not(:first-child) {
+		max-height: 0;
+		margin: 0 !important;
+		padding: 0 !important;
+		overflow: hidden;
+	  }
+	}
+  }
+  &.open-state  {
+	bottom: 0;
+	top: auto !important;
+  }
+}

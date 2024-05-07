@@ -12,7 +12,8 @@ import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Butt
 import { observer } from "mobx-react-lite";
 import { BidStatus } from "utils/schema";
 import { BidsStatus } from 'stores/bidsStrore'
-import { PanelRouteStyle } from "components/common/layout/Panel/Panel";
+import { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
+import { NumberFormatter } from "@mantine/core";
 
 
 const RowData = observer((props: any) => {
@@ -113,8 +114,15 @@ const RowData = observer((props: any) => {
 						className={styles.tableCell}>
 
 					</td>,)
-				} 	else 			if (key == "style") {
+				} 	else if (key == "style") {
 
+				} else if (key == "tire" || key == "evac"  || key == "wash" || key == "total") {
+					const _txtAr = props[key].split('/')
+
+					ar.push(<td key={key}
+						className={styles.tableCell} data-label={label(key)}>
+						<p className={'m-0'}>{_txtAr[0]} / <NumberFormatter className={`${Number(_txtAr[1].replace(' ₽', '')) > 0 && "text-accent"} !leading-tight`} thousandSeparator={" "}  suffix=" ₽" value={_txtAr[1]}/></p>
+					</td>)
 				} else {
 					if (key !== 'id' && key !== 'companyId') {
 						ar.push(<td key={key}
