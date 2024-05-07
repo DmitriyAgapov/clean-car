@@ -21,35 +21,35 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
 import { useSWRConfig } from "swr";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
-import TransferListNew from "components/common/ui/TransferList/TransferListNew";
+import TransferListNew from 'components/common/ui/TransferList/TransferListNew'
 
 interface InitValues {
     address: string | null
     address_ready: boolean
-    qc?: string | null
-    house: string | null
-    street: string | null
-    legal_address: string | null
-    type: "Компания-Заказчик" | "Компания-исполнитель"
     bill: string | number
     city: string | null
     city_name?: string | null | any
     company_name: string | null
     contacts: string | null
+    height: number | null
+    house: string | null
     id: string | number
     inn: string | number
     lat: string | number
+    legal_address: string | null
     lon: string | number
     ogrn: string | number
     overdraft: string
     overdraft_sum: number
-    height: number | null
-    service_percent: number
-    payment: "Постоплата" | "Предоплата"
-    performers_list: string
-    working_time: string
-    performer_company: number[] | any
+    payment: 'Постоплата' | 'Предоплата'
     performer_companies: number[] | any
+    performer_company: number[] | any
+    performers_list: string
+    qc?: string | null
+    service_percent: number
+    street: string | null
+    type: 'Компания-Заказчик' | 'Компания-исполнитель'
+    working_time: string
 }
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
@@ -101,7 +101,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             store.companyStore.loadingCompanies = false
             setStep(step ? step : 2)
         }, 1200)
-        width < 1025 ? scrollIntoView() : null
+        width < 1025   ? scrollIntoView() : null
     }
     if(edit) {
         initValues = {
@@ -394,7 +394,6 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 }))}
                         />
                         <InputAutocompleteNew
-                            {...formData.getInputProps('address')}
                             city={formData.values.city_name}
                             ctx={formData}
                         />

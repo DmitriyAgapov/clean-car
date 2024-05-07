@@ -22,29 +22,39 @@ import { PanelVariant } from "components/common/layout/Panel/Panel";
 
 interface InitValues {
     address: string | null
-    type: "Компания-Заказчик" | "Компания-исполнитель"
+    address_ready: boolean
     city: string | null
     city_name?: string | null | any
+    company_filials: string
+    company_id: number | string | null
     company_name: string | null
     height: string | number | null
+    house: string | null
     id: string | number
-    company_filials: string
-    lat: string | number
     is_active: string
-    company_id: number | string |  null
+    lat: string | number
+    legal_address: string | null
     lon: string | number
-    service_percent: number
-    working_time: string
     performer_company: number[] | any
+    qc?: string | null
+    service_percent: number
+    street: string | null
+    type: 'Компания-Заказчик' | 'Компания-исполнитель'
+    working_time: string
 }
 
-export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
-export const createCompanyFormActions = createFormActions<InitValues>('createCompanyForm')
+export const [FormProvider, useFormContext, useForm] = createFormContext<InitValues | any>()
+export const createFilialsFormActions = createFormActions<InitValues>('createFilialsForm')
 
 const FormCreateUpdateFilial = ({ company, edit }: any) => {
     const store = useStore()
     let initValues: InitValues = {
         address: '',
+        address_ready: false,
+        street: '',
+        legal_address: '',
+        qc: null,
+        house: '',
         type: store.userStore.myProfileData.company.company_type !== CompanyType.admin ? store.userStore.myProfileData.company.company_type : CompanyType.customer,
         city: '',
         city_name: '',
@@ -64,23 +74,19 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         offset: 60,
 
     });
-    const {width} = useViewportSize()
+
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
 
-    const changeStep = (step?: number) => {
-        setAnimate((prevState) => !prevState)
-        setTimeout(() => {
-            setAnimate(false)
-            store.companyStore.loadingCompanies = false
-            setStep(step ? step : 2)
-        }, 1200)
-        width < 1025 ? scrollIntoView() : null
-    }
     if(edit) {
         initValues = {
             address: company.address,
             city: company.city,
+            address_ready: false,
+            street: '',
+            qc: null,
+            house: '',
+            legal_address: '',
             city_name: store.catalogStore.getCity(Number(company.city)).name,
             company_name: company.company_name,
             lat: company.lat,
@@ -186,8 +192,8 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 }).then(() => store.companyStore.getAllFilials())
             }
         }
-
     }, [])
+
     const filialsCompanyData = React.useMemo(() => {
 
             store.companyStore.loadAllFilials()
@@ -202,51 +208,58 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     }, [formData.values.type, formData.values.company_filials])
     // @ts-ignore
     return (
-        <FormProvider form={formData}>
+
             <PanelForForms
-              ref={targetRef}
+                ref={targetRef}
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
                 actionCancel={
-                  step !== 3 ? (<Button
-                        type={'button'}
-                        text={'Отменить'}
-                        action={(e) => {
-                            e.preventDefault()
-                            navigate(-1)
-                        }}
-                        className={'float-right'}
-                    variant={ButtonVariant.cancel}
-                    />) : undefined
-                }
-                actionNext={step !== 3 ? (formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
-                      <Button
-                        type={'button'}
-                        action={() => {
-                            formData.validate()
-                            handleSubmit(formData.values)
-
-                        }}
-                        disabled={!formData.isValid()}
-                        text={'Сохранить'}
-                        className={'float-right'}
-                        variant={ButtonVariant.accent}
-                      />
-                        ) : (
-                          <Button
-                            action={() => handleSubmit(formData.values)}
-                            type={'submit'}
-                            disabled={!formData.isValid()}
-                            text={'Сохранить'}
+                        <Button
+                            type={'button'}
+                            text={'Отменить'}
+                            action={(e) => {
+                                e.preventDefault()
+                                navigate(-1)
+                            }}
                             className={'float-right'}
+                            variant={ButtonVariant.cancel}
+                        />
+                }
+                actionNext={
+                    step !== 3 ? (
+                        formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
+                            <Button
+                                type={'button'}
+                                action={() => {
+                                    formData.validate()
+                                    handleSubmit(formData.values)
+                                }}
+                                disabled={!formData.isValid()}
+                                text={'Сохранить'}
+                                className={'float-right'}
+                                variant={ButtonVariant.accent}
+                            />
+                        ) : (
+                            <Button
+                                action={() => handleSubmit(formData.values)}
+                                type={'submit'}
+                                disabled={!formData.isValid()}
+                                text={'Сохранить'}
+                                className={'float-right'}
+                                variant={ButtonVariant.accent}
+                            />
+                        )
+                    ) : (
+                        <LinkStyled
+                            text={'перейти к компании'}
+                            to={`/account/companies/${formData.values.type == CompanyType.performer ? 'performer' : 'customer'}/${formData.values.id}`}
+                            className={'float-right col-start-2 justify-self-end'}
                             variant={ButtonVariant.accent}
-                          />
-                        )) : <LinkStyled text={'перейти к компании'}
-                  to={`/account/companies/${formData.values.type == CompanyType.performer ? 'performer' : 'customer'}/${formData.values.id}`}
-                  className={'float-right col-start-2 justify-self-end'}
-                  variant={ButtonVariant.accent} />
+                        />
+                    )
                 }
             >
+                <FormProvider form={formData}>
                 <form
                     onSubmit={formData.onSubmit(handleSubmit)}
                     onReset={formData.onReset}
@@ -257,7 +270,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         state={step !== 1}
                         animate={animate}
                         className={'!bg-transparent'}
-                        bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+                        bodyClassName={'tablet:!flex flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
                         background={PanelColor.default}
                         header={
@@ -273,124 +286,114 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             </>
                         }
                     >
-                        <TextInput
-
-                            label={'Название филиала'}
-                            {...formData.getInputProps('company_name')}
+                        <Select
+                      allowDeselect={false}
+                      {...formData.getInputProps('type')}
+                      label={'Тип'}
+                      onOptionSubmit={(value) => {
+                          formData.setFieldValue('company_id', null)
+                          formData.setFieldValue('company_filials', 'filials')
+                      }}
+                      defaultValue={formData.values.type}
+                      data={[
+                          { label: 'Заказчик', value: CompanyType.customer },
+                          { label: 'Партнер', value: CompanyType.performer },
+                      ]}
+                    />
+                        <Select
+                            {...formData.getInputProps('company_filials')}
+                            defaultValue={formData.values.company_filials}
+                            allowDeselect={false}
+                            label={'Принадлежит'}
+                            onOptionSubmit={(value) => {
+                                formData.setFieldValue('company_id', null)
+                            }}
+                            data={[
+                                { label: 'Компании', value: 'company' },
+                                { label: 'Филиалу', value: 'filials' },
+                            ]}
+                            className={'col-span-3'}
                         />
                         <Select
+                            searchable
+                            clearable
+                            onOptionSubmit={(value) => {
+                                console.log(formData.values)
+                            }}
+                            onFocus={() => {
+                                console.log('on focus')
+                                store.companyStore.loadAllFilials()
+                            }}
+                            defaultValue={formData.values.company_id}
+                            label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
+                            {...formData.getInputProps('company_id')}
+                            data={filialsCompanyData}
+                        />
+                        <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
+                        <TextInput label={'Название филиала'} {...formData.getInputProps('company_name')} />
+                        <Select
                             withCheckIcon={false}
-
                             label={'Город'}
                             searchable={true}
                             {...formData.getInputProps('city')}
                             className={'!flex-[0_auto]'}
-                            onOptionSubmit={props => {
-                               formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name);
-                               formData.setFieldValue('address', '');
+                            onOptionSubmit={(props) => {
+                                formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name)
+                                formData.setFieldValue('address', '')
                             }}
-                            data={val(store.catalogStore.cities).filter((c:any) => c.is_active).map((o: any) => ({
-                                label: o.name,
-                                value: String(o.id),
-                            }))}
+                            data={val(store.catalogStore.cities)
+                                .filter((c: any) => c.is_active)
+                                .map((o: any) => ({
+                                    label: o.name,
+                                    value: String(o.id),
+                                }))}
                         />
                         <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
                         <Select
-
-                          {...formData.getInputProps('is_active')}
-                          withCheckIcon={false}
-                          label={'Статус'}
-                          data={[
-                              { label: 'Активен', value: 'true' },
-                              { label: 'Неактивен', value: 'false' },
-                          ]}
+                            {...formData.getInputProps('is_active')}
+                            withCheckIcon={false}
+                            label={'Статус'}
+                            data={[
+                                { label: 'Активен', value: 'true' },
+                                { label: 'Неактивен', value: 'false' },
+                            ]}
                         />
 
-                        <Select
-                          allowDeselect={false}
-                          {...formData.getInputProps('type')}
-                          label={'Тип'}
-                          onOptionSubmit={(value) => {
-                              formData.setFieldValue('company_id', null);
-                              formData.setFieldValue('company_filials', 'filials');
-                          }}
 
-                          defaultValue={formData.values.type}
-
-                          data={[
-                              { label: 'Заказчик', value: CompanyType.customer },
-                              { label: 'Партнер', value: CompanyType.performer },
-                          ]}
-                        />
                         {formData.values.type === CompanyType.performer && (
-                          <InputBase
-                            component={IMaskInput}
-
-                            label={'Часы работы'}
-                            {...formData.getInputProps('working_time')}
-                            mask={Date}
-                            className={'!flex-[1_0_10rem]'}
-                            /*@ts-ignore*/
-                            blocks={{
-                                YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
-                                MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
-                                DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
-                                HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
-                                mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
-                            }}
-                            pattern={`c ${momentFormat} до ${momentFormat}0`}
-                            format={(date: MomentInput) => moment(date).format(momentFormat)}
-                            parse={(str) => moment(str, momentFormat)}
-                            autofix
-                            overwrite
-                            placeholder='c 00:00 до 23:59'
-                          />
+                            <InputBase
+                                component={IMaskInput}
+                                label={'Часы работы'}
+                                {...formData.getInputProps('working_time')}
+                                mask={Date}
+                                className={'!flex-[1_0_10rem]'}
+                                /*@ts-ignore*/
+                                blocks={{
+                                    YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
+                                    MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
+                                    DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
+                                    HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
+                                    mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
+                                }}
+                                pattern={`c ${momentFormat} до ${momentFormat}0`}
+                                format={(date: MomentInput) => moment(date).format(momentFormat)}
+                                parse={(str) => moment(str, momentFormat)}
+                                autofix
+                                overwrite
+                                placeholder='c 00:00 до 23:59'
+                            />
                         )}
                         {formData.values.type === CompanyType.performer && (
-                          <NumberInput
-                            className={'!flex-[1_1_4rem]'}
-
-                            step={1}
-                            hideControls
-                            allowNegative={false}
-                            allowDecimal={false}
-                            label={'Макс. высота транспорта в см'}
-                            {...formData.getInputProps('height')}
-
-                          />
+                            <NumberInput
+                                className={'!flex-[1_1_4rem]'}
+                                step={1}
+                                hideControls
+                                allowNegative={false}
+                                allowDecimal={false}
+                                label={'Макс. высота транспорта в см'}
+                                {...formData.getInputProps('height')}
+                            />
                         )}
-                        <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
-                        <Select
-
-                          {...formData.getInputProps('company_filials')}
-                          defaultValue={formData.values.company_filials}
-                          allowDeselect={false}
-                          label={'Принадлежит'}
-                          onOptionSubmit={(value) => {
-                              formData.setFieldValue('company_id', null);
-                          }}
-                          data={[
-                              { label: 'Компании', value: 'company' },
-                              { label: 'Филиалу', value: 'filials' },
-                          ]}
-                          className={'col-span-3'}
-                        />
-                        <Select
-
-                          searchable
-                          clearable
-                          onOptionSubmit={(value) => {
-                              console.log(formData.values);
-                          }}
-                          onFocus={() => {
-                              console.log('on focus');
-                              store.companyStore.loadAllFilials()
-                          }}
-                          defaultValue={formData.values.company_id}
-                          label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
-                          {...formData.getInputProps('company_id')}
-                            data={filialsCompanyData}
-                        />
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}
@@ -407,7 +410,8 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                     variant={HeadingVariant.h2}
                                 />
                                 <div className={''}>
-                                    Вы можете добавить Отдел Сотрудников и Лимиты для компании или добавить их позже в соответствующем разделе
+                                    Вы можете добавить Отдел Сотрудников и Лимиты для компании или добавить их позже в
+                                    соответствующем разделе
                                 </div>
                             </>
                         }
@@ -422,8 +426,26 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             ]}
                         />
 
-                        <Select label={'Овердрафт'} className={' w-fit  !flex-[0_1_4rem]'}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
-                        <NumberInput   type={'text'} label={'Сумма'} suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} maxLength={2} min={0} max={100} />
+                        <Select
+                            label={'Овердрафт'}
+                            className={' w-fit  !flex-[0_1_4rem]'}
+                            {...formData.getInputProps('overdraft')}
+                            data={[
+                                { label: 'Да', value: '1' },
+                                { label: 'Нет', value: '2' },
+                            ]}
+                        />
+                        <NumberInput
+                            type={'text'}
+                            label={'Сумма'}
+                            suffix={' ₽'}
+                            hideControls
+                            {...formData.getInputProps('overdraft_sum')}
+                            allowNegative={false}
+                            maxLength={2}
+                            min={0}
+                            max={100}
+                        />
 
                         <Select
                             label={'Список Партнеров'}
@@ -438,8 +460,9 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         {/* {formData.values.performers_list === '1' && <TransferList />} */}
                     </PanelForForms>
                 </form>
+                </FormProvider>
             </PanelForForms>
-        </FormProvider>
+
     )
 }
 

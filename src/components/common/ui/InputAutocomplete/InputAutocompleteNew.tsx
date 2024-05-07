@@ -1,11 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from "./InputAutocomplete.module.scss";
 import agent from "utils/agent";
-import { Combobox, TextInput, useCombobox, Loader } from '@mantine/core'
-import { useFormikContext } from 'formik'
-import { useStore } from "stores/store";
-import catalogStore from "stores/catalogStore";
-import { useFormContext } from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
+import { Combobox, TextInput, useCombobox, Loader, Text } from '@mantine/core'
 
 export function InputAutocompleteNew(props:any) {
 
@@ -28,8 +24,6 @@ export function InputAutocompleteNew(props:any) {
             // region: "Челябинская область",
             city: props.city,
             flat: null
-
-
           }
         ],
         type: "address",
@@ -52,7 +46,6 @@ export function InputAutocompleteNew(props:any) {
       return data.suggestions
 
 
-    } catch (e) {
     } finally {
       setLoading(false)
     }
@@ -96,7 +89,7 @@ export function InputAutocompleteNew(props:any) {
       setEmpty(result.length === 0);
       abortController.current = undefined;
     })
-    .catch(() => {});
+
   };
 
   const options = (data || []).map((item, index) => (
@@ -126,11 +119,10 @@ export function InputAutocompleteNew(props:any) {
   // @ts-ignore
   return (
       <Combobox
-          onOptionSubmit={(optionValue) => {
+          onOptionSubmit={(optionValue: string) => {
               setValue(optionValue + ' ')
               combobox.closeDropdown()
           }}
-          {...props}
           withinPortal={true}
           store={combobox}
       >
@@ -140,11 +132,11 @@ export function InputAutocompleteNew(props:any) {
                   htmlFor={'address'}
                   data-form_error={errors.address && isTouched('address') && 'error'}
               >
-                  <text>{'Адрес'}{' '}
+                  <Text>{'Адрес'}{' '}
                   <span style={{color: 'var(--input-asterisk-color, var(--mantine-color-error))', paddingLeft: 0}} className='mantine-InputWrapper-required mantine-Select-required' aria-hidden='true'>
 
                       *
-                  </span></text>
+                  </span></Text>
                   <TextInput
                       ref={ref}
                       disabled={!values.city}
