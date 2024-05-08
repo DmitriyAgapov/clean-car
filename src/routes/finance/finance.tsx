@@ -741,7 +741,11 @@ const FinacePage = () => {
         evac: `${item.evac_count} / ${item.evac_total_sum} ₽`,
         total: `${item.total_count} / ${item.total_sum} ₽`
     }, ...item.has_child && {
-        id: item.id}}))}
+        id: item.id}
+      , attributes: {
+          ...item
+      }
+      }))}
     localStore.setIsLoading = isLoading
   },[data])
 

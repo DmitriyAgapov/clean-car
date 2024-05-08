@@ -14,12 +14,14 @@ import { BidStatus } from "utils/schema";
 import { BidsStatus } from 'stores/bidsStrore'
 import { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
 import { NumberFormatter } from "@mantine/core";
+import { useLocalStore } from "stores/localStore";
 
 
 const RowData = observer((props: any) => {
 	const navigate = useNavigate()
 	const location = useLocation()
-
+	const localStore = useLocalStore()
+	console.log(props);
 	const querys = React.useCallback(() => {
 		let queryString = ''
 		if (props.query) {
@@ -139,14 +141,14 @@ const RowData = observer((props: any) => {
 
 	const {width} = useWindowDimensions()
 	const [open, setOpen] = useState(false);
-
+	console.log(props);
 	return (
 		<tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : () => setOpen(prevState => !prevState)} data-state-mobile={open}>
 			{propsRender}
 			{(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
         <SvgChevron  onClick={() => setOpen(prevState => !prevState)}/>
       </td>}
-			{(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
+			{(width && width < 961 && props?.attributes?.has_child !== false) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
 		</tr>
 	)
 })
