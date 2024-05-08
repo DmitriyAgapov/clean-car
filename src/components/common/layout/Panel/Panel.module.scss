@@ -450,12 +450,15 @@
 
 	  [data-label="Компания"] {
 		grid-column: 1/-3;
+		margin-top: 1rem;
 		&:before {
 		  content: none;
 		}
 	  }
 	  [data-label="Тип"] {
-		grid-column: -3/-1;
+		grid-column: 1/-3;
+		margin-top: -1rem;
+		@apply text-xs;
 		p {
 		  text-wrap: wrap;
 		}
