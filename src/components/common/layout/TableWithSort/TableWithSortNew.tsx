@@ -13,6 +13,8 @@ import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
 import { useStore } from 'stores/store'
 import { useDidUpdate } from "@mantine/hooks";
+import Button from "components/common/ui/Button/Button";
+import stores from "stores";
 
 
 type TableWithSortProps = {
@@ -34,10 +36,10 @@ type TableWithSortProps = {
 
 
 export const PaginationComponent = observer(():any => {
-    const localStore = useLocalStore<LocalRootStore>()
-
+  const localStore = useLocalStore<LocalRootStore>()
   const initCount = localStore.countData
-return <Pagination classNames={{
+  if(window.innerWidth < 1000) return <Button text={'Load more'} action={() => localStore.loadMore()}/>
+  return <Pagination classNames={{
     control:
       'hover:border-accent data-[active=true]:border-accent data-[active]:bg-transparent data-[active=true]:text-accent',
   }}

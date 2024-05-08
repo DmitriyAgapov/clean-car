@@ -21,7 +21,7 @@ const RowData = observer((props: any) => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const localStore = useLocalStore()
-	console.log(props);
+
 	const querys = React.useCallback(() => {
 		let queryString = ''
 		if (props.query) {
@@ -76,7 +76,6 @@ const RowData = observer((props: any) => {
 						<p className={`m-0 cancel-bg ${props[key][0] === "+" ? "text-accent" : ""}`}>{props[key]}</p>
 					</td>)
 				}  else if(key === 'bid') {
-					console.log(props[key]);
 					ar.push(<td key={key}
 						data-label={label(key)}
 						className={styles.tableCell}>
@@ -141,7 +140,7 @@ const RowData = observer((props: any) => {
 
 	const {width} = useWindowDimensions()
 	const [open, setOpen] = useState(false);
-	console.log(props);
+
 	return (
 		<tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : () => setOpen(prevState => !prevState)} data-state-mobile={open}>
 			{propsRender}

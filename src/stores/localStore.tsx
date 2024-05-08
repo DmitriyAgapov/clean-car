@@ -38,16 +38,40 @@ export class LocalRootStore  {
   data: any | undefined | null  = null
   count_data: number | null = null
   isLoading: boolean  = true
+  inFinitiveScroll: boolean = false
+  inFinitiveScrollResults  = new Map([])
   constructor() {
     makeAutoObservable(this)
-
   }
+  loadMore() {
+    console.log(this.inFinitiveScrollResults);
+    this.inFinitiveScroll = true
+    const next = this.params.getSearchParams.page + 1
 
+    this.params.setSearchParams({page: next, page_size: 2 })
+  }
   set setData(data: any) {
+
+    const _initAr = this.getData
     if(data && data.count && this.count_data !== data.count) {
       this.count_data = data.count
+      data.results.forEach((item:any, index:number) => this.inFinitiveScrollResults.set(String(item.id), item))
     }
+
+    //
+    // if(this.inFinitiveScrollResults.size === 0) {
+    //   console.log('empty');
+    //   data?.results?.forEach((item:any, index:number) => this.inFinitiveScrollResults.set(item.id, item))
+    // } else if(this.inFinitiveScroll) {
+    //   // if(data.results && data.results?.length !== 0) {
+    //     data?.results?.forEach((item:any, index:number) => this.inFinitiveScrollResults.set(item.id, item))
+    //   // }
+    //   console.log(this.inFinitiveScrollResults);
+    //
+    // }
+
     this.data = data
+
   }
   get countData() {
     return this.count_data
@@ -105,5 +129,9 @@ export class TransferComponentStore {
     this.unSelected.set(id, this.selected.get(id))
     this.selected.delete(id)
   }
+}
+
+function runOnAction(arg0: () => any) {
+    throw new Error('Function not implemented.');
 }
 

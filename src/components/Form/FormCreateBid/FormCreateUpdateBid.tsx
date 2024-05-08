@@ -351,6 +351,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }
   }, [formData.values.service_type, step])
 
+    const _users = store.usersStore.currentCompanyUsers
+
     const conductorsData = React.useMemo(() => {
         let result: any[] = []
       if(store.usersStore.currentCompanyUsers && store.usersStore.currentCompanyUsers.length !== 0) {
@@ -383,7 +385,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
       }
       return result
-    }, [formData.values.company, store.usersStore.currentCompanyUsers])
+    }, [formData.values.company, _users])
 
     return (
       <FormProvider form={formData}>
