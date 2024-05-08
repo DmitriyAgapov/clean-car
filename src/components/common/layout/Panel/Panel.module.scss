@@ -480,39 +480,49 @@
 	  overflow: hidden;
 	  position: relative;
 
+
 	  &:first-child {
 		padding-left: 2rem;
-		width: 13rem;
-		max-width: 13rem;
+		width: 12rem;
+		max-width: 12rem;
 
 	  }
 
 	  &:nth-child(2) {
 		//padding-left: 2rem;
-		width: 6rem;
-		max-width: 6rem;
+		width: 7rem;
+		max-width: 7rem;
 	  }
 
 	  &:nth-child(3) {
 		//padding-left: 2rem;
-		width: 6rem;
-		max-width: 6rem;
+		width: 8rem;
+		max-width: 8rem;
 	  }
 
 	  &:nth-child(4) {
-		width: 6rem;
-		max-width: 6rem;
+		width: 5rem;
+		max-width: 5rem;
+		text-align: center;
+		> div {
+		  display: inline-flex !important;
+		}
 	  }
 
 	  &:nth-child(5) {
-		width: 6rem;
-		max-width: 6rem;
+		width: 7rem;
+		max-width: 7rem;
 	  }
 
 	  &:nth-child(6) {
 		width: 6rem;
 		max-width: 6rem;
 	  }
+	   &:nth-child(7) {
+		width: 10rem;
+		max-width: 10rem;
+	  }
+
 
 	}
 

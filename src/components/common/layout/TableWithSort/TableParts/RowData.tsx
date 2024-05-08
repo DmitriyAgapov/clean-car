@@ -78,8 +78,8 @@ const RowData = observer((props: any) => {
 				}  else if(key === 'bid') {
 					ar.push(<td key={key}
 						data-label={label(key)}
-						className={styles.tableCell}>
-						<Link to={`/account/bids/${props[key].company}/${props[key].bidId}`} className={`-my-4 h-12 text-center flex items-center justify-center hover:underline hover:text-accent `}>{props[key].bidId}</Link>
+						className={styles.tableCell + " " + " flex "}>
+						<Link to={`/account/bids/${props[key].company}/${props[key].bidId}`} className={`m-auto h-12 border-b border-b-accent/30 text-center inline-flex items-center max-h-4 justify-center  hover:border-accent text-accent `}>{props[key].bidId}</Link>
 					</td>)
 				}
 

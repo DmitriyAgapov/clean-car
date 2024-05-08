@@ -448,9 +448,19 @@ const FinaceIdPage = () => {
 
   const {isLoading, data, mutate} = useSWR([`reportId_${params.company_id}`, Number(params.company_id), localStore.params.getSearchParams] , ([url, id, args]) => store.financeStore.getReport(id, args))
   useEffect(() => {
+      const _root = data?.root_company
+      const _ar = []
+      if(_root) {
+        _ar.push(_root)
+        console.log()
+      }
+      if(data?.results) {
+        _ar.push(...data?.results)
+      }
+
       localStore.setData = {
           ...data,
-          results: data?.results?.map((item: any) => ({
+          results: _ar.map((item: any) => ({
               ...{
                   name: item.name,
                   tire: `${item.tire_count} / ${item.tire_total_sum} ₽`,
