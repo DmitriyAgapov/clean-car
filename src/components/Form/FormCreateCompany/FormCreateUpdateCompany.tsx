@@ -394,6 +394,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 }))}
                         />
                         <InputAutocompleteNew
+                          {...formData.getInputProps('address')}
                             city={formData.values.city_name}
                             ctx={formData}
                         />

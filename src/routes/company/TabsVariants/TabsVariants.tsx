@@ -618,7 +618,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
 
 export const TabsVariantPrice = ({ label, content_type, data, state, name, className, companyId, company_type, ...props }:any) => {
   let result
-  const { height, width } = useViewportSize();
+  const { width } = useViewportSize();
   //Разбор массива для Мойка
   const mapEdWast =  React.useMemo(() => {
 
@@ -986,10 +986,10 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
       default:
           return null
   }
-  return <ScrollArea.Autosize offsetScrollbars={false} data-position={"tabs-panel-container"}  mah={width > 1024 ? '52vh' : 'calc(100lvh - 2rem)'} classNames={{
-    scrollbar: 'z-50'
-  }}>
+  return (
+  <ScrollArea.Autosize offsetScrollbars={false} data-position={"tabs-panel-container"}  mah={width > 1024 ? '52vh' : `auto`} classNames={{ scrollbar: 'z-50' }}>
     {result}
   </ScrollArea.Autosize>
+  )
 }
 export default observer(TabsVariants);

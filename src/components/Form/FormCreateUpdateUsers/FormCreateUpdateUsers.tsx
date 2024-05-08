@@ -115,6 +115,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	let revalidator = useRevalidator();
 	const navigate = useNavigate()
 	const handleCreateUser = React.useCallback(async ():Promise<any> => {
+		const _companyType = form.values.type;
 		// if(form.values.type === "admin") {
 		// 	const senData = {
 		// 		phone: form.values.phone.replaceAll(' ', ''),
@@ -149,7 +150,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 						const userId = edit ? form.values.id : res.data.id
 						revalidator.revalidate()
 						// @ts-ignore
-						navigate(`/account/users/${params.company_type}/${compId}/${userId}`)
+						navigate(`/account/users/${_companyType}/${compId}/${userId}`)
 					}})
 			} else {
 				await agent.Account.createCompanyUser(senData.company_id, senData).then((res) => {
@@ -158,7 +159,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 						const userId = edit ? form.values.id : res.data.id
 						revalidator.revalidate()
 						// @ts-ignore
-						navigate(`/account/users/${params.company_type}/${compId}/${userId}`)
+						navigate(`/account/users/${_companyType}/${compId}/${userId}`)
 						}
 
 					// @ts-ignore

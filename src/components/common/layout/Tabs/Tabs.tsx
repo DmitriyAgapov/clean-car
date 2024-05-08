@@ -170,18 +170,11 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
       setState(data[0]?.label)
     }
   }, [])
-  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
-    // offset: 90,
-    axis: "y",
-    duration: 0.25,
-    easing:(t) => (t < 0.5 ? 16 * t ** 5 : 1 - (-2 * t + 2) ** 5 / 2),
-  });
+
   const  handleChangeTabState = React.useCallback((event: Event, label: string) => {
 
     setState(label);
-    if(width < 1025) {
-      scrollIntoView()
-    }
+
   }, [])
 
   React.useEffect(() => {
@@ -195,7 +188,7 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
 
     return (
         <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant}>
-            <Tabs.TabHeaderContainer  ref={targetRef}>
+            <Tabs.TabHeaderContainer>
               <HeadersTabs data={data} state={state} setState={handleChangeTabState} />
             </Tabs.TabHeaderContainer>
            <TabPanels data={data} state={state} items={items} type={type}/>

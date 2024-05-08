@@ -123,6 +123,7 @@ export function InputAutocompleteNew(props:any) {
               setValue(optionValue + ' ')
               combobox.closeDropdown()
           }}
+        {...props}
           withinPortal={true}
           store={combobox}
       >
@@ -132,15 +133,11 @@ export function InputAutocompleteNew(props:any) {
                   htmlFor={'address'}
                   data-form_error={errors.address && isTouched('address') && 'error'}
               >
-                  <Text>{'Адрес'}{' '}
-                  <span style={{color: 'var(--input-asterisk-color, var(--mantine-color-error))', paddingLeft: 0}} className='mantine-InputWrapper-required mantine-Select-required' aria-hidden='true'>
-
-                      *
-                  </span></Text>
+                 {'Адрес'}
                   <TextInput
                       ref={ref}
                       disabled={!values.city}
-                    {...props.ctx.getInputProps('address')}
+                      {...props.ctx.getInputProps('address')}
                       placeholder='Введите адрес'
                       value={value}
 
