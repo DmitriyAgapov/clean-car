@@ -510,8 +510,8 @@
 	  }
 
 	  &:nth-child(6) {
-		width: 14rem;
-		max-width: 14rem;
+		width: 6rem;
+		max-width: 6rem;
 	  }
 
 	}
@@ -576,9 +576,7 @@
 		grid-row: 2/3;
 		overflow: hidden;
 		max-height: 0;
-		&:before {
-		  content: attr(data-label);
-		}
+
 	  }
 	}
 	[data-state-mobile="true"] {

@@ -85,7 +85,7 @@ const TransactionPage = () => {
         className={'col-span-full table-groups'}
         filter={false}
         state={isLoading}
-        ar={[{ label: 'Дата', name: 'created' }, {label: 'Компания', name: 'balance__company'}, {label: 'Тип компании', name: 'balance__company__company_type'}, { label: 'Сумма', name: 'amount' }, { label: 'Пользователь', name: 'ts_maker' }, { label: 'Заявка №', name: 'bid' }, {label: 'Платеж', name: 'purpose'} ]}
+        ar={[{label: 'Компания', name: 'balance__company'}, { label: 'Дата', name: 'created' }, {label: 'Тип компании', name: 'balance__company__company_type'}, { label: 'Сумма', name: 'amount' }, { label: 'Пользователь', name: 'ts_maker' }, { label: 'Заявка №', name: 'bid' }, {label: 'Платеж', name: 'purpose'} ]}
       />
     </Section>
   )
