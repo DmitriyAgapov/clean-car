@@ -217,11 +217,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }
   }, [formData.values.company])
 
+  const car = store.carStore.getCompanyCars.cars?.results?.filter((car:any) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
  const carsData = React.useMemo(() => {
    //@ts-ignore
-   const car = store.carStore.getCompanyCars.cars?.results?.filter((car) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
 
-   if(car?.length > 0) {
+
+   if(car && car.length > 0) {
       return car.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), }))
    }
 
@@ -229,7 +230,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
      return store.userStore.myProfileData.user.cars.map((c: any) => ({ label: `${c.brand}  ${c.model}  ${c.number}`, value: String(c.id), }))
    }
    return null
-  }, [formData.values.conductor, formData.values.car])
+  }, [formData.values.conductor, car])
 
   const handleChangeCompany = React.useCallback((e:any) => {
     if(e === null) {
@@ -511,9 +512,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 clearable
                 onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
                 //@ts-ignore
-                label={step1.fields[4].label} searchable data={
-                  // store.carStore.cars && store.carStore.cars.length !== 0 &&
-                  carsData !== null ? carsData : ['']}
+                label={step1.fields[4].label} searchable
+                data={carsData}
               />
               </Group>
               <hr className={'col-span-full border-transparent my-2'} />

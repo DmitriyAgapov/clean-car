@@ -417,8 +417,8 @@ export class BidsStore {
             async (conductor)=> {
                 if(conductor !== "0" && conductor !== null && conductor !== 0) {
                     //@ts-ignore
-                    action(() => this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone);
-                    carStore.getCarsByCompony(this.formResult.company);
+                    runInAction(() => this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone);
+                    await carStore.getCarsByCompony(this.formResult.company);
                 }
             }
         )
