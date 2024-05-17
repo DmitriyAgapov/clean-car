@@ -6,7 +6,9 @@ import authStore from "stores/authStore";
 
 axios.interceptors.request
 	.use(
-		async (config,  ) => {
+		async (config) => {
+			// @ts-ignore
+
 			// if(config.params) {
 			// 	console.log('config.params', config);
 			// 	paramsStore.setParams(config.params)
@@ -29,14 +31,15 @@ axios.interceptors.request
 axios.interceptors.response.use(
     (response) => response,
     async (error) => {
-        const config = error.config
-        // if(error.code === "ERR_NETWORK") {
-        //  console.log('setted to network status false');
-        //  appStore.setNetWorkStatus(false)
-        // } else if(!appStore.networkStatus && error.code !== "ERR_NETWORK") {
-        //  console.log('setted to network status true');
-        //  appStore.setNetWorkStatus(true)
-        // }
+	    console.log(error);
+        const config = await error.config
+        if(error.code === "ERR_NETWORK") {
+         console.log('setted to network status false');
+         appStore.setNetWorkStatus(false)
+        } else if(!appStore.networkStatus && error.code !== "ERR_NETWORK") {
+         console.log('setted to network status true');
+         appStore.setNetWorkStatus(true)
+        }
         // console.log('/token/refresh/', config.url.includes('/token/refresh/'));
 
         if (error.response.status === 401 && !config.url.includes('/token/refresh/')) {

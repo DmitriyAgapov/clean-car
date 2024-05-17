@@ -49,7 +49,8 @@ const axiosUpload = axios.create({
 
 
 //Константа для запросов
-export const API_ROOT = process.env.REACT_APP_PUBLIC_API
+export const API_ROOT = "https://d1ev.server.clean-car.net/api"
+// export const API_ROOT = process.env.REACT_APP_PUBLIC_API
 export const fetcherNew = async (url:string) => requests.getNew(url).then(r => ({...r.data, url: url}))
 export const client = new Client(API_ROOT, axios)
 //Объект запросов
@@ -67,7 +68,8 @@ export const requests = {
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
       method: 'GET',
-      params: pagination
+      params: pagination,
+
     })
   .then((response:any) => response)
   .catch(handleErrors),
@@ -124,7 +126,7 @@ export const requests = {
 
 //Обработка ошибок
 const handleErrors = (err: AxiosError & any) => {
-
+  console.log(err);
 
     if(err && err.response && (err.response.status === 400 || err.response.status === 405)) {
       // @ts-ignore
