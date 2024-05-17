@@ -11,10 +11,11 @@ import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
 import { useNavigatorOnLine, useWindowDimensions } from 'utils/utils'
 import { LoadingOverlay } from '@mantine/core'
-import { SvgCleanCarLoader, SvgDisconnect } from "components/common/ui/Icon";
+import { SvgCleanCarLoader, SvgDisconnect } from 'components/common/ui/Icon'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
-import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import { Navigate, useLocation } from "react-router-dom";
+import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
+import { Navigate, useLocation } from 'react-router-dom'
+import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -63,6 +64,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               visible={!store.appStore.getNetWorkStatus}
               loaderProps={{
                   children: (
+
                       <div className={'flex flex-col  items-center'}>
                         <SvgDisconnect className={'mb-6'}/>
                           <Heading text={'Нет соединения'} variant={HeadingVariant.h1} color={HeadingColor.accent}/>
@@ -72,9 +74,11 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               }}
           />
       )
-  if(!store.appStore.token && loc.pathname !== "/") {
+  if(!store.appStore.token && loc.pathname !== "/" && !loc.pathname.includes("/policy")) {
     return (<Navigate to={'/'}/>)
   }
+
+
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
           <Header>
@@ -102,10 +106,10 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               loaderProps={{ children: <SvgCleanCarLoader /> }}
           />
           <main className={'!contents'}>{children}</main>
-          <Footer className={'desktop:block hidden'}>
+          <Footer className={'desktop:flex hidden'}>
               {footerContent}
               <div>2023 (c.)</div>
-              <div>Политика конфиденциальности</div>
+              <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} to={'/policy'}></LinkStyled>
           </Footer>
 
           <div className={'lineBg'}>

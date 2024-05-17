@@ -80,6 +80,7 @@
 	  }
 	}
   }
+
   section {
 	@apply px-10 py-12 border-gray-2 border;
 	background: rgba(36, 37, 41, .6);
@@ -89,6 +90,39 @@
 	}
   }
 
+}
+.ModalSupport {
+
+  & > * {
+	a[data-close='true'] {
+	  cursor: pointer;
+	  position: absolute;
+	  top: 1.25rem;
+	  right: 1.25rem;
+	}
+
+	footer {
+	  display: flex;
+	  gap: 1rem;
+	  justify-content: flex-end;
+	  justify-items: center;
+	  align-items: center;
+
+	  a {
+		width: 50%;
+		flex: 1 0 50%;
+	  }
+	}
+  }
+
+  section {
+	@apply px-8 pt-16 pb-8 border-gray-2 border;
+	background: rgba(36, 37, 41, .6);
+	header {
+	  @apply pt-0 bg-none;
+	  background: none !important;
+	}
+  }
 }
 .ModalCarClasses {
   section {

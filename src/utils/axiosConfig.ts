@@ -27,39 +27,45 @@ axios.interceptors.request
 
 //
 axios.interceptors.response.use(
-		(response) => response,
-		 (error) => {
-			const config = error.config;
-			 // if(error.code === "ERR_NETWORK") {
-				//  console.log('setted to network status false');
-				//  appStore.setNetWorkStatus(false)
-			 // } else if(!appStore.networkStatus && error.code !== "ERR_NETWORK") {
-				//  console.log('setted to network status true');
-				//  appStore.setNetWorkStatus(true)
-			 // }
-			// console.log('/token/refresh/', config.url.includes('/token/refresh/'));
+    (response) => response,
+    async (error) => {
+        const config = error.config
+        // if(error.code === "ERR_NETWORK") {
+        //  console.log('setted to network status false');
+        //  appStore.setNetWorkStatus(false)
+        // } else if(!appStore.networkStatus && error.code !== "ERR_NETWORK") {
+        //  console.log('setted to network status true');
+        //  appStore.setNetWorkStatus(true)
+        // }
+        // console.log('/token/refresh/', config.url.includes('/token/refresh/'));
 
-			if (error.response.status === 401 && !config.url.includes('/token/refresh/')) {
-				const tokenRefresh = localStorage.getItem('jwt_refresh')
-				console.log('tokenRefresh', tokenRefresh);
-				// config._retry = true;
-				if(tokenRefresh && tokenRefresh !== "undefined" && tokenRefresh !== undefined) {
-				   return agent.Auth.tokenRefresh(tokenRefresh)
-				    .then((response: any) => {
-					   // console.log(response);
-							runInAction(() => {
-									localStorage.setItem("jwt", response.data.access)
-									appStore.setToken(response.data.access)
-									localStorage.setItem("jwt_refresh", response.data.refresh)
-								})
-					    config.headers['Authorization'] = "Bearer " + response.data.access
-					    return axios(config)
-							})
-				    // .finally(	() =>	config._retry = true)
-					} else {
-						authStore.logout()
-				}
-			}
+        if (error.response.status === 401 && !config.url.includes('/token/refresh/')) {
+            const tokenRefresh = appStore.tokenRefresh
+            console.log('tokenRefresh', tokenRefresh)
+            // config._retry = true;
+            if (tokenRefresh && tokenRefresh !== 'undefined' && tokenRefresh !== undefined) {
+                agent.Auth.tokenRefresh(tokenRefresh).then(r => {
+	                console.log(r);
+	                runInAction(() => {
+		                localStorage.setItem('jwt', r.data.access)
+		                appStore.setToken(r.data.access)
+		                // appStore.setTokenRefresh(r.data.refresh)
+		                // localStorage.setItem('jwt_refresh', r.data.refresh)
+	                })
+	                config.headers['Authorization'] = 'Bearer ' + r.data.access
+                }).catch((error) => {
+	                console.log('logout');
+									return   authStore.logout()
+                })
+                // console.log(response)
 
-			return Promise.reject(error);
-		})
+                return await axios(config)
+                // .finally(	() =>	config._retry = true)
+            } else {
+                authStore.logout()
+            }
+        }
+
+        return Promise.reject(error)
+    },
+)

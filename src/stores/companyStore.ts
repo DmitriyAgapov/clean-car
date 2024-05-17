@@ -657,13 +657,13 @@ export class CompanyStore {
         .catch((errors:any) => this.errors = errors)
     }
 
-    getAllCompanies (params?: PaginationProps) {
+    async getAllCompanies (params?: PaginationProps) {
         if(authStore.isLoggedIn) {
-        console.log('All companies');
-        this.loadingCompanies = true
+
+            this.loadingCompanies = true
         // if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
-                 agent.Companies.getAllCompanies(params)
+                 return await agent.Companies.getAllCompanies(params)
                     .then((response:any) => response)
                     .then((response:any) => response.data)
                     .then((data:any) => runInAction(() => {
@@ -673,8 +673,7 @@ export class CompanyStore {
 
                 }
            else {
-                console.log('my companies');
-                agent.Companies.getMyCompanies(params)
+                return await agent.Companies.getMyCompanies(params)
                     .then((response:any) => response.data)
                     .then((data:any) => runInAction(() => {
                         this.myCompany.company = data.results

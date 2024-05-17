@@ -987,7 +987,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
           return null
   }
   return (
-  <ScrollArea.Autosize offsetScrollbars={false} data-position={"tabs-panel-container"}  mah={width > 1024 ? '52vh' : `auto`} classNames={{ scrollbar: 'z-50' }}>
+  <ScrollArea.Autosize offsetScrollbars={'y'}  data-position={"tabs-panel-container"}  mah={width > 1024 ? '52vh' : `auto`} classNames={{ scrollbar: 'z-50' }}>
     {result}
   </ScrollArea.Autosize>
   )

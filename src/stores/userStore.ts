@@ -68,11 +68,11 @@ export class UserStore {
         }
       })
     reaction(() => this.myProfileData.company,
-      (company) => {
-        if(authStore.userIsLoggedIn && appStore.token !== "") {
+      async (company) => {
+        if (authStore.userIsLoggedIn && appStore.token !== "") {
           if (company && companyStore.companies.length === 0) {
-            companyStore.getAllCompanies()
-            (appStore.appType !== UserTypeEnum.performer && appStore.appType !== "") && carStore.getCars(company.id)
+            runInAction(() => companyStore.getAllCompanies())
+            // (appStore.appType !== UserTypeEnum.performer && appStore.appType !== "") && carStore.getCars(company.id)
           }
         }
       })

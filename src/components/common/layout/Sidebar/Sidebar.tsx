@@ -208,7 +208,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
               <Footer className={'block desktop:!hidden pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
                   <div>
 
-                      <LinkStyled className={'!text-sm font-medium'} to={'#'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
+                      <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
                   </div>
 
                   <hr className={'mt-3 mb-2 -mr-8 border-accent'} />

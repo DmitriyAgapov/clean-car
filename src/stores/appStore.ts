@@ -11,7 +11,7 @@ export class AppStore {
     makeAutoObservable(this, {}, { autoBind: true } )
     makePersistable(this, {
       name: 'appStore',
-      properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions'],
+      properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions', 'token', 'tokenRefresh' ],
       storage: localStorage,
     }, {
       fireImmediately: true,
@@ -88,11 +88,6 @@ export class AppStore {
         if(appType !== "") {
           catalogStore.setLoadingStateFalse()
         }
-        if(appType === "") {
-          console.log('appType in ""')
-        }
-
-
       })
     )
   }

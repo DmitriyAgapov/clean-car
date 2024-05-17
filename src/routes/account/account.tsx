@@ -25,7 +25,7 @@ const AccountPage = () => {
             }
             footerContent={
                 <>
-                    <LinkStyled to={'#'} text={'Служба поддержки'} variant={ButtonVariant.text} className={'mb-7'} />
+                    <LinkStyled to={'/account/support'} text={'Служба поддержки'} variant={ButtonVariant.text} className={'mb-7'} />
                     <hr className={'border-accent my-7'} />
                 </>
             }

@@ -93,13 +93,13 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 				if(payload.field === 'group') {
 					return ({
 						disabled: payload.form.values.company_id === null && payload.form.values.type !== 'admin',
-						className: `w-full flex-grow  !flex-[1_0_20rem] col-span-2 ${store.appStore.appType !== "admin" && 'col-span-3'}`
+						className: `w-full flex-grow  !flex-[1_0_20rem] col-span-4 ${store.appStore.appType !== "admin" && 'col-span-3'}`
 					})
         }
 	      if(payload.field === 'company_id') {
 		      return ({
 			      disabled: companyVar?.length === 0 || payload.form.values.depend_on === null,
-			      className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-6'
+			      className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-4'
 		      })
 	      }
 				if(payload.field === 'is_active') {
@@ -271,8 +271,24 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     onReset={form.onReset}
                     style={{ display: 'contents' }}
                 >
+	                <Select
+		                label={'Тип'}
+		                allowDeselect={false}
+		                onOptionSubmit={(e) => {
+			                e === 'admin' && store.permissionStore.loadCompanyPermissionsResults(1)
+
+			                form.setValues({ ...form.values, company_id: null, group: null })
+		                }}
+		                {...form.getInputProps('type')}
+		                defaultValue={form.values.type}
+		                data={Object.entries(UserTypeEnum).map((item: any) => ({
+			                label: label(item[0]),
+			                value: item[1],
+		                }))}
+	                />
                     {!(form.values.type === null || form.values.type === UserTypeEnum.admin) && (
                         <>
+
                             <Select
                                 onOptionSubmit={() => form.setValues({ ...form.values, company_id: null, group: null })}
                                 label={'Относится к'}
@@ -311,21 +327,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         placeholder='+7 000 000 0000'
                     />
                     <TextInput label={'E-mail'} {...form.getInputProps('email')} />
-                    <Select
-                        label={'Тип'}
-                        allowDeselect={false}
-                        onOptionSubmit={(e) => {
-                            e === 'admin' && store.permissionStore.loadCompanyPermissionsResults(1)
 
-                            form.setValues({ ...form.values, company_id: null, group: null })
-                        }}
-                        {...form.getInputProps('type')}
-                        defaultValue={form.values.type}
-                        data={Object.entries(UserTypeEnum).map((item: any) => ({
-                            label: label(item[0]),
-                            value: item[1],
-                        }))}
-                    />
                     <Select
                         clearable
                         label={'Группа'}

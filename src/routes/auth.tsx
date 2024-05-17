@@ -6,12 +6,14 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import FormAuth from 'components/Form/FormAuth/FormAuth'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
 
 function AuthPage() {
   const store = useStore()
-  if (store.appStore.appType !== "") {
+  const location = useLocation()
+  console.log(!location.pathname.includes('policy'));
+  if (store.appStore.appType !== "" && location.pathname !== 'policy') {
     return <Navigate to={'/account'} />
   }
   return (

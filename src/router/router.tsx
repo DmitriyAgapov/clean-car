@@ -62,15 +62,34 @@ import LimitPageEditAction from "routes/limits/limitEditAction";
 import FinacePage from "routes/finance/finance";
 import TransactionPage from "routes/finance/transaction";
 import PriceHistoryIdPage from "routes/price/priceHistoryId";
-import FinanceId from "routes/finance/financeId";
 import FinaceIdPage from "routes/finance/financeId";
+import SupportPage from "routes/support/support";
+import PolicyPage from "routes/poliicy";
+import ErrorPageNotFound from "error-page-404";
 
 const router = createBrowserRouter([
+        {
+            path: '*',
+            element: <ErrorPageNotFound />
+        },
+        {
+            path: '/404',
+            element: <ErrorPageNotFound />
+        },
+
+          {
+                path: '/',
+                element: <AuthPage />,
+                errorElement: <ErrorPage />,
+            },
+
     {
-        path: '/',
-        element: <AuthPage />,
+        path: '/policy',
+        element: <PolicyPage />,
         errorElement: <ErrorPage />,
     },
+
+
     {
         path: '/register',
         element: <RegisterPage />,
@@ -93,6 +112,10 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         // loader: authUser,
         children: [
+            {
+                path: 'support',
+                element: <SupportPage/>
+            },
             {
                 path: 'profile',
                 element: <MyProfilePage />,
