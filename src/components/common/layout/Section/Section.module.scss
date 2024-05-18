@@ -9,6 +9,7 @@
   &[data-variant="centered"] {
 	align-self: center;
 	align-items: center;
+	grid-row: 2/3;
   }
   &[data-variant="withSuffix"] {
 	grid-template-rows: min-content 1fr;

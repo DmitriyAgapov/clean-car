@@ -16,6 +16,7 @@ import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { Navigate, useLocation } from 'react-router-dom'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
+import Errors from "components/common/layout/Errors/Errors";
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -56,23 +57,25 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   const { appStore, userStore, authStore } = store;
   if (!store.appStore.getNetWorkStatus)
       return (
-          <LoadingOverlay
-              transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }}
-              classNames={{
-                  overlay: 'bg-black/80 backdrop-blur-xl',
-              }}
-              visible={!store.appStore.getNetWorkStatus}
-              loaderProps={{
-                  children: (
-
-                      <div className={'flex flex-col  items-center'}>
-                        <SvgDisconnect className={'mb-6'}/>
-                          <Heading text={'Нет соединения'} variant={HeadingVariant.h1} color={HeadingColor.accent}/>
-                        {isOnline && <Button variant={ButtonVariant["accent-outline"]} action={() => location.reload()} text={'Обновить'}/>}
-                      </div>
-                  ),
-              }}
-          />
+        <Errors className={className}/>
+          // <LoadingOverlay
+          //     transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }}
+          //     classNames={{
+          //         overlay: 'bg-black/80 backdrop-blur-xl',
+          //     }}
+          //     visible={!store.appStore.getNetWorkStatus}
+          //     loaderProps={{
+          //         children: (
+          //
+          //
+          //             <div className={'flex flex-col  items-center'}>
+          //               <SvgDisconnect className={'mb-6'}/>
+          //                 <Heading text={'Нет соединения'} variant={HeadingVariant.h1} color={HeadingColor.accent}/>
+          //               {isOnline && <Button variant={ButtonVariant["accent-outline"]} action={() => location.reload()} text={'Обновить'}/>}
+          //             </div>
+          //         ),
+          //     }}
+          // />
       )
   if(!store.appStore.token && loc.pathname !== "/" && !loc.pathname.includes("/policy")) {
     return (<Navigate to={'/'}/>)
