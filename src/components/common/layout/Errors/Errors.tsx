@@ -25,7 +25,7 @@ const Errors = ({ className }: { className:string }) => {
             <Section type={SectionType.centered}>
                 <Panel
                     className={' desktop-max:-mx-4  desktop-max:h-lvh z-20 !border-accent'}
-                    header={<Heading variant={HeadingVariant.h1} text={'Нет подключения к интернету'} className={'uppercase !mb-0'} />}
+                    header={<Heading variant={HeadingVariant.h1} text={'Сервер недоступен'} className={'uppercase !mb-0'} />}
                     variant={PanelVariant.textPadding}
                     background={PanelColor.glass}
                     footerClassName={'!justify-start tablet-max:!px-4'}
@@ -37,7 +37,7 @@ const Errors = ({ className }: { className:string }) => {
                             variant={ButtonVariant['accent-outline']}
                             size={ButtonSizeType.base}
                             action={checkConnection}
-                            text={'Вернуться в личный кабинет'}
+                            text={'Обновить'}
                             type={'button'}
                         /> : ''
                     }
