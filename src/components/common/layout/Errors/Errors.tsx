@@ -1,22 +1,21 @@
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
-import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { IconNoIntBSvgBgBack, IconNoIntSvgBgBack, IconNotFoundSvg, IconNotFoundSvgBg, IconNotFoundSvgBgBack, SvgAuthBg, SvgAuthBgSec, SvgCleanCarLoader } from "components/common/ui/Icon";
-import Layout from 'components/common/layout/Layout/Layout'
 import React from 'react'
 import { rem } from "@mantine/core";
 import styles from "components/common/layout/Layout/Layout.module.scss";
-import Header from "components/common/layout/Header/Header";
-import Logo from "components/common/layout/Logo/Logo";
-import Burger from "components/common/ui/Burger/Burger";
-import MobileMenu from "components/common/layout/MobileMenu/MobileMenu";
-import Footer from "components/common/layout/Footer/Footer";
-import Modal from "components/common/layout/Modal/Modal";
 import appStore from "stores/appStore";
+import { useNetwork } from "@mantine/hooks";
+import agent from "utils/agent";
 
 const Errors = ({ className }: { className:string }) => {
+    const networkStatus = useNetwork();
+    const checkConnection = async () => {
+        return await agent.Auth.login('', '');
+
+    }
     return (
         <div
             className={styles.Layout + ' ' + className}
@@ -32,15 +31,15 @@ const Errors = ({ className }: { className:string }) => {
                     footerClassName={'!justify-start tablet-max:!px-4'}
                     bodyClassName={'max-w-lg'}
                     footer={
-                        <LinkStyled
+                      networkStatus.online ? <Button
                             className={'col-span-1'}
-                            to={'/'}
+                            href={'#'}
                             variant={ButtonVariant['accent-outline']}
                             size={ButtonSizeType.base}
-                            action={() => console.log('click')}
+                            action={checkConnection}
                             text={'Вернуться в личный кабинет'}
                             type={'button'}
-                        />
+                        /> : ''
                     }
                 >
                     <p>Нет соединения. Приносим свои извинения. Вы можете связаться с поддержкой.</p>

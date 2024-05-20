@@ -139,55 +139,54 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             onValuesChange: (values, previous) => console.log(values),
             validate: yupResolver(CreateCompanySchema),
             enhanceGetInputProps: (payload) => {
-            if (payload.field === 'working_time') {
-                return {
-                    className: 'mb-2 w-full flex-grow  !flex-[0_0_16rem] col-span-3',
-                }
-            }
-            if (payload.field === 'service_percent') {
-                return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3'
-                }
-            }
-            if (payload.field === 'overdraft_sum') {
-                return {
-                    className: 'mb-2  flex-grow  tablet:!flex-[0_0_11rem] !flex-[1_0_20rem] col-span-3',
-                }
-            }
-            if (payload.field === 'overdraft') {
-                return {
-                    className: 'mb-2  flex-grow  tablet:!flex-[0_0_11rem] !flex-[1_0_20rem] col-span-3',
-                }
-            }
-            if (payload.field === 'height') {
-                return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_22rem] col-span-3',
-                }
-            }
+            // if (payload.field === 'working_time') {
+            //     return {
+            //         // className: 'mb-2 w-full  col-span-3',
+            //     }
+            // }
+            // if (payload.field === 'service_percent') {
+            //     return {
+            //         // className: 'mb-2   col-span-3'
+            //     }
+            // }
+            // if (payload.field === 'overdraft_sum') {
+            //     return {
+            //         // className: 'mb-2     col-span-3',
+            //     }
+            // }
+            // if (payload.field === 'overdraft') {
+            //     return {
+            //         // className: 'mb-2  flex-grow  col-span-3',
+            //     }
+            // }
+            // if (payload.field === 'height') {
+            //     return {
+            //         // className: 'mb-2    col-span-3',
+            //     }
+            // }
             if (payload.field === 'address') {
                 return {
-                    className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
+                    className: 'mb-2 w-full desktop:!flex-[1_0_64%] col-span-3',
                 }
             }
-            if (payload.field === 'inn') {
-                return {
-                    className: 'mb-2 w-full flex-grow  !flex-[1_0_25rem] col-span-3',
-                }
-            }
-            if (payload.field === 'ogrn') {
-                return {
-                    className: 'mb-2 w-full flex-grow  !flex-[1_0_25rem] col-span-3',
-                }
-            }
+            // if (payload.field === 'inn') {
+            //     return {
+            //         // className: 'mb-2 w-full col-span-3',
+            //     }
+            // }
+            // if (payload.field === 'ogrn') {
+            //     return {
+            //         // className: 'mb-2 w-full col-span-3',
+            //     }
+            // }
 
 
 
             return {
-                className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
+                className: 'mb-2 w-full !flex-[1_1_30%] col-span-3',
             }
         },
     })
-
 
     const navigate = useNavigate()
     const momentFormat = 'HH:mm'
@@ -368,7 +367,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             label={'Тип'}
                             disabled={edit}
                             defaultValue={formData.values.type}
-                            className={'tablet:!flex-initial !flex-[1_0_20rem]'}
+                            className={'tablet:!flex-initial desktop:!flex-[0_1_33%]'}
                             data={[
                                 { label: 'Заказчик', value: CompanyType.customer },
                                 { label: 'Партнер', value: CompanyType.performer },
@@ -381,7 +380,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             label={'Город'}
                             searchable={true}
                             {...formData.getInputProps('city')}
-                            className={'!flex-auto'}
+                            className={'!flex-auto desktop:!flex-[0_1_33%]'}
                             onOptionSubmit={(props) => {
                                 formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name)
                                 formData.setFieldValue('address', '')
@@ -422,7 +421,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 label={'Часы работы'}
                                 {...formData.getInputProps('working_time')}
                                 mask={Date}
-                                className={'!flex-[1_0_10rem]'}
+                                // className={'!flex-[0_1_33%]'}
                                 /*@ts-ignore*/
                                 blocks={{
                                     YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
@@ -441,7 +440,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         )}
 
                         <TextInput
-                            className={'!flex-[1_0_100%]'}
+                            // className={'!flex-[1_0_100%]'}
                             label={'Юридический адрес'}
                             {...formData.getInputProps('legal_address')}
                             placeholder={'Введите Юридический адрес'}
@@ -449,7 +448,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         {formData.values.type === CompanyType.performer && (
                             <NumberInput
                                 defaultValue={1}
-                                className={'!flex-[1_1_4rem]'}
+                                // className={'!flex-[1_1_4rem]'}
                                 step={1}
                                 hideControls
                                 allowNegative={false}

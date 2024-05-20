@@ -70,6 +70,7 @@ export default function LimitPageEditAction(props: any) {
         is_day: data?.is_day,
         // @ts-ignore
         amount: data?.amount,
+        is_active: data?.is_active
       }}
       />
       {/* <FormEditCompany /> */}

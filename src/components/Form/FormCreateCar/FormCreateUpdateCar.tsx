@@ -114,7 +114,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     enhanceGetInputProps: (payload) => {
       if (payload.field === "model") {
         return ({
-          disabled: payload.form.values.brand === null
+          disabled: payload.form.values.brand === null,
+          className: ' !flex-[1_1_30%]'
         })
       }
       if (payload.field === "brand") {
@@ -123,12 +124,16 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             payload.form.values.model = null;
             store.carStore.setBrand(prop);
           }
+          ,
+          className: ' !flex-[1_1_30%]'
         })
       }
       if (payload.field === "company_id") {
         return ({
           label: form.values.depend_on === "company" ? 'Компания' : 'Филиал',
-          className: ' !flex-[0_1_27rem]'
+
+          disabled: edit,
+          className: ' !flex-[1_1_64%]'
         })
       }
 
@@ -140,11 +145,12 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             // payload.form.values.model = null;
             // store.carStore.setBrand(prop);
           ,
-          className: '!flex-[0_0_14rem]'
+          disabled: edit,
+          className: ' !flex-[1_1_30%]'
         })
       }
       return ({
-        className: 'flex-grow !flex-[1_1_auto]'
+        className: ' !flex-[1_1_30%]'
       })
     },
   })
@@ -350,7 +356,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                             label={'Модель'}
                             searchable
                             clearable
-                            className={'w-full flex-grow  !flex-[1_0_20rem]'}
+                            // className={'w-full flex-grow  !flex-[1_0_20rem]'}
                             data={store.carStore.getBrandModels}
                         />
                         <InputBase

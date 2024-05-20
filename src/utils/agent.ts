@@ -246,6 +246,7 @@ const Bids = {
   getBidCountPerformer: (company_id: number) => requests.get(`/bids/${company_id}/count/performer/`)
 }
 const Utils = {
+  sendToSupport: (values:any) => requests.post(`/extra/contact_form/`, values),
   suggest: (props:{query: any, location: any[], restrict_value: boolean,
 
   }
@@ -440,7 +441,8 @@ const Cars = {
   }),
 }
 const Limits = {
-  createLimit: ({company_id, data }:{company_id: number, data:{ amount?: number, is_day?: boolean, service_type: number, employee?: number, company: number, car?: number }}) => requests.post(`/limits/${company_id}/create/`, data),
+  createLimit: ({company_id, data }:{company_id: number, data:{ amount?: number, is_day?: boolean,  is_active?: boolean, service_type: number, employee?: number, company: number, car?: number }}) => requests.post(`/limits/${company_id}/create/`, data),
+  updateLimit: ({company_id, id, data }:{company_id: number, id: number|string, data:{ amount?: number, is_day?: boolean,  is_active?: boolean, service_type: number, employee?: number, company: number, car?: number }}) => requests.put(`/limits/${company_id}/${id}/update/`, data),
   getAllLimitsByAdmin: (params?: { q?: string, is_day?: string, ordering?: string, page?: string, page_size?: string }) => requests.get('/limits/all/list/', params),
   getAllLimitsByCustomer: (params: { company_id: string, q?: string, is_day?: string, ordering?: string, page?: string, page_size?: string }) => requests.get(`/limits/${params.company_id}/list/`, params),
   deleteLimit: (company_id: number, id: number) => requests.delete(`/limits/${company_id}/${id}/delete/`),

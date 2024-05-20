@@ -34,7 +34,7 @@ const BidsPage = () => {
 	useDidUpdate(
 		() => {
 			if(location.pathname === '/account/companies') {
-				mutate()
+				mutate().then(() => console.log('updated bids'))
 			}
 		},
 		[location.pathname]

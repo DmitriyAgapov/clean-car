@@ -81,34 +81,34 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
         if(payload.options.dependOn === 'depend_on') {
 					return ({
 						disabled: form.values.depend_on === "" || form.values.depend_on === null,
-						className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-3'
+						className: 'w-full  !flex-[1_1_30%] col-span-3'
 					})
         }
 				if(payload.field === 'type') {
 					return ({
 
-						className: `w-full flex-grow  !flex-[1_0_20rem] col-span-2 ${store.appStore.appType !== "admin" && 'hidden'}`,
+						className: `w-full !flex-[1_1_30%] col-span-3 ${store.appStore.appType !== "admin" && 'hidden'}`,
 					})
         }
 				if(payload.field === 'group') {
 					return ({
 						disabled: payload.form.values.company_id === null && payload.form.values.type !== 'admin',
-						className: `w-full flex-grow  !flex-[1_0_20rem] col-span-4 ${store.appStore.appType !== "admin" && 'col-span-3'}`
+						className: `w-full  !flex-[1_1_30%] col-span-3 ${store.appStore.appType !== "admin" && 'col-span-3'}`
 					})
         }
 	      if(payload.field === 'company_id') {
 		      return ({
 			      disabled: companyVar?.length === 0 || payload.form.values.depend_on === null,
-			      className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-4'
+			      className: 'w-full  !flex-[1_1_30%] col-span-3'
 		      })
 	      }
 				if(payload.field === 'is_active') {
 					return ({
-						className: `w-full flex-grow  !flex-[1_0_20rem] col-span-2 ${store.appStore.appType !== "admin" && 'col-span-3'}`
+						className: `w-full  !flex-[1_1_30%] col-span-3 ${store.appStore.appType !== "admin" && 'col-span-3'}`
 					})
         }
 				return ({
-					className: 'w-full flex-grow  !flex-[1_0_20rem] col-span-3'
+					className: 'w-full  !flex-[1_1_30%] col-span-3'
 				})
       },
   })

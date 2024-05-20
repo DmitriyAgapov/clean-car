@@ -6,7 +6,7 @@ import { createFormActions, createFormContext } from '@mantine/form'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
-import { useNavigate, useRevalidator } from 'react-router-dom'
+import { useNavigate, useParams, useRevalidator } from 'react-router-dom'
 import { type Company, CompanyType, Payment } from "stores/companyStore";
 import PanelForForms, { PanelColor } from 'components/common/layout/Panel/PanelForForms'
 import { PanelVariant } from "components/common/layout/Panel/Panel";
@@ -25,6 +25,7 @@ interface InitValues {
     car: string | null
     is_day: string | null
     service_type: string | null
+    is_active: string
     amount: string
 }
 
@@ -41,7 +42,8 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
         car: null,
         is_day: 'false',
         service_type: null,
-        amount: ''
+        amount: '',
+        is_active: 'true'
     }
     const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({
         offset: 60,
@@ -49,6 +51,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
     });
     const {width} = useViewportSize()
     const [step, setStep] = useState(1)
+    const params = useParams()
 
     const [opened, { open, close }] = useDisclosure(false)
     const memoModal = React.useMemo(() => {
@@ -72,7 +75,8 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
             car: company.car ? String(company.car.id) : null,
             is_day: company.is_day ? 'true' : 'false',
             service_type: String(company.service_type),
-            amount: String(company.amount)
+            amount: String(company.amount),
+            is_active: String(company.is_active),
         }
     }
     const formData = useForm({
@@ -82,7 +86,11 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
             onValuesChange: (values, previous) => console.log(values, 'values'),
             validate: yupResolver(CreateLimitSchema),
             enhanceGetInputProps: (payload) => {
-
+                if(payload.field === "is_active") {
+                    return ({
+                        className: 'w-max  !flex-[0_0_20rem] '
+                    })
+                }
                 return {
                     className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
                 }
@@ -198,28 +206,47 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
         }
 
     },[formData.values.company])
-    useEffect(() => {
-      console.log('form', formData.values.company);
-    },[formData.values.company] )
     const navigate = useNavigate()
 
     const handleSubmit = React.useCallback(async (values: any) => {
-        await agent.Limits.createLimit({
-            company_id: values.filial ? Number(values.filial) : Number(values.company),
-            data: {
-                amount: values.amount ? Number(values.amount) : undefined,
-                is_day: values.is_day === 'true',
-                service_type: Number(values.service_type),
-                employee: values.conductor ?  Number(values.conductor)  : undefined,
-                car: values.car ? Number(values.car) : undefined,
-                company:  values.filial ? Number(values.filial) : Number(values.company),
-            },
-        }).then((r:any) => {
-            if(r.status === 201) {
-                mutate(`limits`)
-                navigate(`/account/limits/${r.data?.company}/${r.data?.id}`)
-            }
-        })
+        if(!edit) {
+            return await agent.Limits.createLimit({
+                company_id: values.filial ? Number(values.filial) : Number(values.company),
+                data: {
+                    amount: values.amount ? Number(values.amount) : undefined,
+                    is_day: values.is_day === 'true',
+                    is_active: values.is_active === 'true',
+                    service_type: Number(values.service_type),
+                    employee: values.conductor ?  Number(values.conductor)  : undefined,
+                    car: values.car ? Number(values.car) : undefined,
+                    company:  values.filial ? Number(values.filial) : Number(values.company),
+                },
+            }).then((r:any) => {
+                if(r.status === 201) {
+                    mutate(`limits`)
+                    navigate(`/account/limits/${r.data?.company}/${r.data?.id}`)
+                }
+            })
+        } else if(edit) {
+           return  await agent.Limits.updateLimit({
+                company_id: values.filial ? Number(values.filial) : Number(values.company),
+                id: params.id as string,
+                data: {
+                    amount: values.amount ? Number(values.amount) : undefined,
+                    is_day: values.is_day === 'true',
+                    is_active: values.is_active === 'true',
+                    service_type: Number(values.service_type),
+                    employee: values.conductor ?  Number(values.conductor)  : undefined,
+                    car: values.car ? Number(values.car) : undefined,
+                    company:  values.filial ? Number(values.filial) : Number(values.company),
+                },
+            }).then((r:any) => {
+                if(r.status === 200) {
+                    mutate(`limits`)
+                    navigate(`/account/limits/${params.company_id}/${params.id}`)
+                }
+            })
+        }
 
     }, [])
     // @ts-ignore
@@ -426,6 +453,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                                 </Group>
                             </Radio.Group>
                         </Group>
+
                         <Group grow className={'col-span-6'}>
                             <Select
                                 {...formData.getInputProps('service_type')}
@@ -454,6 +482,17 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                                 allowDecimal={false}
                                 allowNegative={false}
                                 max={100}
+                            />
+
+                        </Group>
+                        <Group grow className={'col-span-6'}>
+                            <Select
+                              label={'Статус'}
+                              {...formData.getInputProps('is_active')}
+                              data={[
+                                  { label: 'Активен', value: 'true' },
+                                  { label: 'Неактивен', value: 'false' },
+                              ]}
                             />
                         </Group>
                         {memoModal}

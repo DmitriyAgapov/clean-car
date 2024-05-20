@@ -717,7 +717,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         return at
       }
       let newMap:any = new Map(data.tire_positions?.map((item: any) => [item.service_subtype.name,  innerData(data.tire_positions, 'service_subtype', item.service_subtype.name)]))
-    // console.log('newMap', newMap);
+    console.log('newMap', newMap);
       newMap.forEach((value:any, key: any) => {
         const newAr = new Map([])
         const  curVal = value;
@@ -741,8 +741,8 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         newMap.set(key, newAr)
       })
 
-      let result:any[] = []
-
+      let result:any[] = [];
+      console.log(newMap);
       newMap.forEach((value:any, key: any) => {
         let resultInner:any[] = []
         value.forEach((value:any, key: any) => {
@@ -762,12 +762,12 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         })
         result.push({ label: key, data: resultInner })
       })
+    console.log(result);
       return result.map((item: any, index: number) => {
         return (
           <div className={'col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4'} key={translite(item.label ?? `null_${index}`)}>
             <Heading text={item.label} variant={HeadingVariant.h6} className={`text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 ${item.data[0].label === null ? 'px-6 sticky top-0 z-10  bg-[#090909]' : ''}`}/>
             {item.data.map((item: any, index: number) => {
-
               return (
                 <div key={translite(item.label ?? `null_${index}`)}>
                   {item.label && <Heading

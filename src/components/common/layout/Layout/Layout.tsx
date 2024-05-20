@@ -85,7 +85,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
           <Header>
-              {width && width > 1024 && <Logo className={' logo-header'} />}
+              {width && width > 1024 && <Logo className={' logo-header tablet:pl-6'} />}
               {headerContent}
               <Burger
                   className={'desktop:hidden'}
@@ -109,7 +109,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               loaderProps={{ children: <SvgCleanCarLoader /> }}
           />
           <main className={'!contents'}>{children}</main>
-          <Footer className={'desktop:flex hidden'}>
+          <Footer className={'desktop:flex hidden  tablet:px-6'}>
               {footerContent}
               <div>2023 (c.)</div>
               <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} to={'/policy'}></LinkStyled>

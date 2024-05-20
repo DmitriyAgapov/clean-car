@@ -5,15 +5,12 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer, useLocalStore } from "mobx-react-lite";
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Outlet,  useLocation, useNavigate } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import agent, { client } from "utils/agent";
+import  { client } from "utils/agent";
 import useSWR from "swr";
-import { createParams, dateTransformShort } from "utils/utils";
-import { TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
 import {  LocalRootStore } from "stores/localStore";
-import userStore from "stores/userStore";
 import { useDidUpdate } from "@mantine/hooks";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 
@@ -24,9 +21,11 @@ const CompaniesPage = () => {
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
-
-  const {isLoading, data, mutate} = useSWR(['companies', localStore.params.getSearchParams] , ([url, args]) => client.companiesOnlyCompaniesList(args))
+  const searchParams = localStore.params.getSearchParams
+  console.log(searchParams);
+  const {isLoading, data, mutate} = useSWR(['companies', {...localStore.params.getSearchParams}] , ([url, args]) => store.companyStore.loadAllOnlyCompanies(args))
   useEffect(() => {
+    console.log();
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
@@ -82,7 +81,7 @@ const CompaniesPage = () => {
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
         filter={true}
-        initFilterParams={[FilterData.city, ]}
+        initFilterParams={[FilterData.city, FilterData.company_type_c]}
         state={isLoading}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'}, {label: 'Тип', name: 'company_type'},{ label: 'Город', name: 'city' }]}
       />

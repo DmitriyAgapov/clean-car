@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -20,10 +20,10 @@ const SupportPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  // const { user }: any = useLoaderData()
+
   const [opened, { open, close }] = useDisclosure(false)
   const memoModal = React.useMemo(() => {
-    return <SupportModal opened={opened} onClose={close} />
+    return <SupportModal opened={opened} onClose={close}/>
   }, [opened])
 
 

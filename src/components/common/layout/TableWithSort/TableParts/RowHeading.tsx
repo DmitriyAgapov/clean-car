@@ -24,11 +24,10 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
 						index: index
 					})
 				}
-					return			console.log(index, 'index');
-
 			})
 		}
 	}, [localStore.params.searchParams.ordering])
+
 	const handleSortKey = React.useCallback((index: number) => {
 		let newVal = {
 			index: index, reversed: false, count: 0,

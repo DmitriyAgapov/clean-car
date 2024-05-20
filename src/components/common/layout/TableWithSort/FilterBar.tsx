@@ -16,6 +16,7 @@ import { CarType } from "stores/carStore";
 interface FilterBarProps {
   state: boolean
   filters:  any[] | undefined
+  action: (state:any) => void
 }
 const ctx = React.createContext<TableSearchParams | null>(null)
 
@@ -24,7 +25,7 @@ const SelectStyles = {
     label: 'text-xss uppercase mb-1 text-gray-2',
     input: 'h-8 rounded-sm !bg-gray-2/20 border-gray-2/80 text-white focus:border-white/40 focus:filter-none',
 }
-const FilterElements = ({ filters }:{filters: any}) => {
+const FilterElements = observer(({ filters }:{filters: any}) => {
 
     const params = React.useContext(ctx)
 
@@ -32,7 +33,7 @@ const FilterElements = ({ filters }:{filters: any}) => {
 
   return React.useMemo(() => {
     const elements: any[] = []
-
+    console.log(filters);
     params && filters && filters.forEach((el: FilterData) => {
       switch (el) {
         case FilterData.city:
@@ -183,6 +184,31 @@ const FilterElements = ({ filters }:{filters: any}) => {
               }))} />,
           )
           break
+        case FilterData.company_type_c:
+          console.log('company_type_c');
+          elements.push(
+            <Select clearable
+              label={'Тип компании'}
+              size={'xs'}
+              defaultValue={params.company_type}
+              onChange={(value) => {
+                if (value !== null) {
+                  params.company_type = value
+                  // setParams((prevState) => ({...prevState, service_type: value}))
+                } else {
+                  let newParams: any = params
+                  delete params.company_type
+                  // setParams(newParams)
+                }
+              }}
+              classNames={SelectStyles}
+              comboboxProps={{ withinPortal: false }}
+              data={['Компания-Заказчик', "Компания-Партнер", "Физическое лицо", "Администратор системы"].map((el:string) => ({
+                label: el,
+                value: el
+              }))} />,
+          )
+          break
         case FilterData.employee__is_active:
           elements.push(
             <Select clearable
@@ -304,9 +330,9 @@ const FilterElements = ({ filters }:{filters: any}) => {
     return <>{elements}</>
 
   }, [filters, params])
-}
+})
 
-const FilterBar = ({ filters, state = false }: FilterBarProps) => {
+const FilterBar = ({ filters, state = false, action }: FilterBarProps) => {
   const localStore = useLocalStore()
 
   const [params, setParams] = useState<TableSearchParams | null>(localStore.params.getSearchParams)
@@ -318,6 +344,7 @@ const FilterBar = ({ filters, state = false }: FilterBarProps) => {
 
   const handleClearAction = React.useCallback(() => {
     localStore.params.clearParams()
+    action(false)
     // setParams()
   }, [params])
 

@@ -1,16 +1,9 @@
-import { useOutsideClick } from "utils/utils";
 import styles from "components/common/layout/TableWithSort/TableWithSort.module.scss";
-import { SvgFilter } from "components/common/ui/Icon";
 import icon from "assets/icons/filter.png"
 import FilterBar from 'components/common/layout/TableWithSort/FilterBar'
 import { useState } from 'react'
 import React from 'react'
-import { Select } from "@mantine/core";
-import { useStore } from "stores/store";
 import { useClickOutside } from "@mantine/hooks";
-import { BidsStatus } from "stores/bidsStrore";
-import dayjs from "dayjs";
-import { DateInput, DateTimePicker } from "@mantine/dates";
 import Image from "components/common/ui/Image/Image";
 export enum FilterData {
   city= 'city',
@@ -18,7 +11,8 @@ export enum FilterData {
   employee__is_active= 'employee__is_active',
   brand= 'brand',
   service_type= 'service_type',
-  company_type= 'company_type',
+  company_type = 'company_type',
+  company_type_c = 'company_type_c',
   is_active= 'is_active',
   bidStatus= 'bidStatus',
   start_date = 'start_date',
@@ -39,7 +33,7 @@ export default function DataFilter({ filterData}: {filterData: any[] | undefined
                 {/* <SvgFilter /> */}
               <Image src={icon} alt={''} className={'w-5 h-6'}/>
             </a>
-            {state && <FilterBar state={state} filters={filterData} />}
+            {state && <FilterBar state={state} filters={filterData} action={handleState}/>}
         </div>
     )
 }

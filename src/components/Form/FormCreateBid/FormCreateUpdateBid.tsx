@@ -23,7 +23,8 @@ import { UploadedPhotosFirstStep } from "components/common/layout/Modal/Uploaded
 import {  DateTimePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
-import { PermissionNames } from "stores/permissionStore";
+import { PermissionNames } from 'stores/permissionStore'
+import useSWR, { useSWRConfig, mutate } from 'swr'
 
 interface InitValues {
     address: string | null
@@ -227,7 +228,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
    }
 
    if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'read') && store.userStore.myProfileData.user.cars.length > 0) {
-     return store.userStore.myProfileData.user.cars.map((c: any) => ({ label: `${c.brand}  ${c.model}  ${c.number}`, value: String(c.id), }))
+     return store.userStore.myProfileData.user.cars.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), }))
    }
    return null
   }, [formData.values.conductor, car])
@@ -264,7 +265,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
   React.useEffect(() => {
     if(formData.values.conductor === null) {
-      console.log('null');
       formData.setFieldValue('conductor', null)
       formData.setFieldValue('car', null)
       formData.setFieldValue('phone', null)
@@ -295,7 +295,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       setStep((prevState: number) => prevState - 1)
     }
   }, [step, store.bidsStore.formResult.service_type, formData.values.service_type])
-
+  const { mutate } = useSWRConfig()
   const handleNext = React.useCallback(() => {
     if(step === 2) {
         store.bidsStore.loadCurrentPerformers(Number(store.bidsStore.formResult.company), {
@@ -341,10 +341,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     // style: { backgroundColor: 'red' },
                     loading: false,
                 })
-                store.bidsStore.formResultsClear()
-                changeStep()
-                store.bidsStore.clearPhotos()
+
+
             }
+          })
+          await mutate(['bids']).then(() => {
+
+            console.log('bids updated successfully');
+          }).finally(() => {
+            store.bidsStore.formResultsClear()
+            changeStep();
+            store.bidsStore.clearPhotos();
           })
         })()
     } else {
@@ -436,7 +443,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               className={'float-right'}
               variant={ButtonVariant.accent} />
           }>
-          <form onSubmit={formData.onSubmit((props) => console.log('form', props))}
+          <form
+            // onSubmit={formData.onSubmit((props) => console.log('form', props))}
             onReset={formData.onReset}
             style={{ display: 'contents' }}>
             <Progress total={formData.values.service_type === "1" ? 4 : 5} current={step} />

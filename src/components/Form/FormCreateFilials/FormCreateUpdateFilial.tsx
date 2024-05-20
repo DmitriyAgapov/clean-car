@@ -109,34 +109,39 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         onValuesChange: (values, previous) => console.log(values),
         validate: yupResolver(CreateFilialSchema),
         enhanceGetInputProps: (payload) => {
-            if (payload.field === 'working_time') {
-                return {
-                    className: 'mb-2 w-full flex-grow  !flex-[0_0_16rem] col-span-3',
-                }
-            }
+            // if (payload.field === 'working_time') {
+            //     return {
+            //         className: 'mb-2 w-full flex-grow  !flex-[0_0_16rem] col-span-3',
+            //     }
+            // }
             if (payload.field === 'address') {
                 return {
-                    className: `mb-2 w-full  flex-grow !flex-[1_1_30rem]   ${store.appStore.appType === "admin" && ''} col-span-3`,
+                    className: `mb-2 w-full desktop:!flex-[1_0_64%] col-span-3   ${store.appStore.appType === "admin" && ''} col-span-3`,
                 }
             }
             if (payload.field === 'type') {
                 return {
-                    className: `mb-2  col-span-5  ${store.appStore.appType !== "admin" && 'hidden'}`,
+                    className: `mb-2  col-span-5  !flex-[1_1_30%]  ${store.appStore.appType !== "admin" && 'hidden'}`,
+                }
+            }
+            if (payload.field === 'company_name') {
+                return {
+                    className: `mb-2  col-span-3  !flex-[1_1_64%]`,
                 }
             }
 
-            if (payload.field === 'city') {
-                return {
-                    className: 'mb-2  col-span-3 !flex-[0_15rem]}',
-                }
-            }
-            if (payload.field === 'is_active') {
-                return {
-                    className: 'mb-2  col-span-3 !flex-[0_15rem]}',
-                }
-            }
+            // if (payload.field === 'city') {
+            //     return {
+            //         className: 'mb-2  col-span-3 !flex-[0_15rem]}',
+            //     }
+            // }
+            // if (payload.field === 'is_active') {
+            //     return {
+            //         className: 'mb-2  col-span-3 !flex-[0_15rem]}',
+            //     }
+            // }
             return {
-                className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
+                className: 'mb-2 w-full  !flex-[1_1_30%] col-span-3',
             }
         },
     })
@@ -271,7 +276,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                     )
                 }
             >
-                <FormProvider form={formData}>
+                {/* <FormProvider form={formData}> */}
                 <form
                     onSubmit={formData.onSubmit(handleSubmit)}
                     onReset={formData.onReset}
@@ -324,7 +329,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                 { label: 'Компании', value: 'company' },
                                 { label: 'Филиалу', value: 'filials' },
                             ]}
-                            className={'col-span-3'}
                         />
                         <Select
                             searchable
@@ -344,6 +348,15 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
                         <TextInput label={'Название филиала'} {...formData.getInputProps('company_name')} />
                         <Select
+                          {...formData.getInputProps('is_active')}
+                          withCheckIcon={false}
+                          label={'Статус'}
+                          data={[
+                              { label: 'Активен', value: 'true' },
+                              { label: 'Неактивен', value: 'false' },
+                          ]}
+                        />
+                        <Select
                             withCheckIcon={false}
                             label={'Город'}
                             searchable={true}
@@ -361,16 +374,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                 }))}
                         />
                         <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
-                        <Select
-                          className={'!flex-[0_15rem]'}
-                            {...formData.getInputProps('is_active')}
-                            withCheckIcon={false}
-                            label={'Статус'}
-                            data={[
-                                { label: 'Активен', value: 'true' },
-                                { label: 'Неактивен', value: 'false' },
-                            ]}
-                        />
+
 
 
                         {formData.values.type === CompanyType.performer && (
@@ -379,7 +383,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                 label={'Часы работы'}
                                 {...formData.getInputProps('working_time')}
                                 mask={Date}
-                                className={'!flex-[1_0_10rem]'}
                                 /*@ts-ignore*/
                                 blocks={{
                                     YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
@@ -398,7 +401,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         )}
                         {formData.values.type === CompanyType.performer && (
                             <NumberInput
-                                className={'!flex-[1_1_4rem]'}
                                 step={1}
                                 hideControls
                                 allowNegative={false}
@@ -412,7 +414,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         state={step !== 2}
                         animate={animate}
                         className={'!bg-transparent'}
-                        bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+                        // bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
                         background={PanelColor.default}
                         header={
@@ -473,7 +475,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         {/* {formData.values.performers_list === '1' && <TransferList />} */}
                     </PanelForForms>
                 </form>
-                </FormProvider>
+                {/* </FormProvider> */}
             </PanelForForms>
 
     )

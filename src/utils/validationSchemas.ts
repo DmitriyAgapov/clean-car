@@ -128,10 +128,10 @@ export const CreateBidSchemaStep2 = Yup.object().shape({
 	service_option: Yup.array().when('service_subtype', (service_subtype, schema) => {
 		const store = rootStore
 		if(!store.catalogStore.CurrentServiceSubtypes.find((el:any) => (Number(service_subtype) === el.id) && el.in_price)) {
-			console.log('option req');
+			// console.log('option req');
 			return schema.min(1, 'Выберите опции')
 		} else {
-			console.log('option notreq');
+			// console.log('option notreq');
 			return schema
 		}
 	}),

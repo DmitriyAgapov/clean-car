@@ -18,6 +18,7 @@ export function InputAutocompleteNew(props:any) {
   const [empty, setEmpty] = useState(false);
   const abortController = useRef<AbortController>();
   async function getData(query: string) {
+    combobox.resetSelectedOption()
     try {
       const dataToform = { query: query, locations: [
           {
@@ -40,7 +41,7 @@ export function InputAutocompleteNew(props:any) {
       // @ts-ignore
       setData(response)
 
-      combobox.resetSelectedOption()
+
       // @ts-ignore
       const {data} = response
       return data.suggestions
@@ -123,11 +124,12 @@ export function InputAutocompleteNew(props:any) {
               setValue(optionValue + ' ')
               combobox.closeDropdown()
           }}
-        {...props}
+
           withinPortal={true}
           store={combobox}
       >
           <Combobox.Target>
+            <div   {...props}>
               <label
                   className={`account-form__input w-full flex-grow  flex-[1_0_20rem] ${!values.city && 'filter grayscale'}`}
                   htmlFor={'address'}
@@ -182,10 +184,11 @@ export function InputAutocompleteNew(props:any) {
                   />
                   {errors.address && isTouched('address') ? <div className={'form-error'}>{errors.address}</div> : null}
               </label>
+            </div>
           </Combobox.Target>
 
           <Combobox.Dropdown hidden={data === null}>
-              <Combobox.Options onClick={(e) => console.log(options)}>
+              <Combobox.Options>
                   {options}
                   {empty && <Combobox.Empty>Не найдено</Combobox.Empty>}
               </Combobox.Options>

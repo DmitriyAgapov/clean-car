@@ -12,7 +12,6 @@ import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
 function AuthPage() {
   const store = useStore()
   const location = useLocation()
-  console.log(!location.pathname.includes('policy'));
   if (store.appStore.appType !== "" && location.pathname !== 'policy') {
     return <Navigate to={'/account'} />
   }

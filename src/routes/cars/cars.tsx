@@ -101,7 +101,7 @@ const CarsPage = () => {
           background={PanelColor.glass}
           className={'col-span-full table-groups'}
           filter={true}
-          initFilterParams={[FilterData.is_active, FilterData.city]}
+          initFilterParams={[FilterData.is_active, FilterData.city, FilterData.brand]}
           state={isLoading}
           ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
       />
