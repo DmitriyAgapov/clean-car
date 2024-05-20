@@ -49,7 +49,7 @@ const axiosUpload = axios.create({
 
 
 //Константа для запросов
-export const API_ROOT = "https://dev.server.clean-car.net/api"
+export const API_ROOT = process.env.REACT_APP_PUBLIC_API
 // export const API_ROOT = process.env.REACT_APP_PUBLIC_API
 export const fetcherNew = async (url:string) => requests.getNew(url).then(r => ({...r.data, url: url}))
 export const client = new Client(API_ROOT, axios)
