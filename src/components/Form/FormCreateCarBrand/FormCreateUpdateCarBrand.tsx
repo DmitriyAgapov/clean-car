@@ -13,7 +13,8 @@ import { Select, TextInput } from '@mantine/core'
 import { yupResolver } from "mantine-form-yup-resolver";
 import { CreateCarBrandSchema } from "utils/validationSchemas";
 import PanelForForms from 'components/common/layout/Panel/PanelForForms';
-import { createFormContext } from "@mantine/form";
+import { createFormContext } from '@mantine/form'
+import { observer } from 'mobx-react-lite';
 const dataCreate = {
   initValues: {
     brandId: 0,
@@ -135,6 +136,7 @@ const FormCreateUpdateCarBrand = (props: any) => {
       }
     },
   })
+  console.log(formData);
   // @ts-ignore
   return (
 
@@ -216,4 +218,4 @@ const FormCreateUpdateCarBrand = (props: any) => {
     </FormProvider>
   )
 }
-export default FormCreateUpdateCarBrand
+export default observer(FormCreateUpdateCarBrand)

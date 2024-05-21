@@ -13,6 +13,7 @@ import { useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { CompanyTypeRus, CompanyType } from "stores/companyStore";
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import agent from "utils/agent";
+import { formatPhone } from "utils/utils";
 
 interface InitValues {
 	id: string | number
@@ -215,7 +216,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		mask: '+7 000 00 000 00',
 		autofix: true,
 		overwrite: true,
-		// format: (value:any) => formatPhone(value)
+		format: (value:any) => formatPhone(value)
 		// ...and other options
 	});
 	// @ts-ignore
@@ -315,13 +316,15 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
                     <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
                     <InputBase
-                        // onPaste={(value) => {
-                        //   console.log(formatPhone(value.clipboardData.getData('text/plain')));
-                        // 	return formatPhone(value.clipboardData.getData('text/plain'))
-                        // 	// console.log(value.clipboardData.getData('text/plain'), 'paste')
-                        // }}
+
                         {...form.getInputProps('phone')}
                         label={'Телефон'}
+	                    onPaste={(value) => {
+		                    console.log(value, 'paste');
+		                    // console.log(formatPhone(value.clipboardData.getData('text/plain')));
+		                    // return formatPhone(value.clipboardData.getData('text/plain'))
+		                    // console.log(value.clipboardData.getData('text/plain'), 'paste')
+	                    }}
                         component={IMaskInput}
                         {...masked}
                         placeholder='+7 000 000 0000'

@@ -3,7 +3,7 @@ import { Combobox, InputBase, useCombobox } from '@mantine/core';
 import { useFormikContext } from "formik";
 import { useFormContext } from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
 
-export function SelectCreatable({ items, createAction, defaultValue,  label}:{items: any[], defaultValue?: any, createAction: (e:any) => void, label: string}) {
+export function SelectCreatable({ items, createAction, defaultValue,  label, ...props}:{items: any[], defaultValue?: any, createAction: (e:any) => void, label: string}) {
 
 	const initBrand = items.filter((i:any) => i.label === String(defaultValue))[0]?.label || null
 	const combobox = useCombobox({
@@ -46,10 +46,11 @@ export function SelectCreatable({ items, createAction, defaultValue,  label}:{it
 				}
 				combobox.closeDropdown();
 			}}
+
 		>
 			<Combobox.Target>
 				<InputBase
-
+					{...props}
 					classNames={{
 					input: "bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10"
 
