@@ -220,7 +220,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   const { cars }  = store.carStore.getCompanyCars
   const car = React.useMemo(() => {
 
-    return cars.results?.filter((c:any) => {
+    return cars?.results?.filter((c:any) => {
       // console.log(c);
       if(c.is_active) {
         return c.employees.filter((e: any) => e.id === Number(formData.values.conductor))?.length !== 0

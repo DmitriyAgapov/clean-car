@@ -19,14 +19,14 @@ const BidsCreatePage = (props:any) => {
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={store.bidsStore.loading} header={<>
 				<div>
-					<Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
+					<Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163]  hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
 					<Heading text={!props.edit ? textData.createPage : textData.editPage} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
 				</div>
 				{store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<>
 					<Button text={textData.fillTemplate} action={() => {
 						store.bidsStore.formResultsClear()
 						navigate('create')
-					}} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
+					}} trimText={true} className={'inline-flex  tablet-big-max:!self-end'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 				</>)}
 			</>}>
 			</Panel>
