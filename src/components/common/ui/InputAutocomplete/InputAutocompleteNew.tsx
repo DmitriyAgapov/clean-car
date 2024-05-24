@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from "./InputAutocomplete.module.scss";
 import agent from "utils/agent";
 import { Combobox, TextInput, useCombobox, Loader, Text } from '@mantine/core'
+import { observer } from 'mobx-react-lite'
 
 export function InputAutocompleteNew(props:any) {
 
@@ -197,4 +198,4 @@ export function InputAutocompleteNew(props:any) {
   )
 }
 
-export default InputAutocompleteNew;
+export default observer(InputAutocompleteNew);

@@ -217,7 +217,8 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		autofix: true,
 		// overwrite: true,
 		prepare: (appended, masked) => {
-			if (appended[0] === '8') {
+			console.log(masked);
+			if (appended[0] === '8' && masked.value === "") {
 				return appended.slice(1);
 			}
 			return appended
