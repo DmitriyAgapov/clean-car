@@ -576,13 +576,13 @@ export class PriceStore {
 
     })}
     // @ts-ignore
-    handleChangeAmount({label, price_id, company_id, initValue, amount, id}) {
-
+    handleChangeAmount({type, label, price_id, company_id, initValue, amount, id}) {
+        console.log(initValue);
         if(!initValue) {
             // @ts-ignore
-            this.priceOnChange.set(id.toString(), {amount: amount, label: label, price_id: price_id, company_id, id: id})
+            this.priceOnChange.set(`${type}_${id.toString()}`, {amount: amount, label: label, price_id: price_id, company_id, id: id})
         } else {
-            this.priceOnChange.delete(id.toString())
+            this.priceOnChange.delete(`${type}_${id.toString()}`)
         }
 
     }

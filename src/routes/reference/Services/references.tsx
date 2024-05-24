@@ -69,9 +69,9 @@ const ServicesPage = () => {
                   </>
                 }></Panel>
           <Panel variant={PanelVariant.textPadding}
-            className={"!mt-0"}
+            className={"!mt-0  tablet-big-max:-mx-5"}
             background={PanelColor.glass}
-            bodyClassName={"grid grid-cols-3 gap-6"}
+            bodyClassName={"grid tablet:grid-cols-3 gap-6"}
             header={<p>{textData.description}</p>}>
             {data && data.results && data.results.length > 0 && data.results.map((card: any) => <FormCard title={card.name}
               titleVariant={HeadingVariant.h4}

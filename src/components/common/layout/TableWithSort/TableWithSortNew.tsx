@@ -13,6 +13,7 @@ import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
 import { useStore } from 'stores/store'
 import Button from "components/common/ui/Button/Button";
+import { useWindowDimensions } from "utils/utils";
 
 
 type TableWithSortProps = {
@@ -36,23 +37,27 @@ type TableWithSortProps = {
 export const PaginationComponent = observer(():any => {
   const localStore = useLocalStore<LocalRootStore>()
   const initCount = localStore.countData
-  if(window.innerWidth < 1000) return <Button text={'Load more'} action={() => localStore.loadMore()}/>
-  return <Pagination classNames={{
-    control:
-      'hover:border-accent data-[active=true]:border-accent data-[active]:bg-transparent data-[active=true]:text-accent',
-  }}
-    total={(initCount &&  Math.ceil(initCount / localStore.params.searchParams.page_size) > 1) ? Math.ceil(initCount / localStore.params.searchParams.page_size) : 0}
-    value={localStore.params.searchParams.page}
-    onChange={value => localStore.params.setSearchParams({ page: Number(value) })}
-    // boundaries={2}
-    defaultValue={5} />
+  const {width} = useWindowDimensions()
+  const nextPageIsNotExist = localStore.getData?.next
 
+  return React.useMemo(() => {
+    if(!nextPageIsNotExist && width && width < 1000) return
+    if(width && width < 1000) return <Button text={'Load more'} action={() => localStore.loadMore()}/>
+    return <Pagination classNames={{
+      control:
+        'hover:border-accent data-[active=true]:border-accent data-[active]:bg-transparent data-[active=true]:text-accent',
+    }}
+      total={(initCount &&  Math.ceil(initCount / localStore.params.searchParams.page_size) > 1) ? Math.ceil(initCount / localStore.params.searchParams.page_size) : 0}
+      value={localStore.params.searchParams.page}
+      onChange={value => localStore.params.setSearchParams({ page: Number(value) })}
+      // boundaries={2}
+      defaultValue={5} />
+  }, [width, nextPageIsNotExist]);
 })
 
 const TableWithSortNew = observer(({ variant, withOutLoader, search = false,headerBar = true, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
 }: TableWithSortProps) => {
     const localStore = useLocalStore<LocalRootStore>()
-    const store =useStore()
     const rows = toJS(localStore.getData)?.results
     const initCount = localStore.getData?.count || 0
     const {data, params: {getSearchParams: {page_size: pageSize}}} = localStore
@@ -73,11 +78,9 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
                     {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
                 </> : null
             }
-footer={
-  <PaginationComponent />}
+            footer={<PaginationComponent />}
             {...props}
         >
-
             <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
                 {headerBar && <RowHeading total={initCount} ar={ar} />}
                 <tbody>

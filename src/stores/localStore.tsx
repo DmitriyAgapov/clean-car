@@ -44,27 +44,24 @@ export class LocalRootStore  {
     makeAutoObservable(this)
   }
   loadMore() {
-    console.log(this.inFinitiveScrollResults);
     this.inFinitiveScroll = true
     const next = this.params.getSearchParams.page + 1
 
     this.params.setSearchParams({page: next, page_size: 10 })
   }
   set setData(data: any) {
-    console.log(data && data.count && this.count_data !== data.count);
     const _initAr = this.getData
     if(data && data.count && this.count_data !== data.count) {
       this.count_data = data.count
-      console.log(data);
+
 
     }
     if(data && data.results) {
       data.results.forEach((item:any, index:number) => {
-        console.log(item.id, " = ", item);
+
         this.inFinitiveScrollResults.set(String(item.id), item)
       })
     }
-    console.log(this.inFinitiveScrollResults);
     //
     // if(this.inFinitiveScrollResults.size === 0) {
     //   console.log('empty');
@@ -93,8 +90,6 @@ export class LocalRootStore  {
     return this.isLoading
   }
   get getData() {
-    console.log(this.data);
-    console.log(values(this.inFinitiveScrollResults));
     if(this.inFinitiveScroll) {
       return ({
         ...this.data,

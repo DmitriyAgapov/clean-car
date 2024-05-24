@@ -162,7 +162,7 @@ const ServicePage = () => {
                     </div>
                   </>
                 }></Panel>
-          <Panel className={"col-span-full grid grid-rows-[auto_1fr_auto]"}
+          <Panel className={"col-span-full grid grid-rows-[auto_1fr_auto]   tablet-big-max:-mx-5"}
             variant={PanelVariant.textPadding}
             background={PanelColor.glass}
             bodyClassName={"grid grid-cols-3 items-start content-start gap-8"}

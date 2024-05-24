@@ -73,75 +73,75 @@ const RefCarsPage = () => {
 
 
   if (location.pathname !== `/account/references/car_brands`) return <Outlet />
-    return (
-        <Section type={SectionType.default}>
-            <Panel
-                variant={PanelVariant.withGapOnly}
-                state={false}
-                headerClassName={'justify-between gap-4'}
-                header={
-                    <>
-                        <div>
-                            <Button
-                                text={
-                                    <>
-                                        <SvgBackArrow />
-                                        Назад к справочнику{' '}
-                                    </>
-                                }
-                                className={
-                                    'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                                }
-                                action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))}
-                                variant={ButtonVariant.text}
-                            />
-                            <Heading
-                                text={textDataCars.title}
-                                variant={HeadingVariant.h1}
-                                className={'inline-block !mb-0'}
-                                color={HeadingColor.accent}
-                            />
-                        </div>
-                        <div className={'flex gap-6 tablet-max:max-w-96 mobile:mt-6'}>
-                            <Button
-                                text={'Классификация автомобилей'}
-                                action={open}
-                                trimText={true}
-                                /* action={() => store.companyStore.addCompany()} */
-                              className={"inline-flex tablet-max:flex-1"}
-                                variant={ButtonVariant['accent-outline']}
-                                size={ButtonSizeType.sm}
-                            />{' '}
-                            {memoModal}
-                            {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (
-                                <Button
-                                    text={textDataCars.create}
-                                    action={() => navigate('create')}
-                                    trimText={true}
-                                  className={"inline-flex tablet-max:flex-1"}
-                                    directory={ButtonDirectory.directory}
-                                    size={ButtonSizeType.sm}
-                                />
-                            )}
-                        </div>
-                    </>
-                }
-            />
-            <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
-                <TableWithSortNew
-                    store={localRootStore}
-                    variant={PanelVariant.dataPadding}
-                    search={true}
-                    style={PanelRouteStyle.refcars}
-                    background={PanelColor.glass}
-                    className={'col-span-full table-groups  h-full'}
-                    filter={true}
-                    initFilterParams={[FilterData.brand, FilterData.car_type]}
-                    state={isLoading}
-                    ar={textDataCars.tableHeaders}
-                />
-            </Panel>
-        </Section>
-    )
+  return (
+      <Section type={SectionType.default}>
+          <Panel
+              variant={PanelVariant.withGapOnly}
+              state={false}
+              headerClassName={'justify-between gap-4'}
+              header={
+                  <>
+                      <div>
+                          <Button
+                              text={
+                                  <>
+                                      <SvgBackArrow />
+                                      Назад к справочнику{' '}
+                                  </>
+                              }
+                              className={
+                                  'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
+                              }
+                              action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))}
+                              variant={ButtonVariant.text}
+                          />
+                          <Heading
+                              text={textDataCars.title}
+                              variant={HeadingVariant.h1}
+                              className={'inline-block !mb-0'}
+                              color={HeadingColor.accent}
+                          />
+                      </div>
+                      <div className={'flex gap-6 tablet-max:max-w-96 mobile:mt-6'}>
+                          <Button
+                              text={'Классификация автомобилей'}
+                              action={open}
+                              trimText={true}
+                              /* action={() => store.companyStore.addCompany()} */
+                            className={"inline-flex tablet-max:flex-1"}
+                              variant={ButtonVariant['accent-outline']}
+                              size={ButtonSizeType.sm}
+                          />{' '}
+                          {memoModal}
+                          {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (
+                              <Button
+                                  text={textDataCars.create}
+                                  action={() => navigate('create')}
+                                  trimText={true}
+                                className={"inline-flex tablet-max:flex-1"}
+                                  directory={ButtonDirectory.directory}
+                                  size={ButtonSizeType.sm}
+                              />
+                          )}
+                      </div>
+                  </>
+              }
+          />
+          <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full tablet-big-max:-mx-5'}>
+              <TableWithSortNew
+                  store={localRootStore}
+                  variant={PanelVariant.dataPadding}
+                  search={true}
+                  style={PanelRouteStyle.refcars}
+                  background={PanelColor.glass}
+                  className={'col-span-full table-groups  h-full'}
+                  filter={true}
+                  initFilterParams={[FilterData.brand, FilterData.car_type]}
+                  state={isLoading}
+                  ar={textDataCars.tableHeaders}
+              />
+          </Panel>
+      </Section>
+  )
 }
 export default observer(RefCarsPage)
