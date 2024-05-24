@@ -191,33 +191,37 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		[form.values.depend_on, form.values.type])
 
 	const groupData = React.useMemo(() => {
-		// console.log('edit', edit && !!user.company.groups);
-		// console.log('edit', edit && user.company);
-		const _permissions = store.permissionStore.getCompanyPermissions
+        // console.log('edit', edit && !!user.company.groups);
+        // console.log('edit', edit && user.company);
+        const _permissions = store.permissionStore.getCompanyPermissions
 
-		// if(form.values.type !== UserTypeEnum.admin) {
-			console.log('edit a', _permissions);
-			return _permissions.map((p: any) => ({
-				label: p.name,
-				value: String(p.id),
-			}))
-		// } else {
-		// 	return _permissions.map((p: any) => ({
-		// 		label: p.name,
-		// 		value: String(p.id),
-		// 	}))
-		// }
-	}, [form.values.type, form.values.company_id, edit])
+        // if(form.values.type !== UserTypeEnum.admin) {
+        console.log('edit a', _permissions)
+        return _permissions.map((p: any) => ({
+            label: p.name,
+            value: String(p.id),
+        }))
+        // } else {
+        // 	return _permissions.map((p: any) => ({
+        // 		label: p.name,
+        // 		value: String(p.id),
+        // 	}))
+        // }
+    }, [form.values.type, form.values.company_id, edit])
 
 	useEffect(() => {
 		store.permissionStore.loadCompanyPermissionsResults(form.values.company_id)
 	}, [form.values.company_id]);
 	const masked = IMask.createMask({
-		mask: '+7 000 00 000 00',
+		mask: "+7 000 000 00 00",
 		autofix: true,
-		overwrite: true,
-		format: (value:any) => formatPhone(value)
-		// ...and other options
+		// overwrite: true,
+		prepare: (appended, masked) => {
+			if (appended[0] === '8') {
+				return appended.slice(1);
+			}
+			return appended
+		},
 	});
 	// @ts-ignore
 	return (
@@ -272,24 +276,23 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     onReset={form.onReset}
                     style={{ display: 'contents' }}
                 >
-	                <Select
-		                label={'Тип'}
-		                allowDeselect={false}
-		                onOptionSubmit={(e) => {
-			                e === 'admin' && store.permissionStore.loadCompanyPermissionsResults(1)
+                    <Select
+                        label={'Тип'}
+                        allowDeselect={false}
+                        onOptionSubmit={(e) => {
+                            e === 'admin' && store.permissionStore.loadCompanyPermissionsResults(1)
 
-			                form.setValues({ ...form.values, company_id: null, group: null })
-		                }}
-		                {...form.getInputProps('type')}
-		                defaultValue={form.values.type}
-		                data={Object.entries(UserTypeEnum).map((item: any) => ({
-			                label: label(item[0]),
-			                value: item[1],
-		                }))}
-	                />
+                            form.setValues({ ...form.values, company_id: null, group: null })
+                        }}
+                        {...form.getInputProps('type')}
+                        defaultValue={form.values.type}
+                        data={Object.entries(UserTypeEnum).map((item: any) => ({
+                            label: label(item[0]),
+                            value: item[1],
+                        }))}
+                    />
                     {!(form.values.type === null || form.values.type === UserTypeEnum.admin) && (
                         <>
-
                             <Select
                                 onOptionSubmit={() => form.setValues({ ...form.values, company_id: null, group: null })}
                                 label={'Относится к'}
@@ -310,21 +313,15 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                                 }}
                                 data={companyVar.map((item: any) => ({ label: item.name, value: String(item.id) }))}
                             />
-                            <hr className={'col-span-full'} />
                         </>
                     )}
+                    <hr className={'col-span-full border-gray-2'} />
                     <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
                     <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
                     <InputBase
-
                         {...form.getInputProps('phone')}
                         label={'Телефон'}
-	                    onPaste={(value) => {
-		                    console.log(value, 'paste');
-		                    // console.log(formatPhone(value.clipboardData.getData('text/plain')));
-		                    // return formatPhone(value.clipboardData.getData('text/plain'))
-		                    // console.log(value.clipboardData.getData('text/plain'), 'paste')
-	                    }}
+
                         component={IMaskInput}
                         {...masked}
                         placeholder='+7 000 000 0000'

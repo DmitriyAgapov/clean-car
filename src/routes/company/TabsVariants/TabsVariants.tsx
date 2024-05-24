@@ -1,7 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import DList from 'components/common/ui/DList/DList'
 import CardSimple from 'components/common/layout/Cards/CardSimple/CardSimple'
-import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
@@ -246,8 +245,8 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           <DList label={'Макс. высота транспорта, в см'} title={<>{data[`${company_type}profile`].height} <sub className={'bottom-0 text-white/75'}> см</sub></>} />
         <DList label={'Время работы'} title={data[`${company_type}profile`].working_time} />
         </>}
-        {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} className={'col-span-2 row-start-5'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
-        <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts} />
+        {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} className={'tablet:!col-[2_/_2_span] tablet:!row-start-4'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
+        <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts}  className={'tablet:!col-[2_/_2_span] tablet:!row-start-5'}/>
         {/*{company_type === 'customer' &&  <Button text={'Пополнить счет'}  action={async () => {*/}
         {/*store.appStore.setModal(fundBill) }}*/}
         {/* variant={ButtonVariant['accent-outline']} className={'col-start-3'} size={ButtonSizeType.sm} /> }*/}
@@ -661,6 +660,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         })
         result.push({ label: key, data: resultInner })
     })
+    console.log(result);
     return result.map((item: any) => {
 
         return (
@@ -742,7 +742,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
       })
 
       let result:any[] = [];
-      console.log(newMap);
+
       newMap.forEach((value:any, key: any) => {
         let resultInner:any[] = []
         value.forEach((value:any, key: any) => {

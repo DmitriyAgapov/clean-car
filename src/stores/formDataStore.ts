@@ -72,7 +72,7 @@ export class FormStore {
       .finally(() => formStore.formClear('formCreateCar'))
   }
   sendCarFormDataEdit() {
-      carStore.editCar(this.formCreateCar.company_id, this.formCreateCar.id, this.formCreateCar)
+      return carStore.editCar(this.formCreateCar.company_id, this.formCreateCar.id, this.formCreateCar)
       .then((res) => res)
       .then((res:any) => runInAction(() => {
         if(res && res.status > 199 && res.status < 300) {

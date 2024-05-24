@@ -12,9 +12,7 @@ import RowHeading from "components/common/layout/TableWithSort/TableParts/RowHea
 import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
 import { useStore } from 'stores/store'
-import { useDidUpdate } from "@mantine/hooks";
 import Button from "components/common/ui/Button/Button";
-import stores from "stores";
 
 
 type TableWithSortProps = {
@@ -83,7 +81,7 @@ footer={
             <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
                 {headerBar && <RowHeading total={initCount} ar={ar} />}
                 <tbody>
-                {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData    style={style}  {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
+                {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData style={style} {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
                 </tbody>
             </table>
         </Panel>

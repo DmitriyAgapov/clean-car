@@ -789,6 +789,7 @@ export class BidsStore {
         return _res
     }
     loadBids(args:any) {
+        console.log(args);
         if(appStore.appType === "admin") {
             return client.bidsAllBidsList(args)
         } else {

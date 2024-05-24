@@ -9,6 +9,7 @@ import UserPortal from 'components/common/layout/UserMenu/UserPortal'
 import { useOutsideClick } from 'utils/utils'
 import { useInterval } from "@mantine/hooks";
 import { Link } from "react-router-dom";
+import Image from "components/common/ui/Image/Image";
 type UserProps = {
   first_name?: string
   last_name?: string
@@ -56,9 +57,20 @@ const UserMenuStyled = styled(UserPortal)`
   .user__photo {
     justify-self: center;
     position: relative;
-    border: 1px solid var(--accentColor);
     border-radius: 50%;
     margin-bottom: 0.625rem;
+    padding: 1px;
+    &[data-directory="admin"] {
+      background: var(--gradient-admin);
+    }
+
+    &[data-directory="performer"] {
+      background: var(--gradient-performer);
+    }
+
+    &[data-directory="customer"] {
+      background: var(--gradient-customer);
+    }
     a {
       position: absolute;
       bottom: -.125rem;
@@ -87,10 +99,12 @@ const UserMenuStyled = styled(UserPortal)`
 `
 
 const User = ({ last_name, first_name, status, photoUrl, action }: UserProps) => {
+  const store = useStore()
+  const companyType = store.appStore.appType
   return (
     <div className={styles.user} onClick={action}>
-      <div className={styles.photo}>
-        <img src={photo} width={40} height={40} alt={''} loading={'lazy'} />
+      <div className={styles.photo} data-directory={companyType}>
+        {photoUrl ? <Image src={photo} width={40} height={40} alt={''} /> : <div className={'w-10 h-10 flex justify-center items-center text-black !text-lg'}>{String(first_name)[0]}{String(last_name)[0]}</div>}
       </div>
       <div className={styles.menuName}>
         <div className={styles.name}>

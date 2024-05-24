@@ -14,12 +14,16 @@ import agent from "utils/agent";
 
 
 const masked = IMask.createMask({
-    mask: '+7 000 00 000 00',
-    autofix: true,
-    overwrite: true,
-    // format: (value:any) => formatPhone(value)
-    // ...and other options
-})
+	mask: "+7 000 000 00 00",
+	autofix: true,
+	// overwrite: true,
+	prepare: (appended, masked) => {
+		if (appended[0] === '8') {
+			return appended.slice(1);
+		}
+		return appended
+	},
+});
 
 interface InitValues { name: string, phone: string, text: string, email: string  }
 

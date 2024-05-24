@@ -122,11 +122,10 @@ const UserPage = () => {
           <div
             className={'w-24 h-24 flex rounded-full mr-2'}
             style={{ background: 'var(--gradient-directory)' }}
-            data-app-type={'admin'}
+            data-app-type={companyType}
           >
             <span className={'text-black font-sans uppercase text-3xl leading-none m-auto'}>
               {data?.employee.first_name[0]}
-              {data?.employee.last_name[0]}
               {data?.employee.last_name[0]}
             </span>
           </div>

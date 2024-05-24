@@ -213,31 +213,43 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   })
 
   React.useEffect(() => {
-    if(formData.values.company !== '0') {
-      store.bidsStore.formResultSet({ company: Number(formData.values.company) })
-    }
+      if (formData.values.company !== '0') {
+          store.bidsStore.formResultSet({ company: Number(formData.values.company) })
+      }
   }, [formData.values.company])
+  const { cars }  = store.carStore.getCompanyCars
+  const car = React.useMemo(() => {
 
-  const car = store.carStore.getCompanyCars.cars?.results?.filter((car:any) => car.employees.filter((e:any) => e.id === Number(formData.values.conductor))?.length !== 0)
+    return cars.results?.filter((c:any) => {
+      // console.log(c);
+      if(c.is_active) {
+        return c.employees.filter((e: any) => e.id === Number(formData.values.conductor))?.length !== 0
+      }
+      // return
+    })
+  }, [formData.values.conductor, cars])
+
  const carsData = React.useMemo(() => {
    //@ts-ignore
+     if(car && car.length === 1) {
+       store.bidsStore.formResultSet({ car: Number(car[0].id) })
+       formData.setFieldValue('car', String(car[0].id))
+       return car.map((c: any) => ({ label: `${c.brand?.name}  ${c.model?.name}  ${c.number}`, value: String(c.id), }))
+     }
+     if(car && car.length > 0) {
+        return car.map((c: any) => ({ label: `${c.brand?.name}  ${c.model?.name}  ${c.number}`, value: String(c.id), }))
+     }
 
-
-   if(car && car.length > 0) {
-      return car.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), }))
-   }
-
-   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'read') && store.userStore.myProfileData.user.cars.length > 0) {
-     return store.userStore.myProfileData.user.cars.map((c: any) => ({ label: `${c.brand.name}  ${c.model.name}  ${c.number}`, value: String(c.id), }))
-   }
-   return null
-  }, [formData.values.conductor, car])
+     if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'read') && store.userStore.myProfileData.user.cars.length > 0) {
+       return store.userStore.myProfileData.user.cars.map((c: any) => ({ label: `${c.brand?.name}  ${c.model?.name}  ${c.number}`, value: String(c.id), }))
+     }
+     return null
+    }, [formData.values.conductor, cars])
 
   const handleChangeCompany = React.useCallback((e:any) => {
     if(e === null) {
       formData.values.company = '0'
       store.bidsStore.formResultSet({company: 0})
-
     }
     if(e !== "0") {
       formData.setFieldValue('company', e);
@@ -295,18 +307,24 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       setStep((prevState: number) => prevState - 1)
     }
   }, [step, store.bidsStore.formResult.service_type, formData.values.service_type])
+
   const { mutate } = useSWRConfig()
   const handleNext = React.useCallback(() => {
     if(step === 2) {
+      console.log('step 2');
         store.bidsStore.loadCurrentPerformers(Number(store.bidsStore.formResult.company), {
           car_id: store.bidsStore.formResult.car,
           subtype_id: store.bidsStore.formResult.service_subtype,
           options_idx: store.bidsStore.formResult.service_option
         }).then((res:any) => {
-
+          console.log(store.bidsStore.formResult.service_subtype, 'step t');
           if (formData.values.service_type === '1') {
-          changeStep(4)
+            changeStep(4)
+          } else if (store.bidsStore.formResult.service_subtype === 5) {
+            console.log('step 5');
+            changeStep(4)
           } else {
+            console.log('step ');
             changeStep()
           }
         })
@@ -656,7 +674,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   color={HeadingColor.accent}
                   className={'col-span-2 mt-6'}
                 />
-
             </PanelForForms>
             {formData.values.service_type === "3" ? (
               <PanelForForms
@@ -908,7 +925,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 </>
               }
             >
-              {(store.bidsStore.AvailablePerformers.size === 0) ? <><Heading className={'col-span-full'} text={'Исполнители не найдены'} variant={HeadingVariant.h3}/></> :
+              {(store.bidsStore.AvailablePerformers.size === 0) ? <>
+                  <Heading className={'col-span-full'} text={'Исполнители не найдены'} variant={HeadingVariant.h3}/></> :
                     (<div className={'col-span-full subgrid contents'}><div     className={'col-span-2  relative z-[999] mobile:mb-8'}>
                         <Select
                       className={'col-span-2'}

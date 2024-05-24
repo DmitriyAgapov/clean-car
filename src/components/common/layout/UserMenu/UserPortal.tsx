@@ -113,7 +113,7 @@ const UserPortal = ({
           />
         }
       >
-        <div className={'user__photo'}>
+        <div className={'user__photo'} data-directory={store.appStore.appType}>
           <Image src={photo} alt={''} width={80} height={80} />
           {/* <Button */}
           {/*   className={'bg-accent rounded-full p-1.5 inline-block'} */}

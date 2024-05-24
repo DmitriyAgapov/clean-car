@@ -71,11 +71,27 @@
   }
 }
 .photo {
-  background: var(--gradient-admin);
-  flex: 0 0 40px;
+
+  flex: 0 0 42px;
+  padding: 1px;
   border-radius: 1.25rem;
   display: inline-block;
-  border: 1px solid transparent;
+  border: 0 solid transparent;
+  //@TODO Убрать как фото загрузщка появится
+  img {
+	//opacity: 0;
+  }
+  &[data-directory="admin"] {
+	background: var(--gradient-admin);
+  }
+  &[data-directory="customer"] {
+	background: var(--gradient-customer);
+  }
+  &[data-directory="performer"] {
+	background: var(--gradient-performer);
+  }
+
+
 }
 .name {
   line-height: 1.29;

@@ -19,6 +19,8 @@ const ElMapPanel = (item:any) => {
         <DList className={'uppercase !text-white text-xs [&_dt]:text-xss [&_dt]:mb-1.5 [&_dd]:text-sm [&_dd]:font-sansSerif [&_dd]:font-medium'} label={'Время работы'}  title={item.working_time} />
         <Button text={'Выбрать'} variant={ButtonVariant.accent} className={'!rounded-md !text-xs mt-4'} action={() => {
             createBidFormActions.setFieldValue('performer', String(item.id));
+            createBidFormActions.setTouched({'performer': true});
+            createBidFormActions.clearErrors();
             store.bidsStore.formResultSet({performer: item.id})
         }} size={ButtonSizeType.xs}/>
     </div>

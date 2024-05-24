@@ -5,8 +5,6 @@ import { SvgChevron, SvgLoading, SvgSort } from "components/common/ui/Icon";
 import Chips from "components/common/ui/Chips/Chips";
 import label from "utils/labels";
 import { useWindowDimensions } from "utils/utils";
-import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import Status from "components/common/ui/Status/Status";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { NumberInput, Table } from "@mantine/core";
 import { number } from "yup";
@@ -56,14 +54,32 @@ const RowHeadingPure = ({ ar,total }: any) => {
 }
 
 const RowDataPure = observer(({edit, meta, ...props}: any) => {
-  // console.log(props);
+    const isSingle = Object.keys(props).length <= 2
     const store = useStore()
+
+    const type = (() => {
+      let _type:string = ""
+      if(meta?.label) {
+        switch (meta?.label) {
+          case "Мойка":
+            _type = "w_"
+            break;
+          case "Эвакуация":
+            _type = "evac_"
+            break;
+          case "Шиномонтаж":
+            _type = "tire_"
+            break
+        }
+      }
+      return _type
+    })()
     const {width} = useWindowDimensions()
     const [open, setOpen] = useState(false);
     const propsRender = React.useMemo(() => {
         const ar = []
         for (const key in props) {
-           const priceValue = typeof props[key] === 'number'
+          const priceValue = typeof props[key] === 'number'
 
           if(key !== 'id') {
             ar.push(
@@ -82,11 +98,13 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
 
                           min={0}
                           max={999999999999}
-                          onChange={(value) => store.priceStore.handleChangeAmount({amount: value !== "" ? value : 0, id: props.id, initValue: props[key] === value, ...meta})}
+                          onChange={(value) => {
+                            return store.priceStore.handleChangeAmount({type: type, amount: value !== "" ? value : 0, id: props.id, initValue: props[key] === value, ...meta})
+                          }}
                           suffix=" ₽"
                           // decimalScale={2}
                           // fixedDecimalScale
-                          value={store.priceStore.priceOnChange.get(`${props.id}`)?.amount ? store.priceStore.priceOnChange.get(`${props.id}`).amount : props[key]}
+                          value={store.priceStore.priceOnChange.get(`${type}_${props.id.toString()}`)?.amount ? store.priceStore.priceOnChange.get(`${type}_${props.id.toString()}`).amount : props[key]}
 
                         />
                     ) : (
@@ -103,9 +121,9 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
     }, [props])
 
   return (
-    <Table.Tr className={styles.tableRowPure} onClick={(width && width > 1023) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={open}>
+    <Table.Tr data-single={isSingle} className={styles.tableRowPure} onClick={(width && width > 1023) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={!isSingle ? open : null}>
           {propsRender}
-          {(width && width < 1024) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
+          {(width && width < 1024 && !isSingle) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
               <SvgChevron/>
           </td>}
           {/* {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm}/></td>} */}
@@ -126,12 +144,15 @@ export const TableForPrice = (props: any) => {
 
 export const TableWithSortNewPure = ({ meta, edit, variant, offsetSticky = 33, data, search = false, filter = false, state, className, total, ar, action, pageSize = 10, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props }: TableWithSortProps) => {
     const initCount = total || 0
-
+  console.log(data);
     const RowDataMemoized = React.useMemo(() => {
-        if(data && data.length > 0) return data.map((item: any, index: number) => <RowDataPure {...item} key={'_00' + index} edit={edit} meta={meta}
-          // meta={{company_id: props.company, price_id: props.id}}
-        />)
-    }, [data])
+        if(data && data.length > 0) return data.map((item: any, index: number) => {
+
+          return <RowDataPure {...item} key={'_00' + index} edit={edit} meta={meta}
+            // meta={{company_id: props.company, price_id: props.id}}
+          />
+        })
+    }, [data, state])
     return (
       <Panel
         background={background ? background : PanelColor.glass}

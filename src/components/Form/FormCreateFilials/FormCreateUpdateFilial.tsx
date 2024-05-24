@@ -305,6 +305,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                     >
                         <Select
                       allowDeselect={false}
+                          disabled={edit}
                       {...formData.getInputProps('type')}
                       label={'Тип'}
                       onOptionSubmit={(value) => {

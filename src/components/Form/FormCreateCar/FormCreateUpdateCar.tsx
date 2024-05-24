@@ -218,6 +218,10 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             if (edit) {
               store.formStore.setFormDataCreateCar(data)
               store.formStore.sendCarFormDataEdit()
+              .then(() =>  {
+                // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
+                navigate(`/account/cars`)
+              })
             } else {
               store.formStore.setFormDataCreateCar(data)
               store.formStore.sendCarFormData()

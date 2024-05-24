@@ -1273,7 +1273,7 @@
       display: grid;
       width: initial;
       grid-template-columns: repeat(6, 1fr) 3rem 1.5rem;
-      margin: .625rem 1.25rem ;
+      margin: 0.625rem 0.625rem  0.625rem 1.25rem;
       border: 1px solid gray;
       padding: 0 .625rem;
 
@@ -1368,7 +1368,16 @@
         }
 
       }
-
+      &[data-single="true"] {
+        display: flex;
+        td:before {
+          content: none;
+        }
+        td:last-child {
+          width: auto !important;
+          padding: 0.75rem .5rem 0.75rem 0 !important;
+        }
+      }
       &[data-state-mobile="false"] {
         grid-template-rows: auto repeat(10, 0);
         overflow: hidden;
