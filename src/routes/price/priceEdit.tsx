@@ -11,13 +11,15 @@ import { dateTransformShort } from "utils/utils";
 import { CompanyType } from "stores/companyStore";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import { observer } from "mobx-react-lite";
-const PriceActions = observer(() => {
-  const  store
- return   {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <div className={'flex fixed bottom-0 bg-black/80 left-0 right-0 w-full p-6 rounded'}>
+const PriceActions = observer((props: any) => {
+  const  store = useStore()
+  const revalidator = useRevalidator();
+  const navigate = useNavigate()
+  return  store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <div className={`flex fixed bottom-0 bg-black/80 left-0 right-0 w-full p-6 rounded ${props.className}`} {...props}>
      <Button className={''} text={'Отменить'} action={() =>  {navigate(location.pathname.split('/').slice(0, -1).join('/')); store.priceStore.clearPriceOnChange()}} size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/>
      <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={async () => {store.appStore.setAppState(true); await store.priceStore.handleSavePrice().then(() => {revalidator.revalidate(); navigate(location.pathname.split('/edit')[0])})}} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>
    </div>
- }
+
 })
 const PriceEditPage = ():JSX.Element => {
   const navigate = useNavigate()
@@ -29,7 +31,6 @@ const PriceEditPage = ():JSX.Element => {
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
   console.log(data);
-  const revalidator = useRevalidator();
   useEffect(() => {
     console.log('params changed, priceOnChange cleared');
     store.priceStore.clearPriceOnChange()
@@ -43,6 +44,7 @@ const PriceEditPage = ():JSX.Element => {
             <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
             <Heading text={company.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
           </div>
+          <PriceActions className="tablet-max:hidden"/>
           {/* {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <Button */}
           {/*   text={'Редактировать'} */}
           {/*   action={() => navigate(location.pathname + '/edit')} */}
