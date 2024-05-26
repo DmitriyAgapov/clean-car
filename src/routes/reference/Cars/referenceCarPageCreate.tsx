@@ -7,8 +7,6 @@ import { useStore } from 'stores/store'
 import { Navigate, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { PermissionNames } from "stores/permissionStore";
-import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
-import { useMap } from "react-leaflet";
 import { textDataCars } from "routes/reference/Cars/cars";
 import FormCreateUpdateCarBrand from "components/Form/FormCreateCarBrand/FormCreateUpdateCarBrand";
 import agent from "utils/agent";

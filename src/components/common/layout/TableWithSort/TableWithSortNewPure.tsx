@@ -158,7 +158,7 @@ export const TableWithSortNewPure = ({ meta, edit, variant, offsetSticky = 33, d
         background={background ? background : PanelColor.glass}
         className={' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto]'}
         routeStyle={style}
-        bodyClassName={'flex'}
+        bodyClassName={''}
         variant={variant ? variant : PanelVariant.dataPadding}
         footerClassName={'px-6 pt-2 pb-6 flex  justify-end'}
         headerClassName={''}

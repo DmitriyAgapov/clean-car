@@ -53,6 +53,8 @@
   grid-template-columns: 40px 1fr;
   gap: .625rem;
   flex: 1 100%;
+
+  flex-wrap: nowrap;
 }
 .menuName {
   display: block;

@@ -11,7 +11,14 @@ import { dateTransformShort } from "utils/utils";
 import { CompanyType } from "stores/companyStore";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import { observer } from "mobx-react-lite";
-
+const PriceActions = observer(() => {
+  const  store
+ return   {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <div className={'flex fixed bottom-0 bg-black/80 left-0 right-0 w-full p-6 rounded'}>
+     <Button className={''} text={'Отменить'} action={() =>  {navigate(location.pathname.split('/').slice(0, -1).join('/')); store.priceStore.clearPriceOnChange()}} size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/>
+     <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={async () => {store.appStore.setAppState(true); await store.priceStore.handleSavePrice().then(() => {revalidator.revalidate(); navigate(location.pathname.split('/edit')[0])})}} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>
+   </div>
+ }
+})
 const PriceEditPage = ():JSX.Element => {
   const navigate = useNavigate()
   const navigation = useNavigation();
@@ -47,33 +54,19 @@ const PriceEditPage = ():JSX.Element => {
       </Panel>
 
       <Panel
-        className={'col-span-full grid grid-rows-[auto_1fr] px-5 py-8 !gap-10 '}
+        className={'col-span-full grid grid-rows-[auto_1fr] px-5 py-8 !gap-10 tablet-big-max:-mx-5'}
         variant={PanelVariant.withGapOnly}
         background={PanelColor.glass}
-        bodyClassName={'flex'}
+        bodyClassName={'flex '}
         footerClassName={'flex  justify-end'}
         headerClassName={'border-bottom-none !grid gap-5 !justify-normal'}
         header={
           <>
-            <div className={'flex w-full  col-span-full gap-2.5'}>
+            <div className={'flex w-full tablet-max:flex-col col-span-full gap-2.5'}>
               <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
-              {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <><Button text={'Отменить'} action={() =>  {
-                navigate(location.pathname.split('/').slice(0, -1).join('/'))
-                store.priceStore.clearPriceOnChange()
-                }
-              } size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/> <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={async () => {
-                store.appStore.setAppState(true)
-                await store.priceStore.handleSavePrice()
-                  .then(() => {
-                    revalidator.revalidate()
-                    navigate(location.pathname.split('/edit')[0])
-                  })
 
-              }} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/></>
-
-              }
             </div>
-            <div className={'flex items-baseline  gap-6'}>
+            <div className={'flex items-baseline tablet-max:flex-col  gap-6'}>
               <div className={'text-xs text-gray-2'}>
                 Дата и время регистрации: <span>{dateTransformShort(company.updated).date}</span>
               </div>
@@ -102,7 +95,7 @@ const PriceEditPage = ():JSX.Element => {
           </>
         }
       >
-        <Tabs data={data.tabs} type={TabsType.priceEdit} className={'page-price flex-[1_auto]'}/>
+        <Tabs data={data.tabs} type={TabsType.priceEdit} className={'page-price flex-[1_auto]'} />
       </Panel>
     </Section>
   )

@@ -136,18 +136,18 @@ const FormCreateUpdateCarBrand = (props: any) => {
       }
     },
   })
-  console.log(formData);
+
   // @ts-ignore
   return (
 
     <FormProvider form={formData}>
       <form onSubmit={formData.onSubmit(handleSubmit)} style={{display: 'contents'}}>
         <PanelForForms
-          className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+          className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-big-max:-mx-5'}
           variant={PanelVariant.textPadding}
           background={PanelColor.glass}
-          bodyClassName={'grid gap-6 lg:grid-cols-3 items-start'}
-          footerClassName={'!block px-8 !pb-8 !pt-2'}
+          bodyClassName={'tablet:grid gap-6 tablet:grid-cols-3 items-start'}
+          footerClassName={'!block px-8 !pb-8 !pt-2 tablet-max:px-5 tablet-max:pb-24'}
           actionBack={<>{edit && <Button
             text={'Удалить'}
             action={async () => {

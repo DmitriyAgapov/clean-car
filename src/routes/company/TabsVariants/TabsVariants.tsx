@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
 import { dateTransformShort, translite } from "utils/utils";
 import { CAR_RADIUS } from 'stores/priceStore'
-import { ScrollArea } from '@mantine/core'
+import { NumberInput, ScrollArea } from '@mantine/core'
 import { observer, useLocalStore } from "mobx-react-lite";
 import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
 import { BidsStatus } from 'stores/bidsStrore'
@@ -200,7 +200,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           ],
           text: (
               <div className={'grid gap-12 mb-12'}>
-                  <CreateInput text={'Сумма начисления'} name={'paymoney'} type={'number'} />
+                  <NumberInput label={'Сумма начисления'} name={'paymoney'} />
                   <DList label={'Компания'} title={data.name} />
                   <DList label={'Зачислил'} title={data.name} />
               </div>
@@ -247,9 +247,12 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         </>}
         {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} className={'tablet:!col-[2_/_2_span] tablet:!row-start-4'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
         <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts}  className={'tablet:!col-[2_/_2_span] tablet:!row-start-5'}/>
-        {/*{company_type === 'customer' &&  <Button text={'Пополнить счет'}  action={async () => {*/}
-        {/*store.appStore.setModal(fundBill) }}*/}
-        {/* variant={ButtonVariant['accent-outline']} className={'col-start-3'} size={ButtonSizeType.sm} /> }*/}
+        {company_type === 'customer' &&
+          <div className={'lg:col-start-3 grid gap-4 lg-max:justify-end lg-max:row-start-1 lg-max:grid-flow-col lg-max:col-span-full'}>
+            <Button text={'Пополнить счет'}  action={async () => store.appStore.setModal(fundBill)} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
+            <Button text={'Бонусы и штрафы'}  action={async () => store.appStore.setModal(fundBill)} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
+          </div>
+          }
       </Tabs.Panel>)
       break;
 
@@ -460,10 +463,10 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
             )
             break
         case 'Услуги':
-          console.log(data);
+
             result = (
                 <Tabs.Panel
-                  className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 !py-8' + ' ' + className}
+                  className={'pt-8 grid !grid-cols-5  !gap-y-3  gap-x-12 !py-8' + ' ' + className}
                   state={state}
                   name={'bidService'}
                   variant={PanelVariant.default}
@@ -524,17 +527,17 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     variant={PanelVariant.withPaddingSmWithBody}
                     background={PanelColor.glass}
                     bodyClassName={'flex flex-col  h-full'}
-                    className={'!col-start-3 row-span-5 !border-active'}
+                    className={'!col-start-3 col-span-2 row-span-5 !border-active'}
                   >
                     <DList
                       className={'child:dt:text-accent'}
                       label={'Тип услуги'}
                       title={<Heading variant={HeadingVariant.h4} text={data.service_subtype.name} />}
                     />
-                    {(data.service_option && data.service_option.length > 0) && <DList
+                    {(data.price_positions.performer && data.price_positions.performer.length > 0) && <DList
 
                       label={'Дополнительные опции'}
-                      title={data.service_option.map((o:any) => <Heading variant={HeadingVariant.h4} text={o.name} />)}
+                      title={<ul>{data.price_positions.performer.map((o:any) => <li className={'flex justify-between'}>{o.name.replace('Шиномонтаж - Стационарный - ', '')} <span className={'text-accent font-sansSerif text-sm font-medium'}>{o.amount} ₽</span></li>)}</ul>}
                     />}
                     {data.truck_type && <DList
                       className={'child:dt:text-accent'}
@@ -660,7 +663,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         })
         result.push({ label: key, data: resultInner })
     })
-    console.log(result);
+
     return result.map((item: any) => {
 
         return (
@@ -677,24 +680,24 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                 search={false}
                 background={PanelColor.default}
                 className={'col-span-full table-groups'}
-                    initFilterParams={[
-                        { label: 'Статус', value: 'status' },
-                        { label: 'Город', value: 'city' },
-                    ]}
-                    filter={false}
-                    data={item.data}
-                    state={false}
-                    ar={[
-                        { label: 'Опция', name: 'service_option' },
-                        { label: '1 класс', name: 'class1}' },
-                        { label: '2 класс', name: 'class2' },
-                        { label: '3 класс', name: 'class3' },
-                        { label: '4 класс', name: 'class4', },
-                        { label: '5 класс', name: 'class5' },
-                        { label: '6 класс', name: 'class6' },
-                        { label: '7 класс', name: 'class7' },
-                        { label: '8 класс', name: 'class8' },
-                    ]}
+                initFilterParams={[
+                    { label: 'Статус', value: 'status' },
+                    { label: 'Город', value: 'city' },
+                ]}
+                filter={false}
+                data={item.data}
+                state={false}
+                ar={[
+                    { label: 'Опция', name: 'service_option' },
+                    { label: '1 класс', name: 'class1}' },
+                    { label: '2 класс', name: 'class2' },
+                    { label: '3 класс', name: 'class3' },
+                    { label: '4 класс', name: 'class4', },
+                    { label: '5 класс', name: 'class5' },
+                    { label: '6 класс', name: 'class6' },
+                    { label: '7 класс', name: 'class7' },
+                    { label: '8 класс', name: 'class8' },
+                ]}
                 />
             </div>
         )
@@ -717,7 +720,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         return at
       }
       let newMap:any = new Map(data.tire_positions?.map((item: any) => [item.service_subtype.name,  innerData(data.tire_positions, 'service_subtype', item.service_subtype.name)]))
-    console.log('newMap', newMap);
+
       newMap.forEach((value:any, key: any) => {
         const newAr = new Map([])
         const  curVal = value;
@@ -762,12 +765,12 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         })
         result.push({ label: key, data: resultInner })
       })
-    console.log(result);
       return result.map((item: any, index: number) => {
         return (
           <div className={'col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4'} key={translite(item.label ?? `null_${index}`)}>
             <Heading text={item.label} variant={HeadingVariant.h6} className={`text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 ${item.data[0].label === null ? 'px-6 sticky top-0 z-10  bg-[#090909]' : ''}`}/>
-            {item.data.map((item: any, index: number) => {
+            {(() => {
+              return item.data.map((item: any, index: number) => {
               return (
                 <div key={translite(item.label ?? `null_${index}`)}>
                   {item.label && <Heading
@@ -859,7 +862,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                     ]}
                   />
                 </div>
-              )})}
+              )})})()}
 
           </div>
         )
@@ -949,7 +952,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
                   bodyClassName={'!bg-transparent'}
               >
-                {!props.edit ? <div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}><TableWithSortNewPure
+                {!props.edit ? <div className={" col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}><TableWithSortNewPure
 
                   offsetSticky={0}
                   total={data.length}
@@ -987,7 +990,10 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
           return null
   }
   return (
-  <ScrollArea.Autosize offsetScrollbars={'y'}  data-position={"tabs-panel-container"}  mah={width > 1024 ? '52vh' : `auto`} classNames={{ scrollbar: 'z-50' }}>
+  <ScrollArea.Autosize style={{overflow: 'initial'}}  data-position={"tabs-panel-container"}  mah={width > 1024 ? '52vh' : `auto`} classNames={{
+    root: 'tablet-max:-mx-5',
+    scrollbar: 'z-50'
+  }}>
     {result}
   </ScrollArea.Autosize>
   )

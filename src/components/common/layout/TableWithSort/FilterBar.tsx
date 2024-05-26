@@ -26,14 +26,17 @@ const SelectStyles = {
     input: 'h-8 rounded-sm !bg-gray-2/20 border-gray-2/80 text-white focus:border-white/40 focus:filter-none',
 }
 const FilterElements = observer(({ filters }:{filters: any}) => {
+  const params = React.useContext(ctx)
 
-    const params = React.useContext(ctx)
-
-    const store = useStore()
+  const store = useStore()
+  const setInitParams = () => {
+    if (params) {
+      params.page = 1
+    }
+  }
 
   return React.useMemo(() => {
     const elements: any[] = []
-    console.log(filters);
     params && filters && filters.forEach((el: FilterData) => {
       switch (el) {
         case FilterData.city:
@@ -44,6 +47,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               clearable
               defaultValue={params.company__city}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.company__city = value
                 } else if (value === null) {
@@ -67,6 +71,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               clearable
               defaultValue={params.status}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.status = value as Status
                   // setParams((prevState) => ({...prevState, status: value}))
@@ -92,6 +97,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               clearable
               defaultValue={params.brand}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.brand = value
                   // setParams((prevState) => ({...prevState, status: value}))
@@ -121,6 +127,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               clearable
               defaultValue={params.is_active}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.is_active = value
                   // setParams((prevState) => ({...prevState, status: value}))
@@ -143,6 +150,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               size={'xs'}
               defaultValue={params.service_type}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.service_type = value
                   // setParams((prevState) => ({...prevState, service_type: value}))
@@ -167,6 +175,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               size={'xs'}
               defaultValue={params.company__company_type}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.company__company_type = value
                   // setParams((prevState) => ({...prevState, service_type: value}))
@@ -192,6 +201,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               size={'xs'}
               defaultValue={params.company_type}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.company_type = value
                   // setParams((prevState) => ({...prevState, service_type: value}))
@@ -216,6 +226,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               size={'xs'}
               defaultValue={params.company__company_type}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.employee__is_active = value
                   // setParams((prevState) => ({...prevState, service_type: value}))
@@ -237,6 +248,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               size={'xs'}
               defaultValue={params.car_type}
               onChange={(value) => {
+                setInitParams()
                 if (value !== null) {
                   params.car_type = value
                   // setParams((prevState) => ({...prevState, service_type: value}))
@@ -273,6 +285,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               defaultValue={params.start_date ? dayjs(params.start_date).toDate() : null}
               clearable
               onChange={(value) => {
+                setInitParams()
                 const timestamp = dayjs(String(value)).format('YYYY-MM-DD')
                 if (value !== null) {
                   params.start_date = timestamp
@@ -306,6 +319,7 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               }}
               defaultValue={params.end_date ? dayjs(params.end_date).toDate() : null}
               onChange={(value) => {
+                setInitParams()
                 const timestamp = dayjs(String(value)).format('YYYY-MM-DD')
                 if (value !== null) {
                   params.end_date = timestamp

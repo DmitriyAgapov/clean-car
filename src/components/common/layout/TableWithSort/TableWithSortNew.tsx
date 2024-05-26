@@ -39,10 +39,10 @@ export const PaginationComponent = observer(():any => {
   const initCount = localStore.countData
   const {width} = useWindowDimensions()
   const nextPageIsNotExist = localStore.getData?.next
-
+  console.log(initCount);
   return React.useMemo(() => {
-    if(!nextPageIsNotExist && width && width < 1000) return
-    if(width && width < 1000) return <Button text={'Load more'} action={() => localStore.loadMore()}/>
+    // if(!nextPageIsNotExist && width && width < 1000) return
+    // if(width && width < 1000) return <Button text={'Load more'} action={() => localStore.loadMore()}/>
     return <Pagination classNames={{
       control:
         'hover:border-accent data-[active=true]:border-accent data-[active]:bg-transparent data-[active=true]:text-accent',

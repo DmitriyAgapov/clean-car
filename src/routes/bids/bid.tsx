@@ -111,7 +111,7 @@ const BidPage = () => {
                 bodyClassName={''}
                 headerClassName={'grid grid-cols-4 gap-4 border-bottom-none'}
 	              footer={width && width < 740 && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
-		              <BidActions status={data?.status as BidsStatus} />
+		              <BidActions status={data?.status as BidsStatus} update={mutate}/>
 	              )}
                 header={
                     <>
@@ -139,7 +139,7 @@ const BidPage = () => {
                         </div>
 
                         {(width && width >740) && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
-                            <BidActions status={data?.status as BidsStatus} update={() => mutate()}/>
+                            <BidActions status={data?.status as BidsStatus} update={mutate}/>
                         )}
                     </>
                 }

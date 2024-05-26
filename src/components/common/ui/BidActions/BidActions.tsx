@@ -80,13 +80,13 @@ export const BidAdminActions = () => {
 }
 
 
-const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void}): JSX.Element => {
+const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void }): JSX.Element => {
 
   const { height, width } = useViewportSize();
-  const { mutate } = useSWRConfig()
+  const {cache, mutate } = useSWRConfig()
   const params = useParams()
   const store = useStore()
-
+  console.log(params);
   const memoModal = React.useMemo(() => {
     // @ts-ignore
     return  <BidModal update={update} opened={store.bidsStore.modalCurrentState}
@@ -107,10 +107,7 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
     })().then(() => {
       console.log('status changed');
       // @ts-ignore
-      update()
-
-      // @ts-ignore
-    }).finally(() => update())
+    }).finally(update)
     mutate(`bids/${params.company_id}/${params.id}`)
     mutate(`/bids/${params.id}/photos/`)
   }, [])

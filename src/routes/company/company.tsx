@@ -20,10 +20,10 @@ const CompanyPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  console.log(location);
+  // console.log(location);
   const params = useParams()
 
-  console.log(location.pathname === `/account/companies/${params.company_type}/${params.id}`);
+  // console.log(location.pathname === `/account/companies/${params.company_type}/${params.id}`);
   const revalidator = useRevalidator()
   const {isLoading, data, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
     revalidateOnMount: true

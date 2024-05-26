@@ -82,7 +82,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         initValues = {
             address: company.address,
             city: company.city,
-            address_ready: false,
+            address_ready: true,
             street: '',
             qc: null,
             house: '',
@@ -223,6 +223,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             }
 
     }, [formData.values.type, formData.values.company_filials])
+
     // @ts-ignore
     return (
 

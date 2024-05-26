@@ -12,17 +12,21 @@ import { observer } from "mobx-react-lite";
 // type MapProps = {}
 const ElMapPanel = (item:any) => {
     const store = useStore()
-    return <div className={'bg-black/90 rounded-md border-2 border-accent px-2 py-4'}>
-        <Heading text={item.name} className={'text-white font-normal font-sans'} variant={HeadingVariant.h6}/>
-        <p className={'text-white'}>{item.address}</p>
+    console.log(item);
+    return <div className={'bg-black/90 rounded-md border-2 border-accent px-2 w-56 py-4 pt-10'}>
+        <Heading text={item.name} className={'text-white font-normal text-xs font-sansSerif !mb-1'} variant={HeadingVariant.h6}/>
+        <p className={'text-white !mt-1  font-sansSerif '}>{item.address}</p>
         <hr className={'border-gray-2'}/>
         <DList className={'uppercase !text-white text-xs [&_dt]:text-xss [&_dt]:mb-1.5 [&_dd]:text-sm [&_dd]:font-sansSerif [&_dd]:font-medium'} label={'Время работы'}  title={item.working_time} />
-        <Button text={'Выбрать'} variant={ButtonVariant.accent} className={'!rounded-md !text-xs mt-4'} action={() => {
+        <div className={'flex items-end justify-between text-sm text-active  font-sans '}>
+            <span>{item.amount} ₽</span>
+            <Button text={'Выбрать'} variant={ButtonVariant.accent} className={'!rounded-md !text-xs mt-4'} action={() => {
             createBidFormActions.setFieldValue('performer', String(item.id));
             createBidFormActions.setTouched({'performer': true});
             createBidFormActions.clearErrors();
             store.bidsStore.formResultSet({performer: item.id})
         }} size={ButtonSizeType.xs}/>
+        </div>
     </div>
 }
 
@@ -69,7 +73,7 @@ const MapWithDots = () => {
   const displayMap = useMemo(
     () => (
       // @ts-ignore
-      <MapContainer/* @ts-ignore */ ref={setMap} attributionControl={false} center={[centerLon, centerLat]} className={styles.Map} style={{ width: '100%', height: '100%' }} scrollWheelZoom={true} zoom={14}>
+      <MapContainer/* @ts-ignore */ ref={setMap} attributionControl={false} center={[centerLon, centerLat]} className={styles.Map} style={{ width: '100%', height: '100%'}} scrollWheelZoom={true} zoom={14}>
 
         <TileLayer/* attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' */ url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         {performers.map((item: any, index: number) => (
@@ -79,7 +83,7 @@ const MapWithDots = () => {
     ),
     [])
   if(performersAr.size > 0) return (
-        <div className={'rounded-md overflow-hidden bg-black/80 content-start col-span-2 row-start-1 col-start-3 row-span-2'} style={{minHeight: '24rem', height:' 100%', width: '100%', position: 'relative', display: 'block' }}>
+        <div className={'rounded-md overflow-hidden bg-black/80 content-start col-span-3 aspect-square row-start-1 col-start-3 row-span-2 '} style={{minHeight: '24rem', height:' 100%', width: '100%', position: 'relative', display: 'block',  marginBottom: "2rem"  }}>
             {displayMap}
         </div>
     )

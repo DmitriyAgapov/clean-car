@@ -7,7 +7,7 @@
   &[data-state="true"] {
 	transform: translateX(0);
 	opacity: 1;
-	transition:  0.25s 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+	transition: .25s 0.15s cubic-bezier(0.550, 0.085, 0.680, 0.530) ;
   }
   @screen desktop-max {
 	display: flex;
@@ -21,8 +21,8 @@
 	top: 0;
 	border-radius: 0;
 	bottom: 0;
-	transition:  0.25s 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
-	transform: translateX(220px);
+	transition:  .25s cubic-bezier(0.550, 0.085, 0.680, 0.530) ;
+	transform: translateX(100vw);
 	opacity: 0;
 	z-index: 9999;
 	background: linear-gradient(180.45deg, rgba(24, 25, 28, 1) 0%, rgba(24, 25, 28, 1) 65%, rgba(24, 25, 28, 1) 100%);

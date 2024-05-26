@@ -181,6 +181,18 @@
 
   &[data-variant="modal"] {
 		@apply  py-16 px-12;
+	@screen tablet-max {
+	  position: fixed;
+	  bottom: 0;
+	  left: 0;
+	  right: 0;
+	  top: 0;
+	  align-content: center;
+	  border-radius: 0;
+	  border: 0;
+	  z-index: 99989;
+	  display: grid;
+	}
   }
   &[data-variant="textPadding"] {
 	@apply bg-gray-4/70;
@@ -214,7 +226,8 @@
 	}
 
 	> footer {
-	  @apply px-8 pb-8 pt-4 flex gap-6 justify-end items-end;
+	  @apply px-8 pb-8 pt-8 flex gap-6 justify-end items-end tablet-max:justify-center  tablet-max:px-4 tablet-max:mt-6 tablet-max:mb-6;
+
 	}
 
 	> [data-panel="body"] {

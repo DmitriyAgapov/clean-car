@@ -17,6 +17,7 @@ import { Select } from "@mantine/core";
 import { textDataCities } from "routes/reference/City/cities";
 import { mutate, useSWRConfig } from "swr";
 import { backToUrlLevel } from "utils/utils";
+import PanelForForms from "components/common/layout/Panel/PanelForForms";
 const dataCreate = {
     initValues: {
       id: 0,
@@ -74,6 +75,7 @@ const FormCreateCity = (props: any) => {
           status: props.is_active,
   }
   console.log(`refCity_${params.id}`);
+  console.log(props);
   const {mutate} = useSWRConfig()
   return (
       <Formik  initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
@@ -106,62 +108,57 @@ const FormCreateCity = (props: any) => {
         }}>
         {({ errors, setFieldValue, touched,isSubmitting, values, submitForm,isValid }) => (
           <Form  style={{display: 'contents'}}>
-          <Panel
+          <PanelForForms
             state={false}
-            className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+            className={'col-span-full grid grid-rows-[auto_1fr_auto]   tablet-big-max:-mx-5'}
             variant={PanelVariant.textPadding}
             background={PanelColor.glass}
-            footerClassName={'!px-8 !pb-8 !pt-2'}
-            bodyClassName={'grid gap-6 lg:grid-cols-3 items-start'}
-            footer={
-              <>
+            footerClassName={'!block px-8 !pb-8 !pt-2 tablet-max:px-5 tablet-max:pb-24'}
+            bodyClassName={'ablet:grid gap-6 tablet:grid-cols-3 items-start'}
+            actionBack={editStatus && <Button
+              text={'Удалить'}
+              action={async () => {
+                store.appStore.setModal({
+                  actions: [
+                    <Button text={'Нет'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
+                    <Button
+                      text={'Удалить'}
+                      action={async () => {
+                        agent.Catalog.deleteCity(props.id)
+                        .then(() => {
+                          navigate('/account/references/cities', { replace: false })
+                        })
+                        .finally(          () => store.appStore.closeModal())
+                      }}
+                      variant={ButtonVariant['accent-outline']}
+                    />,
+                  ],
+                  text: `Вы уверены, что хотите удалить ${props.city}`,
+                  state: true,
+                })
 
-                {/* <div className={'flex gap-5 flex-1'}> */}
-                  {editStatus && <Button
-                    text={'Удалить'}
-                    action={async () => {
-                      store.appStore.setModal({
-                        actions: [
-                          <Button text={'Нет'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
-                          <Button
-                            text={'Удалить'}
-                            action={async () => {
-                              agent.Catalog.deleteCity(props.id).then(() => {
-                                navigate('/account/references/cities', { replace: false })
-                              })
-                                .finally(          () => store.appStore.closeModal())
-                            }}
-                            variant={ButtonVariant['accent-outline']}
-                          />,
-                        ],
-                        text: `Вы уверены, что хотите удалить ${props.name}`,
-                        state: true,
-                      })
+              }}
+              className={'justify-self-start mr-auto'}
+            />}
+            actionCancel={<Button
+              text={'Отменить'}
+              action={() => navigate(-1)}
+              className={!editStatus ? 'mr-auto' : ''}
+              variant={ButtonVariant.cancel}
+            />}
+            actionNext={ <Button
+              text={'Сохранить'}
+              type={'submit'}
 
-                    }}
-                    className={'justify-self-start mr-auto'}
-                  />}
-                  <Button
-                    text={'Отменить'}
-                    action={() => navigate(-1)}
-                    className={!editStatus ? 'mr-auto' : ''}
-                    variant={ButtonVariant.cancel}
-                  />
-                  <Button
-                    text={'Сохранить'}
-                    type={'submit'}
+              className={'justify-self-end float-right'}
+              disabled={!isValid}
+              variant={ButtonVariant.accent}
+            />}
 
-                    className={'justify-self-end float-right'}
-                    disabled={!isValid}
-                    variant={ButtonVariant.accent}
-                  />
-                {/* </div> */}
-              </>
-            }
             headerClassName={'flex gap-10'}
 
             header={
-              <p>{props.name ? textDataCities.editPageDesc : textDataCities.createPageDesc}</p>
+              <p>{props.city ? textDataCities.editPageDesc : textDataCities.createPageDesc}</p>
             }
           >
               <CreateInput
@@ -249,7 +246,7 @@ const FormCreateCity = (props: any) => {
                   ]}
               />
 
-          </Panel>
+          </PanelForForms>
           </Form>
           )}
 

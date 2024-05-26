@@ -99,11 +99,17 @@ const ReferenceCarPage = ():JSX.Element => {
       </Panel>
       <Panel
         state={isLoading}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+        className={'col-span-full grid grid-rows-[auto_1fr_auto]  tablet-big-max:-mx-5'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
-        bodyClassName={'!pl-44 grid grid-cols-2 items-start content-start gap-8'}
-        headerClassName={'flex gap-10'}
+        bodyClassName={'desktop:pl-44 desktop:grid flex flex-col desktop:grid-cols-2 items-start content-start desktop:gap-8 gap-4'}
+        headerClassName={'flex flex-col tablet_flex-row gap-10'}
+        footer= {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
+          text={'Редактировать'}
+          action={() => navigate(location.pathname + '/edit')}
+          className={'justify-self-end ml-auto tablet-max:!flex'}
+          variant={ButtonVariant.default}
+        />}
         header={
           <>
             <div
@@ -121,7 +127,7 @@ const ReferenceCarPage = ():JSX.Element => {
             {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
               text={'Редактировать'}
               action={() => navigate(location.pathname + '/edit')}
-              className={'justify-self-end ml-auto'}
+              className={'justify-self-end ml-auto tablet-max:!hidden'}
               variant={ButtonVariant.default}
             />}
           </>

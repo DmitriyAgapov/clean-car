@@ -51,7 +51,7 @@ const FilialPage = () => {
               state={isLoading}
               variant={PanelVariant.withGapOnly}
               header={<><div>
-                <Button text={<><SvgBackArrow />Назад к списку филиалов{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(-1)} variant={ButtonVariant.text} />
+                <Button text={<><SvgBackArrow />Назад к списку филиалов{' '}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate('/account/filials')} variant={ButtonVariant.text} />
                 <Heading text={'Филиал'} variant={HeadingVariant.h1} className={'!mb-0 inline-block'} color={HeadingColor.accent} /></div>
               {store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'update') && <LinkStyled text={'Редактировать'} to={'edit'}/* action={() => store.companyStore.addCompany()} */ className={'float-right mt-auto '}     size={ButtonSizeType.sm} variant={ButtonVariant.default} />}</>}
           />
@@ -72,7 +72,7 @@ const FilialPage = () => {
                           <div className={'text-xs text-gray-2'}>
                               Дата и время регистрации: <span>{dateTransform(data?.updated).date}</span>
                           </div>
-                          <div className={'flex flex-1 justify-around'}>
+                          <div className={'flex flex-1 tablet-max:flex-col justify-around'}>
                               <Heading
                                   className={'!m-0'}
                                   text={data?.is_active ? 'Активен' : 'Не активна'}

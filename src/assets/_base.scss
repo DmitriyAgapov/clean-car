@@ -5,6 +5,8 @@
 html {
   scroll-behavior: smooth;
   font-size: var(--scaling-font);
+  width:100vw;
+  overflow-x:hidden;
 }
 
 body {

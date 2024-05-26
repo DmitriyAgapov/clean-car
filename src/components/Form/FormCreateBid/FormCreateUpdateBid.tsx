@@ -1,30 +1,30 @@
-import React, { useState } from 'react'
-import 'yup-phone-lite'
-import { useStore } from 'stores/store'
-import { useNavigate } from 'react-router-dom'
-import Button, {  ButtonVariant } from 'components/common/ui/Button/Button'
-import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Progress from 'components/common/ui/Progress/Progress'
-import { observer } from 'mobx-react-lite'
-import { Checkbox,  FileButton, Group,  InputBase,   Select, Textarea } from "@mantine/core";
-import { action, values as val } from 'mobx'
-import {IMaskInput } from 'react-imask'
-import { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import { yupResolver } from 'mantine-form-yup-resolver'
+import React, { useState } from "react";
+import "yup-phone-lite";
+import { useStore } from "stores/store";
+import { useNavigate } from "react-router-dom";
+import Button, { ButtonVariant } from "components/common/ui/Button/Button";
+import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
+import Progress from "components/common/ui/Progress/Progress";
+import { observer } from "mobx-react-lite";
+import { Checkbox, FileButton, Group, InputBase, Select, Textarea } from "@mantine/core";
+import { action, values as val } from "mobx";
+import { IMaskInput } from "react-imask";
+import { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import { yupResolver } from "mantine-form-yup-resolver";
 import { CreateBidSchema, CreateBidSchemaStep2, CreateBidSchemaStep3, CreateBidSchemaStep4 } from "utils/validationSchemas";
-import PanelForForms from 'components/common/layout/Panel/PanelForForms'
-import { createFormActions, createFormContext } from '@mantine/form'
-import { notifications } from '@mantine/notifications'
-import { SvgClose } from 'components/common/ui/Icon'
-import MapWithDots from 'components/common/Map/Map'
-import InputAutocompleteWithCity from 'components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency'
-import FormBidResult from 'routes/bids/FormBidResult/FormBidResult'
+import PanelForForms from "components/common/layout/Panel/PanelForForms";
+import { createFormActions, createFormContext } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { SvgClose } from "components/common/ui/Icon";
+import MapWithDots from "components/common/Map/Map";
+import InputAutocompleteWithCity from "components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency";
+import FormBidResult from "routes/bids/FormBidResult/FormBidResult";
 import { UploadedPhotosFirstStep } from "components/common/layout/Modal/UploadedPhotos";
-import {  DateTimePicker } from '@mantine/dates'
-import dayjs from 'dayjs'
+import { DateTimePicker } from "@mantine/dates";
+import dayjs from "dayjs";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
-import { PermissionNames } from 'stores/permissionStore'
-import useSWR, { useSWRConfig, mutate } from 'swr'
+import { PermissionNames } from "stores/permissionStore";
+import { useSWRConfig } from "swr";
 
 interface InitValues {
     address: string | null
@@ -91,7 +91,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     const [animate, setAnimate] = useState(false)
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
-
+    // @ts-ignore
+  const selectedPerformerAmount:any = store.bidsStore.AvailablePerformers.get(String(store.bidsStore.formResultsAll.performer))?.amount
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
         setTimeout(() => {
@@ -414,564 +415,625 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }, [formData.values.company, _users])
 
     return (
-      <FormProvider form={formData}>
-        <PanelForForms ref={targetRef}
-          footerClassName={'px-8 tablet-max:px-5 pb-8 pt-2  tablet-max:pb-24'}
-
-          bodyClassName={'self-stretch'}
-          variant={PanelVariant.default}
-          actionBack={<>{step === 5 || step === 1 ? null
-             : (<Button
-              text={'Назад'}
-              action={handleBack}
-              className={'lg:mb-0 mr-auto'}
-              variant={ButtonVariant['accent-outline']}
-            />
-           )}
-            {step === 1 && <><FileButton onChange={(e) => store.bidsStore.sendFiles(e, true)} multiple accept='image/png,image/jpeg'>
-          {(props) => (
-            <Button
-              className={'col-span-1'}
-              type={'button'}
-              variant={ButtonVariant['accent-outline']}
-              disabled={(store.bidsStore.formResult.company === 0 || store.bidsStore.formResult.company === null) ||  store.bidsStore.getPhotos.length > 7}
-              {...props}
-              text={'Добавить фото'}
-            ></Button>
-          )}
-        </FileButton></>}
-            </>}
-          actionCancel={step !== 5 ? <Button type={'button'}
-            text={'Отменить'}
-            action={(e) => {
-              e.preventDefault()
-              navigate(-1)
-            }}
-            variant={ButtonVariant.cancel} />: null}
-            actionNext={step === 5 ?  <Button type={'button'}
-            action={() => navigate('/account/bids')}
-            text={'Закрыть'}
-            className={'float-right'}
-            variant={ButtonVariant.accent} />
-           :
-            <Button type={'button'}
-              action={handleNext}
-              disabled={!formData.isValid() || (store.bidsStore.AvailablePerformers.size === 0 && step === 4)}
-              text={'Дальше'}
-              className={'float-right'}
-              variant={ButtonVariant.accent} />
-          }>
-          <form
-            // onSubmit={formData.onSubmit((props) => console.log('form', props))}
-            onReset={formData.onReset}
-            style={{ display: 'contents' }}>
-            <Progress total={formData.values.service_type === "1" ? 4 : 5} current={step} />
+        <FormProvider form={formData}>
             <PanelForForms
-              state={step !== 1}
-              animate={animate}
-              className={'!bg-transparent h-full !flex flex-col'}
-              bodyClassName={'grid  flex-col !grid-cols-3 !grid-rows-[auto_auto_auto_auto_1fr] !gap-0 !pb-2 flex-[1_100%] !self-stretch !items-stretch'}
-              variant={PanelVariant.textPadding}
-              background={PanelColor.default}
-              header={<><Heading text={step1.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step1.description}</div></>}
-            >
-              <Group grow  className={'col-span-2'}>
-                <Select
-                {...formData.getInputProps('company')}
-                clearable
-                label={step1.fields[1].label}
-                onLoad={handleChangeCompany}
-                onOptionSubmit={handleChangeCompany}
-                searchable
-                data={store.companyStore.companies.filter((c: any) => c.company_type === 'Компания-Заказчик').map((c: any) => ({ label: c.name, value: String(c.id), }))}
-              />
-              <Select
-                withAsterisk
-                {...formData.getInputProps('city')}
-                clearable
-                label={step1.fields[0].label}
-                searchable
-                value={formData.values.city}
-                data={val(store.catalogStore.cities).map((i: any) => ({
-                  label: i.name,
-                  value: String(i.id),
-                }))}
-              />
-                </Group>
-              {store.appStore.appType === "admin" && <hr className={'col-span-full border-transparent my-2'} />}
-              {/* //todo: map not admin values to select */}
-
-
-              <Group grow  className={'col-span-full'}>
-              <Select
-                {...formData.getInputProps('conductor')}
-                label={step1.fields[2].label}
-                searchable
-                className={'self-start'}
-                onOptionSubmit={(value) => {
-                  formData.values.car = null
-                  formData.values.phone = null
-                  store.bidsStore.formResultSet({ conductor: Number(value) })
-                }}
-                disabled={
-                  store.bidsStore.formResult.company === 0 ||
-                  store.usersStore.currentCompanyUsers.length === 0 && conductorsData.length === 0
+                ref={targetRef}
+                footerClassName={'px-8 tablet-max:px-5 pb-8 pt-2  tablet-max:pb-8'}
+                bodyClassName={'self-stretch'}
+                variant={PanelVariant.default}
+                actionBack={
+                    <>
+                        {step === 5 || step === 1 ? null : (
+                            <Button
+                                text={'Назад'}
+                                action={handleBack}
+                                className={'lg:mb-0 mr-auto'}
+                                variant={ButtonVariant['accent-outline']}
+                            />
+                        )}
+                        {step === 1 && (
+                            <>
+                                <FileButton
+                                    onChange={(e) => store.bidsStore.sendFiles(e, true)}
+                                    multiple
+                                    accept='image/png,image/jpeg'
+                                >
+                                    {(props) => (
+                                        <Button
+                                            className={'col-span-1'}
+                                            type={'button'}
+                                            variant={ButtonVariant['accent-outline']}
+                                            disabled={
+                                                store.bidsStore.formResult.company === 0 ||
+                                                store.bidsStore.formResult.company === null ||
+                                                store.bidsStore.getPhotos.length > 7
+                                            }
+                                            {...props}
+                                            text={'Добавить фото'}
+                                        ></Button>
+                                    )}
+                                </FileButton>
+                            </>
+                        )}
+                    </>
                 }
-                data={conductorsData}
-              />
-
-              <InputBase
-                className={'self-start'}
-                {...formData.getInputProps('phone')}
-                onAccept={(value:any, mask:any) => {
-                  formData.setFieldValue('phone', value)
-                  store.bidsStore.formResultSet({ phone: value })
-                }}
-                //@ts-ignore
-
-                label={step1.fields[3].label} component={IMaskInput} mask='+7 000 000 0000' placeholder='+7 000 000 0000'
-              />
-
-              <Select
-                {...formData.getInputProps('car')}
-                className={'self-start'}
-                clearable
-                onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
-                //@ts-ignore
-                label={step1.fields[4].label} searchable
-                data={carsData}
-              />
-              </Group>
-              <hr className={'col-span-full border-transparent my-2'} />
-              <Group grow  className={'col-span-full flex-1 gap-0 tablet-max:pt-4 pb-6'} align={'stretch'}>
-              <UploadedPhotosFirstStep/>
-              </Group>
-            </PanelForForms>
-
-            <PanelForForms
-              state={step !== 2}
-              animate={animate}
-              className={'!bg-transparent'}
-              bodyClassName={'grid !grid-cols-3 gap-4'}
-              variant={PanelVariant.textPadding}
-              background={PanelColor.default}
-              header={<><Heading text={step2.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step2.description}</div></>}
+                actionCancel={
+                    step !== 5 ? (
+                        <Button
+                            type={'button'}
+                            text={'Отменить'}
+                            action={(e) => {
+                                e.preventDefault()
+                                navigate(-1)
+                            }}
+                            variant={ButtonVariant.cancel}
+                        />
+                    ) : null
+                }
+                actionNext={
+                    step === 5 ? (
+                        <Button
+                            type={'button'}
+                            action={() => navigate('/account/bids')}
+                            text={'Закрыть'}
+                            className={'float-right'}
+                            variant={ButtonVariant.accent}
+                        />
+                    ) : (
+                        <Button
+                            type={'button'}
+                            action={handleNext}
+                            disabled={
+                                !formData.isValid() || (store.bidsStore.AvailablePerformers.size === 0 && step === 4)
+                            }
+                            text={'Дальше'}
+                            className={'float-right'}
+                            variant={ButtonVariant.accent}
+                        />
+                    )
+                }
             >
-                    <Select
-                      {...formData.getInputProps(step2.fields[0].name)}
-                      label={step2.fields[0].label}
-                      disabled={store.catalogStore.services.size === 0}
-                      onOptionSubmit={(value) => {
-                        formData.setFieldValue('service_subtype', null);
-                        formData.resetTouched();
-                        if (value === null) {
-                          formData.setFieldValue(step2.fields[1].name, '0')
-                          formData.setFieldValue(step2.fields[0].name, '0')
-                        } else {
-                          // console.log('set service_type');
-                          formData.setFieldValue(step2.fields[1].name, null);
-                          action(() => {
-                            store.catalogStore.currentService = Number(value);
-                            store.catalogStore.currentServiceSubtypesOptions = new Map([])
-                          })
-                          store.bidsStore.formResultSet({ service_type: Number(value) })
+                <form
+                    // onSubmit={formData.onSubmit((props) => console.log('form', props))}
+                    onReset={formData.onReset}
+                    style={{ display: 'contents' }}
+                >
+                    <Progress total={formData.values.service_type === '1' ? 4 : 5} current={step} />
+                    <PanelForForms
+                        state={step !== 1}
+                        animate={animate}
+                        className={'!bg-transparent h-full !flex flex-col'}
+                        bodyClassName={
+                            'grid  flex-col !grid-cols-3 !grid-rows-[auto_auto_auto_auto_1fr] !gap-0 !pb-2 flex-[1_100%] !self-stretch !items-stretch'
                         }
-                      }}
-                      data={val(store.catalogStore.services).map((i: any) => ({
-                        label: i.name,
-                        value: String(i.id),
-                      }))}
-                    />
+                        variant={PanelVariant.textPadding}
+                        background={PanelColor.default}
+                        header={
+                            <>
+                                <Heading text={step1.title} color={HeadingColor.accent} variant={HeadingVariant.h2} />
+                                <div className={'text-base'}>{step1.description}</div>
+                            </>
+                        }
+                    >
+                        <Group grow className={'col-span-2'}>
+                            <Select
+                                {...formData.getInputProps('company')}
+                                clearable
+                                label={step1.fields[1].label}
+                                onLoad={handleChangeCompany}
+                                onOptionSubmit={handleChangeCompany}
+                                searchable
+                                data={store.companyStore.companies
+                                    .filter((c: any) => c.company_type === 'Компания-Заказчик')
+                                    .map((c: any) => ({ label: c.name, value: String(c.id) }))}
+                            />
+                            <Select
+                                withAsterisk
+                                {...formData.getInputProps('city')}
+                                clearable
+                                label={step1.fields[0].label}
+                                searchable
+                                value={formData.values.city}
+                                data={val(store.catalogStore.cities).map((i: any) => ({
+                                    label: i.name,
+                                    value: String(i.id),
+                                }))}
+                            />
+                        </Group>
+                        {store.appStore.appType === 'admin' && (
+                            <hr className={'col-span-full border-transparent my-2'} />
+                        )}
+                        {/* //todo: map not admin values to select */}
 
-                      <Select
-                        {...formData.getInputProps(step2.fields[1].name)}
-                        label={step2.fields[1].label}
-                        disabled={store.bidsStore.formResult.service_type === 0}
-                        // onChange={(value) => {
-                        //
-                        // }}
-                        onOptionSubmit={(value) => {
-                          if (value === null) {
-                            store.bidsStore.formResultSet({ service_subtype: 0 })
-                            formData.setFieldValue(step2.fields[1].name, '0')
-                            formData.setTouched({service_option: false})
-                            formData.setFieldValue('service_option', []);
-                          } else {
-                            formData.setTouched({service_option: false})
-                            formData.setFieldValue('service_subtype', value)
-                            store.bidsStore.formResultSet({
-                              service_subtype: Number(value),
-                            })
-                            formData.setFieldValue('service_option', []);
-                            // console.log('setTouched');
-                            formData.setTouched({ 'service_option': true });
-                          }
-                        }}
-                        data={
-                          store.catalogStore.currentService !== 0
-                            ? val(store.catalogStore.currentServiceSubtypes).map(
-                              (i: any) => ({
+                        <Group grow className={'col-span-full'}>
+                            <Select
+                                {...formData.getInputProps('conductor')}
+                                label={step1.fields[2].label}
+                                searchable
+                                className={'self-start'}
+                                onOptionSubmit={(value) => {
+                                    formData.values.car = null
+                                    formData.values.phone = null
+                                    store.bidsStore.formResultSet({ conductor: Number(value) })
+                                }}
+                                disabled={
+                                    store.bidsStore.formResult.company === 0 ||
+                                    (store.usersStore.currentCompanyUsers.length === 0 && conductorsData.length === 0)
+                                }
+                                data={conductorsData}
+                            />
+
+                            <InputBase
+                                className={'self-start'}
+                                {...formData.getInputProps('phone')}
+                                onAccept={(value: any, mask: any) => {
+                                    formData.setFieldValue('phone', value)
+                                    store.bidsStore.formResultSet({ phone: value })
+                                }}
+                                //@ts-ignore
+
+                                label={step1.fields[3].label}
+                                component={IMaskInput}
+                                mask='+7 000 000 0000'
+                                placeholder='+7 000 000 0000'
+                            />
+
+                            <Select
+                                {...formData.getInputProps('car')}
+                                className={'self-start'}
+                                clearable
+                                onOptionSubmit={(value) => store.bidsStore.formResultSet({ car: Number(value) })}
+                                //@ts-ignore
+                                label={step1.fields[4].label}
+                                searchable
+                                data={carsData}
+                            />
+                        </Group>
+                        <hr className={'col-span-full border-transparent my-2'} />
+                        <Group grow className={'col-span-full flex-1 gap-0 tablet-max:pt-4 pb-6'} align={'stretch'}>
+                            <UploadedPhotosFirstStep />
+                        </Group>
+                    </PanelForForms>
+
+                    <PanelForForms
+                        state={step !== 2}
+                        animate={animate}
+                        className={'!bg-transparent'}
+                        bodyClassName={'grid !grid-cols-3 gap-4'}
+                        variant={PanelVariant.textPadding}
+                        background={PanelColor.default}
+                        header={
+                            <>
+                                <Heading text={step2.title} color={HeadingColor.accent} variant={HeadingVariant.h2} />
+                                <div className={'text-base'}>{step2.description}</div>
+                            </>
+                        }
+                    >
+                        <Select
+                            {...formData.getInputProps(step2.fields[0].name)}
+                            label={step2.fields[0].label}
+                            disabled={store.catalogStore.services.size === 0}
+                            onOptionSubmit={(value) => {
+                                formData.setFieldValue('service_subtype', null)
+                                formData.resetTouched()
+                                if (value === null) {
+                                    formData.setFieldValue(step2.fields[1].name, '0')
+                                    formData.setFieldValue(step2.fields[0].name, '0')
+                                } else {
+                                    // console.log('set service_type');
+                                    formData.setFieldValue(step2.fields[1].name, null)
+                                    action(() => {
+                                        store.catalogStore.currentService = Number(value)
+                                        store.catalogStore.currentServiceSubtypesOptions = new Map([])
+                                    })
+                                    store.bidsStore.formResultSet({ service_type: Number(value) })
+                                }
+                            }}
+                            data={val(store.catalogStore.services).map((i: any) => ({
                                 label: i.name,
                                 value: String(i.id),
-                              }),
-                            )
-                            : ['']
-                        }
-                      />
-                {formData.values.service_subtype &&
-                  formData.values.service_subtype !== '0' &&
-                  formData.values.service_subtype &&
-                  formData.values.service_subtype !== '0' && store.catalogStore.ServiceSubtypesOptions.length !== 0 && (
-                <Checkbox.Group
-                          className={'col-span-2'}
-                          {...formData.getInputProps('service_option')}
-                          classNames={{
-                            label: 'text-accent label mb-4',
-                            error: 'absolute -bottom-2',
-                            root: 'relative pb-4'
-                          }}
-                          value={store.bidsStore.formResult.service_option.map((o: number) =>
-                            String(o),
-                          )}
-                          onChange={(vals) => {
-                            store.bidsStore.formResultSet({
-                              service_option: vals.map((e) => Number(e)),
-                            })
-                            formData.values.service_option = val(
-                              store.bidsStore.formResultsAll.service_option,
-                            )
-                        }}
-                          label='Выберите дополнительные опции (при необходимости)'
-                        >
-                          <Group mt='xs'>
-                            {store.catalogStore.ServiceSubtypesOptions.map(
-                                (i: any) => (
-                                  <Checkbox
-                                    key={i.id}
-                                    value={String(i.id)}
+                            }))}
+                        />
 
-                                    label={i.name}
-                                  />
-                                ),
-                              )}
-                          </Group>
-                        </Checkbox.Group>
-                      )}
-                <Textarea
-                  className={'col-span-2  pt-4'}
-                  minRows={3}
-                  {...formData.getInputProps('customer_comment')}
-                  onInput={(values: any) => {
-                    store.bidsStore.formResultSet({ customer_comment: values.currentTarget.value })
-                    formData.setFieldValue('customer_comment', values.currentTarget.value)
-                  }}
-                  label={'Комментарий'}
-                  placeholder={'Дополнительная информация, которая может помочь в выполнении заявки'}
-                />
-                <Heading
-                  variant={HeadingVariant.h4}
-                  text={'Факт/лимит 35/100'}
-                  color={HeadingColor.accent}
-                  className={'col-span-2 mt-6'}
-                />
-            </PanelForForms>
-            {formData.values.service_type === "3" ? (
-              <PanelForForms
-                state={step !== 3}
-                animate={animate}
-                className={'!bg-transparent'}
-                bodyClassName={'grid !grid-cols-3 gap-4'}
-                variant={PanelVariant.textPadding}
-                background={PanelColor.default}
-                header={<><Heading text={step3.title} color={HeadingColor.accent} variant={HeadingVariant.h2} /><div className={'text-base'}>{step3.description}</div></>}
-              >
-
-                  <InputAutocompleteWithCity
-                    label={'Откуда вас забрать?'}
-                    {...formData.getInputProps('address_from')}
-                    action={(val: any) => {
-                      formData.setFieldValue('address_from', val)
-                      store.bidsStore.formResultSet({ address_from: val })
-                    }}
-                    city={
-                      store.bidsStore.formResult.city !== 0
-                        ? store.catalogStore.cities.get(
-                          store.bidsStore.formResult.city.toString(),
-                        ).name
-                        : ''
-                    }
-                  />
-                  <hr className={'col-span-full border-transparent my-2'} />
-                  <InputAutocompleteWithCity
-                    {...formData.getInputProps('address_to')}
-                    label={'Куда привезти?'}
-                    action={(val: any) => {
-                      formData.setFieldValue('address_to', val)
-                      store.bidsStore.formResultSet({ address_to: val })
-                    }}
-                    city={
-                      store.bidsStore.formResult.city !== 0
-                        ? store.catalogStore.cities.get(
-                          store.bidsStore.formResult.city.toString(),
-                        ).name
-                        : ''
-                    }
-                  />
-                  <hr className={'col-span-full border-transparent my-2'} />
-                  <Select
-                    {...formData.getInputProps('tire_destroyed')}
-                    onOptionSubmit={(values) => store.bidsStore.formResultSet({ tire_destroyed: values })}
-                    label={'Сколько колес вышло из строя?'}
-                    data={[
-                      { label: '0', value: '0' },
-                      { label: '1', value: '1' },
-                      { label: '2', value: '2' },
-                      { label: '3', value: '3' },
-                      { label: '4', value: '4' },
-                    ]}
-                  />
-                  <Select
-                    {...formData.getInputProps('truck_type')}
-                    onOptionSubmit={(values) => store.bidsStore.formResultSet({ truck_type: values })}
-                    label={'Тип эвакуатора?'}
-                    data={[
-                      { label: 'эвакуатор', value: 'эвакуатор' },
-                      { label: 'манипулятор ', value: 'манипулятор' }
-                    ]}
-                  />
-                  <hr className={'col-span-full border-transparent my-2'} />
-                <Select
-                  {...formData.getInputProps('important')}
-                  onOptionSubmit={(values) => {
-                    // console.log(values);
-                    if(values !== 'time') {
-                    formData.setFieldValue('time', '')
-                    store.bidsStore.formResultSet({
-                      important: {
-                        label: step3?.fields[3]?.options?.filter(
-                          (item) => item.value == values,
-                        )[0].label,
-                        value: values,
-                      },
-                    })
-                  }
-                  }}
-                  defaultValue={null}
-                  label={step3.fields[3].label}
-                  data={step3.fields[3].options}
-                />
-
-                <DateTimePicker
-                  classNames={{
-                    root: '',
-                    input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
-                    monthCell: 'text-white',
-                    day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80'
-                  }}
-                  {...formData.getInputProps('time')}
-                  dropdownType="modal"
-                  modalProps={{
-                    centered: true
-                  }}
-                  onChange={(value) => {
-                    const timestamp = dayjs(String(value)).valueOf()
-                    formData.setFieldValue('time', value)
-                    formData.setTouched({time: true})
-                    store.bidsStore.formResultSet({time: timestamp})
-                  }}
-                  valueFormat="DD.MM.YYYY hh:mm"
-                  minDate={dayjs(new Date()).add(2, 'hours').toDate()}
-                  maxDate={dayjs(new Date()).add(2, 'hours').add(2, 'days').toDate()}
-                  label={step3.fields[4].label}
-                  placeholder=""
-                />
-              </PanelForForms>
-            ) : (
-              <PanelForForms
-                state={step !== 3}
-                animate={animate}
-                className={'!bg-transparent'}
-                bodyClassName={'grid !grid-cols-3 gap-4'}
-                variant={PanelVariant.textPadding}
-                background={PanelColor.default}
-                header={
-                  <>
-                    <Heading
-                      text={step3.title}
-                      color={HeadingColor.accent}
-                      variant={HeadingVariant.h2}
-                    />
-                    <div className={'text-base'}>{step3.description}</div>
-                  </>
-                }
-
-              >
-                <>
-                  {formData.values.service_subtype === "6" && <><InputAutocompleteWithCity
-                    label={'Куда подъехать?'}
-                    {...formData.getInputProps('address_from')}
-                    action={(val: any) => {
-                      formData.setFieldValue('address_from', val)
-                      store.bidsStore.formResultSet({ address_from: val })
-                    }}
-                    city={
-                      store.bidsStore.formResult.city !== 0
-                        ? store.catalogStore.cities.get(
-                          store.bidsStore.formResult.city.toString(),
-                        ).name
-                        : ''
-                    }
-                  />
-                  <hr className={'col-span-full border-transparent my-2'} /></>}
-                  <Select
-                    {...formData.getInputProps('parking')}
-                    onOptionSubmit={(values) =>
-                      store.bidsStore.formResultSet({
-                        parking: {
-                          label: step3?.fields[1]?.options?.filter(
-                            (item) => item.value == values,
-                          )[0].label,
-                          value: values,
-                        },
-                      })
-                    }
-                    label={step3.fields[1].label}
-                    data={step3.fields[1].options}
-                  />
-                  <Select
-                    {...formData.getInputProps('secretKey')}
-                    onOptionSubmit={(values) => {
-                      store.bidsStore.formResultSet({
-                        secretKey: {
-                          label: step3?.fields[2]?.options?.filter(
-                            (item) => item.value == values,
-                          )[0].label,
-                          value: values,
-                        },
-                      })
-                    }}
-                    label={step3.fields[2].label}
-                    data={step3.fields[2].options}
-                  />
-                  <hr className={'col-span-full border-transparent my-2'} />
-                  <Select
-                    {...formData.getInputProps('important')}
-                    onOptionSubmit={(values) => {
-                      // console.log(values);
-                      if(values === 'fast') {
-                        formData.setFieldValue('time', '')
-                        store.bidsStore.formResultSet({
-                          important: {
-                            label: step3?.fields[3]?.options?.filter(
-                              (item) => item.value == values,
-                            )[0].label,
-                            value: values,
-                          },
-                          time: null
-                        })
-                      }
-                    }}
-                    defaultValue={'time'}
-                    // value={store.bidsStore.formResult.important}
-                    label={step3.fields[3].label}
-                    data={step3.fields[3].options}
-                  />
-
-                  <DateTimePicker
-                    classNames={{
-                        root: '',
-                      input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
-
-                      monthCell: 'text-white',
-                      day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80'
-                    }}
-                    {...formData.getInputProps('time')}
-                    dropdownType="modal"
-                    modalProps={{
-                      centered: true
-                    }}
-                    onChange={(value) => {
-                      const timestamp = dayjs(String(value)).valueOf()
-                      formData.setFieldValue('time', value)
-                      formData.setTouched({time: true})
-                      store.bidsStore.formResultSet({time: timestamp})
-                    }}
-	                  valueFormat="DD.MM.YYYY hh:mm"
-                    minDate={dayjs(new Date()).add(2, 'hours').toDate()}
-                    maxDate={dayjs(new Date()).add(2, 'hours').add(2, 'days').toDate()}
-                    label={step3.fields[4].label}
-                    placeholder=""
-                  />
-
-                </>
-              </PanelForForms>
-            )}
-            <PanelForForms
-              state={step !== 4}
-              animate={animate}
-              className={'!bg-transparent  self-stretch auto-rows-[min-content_1fr] desktop:grid-rows-[auto_1fr]'}
-              variant={PanelVariant.textPadding}
-              background={PanelColor.default}
-              bodyClassName={'mobile:!grid grid !grid-cols-4   gap-y-8  gap-x-12 content-start content-stretch items-stretch'}
-              footerClassName={'flex-1 w-full justify-stretch'}
-              header={
-                <>
-                  <Heading
-                    text={formData.values.service_type === "1" ? "Шаг 3. Выбор исполнителя" : step4.title}
-                    color={HeadingColor.accent}
-                    variant={HeadingVariant.h2}
-                  />
-                  <div className={'text-base'}>{step4.description}</div>
-                </>
-              }
-            >
-              {(store.bidsStore.AvailablePerformers.size === 0) ? <>
-                  <Heading className={'col-span-full'} text={'Исполнители не найдены'} variant={HeadingVariant.h3}/></> :
-                    (<div className={'col-span-full subgrid contents'}><div     className={'col-span-2  relative z-[999] mobile:mb-8'}>
                         <Select
-                      className={'col-span-2'}
-                      required
-                      label={step4.fields[0].label}
-                      searchable
-                      value={String(store.bidsStore.formResult.city)}
-                      data={val(store.catalogStore.cities).map((i: any) => ({
-                        label: i.name,
-                        value: String(i.id),
-                      }))}
-                    />
-                    <Select
-                      className={'col-span-2'}
-                      required
-                      {...formData.getInputProps('performer')}
-                      label={step4.fields[1].label}
-                      searchable
-                      clearable
-                      onOptionSubmit={(val: any) => {
-                        store.bidsStore.formResultSet({ performer: Number(val) })
-                      }
-                      }
-                      data={val(store.bidsStore.currentPerformers).map((i: any) => ({
-                        label: i.name,
-                        value: String(i.id),
-                      }))}
-                    />
-                    </div>
-                        <MapWithDots />
-                    </div>
-                    )
-              }
+                            {...formData.getInputProps(step2.fields[1].name)}
+                            label={step2.fields[1].label}
+                            disabled={store.bidsStore.formResult.service_type === 0}
+                            // onChange={(value) => {
+                            //
+                            // }}
+                            onOptionSubmit={(value) => {
+                                if (value === null) {
+                                    store.bidsStore.formResultSet({ service_subtype: 0 })
+                                    formData.setFieldValue(step2.fields[1].name, '0')
+                                    formData.setTouched({ service_option: false })
+                                    formData.setFieldValue('service_option', [])
+                                } else {
+                                    formData.setTouched({ service_option: false })
+                                    formData.setFieldValue('service_subtype', value)
+                                    store.bidsStore.formResultSet({
+                                        service_subtype: Number(value),
+                                    })
+                                    formData.setFieldValue('service_option', [])
+                                    // console.log('setTouched');
+                                    formData.setTouched({ service_option: true })
+                                }
+                            }}
+                            data={
+                                store.catalogStore.currentService !== 0
+                                    ? val(store.catalogStore.currentServiceSubtypes).map((i: any) => ({
+                                          label: i.name,
+                                          value: String(i.id),
+                                      }))
+                                    : ['']
+                            }
+                        />
+                        {formData.values.service_subtype &&
+                            formData.values.service_subtype !== '0' &&
+                            formData.values.service_subtype &&
+                            formData.values.service_subtype !== '0' &&
+                            store.catalogStore.ServiceSubtypesOptions.length !== 0 && (
+                                <Checkbox.Group
+                                    className={'col-span-2'}
+                                    {...formData.getInputProps('service_option')}
+                                    classNames={{
+                                        label: 'text-accent label mb-4',
+                                        error: 'absolute -bottom-2',
+                                        root: 'relative pb-4',
+                                    }}
+                                    value={store.bidsStore.formResult.service_option.map((o: number) => String(o))}
+                                    onChange={(vals) => {
+                                        store.bidsStore.formResultSet({
+                                            service_option: vals.map((e) => Number(e)),
+                                        })
+                                        formData.values.service_option = val(
+                                            store.bidsStore.formResultsAll.service_option,
+                                        )
+                                    }}
+                                    label='Выберите дополнительные опции (при необходимости)'
+                                >
+                                    <Group mt='xs'>
+                                        {store.catalogStore.ServiceSubtypesOptions.map((i: any) => (
+                                            <Checkbox key={i.id} value={String(i.id)} label={i.name} />
+                                        ))}
+                                    </Group>
+                                </Checkbox.Group>
+                            )}
+                        <Textarea
+                            className={'col-span-2  pt-4'}
+                            minRows={3}
+                            {...formData.getInputProps('customer_comment')}
+                            onInput={(values: any) => {
+                                store.bidsStore.formResultSet({ customer_comment: values.currentTarget.value })
+                                formData.setFieldValue('customer_comment', values.currentTarget.value)
+                            }}
+                            label={'Комментарий'}
+                            placeholder={'Дополнительная информация, которая может помочь в выполнении заявки'}
+                        />
+                        <Heading
+                            variant={HeadingVariant.h4}
+                            text={'Факт/лимит 35/100'}
+                            color={HeadingColor.accent}
+                            className={'col-span-2 mt-6'}
+                        />
+                    </PanelForForms>
+                    {formData.values.service_type === '3' ? (
+                        <PanelForForms
+                            state={step !== 3}
+                            animate={animate}
+                            className={'!bg-transparent'}
+                            bodyClassName={'grid !grid-cols-3 gap-4'}
+                            variant={PanelVariant.textPadding}
+                            background={PanelColor.default}
+                            header={
+                                <>
+                                    <Heading
+                                        text={step3.title}
+                                        color={HeadingColor.accent}
+                                        variant={HeadingVariant.h2}
+                                    />
+                                    <div className={'text-base'}>{step3.description}</div>
+                                </>
+                            }
+                        >
+                            <InputAutocompleteWithCity
+                                label={'Откуда вас забрать?'}
+                                {...formData.getInputProps('address_from')}
+                                action={(val: any) => {
+                                    formData.setFieldValue('address_from', val)
+                                    store.bidsStore.formResultSet({ address_from: val })
+                                }}
+                                city={
+                                    store.bidsStore.formResult.city !== 0
+                                        ? store.catalogStore.cities.get(store.bidsStore.formResult.city.toString()).name
+                                        : ''
+                                }
+                            />
+                            <hr className={'col-span-full border-transparent my-2'} />
+                            <InputAutocompleteWithCity
+                                {...formData.getInputProps('address_to')}
+                                label={'Куда привезти?'}
+                                action={(val: any) => {
+                                    formData.setFieldValue('address_to', val)
+                                    store.bidsStore.formResultSet({ address_to: val })
+                                }}
+                                city={
+                                    store.bidsStore.formResult.city !== 0
+                                        ? store.catalogStore.cities.get(store.bidsStore.formResult.city.toString()).name
+                                        : ''
+                                }
+                            />
+                            <hr className={'col-span-full border-transparent my-2'} />
+                            <Select
+                                {...formData.getInputProps('tire_destroyed')}
+                                onOptionSubmit={(values) => store.bidsStore.formResultSet({ tire_destroyed: values })}
+                                label={'Сколько колес вышло из строя?'}
+                                data={[
+                                    { label: '0', value: '0' },
+                                    { label: '1', value: '1' },
+                                    { label: '2', value: '2' },
+                                    { label: '3', value: '3' },
+                                    { label: '4', value: '4' },
+                                ]}
+                            />
+                            <Select
+                                {...formData.getInputProps('truck_type')}
+                                onOptionSubmit={(values) => store.bidsStore.formResultSet({ truck_type: values })}
+                                label={'Тип эвакуатора?'}
+                                data={[
+                                    { label: 'эвакуатор', value: 'эвакуатор' },
+                                    { label: 'манипулятор ', value: 'манипулятор' },
+                                ]}
+                            />
+                            <hr className={'col-span-full border-transparent my-2'} />
+                            <Select
+                                {...formData.getInputProps('important')}
+                                onOptionSubmit={(values) => {
+                                    // console.log(values);
+                                    if (values !== 'time') {
+                                        formData.setFieldValue('time', '')
+                                        store.bidsStore.formResultSet({
+                                            important: {
+                                                label: step3?.fields[3]?.options?.filter(
+                                                    (item) => item.value == values,
+                                                )[0].label,
+                                                value: values,
+                                            },
+                                        })
+                                    }
+                                }}
+                                defaultValue={null}
+                                label={step3.fields[3].label}
+                                data={step3.fields[3].options}
+                            />
 
+                            <DateTimePicker
+                                classNames={{
+                                    root: '',
+                                    input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                                    monthCell: 'text-white',
+                                    day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80',
+                                }}
+                                {...formData.getInputProps('time')}
+                                dropdownType='modal'
+                                modalProps={{
+                                    centered: true,
+                                }}
+                                onChange={(value) => {
+                                    const timestamp = dayjs(String(value)).valueOf()
+                                    formData.setFieldValue('time', value)
+                                    formData.setTouched({ time: true })
+                                    store.bidsStore.formResultSet({ time: timestamp })
+                                }}
+                                valueFormat='DD.MM.YYYY hh:mm'
+                                minDate={dayjs(new Date()).add(2, 'hours').toDate()}
+                                maxDate={dayjs(new Date()).add(2, 'hours').add(2, 'days').toDate()}
+                                label={step3.fields[4].label}
+                                placeholder=''
+                            />
+                        </PanelForForms>
+                    ) : (
+                        <PanelForForms
+                            state={step !== 3}
+                            animate={animate}
+                            className={'!bg-transparent'}
+                            bodyClassName={'grid !grid-cols-3 gap-4'}
+                            variant={PanelVariant.textPadding}
+                            background={PanelColor.default}
+                            header={
+                                <>
+                                    <Heading
+                                        text={step3.title}
+                                        color={HeadingColor.accent}
+                                        variant={HeadingVariant.h2}
+                                    />
+                                    <div className={'text-base'}>{step3.description}</div>
+                                </>
+                            }
+                        >
+                            <>
+                                {formData.values.service_subtype === '6' && (
+                                    <>
+                                        <InputAutocompleteWithCity
+                                            label={'Куда подъехать?'}
+                                            {...formData.getInputProps('address_from')}
+                                            action={(val: any) => {
+                                                formData.setFieldValue('address_from', val)
+                                                store.bidsStore.formResultSet({ address_from: val })
+                                            }}
+                                            city={
+                                                store.bidsStore.formResult.city !== 0
+                                                    ? store.catalogStore.cities.get(
+                                                          store.bidsStore.formResult.city.toString(),
+                                                      ).name
+                                                    : ''
+                                            }
+                                        />
+                                        <hr className={'col-span-full border-transparent my-2'} />
+                                    </>
+                                )}
+                                <Select
+                                    {...formData.getInputProps('parking')}
+                                    onOptionSubmit={(values) =>
+                                        store.bidsStore.formResultSet({
+                                            parking: {
+                                                label: step3?.fields[1]?.options?.filter(
+                                                    (item) => item.value == values,
+                                                )[0].label,
+                                                value: values,
+                                            },
+                                        })
+                                    }
+                                    label={step3.fields[1].label}
+                                    data={step3.fields[1].options}
+                                />
+                                <Select
+                                    {...formData.getInputProps('secretKey')}
+                                    onOptionSubmit={(values) => {
+                                        store.bidsStore.formResultSet({
+                                            secretKey: {
+                                                label: step3?.fields[2]?.options?.filter(
+                                                    (item) => item.value == values,
+                                                )[0].label,
+                                                value: values,
+                                            },
+                                        })
+                                    }}
+                                    label={step3.fields[2].label}
+                                    data={step3.fields[2].options}
+                                />
+                                <hr className={'col-span-full border-transparent my-2'} />
+                                <Select
+                                    {...formData.getInputProps('important')}
+                                    onOptionSubmit={(values) => {
+                                        // console.log(values);
+                                        if (values === 'fast') {
+                                            formData.setFieldValue('time', '')
+                                            store.bidsStore.formResultSet({
+                                                important: {
+                                                    label: step3?.fields[3]?.options?.filter(
+                                                        (item) => item.value == values,
+                                                    )[0].label,
+                                                    value: values,
+                                                },
+                                                time: null,
+                                            })
+                                        }
+                                    }}
+                                    defaultValue={'time'}
+                                    // value={store.bidsStore.formResult.important}
+                                    label={step3.fields[3].label}
+                                    data={step3.fields[3].options}
+                                />
+
+                                <DateTimePicker
+                                    classNames={{
+                                        root: '',
+                                        input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+
+                                        monthCell: 'text-white',
+                                        day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80',
+                                    }}
+                                    {...formData.getInputProps('time')}
+                                    dropdownType='modal'
+                                    modalProps={{
+                                        centered: true,
+                                    }}
+                                    onChange={(value) => {
+                                        const timestamp = dayjs(String(value)).valueOf()
+                                        formData.setFieldValue('time', value)
+                                        formData.setTouched({ time: true })
+                                        store.bidsStore.formResultSet({ time: timestamp })
+                                    }}
+                                    valueFormat='DD.MM.YYYY hh:mm'
+                                    minDate={dayjs(new Date()).add(2, 'hours').toDate()}
+                                    maxDate={dayjs(new Date()).add(2, 'hours').add(2, 'days').toDate()}
+                                    label={step3.fields[4].label}
+                                    placeholder=''
+                                />
+                            </>
+                        </PanelForForms>
+                    )}
+                    <PanelForForms
+                        state={step !== 4}
+                        animate={animate}
+                        className={
+                            '!bg-transparent  self-stretch auto-rows-[min-content_1fr] desktop:grid-rows-[auto_1fr]'
+                        }
+                        variant={PanelVariant.textPadding}
+                        background={PanelColor.default}
+                        bodyClassName={
+                            'mobile:!grid grid !grid-cols-5   gap-y-8  gap-x-12 content-start content-stretch items-stretch'
+                        }
+                        footerClassName={'flex-1 w-full justify-stretch'}
+                        header={
+                            <>
+                                <Heading
+                                    text={
+                                        formData.values.service_type === '1' ? 'Шаг 3. Выбор исполнителя' : step4.title
+                                    }
+                                    color={HeadingColor.accent}
+                                    variant={HeadingVariant.h2}
+                                />
+                            </>
+                        }
+                    >
+                        {store.bidsStore.AvailablePerformers.size === 0 ? (
+                            <>
+                                <Heading
+                                    className={'col-span-full'}
+                                    text={'Исполнители не найдены'}
+                                    variant={HeadingVariant.h3}
+                                />
+                            </>
+                        ) : (
+                            <div className={'col-span-full subgrid contents'}>
+                              <div className={"col-span-2  row-span-2  relative z-[999] mobile:mb-8 grid grid-rows-3 justify-evenly items-center"}>
+                                <div className={"text-base"}>{step4.description}</div>
+                                <div>
+                                  <Select className={"col-span-2"}
+                                    required
+                                    label={step4.fields[0].label}
+                                    searchable
+                                    value={String(store.bidsStore.formResult.city)}
+                                    data={val(store.catalogStore.cities).map((i: any) => ({
+                                      label: i.name,
+                                      value: String(i.id)
+                                    }))} />
+                                  <Select className={"col-span-2"}
+                                    required
+                                    {...formData.getInputProps("performer")}
+                                    label={step4.fields[1].label}
+                                    searchable
+                                    clearable
+                                    onOptionSubmit={(val: any) => {
+                                      store.bidsStore.formResultSet({ performer: Number(val) });
+                                    }}
+                                    data={val(store.bidsStore.currentPerformers).map((i: any) => ({
+                                      label: i.name,
+                                      value: String(i.id)
+                                    }))} />
+                                </div>
+                                <div> {selectedPerformerAmount && <>
+                                  <Heading text={"Общая стоимость"}
+                                    variant={HeadingVariant.h5}
+                                    className={"text-sm text-accent"} />
+                                  <Heading text={`${selectedPerformerAmount} ₽`} variant={HeadingVariant.h2}
+                                  className={"text-sm text-accent"} />
+                                </>
+                              } </div>
+                            </div>
+                                <MapWithDots />
+
+                            </div>
+                        )}
+
+                    </PanelForForms>
+                    <FormBidResult state={step !== 5} animate={animate} {...store.bidsStore.justCreatedBid} />
+                </form>
             </PanelForForms>
-            <FormBidResult
-              state={step !== 5}
-              animate={animate}
-              {...store.bidsStore.justCreatedBid}
-            />
-
-          </form>
-        </PanelForForms>
-      </FormProvider>
-  )
+        </FormProvider>
+    )
 }
 
 export default observer(FormCreateUpdateBid)

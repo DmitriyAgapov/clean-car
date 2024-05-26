@@ -165,17 +165,17 @@ const ServicePage = () => {
           <Panel className={"col-span-full grid grid-rows-[auto_1fr_auto]   tablet-big-max:-mx-5"}
             variant={PanelVariant.textPadding}
             background={PanelColor.glass}
-            bodyClassName={"grid grid-cols-3 items-start content-start gap-8"}
+            bodyClassName={"grid tablet:grid-cols-3 items-start content-start tablet:gap-8 gap-4"}
             headerClassName={"flex gap-10"}
             header={
               <>
-                <div className={"flex items-baseline justify-between flex-1 "}>
+                <div className={"tablet:flex items-baseline justify-between flex-1 "}>
                   <div className={"flex-1"}>
                     <Heading text={data.results.name}
                                     variant={HeadingVariant.h2}
                                     color={HeadingColor.accent}
                                 />
-                                <div className={'flex flex-1 items-end gap-12'}>
+                                <div className={'tablet:flex flex-1 items-end gap-12'}>
                                     <div className={'text-xs text-gray-2'}>
                                         Дата и время регистрации: <span>{dateTransform(data.updated).date}</span>
                                     </div>
@@ -204,7 +204,7 @@ const ServicePage = () => {
                                             state: true,
                                         })
                                     }}
-                                    className={'justify-self-end ml-auto'}
+                                    className={'justify-self-end ml-auto tablet-max:mt-4'}
                                     variant={ButtonVariant['accent-outline']}
                                 />
                             )}
@@ -239,7 +239,7 @@ const ServicePage = () => {
                 actions={
                   <div
                     className={
-                      'absolute  group-hover:opacity-100 opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5  gap-2 px-8 flex items-center justify-center flex-col bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2'
+                      'tablet:absolute tablet-max:mt-4  tablet:group-hover:opacity-100 tablet:opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5  gap-2 tablet:px-8 flex items-center justify-center tablet:flex-col tablet:bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2'
                     }
                   >
                     <Button
@@ -292,7 +292,7 @@ const ServicePage = () => {
                     {subtype.options.length > 0 && (
                       <LinkStyled
                         to={String(subtype.id)}
-                        className={'!text-xs text-accent uppercase w-full'}
+                        className={'!text-xs text-accent uppercase w-full tablet-max:!hidden'}
                         variant={ButtonVariant['outline']}
                         size={ButtonSizeType.sm}
                         text={'Подробнее'}

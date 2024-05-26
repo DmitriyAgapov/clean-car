@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite'
 
 export function InputAutocompleteNew(props:any) {
 
-  const { values, isTouched,  errors } = props.ctx;
+  const { values, isTouched, setFieldValue,  errors } = props.ctx;
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -18,6 +18,7 @@ export function InputAutocompleteNew(props:any) {
   const [tempAdress, setTempAdress] = useState(values.city);
   const [empty, setEmpty] = useState(false);
   const abortController = useRef<AbortController>();
+
   async function getData(query: string) {
     combobox.resetSelectedOption()
     try {
@@ -96,8 +97,8 @@ export function InputAutocompleteNew(props:any) {
 
   const options = (data || []).map((item, index) => (
     <Combobox.Option value={item.value} key={index} onClick={() => {
-      values.address = item.value
-
+      // values.address = item.value
+      setFieldValue(item.value)
       setPrefix(item.label)
       if(item.data.street_with_type) {
         values.street = item.data.street_with_type
@@ -126,7 +127,7 @@ export function InputAutocompleteNew(props:any) {
               combobox.closeDropdown()
           }}
 
-          withinPortal={true}
+          withinPortal={false}
           store={combobox}
       >
           <Combobox.Target>

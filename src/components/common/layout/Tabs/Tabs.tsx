@@ -19,15 +19,7 @@ export type TabsProps = {
   className?: string
   type?: TabsType
 }
-const HeadersTabs = ({
-    data,
-    state,
-    setState,
-}: {
-    data: any
-    state: any
-    setState: (event: any, key: string) => void
-}) => {
+const HeadersTabs = ({ data, state, setState, }: { data: any, state: any, setState: (event: any, key: string) => void }) => {
     // console.log(data);
     const result: any = []
     for (const key in data) {

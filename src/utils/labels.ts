@@ -53,6 +53,15 @@ const label = (key:string|unknown) => {
     r2123: "R21-23",
     r15C: "R15C",
     r16C: "R16C",
+    tire: "Шиномонтаж",
+    evac: "Эвакуция",
+    wash: "Мойка",
+    total: "Итог",
+    bid: "Заявка №",
+    purpose: "Назначение",
+    ts_maker: "Пользователь",
+    car_class: "Класс",
+    service_option: "Опция"
   }
   //@ts-ignore
   if(values[`${key}`]) return values[`${key}`]

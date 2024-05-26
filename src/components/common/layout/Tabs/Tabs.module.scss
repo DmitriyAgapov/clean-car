@@ -17,6 +17,8 @@
     margin: 0 -1.5rem;
     scroll-margin: 0 4rem;
     padding: 0 1.5rem;
+    scroll-snap-type: both;
+    width: 100lvw;
     &::-webkit-scrollbar {
       display: none;  /* Safari and Chrome */
     }
@@ -30,6 +32,8 @@
       }
       > div {
         grid-column: 1 / -1 !important;
+        margin-left: -1.25rem;
+        margin-right: -1.25rem;
       }
     }
   }

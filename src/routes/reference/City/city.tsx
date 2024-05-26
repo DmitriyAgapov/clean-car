@@ -85,11 +85,17 @@ const ReferenceCityPage = ():JSX.Element => {
       </Panel>
       <Panel
         state={isLoading}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+        className={'col-span-full grid grid-rows-[auto_1fr_auto] tablet-max:-mx-6'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
-        bodyClassName={'!pl-44 grid grid-cols-2 items-start content-start gap-8'}
-        headerClassName={'flex gap-10'}
+        bodyClassName={'desktop:pl-44 desktop:grid flex flex-col desktop:grid-cols-2 items-start content-start desktop:gap-8 gap-4'}
+        headerClassName={'flex desktop:gap-10 gap-4'}
+        footer={store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
+          text={'Редактировать'}
+          action={() => navigate(location.pathname + '/edit')}
+          className={'justify-self-end ml-auto  tablet-max:!flex'}
+          variant={ButtonVariant.default}
+        />}
         header={
           <>
             <div
@@ -106,7 +112,7 @@ const ReferenceCityPage = ():JSX.Element => {
             {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
               text={'Редактировать'}
               action={() => navigate(location.pathname + '/edit')}
-              className={'justify-self-end ml-auto'}
+              className={'justify-self-end ml-auto  tablet-max:!hidden'}
               variant={ButtonVariant.default}
             />}
           </>
