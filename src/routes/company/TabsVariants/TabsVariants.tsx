@@ -767,7 +767,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
       })
       return result.map((item: any, index: number) => {
         return (
-          <div className={'col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4'} key={translite(item.label ?? `null_${index}`)}>
+          <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
             <Heading text={item.label} variant={HeadingVariant.h6} className={`text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 ${item.data[0].label === null ? 'px-6 sticky top-0 z-10  bg-[#090909]' : ''}`}/>
             {(() => {
               return item.data.map((item: any, index: number) => {
@@ -785,7 +785,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                     search={false}
                     style={item.label ? PanelRouteStyle.price_tire : PanelRouteStyle.default}
                     background={PanelColor.default}
-                    className={'col-span-full table-groups'}
+                    className={'col-span-full table-groups  mobile:mx-4'}
                     filter={false}
                     data={item.label ? item.data.map(
                       (it: any) =>
@@ -890,7 +890,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   search={false}
                   background={PanelColor.default}
                   state={false}
-                  className={'col-span-full table-groups'}
+                  className={'col-span-full table-groups  mobile:mx-4'}
                   filter={false}
                   data={data.wash_positions.map((item:any) => ({
                     id: item.id,
@@ -924,9 +924,10 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                 total={data.tire_positions.length}
                 variant={PanelVariant.default}
                 search={false}
+                  style={PanelRouteStyle.price_tire}
                 background={PanelColor.default}
                 state={false}
-                className={'col-span-full table-groups mobile:mx-4'}
+                className={'col-span-full table-groups  mobile:mx-4'}
                 filter={false}
                 data={data.tire_positions.map((item:any) => ({
                   id: item.id,
@@ -934,7 +935,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   service_subtype: item.service_subtype.name,
                   service_option: item.service_option ? item.service_option.name : null,
                   car_class: item.car_type,
-                  amount: item.amount
+                  amount_price: item.amount
                 }))}
                 ar={[{label: 'Радиус', name: 'radius'},{label: 'Тип услуги', name: 'service_subtype'}, {label: 'Доп. опции', name: 'service_option'}, {label: 'Тип автомобиля', name: 'car_class'}, {label: 'Cтоимость', name: 'amount'}, ]}
               />}
@@ -952,8 +953,8 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
                   bodyClassName={'!bg-transparent'}
               >
-                {!props.edit ? <div className={" col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}><TableWithSortNewPure
-
+                {!props.edit ? <div className={" col-span-full border-gray-4/70 border-b pb-4  mobile:mx-4"}>
+                  <TableWithSortNewPure
                   offsetSticky={0}
                   total={data.length}
                   variant={PanelVariant.default}
@@ -964,7 +965,8 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   data={data}
                   initFilterParams={[{ label: "Статус", value: "status" }, { label: "Город", value: "city" }]}
                   state={false}
-                  ar={[{ label: "Тип услуги", name: "service_option" }, { label: "До 2 тонн", name: "service_option" }, { label: "от 2 тонн", name: "service_option_1" }]} /></div> :<div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}> <TableWithSortNewPure meta={{ company_id: data.company, price_id: data.id, label: label}}
+                  ar={[{ label: "Тип услуги", name: "service_option" }, { label: "До 2 тонн", name: "service_option" }, { label: "от 2 тонн", name: "service_option_1" }]} /></div> :
+                  <div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}> <TableWithSortNewPure meta={{ company_id: data.company, price_id: data.id, label: label}}
                   edit={true}
                   offsetSticky={-1}
                   total={data.evacuation_positions.length}

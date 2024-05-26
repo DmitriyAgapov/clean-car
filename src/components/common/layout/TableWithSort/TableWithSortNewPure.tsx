@@ -74,6 +74,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
       }
       return _type
     })()
+
     const {width} = useWindowDimensions()
     const [open, setOpen] = useState(false);
     const propsRender = React.useMemo(() => {
@@ -83,7 +84,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
 
           if(key !== 'id') {
             ar.push(
-                <Table.Td key={key} className={styles.tableCellPure + ' ' + `${priceValue  ? '!pl-0 !pr-1' : ''}`} style={priceValue ? {width: 'calc(5rem * var(--mantine-scale))'} : {}} data-pricevalue={priceValue} data-label={label(key)}>
+                <Table.Td key={key} className={styles.tableCellPure + ' ' + `${priceValue  ? '!pl-0 !pr-1' : ''}`} onClick={(event: any)  => event.stopPropagation()} style={priceValue ? {width: 'calc(5rem * var(--mantine-scale))'} : {}} data-pricevalue={priceValue} data-label={label(key)}>
                     {edit && typeof props[key] === 'number' ? (
                         <NumberInput
                           data-id={props.id}
