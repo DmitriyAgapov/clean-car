@@ -1,17 +1,17 @@
 import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
+import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from 'stores/store'
 import { useLoaderData, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import Checkbox from 'components/common/ui/Checkbox/Checkbox'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { observer } from 'mobx-react-lite'
-import moment from 'moment'
 import { PermissionNames } from "stores/permissionStore";
 import { modificationSchema, modifyPermissions } from "utils/utils";
+import dayjs from 'dayjs';
 
 
 const GroupPage = () => {
@@ -25,57 +25,65 @@ const GroupPage = () => {
     let modifCatedData = { ...group };
     const except= store.appStore.appType === "admin" ? [null] : ["Компании", 'Управление справочниками', 'Компании']
     modifCatedData.permissions = modifyPermissions(group, modificationSchema, store.appStore.appType, except );
-
     return modifCatedData;
   }, [group]);
-
+  console.log(memoizedAndModificatedGroup);
   return (
     <Section type={SectionType.default}>
-      <Panel
-
-        className={'col-span-full'}
-        header={
-          <>
-            <Button
-              text={
-                <>
-                  <SvgBackArrow />
-                  Назад к списку групп{' '}
-                </>
-              }
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
-              action={() => navigate(-1)}
-              variant={ButtonVariant.text}
-            />
-            <Heading
-              text={'Группа'}
-              variant={HeadingVariant.h1}
-              className={'!mb-0 inline-block'}
-              color={HeadingColor.accent}
-            />
-          </>
-        }
-      ></Panel>
-      <Panel
-        variant={PanelVariant.textPadding}
-        state={store.permissionStore.loadingPermissions}
-        className={'grid grid-rows-[auto_1fr_auto]'}
-        headerClassName={'grid grid-cols-2'}
-        bodyClassName={'!p-0'}
+      <Panel className={'col-span-full'}
+        headerClassName={'justify-between gap-4 flex'}
         header={
           <>
             <div>
-              <Heading text={group.name} color={HeadingColor.accent} variant={HeadingVariant.h2} />
-              <div className={'text-gray-2 text-xs'}>
-                Дата и время создания {moment(group.created).format('DD.MM.YYYY HH:mm')}
-              </div>
+              <Button
+                text={
+                  <>
+                    <SvgBackArrow />
+                    Назад к списку компаний{' '}
+                  </>
+                }
+                className={
+                  'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
+                }
+                action={() => navigate('/account/companies')}
+                variant={ButtonVariant.text}
+              />
+              <Heading
+                text={'Группа'}
+                variant={HeadingVariant.h1}
+                className={'!mb-0 inline-block'}
+                color={HeadingColor.accent}
+              />
             </div>
             {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
               text={'Редактировать'}
               action={() => navigate(location.pathname + '/edit')}
-              className={'justify-self-end'}
+              className={'float-right mobile:mt-auto'}
               variant={ButtonVariant.default}
+
+              size={ButtonSizeType.sm}
             />}
+
+          </>
+        }
+
+      ></Panel>
+      <Panel
+        variant={PanelVariant.textPadding}
+        state={store.permissionStore.loadingPermissions}
+        className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto] tablet-max:-mx-3'}
+        footerClassName={'flex  justify-end mobile:!justify-center'}
+        headerClassName={'border-bottom-none'}
+        bodyClassName={'!py-0'}
+        header={
+          <>
+            <Heading text={group.name} color={HeadingColor.accent} variant={HeadingVariant.h3} />
+            <div className={'flex  tablet-max:block  items-baseline justify-between '}>
+              <div className={'text-gray-2 text-xs'}>
+                Дата и время создания {dayjs(group.created).locale('ru').format('DD MMMM YYYY г. HH:mm')}
+              </div>
+            </div>
+            <Heading className={'mt-6 !mb-2'} text={'Права группы'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
           </>
         }
         footer={
@@ -92,10 +100,7 @@ const GroupPage = () => {
         }
         background={PanelColor.glass}
       >
-        <div className={'accounts-group_body text-[#606163] py-6'}>
-          <Heading className={'px-8'} text={'Права группы'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
-          <PermissionTable data={memoizedAndModificatedGroup.permissions} />
-        </div>
+        <PermissionTable data={memoizedAndModificatedGroup.permissions} />
       </Panel>
     </Section>
   )

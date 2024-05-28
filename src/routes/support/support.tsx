@@ -3,16 +3,12 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { PriceOptionsSVG, SvgBackArrow } from "components/common/ui/Icon";
-import DList from 'components/common/ui/DList/DList'
-import { PermissionNames } from "stores/permissionStore";
-import label from "utils/labels";
-import useSWR from "swr";
-import { useDidUpdate, useDisclosure } from '@mantine/hooks'
-import dayjs from 'dayjs'
+import {  useDisclosure } from '@mantine/hooks'
+
 import { Box, List} from '@mantine/core'
 import SupportModal from "components/common/layout/Modal/SupportModal";
 

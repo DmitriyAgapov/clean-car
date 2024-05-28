@@ -11,19 +11,21 @@
   @screen tablet-max {
     display: block;
     overflow: hidden;
+    @apply border-b border-gray-2;
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */
     overflow-x: scroll;
-    margin: 0 -1.5rem;
-    scroll-margin: 0 4rem;
-    padding: 0 1.5rem;
-    scroll-snap-type: both;
-    width: 100lvw;
+    margin: 0 -.75rem;
+    //scroll-margin: 0 4rem;
+    //padding: 0 1.5rem;
+    //scroll-snap-type: both;
+    //width: 100lvw;
     &::-webkit-scrollbar {
       display: none;  /* Safari and Chrome */
     }
     ul {
       width: max-content;
+      padding: 0 .75rem;
     }
     & + [data-name] {
       //grid-template-columns: 1fr;
@@ -32,8 +34,8 @@
       }
       > div {
         grid-column: 1 / -1 !important;
-        margin-left: -1.25rem;
-        margin-right: -1.25rem;
+        //margin-left: -1.25rem;
+        //margin-right: -1.25rem;
       }
     }
   }
@@ -52,7 +54,7 @@
 }
 .containerHeader {
   display: flex;
-  @apply border-b border-gray-2 gap-6;
+  @apply tablet:border-b tablet:border-gray-2 gap-6;
 }
 .tabPanel {
   @apply  grid grid-cols-2 gap-y-6 gap-x-4 grid-flow-col;

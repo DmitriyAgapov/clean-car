@@ -143,7 +143,7 @@ const FormCreateUpdateCarBrand = (props: any) => {
     <FormProvider form={formData}>
       <form onSubmit={formData.onSubmit(handleSubmit)} style={{display: 'contents'}}>
         <PanelForForms
-          className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-big-max:-mx-5'}
+          className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]'}
           variant={PanelVariant.textPadding}
           background={PanelColor.glass}
           bodyClassName={'tablet:grid gap-6 tablet:grid-cols-3 items-start'}

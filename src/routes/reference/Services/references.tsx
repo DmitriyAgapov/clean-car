@@ -69,7 +69,7 @@ const ServicesPage = () => {
                   </>
                 }></Panel>
           <Panel variant={PanelVariant.textPadding}
-            className={"!mt-0  tablet-big-max:-mx-5"}
+            className={"!mt-0"}
             background={PanelColor.glass}
             bodyClassName={"grid tablet:grid-cols-3 gap-6"}
             header={<p>{textData.description}</p>}>

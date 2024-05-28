@@ -1,36 +1,29 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useEffect } from 'react'
 import DList from 'components/common/ui/DList/DList'
 import CardSimple from 'components/common/layout/Cards/CardSimple/CardSimple'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
-import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { User } from 'stores/usersStore'
 import Tabs, { TabsProps } from '../../../components/common/layout/Tabs/Tabs'
 import { useStore } from 'stores/store'
 import CreateInput from 'components/common/ui/CreateInput/CreateInput'
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
-import { dateTransformShort, translite } from "utils/utils";
+import { translite } from 'utils/utils'
 import { CAR_RADIUS } from 'stores/priceStore'
 import { NumberInput, ScrollArea } from '@mantine/core'
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalStore } from 'mobx-react-lite'
 import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
 import { BidsStatus } from 'stores/bidsStrore'
 import { PermissionNames } from 'stores/permissionStore'
 import dayjs from 'dayjs'
-import { CompanyType } from 'stores/companyStore'
-import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import useSWR from "swr";
-import agent from "utils/agent";
-import { LocalRootStore } from "stores/localStore";
-import userStore from "stores/userStore";
-import { toJS, values } from "mobx";
-import TabFilials from "routes/company/TabsVariants/TabFilials";
-import TabCars from "routes/company/TabsVariants/TabCars";
-import TabUsers from "routes/company/TabsVariants/TabUsers";
+import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
+import { LocalRootStore } from 'stores/localStore'
+import TabFilials from 'routes/company/TabsVariants/TabFilials'
+import TabCars from 'routes/company/TabsVariants/TabCars'
+import TabUsers from 'routes/company/TabsVariants/TabUsers'
 import TabBidHistory from 'routes/company/TabsVariants/TabBidHistory'
-import { useViewportSize } from "@mantine/hooks";
+import { useViewportSize } from '@mantine/hooks'
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -678,6 +671,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                 total={item.data.length}
                 variant={PanelVariant.default}
                 search={false}
+
                 background={PanelColor.default}
                 className={'col-span-full table-groups'}
                 initFilterParams={[
@@ -890,14 +884,15 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   search={false}
                   background={PanelColor.default}
                   state={false}
+                  routeStyle={PanelRouteStyle.price_tire}
                   className={'col-span-full table-groups  mobile:mx-4'}
                   filter={false}
                   data={data.wash_positions.map((item:any) => ({
                     id: item.id,
                     service_subtype: item.service_subtype.name,
-                    service_option: item.service_option ? item.service_option.name : null,
-                    car_class: item.car_class,
-                    amount: item.amount
+                    ...(item.service_option ? ({service_option: item.service_option?.name}) : ({service_option: ""})),
+                    ['Тип автомобиля'] : item.car_class,
+                    ['Цена']: item.amount
                   }))}
                   ar={[{label: 'Тип услуги', name: 'service_subtype'}, {label: 'Доп. опции', name: 'service_option'}, {label: 'Тип автомобиля', name: 'car_class'}, {label: 'Cтоимость', name: 'amount'}, ]}
                 />}
@@ -943,7 +938,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
           )
           break;
       case 'Эвакуация':
-
+        console.log(data);
           result = (
               <Tabs.PanelPure
                   state={state}
@@ -966,7 +961,8 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   initFilterParams={[{ label: "Статус", value: "status" }, { label: "Город", value: "city" }]}
                   state={false}
                   ar={[{ label: "Тип услуги", name: "service_option" }, { label: "До 2 тонн", name: "service_option" }, { label: "от 2 тонн", name: "service_option_1" }]} /></div> :
-                  <div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}> <TableWithSortNewPure meta={{ company_id: data.company, price_id: data.id, label: label}}
+                  <div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}>
+                    <TableWithSortNewPure meta={{ company_id: data.company, price_id: data.id, label: label}}
                   edit={true}
                   offsetSticky={-1}
                   total={data.evacuation_positions.length}
@@ -974,6 +970,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   search={false}
                   background={PanelColor.default}
                   state={false}
+                      routeStyle={PanelRouteStyle.price_evac}
                   className={'col-span-full table-groups'}
                   filter={false}
                   data={data.evacuation_positions.map((item:any) => ({

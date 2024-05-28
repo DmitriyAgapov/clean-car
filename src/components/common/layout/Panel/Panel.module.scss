@@ -22,6 +22,45 @@
   footer {
 
   }
+  &[data-style="price_evac"] {
+	@screen tablet-big-max {
+	  tr {
+		&:first-child {
+		  width: initial !important;
+		}
+		td {
+		  &:first-child {
+			grid-column: 1/-3;
+			&:before {
+			  content: none  !important;
+			}
+		  }
+
+		  &[data-label="Факт/лимит"] {
+			grid-row: 3;
+			 > div {
+			  width: 100% !important;
+			}
+			&:before {
+			  content: none;
+			}
+		  }
+		  &[data-label="Опция"] {
+			grid-column: 1/-1;
+			&:before {
+			  content: attr(data-label);
+			  font-size: .625rem;
+			  @apply text-gray-2;
+			}
+		  }
+
+
+		}
+
+	  }
+
+	}
+  }
   &[data-style="price_tire"] {
 	@screen desktop {
 	  th {
@@ -55,7 +94,7 @@
 		}
 	  }
 	}
-	@screen mobile {
+	@screen tablet-big-max {
 	  tr {
 		&:first-child {
 		  width: initial !important;
@@ -64,7 +103,7 @@
 		  &:first-child {
 			grid-column: 1/-3;
 			&:before {
-			  content: none;
+			  content: none  !important;
 			}
 		  }
 		  &[data-label="R14"] {
@@ -74,13 +113,42 @@
 			  @apply text-gray-2;
 			}
 		  }
+		  &[data-label="Опция"] {
+			grid-column: 1/-1;
+			&:before {
+			  content: attr(data-label);
+			  font-size: .625rem;
+			  @apply text-gray-2;
+			}
+		  }
+		  &[data-label="service_subtype"] {
+			&:before {
+			  content: attr(data-label);
+			  font-size: .625rem;
+			  @apply text-gray-2;
+			}
+		  }
+
+
 		}
 
 	  }
 
 	}
   }
-  &[data-style="price"] {
+  &[data-style="finance"],  &[data-style="default_form"], &[data-style="financeId"], &[data-variant="suffixFooter"]:not([class*="-state"]), &[data-style="refcars"] {
+	@screen mobile {
+	  margin-left: -.75rem;
+	  margin-right: -.75rem;
+
+	  header,  [data-panel="body"], footer {
+		padding-left: .75rem !important;
+		padding-right: .75rem !important;;
+	  }
+	}
+  }
+
+  &[data-style="price"]  {
 	@screen mobile {
 		margin-left: -.75rem;
 		margin-right: -.75rem;
@@ -99,17 +167,18 @@
 		ul {
 		  width: 100vw;
 		  & > *:first-child {
-			margin-left: 1.25rem;
+			//margin-left: 1.25rem;
 		  }
 		  & > *:last-child {
-			margin-right: 1.25rem;
+			//margin-right: 1.25rem;
 		  }
 		}
 	  }
 	  [data-position="tabs-panel-container"] {
 
 	  }
-	  [data-label="service_option"] {
+
+	  [data-label="Опция"] {
 		grid-column: 1/-3;
 		&:before {
 		  content: none;
@@ -123,6 +192,7 @@
 		  }
 		}
 	  }
+
 	}
   }
   &[data-style="default"] {
@@ -132,7 +202,7 @@
   &[data-style="default_form"]:not([data-variant="textPadding"]) {
 	@apply col-span-full;
 	@screen tablet-max {
-	  margin: 0 -1.25rem;
+	  margin: 0 -.75rem;
 
 	  overflow: hidden;
 	  //max-width: 100vw;
@@ -197,18 +267,18 @@
   &[data-variant="textPadding"] {
 	@apply bg-gray-4/70;
 	> header {
-	  @apply px-8 pt-12 pb-6 tablet-max:px-5 ;
+	  @apply px-8 pt-12 pb-6 tablet-max:px-3 ;
 	}
 
 	> footer {
 	  @apply px-8 pb-12 pt-6 ;
 	  @screen tablet {
-		@apply flex  gap-6 justify-end items-end tablet-max:px-5 ;
+		@apply flex  gap-6 justify-end items-end tablet-max:px-3 ;
 	  }
 	}
 
 	> [data-panel="body"] {
-	  @apply  px-8 py-6 tablet-max:px-5 ;
+	  @apply  px-8 py-6 tablet-max:px-3 ;
 	}
 	> [data-panel="body"]:first-child {
 	  padding-top: 3rem;
@@ -458,16 +528,16 @@
 	  }
 	}
 	@screen mobile {
-	  margin-left: -1.25rem !important;
-	  margin-right: -1.25rem !important;
+	  margin-left: -.75rem !important;
+	  margin-right: -.75rem !important;
 
 
 	}
   }
   &[data-style="finance"] {
 	@screen mobile {
-	  margin-left: -1.25rem !important;
-	  margin-right: -1.25rem !important;
+	  margin-left: -.75rem !important;
+	  margin-right: -.75rem !important;
 
 	  [data-label="Компания"] {
 		grid-column: 1/-3;

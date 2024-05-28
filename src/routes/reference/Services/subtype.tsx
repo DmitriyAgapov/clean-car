@@ -108,7 +108,7 @@ const ServicesSubTypePage = () => {
               </div>
               <Heading color={HeadingColor.accent} text={'Дополнительные опции'} className={'mt-12 !mb-0'} variant={HeadingVariant.h4}/>
             </>
-          } variant={PanelVariant.textPadding} className={'!mt-0   tablet-big-max:-mx-5'} background={PanelColor.glass} bodyClassName={'grid tablet:grid-cols-3 gap-6'} >
+          } variant={PanelVariant.textPadding} className={'!mt-0'} background={PanelColor.glass} bodyClassName={'grid tablet:grid-cols-3 gap-6'} >
 
               {data.results.options.map((card:any) => <FormCard key={card.id} title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full group  overflow-hidden'}
                 actions={

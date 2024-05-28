@@ -1,6 +1,6 @@
 import React, { JSX, useEffect } from "react";
 import Section, { SectionType } from "components/common/layout/Section/Section";
-import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
+import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from "stores/store";
@@ -10,17 +10,11 @@ import { PermissionNames } from "stores/permissionStore";
 import { dateTransformShort } from "utils/utils";
 import { CompanyType } from "stores/companyStore";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
-import { observer } from "mobx-react-lite";
-const PriceActions = observer((props: any) => {
-  const  store = useStore()
-  const revalidator = useRevalidator();
-  const navigate = useNavigate()
-  return  store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <div className={`flex fixed bottom-0 bg-black/80 left-0 right-0 w-full p-6 rounded ${props.className}`} {...props}>
-     <Button className={''} text={'Отменить'} action={() =>  {navigate(location.pathname.split('/').slice(0, -1).join('/')); store.priceStore.clearPriceOnChange()}} size={ButtonSizeType.sm}       variant={ButtonVariant.cancel}/>
-     <Button text={'Сохранить'} disabled={store.priceStore.priceOnChange.size === 0}  type={'button'}   action={async () => {store.appStore.setAppState(true); await store.priceStore.handleSavePrice().then(() => {revalidator.revalidate(); navigate(location.pathname.split('/edit')[0])})}} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>
-   </div>
+import { observer } from 'mobx-react-lite'
+import PriceActions from "routes/price/actions";
 
-})
+
+
 const PriceEditPage = ():JSX.Element => {
   const navigate = useNavigate()
   const navigation = useNavigation();
@@ -35,16 +29,18 @@ const PriceEditPage = ():JSX.Element => {
     console.log('params changed, priceOnChange cleared');
     store.priceStore.clearPriceOnChange()
   }, [params.id])
-
+  const handleClick = () => {
+    console.log('click');
+  }
   return (
+    <>
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'} state={false}
         header={<>
           <div>
             <Button text={<><SvgBackArrow />{textData.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() =>  navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
-            <Heading text={company.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
+            <Heading text={company?.name} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
           </div>
-          <PriceActions className="tablet-max:hidden"/>
           {/* {store.userStore.getUserCan(PermissionNames["Управление прайс-листом"], 'update') && <Button */}
           {/*   text={'Редактировать'} */}
           {/*   action={() => navigate(location.pathname + '/edit')} */}
@@ -56,8 +52,9 @@ const PriceEditPage = ():JSX.Element => {
       </Panel>
 
       <Panel
-        className={'col-span-full grid grid-rows-[auto_1fr] px-5 py-8 !gap-10 tablet-big-max:-mx-5'}
+        className={'col-span-full grid grid-rows-[auto_1fr] px-5 py-8 !gap-10'}
         variant={PanelVariant.withGapOnly}
+        routeStyle={PanelRouteStyle.price}
         background={PanelColor.glass}
         bodyClassName={'flex '}
         footerClassName={'flex  justify-end'}
@@ -65,28 +62,29 @@ const PriceEditPage = ():JSX.Element => {
         header={
           <>
             <div className={'flex w-full tablet-max:flex-col col-span-full gap-2.5'}>
-              <Heading text={company.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
+              <Heading text={company?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
 
+              <PriceActions/>
             </div>
             <div className={'flex items-baseline tablet-max:flex-col  gap-6'}>
               <div className={'text-xs text-gray-2'}>
-                Дата и время регистрации: <span>{dateTransformShort(company.updated).date}</span>
+                Дата и время регистрации: <span>{dateTransformShort(company?.updated).date}</span>
               </div>
               <div className={'flex flex-1 gap-6'}>
                 <Heading
                   className={'!m-0'}
-                  text={company.is_active ? 'Активен' : 'Не активна'}
-                  color={company.is_active ? HeadingColor.active : HeadingColor.notActive}
+                  text={company?.is_active ? 'Активен' : 'Не активна'}
+                  color={company?.is_active ? HeadingColor.active : HeadingColor.notActive}
                   variant={HeadingVariant.h4}
                 />
                 <Heading
                   className={'!m-0'}
-                  text={company.company_type == 'customer'
+                  text={company?.company_type == 'customer'
                     ? CompanyType.customer
                     : CompanyType.performer}
                   variant={HeadingVariant.h4}
                   directory={
-                    company.company_type == 'customer'
+                    company?.company_type == 'customer'
                       ? HeadingDirectory.customer
                       : HeadingDirectory.performer
                   }
@@ -99,7 +97,9 @@ const PriceEditPage = ():JSX.Element => {
       >
         <Tabs data={data.tabs} type={TabsType.priceEdit} className={'page-price flex-[1_auto]'} />
       </Panel>
+
     </Section>
+          <PriceActions/></>
   )
 }
 export default observer(PriceEditPage)

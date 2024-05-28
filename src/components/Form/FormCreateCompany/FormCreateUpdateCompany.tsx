@@ -367,20 +367,20 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             label={'Тип'}
                             disabled={edit}
                             defaultValue={formData.values.type}
-                            className={'tablet:!flex-initial desktop:!flex-[0_1_33%]'}
+                            className={'tablet:!flex-initial desktop:!flex-[0_1_33%] col-span-3'}
                             data={[
                                 { label: 'Заказчик', value: CompanyType.customer },
                                 { label: 'Партнер', value: CompanyType.performer },
                             ]}
                         />
                         <TextInput label={'Название'} {...formData.getInputProps('company_name')} />
-                        <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
+                        <hr className='my-2 flex-[1_0_100%] col-span-full w-full border-gray-2' />
                         <Select
                             withCheckIcon={false}
                             label={'Город'}
                             searchable={true}
                             {...formData.getInputProps('city')}
-                            className={'!flex-auto desktop:!flex-[0_1_33%]'}
+                            // className={'!flex-auto desktop:!flex-[0_1_33%]'}
                             onOptionSubmit={(props) => {
                                 formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name)
                                 formData.setFieldValue('address', '')

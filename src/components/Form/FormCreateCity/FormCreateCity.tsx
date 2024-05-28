@@ -110,7 +110,7 @@ const FormCreateCity = (props: any) => {
           <Form  style={{display: 'contents'}}>
           <PanelForForms
             state={false}
-            className={'col-span-full grid grid-rows-[auto_1fr_auto]   tablet-big-max:-mx-5'}
+            className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
             variant={PanelVariant.textPadding}
             background={PanelColor.glass}
             footerClassName={'!block px-8 !pb-8 !pt-2 tablet-max:px-5 tablet-max:pb-24'}

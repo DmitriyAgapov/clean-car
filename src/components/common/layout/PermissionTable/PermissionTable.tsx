@@ -16,11 +16,11 @@ type PermissionTableProps = {
   action?: (event: Event, id: string) => void
 }
 const PermissionTable = ({ data, editable = false, action }: PermissionTableProps) => {
-  const handleChange = (event: Event, id: string) => {
+  const handleChange = React.useCallback((event: Event, id: string) => {
     if (action) {
       action(event, id)
     }
-  }
+  }, [])
 
   return (
     <div className={styles.PermissionTable}>

@@ -39,7 +39,7 @@ export const PaginationComponent = observer(():any => {
   const initCount = localStore.countData
   const {width} = useWindowDimensions()
   const nextPageIsNotExist = localStore.getData?.next
-  console.log(initCount);
+
   return React.useMemo(() => {
     // if(!nextPageIsNotExist && width && width < 1000) return
     // if(width && width < 1000) return <Button text={'Load more'} action={() => localStore.loadMore()}/>
@@ -50,8 +50,10 @@ export const PaginationComponent = observer(():any => {
       total={(initCount &&  Math.ceil(initCount / localStore.params.searchParams.page_size) > 1) ? Math.ceil(initCount / localStore.params.searchParams.page_size) : 0}
       value={localStore.params.searchParams.page}
       onChange={value => localStore.params.setSearchParams({ page: Number(value) })}
-      // boundaries={2}
-      defaultValue={5} />
+      boundaries={1}
+      withControls={!!(width && width > 743)}
+      siblings={1}
+    />
   }, [width, nextPageIsNotExist]);
 })
 
@@ -60,7 +62,6 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
     const localStore = useLocalStore<LocalRootStore>()
     const rows = toJS(localStore.getData)?.results
     const initCount = localStore.getData?.count || 0
-    const {data, params: {getSearchParams: {page_size: pageSize}}} = localStore
     const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading
 
 

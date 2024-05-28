@@ -22,6 +22,7 @@ export enum PanelColor {
 
 export enum PanelRouteStyle {
     default = 'default',
+    price_evac = 'price_evac',
     default_form = 'default_form',
     limits = 'limits',
     prices = 'prices',

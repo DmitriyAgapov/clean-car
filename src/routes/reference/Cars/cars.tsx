@@ -127,7 +127,7 @@ const RefCarsPage = () => {
                   </>
               }
           />
-          <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full tablet-big-max:-mx-5'}>
+          <Panel variant={PanelVariant.withGapOnly} className={'!mt-0 h-full'}>
               <TableWithSortNew
                   store={localRootStore}
                   variant={PanelVariant.dataPadding}

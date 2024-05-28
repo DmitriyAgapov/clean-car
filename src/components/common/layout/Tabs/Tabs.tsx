@@ -53,7 +53,9 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
         return result
     }
     if (type == TabsType.price) {
+
         (data && data.length > 0) && data.forEach((item: any, index: number) => {
+          console.log(data)
             result.push(
                 <TabsVariantPrice
                     key={`tab_${index}`}
@@ -173,13 +175,13 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
     if(aTab !== null) {
       setState(aTab)
     }
-    store.bidsStore.setActiveTab(null);
+    store.bidsStore.setActiveTab(null)
   }, [aTab]);
 
 
 
     return (
-        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant}>
+        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} data-panel={"tabs"}>
             <Tabs.TabHeaderContainer>
               <HeadersTabs data={data} state={state} setState={handleChangeTabState} />
             </Tabs.TabHeaderContainer>
@@ -198,7 +200,7 @@ Tabs.Tab = ({ title, state, type, ...props }: { title: string; state: boolean} |
 Tabs.Panel = observer(({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
 
  if(state) return (
-    <div data-company-type={company_type}  className={styles.tabPanel + " " + className} data-state={state} data-name={name}>
+    <div data-company-type={company_type}  className={styles.tabPanel + " " + className} data-panel={"panel"}  data-state={state} data-name={name}>
       {children}
     </div>
   )

@@ -95,7 +95,9 @@ export class PriceStore {
     async loadPrices(params?: PaginationProps) {
         return await agent.Price.getAllPrice(paramsStore.params)
     }
-
+    get getPriceOnChange() {
+        return this.priceOnChange
+    }
     parseEntries() {
         const result = (ar:any[]) => ar.reduce((acc, item) => {
             acc[item.id] = item.amount;
@@ -156,7 +158,7 @@ export class PriceStore {
             let result:any[] = []
 
             newMap.forEach((value:any, key) => {
-                return result.push(Object.assign({service_option: key}, ...value.map((i:any, index:number) => ({[`service_subtype_${index}`]: i.amount}))))
+                return result.push(Object.assign({service_option: key}, ...value.map((i:any, index:number) => ({[i.service_subtype.name]: i.amount}))))
             })
             return result
         }
@@ -201,7 +203,7 @@ export class PriceStore {
                 })
                 result.push({ label: key, data: resultInner })
             })
-            console.log(result);
+            // console.log(result);
             return result
         }
         const mapEdTire = (ar: any[], edit: boolean) => {
@@ -284,7 +286,7 @@ export class PriceStore {
                 // const { data: dataWash } = await agent.Price.getCompanyPriceWash(userStore.myProfileData.company?.id, props.params.id);
                 console.log('есть ID', props.params.id);
                 const tempAr:any[] = []
-                console.log(mapEdWast(dataWash.wash_positions));
+                // console.log(mapEdWast(dataWash.wash_positions));
                 runInAction(() => {
                     this.currentPrice = {
                         tabs: [{
@@ -380,11 +382,8 @@ export class PriceStore {
                                 return obj;
                             })
                         }
-                        console.log('datalist', data);
-                        console.log('dataResults', dataResults);
                         this.currentPrice = data
                         this.loading = false
-                        console.log('statePriceFinish', this.loading);
                     }
                 } catch (e) {
                     console.log(e)
@@ -440,8 +439,6 @@ export class PriceStore {
                             this.loading = false
                             console.log('statePriceFinish', this.loading);
                         }
-                        console.log(data);
-                        console.log(dataResults, status);
                     } else {
                         let tempId = props.params.id || userStore.myProfileData.company?.id
                         const { data: dataEvac } = await agent.Price.getCompanyPriceEvac(tempId, props.params.bid_id);
@@ -542,7 +539,6 @@ export class PriceStore {
     async handleSavePrice() {
         return await this.updatePrices()
             .then((r) => {
-                console.log('success', r)
                 r.forEach((r: any) => {
                     setTimeout(() => {
                         if(r) {
@@ -556,7 +552,7 @@ export class PriceStore {
                                     className: 'my-notification-class z-[9999] absolute top-12 right-12',
                                     loading: false,
                                 });
-                                this.clearPriceOnChange()
+
                             } else {
                                 notifications.show({
                                     id: 'car-created',
@@ -574,10 +570,11 @@ export class PriceStore {
                             }}
                         }, 50)})
 
-    })}
+    })
+          .finally(() =>       this.clearPriceOnChange())}
     // @ts-ignore
     handleChangeAmount({type, label, price_id, company_id, initValue, amount, id}) {
-        console.log(initValue);
+
         if(!initValue) {
             // @ts-ignore
             this.priceOnChange.set(`${type}_${id.toString()}`, {amount: amount, label: label, price_id: price_id, company_id, id: id})

@@ -6,6 +6,13 @@
 .PermissionTableHeader {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  @screen tablet-max {
+    grid-template-columns: 1.25fr repeat(4, .75fr);
+    padding-left: .75rem;
+    padding-right: .75rem;
+    margin: 0 -.75rem;
+    font-size: 8px;
+  }
 
   & > *:first-child {
 	text-align: initial;
@@ -25,8 +32,14 @@
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
   @apply font-medium text-xs px-8;
   & > *:first-child {
-	font-size: .75rem;
+	font-size: .625rem;
 	color: white;
   }
-
+  @screen tablet-max {
+    grid-template-columns: 1.25fr repeat(4, .75fr);
+    padding-left: .75rem;
+    padding-right: .75rem;
+    margin: 0 -.75rem;
+    font-size: 8px;
+  }
 }

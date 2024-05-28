@@ -99,7 +99,7 @@ const ReferenceCarPage = ():JSX.Element => {
       </Panel>
       <Panel
         state={isLoading}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto]  tablet-big-max:-mx-5'}
+        className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
         bodyClassName={'desktop:pl-44 desktop:grid flex flex-col desktop:grid-cols-2 items-start content-start desktop:gap-8 gap-4'}

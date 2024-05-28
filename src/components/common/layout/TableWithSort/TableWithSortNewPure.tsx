@@ -77,6 +77,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
 
     const {width} = useWindowDimensions()
     const [open, setOpen] = useState(false);
+
     const propsRender = React.useMemo(() => {
         const ar = []
         for (const key in props) {
@@ -84,7 +85,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
 
           if(key !== 'id') {
             ar.push(
-                <Table.Td key={key} className={styles.tableCellPure + ' ' + `${priceValue  ? '!pl-0 !pr-1' : ''}`} onClick={(event: any)  => (edit && typeof props[key] === 'number') && event.stopPropagation()} style={priceValue ? {width: 'calc(5rem * var(--mantine-scale))'} : {}} data-pricevalue={priceValue} data-label={label(key)}>
+                <Table.Td key={key} className={styles.tableCellPure + ' ' + `${priceValue  ? '!pl-0 !pr-1' : ''}`} onClick={(event: any)  => (edit && typeof props[key] === 'number') && event.stopPropagation()} style={priceValue ? {width: 'calc(5rem * var(--mantine-scale))'} : (key === "service_option" && props[key] === "") ? {opacity: 0, border: 0, padding: 0} : {}} data-pricevalue={priceValue} data-label={label(key)}>
                     {edit && typeof props[key] === 'number' ? (
                         <NumberInput
                           data-id={props.id}
@@ -145,7 +146,7 @@ export const TableForPrice = (props: any) => {
 
 export const TableWithSortNewPure = ({ meta, edit, variant, offsetSticky = 33, data, search = false, filter = false, state, className, total, ar, action, pageSize = 10, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props }: TableWithSortProps) => {
     const initCount = total || 0
-  console.log(data);
+
     const RowDataMemoized = React.useMemo(() => {
         if(data && data.length > 0) return data.map((item: any, index: number) => {
 
