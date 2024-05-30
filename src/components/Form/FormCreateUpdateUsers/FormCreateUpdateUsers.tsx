@@ -231,7 +231,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                 className={' tablet-max:-mx-6'}
                 bodyClassName={'tablet-max:block '}
                 footerClassName={
-                    'tablet-max:child:flex tablet-max:child:flex-col tablet-max:child:w-full tablet-max:child:*:flex-1 tablet-max:child:*:w-full'
+                    'tablet-max:child:flex tablet-max:child:flex-col tablet-max:child:w-full tablet-max:child:*:flex-1 tablet-max:child:*:w-full  tablet-max:-mx-2'
                 }
                 actionCancel={
                     <>

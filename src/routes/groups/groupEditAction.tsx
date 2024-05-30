@@ -13,7 +13,6 @@ import { modificationSchema, modifyPermissions } from "utils/utils";
 
 export default function GroupPageEditAction(props: any) {
   const store = useStore()
-  const location = useLocation()
   const revalidator = useRevalidator()
   const navigate = useNavigate()
   // @ts-ignore
@@ -28,7 +27,6 @@ export default function GroupPageEditAction(props: any) {
         _ar.push(item)
       }
     })
-
     modifCatedData.permissions = _ar;
 
     return modifCatedData;
@@ -64,33 +62,32 @@ export default function GroupPageEditAction(props: any) {
     <Section type={SectionType.default}>
       <Panel
         className={'col-span-full'}
+        headerClassName={'justify-between gap-4 flex'}
         header={
           <>
-            <Button
-              text={
-                <>
-                  <SvgBackArrow />
-                  Назад к списку групп{' '}
-                </>
-              }
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
+          <div>
+            <Button text={
+              <>
+                <SvgBackArrow />
+                Назад к списку групп </>
+            }
+              className={     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
               action={() => navigate(-1)}
-              variant={ButtonVariant.text}
-            />
-            <Heading
-              text={'Редактирование группы'}
+              variant={ButtonVariant.text} />
+            <Heading text={"Редактирование группы"}
               variant={HeadingVariant.h1}
               className={'!mb-0 inline-block'}
-              color={HeadingColor.accent}
-            />
+              color={HeadingColor.accent} />
+
+          </div>
           </>
-        }
-      ></Panel>
-      <Panel
+          }
+          ></Panel>
+          <Panel
         variant={PanelVariant.textPadding}
         state={false}
-        bodyClassName={'!pt-0 !px-0'}
-        className={'grid grid-rows-[auto_1fr_auto]'}
+            bodyClassName={'!py-0'}
+        className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto] tablet-max:-mx-3'}
         header={<label className={'account-form__input flex-1'} htmlFor='cleanm'>
           Название группы
           <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
@@ -120,9 +117,9 @@ export default function GroupPageEditAction(props: any) {
                   state: true,
                 })
               }}
-              className={'justify-self-start mr-auto'}
+              className={'justify-self-start mr-auto  tablet-max:order-1'}
             />
-            <div className={'flex justify-end gap-5'}>
+            <div className={'flex tablet-max:flex-col  justify-end gap-4 tablet-max:!mb-4 '}>
               <Button
                 text={'Отменить'}
                 action={() => navigate(-1)}
@@ -137,12 +134,13 @@ export default function GroupPageEditAction(props: any) {
                   revalidator.revalidate()
                   setTimeout(() => navigate('/account/groups'), 500)
                 }}
-                className={'float-right'}
+                className={'float-right tablet-max:-order-1  '}
                 variant={ButtonVariant.accent}
               />
             </div>
           </>
         }
+            footerClassName={'flex tablet-max:flex-col  justify-end mobile:!justify-center tablet-max:!px-3  tablet-max:border-t mt-6 pt-4 border-gray-2'}
         background={PanelColor.glass}
       >
         <div className={'accounts-group_body text-[#606163] py-6'}>

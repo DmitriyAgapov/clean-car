@@ -222,7 +222,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     if(r.status > 299) {}
                     else {
                         formData.setFieldValue('id', r.id)
-                        changeStep(3)
+                        navigate('/account/companies')
                     }
                 }).catch((e) => {
                     console.log('error');
@@ -256,7 +256,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             } else {
                 store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
                     values.id = r.id
-                    changeStep(3)
+                    navigate('/account/companies')
                 }).finally(() => store.companyStore.loadCompanies())
             }
         }

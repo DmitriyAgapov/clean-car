@@ -19,7 +19,6 @@ const UsersPageEditAction = () => {
   const location = useLocation()
   const { user }: any = useLoaderData()
   const params = useParams()
-  console.log(user, 'user');
   const {isLoading, data, mutate}:any = useSWR(`users_${params.company_id}_${params.id}`,() => store.usersStore.userLoader({company_type : params.company_type, id:Number(params.id), company_id:Number(params.company_id)}))
   // const _data = React.useMemo(() => {
   //   return ({

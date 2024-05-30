@@ -68,28 +68,24 @@ import PolicyPage from "routes/poliicy";
 import ErrorPageNotFound from "error-page-404";
 
 const router = createBrowserRouter([
-        {
-            path: '*',
-            element: <ErrorPageNotFound />
-        },
-        {
-            path: '/404',
-            element: <ErrorPageNotFound />
-        },
-
-          {
-                path: '/',
-                element: <AuthPage />,
-                errorElement: <ErrorPage />,
-            },
-
+    {
+        path: '*',
+        element: <ErrorPageNotFound />
+    },
+    {
+        path: '/404',
+        element: <ErrorPageNotFound />
+    },
+    {
+        path: '/',
+        element: <AuthPage />,
+        errorElement: <ErrorPage />,
+    },
     {
         path: '/policy',
         element: <PolicyPage />,
         errorElement: <ErrorPage />,
     },
-
-
     {
         path: '/register',
         element: <RegisterPage />,

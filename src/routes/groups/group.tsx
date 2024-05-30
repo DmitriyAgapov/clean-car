@@ -27,10 +27,11 @@ const GroupPage = () => {
     modifCatedData.permissions = modifyPermissions(group, modificationSchema, store.appStore.appType, except );
     return modifCatedData;
   }, [group]);
-  console.log(memoizedAndModificatedGroup);
+
   return (
     <Section type={SectionType.default}>
-      <Panel className={'col-span-full'}
+      <Panel
+        className={'col-span-full'}
         headerClassName={'justify-between gap-4 flex'}
         header={
           <>
@@ -39,7 +40,7 @@ const GroupPage = () => {
                 text={
                   <>
                     <SvgBackArrow />
-                    Назад к списку компаний{' '}
+                    Назад к списку групп{' '}
                   </>
                 }
                 className={
@@ -72,7 +73,7 @@ const GroupPage = () => {
         variant={PanelVariant.textPadding}
         state={store.permissionStore.loadingPermissions}
         className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto] tablet-max:-mx-3'}
-        footerClassName={'flex  justify-end mobile:!justify-center'}
+        footerClassName={'flex  justify-end mobile:!justify-center tablet-max:!px-3  tablet-max:border-t mt-6 pt-4 border-gray-2'}
         headerClassName={'border-bottom-none'}
         bodyClassName={'!py-0'}
         header={
@@ -87,13 +88,8 @@ const GroupPage = () => {
           </>
         }
         footer={
-          <div className={'flex gap-10 text-gray-2 font-medium text-xs'}>
-            <Checkbox
-              name={'test_change_availible_checked'}
-              checked={true}
-              disabled={false}
-              label={'Выбранная позиция'}
-            />
+          <div className={'flex gap-10 tablet-max:gap-3 tablet-max:flex-col text-gray-2 font-medium text-xs'}>
+            <Checkbox name={'test_change_availible_checked'} checked={true} disabled={false} label={'Выбранная позиция'} />
             <Checkbox name={'test_change_availible'} checked={false} disabled={false} label={'Доступно к выбору'} />
             <Checkbox name={'test_change_availible_disabled'} available={false} disabled={true} label={'Недоступно'} />
           </div>

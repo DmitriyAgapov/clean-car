@@ -63,5 +63,7 @@
 	outline-offset: max(2px, 0.15em);
   }
 
-
+	@screen tablet-max {
+	  font-size: .75rem;
+	}
 }

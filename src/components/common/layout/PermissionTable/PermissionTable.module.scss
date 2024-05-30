@@ -1,6 +1,9 @@
 .PermissionTable {
   display: grid;
   gap: 2rem;
+  @screen tablet-max {
+    gap: 1.25rem .75rem;
+  }
 }
 
 .PermissionTableHeader {
@@ -32,7 +35,10 @@
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
   @apply font-medium text-xs px-8;
   & > *:first-child {
-	font-size: .625rem;
+
+    @screen tablet-max {
+	  font-size: .625rem;
+    }
 	color: white;
   }
   @screen tablet-max {

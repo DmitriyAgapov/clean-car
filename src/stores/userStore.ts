@@ -98,6 +98,7 @@ export class UserStore {
     company: <any> null,
     user: <any> null,
     permissions: <any> null,
+    permissionGroupName: <any>  null,
     error:  null,
     roles: [] = []
   }
@@ -127,6 +128,7 @@ export class UserStore {
           this.myProfileData.user = data
           this.myProfileData.company = data.account_bindings[0].company
           this.myProfileData.permissions = data.account_bindings[0].group.permissions
+          this.myProfileData.permissionGroupName = data.account_bindings[0].group.name
           this.createUserPermissions()
           bidsStore.loadEventCount()
         })
@@ -265,6 +267,7 @@ export class UserStore {
       loading: false,
       company: <any> null,
       user:<any> null,
+      permissionGroupName: <any> null,
       permissions: <any> null,
       error:  null,
       roles: [] = []

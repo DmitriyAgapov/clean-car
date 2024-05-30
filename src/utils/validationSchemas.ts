@@ -26,6 +26,13 @@ export const CreateUserSchema = Yup.object().shape({
 	}),
 	is_active: Yup.string()
 })
+export const UpdateUserProfileSchema = Yup.object().shape({
+	first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+	last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+	phone: Yup.string().max(16, 'Слишком длинное!').phone('RU', 'Введите правильный номер').required('Обязательное поле'),
+	email: Yup.string().email('Неверный email').required('Обязательное поле'),
+})
+
 export const CreateModalUserSchema = Yup.object().shape({
 	first_name: Yup.string()
 	.min(2, 'Too Short!')

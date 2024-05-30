@@ -77,10 +77,14 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           //     }}
           // />
       )
-  if(!store.appStore.token && loc.pathname !== "/" && !loc.pathname.includes("/policy")) {
+  const exceptions = [
+    'policy', '404', 'restore'
+  ]
+  const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
+
+  if(!store.appStore.token && loc.pathname !== "/" && !isInException(loc.pathname)) {
     return (<Navigate to={'/'}/>)
   }
-
 
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
