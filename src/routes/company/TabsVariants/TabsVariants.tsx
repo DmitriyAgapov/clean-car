@@ -360,7 +360,6 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
     let result
     switch (label) {
         case 'Основная информация':
-          console.log(data);
             result = (
                 <Tabs.Panel
                     className={'pt-8 grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !py-8' + ' ' + className}
@@ -483,7 +482,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     }
                   />
                   {store.appStore.appType === "performer" && <p className={'col-span-2'}>Ознакомьтесь с услугой. И при необходимости внесите изменения. Сервис передаст их на согласование</p>}
-                  {(store.appStore.appType === "customer" || store.appStore.appType === "admin") && <p className={'col-span-2'}>Исполнитель отредактировал перечень услуг. Пожалуйста проверьте и подтвердите изменения </p>}
+                  {/* {(store.appStore.appType === "customer" || store.appStore.appType === "admin") && <p className={'col-span-2'}>Исполнитель отредактировал перечень услуг. Пожалуйста проверьте и подтвердите изменения </p>} */}
 
                   {data.address_from && <DList
                     className={'child:dt:text-accent col-span-2'}

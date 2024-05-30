@@ -38,7 +38,7 @@ const TabBidHistory = ({companyId, company_type, state }:any) => {
 	className={'!rounded-none  !bg-none overflow-visible !border-0 row-span-5 pb-0'}
 	bodyClassName={'!bg-none !rounded-none !bg-transparent  !pb-0'}
 	background={PanelColor.default}
-	search={true} filter={true}
+	search={false} filter={true}
 	footerClassName={'pt-8 justify-end flex'}
 	variant={PanelVariant.default}
 

@@ -13,7 +13,7 @@ function AuthPage() {
   const store = useStore()
   const location = useLocation()
   if (store.appStore.appType !== "" && location.pathname !== 'policy') {
-    return <Navigate to={'/account'} />
+    return <Navigate to={'/account/bids'} />
   }
   return (
     <Layout

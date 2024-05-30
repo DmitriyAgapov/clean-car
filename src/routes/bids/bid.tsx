@@ -14,7 +14,6 @@ import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import BidActions, { BidAdminActions } from "components/common/ui/BidActions/BidActions";
 import appStore from "stores/appStore";
 import { observer } from "mobx-react-lite";
-import agent, { client } from "utils/agent";
 import useSWR from "swr";
 import { useViewportSize } from "@mantine/hooks";
 

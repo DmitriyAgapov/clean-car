@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { Button, Group, Image, Text, Modal } from '@mantine/core'
+import React, { useState } from 'react'
+import { Image, Modal } from '@mantine/core'
+import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
-import 'swiper/css';
-import { observer } from "mobx-react-lite";
-import BidImg from "components/common/layout/Modal/BidImg";
-import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import styles from "components/common/layout/Modal/Modal.module.scss";
-import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
-import { SvgBackArrow, SvgClose } from "components/common/ui/Icon";
-import { Controller } from 'swiper/modules';
+import 'swiper/css'
+import { observer } from 'mobx-react-lite'
+import BidImg from 'components/common/layout/Modal/BidImg'
+import { useDisclosure, useViewportSize } from '@mantine/hooks'
+import styles from 'components/common/layout/Modal/Modal.module.scss'
+import { SvgBackArrow } from 'components/common/ui/Icon'
+import { Controller } from 'swiper/modules'
 
 const CarouselCustom = ({items}:{items:any []}) => {
 
@@ -54,7 +54,7 @@ const CarouselCustom = ({items}:{items:any []}) => {
 			<Modal.Overlay className={'bg-black/80'}/>
 			<Modal.Content radius={20} className={styles.ModalBidFullImg} bg={'transparent !important'}	h={500}>
 
-				<Modal.Body>
+				<Modal.Body className={'tablet-max:flex tablet-max:aspect-square'}>
 					<Image
 						src={img.foto}
 						style={{objectFit: "contain", aspectRatio: 16/9}}
@@ -63,12 +63,12 @@ const CarouselCustom = ({items}:{items:any []}) => {
 					/>
 				</Modal.Body>
 				<Modal.Header className={'static max-w-64 mx-auto'}>
-					{items.length !== 1 && <Button  type={'button'} onClick={() => handleImg(ind - 1)}  className={'!outline-none'}><SvgBackArrow className={'w-8 h-8'}/></Button>}
+					{items.length !== 1 && <SvgBackArrow className={'w-8 h-8'} onClick={() => handleImg(ind - 1)}/>}
 					<div className={'text-4xl font-medium mx-auto'} style={{letterSpacing: '0.05em'}}>
 						<span className={'text-accent'}>{ind + 1}/</span>
 						<span  className={'text-gray-2'}>{swiper.slides.length}</span>
 					</div>
-					{items.length !== 1 && <Button type={'button'} onClick={() => handleImg(ind + 1)} className={'!outline-none'}><SvgBackArrow className={'w-8 h-8 rotate-180'}/></Button>}
+					{items.length !== 1 && <SvgBackArrow className={'w-8 h-8 rotate-180'} onClick={() => handleImg(ind + 1)}/> }
 				</Modal.Header>
 
 			</Modal.Content>

@@ -104,7 +104,7 @@ const PricePage = ():JSX.Element => {
     },
     [location.pathname]
   );
-
+  console.log(company)
   if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
     <Section type={SectionType.default} noScroll={true}>
@@ -123,7 +123,7 @@ const PricePage = ():JSX.Element => {
               className={"inline-flex tablet-max:flex-1"}
               variant={ButtonVariant['accent-outline']}
               size={ButtonSizeType.sm}
-            />{' '}
+            />
             {memoModalCarClasses}
           </div>
         </>}>
@@ -159,12 +159,12 @@ const PricePage = ():JSX.Element => {
                   color={company.is_active ? HeadingColor.active : HeadingColor.notActive}
                   variant={HeadingVariant.h4} />}
                 <Heading className={'!m-0'}
-                  text={company.company_type == 'customer'
+                  text={company.company_type == "Компания-Заказчик"
                     ? CompanyType.customer
                     : CompanyType.performer}
                   variant={HeadingVariant.h4}
                   directory={
-                    company.company_type == 'customer'
+                    company.company_type == "Компания-Заказчик"
                       ? HeadingDirectory.customer
                       : HeadingDirectory.performer
                   } />

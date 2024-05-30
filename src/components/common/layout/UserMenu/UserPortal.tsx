@@ -93,6 +93,7 @@ const UserPortal = ({
 }) => {
   const store = useStore()
   const navigate = useNavigate()
+
   if (state)
     return (
       <Panel
@@ -114,7 +115,10 @@ const UserPortal = ({
         }
       >
         <div className={'user__photo'} data-directory={store.appStore.appType}>
-          <Image src={photo} alt={''} width={80} height={80} />
+          <div className="w-10 h-10 flex justify-center items-center text-black !text-lg">
+            {store.userStore.myProfileData.user.first_name[0]}{store.userStore.myProfileData.user.last_name[0]}
+          </div>
+          {/* <Image src={photo} alt={''} width={80} height={80} /> */}
           {/* <Button */}
           {/*   className={'bg-accent rounded-full p-1.5 inline-block'} */}
           {/*   text={<SvgPencil />} */}
