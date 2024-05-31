@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { observer, useLocalStore } from 'mobx-react-lite'
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -10,7 +10,8 @@ import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSo
 import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate, useViewportSize } from '@mantine/hooks'
-import { NumberFormatter } from '@mantine/core';
+import { NumberFormatter } from '@mantine/core'
+import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 
 const localRootStore =  new LocalRootStore()
 function FinanceBottom(props: { data: any }) {
@@ -355,10 +356,12 @@ const FinacePage = () => {
         <TableWithSortNew store={localRootStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
+
           style={PanelRouteStyle.finance}
           background={PanelColor.glass}
           className={'col-span-full table-groups tablet-max:pb-28'}
-          filter={false}
+          initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
+          filter={true}
           state={isLoading}
           ar={[
             { label: 'Компания', name: 'company' },

@@ -274,11 +274,12 @@ const FilterElements = observer(({ filters }:{filters: any}) => {
               day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80',
             }}
               popoverProps={{
-                withinPortal: false,
+                withinPortal: true,
                 width: 300,
                 styles: {
                   dropdown: {
                     width: 280,
+                    zIndex: 9999
                   },
                 },
               }}

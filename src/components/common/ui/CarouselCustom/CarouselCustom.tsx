@@ -52,12 +52,12 @@ const CarouselCustom = ({items}:{items:any []}) => {
 
 		return <Modal.Root size={"lg"} style={{ background: 'none'}} opened={opened} onClose={close}  centered={true}>
 			<Modal.Overlay className={'bg-black/80'}/>
-			<Modal.Content radius={20} className={styles.ModalBidFullImg} bg={'transparent !important'}	h={500}>
+			<Modal.Content radius={20} className={styles.ModalBidFullImg} bg={'transparent !important'}	h={"80lvh"}>
 
-				<Modal.Body className={'tablet-max:flex tablet-max:aspect-square'}>
+				<Modal.Body className={'tablet-max:flex'} >
 					<Image
 						src={img.foto}
-						style={{objectFit: "contain", aspectRatio: 16/9}}
+						style={{objectFit: "cover"}}
 
 						maw={650}
 					/>
