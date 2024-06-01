@@ -63,16 +63,34 @@ export const requests = {
     })
     .then((response) => response.data)
     .catch(handleErrors),
-  get: (url: string,  pagination?:PaginationProps) =>
+  get: (url: string,  pagination?:PaginationProps, responseType?: string) =>
+     axios({
+      url: `${API_ROOT}${url}`,
+      // headers: tokenPlugin(),
+      method: 'GET',
+      params: pagination
+
+    })
+  .then((response:any) => response)
+  .catch(handleErrors),
+  getFile: (url: string,  pagination?:PaginationProps) =>
      axios({
       url: `${API_ROOT}${url}`,
       // headers: tokenPlugin(),
       method: 'GET',
       params: pagination,
-
+      responseType: "blob",
     })
-  .then((response:any) => response)
+  .then((response) => {
+       const type = response.headers['content-type']
+       const blob = new Blob([response.data], { type: type })
+       const link = document.createElement('a')
+       link.href = window.URL.createObjectURL(blob)
+       link.download = 'report.xlsx'
+       link.click()
+     })
   .catch(handleErrors),
+
   getNew: (url: string) => {
     return axios.get(`${API_ROOT}${url}`,{
       // headers: tokenPlugin(),
@@ -463,6 +481,7 @@ const Account = {
 
 }
 const Balance = {
+  getBalanceExportReport: (params?: PaginationProps) => requests.getFile('/balance/export_report/', params),
   getReport: (params?: PaginationProps) => requests.get(`/balance/report/`, params),
   getReportByCompanyId: (company_id: number, params?: PaginationProps) => requests.get(`/balance/report/${company_id}`),
   getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params),

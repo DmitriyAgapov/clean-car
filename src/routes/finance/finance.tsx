@@ -12,6 +12,7 @@ import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate, useViewportSize } from '@mantine/hooks'
 import { NumberFormatter } from '@mantine/core'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
+import agent from "utils/agent";
 
 const localRootStore =  new LocalRootStore()
 function FinanceBottom(props: { data: any }) {
@@ -345,7 +346,7 @@ const FinacePage = () => {
                 className={'inline-block'}
                 color={HeadingColor.accent} />
               <Button text={'Сохранить Excel'}
-                action={() => navigate('#')}
+                action={async () => await agent.Balance.getBalanceExportReport(localStore.params.getSearchParams)}
                 trimText={true}
                 variant={ButtonVariant['accent-outline']}
                 // action={() => store.companyStore.addCompany()}
