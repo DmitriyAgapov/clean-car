@@ -3,8 +3,14 @@ import icon from "assets/icons/filter.png"
 import FilterBar from 'components/common/layout/TableWithSort/FilterBar'
 import { useState } from 'react'
 import React from 'react'
-import { useClickOutside } from "@mantine/hooks";
+import { useClickOutside, useDisclosure } from '@mantine/hooks'
 import Image from "components/common/ui/Image/Image";
+import { LocalRootStore, LocalStoreProvider, useLocalStore } from "stores/localStore";
+import { TableSearchParams } from 'components/common/layout/TableWithSort/TableWithSort.store'
+import { Popover } from '@mantine/core'
+import { Button as Btn } from '@mantine/core'
+import { observer } from "mobx-react-lite";
+import { SvgClose } from "components/common/ui/Icon";
 export enum FilterData {
   city= 'city',
   car_type= 'car_type',
@@ -18,22 +24,49 @@ export enum FilterData {
   start_date = 'start_date',
   end_date = 'end_date'
 }
+export const ctx = React.createContext<any>({
+  page: 1,
+  page_size: 10
+})
+function DataFilter({ filterData}: {filterData: any[] | undefined}) {
+  const [opened, { close, open, toggle}, ] = useDisclosure(false);
+  const ref = useClickOutside(() => close())
+  const localStore = useLocalStore<LocalRootStore>()
 
-export default function DataFilter({ filterData}: {filterData: any[] | undefined}) {
-    const [state, setState] = useState(false)
-    const ref = useClickOutside(() => setState(false))
 
-    const handleState = (event: React.MouseEvent<HTMLAnchorElement>) => {
-        setState((prevState) => !prevState)
-    }
-
+    const isActiveBtn = Array.from(Object.keys(localStore.params.getSearchParams)).length >= 3
+  console.log(isActiveBtn);
     return (
-        <div className={styles.btnFilter} ref={ref}>
-            <a className={'flex-1 flex justify-center items-center'} onClick={(event) => handleState(event)}>
-                {/* <SvgFilter /> */}
-              <Image src={icon} alt={''} className={'w-5 h-6'}/>
-            </a>
-            {state && <FilterBar state={state} filters={filterData} action={handleState}/>}
+        <div className={styles.btnFilter + ` ` + ` border ${isActiveBtn && '!border-accent'}`}>
+            <ctx.Provider value={ctx}>
+                {/* <Popover   middlewares={{ shift: { padding: 20 } }} trapFocus opened={opened} width={"100vw"}   classNames={{ */}
+                {/*   dropdown: '!top-0' */}
+                {/* } */}
+
+                {/* } clickOutsideEvents={['mouseup', 'touchend']} */}
+
+                {/*   position="bottom" */}
+                {/*   withArrow */}
+                {/*   shadow="md"> */}
+                <Popover opened={opened}  clickOutsideEvents={['mouseup', 'touchend', 'click']} width={240} position='bottom-end' shadow='md'   classNames={{
+                  dropdown: '!px-0'
+                }}>
+                    <Popover.Target>
+                        <a className={`flex-1 flex justify-center items-center`} onClick={toggle}>
+                            {/* <SvgFilter /> */}
+                            <Image src={icon} alt={''} className={`w-5 h-6 `} />
+                        </a>
+                    </Popover.Target>
+                    <Popover.Dropdown className={'!bg-transparent border-0'}>
+                        <div className={styles.wrapper}>
+                            {/* <a onClick={close}>Close</a> */}
+                            <FilterBar state={opened} filters={filterData} action={toggle} ref={ref}/>
+                        </div>
+                    </Popover.Dropdown>
+                </Popover>
+            </ctx.Provider>
         </div>
     )
 }
+
+export default observer(DataFilter)

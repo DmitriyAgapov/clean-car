@@ -1049,7 +1049,22 @@
     }
   }
 }
-
+.wrapper {
+  @screen tablet-max {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    z-index: 0;
+    align-items: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 2rem;
+    background: #18191fc7;
+    backdrop-filter: blur(2px);
+  }
+}
 .btnFilter {
   cursor: pointer;
   width: 2.5rem;
@@ -1079,17 +1094,19 @@
 .filterBar {
   background-color: #18191F;
   padding: 1.25rem;
+
   border-radius: 12px;
   display: grid;
   border: 2px solid transparent;
   gap: .75rem 1.25rem;
-  position: absolute;
+  //position: absolute;
   z-index: -1;
   max-height: 0;
   opacity: 0;
   top: 3rem;
   right: 0;
   min-width: 12rem;
+  width: 100%;
   &[data-state="true"] {
     z-index: 999;
     max-height: initial;
@@ -1097,6 +1114,10 @@
     box-shadow: -9px 10px 11px 0px rgba(0, 0, 0, 0.25);
     border: 2px solid var(--accentColor);
 
+  }
+  @screen tablet-max {
+    position: relative;
+    z-index: 200;
   }
 }
 .tableheadingPure {

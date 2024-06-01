@@ -140,8 +140,3 @@ export class TransferComponentStore {
     this.selected.delete(id)
   }
 }
-
-function runOnAction(arg0: () => any) {
-    throw new Error('Function not implemented.');
-}
-

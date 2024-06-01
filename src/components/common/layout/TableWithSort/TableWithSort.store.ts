@@ -29,6 +29,10 @@ export class TableWithSortStore {
 			...params
 		}
 	}
+	deleteParams(paramsName:any) {
+			let _searchParams:any = this.searchParams;
+			delete _searchParams[paramsName];
+	}
 	clearParams() {
 		this.searchParams = {
 			page: 1,
