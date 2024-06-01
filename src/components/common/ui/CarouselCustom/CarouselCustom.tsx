@@ -50,6 +50,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 						spaceBetween={20}
 						slidesPerView={1}
 						modules={[Controller]}
+						autoHeight
 						// on={{
 						// 	sliderMove: (swiper:any,event:any) => console.log(event, swiper)}}
 						onSlideChange={(event: any) => setInd(event.activeIndex)}
@@ -66,14 +67,14 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 								// onTouchEnd={(event) => console.log(event)}
 							>
 								<BidImg
-									containerClassName={'flex justify-center'}
+									containerClassName={'tablet-max:flex tablet-max:justify-center  tablet-max:aspect-[9_/_12] tablet-max:items-end'}
 									item={i}
 									// mih={'10rem'}
 									// miw={'100%'}
 									// h={'100%'}
 									style={{ objectFit: 'contain', cursor: 'pointer',  maxHeight: "480px" }}
 									// maw={'10rem'}
-									className={'border-accent  border rounded-md '}
+									className={''}
 								/>
 							</SwiperSlide>
 						))}
