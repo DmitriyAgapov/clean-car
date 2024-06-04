@@ -4,7 +4,7 @@ import { useStore } from "stores/store";
 import { useDisclosure } from "@mantine/hooks";
 import { observer } from "mobx-react-lite";
 
-const BidImg = ({ item, containerClassName, ...props }: any) => {
+const BidImg = ({ item, containerClassName, closeBtn = true, ...props }: any) => {
     const store = useStore()
     const [visible, { toggle, close, open }] = useDisclosure(true)
     return (

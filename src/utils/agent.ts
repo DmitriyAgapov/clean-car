@@ -292,16 +292,16 @@ const Auth = {
       refresh: refresh
   }),
   login: (email: string, password: string) => requests.post('/token/', { email: email, password: password }),
-  register: (first_name: string, last_name: string, email: string, phone: string, pwd: string, pwd_confirmation: string, city: number) =>
-    requests.post('/accounts/register/', {
-      email: email,
-      phone: phone,
-      first_name: first_name,
-      last_name: last_name,
-      password: pwd,
-      password2: pwd_confirmation,
-      city: city
-    }),
+  register: (data:{
+    first_name: string,
+    last_name: string,
+    phone: string,
+    email: string,
+    city: number,
+    password: string,
+    password2: string
+  }) =>
+    requests.post('/accounts/register/', data, {}),
 }
 const Users = {
     getAllUsers:  (pagination?: PaginationProps) => requests.get('/accounts/all_users/', pagination),

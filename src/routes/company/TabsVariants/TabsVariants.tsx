@@ -558,8 +558,6 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
             )
             break
         case 'Фото':
-
-          const ph = store.bidsStore.CurrentBidPhotosAll
           if(data.photos.results.length > 0) {
             result = (
                 <Tabs.Panel

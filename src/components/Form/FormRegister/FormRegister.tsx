@@ -44,13 +44,15 @@ const FormRegister = () => {
       last_name: '',
       phone: '',
       email: '',
-      city: ''
+      city: '',
+      password: '',
+      password2: ''
     },
     validateInputOnBlur: true,
-    // onValuesChange: (values, previous) => console.log(values),
+    onValuesChange: (values, previous) => console.log(values),
     validate: yupResolver(SignupSchemaNew),
     enhanceGetInputProps: (payload) => {
-      if(payload.field === "pwd" || payload.field === "pwd_confirmation") {
+      if(payload.field === "password" || payload.field === "password2") {
         return ({
           className: "flex-1",
 
@@ -61,8 +63,15 @@ const FormRegister = () => {
   })
   const handleSubmit = React.useCallback((event:any) => {
     event.preventDefault()
-    console.log(event);
     console.log(form.values);
+    const _d = {
+      ...form.values,
+      phone: form.values.phone.replaceAll(' ', ''),
+      city: Number(form.values.city)
+    }
+    return store.authStore.registerPerson(_d)
+
+    // console.log(form.values);
     // store.authStore.setLastname(values.lastName)
     // store.authStore.setFirstname(values.firstName)
     // store.authStore.setPhone(values.phone)
@@ -73,9 +82,9 @@ const FormRegister = () => {
     //   // console.log('success', Object.values(store.authStore.values))
     //   // store.authStore.register()
     // }
-  }, [])
+  }, [form.values])
   return (
-    <form className={'grid gap-y-2'}>
+    <form className={'grid gap-y-2'} onSubmit={handleSubmit}>
       <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
       <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
       <
@@ -91,16 +100,16 @@ const FormRegister = () => {
       <TextInput label={'E-mail'} {...form.getInputProps('email')} />
       {(cities && cities.length !== 0) &&  <Select {...form.getInputProps('city')} disabled={cities.length === 0} label={'Город'} data={cities} />}
       <Box className="flex gap-x-2">
-        <PasswordInput label={'Пароль'} {...form.getInputProps('pwd')} />
-        <PasswordInput label={'Подтвердите пароль'} {...form.getInputProps('pwd_confirmation')} />
+        <PasswordInput label={'Пароль'} {...form.getInputProps('password')} />
+        <PasswordInput label={'Подтвердите пароль'} {...form.getInputProps('password2')} />
       </Box>
       <div className={styles.actionGroup}>
         <Button
+          disabled={!form.isValid()}
           text={'зарегистрироваться'}
           size={ButtonSizeType.lg}
           type={'submit'}
           variant={ButtonVariant.accent}
-          action={handleSubmit}
         />
       </div>
       <div className={styles.text}>

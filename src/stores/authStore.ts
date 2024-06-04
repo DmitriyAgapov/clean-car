@@ -146,7 +146,11 @@ export class AuthStore {
         })
 
   }
+  async registerPerson(data: {first_name:string, last_name:string, phone:string, email:string, password:string,  password2:string, city:number }) {
+    console.log(data);
+    return agent.Auth.register(data)
 
+  }
   register() {
     this.inProgress = true
     this.errors = undefined

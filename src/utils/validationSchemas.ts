@@ -12,8 +12,9 @@ export const SignupSchemaNew = Yup.object().shape({
 	.phone('RU', 'Введите правильный номер')
 	.required('Требуется номер телефона'),
 	email: Yup.string().email('Неверный email').required('Укажите email'),
-	pwd: Yup.string().required('Введите пароль'),
-	pwd_confirmation: Yup.string().oneOf([Yup.ref('pwd'), ""], 'Пароли не совпадает'),
+	city: Yup.string().required('Выберите город'),
+	password: Yup.string().required('Введите пароль'),
+	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),
 
 })
 export const CreateUserSchema = Yup.object().shape({

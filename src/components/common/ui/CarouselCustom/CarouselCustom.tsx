@@ -41,9 +41,11 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 	}, [controlledSwiper?.activeIndex])
 
 	return (
-		<Modal.Root size={'lg'} style={{ background: 'none' }} opened={opened} onClose={action} centered={true}>
+		<Modal.Root size={'lg'} xOffset={0} yOffset={'10dvh'} style={{ background: 'none' }} opened={opened} onClose={action} centered={true} >
 			<Modal.Overlay className={'bg-black/80'} />
+			<Modal.CloseButton/>
 			<Modal.Content radius={20} className={styles.ModalBidFullImg} bg={'transparent !important'} h={"auto"}>
+
 				<Modal.Body className={'tablet-max:flex !px-0'}>
 
 					<Swiper
@@ -61,9 +63,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 								key={i.id}
 								// className={'relative overflow-hidden'}
 								// style={{ aspectRatio: '1/1' }}
-								onClick={(event) => {
-									open()
-								}}
+
 								// onTouchEnd={(event) => console.log(event)}
 							>
 								<BidImg
