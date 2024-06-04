@@ -7,6 +7,7 @@ import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "componen
 import { SvgBackArrow } from "components/common/ui/Icon";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import React from "react";import FormCreateUpdateBid from "components/Form/FormCreateBid/FormCreateUpdateBid";
+import { Checkbox } from '@mantine/core'
 
 const BidsCreatePage = (props:any) => {
 	const store = useStore()

@@ -74,6 +74,7 @@ const FilialsPage = () => {
         store={localRootStore}
         variant={PanelVariant.dataPadding}
         search={true}
+
         style={PanelRouteStyle.filials}
         background={PanelColor.glass}
         filter={true}

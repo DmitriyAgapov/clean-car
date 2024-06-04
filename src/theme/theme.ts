@@ -114,8 +114,8 @@ const themeOverride = createTheme({
                 body: 'flex items-center relative z-10 ',
                 root: 'relative cursor-pointer',
                 label: 'relative cursor-pointer mb-0 font-base font-normal  font-semibold',
-                inner: 'w-4 h-4 rounded-none relative  outline outline-offset-4 !border-0 outline-1 outline-gray-3  flex items-center justify-center border border-gray-3',
-                input: 'w-3.5 h-3.5 rounded-none absolute bg-accent cursor-pointer opacity-0 !border-0 checked:scale-100 checked:!opacity-100 transition-all duration-500 ease-in-out',
+                inner: 'rounded-none relative outline outline-offset-0 outline-1 !outline-[#343437]  flex items-center justify-center',
+                input: ' rounded-none  !border-gray-3 checked:!bg-accent cursor-pointer opacity-0 border-4 checked:!border-3 checked:!opacity-100 transition-all duration-500 ease-in-out',
                 icon: 'hidden',
             }
         }),

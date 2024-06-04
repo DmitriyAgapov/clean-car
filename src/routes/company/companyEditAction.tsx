@@ -6,8 +6,6 @@ import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { Navigate, Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
-import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
 import { CompanyType, Payment } from "stores/companyStore";
@@ -65,6 +63,7 @@ export default function CompanyPageEditAction(props: any) {
         ogrn: loaderData[`${params.company_type}profile`].ogrn,
         legal_address: loaderData[`${params.company_type}profile`].legal_address,
         height: loaderData[`${params.company_type}profile`].height,
+        workload: loaderData[`${params.company_type}profile`].workload,
         // @ts-ignore
         type: CompanyType[params.company_type],
         lat: loaderData[`${params.company_type}profile`].lat,

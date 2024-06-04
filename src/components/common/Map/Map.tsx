@@ -10,10 +10,41 @@ import { values } from "mobx";
 import { createBidFormActions } from "components/Form/FormCreateBid/FormCreateUpdateBid";
 import { observer } from "mobx-react-lite";
 // type MapProps = {}
+export const WorkLoadStatus = ({status, className, hasDot = true}: {hasDot?:boolean,className?:string, status: number}):any => {
+    let result: React.ReactNode
+    switch (status) {
+        case 1:
+            result = (
+                <div className={'text-active flex items-center leading-none'}>
+                    Свободен
+                    {hasDot && <i className={'rounded-full w-4 h-4 bg-current inline-block ml-2'} />}
+                </div>
+            )
+            break
+        case 2:
+            result = (
+                <div className={'text-notice'}>
+                    Умеренная загрузка
+                    {hasDot && <i className={'rounded-full w-4 h-4 bg-current inline-block ml-2'} />}
+                </div>
+            )
+            break
+        case 3:
+            result = (
+                <div className={'text-error'}>
+                    Занят
+                    {hasDot && <i className={'rounded-full w-4 h-4 bg-current inline-block ml-2'} />}
+                </div>
+            )
+            break
+    }
+    return <div className={`absolute top-2.5 right-2.5 ${className}`}>{ result }</div>
+}
 const ElMapPanel = (item:any) => {
     const store = useStore()
     console.log(item);
-    return <div className={'bg-black/90 rounded-md border-2 border-accent px-2 w-56 py-4 pt-10'}>
+    return <div className={'bg-black/90 rounded-md relative border-2 border-accent px-2 w-56 py-4 pt-10 -mb-5 relative z-10'}>
+        <WorkLoadStatus status={item.workload}/>
         <Heading text={item.name} className={'text-white font-normal text-xs font-sansSerif !mb-1'} variant={HeadingVariant.h6}/>
         <p className={'text-white !mt-1  font-sansSerif '}>{item.address}</p>
         <hr className={'border-gray-2'}/>
@@ -31,11 +62,24 @@ const ElMapPanel = (item:any) => {
 }
 
 const ElMap = (item: any) => {
-
+    let result: any = "";
+    (():any => {
+            switch (item.workload) {
+            case 1:
+                result = "block rounded-full w-3 h-3 bg-accent"
+                break
+            case 2:
+                result = "block rounded-full w-3 h-3 bg-notice"
+                break
+            case 3:
+                result = "block rounded-full w-3 h-3 bg-error"
+                break
+        }
+    })()
     return (
-        <Marker
+      <Marker
 
-            icon={new DivIcon({ className: styles.marker, html: `<i class="block rounded-full w-3 h-3 bg-accent"/>` })}
+            icon={new DivIcon({ className: styles.marker, html: `<i class="block rounded-full w-3 h-3 ${result}"/>` })}
             position={[item.lat, item.lon]}
         >
             <Popup className={'border-none child:contents'} >

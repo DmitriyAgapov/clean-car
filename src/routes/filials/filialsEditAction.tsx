@@ -4,10 +4,8 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Navigate, Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Navigate,  useNavigate, useParams } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
-import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateFilial from "components/Form/FormCreateFilials/FormCreateUpdateFilial";
 import { CompanyType, Payment } from "stores/companyStore";
@@ -67,6 +65,7 @@ export default function FilialsPageEditAction(props: any) {
                       inn: loaderData[`${company_type}profile`].inn,
                       ogrn: loaderData[`${company_type}profile`].ogrn,
                       legal_address: loaderData[`${company_type}profile`].legal_address,
+                      workload: loaderData[`${company_type}profile`].workload,
                       height: loaderData[`${company_type}profile`].height,
                       parent: loaderData.parent.parent_id,
                       // @ts-ignore

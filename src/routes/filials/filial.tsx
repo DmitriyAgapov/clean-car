@@ -14,7 +14,8 @@ import { CompanyType } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
 import agent, { client } from "utils/agent";
 import useSWR from "swr";
-import { useDidUpdate } from "@mantine/hooks";
+import { useDidUpdate } from '@mantine/hooks'
+import { WorkLoadStatus } from 'components/common/Map/Map';
 
 const FilialPage = () => {
   const store = useStore()
@@ -43,7 +44,7 @@ const FilialPage = () => {
     ]
   }, [data])
 
-
+  console.log(data);
   return (
       <Section type={SectionType.default}>
           <Panel
@@ -65,7 +66,9 @@ const FilialPage = () => {
               footerClassName={'flex  justify-end'}
               headerClassName={'border-bottom-none'}
               header={
-                  <><div className={'flex col-span-2  tablet-max:col-span-full justify-between'}>
+                  <>
+
+                    <div className={'flex col-span-2  tablet-max:col-span-full justify-between'}>
                       <Heading text={data?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
                   </div>
                       <div className={'flex items-baseline justify-between  tablet-max:col-span-full tablet-max:block row-start-2'}>

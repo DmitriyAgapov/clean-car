@@ -35,6 +35,7 @@ interface InitValues {
     house: string | null
     id: string | number
     inn: string | number
+    workload: string
     lat: string | number
     legal_address: string | null
     lon: string | number
@@ -62,6 +63,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         address: '',
         address_ready: false,
         street: '',
+        workload: "1",
         qc: null,
         house: '',
         type: CompanyType.customer,
@@ -111,6 +113,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             house: company.address,
             inn: company.inn,
             ogrn: company.ogrn,
+            workload: String(company.workload),
             city: company.city,
             city_name: store.catalogStore.getCity(Number(company.city)).name,
             height: company.height ?? null,
@@ -204,6 +207,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     legal_address: values.legal_address,
                     contacts: values.contacts,
                     height: Number(values.height),
+                    workload: Number(values.workload),
                     // application_type: values.application_type,
                     lat: Number(values.lat),
                     lon: Number(values.lon),
@@ -374,6 +378,18 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
                         <TextInput label={'Название'} {...formData.getInputProps('company_name')} />
+                        {formData.values.type === CompanyType.performer && <Select
+                            allowDeselect={false}
+                            {...formData.getInputProps('workload')}
+                            label={'Загруженность'}
+                            defaultValue={formData.values.workload}
+                            className={'tablet:!flex-initial desktop:!flex-[0_1_33%] col-span-3'}
+                            data={[
+                                { label: 'Свободен', value: "1" },
+                                { label: 'Умеренная загрузка', value: "2" },
+                                { label: 'Занят', value: "3" },
+                            ]}
+                        />}
                         <hr className='my-2 flex-[1_0_100%] col-span-full w-full border-gray-2' />
                         <Select
                             withCheckIcon={false}

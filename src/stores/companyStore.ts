@@ -68,6 +68,7 @@ export interface PerformerProfile {
         legal_address?: string
         height?: number
         contacts?: string
+        workload: number,
         service_percent?: number
         application_type?: string
         working_time?: string

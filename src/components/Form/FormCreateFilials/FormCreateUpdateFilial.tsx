@@ -23,6 +23,7 @@ import { PanelVariant } from 'components/common/layout/Panel/Panel'
 interface InitValues {
     address: string | null
     address_ready: boolean
+    workload: string,
     city: string | null
     city_name?: string | null | any
     company_filials: string
@@ -61,6 +62,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         company_id: null,
         company_name: '',
         id: 0,
+        workload: "1",
         height: null,
         company_filials: 'company',
         lat: 0,
@@ -86,6 +88,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             street: '',
             qc: null,
             house: '',
+            workload: String(company.workload),
             legal_address: '',
             city_name: store.catalogStore.getCity(Number(company.city)).name,
             company_name: company.company_name,
@@ -116,7 +119,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             // }
             if (payload.field === 'address') {
                 return {
-                    className: `mb-2 w-full desktop:!flex-[1_0_64%] col-span-3   ${store.appStore.appType === "admin" && ''} col-span-3`,
+                    className: `mb-2  desktop:!flex-[1_0_64%] col-span-3   ${store.appStore.appType === "admin" && ''} col-span-3`,
                 }
             }
             if (payload.field === 'type') {
@@ -141,7 +144,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             //     }
             // }
             return {
-                className: 'mb-2 w-full  !flex-[1_1_30%] col-span-3',
+                className: 'mb-2   !flex-[1_1_30%] col-span-3',
             }
         },
     })
@@ -157,6 +160,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 performerprofile: {
                     address: values.address,
                     lat: Number(values.lat),
+                    workload: Number(values.workload),
                     lon: Number(values.lon),
                     working_time: values.working_time,
                 },
@@ -212,7 +216,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             }
         }
     }, [])
-
     const filialsCompanyData = React.useMemo(() => {
 
             store.companyStore.loadAllFilials()
@@ -349,6 +352,40 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         />
                         <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
                         <TextInput label={'Название филиала'} {...formData.getInputProps('company_name')} />
+                        {formData.values.type === CompanyType.performer && (
+                          <InputBase
+                            component={IMaskInput}
+                            label={'Часы работы'}
+                            {...formData.getInputProps('working_time')}
+                            mask={Date}
+                            /*@ts-ignore*/
+                            blocks={{
+                                YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
+                                MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
+                                DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
+                                HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
+                                mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
+                            }}
+                            pattern={`c ${momentFormat} до ${momentFormat}0`}
+                            format={(date: MomentInput) => moment(date).format(momentFormat)}
+                            parse={(str) => moment(str, momentFormat)}
+                            autofix
+                            overwrite
+                            placeholder='c 00:00 до 23:59'
+                          />
+                        )}
+                        {formData.values.type === CompanyType.performer && <Select
+                          allowDeselect={false}
+                          {...formData.getInputProps('workload')}
+                          label={'Загруженность'}
+                          defaultValue={formData.values.workload}
+                          className={'tablet:!flex-initial desktop:!flex-[0_1_30%] col-span-3'}
+                          data={[
+                              { label: 'Свободен', value: "1" },
+                              { label: 'Умеренная загрузка', value: "2" },
+                              { label: 'Занят', value: "3" },
+                          ]}
+                        />}
                         <Select
                           {...formData.getInputProps('is_active')}
                           withCheckIcon={false}
@@ -358,6 +395,16 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                               { label: 'Неактивен', value: 'false' },
                           ]}
                         />
+                        {formData.values.type === CompanyType.performer && (
+                          <NumberInput
+                            step={1}
+                            hideControls
+                            allowNegative={false}
+                            allowDecimal={false}
+                            label={'Макс. высота транспорта в см'}
+                            {...formData.getInputProps('height')}
+                          />
+                        )}
                         <Select
                             withCheckIcon={false}
                             label={'Город'}
@@ -379,38 +426,8 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
 
 
 
-                        {formData.values.type === CompanyType.performer && (
-                            <InputBase
-                                component={IMaskInput}
-                                label={'Часы работы'}
-                                {...formData.getInputProps('working_time')}
-                                mask={Date}
-                                /*@ts-ignore*/
-                                blocks={{
-                                    YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
-                                    MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
-                                    DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
-                                    HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
-                                    mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
-                                }}
-                                pattern={`c ${momentFormat} до ${momentFormat}0`}
-                                format={(date: MomentInput) => moment(date).format(momentFormat)}
-                                parse={(str) => moment(str, momentFormat)}
-                                autofix
-                                overwrite
-                                placeholder='c 00:00 до 23:59'
-                            />
-                        )}
-                        {formData.values.type === CompanyType.performer && (
-                            <NumberInput
-                                step={1}
-                                hideControls
-                                allowNegative={false}
-                                allowDecimal={false}
-                                label={'Макс. высота транспорта в см'}
-                                {...formData.getInputProps('height')}
-                            />
-                        )}
+
+
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}

@@ -24,6 +24,7 @@ import TabCars from 'routes/company/TabsVariants/TabCars'
 import TabUsers from 'routes/company/TabsVariants/TabUsers'
 import TabBidHistory from 'routes/company/TabsVariants/TabBidHistory'
 import { useViewportSize } from '@mantine/hooks'
+import { WorkLoadStatus } from "components/common/Map/Map";
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -80,9 +81,11 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
 
         <DList label={'Адрес'} title={data[`${company_type}profile`].address} />
 
+
         {data.parent.name && <DList label={'Компания'}
           // @ts-ignore
           title={data.parent.name} />}
+        {data?.performerprofile &&    <DList label={'Загруженность'} title={<WorkLoadStatus hasDot={false} status={data?.performerprofile.workload} className={'!top-0 !right-0 relative i:hidden'}/>} />}
 
       </Tabs.Panel>)
       break;
@@ -238,6 +241,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
           <DList label={'Макс. высота транспорта, в см'} title={<>{data[`${company_type}profile`].height} <sub className={'bottom-0 text-white/75'}> см</sub></>} />
         <DList label={'Время работы'} title={data[`${company_type}profile`].working_time} />
         </>}
+        {data?.performerprofile &&    <DList label={'Загруженность'} title={<WorkLoadStatus hasDot={false} status={data?.performerprofile.workload} className={'!top-0 !right-0 relative i:hidden'}/>} />}
         {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} className={'tablet:!col-[2_/_2_span] tablet:!row-start-4'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
         <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts}  className={'tablet:!col-[2_/_2_span] tablet:!row-start-5'}/>
         {company_type === 'customer' &&
