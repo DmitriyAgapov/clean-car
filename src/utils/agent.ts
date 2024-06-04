@@ -292,14 +292,15 @@ const Auth = {
       refresh: refresh
   }),
   login: (email: string, password: string) => requests.post('/token/', { email: email, password: password }),
-  register: (first_name: string, last_name: string, email: string, phone: string, password: string) =>
+  register: (first_name: string, last_name: string, email: string, phone: string, pwd: string, pwd_confirmation: string, city: number) =>
     requests.post('/accounts/register/', {
       email: email,
       phone: phone,
       first_name: first_name,
       last_name: last_name,
-      password: password,
-      password2: password,
+      password: pwd,
+      password2: pwd_confirmation,
+      city: city
     }),
 }
 const Users = {

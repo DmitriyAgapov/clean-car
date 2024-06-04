@@ -34,9 +34,9 @@ function DataFilter({ filterData}: {filterData: any[] | undefined}) {
   const localStore = useLocalStore<LocalRootStore>()
 
 
-    const isActiveBtn = Array.from(Object.keys(localStore.params.getSearchParams)).length >= 3
-  console.log(isActiveBtn);
-    return (
+  const isActiveBtn = Array.from(Object.keys(localStore.params.getSearchParams)).length > 4
+
+  return (
         <div className={styles.btnFilter + ` ` + ` border ${isActiveBtn && '!border-accent'}`}>
             <ctx.Provider value={ctx}>
                 {/* <Popover   middlewares={{ shift: { padding: 20 } }} trapFocus opened={opened} width={"100vw"}   classNames={{ */}

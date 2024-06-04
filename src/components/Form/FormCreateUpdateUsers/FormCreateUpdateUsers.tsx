@@ -39,7 +39,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		let initValues: InitValues = {
 			id: 0,
 			company_id: store.userStore.myProfileData.company.company_type === "Администратор системы" ? null : String(store.userStore.myProfileData.company.id),
-			type: store.userStore.myProfileData.company.company_type === "Администратор системы" ? UserTypeEnum.performer : CompanyTypeRus(store.userStore.myProfileData.company.company_type),
+			type: store.userStore.myProfileData.company.company_type === "Администратор системы" ? UserTypeEnum.customer : CompanyTypeRus(store.userStore.myProfileData.company.company_type),
 			email: '',
 			first_name: '',
 			group: null,
@@ -65,8 +65,6 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 				is_active: user.employee.is_active ? "true" : "false",
 			}
 		}
-		console.log(user, 'user edit');
-		console.log(initValues, 'initval');
 		return initValues
 
 	}, [edit, user])

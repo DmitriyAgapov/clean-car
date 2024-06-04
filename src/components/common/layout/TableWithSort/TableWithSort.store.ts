@@ -36,7 +36,9 @@ export class TableWithSortStore {
 	clearParams() {
 		this.searchParams = {
 			page: 1,
-			page_size: 10
+			page_size: 10,
+			ordering: undefined,
+			q: undefined
 		}
 	}
 	get getSearchParams() {

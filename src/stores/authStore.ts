@@ -150,32 +150,33 @@ export class AuthStore {
   register() {
     this.inProgress = true
     this.errors = undefined
-    return agent.Auth.register(
-      this.values.first_name,
-      this.values.last_name,
-      this.values.email,
-      this.values.phone,
-      this.values.password,
-    )
-      .then(
-        action((response: any) => {
-          authStore.values = { ...response, password: this.values.password }
-        }),
-      )
-      .then(action(() => this.login()))
-      .then(() => userStore.pullUser())
-      .catch(
-        action((err: AxiosError) => {
-          // @ts-ignore
-          this.errors = err.response && err.response.data && err.response.data.detail
-          throw err
-        }),
-      )
-      .finally(
-        action(() => {
-          this.inProgress = false
-        }),
-      )
+    // return agent.Auth.register(
+    //   this.values.first_name,
+    //   this.values.last_name,
+    //   this.values.email,
+    //   this.values.phone,
+    //   this.values.password,
+    //   this.values
+    // )
+    //   .then(
+    //     action((response: any) => {
+    //       authStore.values = { ...response, password: this.values.password }
+    //     }),
+    //   )
+    //   .then(action(() => this.login()))
+    //   .then(() => userStore.pullUser())
+    //   .catch(
+    //     action((err: AxiosError) => {
+    //       // @ts-ignore
+    //       this.errors = err.response && err.response.data && err.response.data.detail
+    //       throw err
+    //     }),
+    //   )
+    //   .finally(
+    //     action(() => {
+    //       this.inProgress = false
+    //     }),
+    //   )
   }
   logout() {
     action(() => this.userIsLoggedIn = false)

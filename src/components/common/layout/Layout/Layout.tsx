@@ -78,7 +78,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           // />
       )
   const exceptions = [
-    'policy', '404', 'restore'
+    'policy', '404', 'restore', 'register'
   ]
   const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
 

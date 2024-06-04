@@ -2,7 +2,20 @@ import * as Yup from "yup";
 import { CompanyType } from "stores/companyStore";
 import { useStore } from "stores/store";
 import rootStore from "stores";
+import 'yup-phone-lite'
 
+export const SignupSchemaNew = Yup.object().shape({
+	first_name: Yup.string().min(2, 'Слишком короткое!').max(50, 'Слишком длинное!').required('Обязательное поле'),
+	last_name: Yup.string().min(2, 'Слишком короткое!').max(50, 'Слишком длинное!').required('Обязательное поле'),
+	phone: Yup.string()
+	.max(16, 'Слишком длинное!')
+	.phone('RU', 'Введите правильный номер')
+	.required('Требуется номер телефона'),
+	email: Yup.string().email('Неверный email').required('Укажите email'),
+	pwd: Yup.string().required('Введите пароль'),
+	pwd_confirmation: Yup.string().oneOf([Yup.ref('pwd'), ""], 'Пароли не совпадает'),
+
+})
 export const CreateUserSchema = Yup.object().shape({
 	first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
 	last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),

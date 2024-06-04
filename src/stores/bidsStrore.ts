@@ -119,7 +119,7 @@ export class BidsStore {
     textData = {
         title: 'Заявки',
         create: 'Создать',
-        loadExcel: 'Загрузить Excel',
+        loadExcel: 'Сохранить Excel',
         tableHeaders: [
             { label: '№', name: 'idnum' },
             { label: 'Статус', name: 'status' },

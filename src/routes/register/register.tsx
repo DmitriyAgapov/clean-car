@@ -27,7 +27,7 @@ export default function RegisterPage() {
     >
       <Section type={SectionType.centered}>
         <Panel
-          className={'col-span-6 mb-12 tablet:col-span-full desktop:col-span-6'}
+          className={'!col-span-6  desktop-max:!col-span-full w-full max-w-lg  tablet:px-6 tablet:justify-self-center desktop:justify-self-auto'}
           header={
             <Heading
               text={'Добро пожаловать в CleanCar.'}
@@ -52,9 +52,8 @@ export default function RegisterPage() {
           </p>
         </Panel>
         <Panel
-          bodyClassName={'!py-12'}
           className={
-            'col-span-6 desktop:col-start-9 desktop:col-span-6 tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto'
+            'desktop:!col-start-8 desktop:!col-span-7 desktop:m-8 !tablet:col-start-2 !tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-screen-sm tablet:py-4 tablet:px-2'
           }
           variant={PanelVariant.textPadding}
           background={PanelColor.glass}

@@ -111,49 +111,49 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     validateInputOnBlur: true,
     onValuesChange: (values) => console.log('val', values.number.length),
     validate: yupResolver(CreateCarSchema),
-    enhanceGetInputProps: (payload) => {
-      if (payload.field === "model") {
-        return ({
-          disabled: payload.form.values.brand === null,
-          className: ' !flex-[1_1_30%]'
-        })
-      }
-      if (payload.field === "brand") {
-        return ({
-          onOptionSubmit: (prop: any) => {
-            payload.form.values.model = null;
-            store.carStore.setBrand(prop);
-          }
-          ,
-          className: ' !flex-[1_1_30%]'
-        })
-      }
-      if (payload.field === "company_id") {
-        return ({
-          label: form.values.depend_on === "company" ? 'Компания' : 'Филиал',
+      enhanceGetInputProps: (payload) => {
+        if (payload.field === "model") {
+          return ({
+            disabled: payload.form.values.brand === null,
+            className: ' !flex-[1_1_30%]'
+          })
+        }
+        if (payload.field === "brand") {
+          return ({
+            onOptionSubmit: (prop: any) => {
+              payload.form.values.model = null;
+              store.carStore.setBrand(prop);
+            }
+            ,
+            className: ' !flex-[1_1_30%]'
+          })
+        }
+        if (payload.field === "company_id") {
+          return ({
+            label: form.values.depend_on === "company" ? 'Компания' : 'Филиал',
 
-          disabled: edit,
-          className: ' !flex-[1_1_64%]'
-        })
-      }
+            disabled: edit,
+            className: ' !flex-[1_1_64%]'
+          })
+        }
 
-      if(payload.field === "depend_on") {
+        if(payload.field === "depend_on") {
+          return ({
+            onChange: (event:any) => {
+              form.setFieldValue('depend_on', event)
+            }
+              // payload.form.values.model = null;
+              // store.carStore.setBrand(prop);
+            ,
+            disabled: edit,
+            className: ' !flex-[1_1_30%]'
+          })
+        }
         return ({
-          onChange: (event:any) => {
-            form.setFieldValue('depend_on', event)
-          }
-            // payload.form.values.model = null;
-            // store.carStore.setBrand(prop);
-          ,
-          disabled: edit,
           className: ' !flex-[1_1_30%]'
         })
-      }
-      return ({
-        className: ' !flex-[1_1_30%]'
-      })
-    },
-  })
+      },
+    })
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
 

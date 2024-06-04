@@ -11,16 +11,13 @@ import { UserTypeEnum } from "stores/userStore";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { InputBase, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
-import { CreateUserSchema, UpdateUserProfileSchema } from "utils/validationSchemas";
+import {  UpdateUserProfileSchema } from "utils/validationSchemas";
 import { IMask, IMaskInput } from "react-imask";
-import PanelForForms from 'components/common/layout/Panel/PanelForForms'
-import { notifications } from "@mantine/notifications";
 import NotificationCC from "components/common/ui/NotificationCC/NotificationCC";
 
 const UserProfileEditForm = ({action}: {action: (val:boolean) => void }) => {
   const store = useStore()
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
-  const navigate = useNavigate()
   const masked = IMask.createMask({
     mask: "+7 000 000 00 00",
     autofix: true,
