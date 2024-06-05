@@ -27,23 +27,20 @@ const BidsPage = () => {
 	const textData = store.bidsStore.text
 	const params = useParams()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	useEffect(() => {
-		console.log(localStore);
-	}, [localStore]);
+
 	const {isLoading, data, mutate} = useSWR(['bids', {...localStore.params.getSearchParams}] , ([url, args]) => store.bidsStore.loadBids(args),
 		{refreshInterval: 10000}
 	)
 	useDidUpdate(
 		() => {
-			if(location.pathname === '/account/companies') {
+			console.log(location.pathname);
+			if(location.pathname === '/account/bids') {
 				mutate().then(() => console.log('updated bids'))
 			}
 		},
 		[location.pathname]
 	);
 	useEffect(() => {
-		console.log(localStore.inFinitiveScrollResults);
-		const ar = window.innerWidth < 1000 ? data?.results : localRootStore.inFinitiveScrollResults;
 		localStore.setData = {
 			...data,
 			results: data?.results?.map((r:any) => ({

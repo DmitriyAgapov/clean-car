@@ -310,7 +310,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [step, store.bidsStore.formResult.service_type, formData.values.service_type])
 
   const { mutate } = useSWRConfig()
-  const handleNext = React.useCallback(() => {
+  const handleNext = React.useCallback(async () => {
     if(step === 2) {
       console.log('step 2');
         store.bidsStore.loadCurrentPerformers(Number(store.bidsStore.formResult.company), {
@@ -331,8 +331,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         })
 
     } else if(step === 4) {
-        (async () => {
-          store.bidsStore.formCreateBid()
+          return await store.bidsStore.formCreateBid()
           .then((res) => {
             if (res.status !== 201) {
               notifications.show({
@@ -347,32 +346,32 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 loading: false,
               })
             } else {
-                notifications.show({
-                    id: 'bid-created',
-                    withCloseButton: true,
-                    onClose: () => console.log('unmounted'),
-                    onOpen: () => console.log('mounted'),
-                    autoClose: 3000,
-                    title: 'Заявка создана',
-                    message: 'Успешное создание',
-                    // color: 'red',
-                    className: 'my-notification-class z-[9999]',
-                    // style: { backgroundColor: 'red' },
-                    loading: false,
-                })
 
+              mutate('bids')
+              notifications.show({
+                id: 'bid-created',
+                withCloseButton: true,
+                onClose: () => console.log('unmounted'),
+                onOpen: () => console.log('mounted'),
+                autoClose: 3000,
+                title: 'Заявка создана',
+                message: 'Успешное создание',
+                // color: 'red',
+                className: 'my-notification-class z-[9999]',
+                // style: { backgroundColor: 'red' },
+                loading: false,
+              })
 
             }
-          })
-          await mutate(['bids']).then(() => {
-
-            console.log('bids updated successfully');
           }).finally(() => {
-            store.bidsStore.formResultsClear()
+
             changeStep();
-            store.bidsStore.clearPhotos();
+            setTimeout(() => {
+              store.bidsStore.clearPhotos();
+              store.bidsStore.formResultsClear()
+            }, 2000)
           })
-        })()
+        // })()
     } else {
       changeStep()
     }
@@ -419,8 +418,9 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
             <PanelForForms
                 ref={targetRef}
                 footerClassName={'px-8 tablet-max:px-5 pb-8 pt-2  tablet-max:pb-8'}
-                bodyClassName={'self-stretch'}
+                bodyClassName={'self-stretch grid grid-rows-1'}
                 variant={PanelVariant.default}
+
                 actionBack={
                     <>
                         {step === 5 || step === 1 ? null : (
@@ -988,7 +988,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             </>
                         ) : (
                             <div className={'col-span-full subgrid contents'}>
-                              <div className={"col-span-2  row-span-2  relative z-[999] mobile:mb-8 grid grid-rows-3 justify-evenly items-center"}>
+                              <div className={"col-span-2  row-span-2  relative z-[999] mobile:mb-8 grid  justify-evenly items-center"}>
                                 <div className={"text-base"}>{step4.description}</div>
                                 <div>
                                   <Select className={"col-span-2"}

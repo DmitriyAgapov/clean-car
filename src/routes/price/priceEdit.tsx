@@ -11,7 +11,7 @@ import { dateTransformShort } from "utils/utils";
 import { CompanyType } from "stores/companyStore";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import { observer } from 'mobx-react-lite'
-import PriceActions from "routes/price/actions";
+import PriceActions, { PriceActionsHeader } from "routes/price/actions";
 
 
 
@@ -24,14 +24,12 @@ const PriceEditPage = ():JSX.Element => {
   const  {data} = store.priceStore.currentPriceById;
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
-  console.log(data);
+
   useEffect(() => {
     console.log('params changed, priceOnChange cleared');
     store.priceStore.clearPriceOnChange()
   }, [params.id])
-  const handleClick = () => {
-    console.log('click');
-  }
+
   return (
     <>
     <Section type={SectionType.default}>
@@ -63,8 +61,7 @@ const PriceEditPage = ():JSX.Element => {
           <>
             <div className={'flex w-full tablet-max:flex-col col-span-full gap-2.5'}>
               <Heading text={company?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} className={'mr-auto'}/>
-
-              <PriceActions/>
+              <PriceActionsHeader/>
             </div>
             <div className={'flex items-baseline tablet-max:flex-col  gap-6'}>
               <div className={'text-xs text-gray-2'}>
@@ -99,7 +96,7 @@ const PriceEditPage = ():JSX.Element => {
       </Panel>
 
     </Section>
-          <PriceActions/></>
+    <PriceActions/></>
   )
 }
 export default observer(PriceEditPage)
