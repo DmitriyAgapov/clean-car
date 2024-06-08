@@ -459,72 +459,107 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
             break
         case 'Услуги':
             const servicesPrice = React.useMemo(() => {
-
-              const _res: { service: { label: string | null, values: any[], unit: string }, options: { label: string, values: any[], unit: string }[] | null } = { service: { label: null, values: [], unit: '₽' }, options: [] }
+              const _res: { service: { label: string | null, values: any[], unit: string }, options: { label: string, values: any[], unit: string }[] , count: number} = { service: { label: null, values: [], unit: '₽' }, options: [] , count: data.price_positions.performer.length}
               const serviceName = data.service_type.name + " - " + data.service_subtype.name
               const serviceName_exclude = data.service_type.name + " - " + data.service_subtype.name + " - "
-
-              if(store.appStore.appType === "admin") {
-                if(!!data.service_percent) {
-                  const el = data.price_positions.performer;
-
-
-                  for(let i = 0; el.length > i; i++) {
-                    if(el[i].name === serviceName)  {
-                      const _performerValue = parseFloat(el[i].amount)
-                      const _customerValue = _performerValue * (100 + data.service_percent)
-
-                      _res.service.label = el[i].name;
-                      _res.service.values = [ _customerValue, _performerValue, _customerValue - _performerValue]
-                    } else  {
-                      const _performerValue = parseFloat(el[i].amount)
-                      const _customerValue = _performerValue * (1 + (Number(data.service_percent) / 100))
-                      _res.service.label = data.service_subtype.name
-                      _res.options?.push({
-                        label: el[i].name.replace(serviceName_exclude, ''),
-                        values: [_customerValue, _performerValue,  (_customerValue - _performerValue).toFixed(2)],
-                        unit: el[i].unit,
-                      })
-                    }
-                  }
-                } else {
-                  const el = data.price_positions.performer;
-                  for(let i = 0; el.length > i; i++) {
-                    if(el[i].name === serviceName)  {
-                      const _customerValue = parseFloat(data.price_positions.customer[0].amount)
-                      const _performerValue = parseFloat(el[i].amount)
-                      _res.service.label = el[i].name;
-                      _res.service.values = [ Math.round(_customerValue * 100) / 100,  Math.round(_performerValue * 100) / 100, Math.round((_customerValue - _performerValue) * 100) / 100]
-                    } else  {
-                      const _performerValue = parseFloat(el[i].amount)
-                      const _customerValue = parseFloat(data.price_positions.customer[i].amount)
-                      _res.service.label = data.service_subtype.name
-                      _res.options?.push({
-                        label: el[i].name.replace(serviceName_exclude, ''),
-                        values:[ Math.round(_customerValue * 100) / 100,  Math.round(_performerValue * 100) / 100, Math.round((_customerValue - _performerValue) * 100) / 100],
-                        unit: el[i].unit,
-                      })
-                    }
-                  }
-                }
-              }
               const tableParams = {
                 cols: 6,
                 nameColSpan: 3,
                 valuesSpan: 1,
                 valueStyle: 'text-accent font-medium text-sm'
               }
-                const totalCustomer = _res.options?.reduce((acc:number, item:any) => acc + item.values[0], 0) + _res.service.values[0]  as number
-                const totalPerformer = _res.options?.reduce((acc:number, item:any) => acc + item.values[1], 0)  + _res.service.values[1]  as number
-                const totalProfit =  _res.options?.reduce((acc:number, item:any) => acc + parseFloat(item.values[2]), 0)  + _res.service.values[2] as number
-              const total = [totalCustomer, totalPerformer, totalProfit]
+              const el = data.price_positions.performer;
+                if(data.service_percent === null) {
+                  for(let i = 0; el.length > i; i++) {
+                    const _performerValue = parseFloat(el[i].amount)
+                    if(el[i].name === serviceName)  {
+                      const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                      _res.service.label = el[i].name;
+                      const _ar = []
+                      _customerValue && _ar.push(Math.round(_customerValue * 100) / 100)
+                      _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                      _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                      _res.service.values = _ar
+                    } else  {
+                      const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                      _res.service.label = data.service_subtype.name
+                      const _ar = []
+                      _customerValue && _ar.push(Math.round(_customerValue * 100) / 100)
+                      _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                      _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                      _res.options?.push({
+                        label: el[i].name.replace(serviceName_exclude, ''),
+                        values: _ar,
+                        unit: el[i].unit,
+                      })
+                    }
+                  }
+                } else {
+                  for(let i = 0; el.length > i; i++) {
+                    if(el[i].name === serviceName)  {
+                      const _customerValue = parseFloat(data.price_positions.customer[0].amount)
+                      const _performerValue = parseFloat(el[i].amount)
+                      const _ar = []
+                      _customerValue && _ar.push(Math.round(_customerValue * 100) / 100)
+                      _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                      _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                      _res.service.label = el[i].name;
+                      _res.service.values = _ar
+                    } else  {
+                      const _performerValue = parseFloat(el[i].amount)
+                      const _customerValue = parseFloat(data.price_positions.customer[i]?.amount)
+                      _res.service.label = data.service_subtype.name
+                      const _ar = []
+                      _customerValue && _ar.push(Math.round(_customerValue * 100) / 100)
+                      _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                      _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                      _res.options?.push({
+                        label: el[i].name.replace(serviceName_exclude, ''),
+                        values: _ar,
+                        unit: el[i].unit,
+                      })
+                    }
+                  }
+                }
+
+              const totalCustomer = _res.options?.reduce((acc:number, item:any) => acc + item.values[0], 0)
+              const totalPerformer = _res.options?.reduce((acc:number, item:any) => acc + item.values[1], 0)
+              const totalProfit =  _res.options?.reduce((acc:number, item:any) => acc + parseFloat(item.values[2]), 0) as number
+
+              const _tar = []
+              !!totalCustomer && _tar.push(Math.round(totalCustomer * 100) / 100)
+              !!totalPerformer && _tar.push(Math.round(totalPerformer * 100) / 100)
+              !!totalProfit && _tar.push(Math.round((totalProfit) * 100) / 100)
+
+              let total = _tar
+              if(_res.service.values.length > 0) {
+                const _total:number[] = []
+                total.forEach((el:number, index:number) => _total.push(el + _res.service.values[index]))
+                total = _total
+              }
+              if(store.appStore.appType === "admin")  {
+                tableParams.cols = 6
+              }  else {
+                if(data.service_percent != null) {
+                  let _total:number[] = []
+                  total.forEach((el:number, index:number) => _total.push(el * (100 + data.service_percent) / 100))
+                  total = _total
+                  let _totalOptions:any = []
+                  _res.options.forEach((el:any) => _totalOptions.push({
+                    ...el,
+                    values: el.values.map((el:any) => el * (100 + data.service_percent) / 100)
+                  }))
+                  _res.options = _totalOptions;
+                }
+                tableParams.cols = 4
+              }
 
               return <><Grid columns={tableParams.cols} gutter={8} align={"center"} className={'mb-6'}>
                         {/*  Header  */}
                         <Grid.Col span={tableParams.nameColSpan}  className={'text-gray-2 font-medium'}>
                           Тип услуги
                         </Grid.Col>
-                        {store.appStore.appType !== "admin" ? <Grid.Col  className={'text-gray-2 font-medium text-xss'}  span={tableParams.nameColSpan}>Стоимость</Grid.Col> : <>
+                        {store.appStore.appType !== "admin" ? <Grid.Col  className={'text-gray-2 font-medium text-xss'}  span={tableParams.valuesSpan}>Стоимость</Grid.Col> : <>
                           <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss uppercase'} >Заказчик</Grid.Col>
                           <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss  uppercase'} >Исполнитель</Grid.Col>
                           <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss  uppercase'} >Разница</Grid.Col>
@@ -534,7 +569,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 <Grid.Col span={tableParams.nameColSpan}>
                   <Text className={'font-semibold font-sans'}>{_res.service.label}</Text>
                 </Grid.Col>
-                {store.appStore.appType !== "admin" ? <Grid.Col  className={tableParams.valueStyle}  span={tableParams.nameColSpan}>{_res.service.values[0]} {_res.service.unit}</Grid.Col> : _res.service.values.map((value) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {_res.service.unit}</Grid.Col>)}
+                {_res.service.values.map((value) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {_res.service.unit}</Grid.Col>)}
 
                 {/* Доп опции*/}
                 <Grid.Col span={tableParams.cols}    className={'text-gray-2 font-medium mt-4'}>Дополнительные опции</Grid.Col>
@@ -542,20 +577,20 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 {_res.options?.map((o:any) => <><Grid.Col  className={'font-semibold font-sans'} span={tableParams.nameColSpan}>
                   <Text>{o.label}</Text>
                 </Grid.Col>
-                  {store.appStore.appType !== "admin" ? <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{o.values[0]} {o.unit}</Grid.Col> : o.values.map((value:number) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {o.unit === "Р" ? '₽' : o.unit ?? '₽'}</Grid.Col>)}
+                  {o.values.map((value:number) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {o.unit === "Р" ? '₽' : o.unit ?? '₽'}</Grid.Col>)}
                 </>)}
 
                  {/* Стоимость услуги*/}
 
-                {_res.options?.map((o:any) => <><Grid.Col  className={'font-semibold font-sans  mt-4'} span={tableParams.nameColSpan}>
+               <><Grid.Col  className={'font-semibold font-sans  mt-4'} span={tableParams.nameColSpan}>
                   {data.create_amount !== null && store.userStore.getUserCan(PermissionNames["Финансовый блок"], "read") && <DList
                     className={'child:dt:text-accent mb-6 mt-auto child:*:text-accent'}
                     label={'Стоимость услуги'}
                     title={<Heading variant={HeadingVariant.h2} className={'!mb-0'} text={String(data.create_amount) + " ₽"} />}
                   />}
                 </Grid.Col>
-                  {store.appStore.appType !== "admin" ? <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{o.values[0]} {o.unit}</Grid.Col> : total.map((value:number) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {o.unit === "Р" ? '₽' : o.unit ?? '₽'}</Grid.Col>)}
-                </>)}
+                  {total.map((value:number, index:number) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {_res.options[index]?.unit === "Р" ? '₽' : _res.options[index]?.unit ?? '₽'}</Grid.Col>)}
+                </>
 
               </Grid>
                 {data.truck_type && <DList
