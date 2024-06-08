@@ -111,7 +111,7 @@ const User = ({ last_name, first_name, status, photoUrl, action }: UserProps) =>
           {/* <span className={styles.first_name}></span> */}
           <span className={styles.last_name}>{first_name} {(last_name && last_name.length !== 0) && last_name}</span>
         </div>
-        <div className={styles.status}>Администратор</div>
+        <div className={styles.status}>{store.userStore.myProfileData.permissionGroupName}</div>
       </div>
       <SvgChevron className={styles.svg} />
     </div>

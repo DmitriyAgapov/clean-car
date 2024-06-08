@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
 import { translite } from 'utils/utils'
 import { CAR_RADIUS } from 'stores/priceStore'
-import { Grid, NumberInput, ScrollArea, Text } from '@mantine/core'
+import { Box, Grid, NumberInput, ScrollArea, SimpleGrid, Text } from '@mantine/core'
 import { observer, useLocalStore } from 'mobx-react-lite'
 import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
 import { BidsStatus } from 'stores/bidsStrore'
@@ -358,6 +358,14 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
   return  result
 };
 
+interface _res2 {
+  service: { label: string | null, values: any[], unit: string };
+  role: string;
+  options: { label: string, values: any[], unit: string }[];
+  count: number;
+  calc: () => any;
+}
+
 export const TabsVariantBids = observer(({ label, content_type, data, state, name, className, companyId, company_type, ...props }: TabsVariantsProps) => {
     const store = useStore()
     let result
@@ -459,7 +467,6 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
             break
         case 'Услуги':
             const servicesPrice = React.useMemo(() => {
-              const _res: { service: { label: string | null, values: any[], unit: string }, options: { label: string, values: any[], unit: string }[] , count: number} = { service: { label: null, values: [], unit: '₽' }, options: [] , count: data.price_positions.performer.length}
               const serviceName = data.service_type.name + " - " + data.service_subtype.name
               const serviceName_exclude = data.service_type.name + " - " + data.service_subtype.name + " - "
               const tableParams = {
@@ -468,60 +475,142 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 valuesSpan: 1,
                 valueStyle: 'text-accent font-medium text-sm'
               }
-              const el = data.price_positions.performer;
-                if(data.service_percent === null) {
-                  for(let i = 0; el.length > i; i++) {
-                    const _performerValue = parseFloat(el[i].amount)
-                    if(el[i].name === serviceName)  {
-                      const _customerValue = parseFloat(data.price_positions.customer[i].amount)
-                      _res.service.label = el[i].name;
-                      const _ar = []
-                      _customerValue && _ar.push(Math.round(_customerValue * 100) / 100)
-                      _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
-                      _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
-                      _res.service.values = _ar
-                    } else  {
-                      const _customerValue = parseFloat(data.price_positions.customer[i].amount)
-                      _res.service.label = data.service_subtype.name
-                      const _ar = []
-                      _customerValue && _ar.push(Math.round(_customerValue * 100) / 100)
-                      _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
-                      _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
-                      _res.options?.push({
-                        label: el[i].name.replace(serviceName_exclude, ''),
-                        values: _ar,
-                        unit: el[i].unit,
-                      })
+              const _res2: _res2 = {
+                service: { label: null, values: [], unit: '₽' }, options: [], role: store.appStore.appType, count: data.price_positions.performer.length,
+                  calc: function() {
+                    const el = data.price_positions.performer;
+
+                    if(this.role === "performer") {
+                      for(let i = 0; el.length > i; i++) {
+                        const _performerValue = parseFloat(el[i].amount)
+                        console.log(_performerValue);
+                        if(el[i].name === serviceName)  {
+                          this.service.label = el[i].name;
+                          const _ar = []
+                          _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                          this.service.values = _ar
+                        } else  {
+                          this.service.label = data.service_subtype.name
+                          const _ar = []
+                          _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                          this.options.push({
+                            label: el[i].name.replace(serviceName_exclude, ''),
+                            values: _ar,
+                            unit: el[i].unit,
+                          })
+                        }
+                      }
+                      return this
                     }
-                  }
-                } else {
-                  for(let i = 0; el.length > i; i++) {
-                    if(el[i].name === serviceName)  {
-                      const _customerValue = parseFloat(data.price_positions.customer[0].amount)
-                      const _performerValue = parseFloat(el[i].amount)
-                      const _ar = []
-                      _customerValue && _ar.push(Math.round(_customerValue * 100) / 100)
-                      _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
-                      _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
-                      _res.service.label = el[i].name;
-                      _res.service.values = _ar
-                    } else  {
-                      const _performerValue = parseFloat(el[i].amount)
-                      const _customerValue = parseFloat(data.price_positions.customer[i]?.amount)
-                      _res.service.label = data.service_subtype.name
-                      const _ar = []
-                      _customerValue && _ar.push(Math.round(_customerValue * 100) / 100)
-                      _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
-                      _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
-                      _res.options?.push({
-                        label: el[i].name.replace(serviceName_exclude, ''),
-                        values: _ar,
-                        unit: el[i].unit,
-                      })
+                    if(this.role === "customer") {
+                      if(data.service_percent === null) {
+                        for(let i = 0; el.length > i; i++) {
+                          const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                          if(el[i].name === serviceName)  {
+                            this.service.label = el[i].name;
+                            const _ar = []
+                            _ar.push(Math.round(_customerValue * 100) / 100)
+                            this.service.values = _ar
+                          } else  {
+                            this.service.label = data.service_subtype.name
+                            const _ar = []
+                           _ar.push(Math.round(_customerValue * 100) / 100)
+                            this.options.push({
+                              label: el[i].name.replace(serviceName_exclude, ''),
+                              values: _ar,
+                              unit: el[i].unit,
+                            })
+                          }
+                        }
+                      } else {
+                        for(let i = 0; el.length > i; i++) {
+                          const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                          if(el[i].name === serviceName)  {
+                            const _ar = []
+                            _ar.push(Math.round(_customerValue * 100) / 100)
+                            this.service.label = el[i].name;
+                            this.service.values = _ar
+                          } else  {
+                            const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+
+                            this.service.label = data.service_subtype.name
+                            const _ar = []
+                            _ar.push(Math.round(_customerValue * 100) / 100)
+                            this.options.push({
+                              label: el[i].name.replace(serviceName_exclude, ''),
+                              values: _ar,
+                              unit: el[i].unit,
+                            })
+                          }
+                        }
+                      }
+
+
+                      return this
+                    }
+                    if(this.role === "customer" || this.role === "admin") {
+                      if(data.service_percent === null) {
+                        for(let i = 0; el.length > i; i++) {
+                          const _performerValue = parseFloat(el[i].amount)
+                          const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                          if(el[i].name === serviceName)  {
+                            this.service.label = el[i].name;
+                            const _ar = []
+                            this.role === "customer" || this.role === "admin"  && _ar.push(Math.round(_customerValue * 100) / 100)
+                            this.role === "admin" && _ar.push(Math.round(_performerValue * 100) / 100)
+                            this.role === "admin" && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                            this.service.values = _ar
+                          } else  {
+                            const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                            this.service.label = data.service_subtype.name
+                            const _ar = []
+                            this.role === "customer" || this.role === "admin"  && _ar.push(Math.round(_customerValue * 100) / 100)
+                            this.role === "admin" && _ar.push(Math.round(_performerValue * 100) / 100)
+                            this.role === "admin" && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                            this.options.push({
+                              label: el[i].name.replace(serviceName_exclude, ''),
+                              values: _ar,
+                              unit: el[i].unit,
+                            })
+                          }
+                        }
+                      } else {
+                        const _customerValue = parseFloat(data.price_positions.customer[0]?.amount) ?? null
+                        for(let i = 0; el.length > i; i++) {
+                          const _performerValue = parseFloat(el[i].amount)
+                          console.log(_customerValue);
+                          if(el[i].name === serviceName)  {
+                            const _ar = []
+                            this.role === "customer" || this.role === "admin" && _ar.push(Math.round(_customerValue * 100) / 100)
+                            this.role === "admin" && _ar.push(Math.round(_performerValue * 100) / 100)
+                            this.role === "admin" && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                            this.service.label = el[i].name;
+                            this.service.values = _ar
+                          } else  {
+                            const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+
+                            this.service.label = data.service_subtype.name
+                            const _ar = []
+                            this.role === "customer" || this.role === "admin"  && _ar.push(Math.round(_customerValue * 100) / 100)
+                            this.role ===  "admin" && _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                            this.role === "admin" && _performerValue && _customerValue && _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                            this.options.push({
+                              label: el[i].name.replace(serviceName_exclude, ''),
+                              values: _ar,
+                              unit: el[i].unit,
+                            })
+                          }
+                        }
+                      }
+
+
+                      return this
                     }
                   }
                 }
 
+              const _res = _res2.calc()
+              console.log(_res);
               const totalCustomer = _res.options?.reduce((acc:number, item:any) => acc + item.values[0], 0)
               const totalPerformer = _res.options?.reduce((acc:number, item:any) => acc + item.values[1], 0)
               const totalProfit =  _res.options?.reduce((acc:number, item:any) => acc + parseFloat(item.values[2]), 0) as number
@@ -540,74 +629,160 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
               if(store.appStore.appType === "admin")  {
                 tableParams.cols = 6
               }  else {
-                if(data.service_percent != null) {
-                  let _total:number[] = []
-                  total.forEach((el:number, index:number) => _total.push(el * (100 + data.service_percent) / 100))
-                  total = _total
-                  let _totalOptions:any = []
-                  _res.options.forEach((el:any) => _totalOptions.push({
-                    ...el,
-                    values: el.values.map((el:any) => el * (100 + data.service_percent) / 100)
-                  }))
-                  _res.options = _totalOptions;
+                if(store.appStore.appType === "customer") {
+                  if(data.service_percent != null) {
+                    let _total:number[] = []
+                    total.forEach((el:number, index:number) => _total.push(el * (100 + data.service_percent) / 100))
+                    total = _total
+                    let _totalOptions:any = []
+                    _res.options.forEach((el:any) => _totalOptions.push({
+                      ...el,
+                      values: el.values.map((el:any) => el * (100 + data.service_percent) / 100)
+                    }))
+                    _res.options = _totalOptions;
+                  }
                 }
                 tableParams.cols = 4
               }
 
-              return <><Grid columns={tableParams.cols} gutter={8} align={"center"} className={'mb-6'}>
-                        {/*  Header  */}
-                        <Grid.Col span={tableParams.nameColSpan}  className={'text-gray-2 font-medium'}>
-                          Тип услуги
-                        </Grid.Col>
-                        {store.appStore.appType !== "admin" ? <Grid.Col  className={'text-gray-2 font-medium text-xss'}  span={tableParams.valuesSpan}>Стоимость</Grid.Col> : <>
-                          <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss uppercase'} >Заказчик</Grid.Col>
-                          <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss  uppercase'} >Исполнитель</Grid.Col>
-                          <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss  uppercase'} >Разница</Grid.Col>
-                        </>}
+              return (
+                  <>
+                      <SimpleGrid cols={tableParams.cols} spacing={8} className={'mb-6 items-start flex-1 content-start'}>
+                          {/*  Header  */}
+                          <Box
+                              style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
+                              className={'text-gray-2 font-medium'}
+                          >
+                              Тип услуги
+                          </Box>
+                          {store.appStore.appType !== 'admin' ?
+                            store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && (
+                              <Box
+                                  className={'text-gray-2 font-medium text-xss'}
+                                  style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
+                              >
+                                  Стоимость
+                              </Box>
+                          ) : (
+                              <>
+                                  <Box
+                                      style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
+                                      className={'text-gray-2 font-medium text-xss uppercase'}
+                                  >
+                                      Заказчик
+                                  </Box>
+                                  <Box
+                                      style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
+                                      className={'text-gray-2 font-medium text-xss  uppercase'}
+                                  >
+                                      Исполнитель
+                                  </Box>
+                                  <Box
+                                      style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
+                                      className={'text-gray-2 font-medium text-xss  uppercase'}
+                                  >
+                                      Разница
+                                  </Box>
+                              </>
+                          )}
 
-                {/* Услуга */}
-                <Grid.Col span={tableParams.nameColSpan}>
-                  <Text className={'font-semibold font-sans'}>{_res.service.label}</Text>
-                </Grid.Col>
-                {_res.service.values.map((value) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {_res.service.unit}</Grid.Col>)}
+                          {/* Услуга */}
+                          <Box style={{ gridColumn: `span ${tableParams.nameColSpan}` }}>
+                              <Text className={'font-semibold font-sans'}>{_res.service.label}</Text>
+                          </Box>
+                          {
+                            store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && _res.service.values.map(
+                              (
+                                  value: string | number
+                              ) => (
+                                  <Box
+                                      className={tableParams.valueStyle}
+                                      style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
+                                  >
+                                      {value} {_res.service.unit}
+                                  </Box>
+                              ),
+                          )}
 
-                {/* Доп опции*/}
-                <Grid.Col span={tableParams.cols}    className={'text-gray-2 font-medium mt-4'}>Дополнительные опции</Grid.Col>
+                          {/* Доп опции*/}
+                          <Box
+                              style={{ gridColumn: `span ${tableParams.cols}` }}
+                              className={'text-gray-2 font-medium mt-4'}
+                          >
+                              Дополнительные опции
+                          </Box>
 
-                {_res.options?.map((o:any) => <><Grid.Col  className={'font-semibold font-sans'} span={tableParams.nameColSpan}>
-                  <Text>{o.label}</Text>
-                </Grid.Col>
-                  {o.values.map((value:number) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {o.unit === "Р" ? '₽' : o.unit ?? '₽'}</Grid.Col>)}
-                </>)}
+                          {_res.options?.map((o: any) => (
+                              <>
+                                  <Box
+                                      className={'font-semibold font-sans'}
+                                      style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
+                                  >
+                                      <Text>{o.label}</Text>
+                                  </Box>
+                                  {
+                                    store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && o.values.map((value: number) => (
+                                      <Box
+                                          className={tableParams.valueStyle}
+                                          style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
+                                      >
+                                          {value} {o.unit === 'Р' ? '₽' : o.unit ?? '₽'}
+                                      </Box>
+                                  ))}
+                              </>
+                          ))}
+                      </SimpleGrid>
+                      <SimpleGrid  cols={tableParams.cols} spacing={8} className={'mb-0 items-start flex-0'}>
+                        {/* Стоимость услуги*/}
 
-                 {/* Стоимость услуги*/}
+                        <>
+                          {data.create_amount !== null &&
+                            store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && store.appStore.appType !== "performer" &&  <Box
+                              className={'font-semibold font-sans  mt-4  self-end'}
+                              style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
+                            >
 
-               <><Grid.Col  className={'font-semibold font-sans  mt-4'} span={tableParams.nameColSpan}>
-                  {data.create_amount !== null && store.userStore.getUserCan(PermissionNames["Финансовый блок"], "read") && <DList
-                    className={'child:dt:text-accent mb-6 mt-auto child:*:text-accent'}
-                    label={'Стоимость услуги'}
-                    title={<Heading variant={HeadingVariant.h2} className={'!mb-0'} text={String(data.create_amount) + " ₽"} />}
-                  />}
-                </Grid.Col>
-                  {total.map((value:number, index:number) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {_res.options[index]?.unit === "Р" ? '₽' : _res.options[index]?.unit ?? '₽'}</Grid.Col>)}
-                </>
-
-              </Grid>
-                {data.truck_type && <DList
-                  className={'child:dt:text-accent'}
-                  label={'Тип эвакуатора'}
-                  title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
-                />}
-
-
-                {data.wheel_lock && <DList
-
-                  label={'Нерабочие колеса'}
-                  title={<Heading  variant={HeadingVariant.h4} text={data.wheel_lock + "шт."} />}
-                />}
+                              <DList
+                                className={'child:dt:text-accent mt-auto child:*:text-accent mb-0'}
+                                label={'Стоимость услуги'}
+                                title={
+                                  <Heading
+                                    variant={HeadingVariant.h2}
+                                    className={'!mb-0'}
+                                    text={String(data.create_amount) + ' ₽'}
+                                  />
+                                }
+                              />
 
 
-              </>
+                            </Box>}
+                          {store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && store.appStore.appType === "admin" && total.map((value: number, index: number) => (
+                            <Box
+                              className={tableParams.valueStyle + "  " + " self-end"}
+                              style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
+                            >
+                              {value}{' '}
+                              {_res.options[index]?.unit === 'Р' ? '₽' : _res.options[index]?.unit ?? '₽'}
+                            </Box>
+                          ))}
+                        </>
+                      </SimpleGrid>
+                      {data.truck_type && (
+                          <DList
+                              className={'child:dt:text-accent'}
+                              label={'Тип эвакуатора'}
+                              title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
+                          />
+                      )}
+
+                      {data.wheel_lock && (
+                          <DList
+                              label={'Нерабочие колеса'}
+                              title={<Heading variant={HeadingVariant.h4} text={data.wheel_lock + 'шт.'} />}
+                          />
+                      )}
+                  </>
+              )
             }, [])
 
             result = (
