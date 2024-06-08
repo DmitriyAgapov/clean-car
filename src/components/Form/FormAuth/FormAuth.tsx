@@ -5,6 +5,7 @@ import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import styles from './FormAuth.module.scss'
 import { useStore } from 'stores/store'
 import { observer } from "mobx-react-lite";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 const SignupSchema = Yup.object().shape({
   cleanm: Yup.string().email('Некорректный email').required('Обязательное поле'),
@@ -51,7 +52,7 @@ const FormAuth = () => {
               // type={'button'}
               action={submitForm}
             />
-            {/* <LinkStyled to={'/restore'} text={'Не помню пароль'} variant={ButtonVariant['accent-outline']} /> */}
+            <LinkStyled to={'/restore'} text={'Не помню пароль'} variant={ButtonVariant['accent-outline']} />
           </div>
         </Form>
       )}

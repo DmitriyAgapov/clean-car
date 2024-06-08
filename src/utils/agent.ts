@@ -292,16 +292,8 @@ const Auth = {
       refresh: refresh
   }),
   login: (email: string, password: string) => requests.post('/token/', { email: email, password: password }),
-  register: (data:{
-    first_name: string,
-    last_name: string,
-    phone: string,
-    email: string,
-    city: number,
-    password: string,
-    password2: string
-  }) =>
-    requests.post('/accounts/register/', data, {}),
+  register: (data:{ first_name: string, last_name: string, phone: string, email: string, city: number, password: string, password2: string }) => requests.post('/accounts/register/', data, {}),
+
 }
 const Users = {
     getAllUsers:  (pagination?: PaginationProps) => requests.get('/accounts/all_users/', pagination),
@@ -479,6 +471,8 @@ const Account = {
     // 'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   }),
+  accountEmailConfirmation: ({company_uid, user_uid, token}: {company_uid: string, user_uid: string, token: string}) => requests.post('/accounts/email_confirmation/', {company_uid, user_uid, token}),
+  accountRestorePassword: (email:string) => requests.post(`/accounts/password_restore/`, {email: email})
 
 }
 const Balance = {

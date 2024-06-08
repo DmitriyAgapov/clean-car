@@ -77,9 +77,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           //     }}
           // />
       )
-  const exceptions = [
-    'policy', '404', 'restore', 'register'
-  ]
+  const exceptions = ['policy', '404', 'restore', 'register', 'support' ]
   const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
 
   if(!store.appStore.token && loc.pathname !== "/" && !isInException(loc.pathname)) {

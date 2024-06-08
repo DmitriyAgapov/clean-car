@@ -8,9 +8,17 @@ import { yupResolver } from 'mantine-form-yup-resolver'
 import { Box, InputBase, PasswordInput, TextInput, Select } from '@mantine/core'
 import 'yup-phone-lite'
 import { SignupSchemaNew } from "utils/validationSchemas";
+import { RegisterSuccess } from 'components/common/layout/Modal/RegisterSuccess'
+import { useDisclosure } from '@mantine/hooks';
 
 const FormRegister = () => {
   const store = useStore()
+
+  const [opened, { open, close }] = useDisclosure(false)
+
+  const memoModal = React.useMemo(() => {
+    return <RegisterSuccess opened={opened} onClose={close} />
+  }, [opened])
   // @ts-ignore
   const masked = IMask.createMask({
     mask: "+7 000 000 00 00",
@@ -52,7 +60,7 @@ const FormRegister = () => {
     onValuesChange: (values, previous) => console.log(values),
     validate: yupResolver(SignupSchemaNew),
     enhanceGetInputProps: (payload) => {
-      if(payload.field === "password" || payload.field === "password2") {
+      if(payload.field === "password" || payload.field === "password2" ||  payload.field === "first_name" ||  payload.field === "last_name" || payload.field === "phone" || payload.field === "email") {
         return ({
           className: "flex-1",
 
@@ -64,12 +72,13 @@ const FormRegister = () => {
   const handleSubmit = React.useCallback((event:any) => {
     event.preventDefault()
     console.log(form.values);
+
     const _d = {
       ...form.values,
       phone: form.values.phone.replaceAll(' ', ''),
       city: Number(form.values.city)
     }
-    return store.authStore.registerPerson(_d)
+    return store.authStore.registerPerson(_d).then(() => open())
 
     // console.log(form.values);
     // store.authStore.setLastname(values.lastName)
@@ -85,21 +94,19 @@ const FormRegister = () => {
   }, [form.values])
   return (
     <form className={'grid gap-y-2'} onSubmit={handleSubmit}>
-      <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
-      <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
-      <
+      <Box className="tablet:flex gap-x-2">
+        <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
+        <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
+      </Box>
+      <Box className="tablet:flex gap-x-2"> <
         // @ts-ignore
         InputBase
-        {...form.getInputProps('phone')}
-        label={'Телефон'}
-
-        component={IMaskInput}
-        {...masked}
-        placeholder='+7 000 000 0000'
+        {...form.getInputProps('phone')} label={'Телефон'} component={IMaskInput}{...masked} placeholder='+7 000 000 0000'
       />
       <TextInput label={'E-mail'} {...form.getInputProps('email')} />
+      </Box>
       {(cities && cities.length !== 0) &&  <Select {...form.getInputProps('city')} disabled={cities.length === 0} label={'Город'} data={cities} />}
-      <Box className="flex gap-x-2">
+      <Box className="tablet:flex gap-x-2">
         <PasswordInput label={'Пароль'} {...form.getInputProps('password')} />
         <PasswordInput label={'Подтвердите пароль'} {...form.getInputProps('password2')} />
       </Box>
@@ -115,6 +122,7 @@ const FormRegister = () => {
       <div className={styles.text}>
         Нажимая «Зарегистрироваться», вы принимаете пользовательское соглашение и политику конфиденциальности
       </div>
+      {memoModal}
     </form>
   )
 }

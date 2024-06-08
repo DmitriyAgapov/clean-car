@@ -12,34 +12,43 @@ import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate } from '@mantine/hooks'
 import dayjs from "dayjs";
-
+const purpose:any = {
+  "1": 'Пополнение баланса (счета)',
+  "2": 'Оплата услуг',
+  "3": 'Возврат',
+  "4": 'Начисление бонуса',
+  "5": 'Списание бонуса',
+  "6": 'Штраф по ПДД',
+  "7": 'Штраф Компании (в рамках договора)'
+}
 const localRootStore =  new LocalRootStore()
 
 const TransactionPage = () => {
 
   const location = useLocation()
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+
   const store = useStore()
   const navigate = useNavigate()
 
   const {isLoading, data, mutate} = useSWR(['transactions', localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getTransactions(args).then(r => r.data))
-  console.log(data);
+
   useEffect(() => {
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
         company: store.appStore.appType === "admin" ? item.balance.company.name : store.userStore.myProfileData.company.name,
         created: dayjs(item.created).format('DD.MM.YY HH:mm'),
-
         company_type: store.appStore.appType === "admin" ? item.balance.company.company_type : store.userStore.myProfileData.company.company_type,
         amount: String(item.amount).includes('-') ? `- ${String(item.amount).split('-')[1]} ₽` : `+ ${String(item.amount)} ₽`,
         ts_maker: item.ts_maker.first_name + " " + item.ts_maker.last_name,
         bid: {bidId: item.bid, company: store.appStore.appType === "admin" ? item.balance.company.id : store.userStore.myProfileData.company.id},
-        purpose: item.purpose
+        purpose: purpose[String(item.purpose)]
       }))
     }
     localStore.setIsLoading = isLoading
   },[data])
+
   useDidUpdate(
     () => {
       if(location.pathname === '/account/finance/transaction') {
@@ -48,7 +57,6 @@ const TransactionPage = () => {
     },
     [location.pathname]
   );
-  // if ('/account/finance/repop' !== location.pathname) return <Outlet />
 
   return (
     <Section type={SectionType.default}>

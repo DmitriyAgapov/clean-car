@@ -8,6 +8,8 @@ import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { Navigate, useLocation } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 function AuthPage() {
   const store = useStore()
@@ -18,18 +20,18 @@ function AuthPage() {
   return (
     <Layout
       className={'page-intro'}
-      // headerContent={
-      //   <Button
-      //     className={'!hidden tablet:!inline-flex ml-auto mr-8'}
-      //     text={'Помощь'}
-      //     variant={ButtonVariant['accent-outline']}
-      //     size={ButtonSizeType.sm}
-      //   />
-      // }
+      headerContent={
+        <Button
+          className={'!hidden tablet:!inline-flex ml-auto mr-8'}
+          text={'Помощь'}
+          variant={ButtonVariant['accent-outline']}
+          size={ButtonSizeType.sm}
+        />
+      }
     >
       <Section type={SectionType.centered}>
         <Panel
-
+          footerClassName={'mt-16'}
           className={'!col-span-6  desktop-max:!col-span-full w-full max-w-lg  tablet:px-6 tablet:justify-self-center desktop:justify-self-auto'}
           header={
             <Heading
@@ -39,7 +41,7 @@ function AuthPage() {
               color={HeadingColor.accent}
             />
           }
-          // footer={<LinkStyled text={'У меня нет аккаунта'} to={'/register'} />}
+          footer={<LinkStyled text={'У меня нет аккаунта'} to={'/register'} />}
         >
           <p className={'!mb-4'}>
             <strong>Добро пожаловать в сервис CleanCar.

@@ -12,6 +12,7 @@ import QualityImg from '../../assets/icons/quality.png'
 import ServiceImg from '../../assets/icons/service.png'
 import CardFeaturesCircle from 'components/common/layout/Cards/CardFeaturesCircle/CardFeaturesCircle'
 import { SvgAuthBgSec } from 'components/common/ui/Icon'
+import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 
 const cardsData = [
   {
@@ -35,11 +36,37 @@ const cardsData = [
 ]
 export default function RegisterSuccessPage() {
   const store = useStore()
+  let [searchParams, setSearchParams] = useSearchParams();
+  const uids= React.useMemo(() => {
+    const _uids:{
+      company_uid: string
+      token: string
+      user_uid: string
+    }  = {
+      company_uid: '',
+      token: '',
+      user_uid: ''
+    }
+    for(const u of searchParams) {
+      if(u[0] === "company_id") {
+        // @ts-ignore
+        _uids.company_uid = u[1]
+      } else {
 
+        // @ts-ignore
+        _uids[u[0]] = u[1]
+      }
+    }
+    return _uids
+  }, [searchParams])
   useEffect(() => {
     store.appStore.setAppRouteName('.регистрация')
   })
-
+  useEffect(() => {
+    if(uids.hasOwnProperty('token')) {
+     store.authStore.emailVerify(uids)
+    }
+  }, [uids]);
   // @ts-ignore
   return (
     <>
@@ -51,13 +78,14 @@ export default function RegisterSuccessPage() {
       >
         <Section type={SectionType.centered}>
           <Panel
-            className={'col-span-6 mb-12 tablet:col-span-full desktop:col-span-6'}
+            footerClassName={'mt-16'}
+            className={'!col-span-6 mb-12 tablet:!col-span-full desktop:!col-span-6'}
             header={
               <Heading
                 className={'desktop:!text-5xl tablet:!text-4xl !leading-snug !font-extrabold '}
-                directory={HeadingDirectory.performer}
+                directory={HeadingDirectory.customer}
                 // @ts-ignore
-                text={`${store.userStore.currentUser?.first_name}, регистрация прошла успешно!`}
+                text={`${store.userStore.currentUser?.first_name} ${store.userStore.currentUser?.last_name}, регистрация прошла успешно!`}
                 variant={HeadingVariant.h1}
                 color={HeadingColor.accent}
               />
@@ -66,7 +94,7 @@ export default function RegisterSuccessPage() {
               <div className={'gap-4 flex flex-wrap'}>
                 <LinkStyled
                   text={'В личный кабинет'}
-                  directory={ButtonDirectory.performer}
+                  directory={ButtonDirectory.customer}
                   variant={ButtonVariant['accent']}
                   size={ButtonSizeType.base}
                   to={'/account'}
@@ -92,7 +120,7 @@ export default function RegisterSuccessPage() {
           </Panel>
           <Panel
             className={
-              'col-span-6 desktop:col-start-7 desktop:col-span-6 tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto relative hidden desktop:block'
+              '!col-span-6 desktop:!col-start-7 desktop:!col-span-6 tablet:!col-start-2 tablet:!col-end-12 tablet:!justify-self-center desktop:!justify-self-auto relative hidden desktop:!block !bg-transparent'
             }
             variant={PanelVariant.textPadding}
             background={PanelColor.default}

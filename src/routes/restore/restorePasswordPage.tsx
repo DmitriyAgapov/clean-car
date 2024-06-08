@@ -26,6 +26,7 @@ function RestorePasswordPage() {
     >
       <Section type={SectionType.centered}>
         <Panel
+          footerClassName={'mt-16'}
           className={'!col-span-6  desktop-max:!col-span-full w-full max-w-lg  tablet:px-6 tablet:justify-self-center desktop:justify-self-auto'}
           header={
             <Heading
@@ -35,7 +36,7 @@ function RestorePasswordPage() {
               color={HeadingColor.accent}
             />
           }
-
+          footer={<LinkStyled text={'У меня нет аккаунта'} to={'/register'} />}
         >
           <p>
             <strong>Пожалуйста, введите вашу почту, которую вы оставляли при регистрации.</strong> Мы отправим вам

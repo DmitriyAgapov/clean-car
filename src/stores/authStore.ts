@@ -45,12 +45,22 @@ export class AuthStore {
   userIsLoggedIn: boolean = false
   inProgress = false
   errors: any = undefined
-  values = {
+  values: {
+    first_name: string,
+    last_name: string,
+    email: string,
+    password: string
+    password2: string,
+    city: null | number,
+    phone: string,
+  } = {
     first_name: '',
     last_name: '',
     phone: '',
     email: '',
     password: '',
+    password2: '',
+    city: null
   }
 
  refreshToken() {
@@ -147,10 +157,22 @@ export class AuthStore {
 
   }
   async registerPerson(data: {first_name:string, last_name:string, phone:string, email:string, password:string,  password2:string, city:number }) {
-    console.log(data);
-    return agent.Auth.register(data)
-
+    this.values = data
+    return await agent.Auth.register(data)
   }
+  async restorePassword(email:string) {
+    return await agent.Account.accountRestorePassword(email)
+  }
+  async emailVerify(data:any) {
+    return await agent.Account.accountEmailConfirmation(data)
+      .then(r => {
+        this.login()
+      })
+      .catch(e => {
+        console.log(e)
+    })
+  }
+
   register() {
     this.inProgress = true
     this.errors = undefined

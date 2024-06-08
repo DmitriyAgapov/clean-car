@@ -24,11 +24,12 @@ const CarsPage = () => {
   const navigate = useNavigate()
 
   const [opened, { open, close }] = useDisclosure(false)
-  const {isLoading, data, mutate} =useSWR(['cars', {...localStore.params.getSearchParams}] , ([url, args]) => store.carStore.getAllCars(args))
 
   const memoModal = React.useMemo(() => {
     return <CarClasses opened={opened} onClose={close} />
   }, [opened])
+  const {isLoading, data, mutate} =useSWR(['cars', {...localStore.params.getSearchParams}] , ([url, args]) => store.carStore.getAllCars(args))
+
 
   useEffect(() => {
     localStore.setData = {

@@ -11,6 +11,9 @@ import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { useStore } from 'stores/store'
 import Image from 'components/common/ui/Image/Image'
 import imageBg from '../../assets/images/bg/welcomebg.png'
+import { CarClasses } from 'components/common/layout/Modal/CarClasses'
+import { useDisclosure } from '@mantine/hooks'
+import { RegisterSuccess } from "components/common/layout/Modal/RegisterSuccess";
 
 export default function RegisterPage() {
   const store = useStore()
@@ -27,6 +30,7 @@ export default function RegisterPage() {
     >
       <Section type={SectionType.centered}>
         <Panel
+          footerClassName={'mt-16'}
           className={'!col-span-6  desktop-max:!col-span-full w-full max-w-lg  tablet:px-6 tablet:justify-self-center desktop:justify-self-auto'}
           header={
             <Heading
@@ -53,7 +57,7 @@ export default function RegisterPage() {
         </Panel>
         <Panel
           className={
-            'desktop:!col-start-8 desktop:!col-span-7 desktop:m-8 !tablet:col-start-2 !tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-screen-sm tablet:py-4 tablet:px-2'
+            'desktop:!col-start-8 desktop:!col-span-7 desktop:m-8 !tablet:col-start-2 !tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-xl tablet:py-4 tablet:px-2'
           }
           variant={PanelVariant.textPadding}
           background={PanelColor.glass}

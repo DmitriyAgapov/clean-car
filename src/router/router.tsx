@@ -97,10 +97,9 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
     },
     {
-        path: '/register/success',
+        path: '/register/verification',
         element: <RegisterSuccessPage />,
         errorElement: <ErrorPage />,
-        loader: authUser,
     },
     {
         path: '/account',
