@@ -11,7 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
 import { translite } from 'utils/utils'
 import { CAR_RADIUS } from 'stores/priceStore'
-import { NumberInput, ScrollArea } from '@mantine/core'
+import { Grid, NumberInput, ScrollArea, Text } from '@mantine/core'
 import { observer, useLocalStore } from 'mobx-react-lite'
 import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
 import { BidsStatus } from 'stores/bidsStrore'
@@ -360,7 +360,6 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
 
 export const TabsVariantBids = observer(({ label, content_type, data, state, name, className, companyId, company_type, ...props }: TabsVariantsProps) => {
     const store = useStore()
-    const params = useParams()
     let result
     switch (label) {
         case 'Основная информация':
@@ -459,6 +458,122 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
             )
             break
         case 'Услуги':
+            const servicesPrice = React.useMemo(() => {
+
+              const _res: { service: { label: string | null, values: any[], unit: string }, options: { label: string, values: any[], unit: string }[] | null } = { service: { label: null, values: [], unit: '₽' }, options: [] }
+              const serviceName = data.service_type.name + " - " + data.service_subtype.name
+              const serviceName_exclude = data.service_type.name + " - " + data.service_subtype.name + " - "
+
+              if(store.appStore.appType === "admin") {
+                if(!!data.service_percent) {
+                  const el = data.price_positions.performer;
+
+
+                  for(let i = 0; el.length > i; i++) {
+                    if(el[i].name === serviceName)  {
+                      const _performerValue = parseFloat(el[i].amount)
+                      const _customerValue = _performerValue * (100 + data.service_percent)
+
+                      _res.service.label = el[i].name;
+                      _res.service.values = [ _customerValue, _performerValue, _customerValue - _performerValue]
+                    } else  {
+                      const _performerValue = parseFloat(el[i].amount)
+                      const _customerValue = _performerValue * (1 + (Number(data.service_percent) / 100))
+                      _res.service.label = data.service_subtype.name
+                      _res.options?.push({
+                        label: el[i].name.replace(serviceName_exclude, ''),
+                        values: [_customerValue, _performerValue,  (_customerValue - _performerValue).toFixed(2)],
+                        unit: el[i].unit,
+                      })
+                    }
+                  }
+                } else {
+                  const el = data.price_positions.performer;
+                  for(let i = 0; el.length > i; i++) {
+                    if(el[i].name === serviceName)  {
+                      const _customerValue = parseFloat(data.price_positions.customer[0].amount)
+                      const _performerValue = parseFloat(el[i].amount)
+                      _res.service.label = el[i].name;
+                      _res.service.values = [ Math.round(_customerValue * 100) / 100,  Math.round(_performerValue * 100) / 100, Math.round((_customerValue - _performerValue) * 100) / 100]
+                    } else  {
+                      const _performerValue = parseFloat(el[i].amount)
+                      const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                      _res.service.label = data.service_subtype.name
+                      _res.options?.push({
+                        label: el[i].name.replace(serviceName_exclude, ''),
+                        values:[ Math.round(_customerValue * 100) / 100,  Math.round(_performerValue * 100) / 100, Math.round((_customerValue - _performerValue) * 100) / 100],
+                        unit: el[i].unit,
+                      })
+                    }
+                  }
+                }
+              }
+              const tableParams = {
+                cols: 6,
+                nameColSpan: 3,
+                valuesSpan: 1,
+                valueStyle: 'text-accent font-medium text-sm'
+              }
+                const totalCustomer = _res.options?.reduce((acc:number, item:any) => acc + item.values[0], 0) + _res.service.values[0]  as number
+                const totalPerformer = _res.options?.reduce((acc:number, item:any) => acc + item.values[1], 0)  + _res.service.values[1]  as number
+                const totalProfit =  _res.options?.reduce((acc:number, item:any) => acc + parseFloat(item.values[2]), 0)  + _res.service.values[2] as number
+              const total = [totalCustomer, totalPerformer, totalProfit]
+
+              return <><Grid columns={tableParams.cols} gutter={8} align={"center"} className={'mb-6'}>
+                        {/*  Header  */}
+                        <Grid.Col span={tableParams.nameColSpan}  className={'text-gray-2 font-medium'}>
+                          Тип услуги
+                        </Grid.Col>
+                        {store.appStore.appType !== "admin" ? <Grid.Col  className={'text-gray-2 font-medium text-xss'}  span={tableParams.nameColSpan}>Стоимость</Grid.Col> : <>
+                          <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss uppercase'} >Заказчик</Grid.Col>
+                          <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss  uppercase'} >Исполнитель</Grid.Col>
+                          <Grid.Col  span={tableParams.valuesSpan}  className={'text-gray-2 font-medium text-xss  uppercase'} >Разница</Grid.Col>
+                        </>}
+
+                {/* Услуга */}
+                <Grid.Col span={tableParams.nameColSpan}>
+                  <Text className={'font-semibold font-sans'}>{_res.service.label}</Text>
+                </Grid.Col>
+                {store.appStore.appType !== "admin" ? <Grid.Col  className={tableParams.valueStyle}  span={tableParams.nameColSpan}>{_res.service.values[0]} {_res.service.unit}</Grid.Col> : _res.service.values.map((value) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {_res.service.unit}</Grid.Col>)}
+
+                {/* Доп опции*/}
+                <Grid.Col span={tableParams.cols}    className={'text-gray-2 font-medium mt-4'}>Дополнительные опции</Grid.Col>
+
+                {_res.options?.map((o:any) => <><Grid.Col  className={'font-semibold font-sans'} span={tableParams.nameColSpan}>
+                  <Text>{o.label}</Text>
+                </Grid.Col>
+                  {store.appStore.appType !== "admin" ? <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{o.values[0]} {o.unit}</Grid.Col> : o.values.map((value:number) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {o.unit === "Р" ? '₽' : o.unit ?? '₽'}</Grid.Col>)}
+                </>)}
+
+                 {/* Стоимость услуги*/}
+
+                {_res.options?.map((o:any) => <><Grid.Col  className={'font-semibold font-sans  mt-4'} span={tableParams.nameColSpan}>
+                  {data.create_amount !== null && store.userStore.getUserCan(PermissionNames["Финансовый блок"], "read") && <DList
+                    className={'child:dt:text-accent mb-6 mt-auto child:*:text-accent'}
+                    label={'Стоимость услуги'}
+                    title={<Heading variant={HeadingVariant.h2} className={'!mb-0'} text={String(data.create_amount) + " ₽"} />}
+                  />}
+                </Grid.Col>
+                  {store.appStore.appType !== "admin" ? <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{o.values[0]} {o.unit}</Grid.Col> : total.map((value:number) => <Grid.Col  className={tableParams.valueStyle} span={tableParams.valuesSpan}>{value} {o.unit === "Р" ? '₽' : o.unit ?? '₽'}</Grid.Col>)}
+                </>)}
+
+              </Grid>
+                {data.truck_type && <DList
+                  className={'child:dt:text-accent'}
+                  label={'Тип эвакуатора'}
+                  title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
+                />}
+
+
+                {data.wheel_lock && <DList
+
+                  label={'Нерабочие колеса'}
+                  title={<Heading  variant={HeadingVariant.h4} text={data.wheel_lock + "шт."} />}
+                />}
+
+
+              </>
+            }, [])
 
             result = (
                 <Tabs.Panel
@@ -525,34 +640,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     bodyClassName={'flex flex-col  h-full'}
                     className={'!col-start-3 col-span-2 row-span-5 !border-active'}
                   >
-                    <DList
-                      className={'child:dt:text-accent'}
-                      label={'Тип услуги'}
-                      title={<Heading variant={HeadingVariant.h4} text={data.service_subtype.name} />}
-                    />
-                    {(data.price_positions.performer && data.price_positions.performer.length > 0) && <DList
-
-                      label={'Дополнительные опции'}
-                      title={<ul>{data.price_positions.performer.map((o:any) => <li className={'flex justify-between'}>{o.name.replace('Шиномонтаж - Стационарный - ', '')} <span className={'text-accent font-sansSerif text-sm font-medium'}>{o.amount} ₽</span></li>)}</ul>}
-                    />}
-                    {data.truck_type && <DList
-                      className={'child:dt:text-accent'}
-                      label={'Тип эвакуатора'}
-                      title={<Heading variant={HeadingVariant.h4} text={data.truck_type} />}
-                    />}
-
-
-                    {data.wheel_lock && <DList
-
-                      label={'Нерабочие колеса'}
-                      title={<Heading  variant={HeadingVariant.h4} text={data.wheel_lock + "шт."} />}
-                    />}
-
-                    {data.create_amount !== null && store.userStore.getUserCan(PermissionNames["Финансовый блок"], "read") && <DList
-                      className={'child:dt:text-accent mb-6 mt-auto child:*:text-accent'}
-                      label={'Стоимость услуги'}
-                      title={<Heading variant={HeadingVariant.h2} className={'!mb-0'} text={String(data.create_amount) + " ₽"} />}
-                    />}
+                    {servicesPrice}
                   </Panel>
                 </Tabs.Panel>
             )

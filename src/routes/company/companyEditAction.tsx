@@ -22,6 +22,7 @@ export default function CompanyPageEditAction(props: any) {
   const {isLoading, data:loaderData, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
     revalidateOnMount: true
   })
+  console.log(loaderData);
   useDidUpdate(
     () => {
       if(location.pathname.includes('companies')) {
@@ -33,7 +34,7 @@ export default function CompanyPageEditAction(props: any) {
     [location.pathname]
   );
   if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
-  if(isLoading) return <Loader/>
+  if(isLoading && !loaderData) return <Loader/>
   return (
     <Section type={SectionType.default}>
       <Panel
@@ -54,9 +55,10 @@ export default function CompanyPageEditAction(props: any) {
           </>
         }
       />
-      <FormCreateUpdateCompany edit company={{
+      {(!isLoading && loaderData) && <FormCreateUpdateCompany edit company={{
         id: params.id,
         company_name: loaderData.name,
+        is_active: loaderData.is_active,
         address: loaderData[`${params.company_type}profile`].address ? loaderData[`${params.company_type}profile`].address : "Нет адреса",
         city: String(loaderData.city.id),
         inn: loaderData[`${params.company_type}profile`].inn,
@@ -78,7 +80,7 @@ export default function CompanyPageEditAction(props: any) {
         performer_company: loaderData[`${params.company_type}profile`].performer_company,
         bill: loaderData[`${params.company_type}profile`].bill,
       }}
-      />
+      />}
       {/* <FormEditCompany /> */}
     </Section>
   )

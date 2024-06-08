@@ -264,14 +264,14 @@ export class CatalogStore {
         return this.currentCarModelWithBrand
     }
     getCities = flow(function* (this: CatalogStore, params?: PaginationProps) {
-        let cities
+        let cities:any  = []
         // if (this.cities.size === 0) {
             try {
                 const { data } = yield agent.Catalog.getCities(params)
                 cities = data.results
-                this.cities = cities
+                // this.cities = cities
             } catch (error) {}
-            return this.allCities
+            return cities
         }
     )
     async getAllCities(params?: PaginationProps) {
