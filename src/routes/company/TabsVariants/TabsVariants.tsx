@@ -503,7 +503,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                       return this
                     }
                     if(this.role === "customer") {
-                      if(data.service_percent === null) {
+                      if(data.service_percent == null) {
                         for(let i = 0; el.length > i; i++) {
                           const _customerValue = parseFloat(data.price_positions.customer[i].amount)
                           if(el[i].name === serviceName)  {
@@ -524,14 +524,14 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                         }
                       } else {
                         for(let i = 0; el.length > i; i++) {
-                          const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                          const _customerValue = parseFloat(data.price_positions.performer[i].amount)
                           if(el[i].name === serviceName)  {
                             const _ar = []
                             _ar.push(Math.round(_customerValue * 100) / 100)
                             this.service.label = el[i].name;
                             this.service.values = _ar
                           } else  {
-                            const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                            const _customerValue = parseFloat(data.price_positions.performer[i].amount)
 
                             this.service.label = data.service_subtype.name
                             const _ar = []
@@ -544,8 +544,6 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           }
                         }
                       }
-
-
                       return this
                     }
                     if(this.role === "customer" || this.role === "admin") {
@@ -575,7 +573,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           }
                         }
                       } else {
-                        const _customerValue = parseFloat(data.price_positions.customer[0]?.amount) ?? null
+                        const _customerValue = parseFloat(data.price_positions.customer[0]?.amount)  ?? null
                         for(let i = 0; el.length > i; i++) {
                           const _performerValue = parseFloat(el[i].amount)
                           console.log(_customerValue);
