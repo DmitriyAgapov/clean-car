@@ -248,7 +248,31 @@
 	  margin-bottom: 0;
 	}
   }
-
+  &[data-style="bid_histories"] {
+	@screen mobile {
+	  [data-label="old_status"] {
+		display: none;
+	  }
+	  [data-label="new_status"] {
+		grid-column: -4/-2;
+		justify-self: end;
+	  }
+	  [data-label="created_h"] {
+		grid-column: 1/-4;
+		grid-row: 1 / 2;
+		height: initial;
+		overflow: initial;
+		&:before {
+		  content: none;
+		}
+	  }
+	  [data-label="additional_information"], [data-label="additional_information"], [data-label="updated"] , [data-label="user"]  {
+		&:before {
+		  content: none;
+		}
+	  }
+	}
+  }
   &[data-variant="modal"] {
 		@apply  py-16 px-12;
 	@screen tablet-max {

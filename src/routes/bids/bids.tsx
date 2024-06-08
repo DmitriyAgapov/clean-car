@@ -48,8 +48,8 @@ const BidsPage = () => {
 			id: r.id,
 			status: r.status,
 			created: dayjs(r.created).format('DD.MM.YYYY HH:mm'),
-			customer: r.company.name,
-			performer: r.performer.name,
+			...((store.appStore.appType === "performer" || store.appStore.appType === "admin") && {customer: r.company.name}),
+			...((store.appStore.appType === "customer"  || store.appStore.appType === "admin") && {performer: r.performer.name}),
 			conductor: (r.conductor && r.conductor?.first_name &&  r.conductor?.last_name) ? r.conductor?.first_name + ' ' + r.conductor?.last_name[0] + '.' : " ",
 			executor: (r.executor && r.executor?.first_name &&  r.executor?.last_name)  ? r.executor?.first_name + ' ' + r.executor?.last_name[0] + '.' : " ",
 			number: r.car?.number,
@@ -65,7 +65,31 @@ const BidsPage = () => {
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
+	let th
 
+
+	(() => {
+		const _th = [
+			{ label: '№', name: 'idnum' },
+			{ label: 'Статус', name: 'status' },
+			{ label: 'Дата/Время', name: 'created' }
+		]
+		const _last = [{ label: 'Водитель', name: 'conductor' },
+			{ label: 'Исполнитель', name: 'executor' },
+			{ label: 'ТС', name: 'car' },
+			{ label: 'Город', name: 'city__name' },
+			{ label: 'Услуга', name: 'service_type' }
+		]
+		if(store.appStore.appType === "performer" || store.appStore.appType === "admin")  {
+			_th.push({ label: 'Заказчик', name: 'company' })
+		}
+		if(store.appStore.appType === "customer"  || store.appStore.appType === "admin")  {
+			_th.push({ label: 'Партнер', name: 'performer' })
+		}
+		_th.push(..._last)
+		th = _th
+	})()
+	console.log(th);
 	return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'justify-between gap-4'}
@@ -110,7 +134,7 @@ const BidsPage = () => {
 							filter={true}
 							initFilterParams={[FilterData.city, FilterData.bidStatus, FilterData.service_type, FilterData.start_date, FilterData.end_date]}
 							state={localStore.setIsLoading}
-							ar={textData.tableHeaders}
+							ar={th}
 				/>
 		</Section>
 	)

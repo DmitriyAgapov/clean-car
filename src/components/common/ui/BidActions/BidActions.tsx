@@ -1,14 +1,14 @@
-import { observer } from 'mobx-react-lite'
-import { useStore } from 'stores/store'
-import React from 'react'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { useParams, useRevalidator } from 'react-router-dom'
-import { BidsStatus } from 'stores/bidsStrore'
-import { Button as Btn, Menu } from '@mantine/core'
-import { SvgMenu } from 'components/common/ui/Icon'
-import styles from './BidActions.module.scss'
-import { useDisclosure, useViewportSize } from '@mantine/hooks'
-import  BidModal  from 'components/common/layout/Modal/BidModal'
+import {observer} from "mobx-react-lite"
+import { useStore } from "stores/store";
+import React from "react";
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import { useNavigate, useNavigation, useParams, useRevalidator } from 'react-router-dom'
+import { BidsStatus } from "stores/bidsStrore";
+import { Button as Btn, Menu } from "@mantine/core";
+import { SvgMenu } from "components/common/ui/Icon";
+import styles from "./BidActions.module.scss";
+import { useViewportSize } from "@mantine/hooks";
+import BidModal from "components/common/layout/Modal/BidModal";
 import { useSWRConfig } from "swr";
 
 const BidText = {
@@ -19,7 +19,7 @@ const BidText = {
   CustomerRazbor: <p>Выполненная работа отклонена Заказчиком. Происходит разбор причины</p>,
   CustomerOtmenena: <p>Изменения по заявке со стороны Исполнителя не приняты. Заявка отклонена.</p>,
   PerformerOzhidaet: <p>Вы внесли изменения в заявку. Ожидайте ответ от заказчика.</p>,
-  PerformerVipolnena: <p>Заявка выполнена. Ожидается обратная связь от заказчика.</p>,
+  PerformerVipolnena: <p className={'flex-none'}>Заявка выполнена. Ожидается обратная связь от заказчика.</p>,
   PerformerResheno: <p>Заявка принята заказчиком. Заказ полностью завершен.</p>,
   PerformerRazbor: <p>Выполненная работа отклонена Заказчиком. Происходит разбор причины.</p>,
   PerformerOtmena: <p>Выполненная работа отклонена Заказчиком. Происходит разбор причины.</p>,
@@ -86,7 +86,7 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
   const {cache, mutate } = useSWRConfig()
   const params = useParams()
   const store = useStore()
-  console.log(params);
+  const navigate = useNavigate()
   const memoModal = React.useMemo(() => {
     // @ts-ignore
     return  <BidModal update={update} opened={store.bidsStore.modalCurrentState}
@@ -262,7 +262,7 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                     )
 
                 case BidsStatus["Выполнено"]:
-                    return BidText.PerformerVipolnena
+                    return (<div className={'grid gap-6'}>{BidText.PerformerVipolnena}<Button text={'Закрыть'} action={() => navigate('/account/bids')} variant={ButtonVariant.accent} size={ButtonSizeType.base}/></div>)
                 case BidsStatus["Обрабатывается"]:
                   return (
                     <>

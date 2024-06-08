@@ -299,7 +299,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
   const handleBack = React.useCallback(() => {
     if(step === 4) {
-      if (store.bidsStore.formResult.service_type === 1 || formData.values.service_type === "1") {
+      if (store.bidsStore.formResult.service_type === 1 || formData.values.service_type === "1" || formData.values.service_type === "2") {
         setStep(2)
       } else {
         setStep((prevState: number) => prevState - 1)

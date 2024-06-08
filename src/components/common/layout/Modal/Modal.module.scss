@@ -84,6 +84,19 @@
   section {
 	@apply px-10 py-12 border-gray-2 border;
 	background: rgba(36, 37, 41, .6);
+	@screen tablet-max {
+	  position: absolute;
+	  top: 0;
+	  bottom: 0;
+	  right: 0;
+	  display: grid;
+	  align-content: center;
+	  left: 0;
+	  min-height: 100lvh;
+	  footer {
+		display: grid;
+	  }
+	}
 	header {
 	  @apply pt-0 bg-none;
 	  background: none !important;

@@ -104,10 +104,11 @@ const BidPage = () => {
             ></Panel>
             <Panel
                 state={isLoading}
-                className={'col-span-full grid grid-rows-[auto_1fr_auto] tablet-max:-mx-6'}
+                className={'col-span-full grid tablet:grid-rows-[auto_1fr_auto] tablet-max:-mx-6'}
                 variant={PanelVariant.textPadding}
                 background={PanelColor.glass}
                 bodyClassName={''}
+	            footerClassName={'tablet-max:!pt-0'}
                 headerClassName={'grid grid-cols-4 gap-4 border-bottom-none'}
 	              footer={width && width < 740 && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
 		              <BidActions status={data?.status as BidsStatus} update={mutate}/>

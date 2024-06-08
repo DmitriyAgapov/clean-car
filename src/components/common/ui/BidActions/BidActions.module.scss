@@ -35,8 +35,11 @@
   p {
 	@apply text-accent max-w-80 py-0;
 	@screen tablet-max {
-	  @apply flex-[1_0_20rem];
-	  width: initial !important;
+	  //@apply flex-[1_0_20rem];
+	  //width: initial !important;
+	  padding: 0 !important;
+	  margin: 0 !important;
+	  text-align: center;
 	}
   }
   button {

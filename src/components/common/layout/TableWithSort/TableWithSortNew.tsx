@@ -77,7 +77,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
                 <>
                     {search && <TableSearch/>}
                     {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
-                </> : null
+                </> : false
             }
             footer={<PaginationComponent />}
             {...props}
