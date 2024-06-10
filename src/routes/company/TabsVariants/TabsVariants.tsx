@@ -735,7 +735,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
 
                         <>
                           {data.create_amount !== null &&
-                            store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && store.appStore.appType !== "performer" &&  <Box
+                            store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read')  &&  <Box
                               className={'font-semibold font-sans  mt-4  self-end'}
                               style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
                             >
@@ -759,7 +759,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                               className={tableParams.valueStyle + "  " + " self-end"}
                               style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
                             >
-                              {value}{' '}
+                              {value}
                               {_res.options[index]?.unit === 'Р' ? '₽' : _res.options[index]?.unit ?? '₽'}
                             </Box>
                           ))}
