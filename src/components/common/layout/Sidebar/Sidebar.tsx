@@ -47,7 +47,7 @@ const sidebarMenu: { icon: React.ReactNode; title: string; url: string, urlMap: 
   },
   {
     icon: <img src={'/icons/groups.png'} alt={''} />,
-    title: 'Группы',
+    title: 'Права доступа',
     url: 'groups',
     urlMap: 'Управление пользователями',
   },
@@ -186,7 +186,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
     }
     sidebarMenu.forEach((el) => addRouteWithPermissions(el))
 
-    setRoutes( routeWithPermissions)
+    setRoutes(routeWithPermissions)
   }, [store.userStore.currentUserPermissions.size])
 
   return (

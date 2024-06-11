@@ -62,17 +62,17 @@ const ServicesSubTypePage = () => {
           <Panel headerClassName={"!pb-2"}
             header={
               <>
-                <div className={"flex items-baseline justify-between flex-1 "}>
+                <div className={"tablet:flex items-baseline justify-between flex-1 "}>
                   <div className={"flex-1"}>
                     <Heading text={data.results.name}
                       variant={HeadingVariant.h2}
                       color={HeadingColor.accent} />
-                    <div className={"flex flex-1 items-end gap-12"}>
-                      <div className={"text-xs text-gray-2"}>
+                    <div className={"tablet:flex flex-1 items-end gap-12"}>
+                      <p className={"text-xs text-gray-2"}>
                         Дата и время регистрации: <span>{dateTransform(data.updated).date}</span>
-                    </div>
+                    </p>
                     <Heading
-                      className={'!m-0'}
+                      className={'tablet:!m-0'}
                       text={data.results.is_active ? 'Активен' : 'Не активна'}
                       color={data.results.is_active ? HeadingColor.active : HeadingColor.notActive}
                       variant={HeadingVariant.h4}
@@ -106,7 +106,7 @@ const ServicesSubTypePage = () => {
                   />
                 )}
               </div>
-              <Heading color={HeadingColor.accent} text={'Дополнительные опции'} className={'mt-12 !mb-0'} variant={HeadingVariant.h4}/>
+              <Heading color={HeadingColor.accent} text={'Дополнительные опции'} className={'mt-8 tablet:mt-12 !mb-0'} variant={HeadingVariant.h4}/>
             </>
           } variant={PanelVariant.textPadding} className={'!mt-0'} background={PanelColor.glass} bodyClassName={'grid tablet:grid-cols-3 gap-6'} >
 

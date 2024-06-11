@@ -546,7 +546,7 @@ const FinaceIdPage = () => {
           />
           <Panel variant={PanelVariant.suffixFooter} background={PanelColor.withSuffix}>
               <ul className={'finance_total_headers col-span-2'}>
-                  <li className={'text-accent uppercase'}>Прибыль</li>
+                  <li className={'text-accent uppercase'}>{store.appStore.appType ==="admin" ? "Прибыль" : "Итог"}</li>
               </ul>
               <ul className={'finance_total_tire'} data-content-type={'values'}>
                   <li className={'text-accent uppercase'}>

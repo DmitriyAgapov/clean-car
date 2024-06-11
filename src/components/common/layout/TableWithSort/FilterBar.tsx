@@ -47,7 +47,6 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
     }, [])
 
     const elem = ():React.ReactNode => {
-      console.log('elev changed');
       const elements: any[] = []
       filters.forEach((el: FilterData) => {
         switch (el) {
@@ -338,7 +337,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                   day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80',
                 }}
                 popoverProps={{
-                  withinPortal: portalState,
+                  withinPortal: false,
                   width: 300,
                   styles: {
                     dropdown: {
@@ -377,7 +376,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 }}
                 clearable
                 popoverProps={{
-                  withinPortal: portalState,
+                  withinPortal: false,
                   width: 300,
                   styles: {
                     dropdown: {
@@ -419,10 +418,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
 
 const FilterBar = React.forwardRef(({ filters, state = false, action }: FilterBarProps, ref: any) => {
   const localStore = useLocalStore<LocalRootStore>()
-
-  console.log(toJS(localStore.params.getSearchParams));
   const params = localStore.params.getSearchParams
-
   const handleAction = React.useCallback(() => {
       localStore.params.clearParams()
       localStore.params.setSearchParams(params)

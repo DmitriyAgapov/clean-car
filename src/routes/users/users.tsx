@@ -3,15 +3,13 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
-import { Outlet, useLoaderData, useLocation, useNavigate, useRevalidator, useSearchParams } from 'react-router-dom'
+import { Outlet,  useLocation, useNavigate, useRevalidator } from 'react-router-dom'
 import { useStore } from 'stores/store'
 import { observer, useLocalStore } from "mobx-react-lite";
-import { Company } from 'stores/companyStore'
-import { User } from 'stores/usersStore'
 import { UserTypeEnum } from 'stores/userStore'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import { useDidUpdate, useForceUpdate } from '@mantine/hooks'
+import { useDidUpdate } from '@mantine/hooks'
 import useSWR from "swr";
 import { LocalRootStore } from "stores/localStore";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
@@ -28,7 +26,7 @@ const UsersPage = () => {
     revalidateOnMount: true,
     revalidateIfStale: false,
   })
-  console.log(data);
+
   useDidUpdate(
     () => {
       if(location.pathname === '/account/users') {
@@ -46,7 +44,7 @@ const UsersPage = () => {
         name: item.employee.first_name + ' ' + item.employee.last_name,
         phone: item.employee.phone ? item.employee.phone : " ",
         email: item.employee.email,
-        group: item.company.company_type,
+        ...((store.appStore.appType === "admin") && {group: item.company.company_type}),
         company: item.company.name,
         city: item.company.city.name,
         id: item.employee.id,
@@ -59,7 +57,25 @@ const UsersPage = () => {
       }))}
     localStore.setIsLoading = isLoading
   },[data])
-
+  const th = React.useMemo(() => {
+    const _th = [
+      {label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}
+    ]
+    const _last = [{label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city__name'}]
+    if(store.appStore.appType === "admin")  {
+      _th.push({label: 'Тип', name: 'company__company_type'})
+    }
+    _th.push(..._last)
+    return _th
+  }, [])
+  const ft = React.useMemo(() => {
+    const _ft = []
+    if(store.appStore.appType === "admin") {
+      _ft.push(FilterData.company_type)
+    }
+    _ft.push(FilterData.employee__is_active)
+    return _ft
+  }, [])
   if ('/account/users' !== location.pathname) return <Outlet />
   return (
     <Section type={SectionType.default}>
@@ -95,9 +111,9 @@ const UsersPage = () => {
         style={PanelRouteStyle.users}
         background={PanelColor.glass}
         filter={true}
-        initFilterParams={[FilterData.company_type, FilterData.employee__is_active]}
+        initFilterParams={ft}
         state={isValidating}
-        ar={[{label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}, {label: 'Тип', name: 'company__company_type'}, {label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city__name'}]}
+        ar={th}
       />
 
     </Section>

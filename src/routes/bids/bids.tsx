@@ -66,8 +66,6 @@ const BidsPage = () => {
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
 	let th
-
-
 	(() => {
 		const _th = [
 			{ label: '№', name: 'idnum' },
@@ -89,7 +87,6 @@ const BidsPage = () => {
 		_th.push(..._last)
 		th = _th
 	})()
-	console.log(th);
 	return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'justify-between gap-4'}
@@ -103,12 +100,12 @@ const BidsPage = () => {
 				</div>
 				<div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
 					{store.userStore.getUserCan(PermissionNames["Управление заявками"], "create") && (<>
-						<Button text={textData.loadExcel}
+						{store.appStore.appType === "admin" && <Button text={textData.loadExcel}
 							action={() => navigate("create")}
 							trimText={true}
 							className={"inline-flex tablet-max:flex-1"}
 							variant={ButtonVariant["accent-outline"]}
-							size={ButtonSizeType.sm} />
+							size={ButtonSizeType.sm} />}
 						<Button text={textData.create}
 							action={() => {
 								store.bidsStore.justCreatedBid = {};

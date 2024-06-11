@@ -15,8 +15,9 @@ import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import agent from "utils/agent";
 
 const localRootStore =  new LocalRootStore()
-function FinanceBottom(props: { data: any }) {
+const FinanceBottom = observer((props: { data: any }) => {
     const { width, height } = useViewportSize()
+    const store = useStore()
     const [open, setOpen] = React.useState<boolean>(false);
     if (width < 1024) {
         return (
@@ -127,7 +128,7 @@ function FinanceBottom(props: { data: any }) {
                       </li>
                       <li className={"finance_part"}>
                           <ul>
-                              <li className={'finance_part__title'}>Прибыль</li>
+                              <li className={'finance_part__title'}>{store.appStore.appType ==="admin" ? "Прибыль" : "Итог"}</li>
 
                               <li>
                                   <NumberFormatter thousandSeparator={" "}
@@ -182,7 +183,7 @@ function FinanceBottom(props: { data: any }) {
                     <li>
                         <span data-directory={ButtonDirectory.performer}></span>Итог Партнер
                     </li>
-                    <li className={"text-accent uppercase"}>Прибыль</li>
+                    <li className={"text-accent uppercase"}>{store.appStore.appType === "admin" ? "Прибыль" : "Итог"}</li>
                 </ul>
                 <ul className={"finance_total_tire"}
                   data-content-type={"values"}>
@@ -296,13 +297,18 @@ function FinanceBottom(props: { data: any }) {
             </Panel>
         </>
     )
-}
+})
 
 const FinacePage = () => {
   const location = useLocation()
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
-  const navigate = useNavigate()
+
+  const _p = localStore.params.getSearchParams
+  React.useEffect(() => {
+    console.log(_p);
+    console.log(new Date().getMonth())
+  }, [_p])
   const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getReport(undefined,args))
 
   useEffect(() => {

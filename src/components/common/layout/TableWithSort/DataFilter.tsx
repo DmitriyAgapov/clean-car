@@ -30,7 +30,9 @@ export const ctx = React.createContext<any>({
 })
 function DataFilter({ filterData}: {filterData: any[] | undefined}) {
   const [opened, { close, open, toggle}, ] = useDisclosure(false);
-  const ref = useClickOutside(() => close())
+  const ref = useClickOutside(() => {
+    close()
+  } )
   const localStore = useLocalStore<LocalRootStore>()
 
 

@@ -880,7 +880,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                         <p>После оказания услуги загрузите пожалуйста фотографии</p>
                         {store.appStore.appType === 'performer' &&
                             data.status !== BidsStatus['Выполнено'] &&
-                            data.status !== BidsStatus['Завершена'] && (
+                            data.status !== BidsStatus['Завершено'] && (
                                 <Button
                                     type={'button'}
                                     action={() => store.bidsStore.setModalCurrentState(true)}

@@ -7,7 +7,6 @@ import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import { useStore } from "stores/store";
-import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { client } from "utils/agent";
 import dayjs from "dayjs";
 const localRootStoreF = new LocalRootStore()
@@ -17,17 +16,18 @@ const TabBidHistory = ({companyId, company_type, state }:any) => {
 	const params = useParams()
 	const localStoreF = useLocalStore<LocalRootStore>(() => localRootStoreF)
 	const {isLoading, data} = useSWR([`bid_${params.company_id}_${params.id}-history`,  params.company_id, params.id, localStoreF.params.getSearchParams] , ([url,  company_id,id, args]) => client.bidsHistory({company_id: company_id as string, id: Number(id), ...args}))
-
+	console.log(data);
 	useEffect(() => {
 		localStoreF.setData = {
 			...data,
 			results: data?.results?.map((item: any & {rootRoute?: string} ) => ({
-				old_status: item.old_status ? item.old_status: " - ",
+				// old_status: item.old_status ? item.old_status: " - ",
+				created_h: dayjs(item.created).format('DD-MM-YYYY hh:mm'),
 				new_status: item.new_status ? item.new_status : " - ",
 				user: item.user ? item.user.first_name + " " + item.user.last_name : " - ",
 				additional_information: item.additional_information ? item.additional_information : " - ",
-				created_h: dayjs(item.created).format('DD-MM-YYYY hh:mm'),
-				updated: item.updated ? dayjs(item.updated).format('DD-MM-YYYY hh:mm') : ' - '
+
+				// updated: item.updated ? dayjs(item.updated).format('DD-MM-YYYY hh:mm') : ' - '
 			}))}
 		localStoreF.setIsLoading = isLoading
 	},[data, localStoreF.params.getSearchParams])
@@ -42,7 +42,7 @@ const TabBidHistory = ({companyId, company_type, state }:any) => {
 				search={false} filter={false}
 				footerClassName={'pt-8 justify-end flex'}
 				variant={PanelVariant.default}
-				ar={[{label: "Старый статус", name: 'old_status'}, {label: "Новый статус", name: 'new_status'}, {label: 'Пользователь', name: 'user'}, {label: 'Комментарий', name: 'additional_information'}, {label: 'Дата создания', name: 'created_h'}, {label: 'Дата изменения', name: 'updated'}]}/>
+				ar={[{label: 'Дата', name: 'created_h'}, {label: "Новый статус", name: 'new_status'}, {label: 'Пользователь', name: 'user'}, {label: 'Комментарий', name: 'additional_information'}]}/>
 
 	</Tabs.Panel>
 }

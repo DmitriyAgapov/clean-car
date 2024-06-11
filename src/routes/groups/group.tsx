@@ -50,7 +50,7 @@ const GroupPage = () => {
                 variant={ButtonVariant.text}
               />
               <Heading
-                text={'Группа'}
+                text={'Права доступа'}
                 variant={HeadingVariant.h1}
                 className={'!mb-0 inline-block'}
                 color={HeadingColor.accent}

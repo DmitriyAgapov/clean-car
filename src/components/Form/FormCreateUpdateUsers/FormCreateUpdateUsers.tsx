@@ -13,7 +13,6 @@ import { useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { CompanyTypeRus, CompanyType } from "stores/companyStore";
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import agent from "utils/agent";
-import { formatPhone } from "utils/utils";
 
 interface InitValues {
 	id: string | number
@@ -34,7 +33,6 @@ export const createUserFormActions= createFormActions<InitValues>('createUserFor
 
 const FormCreateUpdateUsers =({ user, edit }: any) => {
 	const store = useStore()
-	const params = useParams()
 	const initData = React.useMemo(() => {
 		let initValues: InitValues = {
 			id: 0,
@@ -215,7 +213,6 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		autofix: true,
 		// overwrite: true,
 		prepare: (appended, masked) => {
-			console.log(masked);
 			if (appended[0] === '8' && masked.value === "") {
 				return appended.slice(1);
 			}

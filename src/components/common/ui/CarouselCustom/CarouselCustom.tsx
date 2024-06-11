@@ -67,12 +67,12 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 								// onTouchEnd={(event) => console.log(event)}
 							>
 								<BidImg
-									containerClassName={'tablet-max:flex tablet-max:justify-center  tablet-max:aspect-[9_/_12] tablet-max:items-end'}
+									containerClassName={'tablet-max:flex tablet-max:justify-center  tablet-max:items-end'}
 									item={i}
 									// mih={'10rem'}
-									// miw={'100%'}
+									miw={'100%'}
 									// h={'100%'}
-									style={{ objectFit: 'contain', cursor: 'pointer',  maxHeight: "480px" }}
+									style={{ objectFit: 'contain', cursor: 'pointer' }}
 									// maw={'10rem'}
 									className={''}
 								/>

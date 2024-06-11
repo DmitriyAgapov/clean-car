@@ -21,7 +21,6 @@ interface RenderListProps {
 
 const RenderList = observer(({ options, onTransfer, type, label }: RenderListProps) => {
     const localStore = useTransferStore()
-  console.log(localStore);
   const { values, setFieldValue } = useFormContext()
     //@ts-ignore
     const items = options?.filter((item: any) => item?.name?.toLowerCase().includes((localStore.params.getSearchParams.q !== null ? localStore.params.getSearchParams.q : "").toLowerCase().trim())).map((item: any) => (
@@ -34,10 +33,9 @@ const RenderList = observer(({ options, onTransfer, type, label }: RenderListPro
                     id={'company-' + item.id}
                     type={'checkbox'}
                     name={'company-' + item.id}
-                    className={' mr-6'}
+                    className={'mr-6'}
                     onChange={(props) => {
                         // handleValueSelect(item)
-                        console.log(item, type)
                         type === "forward" ? localStore.moveToSelected(item.id) : localStore.moveToUnSelected(item.id)
                         setFieldValue('performer_company', localStore.getSelected.map((item:any) => item.id))
 

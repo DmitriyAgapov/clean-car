@@ -41,7 +41,7 @@ const BidPage = () => {
 			if (store.appStore.appType === "performer") {
 				(async () => {
 					if (params.company_id && params.id) {
-						store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus['Обрабатывается']).then(() => {
+						store.bidsStore.updateBitStatus(params.company_id, params.id, BidsStatus['В обработке']).then(() => {
 							console.log('status updated');
 							mutate()
 						} )

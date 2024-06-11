@@ -13,14 +13,14 @@ import authStore from "stores/authStore";
 
 export enum BidsStatus {
     'Новая' = 1,
-    'Обрабатывается' = 2,
-    'Ждет подтверждение' = 3,
-    'Подтверждена' = 4,
+    'В обработке' = 2,
+    'Ожидает' = 3,
+    'Согласовано' = 4,
     'В работе' = 5,
     'Выполнено' = 6,
     'Разбор' = 7,
-    'Отменена' = 8,
-    'Завершена' = 9
+    'Отмена' = 8,
+    'Завершено' = 9
 }
 
 export type ReverseEnum = {[K in keyof typeof BidsStatus as typeof BidsStatus[K]]: K}

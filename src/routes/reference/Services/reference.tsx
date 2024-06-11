@@ -236,6 +236,7 @@ const ServicePage = () => {
                 title={subtype.name}
                 titleVariant={HeadingVariant.h4}
                 className={'group relative w-full overflow-hidden'}
+                navigate={() => navigate(String(subtype.id))}
                 actions={
                   <div
                     className={
