@@ -25,7 +25,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Клиент",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -33,7 +33,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Клиент"
           }
       },
       "tire": {
@@ -63,7 +63,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Клиент",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -71,7 +71,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Клиент"
           }
       },
       "tire": {
@@ -105,7 +105,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Клиент",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -113,7 +113,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Клиент"
           }
       },
       "tire": {
@@ -147,7 +147,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Клиент",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -155,7 +155,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Клиент"
           }
       },
       "tire": {
@@ -189,7 +189,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Клиент",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -197,7 +197,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Клиент"
           }
       },
       "tire": {
@@ -231,7 +231,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Клиент",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -239,7 +239,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Клиент"
           }
       },
       "tire": {
@@ -273,7 +273,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Клиент",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -281,7 +281,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Клиент"
           }
       },
       "tire": {
@@ -315,7 +315,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Заказчик",
+        "company_type": "Клиент",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -323,7 +323,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Заказчик"
+            "company_type": "Клиент"
           }
       },
       "tire": {
@@ -357,7 +357,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Партнер",
+        "company_type": "Партнер",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -365,7 +365,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Партнер"
+            "company_type": "Партнер"
           }
       },
       "tire": {
@@ -399,7 +399,7 @@ const testData = {
       "company": {
         "id": 2,
         "name": "ООО Заказчик-ред1",
-        "company_type": "Компания-Партнер",
+        "company_type": "Партнер",
         "parent": {
             "id": 2,
             "name": "ООО Заказчик-ред1",
@@ -407,7 +407,7 @@ const testData = {
               "id": 1,
               "name": "Москва"
             },
-            "company_type": "Компания-Партнер"
+            "company_type": "Партнер"
           }
       },
       "tire": {

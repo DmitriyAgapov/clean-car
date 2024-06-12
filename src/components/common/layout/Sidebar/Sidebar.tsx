@@ -172,7 +172,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
     // }
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
-        if(store.userStore.myProfileData.company.company_type === "Компания-Партнер" && el.url === "cars") {
+        if(store.userStore.myProfileData.company.company_type === "Партнер" && el.url === "cars") {
 
 
         } else {

@@ -22,7 +22,7 @@ const FormInputs = () => {
   })
   const memoized = React.useMemo(() => {
     const allCompanies = store.companyStore.getCompanies()
-    const companies = allCompanies.filter((c: any) => c.parent === null && c.company_type === "Компания-Заказчик")
+    const companies = allCompanies.filter((c: any) => c.parent === null && c.company_type === "Клиент")
     const filials = allCompanies.filter((c: any) => c.parent !== null && c.parent.id === values.company_id)
     return <>
       <Select className={'col-span-full'} onOptionSubmit={(value:any) => {

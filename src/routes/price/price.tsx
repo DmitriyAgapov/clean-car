@@ -159,12 +159,12 @@ const PricePage = ():JSX.Element => {
                   color={company.is_active ? HeadingColor.active : HeadingColor.notActive}
                   variant={HeadingVariant.h4} />}
                 <Heading className={'!m-0'}
-                  text={company.company_type == "Компания-Заказчик"
+                  text={company.company_type == "Клиент"
                     ? CompanyType.customer
                     : CompanyType.performer}
                   variant={HeadingVariant.h4}
                   directory={
-                    company.company_type == "Компания-Заказчик"
+                    company.company_type == "Клиент"
                       ? HeadingDirectory.customer
                       : HeadingDirectory.performer
                   } />

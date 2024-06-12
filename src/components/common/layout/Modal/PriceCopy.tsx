@@ -13,7 +13,7 @@ import agent from "utils/agent";
 export function PriceCopy(props: { opened: boolean; onClose: () => void; id: number, title: string}) {
 	const store = useStore()
 	const [formData, setFormData]:any = useState({
-		type: store.appStore.appType !== "admin" ? store.userStore.myProfileData.company.company_type === "Компания-Заказчик" ? CompanyType.customer : CompanyType.performer : CompanyType.performer,
+		type: store.appStore.appType !== "admin" ? store.userStore.myProfileData.company.company_type === "Клиент" ? CompanyType.customer : CompanyType.performer : CompanyType.performer,
 		company: null,
 		company_filials: null
 	})

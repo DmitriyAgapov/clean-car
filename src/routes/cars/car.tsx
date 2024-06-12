@@ -107,12 +107,12 @@ const CarPage = () => {
                 />
                 <Heading
                   className={'!m-0'}
-                  text={data?.company?.company_type == 'Компания-Заказчик'
+                  text={data?.company?.company_type == 'Клиент'
                     ? data?.number
                     : data?.number}
                   variant={HeadingVariant.h4}
                   directory={
-                    data?.company?.company_type == 'Компания-Заказчик'
+                    data?.company?.company_type == 'Клиент'
                       ? HeadingDirectory.customer
                       : HeadingDirectory.performer
                   }

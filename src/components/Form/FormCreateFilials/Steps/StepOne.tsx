@@ -66,7 +66,7 @@ export function FormStep1(props: {
     const options = React.useMemo(() => {
 
       if(companies.length !== 0) return companies.map((item:any) => (
-        <Combobox.Option value={item.id} onClick={() => setValues({...values, company_name: item.name, company_id: item.id, type: item.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : UserTypeEnum.performer})}
+        <Combobox.Option value={item.id} onClick={() => setValues({...values, company_name: item.name, company_id: item.id, type: item.company_type === "Клиент" ? UserTypeEnum.customer : UserTypeEnum.performer})}
           key={item.id}>
           {item.name}
         </Combobox.Option>

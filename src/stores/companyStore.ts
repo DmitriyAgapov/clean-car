@@ -16,12 +16,12 @@ export enum Payment {
 }
 export enum CompanyType {
   admin = "Администратор системы",
-  customer = "Компания-Заказчик",
-  performer = "Компания-Партнер"
+  customer = "Клиент",
+  performer = "Партнер"
 }
 export const CompanyTypeRus = (type:any) => {
-  if(type === "Компания-Заказчик") return "customer"
-  if(type === "Компания-Партнер") return "performer"
+  if(type === "Клиент") return "customer"
+  if(type === "Партнер") return "performer"
   return "admin"
 }
 
@@ -235,13 +235,13 @@ export class CompanyStore {
             if (appStore.appType === "admin") {
                 if (company_type === "customer") {
                     return yield  agent.Companies.getOnlyAllCompanies().then(r => r && r.data).then(r => {
-                        this.companiesAndFilials = r.results.filter((i:any) => i.company_type === "Компания-Заказчик")
+                        this.companiesAndFilials = r.results.filter((i:any) => i.company_type === "Клиент")
                         return r.results
                     })
                 }
                 if (company_type === "performer") {
                     return yield  agent.Companies.getOnlyAllCompanies().then(r => r.data).then(r => {
-                        this.companiesAndFilials = r.results.filter((i:any) => i.company_type === "Компания-Партнер")
+                        this.companiesAndFilials = r.results.filter((i:any) => i.company_type === "Партнер")
                         return r.results
                     })
                 }

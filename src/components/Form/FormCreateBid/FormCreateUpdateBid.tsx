@@ -543,7 +543,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                 onOptionSubmit={handleChangeCompany}
                                 searchable
                                 data={store.companyStore.companies
-                                    .filter((c: any) => c.company_type === 'Компания-Заказчик')
+                                    .filter((c: any) => c.company_type === 'Клиент')
                                     .map((c: any) => ({ label: c.name, value: String(c.id) }))}
                             />
                             <Select

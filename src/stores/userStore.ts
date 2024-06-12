@@ -109,11 +109,11 @@ export class UserStore {
       roles.push(UserTypeEnum.admin)
     }
     if(this.myProfileData.user) {
-    if(this.myProfileData.user.account_bindings?.filter((value:any) => value.company.company_type == "Компания-Заказчик").length > 0) {
+    if(this.myProfileData.user.account_bindings?.filter((value:any) => value.company.company_type == "Клиент").length > 0) {
       roles.push(UserTypeEnum.customer)
     }
 
-    if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Компания-Партнер").length > 0) {
+    if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Партнер").length > 0) {
       roles.push(UserTypeEnum.performer)
     }}
     return roles

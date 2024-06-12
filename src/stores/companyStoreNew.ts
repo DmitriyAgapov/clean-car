@@ -17,12 +17,12 @@ export enum Payment {
 }
 export enum CompanyType {
   admin = "Администратор системы",
-  customer = "Компания-Заказчик",
-  performer = "Компания-Партнер"
+  customer = "Клиент",
+  performer = "Партнер"
 }
 export const CompanyTypeRus = (type:any) => {
-  if(type === "Компания-Заказчик") return "customer"
-  if(type === "Компания-Партнер") return "performer"
+  if(type === "Клиент") return "customer"
+  if(type === "Партнер") return "performer"
   return "admin"
 }
 
@@ -170,7 +170,7 @@ export class CompanyStoreNew {
         if(appStore.appType === "admin") {
             return client.companiesOnlyBranchesList(args)
         } else {
-            return this.loadCompanyFiliales(userStore.myProfileData.company.company_type === "Компания-заказчик" ? "customer" : "performer", userStore.myProfileData.company.id, args).then((res) => {
+            return this.loadCompanyFiliales(userStore.myProfileData.company.company_type === "Клиент" ? "customer" : "performer", userStore.myProfileData.company.id, args).then((res) => {
                 runInAction(() => {
                     if(res && res.results) {
                         companyStore.filials = res.results.map((f:any) => ({

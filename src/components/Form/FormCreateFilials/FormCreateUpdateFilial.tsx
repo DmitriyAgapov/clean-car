@@ -40,7 +40,7 @@ interface InitValues {
     qc?: string | null
     service_percent: number
     street: string | null
-    type: 'Компания-Заказчик' | 'Компания-исполнитель'
+    type: 'Клиент' | 'Компания-исполнитель'
     working_time: string
 }
 

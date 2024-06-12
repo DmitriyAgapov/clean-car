@@ -370,7 +370,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                                 onOptionSubmit={handleChangeCompany}
                                 searchable
                                 data={store.companyStore.companies
-                                    .filter((c: any) => c.company_type === 'Компания-Заказчик')
+                                    .filter((c: any) => c.company_type === 'Клиент')
                                     .filter((c: any) => c.parent === null)
                                     .map((c: any) => ({ label: c.name, value: String(c.id) }))}
                             />

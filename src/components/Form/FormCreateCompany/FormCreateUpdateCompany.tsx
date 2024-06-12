@@ -49,7 +49,7 @@ interface InitValues {
     qc?: string | null
     service_percent: number
     street: string | null
-    type: 'Компания-Заказчик' | 'Компания-исполнитель'
+    type: 'Клиент' | 'Компания-исполнитель'
     working_time: string
 }
 
@@ -602,7 +602,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         header={
                             <>
                                 <Heading
-                                    text={`Шаг ${(formData.values.type == 'Компания-Партнер' && '2') || '3'}
+                                    text={`Шаг ${(formData.values.type == 'Партнер' && '2') || '3'}
                                .
                                   Компания создана `}
                                     color={HeadingColor.accent}

@@ -33,7 +33,7 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 				id: item.id,
 				query: {
 					company_id: item.company.id,
-					rootRoute: `/account/users/${item.company.company_type === "Компания-Заказчик" ? "customer" : "performer" }/${item.company.id}/${item.employee.id}`,
+					rootRoute: `/account/users/${item.company.company_type === "Клиент" ? "customer" : "performer" }/${item.company.id}/${item.employee.id}`,
 				},
 			}))}
 		localStoreF.setIsLoading = isLoading

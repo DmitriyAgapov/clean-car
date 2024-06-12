@@ -232,8 +232,8 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 classNames={SelectStyles}
                 comboboxProps={{ withinPortal: portalState }}
                 data={[
-                  'Компания-Заказчик',
-                  'Компания-Партнер',
+                  'Клиент',
+                  'Партнер',
                   'Физическое лицо',
                   'Администратор системы',
                 ].map((el: string) => ({
@@ -267,8 +267,8 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 classNames={SelectStyles}
                 comboboxProps={{ withinPortal: portalState }}
                 data={[
-                  'Компания-Заказчик',
-                  'Компания-Партнер',
+                  'Клиент',
+                  'Партнер',
                   'Физическое лицо',
                   'Администратор системы',
                 ].map((el: string) => ({
