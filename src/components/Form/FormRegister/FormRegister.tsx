@@ -71,8 +71,6 @@ const FormRegister = () => {
   })
   const handleSubmit = React.useCallback((event:any) => {
     event.preventDefault()
-    console.log(form.values);
-
     const _d = {
       ...form.values,
       phone: form.values.phone.replaceAll(' ', ''),

@@ -32,15 +32,15 @@ function DataFilter({ filterData}: {filterData: any[] | undefined}) {
   const [opened, { close, open, toggle}, ] = useDisclosure(false);
   const ref = useClickOutside(() => {
     close()
-  } )
+  })
   const localStore = useLocalStore<LocalRootStore>()
-
-
-  const isActiveBtn = Array.from(Object.keys(localStore.params.getSearchParams)).length > 4
-
+  // const isActiveBtn = Array.from(Object.keys(localStore.params.getSearchParams)).length > 4
+  const isActiveBtn = localStore.params.getFilterState
+  console.log();
+  console.log(ctx);
   return (
         <div className={styles.btnFilter + ` ` + ` border ${isActiveBtn && '!border-accent'}`}>
-            <ctx.Provider value={ctx}>
+            <ctx.Provider value={localStore.params.getSearchParams}>
                 {/* <Popover   middlewares={{ shift: { padding: 20 } }} trapFocus opened={opened} width={"100vw"}   classNames={{ */}
                 {/*   dropdown: '!top-0' */}
                 {/* } */}

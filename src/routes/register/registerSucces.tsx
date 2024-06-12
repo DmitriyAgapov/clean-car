@@ -13,6 +13,7 @@ import ServiceImg from '../../assets/icons/service.png'
 import CardFeaturesCircle from 'components/common/layout/Cards/CardFeaturesCircle/CardFeaturesCircle'
 import { SvgAuthBgSec } from 'components/common/ui/Icon'
 import { useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 
 const cardsData = [
   {
@@ -34,7 +35,7 @@ const cardsData = [
     text: 'Всегда создаем комфорт для клиентов',
   },
 ]
-export default function RegisterSuccessPage() {
+function RegisterSuccessPage() {
   const store = useStore()
   let [searchParams, setSearchParams] = useSearchParams();
   const uids= React.useMemo(() => {
@@ -59,6 +60,7 @@ export default function RegisterSuccessPage() {
     }
     return _uids
   }, [searchParams])
+
   useEffect(() => {
     store.appStore.setAppRouteName('.регистрация')
   })
@@ -135,3 +137,4 @@ export default function RegisterSuccessPage() {
     </>
   )
 }
+export default observer(RegisterSuccessPage)

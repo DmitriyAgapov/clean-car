@@ -12,6 +12,7 @@ import useSWR from "swr";
 import { KeysBidCreate } from "stores/types/bidTypes";
 import { logger } from "utils/utils";
 import { Client } from "utils/schema";
+import company from "routes/company/company";
 
 export type PaginationProps = {
   name?: string | number | URLSearchParams,
@@ -472,15 +473,20 @@ const Account = {
     'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   }),
   accountEmailConfirmation: ({company_uid, user_uid, token}: {company_uid: string, user_uid: string, token: string}) => requests.post('/accounts/email_confirmation/', {company_uid, user_uid, token}),
-  accountRestorePassword: (email:string) => requests.post(`/accounts/password_restore/`, {email: email})
-
+  accountRestorePassword: (email:string) => requests.post(`/accounts/forgot_password/`, {email: email}),
+  accountNewPassword:({user_uid, token, password, password2}: {password: string, password2: string, user_uid: string, token: string}) => requests.post('/accounts/new_password/', {password, password2, user_uid, token}),
 }
 const Balance = {
   getBalanceExportReport: (params?: PaginationProps) => requests.getFile('/balance/export_report/', params),
   getReport: (params?: PaginationProps) => requests.get(`/balance/report/`, params),
   getReportByCompanyId: (company_id: number, params?: PaginationProps) => requests.get(`/balance/report/${company_id}`),
   getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params),
-  getTransactionListAdmin: (params?: PaginationProps) => requests.get('/balance/all_transactions/', params)
+  getTransactionListAdmin: (params?: PaginationProps) => requests.get('/balance/all_transactions/', params),
+  upBalance: (company_id:number, purpose:string, amount:number) => requests.post('/balance/up_balance/', {
+    company_id: company_id,
+    purpose: purpose,
+    amount: amount
+})
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),

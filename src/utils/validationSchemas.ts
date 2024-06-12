@@ -15,7 +15,14 @@ export const SignupSchemaNew = Yup.object().shape({
 	city: Yup.string().required('Выберите город'),
 	password: Yup.string().required('Введите пароль'),
 	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),
+})
+export const RestorePasswordNewSchema = Yup.object().shape({
+	password: Yup.string().required('Введите пароль'),
+	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),
+})
 
+export const CreateRestorePwd = Yup.object().shape({
+	email: Yup.string().email('Неверный email').required('Обязательное поле'),
 })
 export const CreateUserSchema = Yup.object().shape({
 	first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),

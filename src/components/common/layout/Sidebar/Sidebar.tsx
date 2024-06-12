@@ -10,7 +10,6 @@ import Footer from "components/common/layout/Footer/Footer";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { ButtonVariant } from "components/common/ui/Button/Button";
 
-
 const BackDrop = () => {
   const store = useStore()
   if (store.appStore.asideState)
@@ -155,9 +154,6 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   const store = useStore()
   const {appStore} = store
   const {width} = useWindowDimensions()
-
-
-
   const [routes, setRoutes] = React.useState<any[]>([])
 
   React.useEffect(() => {

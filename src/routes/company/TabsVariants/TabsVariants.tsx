@@ -23,8 +23,11 @@ import TabFilials from 'routes/company/TabsVariants/TabFilials'
 import TabCars from 'routes/company/TabsVariants/TabCars'
 import TabUsers from 'routes/company/TabsVariants/TabUsers'
 import TabBidHistory from 'routes/company/TabsVariants/TabBidHistory'
-import { useViewportSize } from '@mantine/hooks'
+import { useDisclosure, useViewportSize } from '@mantine/hooks'
 import { WorkLoadStatus } from "components/common/Map/Map";
+import agent from "utils/agent";
+import { CarClasses } from "components/common/layout/Modal/CarClasses";
+import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -179,31 +182,13 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
   let result
   switch (label) {
     case "Основная информация":
+      const [opened, { open, close }] = useDisclosure(false)
+
+      const memoModal = React.useMemo(() => {
+        return <UpBalance companyName={data.name} id={data.id} opened={opened} onClose={close} />
+      }, [opened])
       const navigate = useNavigate()
-      const fundBill = {
-          className: '',
-          actions: [
-              <Button text={'Отменить'} action={() => store.appStore.closeModal()}       variant={ButtonVariant.cancel} />,
-              <Button
-                  text={'Сохранить'}
-                  action={() => {
-                      // store.permissionStore.deletePermissionStoreAdmin(changes.id)
-                      store.appStore.closeModal()
-                      navigate('/account/groups')
-                  }}
-                  variant={ButtonVariant['accent-outline']}
-              />,
-          ],
-          text: (
-              <div className={'grid gap-12 mb-12'}>
-                  <NumberInput label={'Сумма начисления'} name={'paymoney'} />
-                  <DList label={'Компания'} title={data.name} />
-                  <DList label={'Зачислил'} title={data.name} />
-              </div>
-          ),
-          header: 'Пополнить счет',
-          state: true,
-      }
+
       // console.log(data);
       result = (<Tabs.Panel state={state}
         name={"info"}
@@ -246,10 +231,11 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts}  className={'tablet:!col-[2_/_2_span] tablet:!row-start-5'}/>
         {company_type === 'customer' &&
           <div className={'lg:col-start-3 grid gap-4 lg-max:justify-end lg-max:row-start-1 lg-max:grid-flow-col lg-max:col-span-full'}>
-            <Button text={'Пополнить счет'}  action={async () => store.appStore.setModal(fundBill)} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
-            <Button text={'Бонусы и штрафы'}  action={async () => store.appStore.setModal(fundBill)} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
+            <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
+            <Button text={'Бонусы и штрафы'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
           </div>
           }
+        {memoModal}
       </Tabs.Panel>)
       break;
 
@@ -854,6 +840,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
             )
             break
         case 'Фото':
+          console.log(data.photos);
           if(data.photos.results.length > 0) {
             result = (
                 <Tabs.Panel
@@ -872,7 +859,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                         <p>Фотографии до оказания услуги. Загрузил Заказчик</p>
                     </div>
                     <div className={'col-span-3'}>
-                        <CarouselCustom items={data.photos.results.filter((e: any) => e.is_before)} />
+                        <CarouselCustom closeBtn={false} items={data.photos.results.filter((e: any) => e.is_before).map((item:any) => item.foto)} />
                     </div>
                     <hr className={'col-span-full border-gray-4/70 border'} />
                     <div className={'col-span-2   pr-12'}>
@@ -893,7 +880,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                             )}
                     </div>
                     <div className={'col-span-3'}>
-                        <CarouselCustom items={data.photos.results.filter((e: any) => !e.is_before)} />
+                        <CarouselCustom closeBtn={false} items={data.photos.results.filter((e: any) => !e.is_before).map((item:any) => item.foto)} />
                     </div>
                 </Tabs.Panel>
             )

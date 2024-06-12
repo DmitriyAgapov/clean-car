@@ -9,7 +9,6 @@ import { observer } from 'mobx-react-lite'
 import Button, { ButtonDirectory, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
 import FormRestore from 'components/Form/FormRestore/FormRestore'
-import FormAuth from "components/Form/FormAuth/FormAuth";
 
 function RestorePasswordPage() {
   const store = useStore()

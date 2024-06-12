@@ -87,7 +87,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
           <Header>
-              {width && width > 1024 && <Logo className={' logo-header tablet:pl-6'} />}
+              {width && width > 960 && <Logo className={'logo-header tablet:pl-6'} />}
               {headerContent}
               <Burger
                   className={'desktop:hidden'}

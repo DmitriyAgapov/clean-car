@@ -13,7 +13,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 
 	const [controlledSwiper, setControlledSwiper] = useState<any>(null);
 	const [ind, setInd] = useState(0)
-	console.log(controlledSwiper);
+
 	// const [img, setImg] = useState(items[ind])
 	const handleImg = React.useCallback(
 		(index: number) => {
@@ -36,7 +36,6 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 	)
 
 	React.useEffect(() => {
-		console.log(controlledSwiper?.activeIndex)
 		// setImg(items[ind])
 	}, [controlledSwiper?.activeIndex])
 
@@ -69,6 +68,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 								<BidImg
 									containerClassName={'tablet-max:flex tablet-max:justify-center  tablet-max:items-end'}
 									item={i}
+									closeBtn={false}
 									// mih={'10rem'}
 									miw={'100%'}
 									// h={'100%'}
@@ -124,7 +124,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 	)
 }
 
-const CarouselCustom = ({items}:{items:any []}) => {
+const CarouselCustom = ({items, closeBtn = true}:{items:any [], closeBtn: boolean}) => {
 
 	const [controlledSwiper, setControlledSwiper] = useState<any>(null);
 	const [opened, { close, open }] = useDisclosure(false)
@@ -133,7 +133,7 @@ const CarouselCustom = ({items}:{items:any []}) => {
 		return items.map((i:any) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} style={{aspectRatio: "1/1"}} onClick={(event) => {
 			open()
 			}}>
-					<BidImg item={i}  mih={'10rem'}  miw={'100%'} h={'100%'} style={{objectFit: "cover", cursor: "pointer", aspectRatio: "1/1"}} maw={'10rem'} />
+					<BidImg item={i} closeBtn={closeBtn} mih={'10rem'}  miw={'100%'} h={'100%'} style={{objectFit: "cover", cursor: "pointer", aspectRatio: "1/1"}} maw={'10rem'} />
 			</SwiperSlide>
 		)
 	}, [items])

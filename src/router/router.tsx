@@ -66,6 +66,8 @@ import FinaceIdPage from "routes/finance/financeId";
 import SupportPage from "routes/support/support";
 import PolicyPage from "routes/poliicy";
 import ErrorPageNotFound from "error-page-404";
+import RestorePasswordPageSuccess from "routes/restore/restorePasswordPageSuccess";
+import RestorePasswordNew from "routes/restore/restorePasswordNew";
 
 const router = createBrowserRouter([
     {
@@ -96,6 +98,17 @@ const router = createBrowserRouter([
         element: <RestorePasswordPage />,
         errorElement: <ErrorPage />,
     },
+    {
+        path: '/restore/success',
+        element: <RestorePasswordPageSuccess />,
+        errorElement: <ErrorPage />,
+    },
+  {
+        path: '/restore/newpassword',
+        element: <RestorePasswordNew />,
+        errorElement: <ErrorPage />,
+    },
+
     {
         path: '/register/verification',
         element: <RegisterSuccessPage />,

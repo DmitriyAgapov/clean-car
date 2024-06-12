@@ -48,7 +48,53 @@
 	background-color: transparent !important;
   }
 }
+.ModalUpBalance{
 
+
+  & > * {
+	a[data-close='true'] {
+	  cursor: pointer;
+	  position: absolute;
+	  top: 1.25rem;
+	  right: 1.25rem;
+	}
+	footer {
+	  display: flex;
+	  gap: 1rem;
+	  justify-content: center;
+	  justify-items: center;
+	  align-items: center;
+	  margin-top: 0 !important;
+	  a {
+		width: 50%;
+		flex: 1 0 50%;
+	  }
+	}
+  }
+  section {
+	@apply px-12 py-16 border-gray-2 border;
+	background: rgba(36, 37, 41, .6);
+	@screen tablet-max {
+	  position: absolute;
+	  top: 0;
+	  bottom: 0;
+	  right: 0;
+	  display: grid;
+	  align-content: center;
+	  left: 0;
+	  border: 0;
+	  border-radius: 0;
+	  min-height: 100lvh;
+	  footer {
+		display: grid;
+	  }
+	}
+	header {
+	  @apply pt-0 bg-none pl-0;
+	  background: none !important;
+	}
+  }
+}
 .ModalBid, .ModalCarClasses {
   //display: flex;
   ////position: fixed;

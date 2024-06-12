@@ -67,7 +67,7 @@ const SupportPage = () => {
                   <Button
                       action={open}
                       type={'button'}
-                      text={'Написать в службу поддержки'}
+                      text={'Написать нам'}
                       className={'float-right'}
                       variant={ButtonVariant.accent}
                   />

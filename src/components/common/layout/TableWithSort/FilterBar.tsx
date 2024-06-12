@@ -14,7 +14,7 @@ import { Status } from 'utils/schema'
 import { CarType } from "stores/carStore";
 import { logger, useWindowDimensions } from "utils/utils";
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { toJS } from 'mobx'
+import { keys, toJS } from 'mobx'
 
 interface FilterBarProps {
   state: boolean
@@ -26,19 +26,27 @@ const SelectStyles = {
     root: '!mb-0 !pb-0',
     label: 'text-xss uppercase mb-1 text-gray-2',
     input: 'h-8 rounded-sm !bg-gray-2/20 border-gray-2/80 text-white focus:border-white/40 focus:filter-none',
+    dropdown: '!rounded-[0.25rem]'
 }
 const FilterElements = observer(({ filters, values }: { filters: any, values?: TableSearchParams }) => {
     const  localStore = useLocalStore<any>()
+    const paramsS = localStore.params.getSearchParams
+
+    React.useEffect(() => {
+      const except = ['page', "page_size", "ordering", "q"]
+      const isFilterActive = keys(paramsS).some((el:any) => !except.includes(el))
+      localStore.params.setFilterState(isFilterActive)
+    }, [paramsS])
 
     const params = values
     const { width } = useWindowDimensions()
     const portalState = React.useMemo(() => {
         return width && width > 740 ? true : false
     }, [width])
-  console.log();
     const store = useStore()
     const setInitParams = React.useCallback(() => {
         if (localStore.params) {
+          localStore.params.setFilterState(false)
           localStore.params.setSearchParams({
             page:1,
             page_size:10,
@@ -429,8 +437,6 @@ const FilterBar = React.forwardRef(({ filters, state = false, action }: FilterBa
     action(false)
     // setParams()
   }, [])
-
-
   // @ts-ignore
   return (
 

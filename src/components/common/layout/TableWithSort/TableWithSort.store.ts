@@ -19,9 +19,17 @@ export class TableWithSortStore {
 		page: 1,
 		page_size: 10
 	})
+	filterState: boolean = false
 	constructor() {
 		makeAutoObservable(this, {
 		})
+	}
+
+	setFilterState(state:boolean) {
+		this.filterState = state
+	}
+	get getFilterState() {
+		return this.filterState
 	}
 	setSearchParams(params:any) {
 		this.searchParams = {
@@ -36,9 +44,7 @@ export class TableWithSortStore {
 	clearParams() {
 		this.searchParams = {
 			page: 1,
-			page_size: 10,
-			ordering: undefined,
-			q: undefined
+			page_size: 10
 		}
 	}
 	get getSearchParams() {

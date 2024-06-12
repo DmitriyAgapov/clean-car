@@ -22,15 +22,18 @@ import FormBidResult from "routes/bids/FormBidResult/FormBidResult";
 import { UploadedPhotosFirstStep } from "components/common/layout/Modal/UploadedPhotos";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
+import {Button as Btn} from "@mantine/core"
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 import { PermissionNames } from "stores/permissionStore";
 import { useSWRConfig } from "swr";
+import Image from "components/common/ui/Image/Image";
 
 interface InitValues {
     address: string | null
     address_from?: string | null
     address_to?: string | null
     car: string | null
+    photo_new: File[] | []
     city: string | null
     company: string | null
     conductor: string | null
@@ -56,6 +59,7 @@ export const InitValues: InitValues = {
     address_from: null,
     address_to: null,
     car: null,
+    photo_new: [],
     city: null,
     company: null,
     conductor: null,
@@ -134,7 +138,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       validate: values => {
         if(step === 1) {
 
-          return store.bidsStore.loadedPhoto.length > 1 ? yupResolver(CreateBidSchema).call({}, values) : {err: true}
+          return formData.values.photo_new.length > 1 ? yupResolver(CreateBidSchema).call({}, values) : {err: true}
         }
         if(step === 2) {
           return yupResolver(CreateBidSchemaStep2).call({}, values)
@@ -178,7 +182,11 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   formData.values.time = null
               }
           }
-
+          if(payload.field === 'photo_new') {
+            return ({
+              onChange: (props:any) => formData.setFieldValue('photo_new', props)
+            })
+          }
           if (payload.field === 'car') {
               return {
                   //@ts-ignore
@@ -212,6 +220,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               }
       },
   })
+
+
 
   React.useEffect(() => {
       if (formData.values.company !== '0') {
@@ -331,7 +341,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         })
 
     } else if(step === 4) {
-          return await store.bidsStore.formCreateBid()
+          await store.bidsStore.sendFiles(formData.values.photo_new, true).then(() =>
+            store.bidsStore.formCreateBid()
           .then((res) => {
             if (res.status !== 201) {
               notifications.show({
@@ -371,6 +382,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               store.bidsStore.formResultsClear()
             }, 2000)
           })
+          )
         // })()
     } else {
       changeStep()
@@ -434,7 +446,14 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         {step === 1 && (
                             <>
                                 <FileButton
-                                    onChange={(e) => store.bidsStore.sendFiles(e, true)}
+                                    onChange={(e) => {
+                                      const _ar = formData.values.photo_new
+                                      e.forEach((i:any) => _ar.push(i))
+                                      formData.setFieldValue('photo_new', _ar, {
+                                        forceUpdate: true
+                                      })
+                                      formData.setTouched({"photo_new": true})
+                                    }}
                                     multiple
                                     accept='image/png,image/jpeg'
                                 >
@@ -590,6 +609,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             />
                         </Group>
                         <hr className={'col-span-full border-transparent my-2'} />
+
+
                         <Group grow className={'col-span-full flex-1 gap-0 tablet-max:pt-4 pb-6'} align={'stretch'}>
                             <UploadedPhotosFirstStep />
                         </Group>

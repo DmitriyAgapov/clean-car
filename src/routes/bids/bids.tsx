@@ -89,7 +89,7 @@ const BidsPage = () => {
 	})()
 	return (
 		<Section type={SectionType.default}>
-			<Panel variant={PanelVariant.withGapOnly} headerClassName={'justify-between gap-4'}
+			<Panel variant={PanelVariant.withGapOnly} headerClassName={`${store.appStore.appType !== "admin" ? "flex" : ""} justify-between gap-4`}
 
 				header={<>
 				<div>
@@ -98,7 +98,7 @@ const BidsPage = () => {
 						className={"inline-block !mb-0"}
 						color={HeadingColor.accent} />
 				</div>
-				<div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
+				<div className={`flex gap-6 tablet-max:max-w-96 ${store.appStore.appType === "admin" ? "mobile:mt-6" : ""}`}>
 					{store.userStore.getUserCan(PermissionNames["Управление заявками"], "create") && (<>
 						{store.appStore.appType === "admin" && <Button text={textData.loadExcel}
 							action={() => navigate("create")}
