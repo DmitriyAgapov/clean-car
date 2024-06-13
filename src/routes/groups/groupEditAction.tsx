@@ -145,7 +145,7 @@ export default function GroupPageEditAction(props: any) {
       >
         <div className={'accounts-group_body text-[#606163] py-6'}>
             <Heading
-              text={'Настройте права группы'}
+              text={'Настройте права доступов'}
               color={HeadingColor.accent}
               variant={HeadingVariant.h3}
               className={'px-8'}
