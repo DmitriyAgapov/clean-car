@@ -104,7 +104,7 @@ export default function UsersPageCreateAction() {
             />
             {store.appStore.appType === "admin" && <><Button
               text={'Скачать шаблон'}
-              href={'/Шаблон_пользователи.xlsx'}
+              href={'/Шаблон_автомобилей.xlsx'}
               variant={ButtonVariant["accent-outline"]}
               // action={() => navigate('/account/users/create')}
               className={'inline-flex mr-5'}
