@@ -84,7 +84,7 @@ const GroupPage = () => {
                 Дата и время создания {dayjs(group.created).locale('ru').format('DD MMMM YYYY г. HH:mm')}
               </div>
             </div>
-            <Heading className={'mt-6 !mb-2'} text={'Права группы'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
+            <Heading className={'mt-6 !mb-2'} text={'Права доступа'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
           </>
         }
         footer={
