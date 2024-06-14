@@ -14,7 +14,7 @@ import { LoadingOverlay } from '@mantine/core'
 import { SvgCleanCarLoader, SvgDisconnect } from 'components/common/ui/Icon'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import { Navigate, useLocation } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import Errors from "components/common/layout/Errors/Errors";
 
@@ -90,11 +90,11 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               {width && width > 960 && <Logo className={'logo-header tablet:pl-6'} />}
               {headerContent}
               <Burger
-                  className={'desktop:hidden'}
-                  action={
+                  className={'lg:hidden'}
+                  action={() =>
                       !userStore.currentUser
-                          ? () => store.appStore.setBurgerState()
-                          : () => store.appStore.setAsideState()
+                          ?  store.appStore.setBurgerState()
+                          : store.appStore.setAsideState()
                   }
               />
           </Header>
@@ -111,6 +111,16 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               loaderProps={{ children: <SvgCleanCarLoader /> }}
           />
           <main className={'!contents'}>{children}</main>
+        {width && width < 1300 && width > 960 && <Footer className={'flex desktop:!hidden !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+          <div>
+
+            <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
+          </div>
+
+          <hr className={'mt-3 mb-2 -mr-8 border-accent'} />
+
+          <Link to={'/policy'}  className={'text-xs hover:text-accent'}>Политика конфиденциальности</Link>
+        </Footer>}
           <Footer className={'desktop:flex hidden  tablet:px-6'}>
               {footerContent}
               <div>2023 (c.)</div>

@@ -36,7 +36,7 @@
   --borderPanelColor: rgba(96, 97, 99, 0.60);
   --scaling-font: 16px;
 
-  @media screen and (max-width: 1299px) {
+  @media screen and (max-width: 960px) {
 	--container: 44.375rem;
 	--gridGap: .625rem;
 	--totalCol: 12;
@@ -44,6 +44,15 @@
 	--scaling-font: 16px;
 	--sideGutter: 1.25rem;
 	--grid: var(--sideGutter) repeat(var(--totalCol), 1fr) var(--sideGutter);
+  }
+  @media screen and (min-width: 960px) and (max-width: 1299px){
+	--container: 44.375rem;
+	--gridGap: .625rem;
+	--totalCol: 11;
+	--centered: 3/-3;
+	--scaling-font: 16px;
+	--sideGutter: 1.25rem;
+	--grid: var(--sideGutter) 56px repeat(var(--totalCol), 1fr) var(--sideGutter);
   }
   @media screen and (min-width: 1440px) {
 	--scaling-font:  clamp(16px, calc(100vh / 64), 24px);

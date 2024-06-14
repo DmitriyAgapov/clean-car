@@ -9,7 +9,7 @@
 	opacity: 1;
 	transition: .25s 0.15s cubic-bezier(0.550, 0.085, 0.680, 0.530) ;
   }
-  @screen desktop-max {
+  @screen lg-max {
 	display: flex;
 	flex-direction: column;
 
@@ -28,6 +28,17 @@
 	background: linear-gradient(180.45deg, rgba(24, 25, 28, 1) 0%, rgba(24, 25, 28, 1) 65%, rgba(24, 25, 28, 1) 100%);
 	nav {
 	  overflow-y: auto;
+	}
+  }
+  @screen lg-to-desktop {
+	grid-column: 2/ span 1;
+	& + section {
+	  grid-column: 3/-2;
+	  margin-left: -2rem;
+	  grid-row: span 2;
+	}
+	& + * {
+	  padding-left: 2.5rem;
 	}
   }
   @screen desktop {
@@ -49,6 +60,8 @@
   user-select: none ;
   position: relative;
   display: flex;
+  min-width: 3.5rem;
+  min-height: 50px;
 	img {
 	  width: 1rem;
 	  height: 1rem;
@@ -59,6 +72,16 @@
 	left: 1.125rem;
 	top: 1rem;
 	bottom: calc(50% - .5rem);
+  }
+  @screen lg-to-desktop {
+	a {
+	  opacity: 0;
+	  position: absolute;
+	  left: 0;
+	  right: 0;
+	  bottom: 0;
+	  width: 100%;
+	}
   }
 
   &[data-active="true"]:not([data-sublevel="true"]) {
