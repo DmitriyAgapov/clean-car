@@ -155,7 +155,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         if (values.type == CompanyType.performer) {
             const data: Company<CompanyType.performer> = {
                 city: Number(values.city),
-                is_active: true,
+                is_active: values.is_active === "true",
                 name: values.company_name,
                 performerprofile: {
                     address: values.address,
@@ -188,7 +188,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             const data: Company<CompanyType.customer> = {
                 id: values.id,
                 name: values.company_name,
-                is_active: true,
+                is_active: values.is_active === "true",
                 city: Number(values.city),
                 customerprofile: {
                     address: values.address,
@@ -423,11 +423,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                 }))}
                         />
                         <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
-
-
-
-
-
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}

@@ -151,12 +151,13 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
             )
             break
           case FilterData.is_active:
+            console.log(String(localStore.params.getSearchParams.is_active));
             elements.push(
               <Select
                 label={'Статус'}
                 size={'xs'}
                 clearable
-                value={localStore.params.setSearchParams.is_active || null}
+                value={String(localStore.params.getSearchParams.is_active) || null}
                 onChange={(value) => {
                   setInitParams()
                   if (value !== null) {
