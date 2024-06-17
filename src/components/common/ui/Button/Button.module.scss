@@ -20,7 +20,7 @@ user-select: none ;
   cursor: pointer;
   transition: all .15s ease-in-out;
 
-  &:hover {
+  &:hover, &:active {
 	background: transparent;
 	border-color: var(--accentColor);
 	transition: all .35s ease-in-out;
@@ -216,18 +216,31 @@ user-select: none ;
 	background: linear-gradient(-90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
 	--color: linear-gradient(-90.76deg, #00A8AA 0.27%, #F0F600 87.66%);
   }
+  @keyframes directoryClick {
+	from {
+	  background-position-x: 0;
+	}
+	to {
+	  background-position-x: 100%;
+	}
+  }
 
   &[data-directory="directory"] {
+	--position: 0;
 	border: 0;
 	color: black;
 	background: var(--gradient-directory-200);
 	background-size: 200%;
-	background-position: 0 50%;
+	background-position:  var(--position);
 	--color: var(--gradient-directory);
-
 	&:hover {
-	  background-position-x: 100%;
+	  --position: 100%;
 	}
+	&:active, &:focus, &:focus-within, &:focus-visible, &:hover  {
+	  transition: all 0.3s ease-in-out;
+	  background-position-x: var(--position);
+	}
+
   }
 
 }

@@ -116,7 +116,7 @@ export class AuthStore {
   async login() {
     this.inProgress = true
     this.errors = undefined
-    return await agent.Auth.login(this.values.email.toLowerCase(), this.values.password)
+    return await agent.Auth.login({email: this.values.email.toLowerCase(), password: this.values.password})
       .then((resolve: any) =>  {
         if(resolve && resolve.response && resolve.response.status > 299) {
           notifications.show({
@@ -125,10 +125,10 @@ export class AuthStore {
             // onClose: () => console.log('unmounted'),
             // onOpen: () => console.log('mounted'),
             autoClose: 5000,
-            title: "Error",
-            message: `${resolve.response.data.detail}`,
+            // title: "Error",
+            title: `${resolve.response.data.detail}`,
+            message: null,
             color: 'red',
-            className: 'my-notification-class z-[9999] absolute top-12 right-12',
             loading: false,
           })
           return resolve

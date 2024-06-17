@@ -297,13 +297,13 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       formData.setFieldValue('phone', null)
 
     } else {
-      let value: User;
+      let value: any;
       if (store.userStore.myProfileData.company === CompanyType["fizlico"]) {
         value = store.userStore.myProfileData.user
         formData.setFieldValue('phone', value.phone)
         store.bidsStore.formResultSet({ phone: store.userStore.myProfileData.user.phone })
       } else {
-        store.usersStore.companyUsers.filter((c: any) => c.employee.id === Number(formData.values.conductor))[0]
+        value = store.usersStore.companyUsers.filter((c: any) => c.employee.id === Number(formData.values.conductor))[0]
         if (store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read')) {
           //@ts-ignore
           formData.setFieldValue('phone', value && value.employee && value.employee?.phone)
@@ -356,29 +356,24 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           .then((res) => {
             if (res.status !== 201) {
               notifications.show({
-                id: 'bid-created',
+                id: 'bid-created_error',
                 withCloseButton: true,
-                autoClose: 3000,
+                autoClose: 5000,
                 title: "Ошибка создания заявки",
-                message: 'Leave the building immediately',
-                icon: <SvgClose />,
-                className:
-                  'my-notification-class z-[9999]',
+                message: null,
+                color: 'var(--errorColor)',
                 loading: false,
               })
             } else {
 
               mutate('bids')
               notifications.show({
-                id: 'bid-created',
+                id: 'bid-created_success',
                 withCloseButton: true,
-                onClose: () => console.log('unmounted'),
-                onOpen: () => console.log('mounted'),
-                autoClose: 3000,
+                autoClose: 5000,
                 title: 'Заявка создана',
                 message: 'Успешное создание',
-                // color: 'red',
-                className: 'my-notification-class z-[9999]',
+                color: 'var(--accentColor)',
                 // style: { backgroundColor: 'red' },
                 loading: false,
               })

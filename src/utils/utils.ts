@@ -9,7 +9,6 @@ export const Ctx = React.createContext<any>(null)
 
 export function modifyPermissions(group: any, modificationSchema: any, appType: string, except?: any[]) {
     return group.permissions.map((item: any) => {
-        console.log('ex', except && except.length > 0 && except.some((el:any) => el == item.name), item.name)
         if(except && except.length > 0 &&  !except.find((el:any) => el == item.name)) {
             const matchedItem = modificationSchema[appType].find((el: any) => el.name === item.name) ;
             if (matchedItem) {

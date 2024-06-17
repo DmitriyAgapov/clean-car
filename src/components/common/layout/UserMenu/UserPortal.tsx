@@ -105,7 +105,7 @@ const UserPortal = ({
         footer={
           <Button
             text={'Управление аккаунтом'}
-            className={'!text-sm'}
+            className={'!text-sm !flex !h-10'}
             action={() => {
               navigate('/account/profile')
             }}

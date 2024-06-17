@@ -157,12 +157,11 @@ const handleErrors = (err: AxiosError & any) => {
           // onClose: () => console.log('unmounted'),
           // onOpen: () => console.log('mounted'),
           autoClose: 4000,
-          // title: "Ошибка",
-          message: errMsg,
+          title: "Ошибка",
+          message: "errMsg",
           // color: 'red',
           // icon: <SvgClose />,
-          className:
-            'my-notification-class z-[9999] absolute top-12 right-12 notification_cleancar',
+
           // style: { backgroundColor: 'red' },
           loading: false,
         })
@@ -292,7 +291,7 @@ const Auth = {
   tokenRefresh: (refresh: string) => requests.post('/token/refresh/',{
       refresh: refresh
   }),
-  login: (email: string, password: string) => requests.post('/token/', { email: email, password: password }),
+  login: (data: {email: string, password: string}) => requests.post('/token/', data, {}),
   register: (data:{ first_name: string, last_name: string, phone: string, email: string, city: number, password: string, password2: string }) => requests.post('/accounts/register/', data, {}),
 
 }

@@ -8,6 +8,7 @@ import {
     mergeMantineTheme,
     Checkbox,
     Textarea,
+  Notification,
     TextInput,
     Popover,
     InputBase,
@@ -117,7 +118,14 @@ const themeOverride = createTheme({
                 visibilityToggle: 'text-gray-2'
             }
         }),
-
+        Notification: Notification.extend({
+            classNames: {
+                root: "rounded-[.625rem] pt-1.5 pl-3 pr-4  border-[var(--notification-color)] border bg-black max-w-[20rem] min-h-[4.5rem] before:left-0 before:right-0 before:bottom-0  before:top-auto before:w-full before:h-3  before:animate-progressFive before:bg-gradient-to-r before:from-[var(--notification-color)] before:to-black/90 before:rounded-tl-none before:rounded-tr-none before:h-2 ",
+                title: "text-sm",
+                body: ' pt-0 ',
+                closeButton: "top-1 right-1 absolute text-gray-2 *:!w-5 *:!h-5",
+            }
+        }),
         TimeInput: TimeInput.extend({
             classNames: {
 

@@ -39,8 +39,8 @@ axios.interceptors.response.use(
         }
         // console.log('/token/refresh/', config.url.includes('/token/refresh/'));
 
-        if (error.response && error.response.status === 401 && !config.url.includes('/token/refresh/')) {
-            const tokenRefresh = appStore.tokenRefresh
+        if (error.response && error.response.status === 401 && !config.url.includes('/token/refresh/') && !config.url.includes('/token/')) {
+            const tokenRefresh = window.localStorage.getItem('jwt_refresh') || appStore.tokenRefresh
             console.log('tokenRefresh', tokenRefresh)
             // config._retry = true;
             if (tokenRefresh && tokenRefresh !== 'undefined' && tokenRefresh !== undefined) {
@@ -61,9 +61,10 @@ axios.interceptors.response.use(
 
                 return await axios(config)
                 // .finally(	() =>	config._retry = true)
-            } else {
-                authStore.logout()
             }
+						if(!window.localStorage.getItem('jwt') && !window.localStorage.getItem('jwt_refresh')) {
+							authStore.logout()
+						}
         }
 
         return Promise.reject(error)

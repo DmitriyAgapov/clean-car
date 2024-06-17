@@ -32,6 +32,7 @@
   }
   @screen lg-to-desktop {
 	grid-column: 2/ span 1;
+	margin-top: 5rem;
 	& + section {
 	  grid-column: 3/-2;
 	  margin-left: -2rem;
@@ -126,7 +127,7 @@
   line-height: 1rem;
   letter-spacing: normal;
   flex: 1 100%;
-  padding: 1rem 3.125rem;
+  padding: 1rem 1.125rem 1rem 3.125rem;
   border-bottom-left-radius: .5rem;
   border-top-left-radius: .5rem;
 

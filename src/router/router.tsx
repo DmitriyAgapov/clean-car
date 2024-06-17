@@ -81,7 +81,7 @@ const router = createBrowserRouter([
     {
         path: '/',
         element: <AuthPage />,
-        errorElement: <ErrorPage />,
+        // errorElement: <ErrorPage />,
     },
     {
         path: '/policy',

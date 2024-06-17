@@ -91,9 +91,7 @@ const BidPage = () => {
                                 className={'inline-block !mb-0'}
                                 color={HeadingColor.accent}
                             />
-                            {process.env.NODE_ENV === 'development' && appStore.appType === 'admin' && (
-                                <BidAdminActions />
-                            )}
+
                         </div>
                         {/* {store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<> */}
                         {/* 	<Button text={textData.loadExcel} action={() => navigate('create')} trimText={true} className={'inline-flex'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} /> */}

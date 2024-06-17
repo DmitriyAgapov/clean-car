@@ -13,7 +13,6 @@ import { useNavigatorOnLine, useWindowDimensions } from 'utils/utils'
 import { LoadingOverlay } from '@mantine/core'
 import { SvgCleanCarLoader, SvgDisconnect } from 'components/common/ui/Icon'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
-import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import Errors from "components/common/layout/Errors/Errors";
