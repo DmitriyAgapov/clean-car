@@ -164,19 +164,34 @@ export class UserStore {
           // console.log(`Create ${type}  permissions`);
 
           const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
-          this.myProfileData.company = perm[0].company;
+          console.log(perm && perm.length > 0);
 
-          perm[0].group.permissions.forEach((item:any) => {
-            const exepctions = ['Компании', 'Расчетный блок',
-              // 'Финансовый блок',
-              'Индивидуальный расчет']
-            if(exepctions.indexOf(item.name) == -1) {
-              // @ts-ignore
-              ar.set(PermissionNames[item.name], item)
-            }
-          })
 
-          this.myProfileData.permissions = perm[0].group.permissions
+          if(perm && perm.length > 0) {
+            this.myProfileData.company = perm[0].company;
+
+
+            this.myProfileData.permissions = perm[0].group.permissions
+            perm[0].group.permissions.forEach((item: any) => {
+              const exepctions = ['Компании', 'Расчетный блок',
+                // 'Финансовый блок',
+                'Индивидуальный расчет']
+              if (exepctions.indexOf(item.name) == -1) {
+                // @ts-ignore
+                ar.set(PermissionNames[item.name], item)
+              }
+            })
+          } else {
+            this.myProfileData.permissions.forEach((item: any) => {
+              const exepctions = ['Компании', 'Расчетный блок',
+                // 'Финансовый блок',
+                'Индивидуальный расчет']
+              if (exepctions.indexOf(item.name) == -1) {
+                // @ts-ignore
+                ar.set(PermissionNames[item.name], item)
+              }
+            })
+          }
         }
         this.setCurrentPermissions(ar)
       } catch (e) {

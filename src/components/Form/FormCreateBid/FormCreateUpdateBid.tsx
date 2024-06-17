@@ -27,6 +27,8 @@ import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 import { PermissionNames } from "stores/permissionStore";
 import { useSWRConfig } from "swr";
 import Image from "components/common/ui/Image/Image";
+import { CompanyType } from "stores/companyStore";
+import { User } from "stores/userStore";
 
 interface InitValues {
     address: string | null
@@ -230,7 +232,9 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [formData.values.company])
   const { cars }  = store.carStore.getCompanyCars
   const car = React.useMemo(() => {
-
+    if(store.userStore.myProfileData.company.company_type === CompanyType.fizlico) {
+      return  store.carStore.getCompanyCars.cars?.results
+    }
     return cars?.results?.filter((c:any) => {
       // console.log(c);
       if(c.is_active) {
@@ -292,17 +296,23 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       formData.setFieldValue('car', null)
       formData.setFieldValue('phone', null)
 
-    } else  {
-
-      const value = store.usersStore.companyUsers.filter((c: any) => c.employee.id === Number(formData.values.conductor))[0]
-      if(store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read')) {
-        //@ts-ignore
-        formData.setFieldValue('phone', value && value.employee && value.employee?.phone)
-        //@ts-ignore
-        store.bidsStore.formResultSet({ phone: value && value.employee && value.employee?.phone })
-      } else {
-        formData.setFieldValue('phone', store.userStore.myProfileData.user.phone)
+    } else {
+      let value: User;
+      if (store.userStore.myProfileData.company === CompanyType["fizlico"]) {
+        value = store.userStore.myProfileData.user
+        formData.setFieldValue('phone', value.phone)
         store.bidsStore.formResultSet({ phone: store.userStore.myProfileData.user.phone })
+      } else {
+        store.usersStore.companyUsers.filter((c: any) => c.employee.id === Number(formData.values.conductor))[0]
+        if (store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'read')) {
+          //@ts-ignore
+          formData.setFieldValue('phone', value && value.employee && value.employee?.phone)
+          //@ts-ignore
+          store.bidsStore.formResultSet({ phone: value && value.employee && value.employee?.phone })
+        } else {
+          formData.setFieldValue('phone', store.userStore.myProfileData.user.phone)
+          store.bidsStore.formResultSet({ phone: store.userStore.myProfileData.user.phone })
+        }
       }
     }
   }, [formData.values.conductor])

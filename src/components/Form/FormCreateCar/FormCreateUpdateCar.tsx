@@ -18,7 +18,7 @@ import PanelForForms, { PanelColor } from "components/common/layout/Panel/PanelF
 import { createFormActions, createFormContext } from "@mantine/form";
 import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
-import { CompanyTypeRus } from 'stores/companyStore'
+import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 import { PanelVariant } from "components/common/layout/Panel/Panel";
 
@@ -65,8 +65,13 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         company_type: store.userStore.myProfileData.company.company_type === "Администратор системы" ? UserTypeEnum.performer : CompanyTypeRus(store.userStore.myProfileData.company.company_type),
         company_filials: store.userStore.myProfileData.company.parent === null ? 'company' : 'filials',
       }
+      if(store.userStore.myProfileData.company.company_type === CompanyType.fizlico) {
+        initValues.company_type = CompanyType.fizlico
+        initValues.company_id = store.userStore.myProfileData.company.id
+        console.log(store.userStore.myProfileData.user.id);
+        initValues.employees = [store.userStore.myProfileData.user.id]
+      }
       if(edit) {
-
         car.employees.forEach((item: any) => {
           (async () =>   store.usersStore.getUsers(car.company_id).then(() => {
             store.usersStore.addToSelectedUsers(Number(item))
@@ -109,7 +114,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     name: 'createUpdateCar',
     initialValues: memoizedInitValues,
     validateInputOnBlur: true,
-    onValuesChange: (values) => console.log('val', values.number.length),
+    onValuesChange: (values) => console.log(values),
     validate: yupResolver(CreateCarSchema),
       enhanceGetInputProps: (payload) => {
         if (payload.field === "model") {
@@ -177,7 +182,39 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     const formDataSelectUsers = React.useMemo(() => {
         return store.usersStore.usersList.users.map((item:any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))
     },[store.usersStore.companyUsers]);
-
+    const createCarApi = React.useCallback(() => {
+      const data = {
+        id: form.values.id,
+        number: form.values.number,
+        height: form.values.height,
+        radius: form.values.radius,
+        company_id: Number(form.values.company_id),
+        company_type: form.values.company_type,
+        is_active: form.values.is_active === "true",
+        brand: Number(form.values.brand),
+        model: Number(form.values.model),
+        employees: val(store.usersStore.selectedUsers).map((item: any) => item.employee.id),
+      }
+      if (edit) {
+        store.formStore.setFormDataCreateCar(data)
+        store.formStore.sendCarFormDataEdit()
+        .then(() =>  {
+          // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
+          navigate(`/account/cars`)
+        })
+      } else {
+        store.formStore.setFormDataCreateCar(data)
+        store.formStore.sendCarFormData()
+        .then(r => {
+          console.log(r);
+          form.values.id = r.data.id
+        })
+        .then(() =>  {
+          // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
+          navigate(`/account/cars`)
+        })
+      }
+    }, [form])
     const handleCreateCar = React.useCallback(() => {
 
       // Step 1
@@ -186,7 +223,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         !edit && store.usersStore.clearSelectedUsers()
         const company = store.companyStore.getCompaniesAll.filter((item:any) => item.id == Number(form.values.company_id))[0];
         // console.log(company.company_type);
-        form.values.company_type = company.company_type;
+        form.values.company_type = store.userStore.myProfileData.company.company_type !== CompanyType.fizlico ? company.company_type : CompanyType.fizlico;
         // console.log('submit', form.values);
           store.formStore.setFormDataCreateCar({
             id: store.formStore.formCreateCar.id,
@@ -198,42 +235,17 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             is_active: form.values.is_active === "true",
             brand: Number(form.values.brand),
             model: Number(form.values.model),
-            employees: edit ? form.values.employees :  (store.usersStore.selectedUsers && store.usersStore.selectedUsers.size !== 0) ? val(store.usersStore.selectedUsers).map((item: any) => item.employee.id) : [],
+            employees: edit ? form.values.employees :  (store.usersStore.selectedUsers && store.usersStore.selectedUsers.size !== 0) ? val(store.usersStore.selectedUsers).map((item: any) => item.employee.id) : form.values.employees,
           });
+
+        if(form.values.company_type === CompanyType.fizlico) {
+          createCarApi()
+        } else {
           changeStep();
+        }
       }
       if(step === 2) {
-            const data = {
-              id: form.values.id,
-              number: form.values.number,
-              height: form.values.height,
-              radius: form.values.radius,
-              company_id: Number(form.values.company_id),
-              company_type: form.values.company_type,
-              is_active: form.values.is_active === "true",
-              brand: Number(form.values.brand),
-              model: Number(form.values.model),
-              employees: val(store.usersStore.selectedUsers).map((item: any) => item.employee.id),
-            }
-            if (edit) {
-              store.formStore.setFormDataCreateCar(data)
-              store.formStore.sendCarFormDataEdit()
-              .then(() =>  {
-                // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
-                navigate(`/account/cars`)
-              })
-            } else {
-              store.formStore.setFormDataCreateCar(data)
-              store.formStore.sendCarFormData()
-              .then(r => {
-                console.log(r);
-                form.values.id = r.data.id
-              })
-                .then(() =>  {
-                  // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
-                  navigate(`/account/cars`)
-              })
-            }
+          createCarApi()
 
             // changeStep(3)
       }
@@ -328,7 +340,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                             </>
                         }
                     >
-                        <Select
+                      {store.userStore.myProfileData.company.company_type !== CompanyType.fizlico && <><Select
                             label={'Принадлежит'}
                             {...form.getInputProps('depend_on', { dependOn: 'type' })}
                             defaultValue={form.values.depend_on}
@@ -344,7 +356,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                             {...form.getInputProps('company_id', { dependOn: 'type' })}
                             data={companyVar.map((item) => ({ label: item.name, value: String(item.id) }))}
                         />
-                        <hr className={'col-span-full flex-[1_100%]'} />
+                        <hr className={'col-span-full flex-[1_100%]'} /></> }
                         <Select
                             label={'Марка'}
                             searchable

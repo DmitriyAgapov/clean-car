@@ -15,9 +15,10 @@ export enum Payment {
     predoplata = 'Предоплата',
 }
 export enum CompanyType {
-  admin = "Администратор системы",
-  customer = "Клиент",
-  performer = "Партнер"
+    admin = "Администратор системы",
+    customer = "Клиент",
+    performer = "Партнер",
+    fizlico = "Физическое лицо"
 }
 export const CompanyTypeRus = (type:any) => {
   if(type === "Клиент") return "customer"

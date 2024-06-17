@@ -510,7 +510,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                         }
                       } else {
                         for(let i = 0; el.length > i; i++) {
-                          const _customerValue = parseFloat(data.price_positions.performer[i].amount)
+                          const _customerValue = parseFloat(data.price_positions.performer[i].amount)  * (1 + data.service_percent / 100)
                           if(el[i].name === serviceName)  {
                             const _ar = []
                             _ar.push(Math.round(_customerValue * 100) / 100)
@@ -559,9 +559,13 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           }
                         }
                       } else {
-                        const _customerValue = parseFloat(data.price_positions.customer[0]?.amount)  ?? null
+                        let _customerValue = parseFloat(data.price_positions.customer[0]?.amount)  ?? null
                         for(let i = 0; el.length > i; i++) {
+
                           const _performerValue = parseFloat(el[i].amount)
+                          if(isNaN(_customerValue)) {
+                            _customerValue = _performerValue * (1 + data.service_percent / 100)
+                          }
                           if(el[i].name === serviceName)  {
                             const _ar = []
                             _ar.push(Math.round(_customerValue * 100) / 100)

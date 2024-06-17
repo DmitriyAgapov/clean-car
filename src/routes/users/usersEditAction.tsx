@@ -16,20 +16,9 @@ import useSWR from "swr";
 const UsersPageEditAction = () => {
   const store = useStore()
   const navigate = useNavigate()
-  const location = useLocation()
-  const { user }: any = useLoaderData()
   const params = useParams()
   const {isLoading, data, mutate}:any = useSWR(`users_${params.company_id}_${params.id}`,() => store.usersStore.userLoader({company_type : params.company_type, id:Number(params.id), company_id:Number(params.company_id)}))
-  // const _data = React.useMemo(() => {
-  //   return ({
-  //     ...data,
-  //     company: {
-  //       ...data.company,
-  //       grou
-  //     }
-  //   })
-  // }, [data])
-  console.log(data);
+
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update')) return <Navigate to={'/account'}/>
   return (
       <Section type={SectionType.default}>

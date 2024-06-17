@@ -10,7 +10,8 @@ import { TableSearchParams } from 'components/common/layout/TableWithSort/TableW
 import { Popover } from '@mantine/core'
 import { Button as Btn } from '@mantine/core'
 import { observer } from "mobx-react-lite";
-import { SvgClose } from "components/common/ui/Icon";
+import { SvgClose } from 'components/common/ui/Icon'
+import { keys } from "mobx";
 export enum FilterData {
   city= 'city',
   car_type= 'car_type',
@@ -36,8 +37,13 @@ function DataFilter({ filterData}: {filterData: any[] | undefined}) {
   const localStore = useLocalStore<LocalRootStore>()
   // const isActiveBtn = Array.from(Object.keys(localStore.params.getSearchParams)).length > 4
   const isActiveBtn = localStore.params.getFilterState
-  console.log();
-  console.log(ctx);
+  const paramsS = localStore.params.getSearchParams
+
+  React.useEffect(() => {
+    const except = ['page', "page_size", "ordering", "q"]
+    const isFilterActive = keys(paramsS).some((el:any) => !except.includes(el))
+    localStore.params.setFilterState(isFilterActive)
+  }, [paramsS])
   return (
         <div className={styles.btnFilter + ` ` + ` border ${isActiveBtn && '!border-accent'}`}>
             <ctx.Provider value={localStore.params.getSearchParams}>

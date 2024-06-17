@@ -201,7 +201,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
                   </ul>
               </nav>
               {children}
-            {width && width > 1299 && <Footer className={'block desktop:!hidden pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+            {width && (width > 1299 || width < 960) && <Footer className={'block desktop:!hidden pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
                   <div>
 
                       <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>

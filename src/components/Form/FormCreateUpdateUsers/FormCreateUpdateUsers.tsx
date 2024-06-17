@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { yupResolver } from "mantine-form-yup-resolver";
 import { CreateUserSchema } from "utils/validationSchemas";
-import { InputBase, Select, TextInput } from "@mantine/core";
+import { InputBase, Select, Switch, TextInput } from '@mantine/core'
 import { createFormActions, createFormContext } from "@mantine/form";
 import { useStore } from "stores/store";
 import { observer } from "mobx-react-lite";
@@ -22,6 +22,7 @@ interface InitValues {
 	group: string   | null;
 	company_name?: string
 	last_name: string;
+	bid_visibility: boolean
 	phone: string;
 	type: string | null,
 	depend_on: string  | null;
@@ -43,6 +44,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			group: null,
 			last_name: '',
 			phone: '',
+			bid_visibility: true,
 			depend_on: 'company',
 			is_active: 'true'
 		}
@@ -55,6 +57,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 				company_name: user.company === undefined ? "Администратор системы" : user.company.name,
 				depend_on: user.company?.parent === null ? 'company' : 'filials',
 				first_name: user.employee.first_name,
+				bid_visibility: user.employee.bid_visibility.toString(),
 				last_name: user.employee.last_name,
 				phone: user.employee.phone,
 				email: user.employee.email,
@@ -135,6 +138,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 				id: edit ? user.employee.id : 0,
 				phone: form.values.phone.replaceAll(' ', ''),
 				email: form.values.email,
+				bid_visibility: form.values.bid_visibility === "true",
 				first_name: form.values.first_name,
 				last_name: form.values.last_name,
 				company_id: edit && !user.company ? 1 : compId,
@@ -344,6 +348,12 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                             { label: 'Неактивен', value: 'false' },
                         ]}
                     />
+	                <Select
+
+		                {...form.getInputProps('bid_visibility')}
+		                label="Пользователь видит заявки:"
+		                data={[{label: "Все", value: 'true'}, {label:'Свои', value: "false"}]}
+	                />
                 </form>
             </PanelForForms>
         </FormProvider>

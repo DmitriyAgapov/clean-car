@@ -35,7 +35,6 @@ const UsersPage = () => {
     },
     [location.pathname]
   );
-  console.log(data);
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -112,7 +111,7 @@ const UsersPage = () => {
         background={PanelColor.glass}
         filter={true}
         initFilterParams={ft}
-        state={isValidating}
+        state={isLoading}
         ar={th}
       />
 

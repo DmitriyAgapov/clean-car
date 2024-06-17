@@ -7,446 +7,30 @@ import { useStore } from 'stores/store'
 import { observer, useLocalStore } from 'mobx-react-lite'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import agent, { client } from 'utils/agent'
 import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate } from '@mantine/hooks'
 import { NumberFormatter } from '@mantine/core';
 import { SvgBackArrow } from "components/common/ui/Icon";
+import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
+import dayjs from 'dayjs';
 
 const localRootStore =  new LocalRootStore()
-const testData = {
-  "count": 12,
-  "next": null,
-  "previous": null,
-  "results": [
-    {
-      "id": 1,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Клиент",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Клиент"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 10000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 55,
-        "total_sum": 3000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 32,
-        "total_sum": 40000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      }
-    },
-    {
-      "id": 3,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Клиент",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Клиент"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    },
-    {
-      "id": 2,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Клиент",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Клиент"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    },
-     {
-      "id": 1,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Клиент",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Клиент"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    },
-    {
-      "id": 3,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Клиент",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Клиент"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    },
-    {
-      "id": 2,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Клиент",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Клиент"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    },
-     {
-      "id": 1,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Клиент",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Клиент"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    },
-    {
-      "id": 3,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Клиент",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Клиент"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    },
-    {
-      "id": 2,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Партнер",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Партнер"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 31,
-        "total_sum": 4400
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 77,
-        "total_sum": 120000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 12,
-        "total_sum": 41000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    },
-     {
-      "id": 1,
-      "company": {
-        "id": 2,
-        "name": "ООО Заказчик-ред1",
-        "company_type": "Партнер",
-        "parent": {
-            "id": 2,
-            "name": "ООО Заказчик-ред1",
-            "city": {
-              "id": 1,
-              "name": "Москва"
-            },
-            "company_type": "Партнер"
-          }
-      },
-      "tire": {
-        "name": "Шиномонтаж",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "wash": {
-        "name": "Мойка",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "evac": {
-        "name": "Эвакуация",
-        "count": 30,
-        "total_sum": 4000
-      },
-      //Итог можно и тут считать. Не факт что нужен
-      "total": {
-        "name": "Всего",
-        "count": 30,
-        "total_sum": 4000
-      },
-      "city": {
-        "id": 1,
-        "name": "Москва"
-      },
-    }
-  ]
-}
-
+localRootStore.params.setSearchParams({
+  page: 1,
+  page_size: 10,
+  start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+})
 const FinaceIdPage = () => {
   const location = useLocation()
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
   const params = useParams()
+  const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
 
   const {isLoading, data, mutate} = useSWR([`reportId_${params.company_id}`, Number(params.company_id), localStore.params.getSearchParams] , ([url, id, args]) => store.financeStore.getReport(id, args))
+  console.log(data);
   useEffect(() => {
       const _root = data?.root_company
       const _ar = []
@@ -486,7 +70,7 @@ const FinaceIdPage = () => {
               header={
                   <>
                       <div>
-                          <Button
+                        {(store.appStore.appType === "admin" || !isMyCompany) && <Button
                               text={
                                   <>
                                       <SvgBackArrow />
@@ -504,7 +88,7 @@ const FinaceIdPage = () => {
                                 }
                               })())}
                               variant={ButtonVariant.text}
-                          />
+                          />}
                         <Heading
                           text={'Отчет по заявкам'}
                           variant={HeadingVariant.h1}
@@ -534,7 +118,8 @@ const FinaceIdPage = () => {
               style={PanelRouteStyle.financeId}
               background={PanelColor.glass}
               className={'col-span-full table-groups'}
-              filter={false}
+              initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
+              filter={true}
               state={isLoading}
               ar={[
                   { label: 'Компания', name: 'company' },

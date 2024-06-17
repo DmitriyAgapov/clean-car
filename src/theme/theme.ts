@@ -15,12 +15,15 @@ import {
     Modal,
     Radio,
     PasswordInput,
+    Switch,
 } from '@mantine/core'
 import { TimeInput } from '@mantine/dates';
 
 // @ts-ignore
 const themeOverride = createTheme({
+
     components: {
+
         InputLabel: InputLabel.extend({
             classNames: {
                 label: 'font-semibold',
@@ -129,6 +132,13 @@ const themeOverride = createTheme({
                 inner: 'rounded-none relative outline outline-offset-0 outline-1 !outline-[#343437]  flex items-center justify-center',
                 input: ' rounded-none  !border-gray-3 checked:!bg-accent cursor-pointer opacity-0 border-4 checked:!border-3 checked:!opacity-100 transition-all duration-500 ease-in-out',
                 icon: 'hidden',
+            }
+        }),
+        Switch: Switch.extend({
+            defaultProps: {
+                classNames: {
+                    track: "#ffa900"
+                }
             }
         }),
         NumberInput: InputBase.extend({
