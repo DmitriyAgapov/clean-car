@@ -12,9 +12,15 @@ import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate, useViewportSize } from '@mantine/hooks'
 import { NumberFormatter } from '@mantine/core'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
-import agent from "utils/agent";
+import agent from 'utils/agent'
+import dayjs from 'dayjs'
 
 const localRootStore =  new LocalRootStore()
+localRootStore.params.setSearchParams({
+  page: 1,
+  page_size: 10,
+  start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+})
 const FinanceBottom = observer((props: { data: any }) => {
     const { width, height } = useViewportSize()
     const store = useStore()

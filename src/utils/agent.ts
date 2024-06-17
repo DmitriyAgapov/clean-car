@@ -154,14 +154,10 @@ const handleErrors = (err: AxiosError & any) => {
         notifications.show({
           id: 'global-error',
           withCloseButton: true,
-          // onClose: () => console.log('unmounted'),
-          // onOpen: () => console.log('mounted'),
           autoClose: 5000,
           title: "Ошибка",
           message: errMsg,
           color: 'var(--errorColor)',
-
-          // style: { backgroundColor: 'red' },
           loading: false,
         })
       }

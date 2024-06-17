@@ -142,12 +142,12 @@ const RowData = observer((props: any) => {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<tr className={styles.tableRow} onClick={(width && width > 961) ? handleClick : () => setOpen(prevState => !prevState)} data-state-mobile={open}>
+		<tr className={styles.tableRow} onClick={(width && width > 744) ? handleClick : () => setOpen(prevState => !prevState)} data-state-mobile={open}>
 			{propsRender}
-			{(width && width < 961) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
+			{(width && width < 745) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
         <SvgChevron  onClick={() => setOpen(prevState => !prevState)}/>
       </td>}
-			{(width && width < 961 && props?.attributes?.has_child !== false) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
+			{(width && width < 745 && props?.attributes?.has_child !== false) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
 		</tr>
 	)
 })
