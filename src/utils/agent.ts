@@ -482,7 +482,7 @@ const Balance = {
   getReportByCompanyId: (company_id: number, params?: PaginationProps) => requests.get(`/balance/report/${company_id}`),
   getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params),
   getTransactionListAdmin: (params?: PaginationProps) => requests.get('/balance/all_transactions/', params),
-  upBalance: (company_id:number, purpose:string, amount:number) => requests.post('/balance/up_balance/', {
+  upBalance: (company_id:number, purpose:number, amount:number) => requests.post('/balance/up_balance/', {
     company_id: company_id,
     purpose: purpose,
     amount: amount

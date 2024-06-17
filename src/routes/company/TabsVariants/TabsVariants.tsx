@@ -459,26 +459,47 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 cols: 6,
                 nameColSpan: 3,
                 valuesSpan: 1,
-                valueStyle: 'text-accent font-medium text-sm'
+                valueStyle: 'text-accent font-medium text-sm tablet-max:before:content-[attr(data-label)":_"]'
               }
               const _res2: _res2 = {
                 service: { label: null, values: [], unit: '₽' }, options: [], role: store.appStore.appType, count: data.price_positions.performer.length,
-                  calc: function() {
-                    const el = data.price_positions.performer;
+                calc: function() {
+                  const el = data.price_positions.performer;
 
-                    if(this.role === "performer") {
+                  if(this.role === "performer") {
+                    for(let i = 0; el.length > i; i++) {
+                      const _performerValue = parseFloat(el[i].amount)
+                      if(el[i].name === serviceName)  {
+                        this.service.label = el[i].name;
+                        const _ar = []
+                        _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                        this.service.values = _ar
+                      } else  {
+                        this.service.label = data.service_subtype.name
+                        const _ar = []
+                        _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                        this.options.push({
+                          label: el[i].name.replace(serviceName_exclude, ''),
+                          values: _ar,
+                          unit: el[i].unit,
+                        })
+                      }
+                    }
+                    return this
+                  }
+                  if(this.role === "customer") {
+                    if(data.service_percent == null) {
                       for(let i = 0; el.length > i; i++) {
-                        const _performerValue = parseFloat(el[i].amount)
-                        console.log(_performerValue);
+                        const _customerValue = parseFloat(data.price_positions.customer[i].amount)
                         if(el[i].name === serviceName)  {
                           this.service.label = el[i].name;
                           const _ar = []
-                          _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                          _ar.push(Math.round(_customerValue * 100) / 100)
                           this.service.values = _ar
                         } else  {
                           this.service.label = data.service_subtype.name
                           const _ar = []
-                          _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                         _ar.push(Math.round(_customerValue * 100) / 100)
                           this.options.push({
                             label: el[i].name.replace(serviceName_exclude, ''),
                             values: _ar,
@@ -486,117 +507,93 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           })
                         }
                       }
-                      return this
-                    }
-                    if(this.role === "customer") {
-                      if(data.service_percent == null) {
-                        for(let i = 0; el.length > i; i++) {
-                          const _customerValue = parseFloat(data.price_positions.customer[i].amount)
-                          if(el[i].name === serviceName)  {
-                            this.service.label = el[i].name;
-                            const _ar = []
-                            _ar.push(Math.round(_customerValue * 100) / 100)
-                            this.service.values = _ar
-                          } else  {
-                            this.service.label = data.service_subtype.name
-                            const _ar = []
-                           _ar.push(Math.round(_customerValue * 100) / 100)
-                            this.options.push({
-                              label: el[i].name.replace(serviceName_exclude, ''),
-                              values: _ar,
-                              unit: el[i].unit,
-                            })
-                          }
-                        }
-                      } else {
-                        for(let i = 0; el.length > i; i++) {
-                          const _customerValue = parseFloat(data.price_positions.performer[i].amount)  * (1 + data.service_percent / 100)
-                          if(el[i].name === serviceName)  {
-                            const _ar = []
-                            _ar.push(Math.round(_customerValue * 100) / 100)
-                            this.service.label = el[i].name;
-                            this.service.values = _ar
-                          } else  {
-                            const _customerValue = parseFloat(data.price_positions.performer[i].amount)
+                    } else {
+                      for(let i = 0; el.length > i; i++) {
+                        const _customerValue = parseFloat(data.price_positions.performer[i].amount)  * (1 + data.service_percent / 100)
+                        if(el[i].name === serviceName)  {
+                          const _ar = []
+                          _ar.push(Math.round(_customerValue * 100) / 100)
+                          this.service.label = el[i].name;
+                          this.service.values = _ar
+                        } else  {
+                          const _customerValue = parseFloat(data.price_positions.performer[i].amount)
 
-                            this.service.label = data.service_subtype.name
-                            const _ar = []
-                            _ar.push(Math.round(_customerValue * 100) / 100)
-                            this.options.push({
-                              label: el[i].name.replace(serviceName_exclude, ''),
-                              values: _ar,
-                              unit: el[i].unit,
-                            })
-                          }
+                          this.service.label = data.service_subtype.name
+                          const _ar = []
+                          _ar.push(Math.round(_customerValue * 100) / 100)
+                          this.options.push({
+                            label: el[i].name.replace(serviceName_exclude, ''),
+                            values: _ar,
+                            unit: el[i].unit,
+                          })
                         }
                       }
-                      return this
                     }
-                    if(this.role === "admin") {
-                      if(data.service_percent === null) {
-                        for(let i = 0; el.length > i; i++) {
-                          const _performerValue = parseFloat(el[i].amount)
+                    return this
+                  }
+                  if(this.role === "admin") {
+                    if(data.service_percent === null) {
+                      for(let i = 0; el.length > i; i++) {
+                        const _performerValue = parseFloat(el[i].amount)
+                        const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                        if(el[i].name === serviceName)  {
+                          this.service.label = el[i].name;
+                          const _ar = []
+                          _ar.push(Math.round(_customerValue * 100) / 100)
+                          _ar.push(Math.round(_performerValue * 100) / 100)
+                          _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                          this.service.values = _ar
+                        } else  {
                           const _customerValue = parseFloat(data.price_positions.customer[i].amount)
-                          if(el[i].name === serviceName)  {
-                            this.service.label = el[i].name;
-                            const _ar = []
-                            _ar.push(Math.round(_customerValue * 100) / 100)
-                            _ar.push(Math.round(_performerValue * 100) / 100)
-                            _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
-                            this.service.values = _ar
-                          } else  {
-                            const _customerValue = parseFloat(data.price_positions.customer[i].amount)
-                            this.service.label = data.service_subtype.name
-                            const _ar = []
-                            _ar.push(Math.round(_customerValue * 100) / 100)
-                            _ar.push(Math.round(_performerValue * 100) / 100)
-                            _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
-                            this.options.push({
-                              label: el[i].name.replace(serviceName_exclude, ''),
-                              values: _ar,
-                              unit: el[i].unit,
-                            })
-                          }
+                          this.service.label = data.service_subtype.name
+                          const _ar = []
+                          _ar.push(Math.round(_customerValue * 100) / 100)
+                          _ar.push(Math.round(_performerValue * 100) / 100)
+                          _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                          this.options.push({
+                            label: el[i].name.replace(serviceName_exclude, ''),
+                            values: _ar,
+                            unit: el[i].unit,
+                          })
                         }
-                      } else {
-                        let _customerValue = parseFloat(data.price_positions.customer[0]?.amount)  ?? null
-                        for(let i = 0; el.length > i; i++) {
+                      }
+                    } else {
+                      let _customerValue = parseFloat(data.price_positions.customer[0]?.amount)  ?? null
+                      for(let i = 0; el.length > i; i++) {
 
-                          const _performerValue = parseFloat(el[i].amount)
+                        const _performerValue = parseFloat(el[i].amount)
+                        if(isNaN(_customerValue)) {
+                          _customerValue = _performerValue * (1 + data.service_percent / 100)
+                        }
+                        if(el[i].name === serviceName)  {
+                          const _ar = []
+                          _ar.push(Math.round(_customerValue * 100) / 100)
+                          _ar.push(Math.round(_performerValue * 100) / 100)
+                          _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                          this.service.label = el[i].name;
+                          this.service.values = _ar
+                        } else  {
+                          let _customerValue = parseFloat(data.price_positions.customer[i]?.amount)
                           if(isNaN(_customerValue)) {
                             _customerValue = _performerValue * (1 + data.service_percent / 100)
                           }
-                          if(el[i].name === serviceName)  {
-                            const _ar = []
-                            _ar.push(Math.round(_customerValue * 100) / 100)
-                            _ar.push(Math.round(_performerValue * 100) / 100)
-                            _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
-                            this.service.label = el[i].name;
-                            this.service.values = _ar
-                          } else  {
-                            let _customerValue = parseFloat(data.price_positions.customer[i]?.amount)
-                            if(isNaN(_customerValue)) {
-                              _customerValue = _performerValue * (1 + data.service_percent / 100)
-                            }
-                            this.service.label = data.service_subtype.name
-                            const _ar = []
-                            _ar.push(Math.round(_customerValue * 100) / 100)
-                            _ar.push(Math.round(_performerValue * 100) / 100)
-                            _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
-                            this.options.push({
-                              label: el[i].name.replace(serviceName_exclude, ''),
-                              values: _ar,
-                              unit: el[i].unit,
-                            })
-                          }
+                          this.service.label = data.service_subtype.name
+                          const _ar = []
+                          _ar.push(Math.round(_customerValue * 100) / 100)
+                          _ar.push(Math.round(_performerValue * 100) / 100)
+                          _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
+                          this.options.push({
+                            label: el[i].name.replace(serviceName_exclude, ''),
+                            values: _ar,
+                            unit: el[i].unit,
+                          })
                         }
                       }
-
-
-                      return this
                     }
+                    return this
                   }
                 }
+              }
 
               const _res = _res2.calc()
               const totalCustomer = _res.options?.reduce((acc:number, item:any) => acc + item.values[0], 0)
@@ -632,10 +629,14 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 }
                 tableParams.cols = 4
               }
-
+              let labels:any = {
+                  "0": 'Заказчик',
+                  "1": "Исполнитель",
+                  "2": "Разница"
+              }
               return (
                   <>
-                      <SimpleGrid cols={tableParams.cols} spacing={8} className={'mb-6 items-start flex-1 content-start'}>
+                      <SimpleGrid cols={tableParams.cols} spacing={8} className={'mb-6 items-start flex-1 content-start tablet-max:flex tablet-max:flex-col'}>
                           {/*  Header  */}
                           <Box
                               style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
@@ -648,26 +649,24 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                               <Box
                                   className={'text-gray-2 font-medium text-xss'}
                                   style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
-                              >
-                                  Стоимость
-                              </Box>
+                              >Стоимость</Box>
                           ) : (
                               <>
                                   <Box
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
-                                      className={'text-gray-2 font-medium text-xss uppercase'}
+                                      className={'text-gray-2 font-medium text-xss uppercase tablet-max:hidden'}
                                   >
                                       Заказчик
                                   </Box>
                                   <Box
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
-                                      className={'text-gray-2 font-medium text-xss  uppercase'}
+                                      className={'text-gray-2 font-medium text-xss  uppercase  tablet-max:hidden'}
                                   >
                                       Исполнитель
                                   </Box>
                                   <Box
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
-                                      className={'text-gray-2 font-medium text-xss  uppercase'}
+                                      className={'text-gray-2 font-medium text-xss  uppercase  tablet-max:hidden'}
                                   >
                                       Разница
                                   </Box>
@@ -676,12 +675,13 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
 
                           {/* Услуга */}
                           <Box style={{ gridColumn: `span ${tableParams.nameColSpan}` }}>
-                              <Text className={'font-semibold font-sans'}>{_res.service.label}</Text>
+                              <Text className={'font-semibold font-sans tablet-max:!mb-1'}>{_res.service.label}</Text>
                           </Box>
                           {
+
                             store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && _res.service.values.map(
                               (
-                                  value: string | number
+                                  value: string | number, index: number
                               ) => (
                                   <Box
                                       className={tableParams.valueStyle}
@@ -703,14 +703,16 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           {_res.options?.map((o: any) => (
                               <>
                                   <Box
-                                      className={'font-semibold font-sans'}
+
+                                      className={'font-semibold font-sans  mt-2'}
                                       style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
                                   >
                                       <Text>{o.label}</Text>
                                   </Box>
                                   {
-                                    store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && o.values.map((value: number) => (
+                                    store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && o.values.map((value: number, index: number) => (
                                       <Box
+                                          data-label={labels[index]}
                                           className={tableParams.valueStyle}
                                           style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
                                       >
@@ -720,13 +722,13 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                               </>
                           ))}
                       </SimpleGrid>
-                      <SimpleGrid  cols={tableParams.cols} spacing={8} className={'mb-0 items-start flex-0'}>
+                      <SimpleGrid  cols={tableParams.cols} spacing={8} className={'mb-0 flex-0  tablet-max:flex tablet-max:flex-col items-start'}>
                         {/* Стоимость услуги*/}
 
                         <>
                           {data.create_amount !== null &&
                             store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read')  &&  <Box
-                              className={'font-semibold font-sans  mt-4  self-end'}
+                              className={'font-semibold font-sans  mt-4  self-end tablet-max:self-start'}
                               style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
                             >
 
@@ -736,7 +738,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                                 title={
                                   <Heading
                                     variant={HeadingVariant.h2}
-                                    className={'!mb-0'}
+                                    className={'!mb-0  tablet-max:!mb-1'}
                                     text={String(data.create_amount) + ' ₽'}
                                   />
                                 }
@@ -746,7 +748,8 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                             </Box>}
                           {store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && store.appStore.appType === "admin" && total.map((value: number, index: number) => (
                             <Box
-                              className={tableParams.valueStyle + "  " + " self-end"}
+                              data-label={labels[index]}
+                              className={tableParams.valueStyle + "  " + " self-end  tablet-max:self-start"}
                               style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
                             >
                               {value}
@@ -784,7 +787,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                   <Panel
                     variant={PanelVariant.withGapOnly}
                     background={PanelColor.default}
-                    className={'!col-span-2 row-span-5 child:*:mb-5'}
+                    className={'desktop:!col-span-2 desktop:row-span-5 child:*:mb-5 desktop-max:mb-4 lg-to-desktop:!col-span-2'}
                   >
                   <DList
                     className={'child:dt:text-accent'}
@@ -836,7 +839,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     variant={PanelVariant.withPaddingSmWithBody}
                     background={PanelColor.glass}
                     bodyClassName={'flex flex-col  h-full'}
-                    className={'!col-start-3 col-span-2 row-span-5 !border-active'}
+                    className={'desktop:!col-start-3 desktop:col-span-2 desktop:row-span-5 !border-active  lg-max:!col-span-full lg-to-desktop:!col-span-3 lg-to-desktop:!col-start-3  lg-to-desktop:row-span-5'}
                   >
                     {servicesPrice}
                   </Panel>
@@ -844,7 +847,6 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
             )
             break
         case 'Фото':
-          console.log(data.photos);
           if(data.photos.results.length > 0) {
             result = (
                 <Tabs.Panel

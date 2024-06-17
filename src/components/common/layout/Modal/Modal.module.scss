@@ -44,6 +44,9 @@
 }
 .ModalBidFullImg {
 	background-color: transparent !important;
+  &:focus-visible {
+	outline: none;
+  }
   header {
 	background-color: transparent !important;
   }

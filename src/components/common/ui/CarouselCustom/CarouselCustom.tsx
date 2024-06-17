@@ -73,7 +73,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 									miw={'100%'}
 									// h={'100%'}
 									style={{ objectFit: 'contain', cursor: 'pointer' }}
-									// maw={'10rem'}
+									mah={'60lvh'}
 									className={''}
 								/>
 							</SwiperSlide>
@@ -129,11 +129,12 @@ const CarouselCustom = ({items, closeBtn = true}:{items:any [], closeBtn: boolea
 	const [controlledSwiper, setControlledSwiper] = useState<any>(null);
 	const [opened, { close, open }] = useDisclosure(false)
 	const { height, width } = useViewportSize();
+
 	const itemsMemoized = React.useMemo(() => {
 		return items.map((i:any) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} style={{aspectRatio: "1/1"}} onClick={(event) => {
 			open()
 			}}>
-					<BidImg item={i} closeBtn={closeBtn} mih={'10rem'}  miw={'100%'} h={'100%'} style={{objectFit: "cover", cursor: "pointer", aspectRatio: "1/1"}} maw={'10rem'} />
+					<BidImg item={i} closeBtn={closeBtn} mih={'10rem'} mah={'80lvh'}  miw={'100%'} h={'100%'} style={{objectFit: "cover", cursor: "pointer", aspectRatio: "1/1"}} maw={'10rem'} />
 			</SwiperSlide>
 		)
 	}, [items])
