@@ -28,7 +28,7 @@ const DateComponent = () => {
           {/* <p>{dayjs().locale('ru').format('DD MMMM YYYY г. HH:mm')}</p> */}
 
           <Tooltip label={value?.format('DD MMMM YYYY г. HH:mm:ss')} >
-              <p>{value?.format('DD MMMM YYYY г. HH:mm')} </p>
+              <span>{value?.format('DD MMMM YYYY г. HH:mm')} </span>
           </Tooltip>
           {/* <p>{value?.format('DD MMMM YYYY г. HH:mm')} </p> */}
       </div>
