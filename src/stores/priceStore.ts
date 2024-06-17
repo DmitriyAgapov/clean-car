@@ -549,7 +549,7 @@ export class PriceStore {
                                     autoClose: 5000,
                                     title: "Прайс обновлен",
                                     message: 'Возвращаемся на страницу прайса',
-                                    className: 'my-notification-class z-[9999] absolute top-12 right-12',
+                                    color: 'var(--accentColor)',
                                     loading: false,
                                 });
 
@@ -562,9 +562,7 @@ export class PriceStore {
                                     autoClose: 5000,
                                     title: "Ошибка",
                                     message: 'Прайс не удалось обновить',
-                                    color: 'red',
-                                    className: 'my-notification-class z-[9999]',
-                                    style: { backgroundColor: 'red' },
+                                    color: 'var(--errorColor)',
                                     loading: false,
                                 });
                             }}
