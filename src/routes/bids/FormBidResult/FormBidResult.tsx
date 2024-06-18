@@ -146,7 +146,7 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
 				}
       />}
 			{create_amount && store.userStore.getUserCan(PermissionNames["Финансовый блок"], "read") && <DList
-        className={'child:dt:text-accent child:*:text-accent'}
+        className={'child:dt:text-accent child:*:text-accent mt-6'}
         label={'Стоимость услуги'}
         title={<Heading variant={HeadingVariant.h2} text={create_amount + " ₽"} />}
       />}
