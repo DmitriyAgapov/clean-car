@@ -44,6 +44,9 @@
 }
 .ModalBidFullImg {
 	background-color: transparent !important;
+  &:focus-visible {
+	outline: none;
+  }
   header {
 	background-color: transparent !important;
   }
@@ -177,11 +180,14 @@
   }
 
   section {
-	@apply px-8 pt-16 pb-8 border-gray-2 border;
+	@apply px-1 pt-16 pb-4 border-gray-2 border;
 	background: rgba(36, 37, 41, .6);
 	header {
 	  @apply pt-0 bg-none;
 	  background: none !important;
+	}
+	@screen tablet {
+	  @apply px-8 pt-16 pb-8 border-gray-2 border;
 	}
   }
 }

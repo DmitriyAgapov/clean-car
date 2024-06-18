@@ -40,13 +40,10 @@ export default function UsersPageCreateAction() {
               withCloseButton: true,
               onClose: () => navigate('/account/users'),
               // onOpen: () => console.log('mounted'),
-              autoClose: 3000,
-              // title: "Ошибка",
-              message: 'Файл успешно загружен',
-              // color: 'red',
-              // icon: <SvgClose />,
-              className:
-                'my-notification-class z-[9999]  notification_cleancar success',
+              autoClose: 5000,
+              title: 'Файл успешно загружен',
+              message: null,
+              color: 'var(--accentColor)',
               // style: { backgroundColor: 'red' },
               loading: false,
             })
@@ -56,14 +53,10 @@ export default function UsersPageCreateAction() {
               withCloseButton: true,
               // onClose: () => navigate('/account/cars'),
               // onOpen: () => console.log('mounted'),
-              autoClose: 3000,
-              // title: "Ошибка",
-              message: 'Ошибка',
-              // color: 'red',
-              // icon: <SvgClose />,
-              className:
-                'my-notification-class z-[9999]  notification_cleancar',
-              // style: { backgroundColor: 'red' },
+              autoClose: 5000,
+              title: "Ошибка",
+              message: null,
+              color: 'var(--errorColor)',
               loading: false,
             })
           }

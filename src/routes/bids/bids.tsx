@@ -65,8 +65,8 @@ const BidsPage = () => {
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname.includes(`/account/bids/${params.company_id}/${params.id}`)) return <Outlet />
-	let th
-	(() => {
+
+	let th = (() => {
 		const _th = [
 			{ label: '№', name: 'idnum' },
 			{ label: 'Статус', name: 'status' },
@@ -85,7 +85,7 @@ const BidsPage = () => {
 			_th.push({ label: 'Партнер', name: 'performer' })
 		}
 		_th.push(..._last)
-		th = _th
+		return _th
 	})()
 	return (
 		<Section type={SectionType.default}>

@@ -16,6 +16,10 @@ export const SignupSchemaNew = Yup.object().shape({
 	password: Yup.string().required('Введите пароль'),
 	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),
 })
+export  const SignInSchema = Yup.object().shape({
+	email: Yup.string().email('Некорректный email').required('Обязательное поле'),
+	password: Yup.string().required('Введите пароль')
+})
 export const RestorePasswordNewSchema = Yup.object().shape({
 	password: Yup.string().required('Введите пароль'),
 	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),

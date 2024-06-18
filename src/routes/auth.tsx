@@ -10,7 +10,8 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-
+import FormAuthNew from "components/Form/FormAuth/FormAuthNew";
+import {Notification} from "@mantine/core"
 function AuthPage() {
   const store = useStore()
   const location = useLocation()
@@ -50,20 +51,19 @@ function AuthPage() {
           </p>
         </Panel>
 
-          <Panel
-            bodyClassName={'!py-12'}
-            className={
-              'desktop:!col-start-8 desktop:!col-span-7 desktop:m-8 !tablet:col-start-2 !tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-screen-sm tablet:py-12 tablet:px-6'
-            }
-            variant={PanelVariant.textPadding}
-            background={PanelColor.glass}
-          >
-            <FormAuth />
-          </Panel>
+        <Panel bodyClassName={'!py-12'} state={false}
+          className={
+            'desktop:!col-start-8 desktop:!col-span-7 desktop:m-8 !tablet:col-start-2 !tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-screen-sm tablet:py-12 tablet:px-6'
+          }
+          variant={PanelVariant.textPadding}
+          background={PanelColor.glass}>
+          <FormAuthNew />
 
+        </Panel>
       </Section>
       <SvgAuthBg className={'authBg'} />
       <SvgAuthBgSec className={'authBgSec'} />
+
     </Layout>
   )
 }

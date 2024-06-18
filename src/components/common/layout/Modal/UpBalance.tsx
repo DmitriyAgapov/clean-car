@@ -1,4 +1,4 @@
-import { Modal, NumberInput } from '@mantine/core'
+import { Modal, NumberInput, Select } from '@mantine/core'
 import React from "react";
 import { useStore } from "stores/store";
 import styles from "./Modal.module.scss";
@@ -7,13 +7,31 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import CarHelper from "components/common/layout/CarHelper/CarHelper";
 import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import agent from "utils/agent";
-import DList from "components/common/ui/DList/DList";
+import DList from 'components/common/ui/DList/DList'
+import { useForm } from '@mantine/form'
+import { useSWRConfig } from 'swr';
 
+enum PurposeOfTransaction {
+    "Пополнение баланса (счета)" = "1",
+    "Оплата услуг" = "2",
+    "Возврат" = "3",
+    "Начисление бонуса" = "4",
+    "Списание бонуса"  = "5",
+    "Штраф по ПДД"  = "6",
+    "Штраф компании (в рамках договора)"  = "7"
+}
 export function UpBalance(props: { opened: boolean; onClose: () => void, id: number, companyName: string}) {
 	const store = useStore()
-
-	const [amount, setAmount] = React.useState(0)
-
+    const { mutate } = useSWRConfig()
+  const formData = useForm({
+      name: 'upBalance',
+      onValuesChange: values => console.log(values),
+      initialValues: {
+          amount: 0,
+          purpose: PurposeOfTransaction,
+          company_id: props.id.toString()
+      }
+  })
 	return (
         <Modal.Root size={600} opened={props.opened} onClose={props.onClose} centered>
             <Modal.Overlay className={'bg-black/90'} />
@@ -33,13 +51,15 @@ export function UpBalance(props: { opened: boolean; onClose: () => void, id: num
                     />
                 </Modal.Header>
                 <Modal.Body className={'!p-0'}>
-                    <div className={'grid gap-8 mb-12'}>
+                    <form className={'grid gap-8 mb-12'}>
                         <NumberInput
                             label={'Сумма начисления'}
-                            name={'paymoney'}
-                            value={amount.toString()}
-                            onChange={(value: any) => setAmount(Number(value))}
+
+                          hideControls
+                          {...formData.getInputProps('amount')}
+                            // onChange={(value: any) => setAmount(Number(value))}
                         />
+                        <Select label={'Цель зачисления'}  {...formData.getInputProps('purpose')} data={Array.from(Object.entries(PurposeOfTransaction)).map((el:string[]) => ({label: el[0], value: el[1]}))}/>
                         <DList label={'Компания'} title={props.companyName} />
                         <DList
                             label={'Зачислил'}
@@ -49,7 +69,7 @@ export function UpBalance(props: { opened: boolean; onClose: () => void, id: num
                                 store.userStore.myProfileData.user.last_name
                             }
                         />
-                    </div>
+                    </form>
                 </Modal.Body>
                 <footer>
                     <Button
@@ -60,8 +80,9 @@ export function UpBalance(props: { opened: boolean; onClose: () => void, id: num
                     <Button
                         text={'Сохранить'}
                         action={async () => {
-                            return agent.Balance.upBalance(props.id, 'Пополнение баланса компании', amount).then(() =>
-                                props.onClose
+                            return agent.Balance.upBalance(props.id, Number(formData.values.purpose), Number(formData.values.amount)).then((r) => {
+                                    r.data.status === "success" && mutate(`company_${props.id}`).then(() => props.onClose())
+                                }
                             )
                         }}
                         variant={ButtonVariant['accent-outline']}

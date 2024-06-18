@@ -13,7 +13,7 @@ import agent from "utils/agent";
 const Errors = ({ className }: { className:string }) => {
     const networkStatus = useNetwork();
     const checkConnection = async () => {
-        return await agent.Auth.login('', '');
+        return await agent.Auth.login({email: '', password: ''});
 
     }
     return (

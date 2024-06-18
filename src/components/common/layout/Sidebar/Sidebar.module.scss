@@ -30,8 +30,18 @@
 	  overflow-y: auto;
 	}
   }
+  @screen desktop {
+	& + section {
+	  grid-column: 4/-2;
+	  grid-row: span 2;
+	}
+	& + * {
+	  padding-left: 1rem;
+	}
+  }
   @screen lg-to-desktop {
 	grid-column: 2/ span 1;
+	margin-top: 5rem;
 	& + section {
 	  grid-column: 3/-2;
 	  margin-left: -2rem;
@@ -41,15 +51,7 @@
 	  padding-left: 2.5rem;
 	}
   }
-  @screen desktop {
-	& + section {
-	  grid-column: 4/-2;
-	  grid-row: span 2;
-	}
-	& + * {
-	  padding-left: 2.5rem;
-	}
-  }
+
 
   background: linear-gradient(180.45deg, rgba(24, 25, 28, 1) 0%, rgba(24, 25, 28, .5) 65%, rgba(24, 25, 28, 0) 100%);
 
@@ -126,7 +128,7 @@
   line-height: 1rem;
   letter-spacing: normal;
   flex: 1 100%;
-  padding: 1rem 3.125rem;
+  padding: 1rem 1.125rem 1rem 3.125rem;
   border-bottom-left-radius: .5rem;
   border-top-left-radius: .5rem;
 

@@ -30,13 +30,7 @@ const SelectStyles = {
 }
 const FilterElements = observer(({ filters, values }: { filters: any, values?: TableSearchParams }) => {
     const  localStore = useLocalStore<any>()
-    const paramsS = localStore.params.getSearchParams
 
-    React.useEffect(() => {
-      const except = ['page', "page_size", "ordering", "q"]
-      const isFilterActive = keys(paramsS).some((el:any) => !except.includes(el))
-      localStore.params.setFilterState(isFilterActive)
-    }, [paramsS])
 
     const params = values
     const { width } = useWindowDimensions()
@@ -151,13 +145,13 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
             )
             break
           case FilterData.is_active:
-            console.log(String(localStore.params.getSearchParams.is_active));
             elements.push(
               <Select
                 label={'Статус'}
                 size={'xs'}
                 clearable
                 value={String(localStore.params.getSearchParams.is_active) || null}
+                defaultValue={null}
                 onChange={(value) => {
                   setInitParams()
                   if (value !== null) {
@@ -166,8 +160,8 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                     })
                     // setParams((prevState) => ({...prevState, status: value}))
                   } else {
-                    let newParams: any =localStore.params
-                    localStore.params.localStore.params.deleteParams("is_active")
+                    let newParams: any = localStore.params
+                    localStore.params.deleteParams("is_active")
                     // setParams(newParams)
                   }
                 }}

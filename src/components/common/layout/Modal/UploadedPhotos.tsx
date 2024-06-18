@@ -53,6 +53,7 @@ export const UploadedPhotosFirstStep = () => {
 			}
 			return _photos
 		}, [img.length])
+
     return (
         <div
             className={`flex flex-col col-span-full ${!(store.bidsStore.formResult.company !== 0 && store.bidsStore.formResult.company !== null && store.bidsStore.formResult.company !== '0') ? 'pointer-events-none grayscale' : ''}`}

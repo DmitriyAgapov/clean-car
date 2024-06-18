@@ -544,17 +544,25 @@
 		  content: none;
 		}
 	  }
-	  [data-position="button-mobile"] {
-		grid-column: 1/-1;
-		max-width: initial !important;
-		width: initial !important;
-		padding: 0 !important;
-	  }
 	  [data-label="status"] {
 		grid-row: 1/2;
 		grid-column: -3/-2;
 	  }
 
+	}
+	@screen tablet {
+	  [data-position="button-mobile"], [data-position="icon-open"] {
+		display: none !important;
+	  }
+	}
+	@screen tablet-max {
+	  [data-position="button-mobile"] {
+		display: block !important;
+		grid-column: 1/-1;
+		max-width: initial !important;
+		width: initial !important;
+		padding: 0 !important;
+	  }
 	}
 	th, td {
 

@@ -8,6 +8,7 @@ import {
     mergeMantineTheme,
     Checkbox,
     Textarea,
+  Notification,
     TextInput,
     Popover,
     InputBase,
@@ -15,12 +16,15 @@ import {
     Modal,
     Radio,
     PasswordInput,
+    Switch,
 } from '@mantine/core'
 import { TimeInput } from '@mantine/dates';
 
 // @ts-ignore
 const themeOverride = createTheme({
+
     components: {
+
         InputLabel: InputLabel.extend({
             classNames: {
                 label: 'font-semibold',
@@ -114,7 +118,14 @@ const themeOverride = createTheme({
                 visibilityToggle: 'text-gray-2'
             }
         }),
-
+        Notification: Notification.extend({
+            classNames: {
+                root: "rounded-[.625rem] pt-1.5 pl-3 pr-4  border-[var(--notification-color)] border bg-black max-w-[20rem] min-h-[4.5rem] before:left-0 before:right-0 before:bottom-0  before:top-auto before:w-full before:h-3  before:animate-progressFive before:bg-gradient-to-r before:from-[var(--notification-color)] before:to-black/90 before:rounded-tl-none before:rounded-tr-none before:h-2 ",
+                title: "text-sm",
+                body: ' pt-0 ',
+                closeButton: "top-1 right-1 absolute text-gray-2 *:!w-5 *:!h-5",
+            }
+        }),
         TimeInput: TimeInput.extend({
             classNames: {
 
@@ -129,6 +140,13 @@ const themeOverride = createTheme({
                 inner: 'rounded-none relative outline outline-offset-0 outline-1 !outline-[#343437]  flex items-center justify-center',
                 input: ' rounded-none  !border-gray-3 checked:!bg-accent cursor-pointer opacity-0 border-4 checked:!border-3 checked:!opacity-100 transition-all duration-500 ease-in-out',
                 icon: 'hidden',
+            }
+        }),
+        Switch: Switch.extend({
+            defaultProps: {
+                classNames: {
+                    track: "#ffa900"
+                }
             }
         }),
         NumberInput: InputBase.extend({

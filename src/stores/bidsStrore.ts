@@ -4,7 +4,7 @@ import catalogStore from "stores/catalogStore";
 import { makePersistable } from "mobx-persist-store";
 import usersStore from "stores/usersStore";
 import carStore from "stores/carStore";
-import companyStore from "stores/companyStore";
+import companyStore, { CompanyType } from "stores/companyStore";
 import { CurrentBidProps } from "stores/types/bidTypes";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
@@ -417,7 +417,9 @@ export class BidsStore {
             async (conductor)=> {
                 if(conductor !== "0" && conductor !== null && conductor !== 0) {
                     //@ts-ignore
-                    runInAction(() => this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone);
+                    // runInAction(() => {
+                    //     this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone
+                    // });
                     await carStore.getCarsByCompony(this.formResult.company);
                 }
             }

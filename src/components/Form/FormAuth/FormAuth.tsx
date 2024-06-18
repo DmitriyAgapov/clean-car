@@ -49,7 +49,7 @@ const FormAuth = () => {
             <Button
               text={'Войти'}
               variant={ButtonVariant.accent}
-              // type={'button'}
+              type={'submit'}
               action={submitForm}
             />
             <LinkStyled to={'/restore'} text={'Не помню пароль'} variant={ButtonVariant['accent-outline']} />

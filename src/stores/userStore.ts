@@ -14,7 +14,8 @@ import bidsStore from "stores/bidsStrore";
 export enum UserTypeEnum {
   admin = 'admin',
   customer = "customer",
-  performer = "performer"
+  performer = "performer",
+  fizlico = "fizlico"
 }
 
 export type User = {
@@ -109,13 +110,16 @@ export class UserStore {
       roles.push(UserTypeEnum.admin)
     }
     if(this.myProfileData.user) {
-    if(this.myProfileData.user.account_bindings?.filter((value:any) => value.company.company_type == "Клиент").length > 0) {
-      roles.push(UserTypeEnum.customer)
+      if(this.myProfileData.user.account_bindings?.filter((value:any) => value.company.company_type == "Клиент").length > 0) {
+        roles.push(UserTypeEnum.customer)
+      }
+      if(this.myProfileData.company.company_type === CompanyType.fizlico) {
+        roles.push(UserTypeEnum.customer)
+      }
+      if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Партнер").length > 0) {
+        roles.push(UserTypeEnum.performer)
+      }
     }
-
-    if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Партнер").length > 0) {
-      roles.push(UserTypeEnum.performer)
-    }}
     return roles
   }
 
@@ -164,19 +168,34 @@ export class UserStore {
           // console.log(`Create ${type}  permissions`);
 
           const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
-          this.myProfileData.company = perm[0].company;
+          console.log(perm && perm.length > 0);
 
-          perm[0].group.permissions.forEach((item:any) => {
-            const exepctions = ['Компании', 'Расчетный блок',
-              // 'Финансовый блок',
-              'Индивидуальный расчет']
-            if(exepctions.indexOf(item.name) == -1) {
-              // @ts-ignore
-              ar.set(PermissionNames[item.name], item)
-            }
-          })
 
-          this.myProfileData.permissions = perm[0].group.permissions
+          if(perm && perm.length > 0) {
+            this.myProfileData.company = perm[0].company;
+
+
+            this.myProfileData.permissions = perm[0].group.permissions
+            perm[0].group.permissions.forEach((item: any) => {
+              const exepctions = ['Компании', 'Расчетный блок',
+                // 'Финансовый блок',
+                'Индивидуальный расчет']
+              if (exepctions.indexOf(item.name) == -1) {
+                // @ts-ignore
+                ar.set(PermissionNames[item.name], item)
+              }
+            })
+          } else {
+            this.myProfileData.permissions.forEach((item: any) => {
+              const exepctions = ['Компании', 'Расчетный блок',
+                // 'Финансовый блок',
+                'Индивидуальный расчет']
+              if (exepctions.indexOf(item.name) == -1) {
+                // @ts-ignore
+                ar.set(PermissionNames[item.name], item)
+              }
+            })
+          }
         }
         this.setCurrentPermissions(ar)
       } catch (e) {

@@ -154,16 +154,10 @@ const handleErrors = (err: AxiosError & any) => {
         notifications.show({
           id: 'global-error',
           withCloseButton: true,
-          // onClose: () => console.log('unmounted'),
-          // onOpen: () => console.log('mounted'),
-          autoClose: 4000,
-          // title: "Ошибка",
+          autoClose: 5000,
+          title: "Ошибка",
           message: errMsg,
-          // color: 'red',
-          // icon: <SvgClose />,
-          className:
-            'my-notification-class z-[9999] absolute top-12 right-12 notification_cleancar',
-          // style: { backgroundColor: 'red' },
+          color: 'var(--errorColor)',
           loading: false,
         })
       }
@@ -292,7 +286,7 @@ const Auth = {
   tokenRefresh: (refresh: string) => requests.post('/token/refresh/',{
       refresh: refresh
   }),
-  login: (email: string, password: string) => requests.post('/token/', { email: email, password: password }),
+  login: (data: {email: string, password: string}) => requests.post('/token/', data, {}),
   register: (data:{ first_name: string, last_name: string, phone: string, email: string, city: number, password: string, password2: string }) => requests.post('/accounts/register/', data, {}),
 
 }
@@ -482,7 +476,7 @@ const Balance = {
   getReportByCompanyId: (company_id: number, params?: PaginationProps) => requests.get(`/balance/report/${company_id}`),
   getTransactionList: (company_id: number, params?: PaginationProps) => requests.get(`/balance/${company_id}/transactions/list/`, params),
   getTransactionListAdmin: (params?: PaginationProps) => requests.get('/balance/all_transactions/', params),
-  upBalance: (company_id:number, purpose:string, amount:number) => requests.post('/balance/up_balance/', {
+  upBalance: (company_id:number, purpose:number, amount:number) => requests.post('/balance/up_balance/', {
     company_id: company_id,
     purpose: purpose,
     amount: amount

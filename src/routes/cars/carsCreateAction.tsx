@@ -37,14 +37,10 @@ export default function CarsPageCreateAction() {
               withCloseButton: true,
               onClose: () => navigate('/account/cars'),
               // onOpen: () => console.log('mounted'),
-              autoClose: 3000,
+              autoClose: 5000,
               // title: "Ошибка",
               message: 'Файл успешно загружен',
-              // color: 'red',
-              // icon: <SvgClose />,
-              className:
-                'my-notification-class z-[9999]  notification_cleancar success',
-              // style: { backgroundColor: 'red' },
+              color: 'var(--accentColor)',
               loading: false,
             })
           } else {
@@ -53,13 +49,10 @@ export default function CarsPageCreateAction() {
               withCloseButton: true,
               // onClose: () => navigate('/account/cars'),
               // onOpen: () => console.log('mounted'),
-              autoClose: 3000,
-              // title: "Ошибка",
-              message: 'Ошибка',
-              // color: 'red',
-              // icon: <SvgClose />,
-              className:
-                'my-notification-class z-[9999]  notification_cleancar',
+              autoClose: 5000,
+              title: "Ошибка",
+              message: null,
+              color: 'var(--errorColor)',
               // style: { backgroundColor: 'red' },
               loading: false,
             })
@@ -97,11 +90,7 @@ export default function CarsPageCreateAction() {
             <FileButton
               //@ts-ignore
               onChange={handleFileChange} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-              {(props) => <Button
-                text={
-                  <span style={{ display: "block", width: 'fit-content' , color: 'black !important'}}>{!success ? 'Загрузить файл' : 'Загружено'}</span>
-             }
-
+              {(props) => <Button text={<span style={{ display: "block", width: 'fit-content' , color: 'black !important'}}>{!success ? 'Загрузить файл' : 'Загружено'}</span>}
                 className={'inline-flex mr-5'}
                 directory={ButtonDirectory.directory}
                 size={ButtonSizeType.sm}
