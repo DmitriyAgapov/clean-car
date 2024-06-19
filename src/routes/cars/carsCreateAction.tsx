@@ -84,7 +84,7 @@ export default function CarsPageCreateAction() {
           {store.appStore.appType === "admin" && <div className={"flex gap-6 mobile:max-w-96 mobile:mt-6"}>
             <Button text={"Скачать шаблон"}
             variant={ButtonVariant["accent-outline"]}
-              href={'/Шаблон_автомобилей.xlsx'}
+              href={'/Шаблон_автомобили.xlsx'}
               className={"inline-flex desktop-max:flex-1"}
             size={ButtonSizeType.sm} />
             <FileButton
