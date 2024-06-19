@@ -39,8 +39,21 @@ export type ButtonProps = {
   type?: string
   directory?: ButtonDirectory
 }
+function once(fn:any, context:any) {
+  let result:any;
 
-const Button = ({
+  return function():any {
+    if(fn) {
+      console.log('once');
+      // @ts-ignore
+      result = fn.apply(context || this, arguments);
+      fn = null;
+    }
+
+    return result;
+  };
+}
+const Button = React.forwardRef(({
   text,
   href,
   size = ButtonSizeType.base,
@@ -52,15 +65,16 @@ const Button = ({
   variant = ButtonVariant.default,
   action,
   ...props
-}: ButtonProps) => {
+}: ButtonProps, ref: React.ForwardedRef<any>) => {
   const {width} = useWindowDimensions()
 
-  if(type === 'submit') return  <button type={'submit'} onClick={action} className={styles.Button + ' ' + className}
+
+  if(type === 'submit') return  <button type={'submit'} onClick={once(action, {})} className={styles.Button + ' ' + className}
     data-directory={directory}
     disabled={disabled}
     data-variant={variant}
     data-size={size}> {text}</button>
-  if(type === 'button') return  <Btn type={'button'} onClick={event => action && action(event)} className={styles.Button + ' ' + className}
+  if(type === 'button') return  <Btn  ref={ref} type={'button'} onClick={once(action, {})} className={styles.Button + ' ' + className}
     data-disabled={disabled}
     data-directory={directory}
 
@@ -75,12 +89,12 @@ const Button = ({
       data-directory={directory}
       data-variant={variant}
       data-size={size}
-      onClick={action}
+      onClick={once(action, {})}
       {...props}
     >
       {(width && width < 1025 && trimText && typeof text === "string") ? text.split(' ')[0] : text}
     </a>
   )
-}
+})
 
 export default Button

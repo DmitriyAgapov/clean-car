@@ -13,7 +13,7 @@ import FormRestore from 'components/Form/FormRestore/FormRestore'
 function RestorePasswordPage() {
   const store = useStore()
   useEffect(() => {
-    store.appStore.setAppRouteName('.авторизация')
+    store.appStore.setAppRouteName('.восстановление пароля')
   }, [store.appStore.token])
 
   return (

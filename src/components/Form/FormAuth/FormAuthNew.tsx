@@ -11,7 +11,8 @@ import { createFormActions, createFormContext } from '@mantine/form'
 import {  SignInSchema } from 'utils/validationSchemas'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { SvgClose } from 'components/common/ui/Icon'
-import { notifications } from '@mantine/notifications';
+import { notifications } from '@mantine/notifications'
+import { useNavigate, useNavigation } from 'react-router-dom'
 interface InitValues  {
   email: string
   password: string
@@ -21,6 +22,7 @@ export const createLimitFormActions = createFormActions<InitValues>('formAuthNew
 
 const FormAuthNew = () => {
   const store = useStore()
+  const navigate = useNavigate()
   const formData = useForm({
     name: 'formAuthNew',
     // mode: 'uncontrolled',
@@ -41,18 +43,17 @@ const FormAuthNew = () => {
     }
     store.authStore.setEmail(values.email)
     store.authStore.setPassword(values.password)
-    return  await store.authStore.login().then(r => console.log(r, 'login')).catch(e => console.log(e, 'loginEr'))
-      // return  agent.Auth.login({email: values.email.toLowerCase(), password: values.password})
-      // .then((r:any) => {
-      //   if(r.status === 201) {
-      //     console.log('success');
-      //     // mutate(`limits`)
-      //     // navigate(`/account/limits/${r.data?.company}/${r.data?.id}`)
-      //   } else {
-      //     console.log(r)
-      //   }
-      // })
-      //   .catch(e => console.log(e))
+    return store.authStore.login()
+    // .then((r:any) => {
+    //     if(r.status === 200) {
+    //       console.log('success');
+    //       // mutate(`limits`)
+    //       navigate(`/account/bids`)
+    //     } else {
+    //       console.log(r)
+    //     }
+    //   })
+    //     .catch(e => console.log(e))
 
 
   }, [])

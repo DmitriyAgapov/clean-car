@@ -354,7 +354,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           await store.bidsStore.sendFiles(formData.values.photo_new, true).then(() =>
             store.bidsStore.formCreateBid()
           .then((res) => {
-            if (res.status !== 201) {
+            if (res && res.status !== 201) {
               notifications.show({
                 id: 'bid-created_error',
                 withCloseButton: true,

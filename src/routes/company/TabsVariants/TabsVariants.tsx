@@ -634,6 +634,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                   "1": "Исполнитель",
                   "2": "Разница"
               }
+              console.log(store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read'), 'asdsd');
               return (
                   <>
                       <SimpleGrid cols={tableParams.cols} spacing={8} className={'mb-6 items-start flex-1 content-start tablet-max:flex tablet-max:flex-col'}>
@@ -650,7 +651,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                                   className={'text-gray-2 font-medium text-xss'}
                                   style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
                               >Стоимость</Box>
-                          ) : (
+                          ) : store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && (
                               <>
                                   <Box
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}

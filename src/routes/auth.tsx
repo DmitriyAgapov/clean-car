@@ -3,15 +3,14 @@ import Layout from 'components/common/layout/Layout/Layout'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor,  PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import FormAuth from 'components/Form/FormAuth/FormAuth'
 import { useStore } from 'stores/store'
-import { observer } from 'mobx-react-lite'
 import { Navigate, useLocation } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
-import FormAuthNew from "components/Form/FormAuth/FormAuthNew";
-import {Notification} from "@mantine/core"
+import FormAuthNew from 'components/Form/FormAuth/FormAuthNew'
+import { observer } from 'mobx-react-lite'
+
 function AuthPage() {
   const store = useStore()
   const location = useLocation()
@@ -34,14 +33,7 @@ function AuthPage() {
         <Panel
           footerClassName={'mt-16'}
           className={'!col-span-6  desktop-max:!col-span-full w-full max-w-lg  tablet:px-6 tablet:justify-self-center desktop:justify-self-auto'}
-          header={
-            <Heading
-              text={'Вход в систему'}
-              variant={HeadingVariant.h1}
-              className={'desktop:!text-6xl tablet:!text-4xl mobile:!text-4xl !leading-snug !font-extrabold '}
-              color={HeadingColor.accent}
-            />
-          }
+          header={<Heading text={'Вход в систему'} variant={HeadingVariant.h1} className={'desktop:!text-6xl tablet:!text-4xl mobile:!text-4xl !leading-snug !font-extrabold '} color={HeadingColor.accent} />}
           footer={<LinkStyled text={'У меня нет аккаунта'} to={'/register'} />}
         >
           <p className={'!mb-4'}>

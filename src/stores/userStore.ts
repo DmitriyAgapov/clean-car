@@ -150,18 +150,20 @@ export class UserStore {
     if(authStore.userIsLoggedIn && appStore.token !== "") {
       try {
         if(this.isAdmin) {
-          // console.log('Create admin permissions');
+          console.log('Create admin permissions');
+          console.log(this.myProfileData.permissions);
           appStore.setAppType(UserTypeEnum.admin)
-          for (let permissionNameKey in PermissionNames) {
-            // @ts-ignore
-            ar.set(PermissionNames[permissionNameKey], {
-              read: true,
-              create: true,
-              delete: true,
-              name: permissionNameKey,
-              update:true
-            })
-          }
+          this.myProfileData.permissions.forEach((el:any) => ar.set(el.name, el))
+          // for (let permissionNameKey in PermissionNames) {
+          //   // @ts-ignore
+          //   ar.set(PermissionNames[permissionNameKey], {
+          //     read: true,
+          //     create: true,
+          //     delete: true,
+          //     name: permissionNameKey,
+          //     update:true
+          //   })
+          // }
         } else {
           const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
           appStore.setAppType(type)

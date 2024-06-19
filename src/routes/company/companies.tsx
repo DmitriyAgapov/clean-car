@@ -58,7 +58,7 @@ const CompaniesPage = () => {
             <Heading
               text={'Компании'}
               variant={HeadingVariant.h1}
-              className={'inline-block'}
+              className={'inline-block  !mb-0'}
               color={HeadingColor.accent}
             />
             {store.userStore.getUserCan(PermissionNames["Компании"], 'create') && <Button
