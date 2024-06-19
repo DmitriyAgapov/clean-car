@@ -28,6 +28,7 @@ const BidImg = ({ item, containerClassName, closeBtn = true, closeAction, ...pro
                 // loading={'lazy'}
                 // style={{opacity: visible ? 0 : 1}}
                 src={item}
+                style={{touchAction: "pinch-zoom"}}
                 onLoad={close}
 
                 alt={String(item.name)}
