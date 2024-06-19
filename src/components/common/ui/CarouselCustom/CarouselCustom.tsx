@@ -58,26 +58,25 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 						onSwiper={setControlledSwiper}
 					>
 						{items.map((i) => (
-							<SwiperSlide
-								key={i.id}
+							<SwiperSlide key={i.id}
 								// className={'relative overflow-hidden'}
 								// style={{ aspectRatio: '1/1' }}
 
 								// onTouchEnd={(event) => console.log(event)}
 							>
-								<BidImg
-									containerClassName={'tablet-max:flex tablet-max:justify-center  tablet-max:items-end'}
-									item={i}
-									closeBtn={false}
-									// mih={'10rem'}
-									miw={'100%'}
-									// h={'100%'}
-									style={{ objectFit: 'contain', cursor: 'pointer' }}
-									mah={'60lvh'}
-									className={''}
-								/>
+								<div className={"swiper-zoom-container"}>
+									<BidImg containerClassName={"tablet-max:flex tablet-max:justify-center  tablet-max:items-end"}
+										item={i}
+										closeBtn={false}
+										// mih={'10rem'}
+										miw={"100%"}
+										// h={'100%'}
+										style={{ objectFit: "contain", cursor: "pointer" }}
+										mah={"60lvh"}
+										className={""} />
+								</div>
 							</SwiperSlide>
-						))}
+							))}
 					</Swiper>
 
 					{/* <Image */}
@@ -134,7 +133,9 @@ const CarouselCustom = ({items, closeBtn = true}:{items:any [], closeBtn: boolea
 		return items.map((i:any) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} style={{aspectRatio: "1/1"}} onClick={(event) => {
 			open()
 			}}>
+			<div className={'swiper-zoom-container'}>
 					<BidImg item={i} closeBtn={closeBtn} mih={'10rem'} mah={'80lvh'}  miw={'100%'} h={'100%'} style={{objectFit: "cover", cursor: "pointer", aspectRatio: "1/1"}} maw={'10rem'} />
+			</div>
 			</SwiperSlide>
 		)
 	}, [items])
