@@ -10,11 +10,8 @@ import DataFilter from 'components/common/layout/TableWithSort/DataFilter'
 import TableSearch from 'components/common/layout/TableWithSort/TableSearch'
 import { useDebouncedState } from '@mantine/hooks'
 import label from 'utils/labels'
-import { useWindowDimensions } from 'utils/utils'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { UserTypeEnum } from "stores/userStore";
 import { CompanyType } from "stores/companyStore";
-import { useStore } from "stores/store";
 import { observer } from "mobx-react-lite";
 
 type TableWithSortProps = {
@@ -148,7 +145,7 @@ const RowData = (props: any) => {
         return ar
     }
     // @ts-ignore
-    const {width} = useWindowDimensions()
+    const {width} = useViewportSize()
 
     const [open, setOpen] = useState(false);
     return (

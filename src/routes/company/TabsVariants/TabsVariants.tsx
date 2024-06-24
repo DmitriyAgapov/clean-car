@@ -465,19 +465,32 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 service: { label: null, values: [], unit: '₽' }, options: [], role: store.appStore.appType, count: data.price_positions.performer.length,
                 calc: function() {
                   const el = data.price_positions.performer;
+                  let initVal = 0
+                  console.log(el);
+                  let totalPercentUp = data.price_positions.performer.reduce((acc:number, val:any) => val.unit === "%" ? acc + val.amount : acc, initVal)
 
                   if(this.role === "performer") {
                     for(let i = 0; el.length > i; i++) {
-                      const _performerValue = parseFloat(el[i].amount)
+                      const _performerValue = parseFloat(el[i].amount) + (parseFloat(el[i].amount) * totalPercentUp) / 100
                       if(el[i].name === serviceName)  {
                         this.service.label = el[i].name;
                         const _ar = []
-                        _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+
+                        _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)  + (parseFloat(el[i].amount) * totalPercentUp) / 100
                         this.service.values = _ar
-                      } else  {
+                      } else if(el[i].unit === "%")  {
                         this.service.label = data.service_subtype.name
                         const _ar = []
-                        _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)
+                        _performerValue && _ar.push((Math.round(_performerValue * 100) / 100) + (Math.round((_performerValue * totalPercentUp) / 100) * 100) / 100)
+                        this.options.push({
+                          label: el[i].name.replace(serviceName_exclude, ''),
+                          values: _ar,
+                          unit: el[i].unit,
+                        })
+                      }  else  {
+                        this.service.label = data.service_subtype.name
+                        const _ar = []
+                        _performerValue && _ar.push(Math.round(_performerValue * 100) / 100)  + (parseFloat(el[i].amount) * totalPercentUp) / 100
                         this.options.push({
                           label: el[i].name.replace(serviceName_exclude, ''),
                           values: _ar,
@@ -534,8 +547,8 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                   if(this.role === "admin") {
                     if(data.service_percent === null) {
                       for(let i = 0; el.length > i; i++) {
-                        const _performerValue = parseFloat(el[i].amount)
-                        const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                        const _performerValue = parseFloat(el[i].amount)  + (parseFloat(el[i].amount) * totalPercentUp) / 100
+                        const _customerValue = parseFloat(data.price_positions.customer[i].amount)  + (parseFloat(data.price_positions.customer[i].amount) * totalPercentUp) / 100
                         if(el[i].name === serviceName)  {
                           this.service.label = el[i].name;
                           const _ar = []
@@ -544,7 +557,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
                           this.service.values = _ar
                         } else  {
-                          const _customerValue = parseFloat(data.price_positions.customer[i].amount)
+                          const _customerValue = parseFloat(data.price_positions.customer[i].amount) + parseFloat(data.price_positions.customer[i].amount) * totalPercentUp / 100
                           this.service.label = data.service_subtype.name
                           const _ar = []
                           _ar.push(Math.round(_customerValue * 100) / 100)
@@ -558,10 +571,10 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                         }
                       }
                     } else {
-                      let _customerValue = parseFloat(data.price_positions.customer[0]?.amount)  ?? null
+                      let _customerValue = parseFloat(data.price_positions.customer[0]?.amount) + parseFloat(data.price_positions.customer[0]?.amount) * totalPercentUp / 100  ?? null
                       for(let i = 0; el.length > i; i++) {
 
-                        const _performerValue = parseFloat(el[i].amount)
+                        const _performerValue = parseFloat(el[i].amount) +  parseFloat(el[i].amount) * totalPercentUp / 100
                         if(isNaN(_customerValue)) {
                           _customerValue = _performerValue * (1 + data.service_percent / 100)
                         }
@@ -573,7 +586,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           this.service.label = el[i].name;
                           this.service.values = _ar
                         } else  {
-                          let _customerValue = parseFloat(data.price_positions.customer[i]?.amount)
+                          let _customerValue = parseFloat(data.price_positions.customer[i]?.amount)  + parseFloat(data.price_positions.customer[i]?.amount) * totalPercentUp / 100
                           if(isNaN(_customerValue)) {
                             _customerValue = _performerValue * (1 + data.service_percent / 100)
                           }
@@ -592,6 +605,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     }
                     return this
                   }
+
                 }
               }
 

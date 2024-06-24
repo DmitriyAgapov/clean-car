@@ -1,4 +1,4 @@
-import { action, autorun, makeAutoObservable, observable, reaction } from "mobx";
+import { action, autorun, computed, makeAutoObservable, observable, reaction } from 'mobx'
 import { ReactNode } from "react";
 import userStore, { UserTypeEnum } from "./userStore";
 import { PermissionName, Permissions } from "stores/permissionStore";
@@ -57,6 +57,15 @@ export class AppStore {
         action(() => authStore.logout())
       }
     })
+    reaction(() => this.bodyRef,
+      (bodyRef) => {
+
+          // this.font = this.fontSizeBody
+        console.log('fsC',bodyRef);
+
+      // console.log('fs',fontSize);
+
+    })
     reaction(() => this.appType,
       (appType => {
         let ar:any = new Map([]);
@@ -95,6 +104,7 @@ export class AppStore {
   appName = 'CleanCar'
   appRouteName = '.авторизация'
   appTheme = 'dark'
+  font: number = Number(window.getComputedStyle(document.getElementsByTagName('html')[0]).getPropertyValue('font-size').replaceAll('px', ""))
   token = window.localStorage.getItem('jwt')
   tokenRefresh = window.localStorage.getItem('jwt_refresh')
   appPermissions?: Permissions[]
@@ -124,6 +134,17 @@ export class AppStore {
   get AppState() {
     return this.appState
   }
+  get fontSizeBody() {
+    console.log(this.font);
+    return this.font
+  }
+fontSizeBodyCalc() {
+    const _fSize = Number(window.getComputedStyle(document.getElementsByTagName('html')[0]).getPropertyValue('font-size').replaceAll('px', ""))
+    action(() => this.font = Math.floor(_fSize))
+    return Math.floor(_fSize)
+  }
+
+
   setAppState(state: boolean) {
     this.appState = state
   }

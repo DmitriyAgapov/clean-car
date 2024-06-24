@@ -243,12 +243,11 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                         <>
                             <Button
                                 text={"Завершить заявку"}
+                                isOnce={false}
                                 variant={ButtonVariant.accent}
-                                type={'button'}
-
                                 size={btnSize}
                                 action={() => {
-                                  console.log(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0);
+                                  console.log(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0, 'after');
                                   if(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0) {
                                     console.log('no photo');
                                     store.bidsStore.setActiveTab("Фото")

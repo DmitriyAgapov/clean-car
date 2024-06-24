@@ -610,6 +610,7 @@ export class BidsStore {
         Promise.all(fd).then((res: any) => runInAction(() => (this.photo.photosPreviewAr = res)))
     }
     async sendFiles(files: File[], state: boolean, bid_id?: string, company_id?: string) {
+        console.log(files, state, bid_id, company_id);
         async function* uploadFiles(this: BidsStore) {
             let i = 0;
             let result: any = null;

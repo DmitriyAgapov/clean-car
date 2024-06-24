@@ -6,7 +6,7 @@ import label from "utils/labels";
 import styles from "components/common/layout/TableWithSort/TableWithSort.module.scss";
 import Chips from "components/common/ui/Chips/Chips";
 import Status from "components/common/ui/Status/Status";
-import { useWindowDimensions } from "utils/utils";
+import {  useViewportSize } from '@mantine/hooks'
 import { SvgChevron } from "components/common/ui/Icon";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { observer } from "mobx-react-lite";
@@ -14,13 +14,14 @@ import { BidStatus } from "utils/schema";
 import { BidsStatus } from 'stores/bidsStrore'
 import { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
 import { NumberFormatter } from "@mantine/core";
-import { useLocalStore } from "stores/localStore";
+import { useLocalStore } from 'stores/localStore'
+import { useElementSize } from "@mantine/hooks";
+import { useStore } from "stores/store";
 
 
 const RowData = observer((props: any) => {
 	const navigate = useNavigate()
 	const location = useLocation()
-	const localStore = useLocalStore()
 
 	const querys = React.useCallback(() => {
 		let queryString = ''
@@ -138,17 +139,25 @@ const RowData = observer((props: any) => {
 		return ar
 	}, [props])
 
-	const {width} = useWindowDimensions()
+	const {width} = useViewportSize()
 	const [open, setOpen] = useState(false);
-
+	const rowPart = React.useMemo(() => {
+		const res :any [] = []
+		if(width && width < 745) res.push(<td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
+		<SvgChevron  onClick={() => setOpen(prevState => !prevState)}/>
+	</td>)
+		if(width && width < 745 && props?.attributes?.has_child !== false)  res.push(<td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>)
+		return res
+	}, [width, props])
 	return (
-		<tr className={styles.tableRow} onClick={(width && width > 744) ? handleClick : () => setOpen(prevState => !prevState)} data-state-mobile={open}>
-			{propsRender}
-			{(width && width < 745) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
-        <SvgChevron  onClick={() => setOpen(prevState => !prevState)}/>
-      </td>}
-			{(width && width < 745 && props?.attributes?.has_child !== false) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm} action={handleClick}/></td>}
-		</tr>
-	)
+        <tr
+            className={styles.tableRow}
+            onClick={width && width > 744 ? handleClick : () => setOpen((prevState) => !prevState)}
+            data-state-mobile={open}
+        >
+            {propsRender}
+            {rowPart}
+        </tr>
+    )
 })
 export default RowData

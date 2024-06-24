@@ -12,7 +12,7 @@ import { observer } from 'mobx-react-lite'
 import { TableSearchParams, TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
 import { Status } from 'utils/schema'
 import { CarType } from "stores/carStore";
-import { logger, useWindowDimensions } from "utils/utils";
+import { useViewportSize } from '@mantine/hooks'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { keys, toJS } from 'mobx'
 
@@ -33,7 +33,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
 
 
     const params = values
-    const { width } = useWindowDimensions()
+    const { width } = useViewportSize()
     const portalState = React.useMemo(() => {
         return width && width > 740 ? true : false
     }, [width])

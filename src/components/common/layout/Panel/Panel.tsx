@@ -1,5 +1,7 @@
+import { useElementSize } from '@mantine/hooks'
 import React, { forwardRef, ReactNode } from "react";
 import styles from './Panel.module.scss'
+import { useLocalStore } from "stores/localStore";
 
 export enum PanelVariant {
     default = 'default',
@@ -80,10 +82,15 @@ const Panel = forwardRef(function Panel({
     variant = PanelVariant.default,
     background = PanelColor.default,
     className = '',
-}: PanelProps, ref){
+}: PanelProps,
+  refBody:any
+){
+
     if (state) return null
+
     return (
         <div
+
             onClick={action}
             className={styles.Panel + '  ' + className}
             data-style={routeStyle}
@@ -96,7 +103,7 @@ const Panel = forwardRef(function Panel({
                 </header>
             )}
             {children && (
-            <div className={styles.panelBody + ' ' + bodyClassName} data-panel={'body'}>
+            <div         ref={refBody} className={styles.panelBody + ' ' + bodyClassName} data-panel={'body'}>
                 {children}
             </div>)}
             {footer && (

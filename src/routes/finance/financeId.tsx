@@ -120,7 +120,7 @@ const FinaceIdPage = () => {
               className={'col-span-full table-groups'}
               initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
               filter={true}
-              state={isLoading}
+              state={false}
               ar={[
                   { label: 'Компания', name: 'company' },
                   { label: 'Шиномонтаж', name: 'tire' },
@@ -129,51 +129,51 @@ const FinaceIdPage = () => {
                   { label: 'Всего', name: 'total' },
               ]}
           />
-          <Panel variant={PanelVariant.suffixFooter} background={PanelColor.withSuffix}>
-              <ul className={'finance_total_headers col-span-2'}>
-                  <li className={'text-accent uppercase'}>{store.appStore.appType ==="admin" ? "Прибыль" : "Итог"}</li>
-              </ul>
-              <ul className={'finance_total_tire'} data-content-type={'values'}>
-                  <li className={'text-accent uppercase'}>
-                      <NumberFormatter
-                          className={'text-accent'}
-                          thousandSeparator={' '}
-                          suffix=' ₽'
-                          value={data?.total.tire_total_sum}
-                      />
-                  </li>
-              </ul>
-              <ul className={'finance_total_wash'} data-content-type={'values'}>
-                  <li className={'text-accent uppercase'}>
-                      <NumberFormatter
-                          className={'text-accent'}
-                          thousandSeparator={' '}
-                          suffix=' ₽'
-                          value={data?.total.wash_total_sum}
-                      />
-                  </li>
-              </ul>
-              <ul className={'finance_total_evac'} data-content-type={'values'}>
-                  <li className={'text-accent uppercase'}>
-                      <NumberFormatter
-                          className={'text-accent'}
-                          thousandSeparator={' '}
-                          suffix=' ₽'
-                          value={data?.total.evac_total_sum}
-                      />
-                  </li>
-              </ul>
-              <ul className={'finance_total'} data-content-type={'values'}>
-                  <li className={'text-accent uppercase'}>
-                      <NumberFormatter
-                          className={'text-accent'}
-                          thousandSeparator={' '}
-                          suffix=' ₽'
-                          value={data?.total.total_sum}
-                      />
-                  </li>
-              </ul>
-          </Panel>
+          {/* <Panel variant={PanelVariant.suffixFooter} background={PanelColor.withSuffix}> */}
+          {/*     <ul className={'finance_total_headers col-span-2'}> */}
+          {/*         <li className={'text-accent uppercase'}>{store.appStore.appType ==="admin" ? "Прибыль" : "Итог"}</li> */}
+          {/*     </ul> */}
+          {/*     <ul className={'finance_total_tire'} data-content-type={'values'}> */}
+          {/*         <li className={'text-accent uppercase'}> */}
+          {/*             <NumberFormatter */}
+          {/*                 className={'text-accent'} */}
+          {/*                 thousandSeparator={' '} */}
+          {/*                 suffix=' ₽' */}
+          {/*                 value={data?.total.tire_total_sum} */}
+          {/*             /> */}
+          {/*         </li> */}
+          {/*     </ul> */}
+          {/*     <ul className={'finance_total_wash'} data-content-type={'values'}> */}
+          {/*         <li className={'text-accent uppercase'}> */}
+          {/*             <NumberFormatter */}
+          {/*                 className={'text-accent'} */}
+          {/*                 thousandSeparator={' '} */}
+          {/*                 suffix=' ₽' */}
+          {/*                 value={data?.total.wash_total_sum} */}
+          {/*             /> */}
+          {/*         </li> */}
+          {/*     </ul> */}
+          {/*     <ul className={'finance_total_evac'} data-content-type={'values'}> */}
+          {/*         <li className={'text-accent uppercase'}> */}
+          {/*             <NumberFormatter */}
+          {/*                 className={'text-accent'} */}
+          {/*                 thousandSeparator={' '} */}
+          {/*                 suffix=' ₽' */}
+          {/*                 value={data?.total.evac_total_sum} */}
+          {/*             /> */}
+          {/*         </li> */}
+          {/*     </ul> */}
+          {/*     <ul className={'finance_total'} data-content-type={'values'}> */}
+          {/*         <li className={'text-accent uppercase'}> */}
+          {/*             <NumberFormatter */}
+          {/*                 className={'text-accent'} */}
+          {/*                 thousandSeparator={' '} */}
+          {/*                 suffix=' ₽' */}
+          {/*                 value={data?.total.total_sum} */}
+          {/*             /> */}
+          {/*         </li> */}
+          {/*     </ul> */}
+          {/* </Panel> */}
       </Section>
   )
 }

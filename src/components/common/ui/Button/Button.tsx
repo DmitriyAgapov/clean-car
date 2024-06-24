@@ -1,7 +1,8 @@
 import React, { EventHandler, ReactNode } from 'react'
 import styles from './Button.module.scss'
-import { useWindowDimensions } from "utils/utils";
+import {  useViewportSize } from '@mantine/hooks'
 import { Button as Btn } from '@mantine/core';
+import { useWindowDimensions } from "utils/utils";
 export enum ButtonVariant {
   tech = 'tech',
   default = 'default',
@@ -36,12 +37,12 @@ export type ButtonProps = {
   trimText?: boolean
   disabled?: boolean
   href?: string
+  isOnce?: boolean
   type?: string
   directory?: ButtonDirectory
 }
-function once(fn:any, context:any) {
+function once(fn:any, context?:any) {
   let result:any;
-
   return function():any {
     if(fn) {
       console.log('once');
@@ -62,19 +63,23 @@ const Button = React.forwardRef(({
   disabled = false,
   type,
   trimText,
+  isOnce = true,
   variant = ButtonVariant.default,
   action,
   ...props
 }: ButtonProps, ref: React.ForwardedRef<any>) => {
   const {width} = useWindowDimensions()
+  const handleAction = () => {
+    if(isOnce) return once(action)
+    return action
+  }
 
-
-  if(type === 'submit') return  <button type={'submit'} onClick={once(action, {})} className={styles.Button + ' ' + className}
+  if(type === 'submit') return  <button type={'submit'} onClick={action} className={styles.Button + ' ' + className}
     data-directory={directory}
     disabled={disabled}
     data-variant={variant}
     data-size={size}> {text}</button>
-  if(type === 'button') return  <Btn  ref={ref} type={'button'} onClick={once(action, {})} className={styles.Button + ' ' + className}
+  if(type === 'button') return  <Btn ref={ref}  type={'button'} onClick={action} className={styles.Button + ' ' + className}
     data-disabled={disabled}
     data-directory={directory}
 
@@ -89,7 +94,7 @@ const Button = React.forwardRef(({
       data-directory={directory}
       data-variant={variant}
       data-size={size}
-      onClick={once(action, {})}
+      onClick={action}
       {...props}
     >
       {(width && width < 1025 && trimText && typeof text === "string") ? text.split(' ')[0] : text}

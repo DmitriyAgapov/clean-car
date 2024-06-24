@@ -3,12 +3,14 @@ import { Image, Modal } from '@mantine/core'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
 import 'swiper/css'
+
 import { observer } from 'mobx-react-lite'
 import BidImg from 'components/common/layout/Modal/BidImg'
 import { useDisclosure, useViewportSize } from '@mantine/hooks'
 import styles from 'components/common/layout/Modal/Modal.module.scss'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import { Controller } from 'swiper/modules'
+import { Controller, Zoom } from 'swiper/modules'
+import 'swiper/css/zoom';
 const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => void, items: any[]}) => {
 
 	const [controlledSwiper, setControlledSwiper] = useState<any>(null);
@@ -50,8 +52,9 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 					<Swiper
 						spaceBetween={20}
 						slidesPerView={1}
-						modules={[Controller]}
+						modules={[Controller, Zoom]}
 						autoHeight
+						zoom={true}
 						// on={{
 						// 	sliderMove: (swiper:any,event:any) => console.log(event, swiper)}}
 						onSlideChange={(event: any) => setInd(event.activeIndex)}
@@ -64,14 +67,14 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 
 								// onTouchEnd={(event) => console.log(event)}
 							>
-								<div className={"swiper-zoom-container"}>
-									<BidImg containerClassName={"tablet-max:flex tablet-max:justify-center  tablet-max:items-end"}
-										item={i}
-										closeBtn={false}
+								<div className={"swiper-zoom-container"} data-swiper-zoom="5">
+									<Image
+										src={i}
+
 										// mih={'10rem'}
 										miw={"100%"}
 										// h={'100%'}
-										style={{ objectFit: "contain", cursor: "pointer" }}
+										// style={{ objectFit: "contain", cursor: "pointer" }}
 										mah={"60lvh"}
 										className={""} />
 								</div>
@@ -130,11 +133,12 @@ const CarouselCustom = ({items, closeBtn = true}:{items:any [], closeBtn: boolea
 	const { height, width } = useViewportSize();
 
 	const itemsMemoized = React.useMemo(() => {
+
 		return items.map((i:any) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} style={{aspectRatio: "1/1"}} onClick={(event) => {
 			open()
 			}}>
-			<div className={'swiper-zoom-container'}>
-					<BidImg item={i} closeBtn={closeBtn} mih={'10rem'} mah={'80lvh'}  miw={'100%'} h={'100%'} style={{objectFit: "cover", cursor: "pointer", aspectRatio: "1/1"}} maw={'10rem'} />
+			<div className={'swiper-zoom-container'} data-swiper-zoom="5">
+					<Image src={i}  mah={'80lvh'}  w={'100%'} h={'100%'}  style={{objectFit: "cover", cursor: "pointer", aspectRatio: "1/1", flex: "1"}}/>
 			</div>
 			</SwiperSlide>
 		)
@@ -147,7 +151,8 @@ const CarouselCustom = ({items, closeBtn = true}:{items:any [], closeBtn: boolea
 		<>
 			<Swiper spaceBetween={20}
 				slidesPerView={width < 739 ? 1 : 3}
-				modules={[Controller]}
+				modules={[Controller, Zoom]}
+				zoom={true}
 				// on={{
 				// 	sliderMove: (swiper:any,event:any) => console.log(event, swiper)}}
 				onSlideChange={(event: any) => setInd(event.activeIndex)}

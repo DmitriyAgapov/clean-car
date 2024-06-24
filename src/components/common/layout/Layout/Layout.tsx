@@ -9,13 +9,14 @@ import Burger from 'components/common/ui/Burger/Burger'
 import '../../../../assets/styles.scss'
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
-import { useNavigatorOnLine, useWindowDimensions } from 'utils/utils'
+import { useNavigatorOnLine } from 'utils/utils'
 import { LoadingOverlay } from '@mantine/core'
 import { SvgCleanCarLoader, SvgDisconnect } from 'components/common/ui/Icon'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import Errors from "components/common/layout/Errors/Errors";
+import Errors from 'components/common/layout/Errors/Errors'
+import { useViewportSize } from '@mantine/hooks'
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -51,7 +52,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   const store = useStore()
   const isOnline = useNavigatorOnLine()
   const loc = useLocation()
-  const {width} = useWindowDimensions();
+  const { width } = useViewportSize();
   // console.log('st', (navigation.state === "idle" || store.appStore.getAppState) ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true );
   const { appStore, userStore, authStore } = store;
   if (!store.appStore.getNetWorkStatus)
@@ -109,8 +110,8 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               visible={store.appStore.AppState}
               loaderProps={{ children: <SvgCleanCarLoader /> }}
           />
-          <main className={'!contents'}>{children}</main>
-        {width && width < 1300 && width > 960 && <Footer className={'flex desktop:!hidden !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+          <main>{children}</main>
+       <Footer className={'flex desktop:!hidden lg-to-desktop:block !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
           <div>
 
             <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
@@ -119,8 +120,8 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           <hr className={'mt-3 mb-2 -mr-8 border-accent'} />
 
           <Link to={'/policy'}  className={'text-xs hover:text-accent'}>Политика конфиденциальности</Link>
-        </Footer>}
-          <Footer className={'desktop:flex hidden  tablet:px-6'}>
+        </Footer>
+          <Footer className={'!hidden  tablet:px-6'}>
               {footerContent}
               <div>2023 (c.)</div>
               <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} to={'/policy'}></LinkStyled>

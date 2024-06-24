@@ -1,10 +1,9 @@
 import React, {  useState } from "react";
 import styles from "./TableWithSort.module.scss";
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import { SvgChevron, SvgLoading, SvgSort } from "components/common/ui/Icon";
-import Chips from "components/common/ui/Chips/Chips";
+import { SvgChevron } from "components/common/ui/Icon";
 import label from "utils/labels";
-import { useWindowDimensions } from "utils/utils";
+import { useViewportSize } from '@mantine/hooks'
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { NumberInput, Table } from "@mantine/core";
 import { number } from "yup";
@@ -75,7 +74,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
       return _type
     })()
 
-    const {width} = useWindowDimensions()
+    const {width} = useViewportSize()
     const [open, setOpen] = useState(false);
 
     const propsRender = React.useMemo(() => {

@@ -18,7 +18,7 @@ import { useDidUpdate } from "@mantine/hooks";
 import dayjs from "dayjs";
 
 const localRootStore =  new LocalRootStore()
-localRootStore.params.setSearchParams({ordering: 'status'})
+localRootStore.params.setSearchParams({ordering: '-created'})
 
 const BidsPage = () => {
 	const store = useStore()
@@ -27,10 +27,12 @@ const BidsPage = () => {
 	const textData = store.bidsStore.text
 	const params = useParams()
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+	const count = localStore.params.getItemsCount
 
-	const {isLoading, data, mutate} = useSWR(['bids', {...localStore.params.getSearchParams}] , ([url, args]) => store.bidsStore.loadBids(args), {}
+	const {isLoading, data, mutate} = useSWR(localStore.params.getItemsCount ? ['bids', {...localStore.params.getSearchParams}] : null , ([url, args]) => store.bidsStore.loadBids(args), {}
 		// {refreshInterval: 10000}
 	)
+
 	useDidUpdate(
 		() => {
 			console.log(location.pathname);
@@ -41,6 +43,7 @@ const BidsPage = () => {
 		[location.pathname]
 	);
 	useEffect(() => {
+
 		localStore.setData = {
 			...data,
 			results: data?.results?.map((r:any) => ({
@@ -130,7 +133,7 @@ const BidsPage = () => {
 							className={'col-span-full table-groups table-bids'}
 							filter={true}
 							initFilterParams={[FilterData.city, FilterData.bidStatus, FilterData.service_type, FilterData.start_date, FilterData.end_date]}
-							state={localStore.setIsLoading}
+							state={localStore.params.getIsReady}
 							ar={th}
 				/>
 		</Section>

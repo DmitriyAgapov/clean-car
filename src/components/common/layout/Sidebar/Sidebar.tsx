@@ -4,7 +4,7 @@ import styles from './Sidebar.module.scss'
 import { SectionType } from '../Section/Section'
 import { useStore } from "stores/store";
 import { Observer, observer } from "mobx-react-lite";
-import { useWindowDimensions } from "utils/utils";
+import {  useViewportSize } from '@mantine/hooks'
 import Logo from "components/common/layout/Logo/Logo";
 import Footer from "components/common/layout/Footer/Footer";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
@@ -152,7 +152,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
   const location = useLocation()
   const store = useStore()
   const {appStore} = store
-  const {width} = useWindowDimensions()
+  const {width} = useViewportSize()
   const [routes, setRoutes] = React.useState<any[]>([])
 
   React.useEffect(() => {
@@ -200,7 +200,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
                   </ul>
               </nav>
               {children}
-            {width && (width > 1299 || width < 960) && <Footer className={'block desktop:!hidden pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+            {width && (width > 1299 || width < 960) && <Footer className={'block  overflow-hidden pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
                   <div>
                     <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'} onClick={() => store.appStore.setAsideClose()}/>
                   </div>

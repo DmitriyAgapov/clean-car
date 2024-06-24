@@ -25,6 +25,7 @@ const FinanceBottom = observer((props: { data: any }) => {
     const { width, height } = useViewportSize()
     const store = useStore()
     const [open, setOpen] = React.useState<boolean>(false);
+    if(!width) return <div className={'hidden'}/>
     if (width < 1024) {
         return (
           <Panel
@@ -177,10 +178,7 @@ const FinanceBottom = observer((props: { data: any }) => {
           </Panel>
         )
     }
-    return (
-        <>
-
-            <Panel variant={PanelVariant.suffixFooter}
+    return (<Panel variant={PanelVariant.suffixFooter}
               background={PanelColor.withSuffix}>
                 <ul className={"finance_total_headers col-span-2"}>
                     <li>
@@ -301,7 +299,7 @@ const FinanceBottom = observer((props: { data: any }) => {
                     </li>
                 </ul>
             </Panel>
-        </>
+
     )
 })
 
@@ -309,12 +307,6 @@ const FinacePage = () => {
   const location = useLocation()
   const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
   const store = useStore()
-
-  const _p = localStore.params.getSearchParams
-  React.useEffect(() => {
-    console.log(_p);
-    console.log(new Date().getMonth())
-  }, [_p])
   const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getReport(undefined,args))
 
   useEffect(() => {

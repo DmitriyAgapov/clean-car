@@ -2,7 +2,9 @@
   border-radius: 1.25rem;
   grid-column: 2/span 2;
   padding:2rem 0 0;
-
+	footer {
+	  grid-column: initial;
+	}
 
   &[data-state="true"] {
 	transform: translateX(0);
@@ -31,6 +33,9 @@
 	}
   }
   @screen desktop {
+	display: grid;
+	align-content: space-between;
+	grid-row: span 2;
 	& + section {
 	  grid-column: 4/-2;
 	  grid-row: span 2;

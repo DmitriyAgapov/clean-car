@@ -3,7 +3,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  margin-bottom: clamp(1rem, 100%, 2rem);
+  //margin-bottom: clamp(1rem, 100%, 2rem);
   @media screen and (min-width: 1300px) {
 	grid-column: 2/-2;
   }

@@ -12,8 +12,7 @@ import RowHeading from "components/common/layout/TableWithSort/TableParts/RowHea
 import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
 import { useStore } from 'stores/store'
-import Button from "components/common/ui/Button/Button";
-import { useWindowDimensions } from "utils/utils";
+import { useElementSize, useWindowEvent, useViewportSize, useDebouncedValue } from '@mantine/hooks'
 
 
 type TableWithSortProps = {
@@ -37,17 +36,18 @@ type TableWithSortProps = {
 export const PaginationComponent = observer(():any => {
   const localStore = useLocalStore<LocalRootStore>()
   const initCount = localStore.countData
-  const {width} = useWindowDimensions()
+  const {width} = useViewportSize()
   const nextPageIsNotExist = localStore.getData?.next
-
+  const pageS = localStore.params.getSearchParams.page_size ?? 1
   return React.useMemo(() => {
     // if(!nextPageIsNotExist && width && width < 1000) return
     // if(width && width < 1000) return <Button text={'Load more'} action={() => localStore.loadMore()}/>
+    // if(localStore.params.searchParams.page_size === undefined) return <div></div>
     return <Pagination classNames={{
       control:
         'hover:border-accent data-[active=true]:border-accent data-[active]:bg-transparent data-[active=true]:text-accent',
     }}
-      total={(initCount &&  Math.ceil(initCount / localStore.params.searchParams.page_size) > 1) ? Math.ceil(initCount / localStore.params.searchParams.page_size) : 0}
+      total={(initCount &&  Math.ceil(initCount / pageS) > 1) ? Math.ceil(initCount / pageS) : 0}
       value={localStore.params.searchParams.page}
       onChange={value => localStore.params.setSearchParams({ page: Number(value) })}
       boundaries={1}
@@ -59,14 +59,38 @@ export const PaginationComponent = observer(():any => {
 
 const TableWithSortNew = observer(({ variant, withOutLoader, search = false,headerBar = true, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
 }: TableWithSortProps) => {
+    const store = useStore()
     const localStore = useLocalStore<LocalRootStore>()
     const rows = toJS(localStore.getData)?.results
     const initCount = localStore.getData?.count || 0
     const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading
+    const { ref: refBody, width, height } = useElementSize();
+    const fontSize = store.appStore.fontSizeBodyCalc()
+    const [heightVal, setHeightVal] = useState(0)
+    const { height:heightV, width:widthV } = useViewportSize();
+    React.useEffect(() => {
+      let initHeight = 0
+      if(height && height > 0 && heightVal === 0) {
+        setHeightVal(height)
+      const footehH = Math.ceil(fontSize * 7)
+      const _height = Math.floor(height - footehH)
+      const _fSize = Math.ceil(fontSize * 3)
+      const  _res = Math.ceil(_height / _fSize);
 
+      if(refBody.current !== null && _height > 0) {
+        if (store.appStore.bodyRef.clientWidth > 960) {
+
+          localStore.params.setItemsCount(_res)
+        } else {
+
+          localStore.params.setItemsCount(10)
+        }
+      }
+      }
+    }, [height, heightV, widthV]);
 
     return (
-        <Panel
+        <Panel ref={refBody} state={false}
             background={background ? background : PanelColor.glass}
             className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto] overflow-hidden'}
             routeStyle={style}
