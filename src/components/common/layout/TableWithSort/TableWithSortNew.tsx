@@ -72,20 +72,20 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
       let initHeight = 0
       if(height && height > 0 && heightVal === 0) {
         setHeightVal(height)
-      const footehH = Math.ceil(fontSize * 7)
-      const _height = Math.floor(height - footehH)
-      const _fSize = Math.ceil(fontSize * 3)
-      const  _res = Math.ceil(_height / _fSize);
-
-      if(refBody.current !== null && _height > 0) {
-        if (store.appStore.bodyRef.clientWidth > 960) {
-
-          localStore.params.setItemsCount(_res)
-        } else {
-
-          localStore.params.setItemsCount(10)
-        }
-      }
+        const footehH = Math.ceil(fontSize * 7);
+        const _height = Math.floor(height - footehH);
+        const _fSize = Math.ceil(fontSize * 3);
+        const  _res = Math.ceil(_height / _fSize);
+        console.log('width, heiught changed', heightV, widthV);
+        (() => {
+          if(refBody.current !== null && _height > 0) {
+            if (store.appStore.bodyRef.clientWidth > 960) {
+              localStore.params.setItemsCount(_res)
+            } else {
+              localStore.params.setItemsCount(10)
+            }
+          }
+        })()
       }
     }, [height, heightV, widthV]);
 

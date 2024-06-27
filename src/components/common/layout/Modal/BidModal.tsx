@@ -21,23 +21,28 @@ const BidModal = (props: { opened: boolean; onClose: () => void; update: () => v
 	const handleChangeBidStatus = React.useCallback(   (status: BidsStatus) => {
 			store.bidsStore.sendFiles(temp, false, params.id, params.company_id)
 				.then(() => {
-				if (params.company_id && params.id) {
-				 store.bidsStore.updateBitStatus(params.company_id, params.id, status, store.bidsStore.PhotoId).then(r =>  {
-					 if(r && r.data) {
-						 console.log('update status', r)
-						 store.bidsStore.clearPhotos()
-			        mutate(`bids/${params.company_id}/${params.id}`)
-			        mutate(`/bids/${params.id}/photos/`)
+					if (params.company_id && params.id) {
+					 store.bidsStore.updateBitStatus(params.company_id, params.id, status, store.bidsStore.PhotoId)
+						 .then(r =>  {
+							 if(r && r.data) {
+								 console.log('update status', r)
+								 store.bidsStore.clearPhotos()
+					        // mutate(`bids/${params.company_id}/${params.id}`)
+					        // mutate(`/bids/${params.id}/photos/`)
+								 props.update()
+								 setTimeout(() => {
+									 props.onClose()
+								 }, 2000)
 
-					 }
-				 })
-				}
+							 }
+						 })
+					}
 				}
 			).finally(() => {
-				mutate(`bids/${params.company_id}/${params.id}`).then(() => console.log('photos'))
-				mutate(`/bids/${params.id}/photos/`).then(() => console.log('photos'))
-				props.update()
-				props.onClose()
+				// mutate(`bids/${params.company_id}/${params.id}`).then(() => console.log('photos'))
+				// mutate(`/bids/${params.id}/photos/`).then(() => console.log('photos'))
+				// props.update()
+				// props.onClose()
 			})
 
 		// 	await  store.bidsStore.sendFiles(temp, false, params.id, params.company_id)

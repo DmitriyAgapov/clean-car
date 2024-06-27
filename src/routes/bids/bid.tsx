@@ -63,13 +63,8 @@ const BidPage = () => {
 	useEffect(() => {
 		store.bidsStore.clearPhotos()
 	}, [params.bid_id])
-	//
-	// useEffect(() => {
-	// 	store.bidsStore.clearPhotos()
-	// }, [data?.status])
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
-	// if (location.pathname !== `/account/references/${textData.path}/`) return <Outlet />
 	const { height, width } = useViewportSize();
 	return (
         <Section type={SectionType.default}>
@@ -93,19 +88,13 @@ const BidPage = () => {
 	                            action={() => navigate('/account/bids')}
                                 variant={ButtonVariant.text}
                             />
-
                             <Heading
                                 text={textData.title}
                                 variant={HeadingVariant.h1}
                                 className={'inline-block !mb-0'}
                                 color={HeadingColor.accent}
                             />
-
                         </div>
-                        {/* {store.userStore.getUserCan(PermissionNames['Управление заявками'], 'create') && (<> */}
-                        {/* 	<Button text={textData.loadExcel} action={() => navigate('create')} trimText={true} className={'inline-flex'} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} /> */}
-                        {/* 	<Button text={textData.create} action={() => navigate('create')} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} /> */}
-                        {/* </>)} */}
                     </>
                 }
             ></Panel>

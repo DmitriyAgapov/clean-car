@@ -29,8 +29,8 @@ const BidsPage = () => {
 	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
 	const count = localStore.params.getItemsCount
 
-	const {isLoading, data, mutate} = useSWR(localStore.params.getItemsCount ? ['bids', {...localStore.params.getSearchParams}] : null , ([url, args]) => store.bidsStore.loadBids(args), {}
-		// {refreshInterval: 10000}
+	const {isLoading, data, mutate} = useSWR(localStore.params.getItemsCount ? ['bids', {...localStore.params.getSearchParams}] : null , ([url, args]) => store.bidsStore.loadBids(args),
+		{refreshInterval: 10000}
 	)
 
 	useDidUpdate(

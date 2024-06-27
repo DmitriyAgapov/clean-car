@@ -61,7 +61,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 						spaceBetween={20}
 						slidesPerView={1}
 						modules={[Controller, Zoom]}
-						// autoHeight
+						autoHeight
 						className={'max-h-svh max-w-6xl'}
 						zoom={true}
 						// on={{
