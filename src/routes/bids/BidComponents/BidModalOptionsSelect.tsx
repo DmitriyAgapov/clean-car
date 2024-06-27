@@ -1,17 +1,14 @@
-import { Input, InputLabel, Modal, Pill, PillsInput, TextInput } from '@mantine/core'
+
 import React from "react";
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { observer } from 'mobx-react-lite'
 import { useStore } from "stores/store";
 import { useFormContext } from "components/Form/FormCreateBid/FormCreateUpdateBid";
-import { Checkbox, FileButton, Group, InputBase, Select,Combobox, Textarea, useCombobox  } from "@mantine/core";
+import { Checkbox, InputLabel, Group, Modal, Pill,Combobox, TextInput, useCombobox  } from "@mantine/core";
 import { action, values as val } from 'mobx'
 import { useDisclosure } from "@mantine/hooks";
-import styles from "components/common/layout/Modal/Modal.module.scss";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { SvgClose } from "components/common/ui/Icon";
-import CarHelper from "components/common/layout/CarHelper/CarHelper";
-const groceries = ['🍎 Apples', '🍌 Bananas', '🥦 Broccoli', '🥕 Carrots', '🍫 Chocolate'];
 
 interface OptionValue {label: string, value: string}
 function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals: any[]}) {
