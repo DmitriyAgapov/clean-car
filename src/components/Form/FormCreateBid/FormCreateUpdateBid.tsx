@@ -22,13 +22,10 @@ import FormBidResult from "routes/bids/FormBidResult/FormBidResult";
 import { UploadedPhotosFirstStep } from "components/common/layout/Modal/UploadedPhotos";
 import { DateTimePicker } from "@mantine/dates";
 import dayjs from "dayjs";
-import {Button as Btn} from "@mantine/core"
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 import { PermissionNames } from "stores/permissionStore";
 import { useSWRConfig } from "swr";
-import Image from "components/common/ui/Image/Image";
 import { CompanyType } from "stores/companyStore";
-import { User } from "stores/userStore";
 import BidModalOptionsSelect from "routes/bids/BidComponents/BidModalOptionsSelect";
 
 interface InitValues {
@@ -121,7 +118,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     });
     const {width} = useViewportSize()
     const store = useStore()
-    const [step, setStep] = useState(2)
+    const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
@@ -137,7 +134,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }
 
     const initData = React.useMemo(() => {
-      let initValues = InitValuesTemp
+      let initValues = InitValues
       if(!edit) {
         store.bidsStore.formResultsClear()
       }
