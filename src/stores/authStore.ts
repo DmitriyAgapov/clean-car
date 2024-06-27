@@ -205,7 +205,7 @@ export class AuthStore {
     //   )
   }
   logout() {
-    action(() => this.userIsLoggedIn = false)
+     this.userIsLoggedIn = false
     appStore.setToken(null)
     appStore.setTokenRefresh(null)
     userStore.forgetUser()

@@ -15,6 +15,7 @@ import useSWR from "swr";
 import { LocalRootStore } from "stores/localStore";
 import { useDidUpdate } from "@mantine/hooks";
 import dayjs from "dayjs";
+import BidModalOptionsSelect from "routes/bids/BidComponents/BidModalOptionsSelect";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({ordering: '-created'})
@@ -86,11 +87,13 @@ const BidsPage = () => {
 		_th.push(..._last)
 		return _th
 	})()
+
 	return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={`${store.appStore.appType !== "admin" ? "flex" : ""} justify-between gap-4`}
 
 				header={<>
+
 				<div>
 					<Heading text={textData.title}
 						variant={HeadingVariant.h1}

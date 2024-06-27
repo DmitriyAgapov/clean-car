@@ -29,6 +29,7 @@ import { useSWRConfig } from "swr";
 import Image from "components/common/ui/Image/Image";
 import { CompanyType } from "stores/companyStore";
 import { User } from "stores/userStore";
+import BidModalOptionsSelect from "routes/bids/BidComponents/BidModalOptionsSelect";
 
 interface InitValues {
     address: string | null
@@ -78,10 +79,37 @@ export const InitValues: InitValues = {
     service_option: [],
     service_subtype: null,
     service_type: null,
-  time: null,
+    time: null,
     tire_destroyed: null,
     truck_type: null,
 }
+export const InitValuesTemp: InitValues = {
+    address: null,
+    address_from: null,
+    address_to: null,
+    car: "1",
+    photo_new: [],
+    city: "1",
+    company: "2",
+    conductor: "2",
+    customer_comment: null,
+    important: "fast",
+    lat_from: null,
+    lat_to: null,
+    lon_from: null,
+    lon_to: null,
+    parking: null,
+    performer: null,
+    phone: "+7 987 878 7878",
+    secretKey: null,
+    service_option: [],
+    service_subtype: null,
+    service_type: null,
+    time: null,
+    tire_destroyed: null,
+    truck_type: null,
+}
+
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<any>();
 export const createBidFormActions = createFormActions<InitValues>('createBidForm');
@@ -93,7 +121,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     });
     const {width} = useViewportSize()
     const store = useStore()
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(2)
     const [animate, setAnimate] = useState(false)
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
@@ -109,7 +137,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }
 
     const initData = React.useMemo(() => {
-      let initValues = InitValues
+      let initValues = InitValuesTemp
       if(!edit) {
         store.bidsStore.formResultsClear()
       }
@@ -693,37 +721,38 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                     : ['']
                             }
                         />
-                        {formData.values.service_subtype &&
-                            formData.values.service_subtype !== '0' &&
-                            formData.values.service_subtype &&
-                            formData.values.service_subtype !== '0' &&
-                            store.catalogStore.ServiceSubtypesOptions.length !== 0 && (
-                                <Checkbox.Group
-                                    className={'col-span-2'}
-                                    {...formData.getInputProps('service_option')}
-                                    classNames={{
-                                        label: 'text-accent label mb-4',
-                                        error: 'absolute -bottom-2',
-                                        root: 'relative pb-4',
-                                    }}
-                                    value={store.bidsStore.formResult.service_option.map((o: number) => String(o))}
-                                    onChange={(vals) => {
-                                        store.bidsStore.formResultSet({
-                                            service_option: vals.map((e) => Number(e)),
-                                        })
-                                        formData.values.service_option = val(
-                                            store.bidsStore.formResultsAll.service_option,
-                                        )
-                                    }}
-                                    label='Выберите дополнительные опции (при необходимости)'
-                                >
-                                    <Group mt='xs'>
-                                        {store.catalogStore.ServiceSubtypesOptions.map((i: any) => (
-                                            <Checkbox key={i.id} value={String(i.id)} label={i.name} />
-                                        ))}
-                                    </Group>
-                                </Checkbox.Group>
-                            )}
+                        <BidModalOptionsSelect/>
+                        {/* {formData.values.service_subtype && */}
+                        {/*     formData.values.service_subtype !== '0' && */}
+                        {/*     formData.values.service_subtype && */}
+                        {/*     formData.values.service_subtype !== '0' && */}
+                        {/*     store.catalogStore.ServiceSubtypesOptions.length !== 0 && ( */}
+                        {/*         <Checkbox.Group */}
+                        {/*             className={'col-span-2'} */}
+                        {/*             {...formData.getInputProps('service_option')} */}
+                        {/*             classNames={{ */}
+                        {/*                 label: 'text-accent label mb-4', */}
+                        {/*                 error: 'absolute -bottom-2', */}
+                        {/*                 root: 'relative pb-4', */}
+                        {/*             }} */}
+                        {/*             value={store.bidsStore.formResult.service_option.map((o: number) => String(o))} */}
+                        {/*             onChange={(vals) => { */}
+                        {/*                 store.bidsStore.formResultSet({ */}
+                        {/*                     service_option: vals.map((e) => Number(e)), */}
+                        {/*                 }) */}
+                        {/*                 formData.values.service_option = val( */}
+                        {/*                     store.bidsStore.formResultsAll.service_option, */}
+                        {/*                 ) */}
+                        {/*             }} */}
+                        {/*             label='Выберите дополнительные опции (при необходимости)' */}
+                        {/*         > */}
+                        {/*             <Group mt='xs'> */}
+                        {/*                 {store.catalogStore.ServiceSubtypesOptions.map((i: any) => ( */}
+                        {/*                     <Checkbox key={i.id} value={String(i.id)} label={i.name} /> */}
+                        {/*                 ))} */}
+                        {/*             </Group> */}
+                        {/*         </Checkbox.Group> */}
+                        {/*     )} */}
                         <Textarea
                             className={'col-span-2  pt-4'}
                             minRows={3}
