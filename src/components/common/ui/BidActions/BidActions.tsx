@@ -99,17 +99,20 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
   }, [width])
 
   const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
-
     (async () => {
       if (params.company_id && params.id) {
-        await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
+        await store.bidsStore.updateBitStatus(params.company_id, params.id, status).then(() => {
+          mutate(`bids/${params.company_id}/${params.id}`)
+          mutate(`/bids/${params.id}/photos/`)
+
+          console.log('status changed');
+        })
       }
     })().then(() => {
-      console.log('status changed');
       // @ts-ignore
     }).finally(update)
-    mutate(`bids/${params.company_id}/${params.id}`)
-    mutate(`/bids/${params.id}/photos/`)
+    // mutate(`bids/${params.company_id}/${params.id}`)
+    // mutate(`/bids/${params.id}/photos/`)
   }, [])
     const currentActions = React.useMemo(() => {
         if (store.appStore.appType === "admin") {

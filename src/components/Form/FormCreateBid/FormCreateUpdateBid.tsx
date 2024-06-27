@@ -365,7 +365,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 loading: false,
               })
             } else {
-
               mutate('bids')
               notifications.show({
                 id: 'bid-created_success',

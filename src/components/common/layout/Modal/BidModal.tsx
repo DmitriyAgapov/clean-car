@@ -12,7 +12,7 @@ import { BidsStatus, BidsStore } from 'stores/bidsStrore'
 import { useSWRConfig } from "swr";
 
 
-const BidModal = (props: { opened: boolean; onClose: () => void; update?: () => void}) => {
+const BidModal = (props: { opened: boolean; onClose: () => void; update: () => void}) => {
 	const store = useStore()
 	let revalidator = useRevalidator()
 	const { mutate } = useSWRConfig()
@@ -28,12 +28,17 @@ const BidModal = (props: { opened: boolean; onClose: () => void; update?: () => 
 						 store.bidsStore.clearPhotos()
 			        mutate(`bids/${params.company_id}/${params.id}`)
 			        mutate(`/bids/${params.id}/photos/`)
-			        props.update
+
 					 }
 				 })
 				}
 				}
-			).finally(props.onClose)
+			).finally(() => {
+				mutate(`bids/${params.company_id}/${params.id}`).then(() => console.log('photos'))
+				mutate(`/bids/${params.id}/photos/`).then(() => console.log('photos'))
+				props.update()
+				props.onClose()
+			})
 
 		// 	await  store.bidsStore.sendFiles(temp, false, params.id, params.company_id)
 		// 		  .then(() => {

@@ -14,17 +14,26 @@ import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import BidActions, { BidAdminActions } from "components/common/ui/BidActions/BidActions";
 import appStore from "stores/appStore";
 import { observer } from "mobx-react-lite";
-import useSWR from "swr";
-import { useViewportSize } from "@mantine/hooks";
+import useSWR from 'swr'
+import { useDidUpdate, useViewportSize } from '@mantine/hooks'
 
 const BidPage = () => {
 	const store = useStore()
 	const navigate = useNavigate()
 	const location = useLocation()
+	const revalidator = useRevalidator()
 	const params = useParams()
 	// const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => agent.Bids.getBid(Number(params.company_id), Number(params.id)).then(r => r.data))
 	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => store.bidsStore.loadBid(Number(params.company_id), Number(params.id)))
-
+	useDidUpdate(
+		() => {
+			if (location.pathname === `/account/bids/${params.company_id}/${params.id}`) {
+                mutate().then((r: any) => console.log('updated', r))
+                revalidator.revalidate()
+            }
+		},
+		[location.pathname]
+	);
 	const textData = store.bidsStore.text
 	const tabedData = React.useMemo(() => {
 		// store.appStore.setAppState(isLoading)

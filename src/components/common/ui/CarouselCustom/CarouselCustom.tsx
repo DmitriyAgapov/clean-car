@@ -6,11 +6,12 @@ import 'swiper/css'
 
 import { observer } from 'mobx-react-lite'
 import BidImg from 'components/common/layout/Modal/BidImg'
-import { useDisclosure, useViewportSize } from '@mantine/hooks'
+import { useDisclosure, useMediaQuery, useViewportSize } from '@mantine/hooks'
 import styles from 'components/common/layout/Modal/Modal.module.scss'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { Controller, Zoom } from 'swiper/modules'
 import 'swiper/css/zoom';
+
 const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => void, items: any[]}) => {
 
 	const [controlledSwiper, setControlledSwiper] = useState<any>(null);
@@ -36,24 +37,32 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 		},
 		[ind],
 	)
-
+	const isMobile = useMediaQuery('(max-width: 50em)');
 	React.useEffect(() => {
 		// setImg(items[ind])
 	}, [controlledSwiper?.activeIndex])
 
 	return (
-		<Modal.Root size={'lg'} xOffset={0} yOffset={'10dvh'} style={{ background: 'none' }} opened={opened} onClose={action} centered={true} >
+		<Modal.Root size={isMobile ? "auto" : '75rem'} fullScreen={false}
+			xOffset={0}
+			yOffset={'10dvh'}
+			style={{ background: 'none' }} opened={opened} onClose={action} centered={true} >
 			<Modal.Overlay className={'bg-black/80'} />
-			<Modal.CloseButton/>
-			<Modal.Content radius={20} className={styles.ModalBidFullImg} bg={'transparent !important'} h={"auto"}>
 
-				<Modal.Body className={'tablet-max:flex !px-0'}>
+			<Modal.Content radius={20} className={styles.ModalBidFullImg} bg={'transparent !important'}
+				// display={'flex'}
+				// style={{flexDirection: "column"}}
+				// h={"100%"}
+				mah={"100lvh"}>
+				<Modal.CloseButton w={48} h={48} pos={"absolute"} right={0} top={"-0.5rem"} style={{zIndex: 998}}/>
+				<Modal.Body className={'tablet-max:flex !px-0 !pb-0 !pt-8 overflow-hidden flex-1'}  mah={"85lvh"}>
 
 					<Swiper
 						spaceBetween={20}
 						slidesPerView={1}
 						modules={[Controller, Zoom]}
-						autoHeight
+						// autoHeight
+						className={'max-h-svh max-w-6xl'}
 						zoom={true}
 						// on={{
 						// 	sliderMove: (swiper:any,event:any) => console.log(event, swiper)}}
@@ -67,15 +76,16 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 
 								// onTouchEnd={(event) => console.log(event)}
 							>
-								<div className={"swiper-zoom-container"} data-swiper-zoom="5">
+								<div className={"swiper-zoom-container"} style={{height: "auto"}}>
 									<Image
 										src={i}
-
+											w={"100%"}
+											h={"100%"}
 										// mih={'10rem'}
-										miw={"100%"}
+										// miw={"100%"}
 										// h={'100%'}
-										// style={{ objectFit: "contain", cursor: "pointer" }}
-										mah={"60lvh"}
+										style={{ objectFit: "contain", cursor: "pointer"}}
+										// mah={"60lvh"}
 										className={""} />
 								</div>
 							</SwiperSlide>
