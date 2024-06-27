@@ -7,7 +7,7 @@ import { useStore } from 'stores/store'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { Outlet, useLocation } from "react-router-dom";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
@@ -16,10 +16,11 @@ import { useDidUpdate } from "@mantine/hooks";
 const localRootStore =  new LocalRootStore()
 
 const FilialsPage = () => {
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const location = useLocation()
-  const {isLoading, data, mutate} = useSWR(['filials', localStore.params.getSearchParams] , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
+  const isReadyy = localStore.params.getIsReady
+  const {isLoading, data, mutate} = useSWR(isReadyy ? ['filials', localStore.params.getSearchParams] : null , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
   useDidUpdate(
     () => {
       if(location.pathname === '/account/filials') {
@@ -28,6 +29,7 @@ const FilialsPage = () => {
     },
     [location.pathname]
   );
+
   useEffect(() => {
     localStore.setData = {
       ...data,

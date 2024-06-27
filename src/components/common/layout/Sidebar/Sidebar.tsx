@@ -188,7 +188,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       <>
           <BackDrop />
           <aside className={styles.Sidebar} {...props} data-state={appStore.asideState}>
-              {width && width < 960 && <Logo position={'aside'} />}
+              {(width && width < 960) ? <Logo position={'aside'} /> : null}
 
               <nav>
                   <ul>
@@ -200,7 +200,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
                   </ul>
               </nav>
               {children}
-            {width && (width > 1299 || width < 960) && <Footer className={'block  overflow-hidden pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+            {width && (width > 1299 || width < 960) ? <Footer className={'block  overflow-hidden pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
                   <div>
                     <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'} onClick={() => store.appStore.setAsideClose()}/>
                   </div>
@@ -208,7 +208,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
                   <hr className={'mt-3 mb-2 -mr-8 border-accent'} />
 
               <LinkStyled  className={'!text-xs '} to={'/policy'} text={'Политика конфиденциальности'} variant={ButtonVariant.text}   onClick={() => store.appStore.setAsideClose()}/>
-              </Footer>}
+              </Footer> : null}
           </aside>
       </>
   )

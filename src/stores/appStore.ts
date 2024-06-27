@@ -138,10 +138,10 @@ export class AppStore {
     console.log(this.font);
     return this.font
   }
-fontSizeBodyCalc() {
-    const _fSize = Number(window.getComputedStyle(document.getElementsByTagName('html')[0]).getPropertyValue('font-size').replaceAll('px', ""))
-    action(() => this.font = Math.floor(_fSize))
-    return Math.floor(_fSize)
+  fontSizeBodyCalc() {
+    const _fSize = Math.floor(Number(window.getComputedStyle(document.getElementsByTagName('html')[0]).getPropertyValue('font-size').replaceAll('px', "")))
+    action(() => this.font = _fSize)
+    return _fSize
   }
 
 

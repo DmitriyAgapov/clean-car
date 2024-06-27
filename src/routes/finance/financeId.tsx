@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from 'stores/store'
-import { observer, useLocalStore } from 'mobx-react-lite'
+import { observer, useLocalObservable } from 'mobx-react-lite'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import useSWR from 'swr'
@@ -23,13 +23,13 @@ localRootStore.params.setSearchParams({
 })
 const FinaceIdPage = () => {
   const location = useLocation()
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
   const params = useParams()
   const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
 
-  const {isLoading, data, mutate} = useSWR([`reportId_${params.company_id}`, Number(params.company_id), localStore.params.getSearchParams] , ([url, id, args]) => store.financeStore.getReport(id, args))
+  const {isLoading, data, mutate} = useSWR(localStore.params.isReady && [`reportId_${params.company_id}`, Number(params.company_id), localStore.params.getSearchParams] , ([url, id, args]) => store.financeStore.getReport(id, args))
   console.log(data);
   useEffect(() => {
       const _root = data?.root_company

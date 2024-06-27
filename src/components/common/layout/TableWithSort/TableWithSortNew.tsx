@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./TableWithSort.module.scss";
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { Pagination } from "@mantine/core";
 import DataFilter, { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import TableSearch from "components/common/layout/TableWithSort/TableSearch";
@@ -61,33 +61,37 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
 }: TableWithSortProps) => {
     const store = useStore()
     const localStore = useLocalStore<LocalRootStore>()
+    const _count = localStore.params.getItemsCount
     const rows = toJS(localStore.getData)?.results
-    const initCount = localStore.getData?.count || 0
-    const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading
+    const initCount = _count
+    const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading && localStore.params.getIsReady
     const { ref: refBody, width, height } = useElementSize();
     const fontSize = store.appStore.fontSizeBodyCalc()
     const [heightVal, setHeightVal] = useState(0)
     const { height:heightV, width:widthV } = useViewportSize();
+    const location = useLocation()
+
     React.useEffect(() => {
-      let initHeight = 0
-      if(height && height > 0 && heightVal === 0) {
-        setHeightVal(height)
-        const footehH = Math.ceil(fontSize * 7);
-        const _height = Math.floor(height - footehH);
-        const _fSize = Math.ceil(fontSize * 3);
-        const  _res = Math.ceil(_height / _fSize);
-        console.log('width, heiught changed', heightV, widthV);
-        (() => {
-          if(refBody.current !== null && _height > 0) {
-            if (store.appStore.bodyRef.clientWidth > 960) {
-              localStore.params.setItemsCount(_res)
-            } else {
-              localStore.params.setItemsCount(10)
+      heightVal !== 0 && setHeightVal(0)
+      const correct = widthV > 1920 ? 5 : 3;
+      (() => {
+          if(height > 0 && heightVal == 0) {
+            setHeightVal(height)
+            const footehH = Math.ceil(fontSize * 6);
+            const _height = Math.floor(height - footehH);
+            const _fSize = Math.ceil(fontSize * 3) + correct;
+            const  _res = Math.ceil(_height / _fSize);
+            if(refBody.current !== null && _height > 0 && _count !== _res) {
+              if (store.appStore.bodyRef.clientWidth > 960) {
+                const val = !_count ? _res - 1 : _res
+                localStore.params.setItemsCount(val)
+              } else {
+                localStore.params.setItemsCount(10)
+              }
             }
           }
-        })()
-      }
-    }, [height, heightV, widthV]);
+      })()
+    }, [heightV, fontSize,  height]);
 
     return (
         <Panel ref={refBody} state={false}
@@ -109,7 +113,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
             <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
                 {headerBar && <RowHeading total={initCount} ar={ar} />}
                 <tbody>
-                {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData style={style} {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
+                {!noData ? rows && rows.map((item: any, index: number) => <RowData style={style} {...item} key={item.id + '_00' + index} />) :<Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />}
                 </tbody>
             </table>
         </Panel>
@@ -117,6 +121,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
 })
 
 const TableWithSort = (props:any) => {
+
     return (
       <LocalStoreProvider stores={props.store}>
           <TableWithSortNew {...props} />

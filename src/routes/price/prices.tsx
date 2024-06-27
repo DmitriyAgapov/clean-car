@@ -9,7 +9,7 @@ import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'componen
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import FormModalCreatePrice from "components/Form/FormModalCreatePrice/FormModalCreatePrice";
 import { LocalRootStore } from "stores/localStore";
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
 
@@ -17,8 +17,8 @@ const localRootStore =  new LocalRootStore()
 const PricesPage = () => {
 	const store = useStore()
 	const location = useLocation()
-	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	const {isLoading, data, mutate, isValidating} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
+	const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
+	const {isLoading, data, mutate, isValidating} = useSWR(localStore.params.isReady && ['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
 
 	useEffect(() => {
 		localStore.setData = {

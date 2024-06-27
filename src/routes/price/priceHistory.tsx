@@ -5,7 +5,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import { useStore } from 'stores/store'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import dayjs from 'dayjs'
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
@@ -17,9 +17,9 @@ const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({ordering: 'expires'})
 const PricesHistoryPage = () => {
 	const store = useStore()
-	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+	const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
 	const params = useParams()
-	const {isLoading, data} = useSWR([`price_history_${params.id}`, Number(params.id), { ...localStore.params.getSearchParams}] , ([url,id, args]) => agent.Price.getHistoryPrice(id, args).then(r => r.data))
+	const {isLoading, data} = useSWR(localStore.params.isReady && [`price_history_${params.id}`, Number(params.id), { ...localStore.params.getSearchParams}] , ([url,id, args]) => agent.Price.getHistoryPrice(id, args).then(r => r.data))
 
 	const navigate = useNavigate()
 

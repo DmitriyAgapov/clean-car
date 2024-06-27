@@ -12,7 +12,6 @@ import { ButtonVariant } from 'components/common/ui/Button/Button'
 import { observer } from 'mobx-react-lite'
 
 const AccountPage = () => {
-    const store = useStore()
 
     return (
         <Layout
@@ -38,4 +37,4 @@ const AccountPage = () => {
     )
 }
 
-export default observer(AccountPage)
+export default AccountPage

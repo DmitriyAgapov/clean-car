@@ -7,13 +7,12 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import TableWithSortNew  from "components/common/layout/TableWithSort/TableWithSortNew";
-import { observer, useLocalStore } from "mobx-react-lite";
-import {  dateTransformShort } from "utils/utils";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import userStore from 'stores/userStore'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import useSWR from "swr";
 
-import {  LocalRootStore } from "stores/localStore";
+import { LocalRootStore } from "stores/localStore";
 import { useDidUpdate } from "@mantine/hooks";
 import dayjs from "dayjs";
 
@@ -26,24 +25,21 @@ const BidsPage = () => {
 	const location = useLocation()
 	const textData = store.bidsStore.text
 	const params = useParams()
-	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	const count = localStore.params.getItemsCount
-
-	const {isLoading, data, mutate} = useSWR(localStore.params.getItemsCount ? ['bids', {...localStore.params.getSearchParams}] : null , ([url, args]) => store.bidsStore.loadBids(args),
+	const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
+	const {isLoading, data, mutate} = useSWR(localStore.params.getIsReady ? ['bids', {...localStore.params.getSearchParams}] : null, ([url, args]) => store.bidsStore.loadBids(args),
 		{refreshInterval: 10000}
 	)
 
 	useDidUpdate(
 		() => {
-			console.log(location.pathname);
 			if(location.pathname === '/account/bids') {
 				mutate().then(() => console.log('updated bids'))
 			}
 		},
 		[location.pathname]
 	);
-	useEffect(() => {
 
+	useEffect(() => {
 		localStore.setData = {
 			...data,
 			results: data?.results?.map((r:any) => ({

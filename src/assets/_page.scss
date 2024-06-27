@@ -8,9 +8,9 @@
 
   main {
 	@apply mt-7;
-	@media screen and (min-width: 744px) {
-	  margin-top: clamp(1rem, 100%, 2rem);
-	}
+	//@media screen and (min-width: 744px) {
+	//  margin-top: clamp(1rem, 100%, 2rem);
+	//}
   }
   .logo-header {
 	display: block;

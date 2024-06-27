@@ -3,7 +3,7 @@
   grid-template-columns: var(--grid);
   grid-template-rows: auto 1fr auto;
 
-  min-height: 100vh;
+  min-height: 100svh;
   gap: 0 var(--gridGap);
   overflow: hidden;
   position: relative;
@@ -19,6 +19,9 @@
 	//max-height: 100lvh;
   //}
   //
+  //&[class*="page-account"] {
+	//min-height: calc(100svh - 2.75rem);
+  //}
 
 }
 

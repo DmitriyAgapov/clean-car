@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { observer, useLocalStore } from 'mobx-react-lite'
+import { observer, useLocalObservable } from 'mobx-react-lite'
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import useSWR from 'swr'
@@ -305,9 +305,10 @@ const FinanceBottom = observer((props: { data: any }) => {
 
 const FinacePage = () => {
   const location = useLocation()
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
-  const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getReport(undefined,args))
+  const isReadyy = localStore.params.getIsReady
+  const {isLoading, data, mutate} = useSWR(isReadyy ? ['report', localStore.params.getSearchParams] : null , ([url, args]) => store.financeStore.getReport(undefined,args))
 
   useEffect(() => {
     localStore.setData = {

@@ -4,11 +4,10 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import { Outlet,  useLocation, useNavigate } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
-import  { client } from "utils/agent";
 import useSWR from "swr";
 import {  LocalRootStore } from "stores/localStore";
 import { useDidUpdate } from "@mantine/hooks";
@@ -18,12 +17,13 @@ const localRootStore =  new LocalRootStore()
 
 const CompaniesPage = () => {
   const location = useLocation()
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
   const searchParams = localStore.params.getSearchParams
-  console.log(searchParams);
-  const {isLoading, data, mutate} = useSWR(['companies', {...localStore.params.getSearchParams}] , ([url, args]) => store.companyStore.loadAllOnlyCompanies(args))
+  const isReadyy = localStore.params.getIsReady
+  console.log(isReadyy);
+  const {isLoading, data, mutate} = useSWR(isReadyy ? ['companies', {...localStore.params.getSearchParams}] : null , ([url, args]) => store.companyStore.loadAllOnlyCompanies(args))
   useEffect(() => {
     console.log();
     localStore.setData = {
@@ -37,6 +37,7 @@ const CompaniesPage = () => {
       }))}
     localStore.setIsLoading = isLoading
   },[data])
+
   useDidUpdate(
     () => {
       if(location.pathname === '/account/companies') {
@@ -45,6 +46,7 @@ const CompaniesPage = () => {
     },
     [location.pathname]
   );
+
   if ('/account/companies' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
 

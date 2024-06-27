@@ -5,7 +5,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import moment from 'moment'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
@@ -16,8 +16,8 @@ const localRootStore =  new LocalRootStore()
 const GroupsPage = () => {
     const store = useStore()
 
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-  const {isLoading, data, mutate} = useSWR(['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
+  const {isLoading, data, mutate} = useSWR(localStore.params.isReady && ['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
     const navigate = useNavigate()
     const location = useLocation()
 

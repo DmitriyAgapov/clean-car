@@ -5,7 +5,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { Outlet,useLocation, useNavigate } from "react-router-dom";
 import { useStore } from 'stores/store'
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import { LocalRootStore } from "stores/localStore";
@@ -19,7 +19,7 @@ const localRootStore =  new LocalRootStore()
 const CarsPage = () => {
 
   const store = useStore()
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -28,7 +28,7 @@ const CarsPage = () => {
   const memoModal = React.useMemo(() => {
     return <CarClasses opened={opened} onClose={close} />
   }, [opened])
-  const {isLoading, data, mutate} =useSWR(['cars', {...localStore.params.getSearchParams}] , ([url, args]) => store.carStore.getAllCars(args))
+  const {isLoading, data, mutate} =useSWR(localStore.params.isReady && ['cars', {...localStore.params.getSearchParams}] , ([url, args]) => store.carStore.getAllCars(args))
 
 
   useEffect(() => {

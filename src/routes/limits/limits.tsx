@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite'
 import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator, useSearchParams } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
@@ -20,11 +20,12 @@ const localRootStore =  new LocalRootStore()
 
 const LimitsPage = () => {
   const location = useLocation()
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
   const revalidator =     useRevalidator()
-  const {isLoading, data, mutate} = useSWR(['limits', localStore.params.getSearchParams] , ([url, args]) => store.limitStore.getAllLimits(args).then((res) => res.data))
+  const isReadyy = localStore.params.getIsReady
+  const {isLoading, data, mutate} = useSWR(isReadyy ? ['limits', localStore.params.getSearchParams] : null , ([url, args]) => store.limitStore.getAllLimits(args).then((res) => res.data))
 
   useEffect(() => {
     localStore.setData = {

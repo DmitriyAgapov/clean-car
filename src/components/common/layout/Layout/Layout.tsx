@@ -87,7 +87,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
           <Header>
-              {width && width > 960 && <Logo className={'logo-header tablet:pl-6'} />}
+              {(width && width > 960) ? <Logo className={'logo-header tablet:pl-6'} /> : null}
               {headerContent}
               <Burger
                   className={'lg:hidden'}
@@ -107,11 +107,11 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               classNames={{
                   overlay: 'bg-black/80 backdrop-blur-xl',
               }}
-              visible={store.appStore.AppState}
+              visible={false}
               loaderProps={{ children: <SvgCleanCarLoader /> }}
           />
           <main>{children}</main>
-       <Footer className={'flex desktop:!hidden lg-to-desktop:block !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+       <Footer className={'flex desktop:!hidden  !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
           <div>
 
             <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
@@ -121,11 +121,11 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
 
           <Link to={'/policy'}  className={'text-xs hover:text-accent'}>Политика конфиденциальности</Link>
         </Footer>
-          <Footer className={'!hidden  tablet:px-6'}>
+        {!loc.pathname.includes('account') ?<Footer className={'tablet:px-6'}>
               {footerContent}
               <div>2023 (c.)</div>
               <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} to={'/policy'}></LinkStyled>
-          </Footer>
+          </Footer> : null}
 
           <div className={'lineBg'}>
               <div />

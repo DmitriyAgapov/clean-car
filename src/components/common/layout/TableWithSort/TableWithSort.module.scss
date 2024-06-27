@@ -10,6 +10,9 @@
   }
   tr {
     width: 100%;
+    @screen lg {
+      height: 3rem;
+    }
     @screen tablet-max {
       display: grid;
       width: initial;
@@ -422,7 +425,7 @@
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           display: block;
-          line-height: 14px;
+          //line-height: 14px;
           vertical-align: middle;
           position: relative;
           overflow: hidden;

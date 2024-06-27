@@ -12,7 +12,7 @@ import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { CarClasses } from 'components/common/layout/Modal/CarClasses'
 import agent, { client } from "utils/agent";
 import { LocalRootStore, LocalStoreProvider } from 'stores/localStore'
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import useSWR from "swr";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 export const textDataCars = {
@@ -39,12 +39,12 @@ const localRootStore =  new LocalRootStore()
 const RefCarsPage = () => {
   const location = useLocation()
 
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
 
   const store = useStore()
   const navigate = useNavigate()
-
-  const {isLoading, data, mutate} = useSWR(['refCars', {ordering: "brand", ...localStore.params.getSearchParams}] , ([url, args]) => store.catalogStore.getAllRefCarModels(args))
+  const isReadyy = localStore.params.getIsReady
+  const {isLoading, data, mutate} = useSWR(isReadyy ? ['refCars', {ordering: "brand", ...localStore.params.getSearchParams}] : null, ([url, args]) => store.catalogStore.getAllRefCarModels(args))
   useDidUpdate(
     () => {
       if(location.pathname === `/account/references/car_brands`) {

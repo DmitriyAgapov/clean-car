@@ -33,18 +33,6 @@ export class TableWithSortStore {
 	constructor() {
 		makeAutoObservable(this, {
 		})
-		// autorun(() => {
-		// 	let _cH = appStore.fontSizeBody
-		// 	if(_cH) {
-		// 		console.log(_cH);
-		// 	}
-		// })
-
-		reaction(() => this.tableBodyHeight,
-			(height) => {
-				console.log('hhh', height);
-
-		})
 	}
 
 	get rowHeightSize() {
@@ -58,7 +46,6 @@ export class TableWithSortStore {
 		this.rowHeight = val
 	}
 	get getItemsCount() {
-		console.log(this.itemsCount);
 		return this.itemsCount
 	}
 	@action setItemsCount(value:  number) {

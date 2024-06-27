@@ -5,7 +5,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { Outlet,  useLocation, useNavigate, useRevalidator } from 'react-router-dom'
 import { useStore } from 'stores/store'
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import { UserTypeEnum } from 'stores/userStore'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
@@ -18,9 +18,9 @@ const UsersPage = () => {
   const store = useStore()
   let revalidator = useRevalidator();
   const location = useLocation()
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const navigate = useNavigate()
-  const {isLoading, data, isValidating, mutate} = useSWR(['users', {...localStore.params.getSearchParams}] , ([url, args]) => store.usersStore.loadUserList(args), {
+  const {isLoading, data, isValidating, mutate} = useSWR(localStore.params.isReady && ['users', {...localStore.params.getSearchParams}] , ([url, args]) => store.usersStore.loadUserList(args), {
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
     revalidateOnMount: true,

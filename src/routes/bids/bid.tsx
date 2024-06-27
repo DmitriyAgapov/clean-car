@@ -23,6 +23,7 @@ const BidPage = () => {
 	const location = useLocation()
 	const revalidator = useRevalidator()
 	const params = useParams()
+	const { width } = useViewportSize();
 	// const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => agent.Bids.getBid(Number(params.company_id), Number(params.id)).then(r => r.data))
 	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => store.bidsStore.loadBid(Number(params.company_id), Number(params.id)))
 	useDidUpdate(
@@ -65,7 +66,7 @@ const BidPage = () => {
 	}, [params.bid_id])
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
-	const { height, width } = useViewportSize();
+
 	return (
         <Section type={SectionType.default}>
             <Panel

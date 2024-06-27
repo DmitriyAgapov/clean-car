@@ -7,12 +7,6 @@ export enum SectionType {
   default = 'default',
   withSuffix = 'withSuffix'
 }
-
-export enum SectionPosition {
-  centered = 'centered',
-  default = 'default',
-}
-
 type SectionProps = {
   children: ReactNode | ReactNode[]
   type?: SectionType
@@ -20,9 +14,9 @@ type SectionProps = {
 }
 
 const Section = ({ children, type = SectionType.default,  noScroll = false}: SectionProps) => {
-  const { ref, width:wElSize, height:hElSize } = useElementSize();
+  // const { ref, width:wElSize, height:hElSize } = useElementSize();
   return (
-    <section data-variant={type} className={styles.Section} data-noScroll={noScroll} ref={ref}>
+    <section data-variant={type} className={styles.Section} data-noscroll={noScroll}>
       {children}
     </section>
   )

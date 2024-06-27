@@ -4,7 +4,7 @@ import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/com
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { observer, useLocalStore } from 'mobx-react-lite'
+import { observer, useLocalObservable } from 'mobx-react-lite'
 import { useLocation, useNavigate } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import agent, { client } from 'utils/agent'
@@ -26,12 +26,12 @@ const localRootStore =  new LocalRootStore()
 const TransactionPage = () => {
 
   const location = useLocation()
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
 
   const store = useStore()
   const navigate = useNavigate()
 
-  const {isLoading, data, mutate} = useSWR(['transactions', localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getTransactions(args).then(r => r.data))
+  const {isLoading, data, mutate} = useSWR(localStore.params.isReady && ['transactions', localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getTransactions(args).then(r => r.data))
 
   useEffect(() => {
     localStore.setData = {
