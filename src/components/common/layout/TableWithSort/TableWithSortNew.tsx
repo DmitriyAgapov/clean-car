@@ -66,20 +66,23 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
     const initCount = _count
     const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading && localStore.params.getIsReady
     const { ref: refBody, width, height } = useElementSize();
+
     const fontSize = store.appStore.fontSizeBodyCalc()
     const [heightVal, setHeightVal] = useState(0)
+  const [value] = useDebouncedValue(heightVal, 500)
     const { height:heightV, width:widthV } = useViewportSize();
     const location = useLocation()
 
     React.useEffect(() => {
-      heightVal !== 0 && setHeightVal(0)
+      setHeightVal((prevState) => height !== prevState ? height : prevState);
       const correct = widthV > 1920 ? 5 : 3;
       (() => {
-          if(height > 0 && heightVal == 0) {
-            setHeightVal(height)
-            const footehH = Math.ceil(fontSize * 6);
-            const _height = Math.floor(height - footehH);
+          if(value > 0) {
+            const footehH = Math.ceil(fontSize * 7.5);
+            const headerH = Math.ceil(fontSize * 9);
+            const _height = Math.floor(value - footehH - headerH);
             const _fSize = Math.ceil(fontSize * 3) + correct;
+
             const  _res = Math.ceil(_height / _fSize);
             if(refBody.current !== null && _height > 0 && _count !== _res) {
               if (store.appStore.bodyRef.clientWidth > 960) {
@@ -91,7 +94,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
             }
           }
       })()
-    }, [heightV, fontSize,  height]);
+    }, [height, fontSize, value, _count]);
 
     return (
         <Panel ref={refBody} state={false}
@@ -99,7 +102,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, search = false,head
             className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto] overflow-hidden'}
             routeStyle={style}
             variant={variant ? variant : PanelVariant.dataPadding}
-            footerClassName={'px-6 pt-2 pb-6'}
+            footerClassName={'px-6 pt-2 pb-4 h-24'}
             headerClassName={''}
             header={search || filter ?
                 <>

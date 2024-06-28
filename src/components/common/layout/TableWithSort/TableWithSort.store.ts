@@ -48,8 +48,8 @@ export class TableWithSortStore {
 	get getItemsCount() {
 		return this.itemsCount
 	}
-	@action setItemsCount(value:  number) {
-		this.isReady = value > 0;
+	@action setItemsCount(value:  number | undefined) {
+		this.isReady = value === undefined ? false : value > 0;
 		this.setSearchParams({
 			page_size: value
 		})

@@ -461,16 +461,24 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 valuesSpan: 1,
                 valueStyle: 'text-accent font-medium text-sm tablet-max:before:content-[attr(data-label)":_"]'
               }
+              const addTotalPercent = (value: number, ar: any[]) => {
+                let initVal = 0
+                let totalPercentUp = ar.reduce((acc:number, val:any) => val.unit === "%" ? acc + val.amount : acc, initVal);
+                return totalPercentUp !== 0 ? value + (value * totalPercentUp / 100) : value
+              }
               const _res2: _res2 = {
                 service: { label: null, values: [], unit: '₽' }, options: [], role: store.appStore.appType, count: data.price_positions.performer.length,
                 calc: function() {
-                  const el = data.price_positions.performer;
-                  let initVal = 0
-                  let totalPercentUp = data.price_positions.performer.reduce((acc:number, val:any) => val.unit === "%" ? acc + val.amount : acc, initVal)
-                  const addTotalPercent = (value: number) => totalPercentUp !==0 ? (value + value * totalPercentUp) / 100 : value
+                  //Исполнитель
+
+
+
+
+
                   if(this.role === "performer") {
+                    const el = data.price_positions.performer;
                     for(let i = 0; el.length > i; i++) {
-                      let _performerValue = addTotalPercent(parseFloat(el[i].amount))
+                      let _performerValue = parseFloat(el[i].amount)
                       if(el[i].name === serviceName)  {
                         this.service.label = el[i].name;
                         const _ar = []
@@ -500,9 +508,10 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     return this
                   }
                   if(this.role === "customer") {
+                    const el = data.price_positions.performer;
                     if(data.service_percent == null) {
                       for(let i = 0; el.length > i; i++) {
-                        let _customerValue =  addTotalPercent(parseFloat(data.price_positions.customer[i].amount))
+                        let _customerValue =  parseFloat(data.price_positions.customer[i].amount)
                         if(el[i].name === serviceName)  {
                           this.service.label = el[i].name;
                           const _ar = []
@@ -564,10 +573,11 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     return this
                   }
                   if(this.role === "admin") {
+                    const el = data.price_positions.performer;
                     if(data.service_percent === null) {
                       for(let i = 0; el.length > i; i++) {
-                        let _performerValue =  addTotalPercent(parseFloat(el[i].amount))
-                        let _customerValue =  addTotalPercent(parseFloat(data.price_positions.customer[i].amount))
+                        let _performerValue =  parseFloat(el[i].amount)
+                        let _customerValue =  parseFloat(data.price_positions.customer[i].amount)
                         if(el[i].name === serviceName)  {
                           this.service.label = el[i].name;
                           const _ar = []
@@ -580,14 +590,16 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           _customerValue =  parseFloat(data.price_positions.customer[i].amount)
                           this.service.label = data.service_subtype.name
                           const _ar = []
+                          _customerValue && _ar.push((Math.round(_customerValue * 100) / 100))
                           _performerValue && _ar.push((Math.round(_performerValue * 100) / 100))
+                          _ar.push(Math.round((_customerValue - _performerValue) * 100) / 100)
                           this.options.push({
                             label: el[i].name.replace(serviceName_exclude, ''),
                             values: _ar,
                             unit: el[i].unit,
                           })
                         } else  {
-                          const _customerValue =  addTotalPercent(parseFloat(data.price_positions.customer[i].amount))
+                          console.log('else admin', _customerValue, _performerValue);
                           this.service.label = data.service_subtype.name
                           const _ar = []
                           _ar.push(Math.round(_customerValue * 100) / 100)
@@ -601,10 +613,9 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                         }
                       }
                     } else {
-                      let _customerValue =  addTotalPercent(parseFloat(data.price_positions.customer[0]?.amount))  ?? null
+                      let _customerValue =  addTotalPercent(parseFloat(data.price_positions.customer[0]?.amount), data.price_positions.customer)  ?? null
                       for(let i = 0; el.length > i; i++) {
-
-                        const _performerValue =  addTotalPercent(parseFloat(el[i].amount))
+                        const _performerValue =  addTotalPercent(parseFloat(el[i].amount), data.price_positions.performer)
                         if(isNaN(_customerValue)) {
                           _customerValue = _performerValue * (1 + data.service_percent / 100)
                         }
@@ -616,7 +627,8 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           this.service.label = el[i].name;
                           this.service.values = _ar
                         } else  {
-                          let _customerValue =  addTotalPercent(parseFloat(data.price_positions.customer[i]?.amount))
+                          let _customerValue =  addTotalPercent(parseFloat(data.price_positions.customer[i]?.amount), data.price_positions.customer)
+                          console.log(_customerValue);
                           if(isNaN(_customerValue)) {
                             _customerValue = _performerValue * (1 + data.service_percent / 100)
                           }
@@ -640,10 +652,11 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
               }
 
               const _res = _res2.calc()
-              const totalCustomer = _res.options?.reduce((acc:number, item:any) => acc + item.values[0], 0)
-              const totalPerformer = _res.options?.reduce((acc:number, item:any) => acc + item.values[1], 0)
-              const totalProfit =  _res.options?.reduce((acc:number, item:any) => acc + parseFloat(item.values[2]), 0) as number
-
+              console.log(_res);
+              const totalCustomer = addTotalPercent(_res.options?.reduce((acc:number, item:any) => item.unit !== "%" ? acc + item.values[0] : acc,  0),  data.price_positions.customer)
+              const totalPerformer = addTotalPercent(_res.options?.reduce((acc:number, item:any) => item.unit !== "%" ? acc + item.values[_res.role !== "performer" ? 1 : 0] : acc, _res.role !== "performer" ? 0 : _res.service.values[0] ?? 0),  data.price_positions.performer)
+              const totalProfit =  totalCustomer - totalPerformer
+              console.log(totalCustomer);
               const _tar = []
               !!totalCustomer && _tar.push(Math.round(totalCustomer * 100) / 100)
               !!totalPerformer && _tar.push(Math.round(totalPerformer * 100) / 100)
@@ -678,7 +691,6 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                   "1": "Исполнитель",
                   "2": "Разница"
               }
-              console.log(store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read'), 'asdsd');
               return (
                   <>
                       <SimpleGrid cols={tableParams.cols} spacing={8} className={'mb-6 items-start flex-1 content-start tablet-max:flex tablet-max:flex-col'}>
@@ -784,7 +796,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                                   <Heading
                                     variant={HeadingVariant.h2}
                                     className={'!mb-0  tablet-max:!mb-1'}
-                                    text={String(data.create_amount) + ' ₽'}
+                                    text={String(store.appStore.appType === "performer" ? totalPerformer : data.create_amount) + ' ₽'}
                                   />
                                 }
                               />
@@ -798,7 +810,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                               style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
                             >
                               {value}
-                              {_res.options[index]?.unit === 'Р' ? '₽' : _res.options[index]?.unit ?? '₽'}
+                              {' ₽'}
                             </Box>
                           ))}
                         </>
@@ -1082,7 +1094,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
               // value.forEach((value:any, key: any) => {
               //   resultInnerOptions.push
               // })
-              resultInnerCartypes.push({ label: key, data: value.amount })
+              resultInnerCartypes.push({ label: key, data: value.service_option.is_percent ? `${value.amount} %`: value.amount})
             })
             resultInnerAr.push({label: key, data: resultInnerCartypes })
           })
@@ -1090,11 +1102,13 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         })
         result.push({ label: key, data: resultInner })
       })
+    console.log(result);
       return result.map((item: any, index: number) => {
         return (
           <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
             <Heading text={item.label} variant={HeadingVariant.h6} className={`text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 ${item.data[0].label === null ? 'px-6 sticky top-0 z-10  bg-[#090909]' : ''}`}/>
             {(() => {
+              console.log(item);
               return item.data.map((item: any, index: number) => {
               return (
                 <div key={translite(item.label ?? `null_${index}`)}>
@@ -1161,7 +1175,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                       (it: any) =>
                         ({
                           [it.label]: it.label ? it.label : '-',
-                          value: it.data[0].data
+                          value: it.data[0].data,
                         }) as any,
                     )}
                     initFilterParams={[
@@ -1232,7 +1246,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
           break
 
       case 'Шиномонтаж':
-        console.log(mapEdTire);
+        console.log(data.tire_positions);
           result = (
             <Tabs.PanelPure
               state={state}
@@ -1261,6 +1275,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   service_subtype: item.service_subtype.name,
                   service_option: item.service_option ? item.service_option.name : null,
                   car_class: item.car_type,
+                  is_percent: item.service_option ? item.service_option.is_percent : false,
                   amount_price: item.amount
                 }))}
                 ar={[{label: 'Радиус', name: 'radius'},{label: 'Тип услуги', name: 'service_subtype'}, {label: 'Доп. опции', name: 'service_option'}, {label: 'Тип автомобиля', name: 'car_class'}, {label: 'Cтоимость', name: 'amount'}, ]}

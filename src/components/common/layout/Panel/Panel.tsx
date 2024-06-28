@@ -89,9 +89,9 @@ const Panel = forwardRef(function Panel({
     if (state) return null
 
     return (
-        <div
+        <div          ref={refBody}
 
-            onClick={action}
+          onClick={action}
             className={styles.Panel + '  ' + className}
             data-style={routeStyle}
             data-variant={variant}
@@ -103,7 +103,7 @@ const Panel = forwardRef(function Panel({
                 </header>
             )}
             {children && (
-            <div         ref={refBody} className={styles.panelBody + ' ' + bodyClassName} data-panel={'body'}>
+            <div className={styles.panelBody + ' ' + bodyClassName} data-panel={'body'}>
                 {children}
             </div>)}
             {footer && (

@@ -9,8 +9,6 @@ import TableSearch from "components/common/layout/TableWithSort/TableSearch";
 import { observer } from "mobx-react-lite";
 import { useFormContext } from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
 import { LocalRootStore, LocalStoreProvider, TransferComponentStore, TransferStoreProvider,  useTransferStore } from "stores/localStore";
-import { Companies } from 'stores/companyStore'
-import { SvgSearch } from "components/common/ui/Icon";
 
 interface RenderListProps {
     options?: any
@@ -49,7 +47,7 @@ const RenderList = observer(({ options, onTransfer, type, label }: RenderListPro
         <Panel
             variant={PanelVariant.withPaddingSmWithBody}
             background={PanelColor.glass}
-            className={'flex-1 w-full rounded-lg'}
+            className={'tablet:flex-1 w-full rounded-lg'}
             data-type={type}
         >
             <Heading text={label} variant={HeadingVariant.h4} color={HeadingColor.accent} />

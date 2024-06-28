@@ -43,7 +43,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 	}, [controlledSwiper?.activeIndex])
 
 	return (
-		<Modal.Root size={isMobile ? "auto" : '75rem'} fullScreen={false}
+		<Modal.Root size={isMobile ? "auto" : '75rem'} fullScreen={isMobile}
 			xOffset={0}
 			yOffset={'10dvh'}
 			style={{ background: 'none' }} opened={opened} onClose={action} centered={true} >

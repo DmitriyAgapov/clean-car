@@ -404,7 +404,6 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
             }
           }).finally(() => {
-
             changeStep();
             setTimeout(() => {
               store.bidsStore.clearPhotos();
@@ -531,6 +530,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         <Button
                             type={'button'}
                             action={handleNext}
+                          isOnce={true}
                             disabled={
                                 !formData.isValid() || (store.bidsStore.AvailablePerformers.size === 0 && step === 4)
                             }

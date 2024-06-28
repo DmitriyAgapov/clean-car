@@ -4,15 +4,15 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import { observer } from 'mobx-react-lite'
 import { useStore } from "stores/store";
 import { useFormContext } from "components/Form/FormCreateBid/FormCreateUpdateBid";
-import { Checkbox, InputLabel, Group, Modal, Pill,Combobox, TextInput, useCombobox  } from "@mantine/core";
+import { Checkbox, InputLabel, Group, Modal, Pill, Combobox, TextInput, useCombobox, ScrollArea } from '@mantine/core'
 import { action, values as val } from 'mobx'
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { SvgClose } from "components/common/ui/Icon";
 
 interface OptionValue {label: string, value: string}
 function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals: any[]}) {
-
+	const isMobile = useMediaQuery('(max-width: 47rem)');
 	const { values, touched,  errors, setFieldValue, getInputProps }:any = useFormContext();
 	const store = useStore()
 	const combobox = useCombobox();
@@ -67,9 +67,9 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
 		</Combobox.Option>
 	));
 	return (
-        <Modal.Root size={500} opened={props.opened} onClose={props.onClose} centered lockScroll={false}>
+        <Modal.Root  opened={props.opened} onClose={props.onClose} centered lockScroll={isMobile}  size={isMobile ? "auto" : 500} fullScreen={isMobile}>
             <Modal.Overlay className={'bg-black/90  backdrop-blur-xl'} />
-            <Modal.Content radius={20} className={'pt-12 pb-4 '}>
+            <Modal.Content radius={20} className={'flex flex-col'}>
                 <Modal.Header className={'static px-8 bg-transparent'}>
                     <Modal.Title>
                         <Heading
@@ -84,9 +84,9 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
                         icon={<SvgClose className={'close__modal'} />}
                     />
                 </Modal.Header>
-                <Modal.Body className={'!p-0'}>
+                <Modal.Body className={'!p-0 flex-1 grid grid-rows-[auto_1fr_auto]'}>
                     <Combobox store={combobox} onOptionSubmit={handleValueSelect}>
-                        <div className={'static px-8 pb-4'}>
+                        <div className={'static px-7 pb-4'}>
                             <Combobox.EventsTarget>
                                 <TextInput
 	                                  classNames={{
@@ -109,14 +109,17 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
                                 {/* </PillsInput> */}
                             </div>
                         </div>
-                        <div className={'px-8 py-4 border-t border-t-gray-2'}>
-                            <Combobox.Options>
-                                {options.length > 0 ? options : <Combobox.Empty>Не найдено....</Combobox.Empty>}
-                            </Combobox.Options>
+                        <div className={'px-6 py-4 border-t border-t-gray-2'}>
+	                        <ScrollArea mah={"auto"}>
+		                        <Combobox.Options>
+			                        {options.length > 0 ? options : <Combobox.Empty>Не найдено....</Combobox.Empty>}
+		                        </Combobox.Options>
+	                        </ScrollArea>
+
                         </div>
                     </Combobox>
 
-                    <footer className={'flex !justify-end  px-8 pt-4 border-t border-t-gray-2 gap-4'}>
+                    <footer className={'flex !justify-end pb-4 px-8 pt-4 border-t border-t-gray-2 gap-4'}>
                         <Button
                             type={'button'}
                             size={ButtonSizeType.xs}

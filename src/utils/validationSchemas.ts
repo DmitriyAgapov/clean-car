@@ -115,14 +115,14 @@ export const CreateCompanySchema = Yup.object().shape({
 })
 export const CreateFilialSchema = Yup.object().shape({
 	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-	address: Yup.string().when('address_ready', (address_ready, schema) => {
-		if(!address_ready[0]) {
-			return schema.oneOf([],'Адрес распознан неверно, уточните адрес').required('Обязательное поле')
-		} else {
-			return schema
-		}
-	}),
-	address_ready: Yup.boolean().required('Введите верный адрес'),
+	// address: Yup.string().when('address_ready', (address_ready, schema) => {
+	// 	if(!address_ready[0]) {
+	// 		return schema.oneOf([],'Адрес распознан неверно, уточните адрес').required('Обязательное поле')
+	// 	} else {
+	// 		return schema
+	// 	}
+	// }),
+	// address_ready: Yup.boolean().required('Введите верный адрес'),
 	city: Yup.string().required('Обязательное поле'),
 	type: Yup.string(),
 	company_id: Yup.string().required('Обязательное поле'),

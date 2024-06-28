@@ -264,7 +264,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 data={[
                   'Клиент',
                   'Партнер',
-                  'Физическое лицо',
+                  // 'Физическое лицо',
                   'Администратор системы',
                 ].map((el: string) => ({
                   label: el,

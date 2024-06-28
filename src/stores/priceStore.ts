@@ -80,8 +80,8 @@ export class PriceStore {
         editPage: 'Редактировать город',
         tableHeaders: [
             { label: 'Компания', name: 'name' },
+            { label: 'Филиал', name: 'company__parent__name' },
             { label: 'Тип', name: 'company_type' },
-            { label: 'Филиал', name: 'company__parent__name' }
         ],
         createPageDesc: 'Добавьте новый город',
         editPageDesc: 'Вы можете изменить город или удалить его из системы',

@@ -14,25 +14,22 @@ import { Loader } from "@mantine/core";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
 
-export default function CompanyPageEditAction(props: any) {
+export default function CompanyPageEditAction() {
   const store = useStore()
   const navigate = useNavigate()
   const params = useParams()
-  const revalidator = useRevalidator()
   const {isLoading, data:loaderData, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
     revalidateOnMount: true
   })
-  console.log(loaderData);
   useDidUpdate(
     () => {
       if(location.pathname.includes('companies')) {
-
         mutate()
-        revalidator.revalidate()
       }
     },
     [location.pathname]
   );
+
   if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
   if(isLoading && !loaderData) return <Loader/>
   return (

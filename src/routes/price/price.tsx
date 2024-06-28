@@ -104,7 +104,6 @@ const PricePage = ():JSX.Element => {
     },
     [location.pathname]
   );
-  console.log(company)
   if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
     <Section type={SectionType.default} noScroll={true}>

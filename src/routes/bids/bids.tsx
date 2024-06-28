@@ -68,7 +68,7 @@ const BidsPage = () => {
 
 	let th = (() => {
 		const _th = [
-			{ label: '№', name: 'idnum' },
+			{ label: '№', name: 'id' },
 			{ label: 'Статус', name: 'status' },
 			{ label: 'Дата/Время', name: 'created' }
 		]

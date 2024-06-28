@@ -76,13 +76,13 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
 
     const {width} = useViewportSize()
     const [open, setOpen] = useState(false);
-
+  console.log(props);
     const propsRender = React.useMemo(() => {
         const ar = []
         for (const key in props) {
-          const priceValue = typeof props[key] === 'number'
+          const priceValue = typeof props[key] === 'number' || props[key]?.toString().includes('%')
 
-          if(key !== 'id') {
+          if(key !== 'id' && key !== 'is_percent') {
             ar.push(
                 <Table.Td key={key} className={styles.tableCellPure + ' ' + `${priceValue  ? '!pl-0 !pr-1' : ''}`} onClick={(event: any)  => (edit && typeof props[key] === 'number') && event.stopPropagation()} style={priceValue ? {width: 'calc(5rem * var(--mantine-scale))'} : (key === "service_option" && props[key] === "") ? {opacity: 0, border: 0, padding: 0} : {}} data-pricevalue={priceValue} data-label={label(key)}>
                     {edit && typeof props[key] === 'number' ? (
@@ -102,7 +102,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
                           onChange={(value) => {
                             return store.priceStore.handleChangeAmount({type: type, amount: value !== "" ? value : 0, id: props.id, initValue: props[key] === value, ...meta})
                           }}
-                          suffix=" ₽"
+                          suffix={props.is_percent ? " %" : " ₽"}
                           // decimalScale={2}
                           // fixedDecimalScale
                           value={store.priceStore.priceOnChange.get(`${type}_${props.id.toString()}`)?.amount ? store.priceStore.priceOnChange.get(`${type}_${props.id.toString()}`).amount : props[key]}

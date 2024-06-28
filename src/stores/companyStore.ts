@@ -45,16 +45,16 @@ export type Company<Type> = {
 export type CompanyProfile<Type> = Type extends CompanyType.customer ? CustomerProfile : PerformerProfile
 export interface CustomerProfile {
     customerprofile: {
-        address: string
+        address?: string
         inn?: string
         ogrn?: string
         legal_address?: string
         contacts?: string
         payment?: Payment
         bill?: string
-        lat: number
+        lat?: number
 
-        lon: number
+        lon?: number
         application_type?: string
         overdraft?: boolean
         overdraft_sum?: number

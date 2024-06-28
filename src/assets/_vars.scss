@@ -55,7 +55,7 @@
 	--grid: var(--sideGutter) 56px repeat(var(--totalCol), 1fr) var(--sideGutter);
   }
   @media screen and (min-width: 1440px) {
-	--scaling-font:  clamp(16px, calc(100vh / 64), 24px);
+	--scaling-font:  clamp(16px, calc(100svh / 64), 24px);
   }
   @media screen and (max-width: 743px) {
 	--sideGutter: 0.75rem;

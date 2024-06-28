@@ -81,7 +81,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
                     label={item.label}
                     props={items}
                     className={'!pb-0'}
-                />,
+                />
             )
         })
         return result

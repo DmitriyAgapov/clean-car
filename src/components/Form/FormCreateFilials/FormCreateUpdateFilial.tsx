@@ -133,11 +133,11 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 }
             }
 
-            // if (payload.field === 'city') {
-            //     return {
-            //         className: 'mb-2  col-span-3 !flex-[0_15rem]}',
-            //     }
-            // }
+            if (payload.field === 'city') {
+                return {
+                    className: 'mb-2  col-span-3 !flex-[0_1_30%]',
+                }
+            }
             // if (payload.field === 'is_active') {
             //     return {
             //         className: 'mb-2  col-span-3 !flex-[0_15rem]}',
@@ -190,11 +190,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 name: values.company_name,
                 is_active: values.is_active === "true",
                 city: Number(values.city),
-                customerprofile: {
-                    address: values.address,
-                    lat: Number(values.lat),
-                    lon: Number(values.lon),
-                },
+                customerprofile: {},
             }
             if (edit) {
                 agent.Filials.editFilial(data, values.company_id, 'customer', values.id)
@@ -422,7 +418,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                     value: String(o.id),
                                 }))}
                         />
-                        <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
+                        {formData.values.type === CompanyType.customer ? null : <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>}
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}

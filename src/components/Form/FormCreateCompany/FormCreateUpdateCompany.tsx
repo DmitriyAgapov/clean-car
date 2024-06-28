@@ -536,15 +536,15 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             </>
                         }
                     >
-                        <Select
-                            label={'Оплата'}
-                            {...formData.getInputProps('payment')}
-                            className={' w-fit   tablet:!flex-[0_0_auto] !flex-[1_0_20rem]'}
-                            data={[
-                                { label: 'Постоплата', value: Payment.postoplata },
-                                { label: 'Предоплата', value: Payment.predoplata },
-                            ]}
-                        />
+                        {/* <Select */}
+                        {/*     label={'Оплата'} */}
+                        {/*     {...formData.getInputProps('payment')} */}
+                        {/*     className={' w-fit   tablet:!flex-[0_0_auto] !flex-[1_0_20rem]'} */}
+                        {/*     data={[ */}
+                        {/*         { label: 'Постоплата', value: Payment.postoplata }, */}
+                        {/*         { label: 'Предоплата', value: Payment.predoplata }, */}
+                        {/*     ]} */}
+                        {/* /> */}
 
                         <Select
                             label={'Овердрафт'}
