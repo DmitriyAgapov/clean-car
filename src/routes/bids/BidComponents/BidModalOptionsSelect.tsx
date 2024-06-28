@@ -67,10 +67,10 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
 		</Combobox.Option>
 	));
 	return (
-        <Modal.Root  opened={props.opened} onClose={props.onClose} centered lockScroll={isMobile}  size={isMobile ? "auto" : 500} fullScreen={isMobile}>
+        <Modal.Root  opened={props.opened} onClose={props.onClose} centered lockScroll={isMobile}  size={isMobile ? "auto" : "lg"} fullScreen={isMobile}>
             <Modal.Overlay className={'bg-black/90  backdrop-blur-xl'} />
-            <Modal.Content radius={20} className={'flex flex-col'}>
-                <Modal.Header className={'static px-8 bg-transparent'}>
+            <Modal.Content radius={20} className={'flex flex-col  pt-16 overflow-hidden'} >
+                <Modal.Header className={'static px-8 bg-transparent'} >
                     <Modal.Title>
                         <Heading
                             text={`Выбрать дополнительные опции`}
@@ -80,7 +80,7 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
                         />
                     </Modal.Title>
                     <Modal.CloseButton
-                        className={'hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5'}
+                        className={'hover:rotate-90 hover:bg-transparent transition-all absolute top-10 right-5'}
                         icon={<SvgClose className={'close__modal'} />}
                     />
                 </Modal.Header>
@@ -110,11 +110,11 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
                             </div>
                         </div>
                         <div className={'px-6 py-4 border-t border-t-gray-2'}>
-	                        <ScrollArea mah={"auto"}>
+	                        <ScrollArea.Autosize mah={350} maw={400} mx="auto">
 		                        <Combobox.Options>
 			                        {options.length > 0 ? options : <Combobox.Empty>Не найдено....</Combobox.Empty>}
 		                        </Combobox.Options>
-	                        </ScrollArea>
+	                        </ScrollArea.Autosize >
 
                         </div>
                     </Combobox>
