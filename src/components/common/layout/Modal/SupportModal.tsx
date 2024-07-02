@@ -75,7 +75,11 @@ function SupportForm(props:any) {
 	return <form className={'desktop:grid grid-cols-3 gap-x-6 gap-y-2'} onSubmit={(props:any) => handleSubmit(props)}
 		onReset={formData.onReset}>
 		<TextInput label={'Как вас зовут?'} {...formData.getInputProps('name')} placeholder={'Ваше имя'} />
-		<InputBase{...formData.getInputProps('phone')} label={'Телефон'} component={IMaskInput}{...masked} placeholder='+7 000 000 0000' />
+		<InputBase{...formData.getInputProps('phone')} label={'Телефон'} component={IMaskInput}{...masked} placeholder='+7 000 000 0000' onPaste={(e) => {
+			const numb = e.clipboardData.getData('Text');
+			formData.setFieldValue('phone', numb)
+			return e
+		}}/>
 		<TextInput label={'E-mail'} {...formData.getInputProps('email')} />
 		<Textarea   {...formData.getInputProps('text')} label={'Ваш вопрос'} placeholder="Текст обращения" className={'col-span-full'}/>
 

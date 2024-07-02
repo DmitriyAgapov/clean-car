@@ -693,17 +693,23 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             //
                             // }}
                             onOptionSubmit={(value) => {
+                              console.log(value);
                                 if (value === null) {
-                                    store.bidsStore.formResultSet({ service_subtype: 0 })
-                                    formData.setFieldValue(step2.fields[1].name, '0')
-                                    formData.setTouched({ service_option: false })
+                                    store.bidsStore.formResultSet({ service_subtype: null })
+                                  store.bidsStore.formResultSet({
+                                    service_option: [],
+                                  })
+                                    formData.setFieldValue(step2.fields[1].name, null)
                                     formData.setFieldValue('service_option', [])
+                                    formData.setTouched({ service_option: false })
                                 } else {
                                     formData.setTouched({ service_option: false })
                                     formData.setFieldValue('service_subtype', value)
                                     store.bidsStore.formResultSet({
                                         service_subtype: Number(value),
+                                      service_option: [],
                                     })
+
                                     formData.setFieldValue('service_option', [])
                                     // console.log('setTouched');
                                     formData.setTouched({ service_option: true })

@@ -23,7 +23,7 @@ export default function ErrorPageNotFound() {
       className={'page-intro page-error'}
 
     >
-      <Section type={SectionType.centered}>
+      <Section type={SectionType.centered}  className={'grid-row-[1/-1]'}>
         <Panel
           className={
             ' desktop-max:-mx-4  desktop-max:h-lvh'

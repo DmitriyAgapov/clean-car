@@ -43,6 +43,13 @@
 
 }
 .ModalBidFullImg {
+  @media screen and (max-width: 740px) {
+	display: grid;
+	grid-template-rows: 1fr auto;
+	align-items: center;
+	align-content: center;
+  }
+
 	background-color: transparent !important;
   &:focus-visible {
 	outline: none;

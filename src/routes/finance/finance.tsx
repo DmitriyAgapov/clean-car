@@ -362,7 +362,7 @@ const FinacePage = () => {
         <TableWithSortNew store={localRootStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
-
+          autoScroll={true}
           style={PanelRouteStyle.finance}
           background={PanelColor.glass}
           className={'col-span-full table-groups tablet-max:pb-28'}

@@ -62,6 +62,7 @@ export type PanelProps = {
     className?: string
     headerClassName?: string
     bodyClassName?: string | ''
+    style?: any
     footerClassName?: string
     state?: boolean
     ref?: any
@@ -82,6 +83,7 @@ const Panel = forwardRef(function Panel({
     variant = PanelVariant.default,
     background = PanelColor.default,
     className = '',
+  ...props
 }: PanelProps,
   refBody:any
 ){
@@ -96,6 +98,7 @@ const Panel = forwardRef(function Panel({
             data-style={routeStyle}
             data-variant={variant}
             data-background={background}
+          {...props}
         >
             {header && (
                 <header data-panel={'header'} className={headerClassName}>

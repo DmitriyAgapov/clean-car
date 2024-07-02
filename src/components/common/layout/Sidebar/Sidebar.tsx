@@ -182,7 +182,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
     sidebarMenu.forEach((el) => addRouteWithPermissions(el))
 
     setRoutes(routeWithPermissions)
-  }, [store.userStore.currentUserPermissions.size])
+  }, [store.userStore.myProfileData.permissions])
 
   return (
       <>

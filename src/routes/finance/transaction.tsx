@@ -22,6 +22,9 @@ const purpose:any = {
   "7": 'Штраф Компании (в рамках договора)'
 }
 const localRootStore =  new LocalRootStore()
+localRootStore.params.setSearchParams({
+  ordering: "-created"
+})
 
 const TransactionPage = () => {
 

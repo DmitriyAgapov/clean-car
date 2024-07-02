@@ -82,7 +82,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
 
       result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type+'_filial'}>
 
-        <DList label={'Адрес'} title={data[`${company_type}profile`].address} />
+        {data.customerprofile ? null : <DList label={'Адрес'} title={data[`${company_type}profile`].address} />}
 
 
         {data.parent.name && <DList label={'Компания'}

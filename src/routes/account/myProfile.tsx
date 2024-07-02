@@ -100,6 +100,11 @@ const UserProfileEditForm = ({action}: {action: (val:boolean) => void }) => {
         component={IMaskInput}
         {...masked}
         placeholder='+7 000 000 0000'
+        onPaste={(e) => {
+          const numb = e.clipboardData.getData('Text');
+          form.setFieldValue('phone', numb)
+          return e
+        }}
       />
       <TextInput label={'E-mail'} {...form.getInputProps('email')} />
 

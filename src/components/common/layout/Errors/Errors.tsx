@@ -22,7 +22,7 @@ const Errors = ({ className }: { className:string }) => {
             data-theme={appStore.appTheme}
             data-app-type={appStore.appType}
         >
-            <Section type={SectionType.centered}>
+            <Section type={SectionType.centered}   style={{gridRow: "1/-1"}}>
                 <Panel
                     className={' desktop-max:-mx-4  desktop-max:h-lvh z-20 !border-accent'}
                     header={<Heading variant={HeadingVariant.h1} text={'Сервер недоступен'} className={'uppercase !mb-0'} />}

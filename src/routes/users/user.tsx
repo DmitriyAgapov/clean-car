@@ -43,11 +43,12 @@ const UserPage = () => {
             <DList label={'Пользователь'} title={data.employee?.first_name + ' ' + data?.employee?.last_name} />
             <DList label={'Номер телефона'} title={data?.employee?.phone} />
             <DList label={'E-mail'} title={data?.employee?.email} />
-          <DList
-                label={'Тип'}
-                title={label(companyType ? companyType : "admin")}
-                directory={companyType}
-            />
+            <DList label={'Пользователь видит заявки'} title={data?.employee?.bid_visibility ? "Да" : "Нет"} />
+            <DList
+                  label={'Тип'}
+                  title={label(companyType ? companyType : "admin")}
+                  directory={companyType}
+              />
 
           {data?.group && data?.group.name && <DList label={'Группа'} title={data?.group.name} />}
             <DList

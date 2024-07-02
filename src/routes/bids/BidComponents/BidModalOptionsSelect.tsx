@@ -11,18 +11,21 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import { SvgClose } from "components/common/ui/Icon";
 
 interface OptionValue {label: string, value: string}
-function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals: any[]}) {
+const BidOptionsModal = observer((props: { opened: boolean; onClose: () => void; initVals: any[]}) => {
 	const isMobile = useMediaQuery('(max-width: 47rem)');
 	const { values, touched,  errors, setFieldValue, getInputProps }:any = useFormContext();
 	const store = useStore()
 	const combobox = useCombobox();
-	const test = store.catalogStore.ServiceSubtypesOptions.map((i: any) => ({label: i.name, value: i.id}))
+	const test = store.catalogStore.ServiceSubtypesOptions.map((i: any) => {
+		return ({label: i.name,  value: i.id})
+	})
 
-	const [value, setValue] = React.useState<string[]>(values.service_option);
+	const [value, setValue] = React.useState<string[]>([]);
 	const [search, setSearch] = React.useState('');
-
+	React.useEffect(() => {
+		setValue(props.initVals)
+	}, [props.initVals]);
 	const handleValueSelect = (val: string) => {
-		console.log(test.filter((value:OptionValue) => value.value === val)[0]);
 		setValue((current) =>
 			current.includes(val) ? current.filter((v) => v !== val) : [...current, val]
 		)
@@ -40,21 +43,17 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
 		props.onClose.call(null)
 	}
 
-	const valuess = value.map((item) => (
-		<Pill key={item} withRemoveButton onRemove={() => handleValueRemove(item)} className={'bg-gray-2 text-white rounded'}>
-			{test.filter((value:OptionValue) => value.value === item)[0].label}
-		</Pill>
-	));
 	const options = test
 	.filter((item:{label: string, value: string}) => item.label.toLowerCase().includes(search.toLowerCase().trim()))
 	.map((item:{label: string, value: string}) => (
 		<Combobox.Option
+			className={'!px-1'}
 			value={item.value}
 			key={item.value}
 			active={value.includes(item.value)}
 			onMouseOver={() => combobox.resetSelectedOption()}
 		>
-			<Group gap="sm">
+			<Group gap="sm" className={'flex-nowrap !px-0'}>
 				<Checkbox
 					checked={value.includes(item.value)}
 					onChange={() => {}}
@@ -69,18 +68,18 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
 	return (
         <Modal.Root  opened={props.opened} onClose={props.onClose} centered lockScroll={isMobile}  size={isMobile ? "auto" : "lg"} fullScreen={isMobile}>
             <Modal.Overlay className={'bg-black/90  backdrop-blur-xl'} />
-            <Modal.Content radius={20} className={'flex flex-col  pt-16 overflow-hidden'} >
+            <Modal.Content radius={20} className={'flex flex-col overflow-hidden'} >
                 <Modal.Header className={'static px-8 bg-transparent'} >
                     <Modal.Title>
                         <Heading
                             text={`Выбрать дополнительные опции`}
                             variant={HeadingVariant.h4}
                             color={HeadingColor.accent}
-                            // className={'pb-12'}
+                            className={'  lg:pt-16 pt-8'}
                         />
                     </Modal.Title>
                     <Modal.CloseButton
-                        className={'hover:rotate-90 hover:bg-transparent transition-all absolute top-10 right-5'}
+                        className={'hover:rotate-90 hover:bg-transparent transition-all absolute top-4 right-4'}
                         icon={<SvgClose className={'close__modal'} />}
                     />
                 </Modal.Header>
@@ -101,16 +100,16 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
                                     }}
                                 />
                             </Combobox.EventsTarget>
-                            <div>
-                                {/* <PillsInput pointer onClick={() => combobox.toggleDropdown()}> */}
-                                <Pill.Group>
-                                    {valuess.length > 0 ? valuess : <></>}
-                                </Pill.Group>
-                                {/* </PillsInput> */}
-                            </div>
+                            {/* <div> */}
+                            {/*     /!* <PillsInput pointer onClick={() => combobox.toggleDropdown()}> *!/ */}
+                            {/*     <Pill.Group> */}
+                            {/*         {valuess.length > 0 ? valuess : <></>} */}
+                            {/*     </Pill.Group> */}
+                            {/*     /!* </PillsInput> *!/ */}
+                            {/* </div> */}
                         </div>
                         <div className={'px-6 py-4 border-t border-t-gray-2'}>
-	                        <ScrollArea.Autosize mah={350} maw={400} mx="auto">
+	                        <ScrollArea.Autosize mah={350} maw={420} mx="auto">
 		                        <Combobox.Options>
 			                        {options.length > 0 ? options : <Combobox.Empty>Не найдено....</Combobox.Empty>}
 		                        </Combobox.Options>
@@ -119,14 +118,14 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
                         </div>
                     </Combobox>
 
-                    <footer className={'flex !justify-end pb-4 px-8 pt-4 border-t border-t-gray-2 gap-4'}>
+                    <footer className={'flex tablet-max:justify-stretch tablet:justify-end pb-4 px-8 pt-4 border-t border-t-gray-2 gap-4'}>
                         <Button
                             type={'button'}
                             size={ButtonSizeType.xs}
                             text={'Отменить'}
 	                        action={props.onClose}
                             variant={ButtonVariant['accent-outline']}
-                            className={'!text-sm'}
+                            className={'!text-sm tablet-max:flex-1'}
                         />
                         <Button
                             type={'button'}
@@ -134,36 +133,39 @@ function BidOptionsModal(props: { opened: boolean; onClose: () => void; initVals
                             action={handleSaveValues}
                             text={'Сохранить'}
                             variant={ButtonVariant.accent}
-                            className={'!text-sm'}
+                            className={'!text-sm  tablet-max:flex-1'}
                         />
                     </footer>
                 </Modal.Body>
             </Modal.Content>
         </Modal.Root>
     )
-}
+})
 const BidModalOptionsSelect = () => {
 	const store = useStore()
 	const { values, touched,  errors, setFieldValue, getInputProps }:any = useFormContext();
 	const [opened, { open, close }] = useDisclosure(false)
+	const _selected_options = store.bidsStore.formResultsAll.service_option;
 	const memoModal = React.useMemo(() => {
-		return <BidOptionsModal opened={opened} onClose={close} initVals={store.bidsStore.formResult.service_option}/>
-	}, [opened])
+		return <BidOptionsModal opened={opened} onClose={close} initVals={_selected_options}/>
+	}, [opened, values.service_option, _selected_options])
 	return (
 				<div className={'col-span-full subgrid'}>
-					<InputLabel className={''}>Выберите дополнительные опции (при необходимости)</InputLabel>
-					<Button text={'Выбрать доп.опции'} variant={ButtonVariant["accent-outline"]} className={'!normal-case !h-10'} action={open}/>
-					<Pill.Group className={`col-span-full mt-4 ${store.bidsStore.formResult.service_option.length === 0 ? "hidden" : ''}`}>
-						{/* {valuess.length > 0 ? valuess : <></>} */}
-						{store.bidsStore.formResult.service_option.map((item:any) => (
+					<InputLabel className={'my-4'}>Выберите дополнительные опции (при необходимости)</InputLabel>
+					<Button text={'Выбрать доп.опции'}  type={'button'} variant={ButtonVariant["accent-outline"]} className={'!normal-case !h-10'} action={open} disabled={!values.service_type || !values.service_subtype }/>
+						{_selected_options.length ? 	<Pill.Group className={`col-span-full mt-4 ${_selected_options.length === 0 ? "hidden" : ''}`}> {_selected_options.map((item:any) => (
 							<Pill key={item}
-								// withRemoveButton
-								// onRemove={() => handleValueRemove(item)}
-								className={'bg-gray-2 text-white rounded'}>
-								{store.catalogStore.ServiceSubtypesOptions.map((i: any) => ({label: i.name, value: i.id})).filter((value:OptionValue) => value.value === item)[0].label}
+								withRemoveButton
+								onRemove={() => {
+									const _value =  store.bidsStore.formResult.service_option.filter((v:any) => v !== item)
+									setFieldValue('service_option', _value)
+									store.bidsStore.formResultSet({service_option: _value})
+								}}
+								className={'bg-gray-2 text-white rounded m-0.5'}>
+								{store.catalogStore.ServiceSubtypesOptions.map((i: any) => ({label: i.name, value: i.id})).filter((value:OptionValue) => value.value === item)[0] && store.catalogStore.ServiceSubtypesOptions.map((i: any) => ({label: i.name, value: i.id})).filter((value:OptionValue) => value.value === item)[0].label}
 							</Pill>
 						))}
-					</Pill.Group>
+						</Pill.Group> : null}
 					{/* {values.service_subtype && */}
 					{/* 	values.service_subtype !== '0' && */}
 					{/* 	values.service_subtype && */}

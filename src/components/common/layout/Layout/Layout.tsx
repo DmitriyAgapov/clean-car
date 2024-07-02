@@ -111,7 +111,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               loaderProps={{ children: <SvgCleanCarLoader /> }}
           />
           <main>{children}</main>
-       <Footer className={'flex desktop:!hidden  !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+       <Footer className={'flex desktop:!hidden tablet-max:!hidden !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
           <div>
 
             <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
@@ -121,7 +121,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
 
           <Link to={'/policy'}  className={'text-xs hover:text-accent'}>Политика конфиденциальности</Link>
         </Footer>
-        {!loc.pathname.includes('account') ?<Footer className={'tablet:px-6'}>
+        {!loc.pathname.includes('account') ? <Footer className={'tablet:px-6'}>
               {footerContent}
               <div>2023 (c.)</div>
               <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} to={'/policy'}></LinkStyled>

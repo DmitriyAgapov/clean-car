@@ -58,7 +58,7 @@ const UsersPage = () => {
   },[data])
   const th = React.useMemo(() => {
     const _th = [
-      {label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}
+      {label: 'Статус', name: 'employee__is_active'},{label: 'ФИО', name: 'employee__last_name'}, {label: 'Телефон', name: 'employee__phone'}, {label: 'e-mail', name: 'employee__email'}
     ]
     const _last = [{label: 'Компания',name: 'company__name'}, {label:  'Город', name: 'company__city__name'}]
     if(store.appStore.appType === "admin")  {

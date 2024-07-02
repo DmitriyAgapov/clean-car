@@ -216,6 +216,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		mask: "+7 000 000 00 00",
 		autofix: true,
 		// overwrite: true,
+		skipInvalid: false,
 		prepare: (appended, masked) => {
 			if (appended[0] === '8' && masked.value === "") {
 				return appended.slice(1);
@@ -320,11 +321,18 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
                     <InputBase
                         {...form.getInputProps('phone')}
+	                      placeholder='+7 000 000 0000'
                         label={'Телефон'}
-
                         component={IMaskInput}
                         {...masked}
-                        placeholder='+7 000 000 0000'
+	                      onPaste={(e) => {
+		                      const numb = e.clipboardData.getData('Text');
+													form.setFieldValue('phone', numb)
+													return e
+	                      }}
+
+
+
                     />
                     <TextInput label={'E-mail'} {...form.getInputProps('email')} />
 
