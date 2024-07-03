@@ -150,8 +150,8 @@ export class UserStore {
     if(authStore.userIsLoggedIn && appStore.token !== "") {
       try {
         if(this.isAdmin) {
-          console.log('Create admin permissions');
-          console.log(this.myProfileData.permissions);
+          // console.log('Create admin permissions');
+          // console.log(this.myProfileData.permissions);
           appStore.setAppType(UserTypeEnum.admin)
           this.myProfileData.permissions.forEach((el:any) => ar.set(el.name, el))
           // for (let permissionNameKey in PermissionNames) {

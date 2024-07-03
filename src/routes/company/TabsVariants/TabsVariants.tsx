@@ -182,14 +182,10 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
   let result
   switch (label) {
     case "Основная информация":
-      const [opened, { open, close }] = useDisclosure(false)
 
-      const memoModal = React.useMemo(() => {
-        return <UpBalance companyName={data.name} id={data.id} opened={opened} onClose={close} />
-      }, [opened])
-      const navigate = useNavigate()
 
-      // console.log(data);
+
+
       result = (<Tabs.Panel state={state}
         name={"info"}
         className={"pt-8"}
@@ -229,13 +225,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         {data?.performerprofile &&    <DList label={'Загруженность'} title={<WorkLoadStatus hasDot={false} status={data?.performerprofile.workload} className={'!top-0 !right-0 relative i:hidden'}/>} />}
         {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} className={'tablet:!col-[2_/_2_span] tablet:!row-start-4'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
         <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts}  className={'tablet:!col-[2_/_2_span] tablet:!row-start-5'}/>
-        {company_type === 'customer' &&
-          <div className={'lg:col-start-3 grid gap-4 lg-max:justify-end lg-max:row-start-1 lg-max:grid-flow-col lg-max:col-span-full'}>
-            <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
-            <Button text={'Бонусы и штрафы'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
-          </div>
-          }
-        {memoModal}
+
       </Tabs.Panel>)
       break;
 

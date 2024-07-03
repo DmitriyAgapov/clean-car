@@ -162,13 +162,13 @@ export class AppStore {
     let routeName = ''
     switch (this.appType) {
       case UserTypeEnum.admin:
-        routeName = 'администратор системы'
+        routeName = 'Администратор'
         break
       case UserTypeEnum.performer:
-        routeName = 'Кабинет партнера'
+        routeName = 'Партнёр'
         break
       case UserTypeEnum.customer:
-        routeName = 'Кабинет заказчика'
+        routeName = 'Клиент'
         break
     }
     this.appRouteName = routeName

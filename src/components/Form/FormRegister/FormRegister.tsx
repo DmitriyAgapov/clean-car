@@ -76,7 +76,7 @@ const FormRegister = () => {
       phone: form.values.phone.replaceAll(' ', ''),
       city: Number(form.values.city)
     }
-    return store.authStore.registerPerson(_d).then(() => open())
+    return store.authStore.registerPerson(_d).then(open)
 
     // console.log(form.values);
     // store.authStore.setLastname(values.lastName)

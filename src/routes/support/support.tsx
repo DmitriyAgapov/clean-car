@@ -42,7 +42,7 @@ const SupportPage = () => {
                               className={
                                   'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'
                               }
-                              action={() => navigate('/account/users')}
+                              action={() => navigate(-1)}
                               variant={ButtonVariant.text}
                           />
                           <Heading

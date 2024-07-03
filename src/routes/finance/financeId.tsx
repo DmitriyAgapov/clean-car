@@ -9,11 +9,12 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
-import { useDidUpdate } from '@mantine/hooks'
+import { useDidUpdate, useDisclosure } from '@mantine/hooks'
 import { NumberFormatter } from '@mantine/core';
 import { SvgBackArrow } from "components/common/ui/Icon";
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import dayjs from 'dayjs';
+import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -27,6 +28,8 @@ const FinaceIdPage = () => {
   const store = useStore()
   const navigate = useNavigate()
   const params = useParams()
+  const [opened, { open, close }] = useDisclosure(false)
+
   const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
 
   const {isLoading, data, mutate} = useSWR(localStore.params.isReady && [`reportId_${params.company_id}`, Number(params.company_id), localStore.params.getSearchParams] , ([url, id, args]) => store.financeStore.getReport(id, args))
@@ -60,6 +63,12 @@ const FinaceIdPage = () => {
           mutate()
       }
   }, [location.pathname])
+  console.log(data);
+  const memoModal = React.useMemo(() => {
+    if(isLoading && !data) return null
+    if(data && data.root_company) return <UpBalance companyName={data.root_company.name} id={data.root_company.id} opened={opened} onClose={close} />
+  }, [opened, data, isLoading])
+
   return (
       <Section type={SectionType.withSuffix}>
           <Panel
@@ -96,6 +105,12 @@ const FinaceIdPage = () => {
                       </div>
 
                       <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
+                        {data?.root_company?.company_type === 'Клиент' &&
+                          <div className={'lg:col-start-3 grid gap-4 lg-max:justify-end lg-max:row-start-1 lg-max:grid-flow-col lg-max:col-span-full'}>
+                            <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
+                            <Button text={'Бонусы и штрафы'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
+                          </div>
+                        }
                       <Button
                           text={'Сохранить Excel'}
                           action={() => navigate('#')}
@@ -172,6 +187,8 @@ const FinaceIdPage = () => {
                   </li>
               </ul>
           </Panel>
+
+        {memoModal}
       </Section>
   )
 }

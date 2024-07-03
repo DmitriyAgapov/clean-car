@@ -13,8 +13,8 @@
 	//}
   }
   .logo-header {
-	display: block;
-	flex-flow: column;
+	//display: block;
+	//flex-flow: column;
 	flex: 0 1 14rem;
 	padding: .75rem 1.125rem;
 	border-radius: 1.25rem;
@@ -34,9 +34,9 @@
 	  color: rgba(23, 22, 22, 0.76);
 	  letter-spacing: .1em;
 	}
-	@screen lg {
-	  display: flex;
-	}
+	//@screen lg {
+	//  display: flex;
+	//}
   }
 
   & > footer {

@@ -1,7 +1,12 @@
 .Logo {
-	display: block;
+	display: grid;
   align-self: center;
   user-select: none;
+  position: relative;
+  grid-template-columns: 1.5rem 2fr;
+  align-content: center;
+  align-items: center;
+  gap: 1rem;
   &[data-position="aside"] {
 
 	padding: 0 1.25rem 1.125rem 1.25rem;
@@ -17,11 +22,12 @@
 }
 .routeName {
   font-family: 'RF Dewi Expanded';
-  color: var(--accentColor);
+  color: black;
   margin-left: .375rem;
-  font-size: .75rem;
-  font-weight: 600;
-
+  font-size: .625rem;
+  font-weight: 700;
+  line-height: .75rem;
+  max-width: 128px;
 }
 .logoName {
 	font-family: 'RF Dewi Expanded', sans-serif;
@@ -31,6 +37,14 @@
   	text-decoration: none;
   	cursor: pointer;
   font-weight: 600;
+  &:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+  }
   @media screen and (max-width: 743px ){
 		font-size: 1.125rem;
   }
