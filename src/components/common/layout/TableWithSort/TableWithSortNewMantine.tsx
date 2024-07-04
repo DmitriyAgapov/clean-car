@@ -58,7 +58,7 @@ export const PaginationComponent = observer(():any => {
   }, [width, nextPageIsNotExist]);
 })
 
-const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search = false,headerBar = true, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
+const TableWithSortNewMantine = observer(({ variant, withOutLoader, autoScroll, search = false,headerBar = true, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
 }: TableWithSortProps) => {
     const store = useStore()
     const localStore = useLocalStore<LocalRootStore>()
@@ -96,7 +96,25 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
       })()
     }, [height, fontSize, value, _count]);
 
-
+    const content = React.useMemo(() => {
+      if(noData || !rows) return <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />
+      if(autoScroll) {
+        return (<Table.ScrollContainer  mah={500} minWidth={"100%"} type='native'>
+          <Table className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
+            {headerBar && <RowHeading total={initCount} ar={ar} />}
+            <Table.Tbody>
+            {rows.map((item: any, index: number) => <RowData style={style} {...item} key={item.id + "_00" + index} />)}
+            </Table.Tbody>
+          </Table>
+        </Table.ScrollContainer>)
+      }
+      return <table className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
+        {headerBar && <RowHeading total={initCount} ar={ar} />}
+        <tbody>{rows.map((item: any, index: number) =>
+        <RowData style={style} {...item}
+          key={item.id + "_00" + index} />
+        )}</tbody></table>
+      }, [autoScroll, noData, rows, headerBar])
 
       return (
         <Panel ref={refBody} state={false}
@@ -116,43 +134,17 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
             footer={!autoScroll ? <PaginationComponent /> : null}
             {...props}
         >
-          {autoScroll ? <Table.ScrollContainer mah={"calc(100dvh - 30rem)"}
-            h={"calc(100dvh - 30rem)"}
-            minWidth={"100%"}>
-            <Table className={styles.TableWithSort}
-              data-style={style}
-              data-width={`${Math.floor(100 / ar.length)}`}
-              stickyHeader
-              stickyHeaderOffset={0}>
-              {headerBar && <RowHeading total={initCount}
-                ar={ar}
-                autoScroll={autoScroll} />}
-              <Table.Tbody>
-                {rows && rows.map((item: any, index: number) => <RowData style={style} {...item}
-                  key={item.id + "_00" + index} />)}
-              </Table.Tbody>
-            </Table>
-          </Table.ScrollContainer> : <table className={styles.TableWithSort}
-            data-style={style}
-            data-width={`${Math.floor(100 / ar.length)}`}>
-            {headerBar && <RowHeading total={initCount}
-              ar={ar} />}
-            <tbody>{rows && rows.map((item: any, index: number) =>
-              <RowData style={style} {...item}
-                key={item.id + "_00" + index} />
-            )}</tbody>
-          </table>}
-
+          {content}
         </Panel>
-      )
+    )
 })
 
-const TableWithSort = (props: any) => {
-  return (
-    <LocalStoreProvider stores={props.store}>
-      <TableWithSortNew {...props} />
-    </LocalStoreProvider>
-  )
+const TableWithSort = (props:any) => {
+    return (
+      <LocalStoreProvider stores={props.store}>
+          <TableWithSortNewMantine {...props} />
+      </LocalStoreProvider>
+    )
 }
 
 export default observer(TableWithSort);

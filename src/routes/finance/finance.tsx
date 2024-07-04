@@ -363,6 +363,7 @@ const FinacePage = () => {
         <TableWithSortNew store={localRootStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
+
           autoScroll={true}
           style={PanelRouteStyle.finance}
           background={PanelColor.glass}
@@ -378,7 +379,6 @@ const FinacePage = () => {
             { label: 'Эвакуация', name: 'evac' },
             { label: 'Всего', name: 'total' },
           ]} />
-        <TableWithScroll elements={data}/>
         <FinanceBottom data={data} />
       </Section>
   )

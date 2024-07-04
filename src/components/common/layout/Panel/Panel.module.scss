@@ -331,7 +331,7 @@
   &[data-variant="dataPadding"] {
 	@apply border border-gray-2;
 	> header {
-	  @apply lg:px-8 pt-8 pb-4;
+	  @apply lg:px-8 pt-8 pb-4  border-b border-b-[#242529];
 	}
 
 	> footer {
@@ -349,7 +349,7 @@
 	border-bottom-right-radius: 0;
 	@apply border border-gray-2;
 	> header {
-	  @apply lg:px-8 pt-8 pb-4;
+	  @apply lg:px-8 pt-8 pb-4   border-b border-b-[#242529];
 	}
 
 	> footer {

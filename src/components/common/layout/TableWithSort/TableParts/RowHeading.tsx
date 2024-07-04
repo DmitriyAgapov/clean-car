@@ -2,9 +2,24 @@ import { useLocalStore } from "stores/localStore";
 import { TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
 import React, { useState } from "react";
 import styles from "components/common/layout/TableWithSort/TableWithSort.module.scss";
-import { SvgSort } from "components/common/ui/Icon";
+import { SvgSort } from 'components/common/ui/Icon'
+import { Table } from '@mantine/core'
 
-const RowHeading = ({ ar, sort, action, total }: any) => {
+function StickyHeader(props: { map: any, autoScroll: boolean }) {
+	if (props.autoScroll)
+        return (
+            <Table.Thead>
+                <Table.Tr className={styles.tableheader + ' tableheader'}>{props.map}</Table.Tr>
+            </Table.Thead>
+        )
+    return (
+        <thead>
+            <tr className={styles.tableheader + ' tableheader'}>{props.map}</tr>
+        </thead>
+    )
+}
+
+const RowHeading = ({ ar, sort, action, total, autoScroll }: any) => {
 	const localStore = useLocalStore()
 	// console.log(localStore.params.getSearchParams.ordering && localStore.params.getSearchParams.ordering.length > 0)
 
@@ -54,28 +69,36 @@ const RowHeading = ({ ar, sort, action, total }: any) => {
 
 	}, [count, ar, localStore.params.searchParams])
 	return (
-		<thead>
-		<tr className={styles.tableheader + ' tableheader'}>
-			{ar.map((arItem: { label: string, name: string }, index: number) => {
-				return (
-					<th
-						key={`rh-${index}`}
-						data-name={localStore.data?.canSort === false ? null : arItem.name}
-						// style={(index !== 0 && index !== ar.length - 1) ? ({ width: `${100 / ar.length}%` } ): {}}
-						className={styles.tableheading}
-						onClick={() => localStore.data?.canSort === false ?  void null :handleSortKey(index)}
-						data-sort-selected={localStore.data?.canSort === false ? null : index === count.index}
-						data-sort-reversed={localStore.data?.canSort === false ? null : index === count.index && count.reversed === true}
-					>
-						<div style={{ display: 'flex' }}>
-							<span>{arItem.label}</span>
-							{localStore.data?.canSort === false ? null:  <SvgSort /> }
-						</div>
-					</th>
-				)
-			})}
-		</tr>
-		</thead>
+		<StickyHeader autoScroll={autoScroll} map={ar.map((arItem: { label: string, name: string }, index: number) => {
+			if(autoScroll) return (
+				<Table.Th key={`rh-${index}`}
+					data-name={localStore.data?.canSort === false ? null : arItem.name}
+					// style={(index !== 0 && index !== ar.length - 1) ? ({ width: `${100 / ar.length}%` } ): {}}
+					className={styles.tableheading}
+					onClick={() => localStore.data?.canSort === false ? void null : handleSortKey(index)}
+					data-sort-selected={localStore.data?.canSort === false ? null : index === count.index}
+					data-sort-reversed={localStore.data?.canSort === false ? null : index === count.index && count.reversed === true}>
+					<div style={{ display: 'flex' }}>
+						<span>{arItem.label}</span>
+						{localStore.data?.canSort === false ? null : <SvgSort />}
+					</div>
+				</Table.Th>
+			)
+			return (
+				<th key={`rh-${index}`}
+					data-name={localStore.data?.canSort === false ? null : arItem.name}
+					// style={(index !== 0 && index !== ar.length - 1) ? ({ width: `${100 / ar.length}%` } ): {}}
+					className={styles.tableheading}
+					onClick={() => localStore.data?.canSort === false ? void null : handleSortKey(index)}
+					data-sort-selected={localStore.data?.canSort === false ? null : index === count.index}
+					data-sort-reversed={localStore.data?.canSort === false ? null : index === count.index && count.reversed === true}>
+					<div style={{ display: 'flex' }}>
+						<span>{arItem.label}</span>
+						{localStore.data?.canSort === false ? null : <SvgSort />}
+					</div>
+				</th>
+			)
+		})} />
 	)
 }
 export default RowHeading
