@@ -1,3 +1,6 @@
+:root {
+  --authGradient: linear-gradient(55.87deg, #00FF75 27.15%, #00FFB3 104.84%);
+}
 .Logo {
 	display: grid;
   align-self: center;
@@ -9,15 +12,21 @@
   gap: 1rem;
   &[data-position="aside"] {
 
-	padding: 0 1.25rem 1.125rem 1.25rem;
-	align-self: flex-start;
-	a {
-	  color: var(--accentColor);
-	  font-size: 1.625rem;
-	}
+	//padding: 0 1.25rem 1.125rem 1.25rem;
+	//align-self: flex-start;
+	//a {
+	//  color: var(--accentColor);
+	//  font-size: 1.625rem;
+	//}
 	span {
 	  display: none;
 	}
+  }
+  [data-content="logo"] {
+	background: var(--authGradient);
+	color: var(--accentColor);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
   }
 }
 .routeName {
@@ -28,10 +37,18 @@
   font-weight: 700;
   line-height: .75rem;
   max-width: 128px;
+  &:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+  }
 }
 .logoName {
 	font-family: 'RF Dewi Expanded', sans-serif;
-  	color: white;
+  	//color: white;
   	white-space: nowrap;
   	font-size: 1.5rem;
   	text-decoration: none;

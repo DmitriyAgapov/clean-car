@@ -171,10 +171,7 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
     // }
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
-        if(store.userStore.myProfileData.company.company_type === "Партнер" && el.url === "cars") {
-
-
-        } else {
+        if(store.userStore.myProfileData.company.company_type === "Партнер" && el.url === "cars") {} else {
           routeWithPermissions.push(el)
         }
       }
@@ -188,15 +185,11 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       <>
           <BackDrop />
           <aside className={styles.Sidebar} {...props} data-state={appStore.asideState}>
-              {(width && width < 960) ? <Logo position={'aside'} /> : null}
+              {/* {(width && width < 960) ? <Logo position={'aside'} /> : null} */}
 
               <nav>
                   <ul>
-                      {routes.map((i, index) => {
-                          if (i.url === location.pathname) {
-                          }
-                          return <ListItem key={`item-${index}`} i={i} />
-                      })}
+                      {routes.map((i, index) => {if (i.url === location.pathname) {}return <ListItem key={`item-${index}`} i={i} />})}
                   </ul>
               </nav>
               {children}

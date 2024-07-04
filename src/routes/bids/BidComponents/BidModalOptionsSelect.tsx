@@ -61,7 +61,7 @@ const BidOptionsModal = observer((props: { opened: boolean; onClose: () => void;
 					tabIndex={-1}
 					style={{ pointerEvents: 'none' }}
 				/>
-				<span>{item.label}</span>
+				<span className={'text-white hover:text-accent'}>{item.label}</span>
 			</Group>
 		</Combobox.Option>
 	));

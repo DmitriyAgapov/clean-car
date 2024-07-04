@@ -22,6 +22,7 @@ localRootStore.params.setSearchParams({
   page_size: 10,
   start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
 })
+
 const FinaceIdPage = () => {
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
@@ -29,7 +30,7 @@ const FinaceIdPage = () => {
   const navigate = useNavigate()
   const params = useParams()
   const [opened, { open, close }] = useDisclosure(false)
-
+  const [openedf, { open:openf, close:closef }] = useDisclosure(false)
   const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
 
   const {isLoading, data, mutate} = useSWR(localStore.params.isReady && [`reportId_${params.company_id}`, Number(params.company_id), localStore.params.getSearchParams] , ([url, id, args]) => store.financeStore.getReport(id, args))
@@ -58,21 +59,29 @@ const FinaceIdPage = () => {
       }
       localStore.setIsLoading = isLoading
   }, [data])
+
   useDidUpdate(() => {
       if (location.pathname === `/account/finance/report/${params.company_id}`) {
           mutate()
       }
   }, [location.pathname])
-  console.log(data);
+
   const memoModal = React.useMemo(() => {
     if(isLoading && !data) return null
-    if(data && data.root_company) return <UpBalance companyName={data.root_company.name} id={data.root_company.id} opened={opened} onClose={close} />
+    if(data && data.root_company) return <UpBalance upBalance={true} companyName={data.root_company.name} id={data.root_company.id} opened={opened} onClose={close} />
   }, [opened, data, isLoading])
+
+  const memoModalF = React.useMemo(() => {
+    if(isLoading && !data) return null
+    if(data && data.root_company) return <UpBalance upBalance={false} companyName={data.root_company.name} id={data.root_company.id} opened={openedf} onClose={closef} />
+  }, [openedf, data, isLoading])
+
+
 
   return (
       <Section type={SectionType.withSuffix}>
           <Panel
-              headerClassName={'flex justify-between'}
+              headerClassName={'tablet:flex justify-between'}
               variant={PanelVariant.withGapOnly}
               header={
                   <>
@@ -104,23 +113,13 @@ const FinaceIdPage = () => {
                         />
                       </div>
 
-                      <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
-                        {data?.root_company?.company_type === 'Клиент' &&
-                          <div className={'lg:col-start-3 grid gap-4 lg-max:justify-end lg-max:row-start-1 lg-max:grid-flow-col lg-max:col-span-full'}>
+
+                        {data?.root_company?.company_type === 'Клиент' &&        <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
                             <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
-                            <Button text={'Бонусы и штрафы'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
-                          </div>
+                            <Button text={'Бонусы и штрафы'}  action={openf} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
+                        </div>
                         }
-                      <Button
-                          text={'Сохранить Excel'}
-                          action={() => navigate('#')}
-                          trimText={true}
-                          variant={ButtonVariant['accent-outline']}
-                          // action={() => store.companyStore.addCompany()}
-                          className={'inline-flex'}
-                          size={ButtonSizeType.sm}
-                      />
-                      </div>
+
                   </>
               }
           />
@@ -189,6 +188,7 @@ const FinaceIdPage = () => {
           </Panel>
 
         {memoModal}
+        {memoModalF}
       </Section>
   )
 }

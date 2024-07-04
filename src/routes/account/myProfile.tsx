@@ -9,13 +9,17 @@ import DList from "components/common/ui/DList/DList";
 import { CompanyType } from "stores/companyStore";
 import { UserTypeEnum } from "stores/userStore";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { InputBase, TextInput } from "@mantine/core";
+import { FileButton, InputBase, TextInput } from '@mantine/core'
 import { useForm, yupResolver } from "@mantine/form";
 import {  UpdateUserProfileSchema } from "utils/validationSchemas";
 import { IMask, IMaskInput } from "react-imask";
 import NotificationCC from "components/common/ui/NotificationCC/NotificationCC";
+import agent from 'utils/agent'
+import { useDisclosure } from "@mantine/hooks";
+import { UploadUserPhoto } from "components/common/layout/Modal/UploadUserPhoto";
+import ImageCrop from "components/common/ui/Image/ImageCrop";
 
-const UserProfileEditForm = ({action}: {action: (val:boolean) => void }) => {
+const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }) => {
   const store = useStore()
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
   const masked = IMask.createMask({
@@ -23,7 +27,6 @@ const UserProfileEditForm = ({action}: {action: (val:boolean) => void }) => {
     autofix: true,
     // overwrite: true,
     prepare: (appended, masked) => {
-      console.log(masked);
       if (appended[0] === '8' && masked.value === "") {
         return appended.slice(1);
       }
@@ -34,14 +37,33 @@ const UserProfileEditForm = ({action}: {action: (val:boolean) => void }) => {
     name: 'profileEdit',
     initialValues: {
       first_name: user.first_name,
-      last_name: user.last_name,
+      last_name: store.userStore.myProfileData.user.last_name,
       phone: user.phone,
-      email: user.email
+      email: user.email,
+      bid_visibility: store.userStore.myProfileData.user.bid_visibility,
+      is_active: true,
+      company_id: store.userStore.myProfileData.company.id,
+      group: store.userStore.myProfileData.user.account_bindings[0].group.id ?? 0
     },
     validateInputOnBlur: true,
     onValuesChange: (values, previous) => console.log(values),
     validate: yupResolver(UpdateUserProfileSchema),
   })
+
+  const [opened, { open, close }] = useDisclosure(false)
+  const memoModal = React.useMemo(() => {
+
+    return <UploadUserPhoto  id={user.id} opened={opened} onClose={close} />
+  }, [opened])
+  const handleSubmit = React.useCallback(async () => {
+
+    console.log({id: store.userStore.currentUser.id, ...form.values});
+      const response =  await agent.Account.updateCompanyUser(store.userStore.myProfileData.company.id, {id: store.userStore.currentUser.id, ...form.values})
+    console.log(response);
+      if(response.status === 200) {
+        store.userStore.loadMyProfile().then(() => action(false))
+      }
+  }, [form.values])
   return (
     <Panel
       footerClassName={
@@ -77,11 +99,22 @@ const UserProfileEditForm = ({action}: {action: (val:boolean) => void }) => {
           className={'mr-auto'}
           variant={ButtonVariant.cancel}
         />
-        <NotificationCC id={'test'} title={'test'} message={'testts'}/>
-        <Button text={'Загрузить фото'} variant={ButtonVariant["accent-outline"]}  className={'tablet:justify-self-start  tablet-max:-order-1'}/>
+        <FileButton
+          // @ts-ignore
+          onChange={(event) => {
+            store.userStore.onLoadImage(event)
+            open()
+          }} accept='image/png,image/jpeg'>
+          {(props:any) => (
+            <Button  {...props} type={"button"}  text={'Загрузить фото'} variant={ButtonVariant["accent-outline"]} className={'button tablet:justify-self-start  tablet-max:-order-1'} >Upload image</Button>
+          )}
+        </FileButton>
+        {/* <Button text={'Загрузить фото'} variant={ButtonVariant["accent-outline"]} className={'tablet:justify-self-start  tablet-max:-order-1'} action={() => { */}
+        {/*   store.userStore.onLoadImage() */}
+        {/* }}/> */}
         <Button
-          type={'submit'}
-          action={() => console.log('update')}
+          type={'button'}
+          action={handleSubmit}
           disabled={!form.isValid()}
           text={'Сохранить'}
           className={'float-right tablet-max:-order-1'}
@@ -90,7 +123,7 @@ const UserProfileEditForm = ({action}: {action: (val:boolean) => void }) => {
       </>
     }
     >
-    <form style={{display: "contents"}}>
+    <form style={{display: "grid", gridTemplateColumns: "subgrid", gridColumn: "1/-1"}} onSubmit={handleSubmit}>
       <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
       <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
       <InputBase
@@ -108,18 +141,17 @@ const UserProfileEditForm = ({action}: {action: (val:boolean) => void }) => {
       />
       <TextInput label={'E-mail'} {...form.getInputProps('email')} />
 
-
+      {memoModal}
     </form>
     </Panel>
   )
-}
+})
 const MyProfilePage = () => {
   const store = useStore()
   const navigate = useNavigate()
   const location = useLocation()
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
   const [edit, setEdit] = React.useState(false)
-
   const userData = React.useMemo(() => {
     if(user) {
       if(edit) {
@@ -132,6 +164,7 @@ const MyProfilePage = () => {
           background={PanelColor.glass}
           bodyClassName={'tablet:!pl-44 grid grid-cols-2 items-start content-start gap-8 tablet-max:grid-cols-1'}
           headerClassName={'flex gap-10'}
+
           header={
             <>
               <div className={'w-24 h-24 flex rounded-full mr-2'}
@@ -203,9 +236,11 @@ const MyProfilePage = () => {
               />
             </>
           }
+
         />
 
           {userData}
+
     </Section>
   )
 }

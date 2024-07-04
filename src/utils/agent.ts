@@ -469,6 +469,7 @@ const Account = {
   accountEmailConfirmation: ({company_uid, user_uid, token}: {company_uid: string, user_uid: string, token: string}) => requests.post('/accounts/email_confirmation/', {company_uid, user_uid, token}),
   accountRestorePassword: (email:string) => requests.post(`/accounts/forgot_password/`, {email: email}),
   accountNewPassword:({user_uid, token, password, password2}: {password: string, password2: string, user_uid: string, token: string}) => requests.post('/accounts/new_password/', {password, password2, user_uid, token}),
+  uploadAvatar: (data:FormData) => requests.put('/accounts/update_avatar/', data)
 }
 const Balance = {
   getBalanceExportReport: (params?: PaginationProps) => requests.getFile('/balance/export_report/', params),

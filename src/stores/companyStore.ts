@@ -734,6 +734,12 @@ export class CompanyStore {
         }
         return this.companies as any[]
     }
+    getCompanyCity(id: any) {
+        const _res = this.companies.filter((c) => c.id == id)
+        // @ts-ignore
+        if(_res && _res[0] && _res[0].city.id) return _res[0].city.id
+        return false
+    }
     get getFilialsAll() {
         if(this.companies.length === 0) {
             this.getAllFilials()

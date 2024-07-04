@@ -82,7 +82,7 @@
 	}
   }
   section {
-	@apply px-12 py-16 border-gray-2 border;
+	@apply px-8 pt-12 pb-8 border-gray-2 border content-center;
 	background: rgba(36, 37, 41, .6);
 	@screen tablet-max {
 	  position: absolute;
@@ -90,18 +90,32 @@
 	  bottom: 0;
 	  right: 0;
 	  display: grid;
-	  align-content: center;
+
 	  left: 0;
 	  border: 0;
 	  border-radius: 0;
 	  min-height: 100lvh;
-	  footer {
-		display: grid;
+
+	}
+	[data-content="modal_company"] {
+	  display: flex;
+	  flex-direction: column;
+	  gap: .5rem;
+	  @screen tablet {
+		flex-direction: row;
+			justify-content: space-around;
+	  }
+
+	}
+	footer {
+	  @screen tablet-max {
+		gap: .5rem;
 	  }
 	}
 	header {
 	  @apply pt-0 bg-none pl-0;
 	  background: none !important;
+
 	}
   }
 }

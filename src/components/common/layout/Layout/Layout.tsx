@@ -87,7 +87,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
           <Header>
-              {(width && width > 960) ? <Logo className={'logo-header tablet:pl-6'} /> : null}
+              {(width && width > 960 && store.appStore.appType != "") || store.appStore.appType === ""  ? <Logo className={'logo-header tablet:pl-6'} /> : null}
               {headerContent}
               <Burger
                   className={'lg:hidden'}
@@ -124,7 +124,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
         {!loc.pathname.includes('account') ? <Footer className={'tablet:px-6'}>
               {footerContent}
               <div>2023 (c.)</div>
-              <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} to={'/policy'}></LinkStyled>
+              <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} className={'!text-sm'} to={'/policy'}></LinkStyled>
           </Footer> : null}
 
           <div className={'lineBg'}>

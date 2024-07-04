@@ -1,5 +1,7 @@
 import { action, computed, makeAutoObservable, observable, ObservableMap, reaction, runInAction } from "mobx";
 import agent, { client } from "utils/agent";
+
+import { getMimeType } from 'advanced-cropper/extensions/mimes';
 import { AccountProps, CRUD,  PermissionNames } from "stores/permissionStore";
 import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'
@@ -9,6 +11,10 @@ import label from 'utils/labels';
 import authStore from "stores/authStore";
 import carStore from "stores/carStore";
 import bidsStore from "stores/bidsStrore";
+interface Image {
+  type?: string
+  src: string
+}
 
 
 export enum UserTypeEnum {
@@ -85,7 +91,7 @@ export class UserStore {
           }
       })
   }
-
+  cropperRef: any;
   currentUser: User = {id: 0, email: '', first_name: '', last_name: '', is_staff: null, is_superuser: null};
   currentUserPermissions = observable.map([]);
   permissionsVariants = observable.map([]);
@@ -97,6 +103,7 @@ export class UserStore {
   myProfileData = {
     loading: false,
     company: <any> null,
+    image: <Image | null> null,
     user: <any> null,
     permissions: <any> null,
     permissionGroupName: <any>  null,
@@ -122,7 +129,63 @@ export class UserStore {
     }
     return roles
   }
+  setCropperRef(ref:any) {
+    this.cropperRef = ref
+  }
+  onLoadImage = (event: any) => {
 
+    // Reference to the DOM input element
+    const  files  = event
+
+    // Ensure that you have a file before attempting to read it
+    if (files) {
+      // Create the blob link to the file to optimize performance:
+      const blob = URL.createObjectURL(files)
+
+      // Remember the fallback type:
+      const typeFallback = files.type
+
+      // Create a new FileReader to read this image binary data
+      const reader = new FileReader()
+
+      // Define a callback function to run, when FileReader finishes its job
+      reader.onload = (e) => {
+        // Note: arrow function used here, so that "this.image" refers to the image of Vue component
+        this.myProfileData.image = {
+          // Read image as base64 and set it as src:
+          src: blob,
+          // Determine the image type to preserve it during the extracting the image from canvas:
+          type: getMimeType(e.target?.result, typeFallback),
+        }
+      }
+      // Start the reader job - read file as a data url (base64 format) and get the real file type
+      reader.readAsArrayBuffer(files)
+    }
+    // Clear the event target value to give the possibility to upload the same image:
+    event = ''
+  }
+  upLoadImage() {
+    const canvas = this.cropperRef.current?.getCanvas();
+    console.log(canvas);
+    if (canvas) {
+      const form = new FormData();
+      canvas.toBlob((blob:any) => {
+        if (blob) {
+          form.append('file', blob);
+          console.log(form.get('file'));
+          // agent.Account.uploadAvatar(blob)
+          fetch('https://dev.server.clean-car.net/api/accounts/update_avatar/', {
+            method: 'PUT',
+            headers: {
+              // 'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+            },
+            body: form,
+          });
+        }
+      }, 'image/jpeg');
+    }
+  }
   async loadMyProfile() {
     this.loadingUser = true
     return await agent.Profile.getMyAccount()
@@ -207,8 +270,12 @@ export class UserStore {
       }
 
   }
+  get userData () {
+    return this.myProfileData.user
+  }
   get myProfileState() {
     return ({
+      image: this.myProfileData.image,
       user: this.myProfileData.user,
       loading: this.myProfileData.loading,
       permissions: this.myProfileData.permissions,
@@ -287,6 +354,7 @@ export class UserStore {
     this.myProfileData = {
       loading: false,
       company: <any> null,
+      image: null,
       user:<any> null,
       permissionGroupName: <any> null,
       permissions: <any> null,

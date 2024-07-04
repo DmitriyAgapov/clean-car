@@ -212,6 +212,15 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             }
         }
     }, [])
+    React.useEffect(() => {
+        const _v = store.companyStore.getCompanyCity(formData.values.company_id)
+        if(_v) {
+            formData.setFieldValue('city', _v.toString())
+        } else {
+            formData.setFieldValue('city', null)
+        }
+    }, [formData.values.company_id]);
+
     const filialsCompanyData = React.useMemo(() => {
 
             store.companyStore.loadAllFilials()
@@ -401,7 +410,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             {...formData.getInputProps('height')}
                           />
                         )}
-                        <Select
+                        {formData.values.type !== CompanyType.customer && <Select
                             withCheckIcon={false}
                             label={'Город'}
                             searchable={true}
@@ -417,7 +426,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                     label: o.name,
                                     value: String(o.id),
                                 }))}
-                        />
+                        />}
                         {formData.values.type === CompanyType.customer ? null : <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>}
                     </PanelForForms>
                     <PanelForForms

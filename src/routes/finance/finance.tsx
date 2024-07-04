@@ -14,6 +14,7 @@ import { NumberFormatter } from '@mantine/core'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import agent from 'utils/agent'
 import dayjs from 'dayjs'
+import TableWithScroll from "components/common/layout/TableWithSort/TableWithScroll";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -377,6 +378,7 @@ const FinacePage = () => {
             { label: 'Эвакуация', name: 'evac' },
             { label: 'Всего', name: 'total' },
           ]} />
+        <TableWithScroll elements={data}/>
         <FinanceBottom data={data} />
       </Section>
   )
