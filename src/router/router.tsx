@@ -68,6 +68,9 @@ import PolicyPage from "routes/poliicy";
 import ErrorPageNotFound from "error-page-404";
 import RestorePasswordPageSuccess from "routes/restore/restorePasswordPageSuccess";
 import RestorePasswordNew from "routes/restore/restorePasswordNew";
+import FinaceByTypePage from "routes/finance/financeByType";
+import FinanceByTypeAndTypeId from "routes/finance/financeByTypeAndTypeId";
+import FinanceByTypeAndTypeIdAndCompany from "routes/finance/financeByTypeAndTypeIdAndCompany";
 
 const router = createBrowserRouter([
     {
@@ -262,6 +265,18 @@ const router = createBrowserRouter([
             {
               path: 'finance/report/:company_id',
                 element: <FinaceIdPage/>
+            },
+            {
+                path: 'finance/by-type',
+                element: <FinaceByTypePage/>
+            },
+            {
+                path: 'finance/by-type/:service_type',
+                element: <FinanceByTypeAndTypeId/>
+            },
+            {
+                path: 'finance/by-type/:service_type/:company_id',
+                element: <FinanceByTypeAndTypeIdAndCompany/>
             },
             {
                 path: 'finance/transaction',

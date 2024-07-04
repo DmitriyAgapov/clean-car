@@ -164,24 +164,25 @@ export class UserStore {
     // Clear the event target value to give the possibility to upload the same image:
     event = ''
   }
-  upLoadImage() {
+  async upLoadImage() {
     const canvas = this.cropperRef.current?.getCanvas();
     console.log(canvas);
     if (canvas) {
       const form = new FormData();
       canvas.toBlob((blob:any) => {
+        console.log(blob);
         if (blob) {
           form.append('file', blob);
           console.log(form.get('file'));
-          // agent.Account.uploadAvatar(blob)
-          fetch('https://dev.server.clean-car.net/api/accounts/update_avatar/', {
-            method: 'PUT',
-            headers: {
-              // 'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
-            },
-            body: form,
-          });
+          agent.Account.uploadAvatar(form)
+          // fetch('https://dev.server.clean-car.net/api/accounts/update_avatar/', {
+          //   method: 'PUT',
+          //   headers: {
+          //     // 'Content-Type': 'multipart/form-data',
+          //     'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
+          //   },
+          //   body: form,
+          // });
         }
       }, 'image/jpeg');
     }

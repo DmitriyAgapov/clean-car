@@ -99,9 +99,10 @@ export const requests = {
     }).then((response: any) => response).catch(handleErrors)
   },
 
-  put: (url: string, body: any) =>
+  put: (url: string, body: any, headers?: any) =>
     axios({
       url: `${API_ROOT}${url}`,
+      headers: headers,
       // headers: tokenPlugin(),
       method: 'PUT',
       data: body,
@@ -140,7 +141,10 @@ export const requests = {
       data: JSON.stringify(props) ,
     }),
   img: (url:string, form:FormData, bidId?: number) => axiosUpload.post(`${API_ROOT}${url}`, form)
-  .then((response) => response)
+  .then((response) => response),
+  imgUp: (url:string, form:FormData, bidId?: number) => axiosUpload.post(`${API_ROOT}${url}`, form)
+  .then((response) => response),
+
 }
 
 //Обработка ошибок
@@ -481,7 +485,10 @@ const Balance = {
     company_id: company_id,
     purpose: purpose,
     amount: amount
-})
+}),
+  getServiceReport: (params?: PaginationProps) => requests.get('/balance/service_report/', params),
+  getServiceReportByType: (service_id: number | string, params?: PaginationProps) => requests.get(`/balance/type_report/${service_id}`, params),
+  getServiceReportByTypeAndCompany: (service_id: number | string, company_id: number | string, params?: PaginationProps) => requests.get(`/balance/type_report/${service_id}/`, params),
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),

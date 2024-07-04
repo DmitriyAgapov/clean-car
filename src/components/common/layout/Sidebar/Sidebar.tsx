@@ -79,6 +79,11 @@ const sidebarMenu: { icon: React.ReactNode; title: string; url: string, urlMap: 
         url: 'finance/report'
       },
       {
+        title: 'Отчет по типу услуг',
+        url: 'finance/by-type'
+      },
+
+      {
         title: 'Транзакции',
         url: 'finance/transaction',
       }
