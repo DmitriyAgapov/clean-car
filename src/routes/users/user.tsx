@@ -13,6 +13,8 @@ import label from "utils/labels";
 import useSWR from "swr";
 import { useDidUpdate } from '@mantine/hooks'
 import dayjs from 'dayjs';
+import { CompanyType } from "stores/companyStore";
+import Image from "components/common/ui/Image/Image";
 
 const UserPage = () => {
   const store = useStore()
@@ -117,20 +119,24 @@ const UserPage = () => {
         headerClassName={'flex desktop:gap-10 gap-4'}
         header={
         <>
-          <div
-            className={'w-24 h-24 flex rounded-full mr-2'}
-            style={{ background: 'var(--gradient-directory)' }}
-            data-app-type={companyType}
-          >
-            <span className={'text-black font-sans uppercase text-3xl leading-none m-auto'}>
+
+            <div className={'flex rounded-full mr-2 user__photo'}
+              // style={avatar ? {background: `url(${avatar})`, backgroundSize: "cover"} :{ background: 'var(--gradient-directory)' }}
+              data-app-type={companyType}>
+              {!data?.employee.avatar ?<span className={'w-24 h-24 flex text-black font-sans uppercase text-3xl leading-none items-center justify-center'}>
               {data?.employee.first_name[0]}
-              {data?.employee.last_name[0]}
-            </span>
-          </div>
-          <DList label={'Дата и время регистрации'} title={dayjs(data?.employee.date_joined).format('DD.MM.YYYY HH:mm')} />
+                {data?.employee.last_name[0]}
+            </span>: <Image src={data?.employee.avatar}
+                alt={''}
+                width={98}
+                height={98}
+                className={'rounded-full aspect-square'}
+                data-directory={store.appStore.appType} />}
+            </div>
+          <DList label={'Дата и время регистрации'}
+            title={dayjs(data?.employee.date_joined).format('DD.MM.YYYY HH:mm')} />
         </>
-        }
-      >
+        }>
         {userData}
       </Panel>
     </Section>

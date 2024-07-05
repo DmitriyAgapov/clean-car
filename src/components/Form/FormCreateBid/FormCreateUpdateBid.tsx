@@ -1071,14 +1071,14 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                       value: String(i.id)
                                     }))} />
                                 </div>
-                                <div> {selectedPerformerAmount && <>
+                                {store.userStore.getUserCan('Финансовый блок', "read") ? <div> {selectedPerformerAmount && <>
                                   <Heading text={"Общая стоимость"}
                                     variant={HeadingVariant.h5}
                                     className={"text-sm text-accent"} />
                                   <Heading text={`${selectedPerformerAmount} ₽`} variant={HeadingVariant.h2}
                                   className={"text-sm text-accent"} />
                                 </>
-                              } </div>
+                              } </div> : null}
                             </div>
                                 <MapWithDots />
 

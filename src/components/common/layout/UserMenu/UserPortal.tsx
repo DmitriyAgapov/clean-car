@@ -93,7 +93,7 @@ const UserPortal = ({
 }) => {
   const store = useStore()
   const navigate = useNavigate()
-
+  const avatar = store.userStore.myProfileData.user.avatar;
   if (state)
     return (
       <Panel
@@ -114,17 +114,11 @@ const UserPortal = ({
           />
         }
       >
-        <div className={'user__photo'} data-directory={store.appStore.appType}>
-          <div className="w-10 h-10 flex justify-center items-center text-black !text-lg">
+        <div className={'user__photo'} data-directory={store.appStore.appType} >
+          {!avatar ? <div className="w-20 h-20 flex justify-center items-center text-black !text-lg">
             {store.userStore.myProfileData.user.first_name[0]}{store.userStore.myProfileData.user.last_name[0]}
-          </div>
-          {/* <Image src={photo} alt={''} width={80} height={80} /> */}
-          {/* <Button */}
-          {/*   className={'bg-accent rounded-full p-1.5 inline-block'} */}
-          {/*   text={<SvgPencil />} */}
-          {/*   action={() =>  console.log('edit click')} */}
-          {/*   variant={ButtonVariant.icon} */}
-          {/* /> */}
+          </div> : <Image src={avatar} alt={''} width={80} height={80} className={'rounded-full'} data-directory={store.appStore.appType}/>}
+
         </div>
         <div className={'user__name'}>{name}</div>
         <div className={'user__company'}>{company}</div>

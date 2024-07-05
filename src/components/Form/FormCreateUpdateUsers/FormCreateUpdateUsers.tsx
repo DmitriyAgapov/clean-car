@@ -185,6 +185,13 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			console.log(form.values.depend_on === "company" ? store.companyStore.getCompaniesAll?.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll);
 			// @ts-ignore
 			console.log(CompanyType[form.values.type]);
+			if(user.company.name === `${user.employee.first_name} ${user.employee.last_name}`) {
+				console.log(`${user.employee.first_name} ${user.employee.last_name}`);
+				return ([{
+					name: user.company.name,
+					id: user.company.id
+				}])
+			}
 			// @ts-ignore
 			return form.values.depend_on === "company" ? store.companyStore.getCompaniesAll?.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll
 		},

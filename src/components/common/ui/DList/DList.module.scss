@@ -10,27 +10,27 @@
 	  @apply text-base font-sans font-semibold;
 	  line-height: 1.25rem;
 	  &[data-directory="customer"] {
-		--color: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
-		background: linear-gradient(-120.44deg, #3FECAE 24.44%, #0500FF 119.81%);
+		--color:  var(--gradient-customer-200);
+		background:  var(--gradient-customer-200);
 		border: 0;
-		background: -webkit-linear-gradient(-120deg, #3FECAE 24.44%, #0500FF 119.81%);
+		background: var(--gradient-customer-200);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 	  }
 
 	  &[data-directory="admin"] {
-		background: linear-gradient(120deg, #D80BEA 7.5%, #00FFAE 42.5%, #00FFAE 57.5%, #D80BEA 93.5%);
-		background: -webkit-linear-gradient(120deg, #D80BEA 7.5%, #00FFAE 42.5%, #00FFAE 57.5%, #D80BEA 93.5%);
+		background: var(--gradient-admin-200);
+		background: var(--gradient-admin-200);
 		background-size: 200%;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-position: 0 50%;
 		border: 0;
-		--color: linear-gradient(-120.68deg, #D80BEA 15.78%, #00FFAE 86.68%);
+		--color: var(--gradient-admin-200);
 	  }
 
 	  &[data-directory="performer"] {
-		background: -webkit-linear-gradient(-45deg, #00A8AA 0.27%, #F0F600 87.66%);
+		background: var(--gradient-performer-200);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 	  }

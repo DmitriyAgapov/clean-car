@@ -1,22 +1,22 @@
 import React, { useEffect } from "react";
-import Section, { SectionType } from 'components/common/layout/Section/Section'
+import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
-import { Outlet,  useLocation, useNavigate, useRevalidator } from 'react-router-dom'
-import { useStore } from 'stores/store'
+import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
+import Button, { ButtonDirectory, ButtonSizeType } from "components/common/ui/Button/Button";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useStore } from "stores/store";
 import { observer, useLocalObservable } from "mobx-react-lite";
-import { UserTypeEnum } from 'stores/userStore'
+import { UserTypeEnum } from "stores/userStore";
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import { useDidUpdate } from '@mantine/hooks'
+import { useDidUpdate } from "@mantine/hooks";
 import useSWR from "swr";
 import { LocalRootStore } from "stores/localStore";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
+
 const localRootStore =  new LocalRootStore()
 const UsersPage = () => {
   const store = useStore()
-  let revalidator = useRevalidator();
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const navigate = useNavigate()
@@ -48,7 +48,7 @@ const UsersPage = () => {
         city: item.company.city.name,
         id: item.employee.id,
         query: {
-          type: item.company.company_type === "Клиент" ? UserTypeEnum.customer : item.company.company_type === "Партнер" ? UserTypeEnum.performer : "admin",
+          type: item.company.company_type === "Клиент" ? UserTypeEnum.customer : item.company.company_type === "Партнер" ? UserTypeEnum.performer : item.company.company_type === "Физическое лицо" ? UserTypeEnum.customer : "admin",
           company_id: item.company.id,
 
 

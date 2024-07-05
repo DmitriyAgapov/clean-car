@@ -11,6 +11,7 @@ import label from 'utils/labels';
 import authStore from "stores/authStore";
 import carStore from "stores/carStore";
 import bidsStore from "stores/bidsStrore";
+import resizeFile from "utils/imageResizer";
 interface Image {
   type?: string
   src: string
@@ -166,23 +167,16 @@ export class UserStore {
   }
   async upLoadImage() {
     const canvas = this.cropperRef.current?.getCanvas();
-    console.log(canvas);
+
     if (canvas) {
       const form = new FormData();
       canvas.toBlob((blob:any) => {
-        console.log(blob);
         if (blob) {
-          form.append('file', blob);
-          console.log(form.get('file'));
-          agent.Account.uploadAvatar(form)
-          // fetch('https://dev.server.clean-car.net/api/accounts/update_avatar/', {
-          //   method: 'PUT',
-          //   headers: {
-          //     // 'Content-Type': 'multipart/form-data',
-          //     'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
-          //   },
-          //   body: form,
-          // });
+          (async () => await resizeFile(blob))()
+          .then((r:any) => form.append('avatar', r, 'avatar.jpg'))
+          .then(() => {
+            agent.Account.uploadAvatar(form)
+          })
         }
       }, 'image/jpeg');
     }

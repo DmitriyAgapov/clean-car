@@ -248,3 +248,26 @@
   border-top-left-radius: 1rem !important;
   border-top-right-radius: 1rem !important;
 }
+
+.user__photo {
+  justify-self: center;
+  position: relative;
+  border-radius: 50%;
+  padding: 2px;
+  &[data-directory="admin"], &[data-app-type="admin"] {
+	background: var(--gradient-admin);
+  }
+
+  &[data-directory="performer"], &[data-app-type="performer"] {
+	background: var(--gradient-performer);
+  }
+
+  &[data-directory="customer"], &[data-app-type="customer"] {
+	background: var(--gradient-customer);
+  }
+  a {
+	position: absolute;
+	bottom: -.125rem;
+	right: -.125rem;
+  }
+}
