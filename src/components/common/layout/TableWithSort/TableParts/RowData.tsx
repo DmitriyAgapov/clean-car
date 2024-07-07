@@ -129,7 +129,15 @@ const RowData = observer((props: any) => {
 							<p className={'m-0'}>{props[key]}</p>
 						</td>,)
 
-				}else {
+				}  else if(key === "wrapper") {
+
+						ar.push(<td key={key} colSpan={1000}
+							className={styles.tableCell} data-label={label(key)}>
+
+							<p className={'m-0'}>{props[key]}</p>
+						</td>,)
+
+				} else {
 					if (key !== 'id' && key !== 'p') {
 						ar.push(<td key={key}
 							className={styles.tableCell} data-label={label(key)}>

@@ -119,8 +119,8 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
           {autoScroll ? <Table.ScrollContainer  classNames={{
             scrollContainer: styles.scrollCustom,
             scrollContainerInner: "h-full"
-          }} mah={"calc(100dvh - 30rem)"} maw={"68.5rem"}
-            h={"calc(100dvh - 30rem)"} mih={"100%"}
+          }} mah={"calc(100dvh - 20rem)"} maw={"68.5rem"}
+            h={"calc(100dvh - 20rem)"} mih={"100%"}
             minWidth={"100%"}
           >
             <Table className={styles.TableWithSort}

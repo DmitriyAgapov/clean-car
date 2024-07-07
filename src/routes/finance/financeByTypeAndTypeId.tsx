@@ -71,15 +71,14 @@ const financeByTypeAndTypeId = () => {
     if(data && _data) {
       const _res = _data.results;
       const {bids_count, total_amount, ...props} = data.total
+      _res.push({wrapper: ""})
       _res.push({total_total_label: "Итого", bids_count: bids_count, ...props, total_amount: total_amount + " ₽"})
-      console.log();
+
       localStore.setData = {
         ..._data,
         results: _res
       }
     }
-
-    console.log(_data);
 
     localStore.setIsLoading = isLoading
   },[data])
