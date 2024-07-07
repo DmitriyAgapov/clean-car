@@ -1,22 +1,18 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-import { CompanyType } from "stores/companyStore";
-import label from "utils/labels";
-import styles from "components/common/layout/TableWithSort/TableWithSort.module.scss";
-import Chips from "components/common/ui/Chips/Chips";
-import Status from "components/common/ui/Status/Status";
-import {  useViewportSize } from '@mantine/hooks'
-import { SvgChevron } from "components/common/ui/Icon";
-import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { observer } from "mobx-react-lite";
-import { BidStatus } from "utils/schema";
-import { BidsStatus } from 'stores/bidsStrore'
+import { CompanyType } from 'stores/companyStore'
+import label from 'utils/labels'
+import styles from 'components/common/layout/TableWithSort/TableWithSort.module.scss'
+import Chips from 'components/common/ui/Chips/Chips'
+import Status from 'components/common/ui/Status/Status'
+import { useViewportSize } from '@mantine/hooks'
+import { SvgChevron } from 'components/common/ui/Icon'
+import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import { observer } from 'mobx-react-lite'
 import { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
-import { NumberFormatter } from "@mantine/core";
-import { useLocalStore } from 'stores/localStore'
-import { useElementSize } from "@mantine/hooks";
-import { useStore } from "stores/store";
+import { NumberFormatter } from '@mantine/core'
+import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 
 
 const RowData = observer((props: any) => {
@@ -41,7 +37,7 @@ const RowData = observer((props: any) => {
 		}
 		return ''
 	}, [])
-
+	console.log(props);
 	const handleClick = React.useCallback(() => {
 		if (props.query && props.query.rootRoute) {
 			return navigate(props.query.rootRoute)
@@ -125,14 +121,28 @@ const RowData = observer((props: any) => {
 						className={styles.tableCell} data-label={label(key)}>
 						<p className={'m-0'}>{_txtAr[0]} / <NumberFormatter className={`${Number(_txtAr[1].replace(' ₽', '')) > 0 && "text-accent"} !leading-tight`} thousandSeparator={" "}  suffix=" ₽" value={_txtAr[1]}/></p>
 					</td>)
-				} else {
-					if (key !== 'id' && key !== 'companyId') {
+				} else if(key === "bids_count") {
+
+						ar.push(<td key={key} colSpan={4}
+							className={styles.tableCell} data-label={label(key)}>
+
+							<p className={'m-0'}>{props[key]}</p>
+						</td>,)
+
+				}else {
+					if (key !== 'id' && key !== 'p') {
 						ar.push(<td key={key}
 							className={styles.tableCell} data-label={label(key)}>
 
 							<p className={'m-0'}>{props[key]}{' '}</p>
 						</td>,)
 					}
+				}
+			} else if(typeof props[key] == 'object') {
+			if (key == 'company' || key == 'partner' ) {
+					ar.push(<td key={props[key].name} className={styles.tableCell} data-label={label(props[key].name)}>
+						<LinkStyled variant={ButtonVariant.text} to={`${props[key].id}`} text={props[key].name} className={'m-0 inline-block text-active hover:border-b border-b border-b-active/30 hover:border-b-active'} />
+					</td>)
 				}
 			}
 		}

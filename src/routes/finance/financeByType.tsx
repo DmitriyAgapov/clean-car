@@ -80,8 +80,10 @@ const FinaceByTypePage = () => {
         <TableWithSortNew store={localStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
+
           autoScroll={true}
-          style={PanelRouteStyle.finance}
+          style={PanelRouteStyle.financeByType}
+
           background={PanelColor.glass}
           className={'col-span-full table-groups tablet-max:pb-28'}
           initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}

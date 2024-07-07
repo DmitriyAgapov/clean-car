@@ -14,6 +14,7 @@ import { NumberFormatter } from '@mantine/core'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import agent, { PaginationProps } from "utils/agent";
 import dayjs from 'dayjs'
+import { SvgBackArrow } from "components/common/ui/Icon";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -26,6 +27,8 @@ const financeByTypeAndTypeId = () => {
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
+
+  const navigate = useNavigate()
   const params = useParams()
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
   const ar = React.useMemo(() => {
@@ -49,25 +52,35 @@ const financeByTypeAndTypeId = () => {
     if(!data || data?.results.length === 0) return []
     return init
   }, [data])
-  console.log(ar);
   useEffect(() => {
-    localStore.setData = {
+    const _data = {
       ...data,
       results: data?.results?.map((item:any) =>{
         const {id, date, bid_id, partner, company, address, amount, ...props} = item;
-
-
         return ({
-          id: item.id,
+          // idNum: item.bid_id,
           date: dayjs(item.date).format('DD.MM.YY'),
           bid_id: `№ ${item.bid_id}`,
           partner: item.partner,
           company: item.company,
           address: item.address,
           ...props,
-          total_amount: item.amount,
+          total_amount: item.amount + " ₽",
         })
       })}
+    if(data && _data) {
+      const _res = _data.results;
+      const {bids_count, total_amount, ...props} = data.total
+      _res.push({total_total_label: "Итого", bids_count: bids_count, ...props, total_amount: total_amount + " ₽"})
+      console.log();
+      localStore.setData = {
+        ..._data,
+        results: _res
+      }
+    }
+
+    console.log(_data);
+
     localStore.setIsLoading = isLoading
   },[data])
   console.log(localStore.data)
@@ -88,10 +101,25 @@ const financeByTypeAndTypeId = () => {
           variant={PanelVariant.withGapOnly}
           header={
             <>
+              <div>
+                <Button
+                  text={
+                    <>
+                      <SvgBackArrow />
+                      Назад к компании
+                    </>
+                  }
+                  className={
+                    'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'
+                  }
+                  action={() => navigate(-1)}
+                  variant={ButtonVariant.text}
+                />
               <Heading text={'Отчет по заявкам'}
                 variant={HeadingVariant.h1}
-                className={'inline-block'}
+                className={'inline-block !mb-0'}
                 color={HeadingColor.accent} />
+              </div>
               <Button text={'Сохранить Excel'}
                 action={async () => await agent.Balance.getBalanceExportReport(localStore.params.getSearchParams)}
                 trimText={true}

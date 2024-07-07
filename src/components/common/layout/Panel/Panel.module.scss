@@ -358,7 +358,9 @@
 
 	> [data-panel="body"] {
 	  @apply px-0 py-0;
-	}
+	  & + [data-panel="footer"] {
+		margin-top: 1rem;
+	  }	}
   }
   &[data-variant="suffixFooter"] {
 	//margin-top: -2.5rem;

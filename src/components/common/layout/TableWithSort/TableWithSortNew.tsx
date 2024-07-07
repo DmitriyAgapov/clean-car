@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./TableWithSort.module.scss";
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import { useLocation, useSearchParams } from 'react-router-dom'
-import { Pagination, ScrollArea, Table } from '@mantine/core'
+import { Pagination, Table } from "@mantine/core";
 import DataFilter, { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import TableSearch from "components/common/layout/TableWithSort/TableSearch";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
@@ -11,8 +10,8 @@ import { LocalRootStore, LocalStoreProvider, useLocalStore } from "stores/localS
 import RowHeading from "components/common/layout/TableWithSort/TableParts/RowHeading";
 import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
-import { useStore } from 'stores/store'
-import { useElementSize, useWindowEvent, useViewportSize, useDebouncedValue } from '@mantine/hooks'
+import { useStore } from "stores/store";
+import { useDebouncedValue, useElementSize, useViewportSize } from "@mantine/hooks";
 
 
 type TableWithSortProps = {
@@ -64,6 +63,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
     const localStore = useLocalStore<LocalRootStore>()
     const _count = localStore.params.getItemsCount
     const rows = toJS(localStore.getData)?.results
+    const _countFetch = toJS(localStore.getData)?.count
     const initCount = _count
     // const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading && localStore.params.getIsReady
     const { ref: refBody, width, height } = useElementSize();
@@ -95,7 +95,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
           }
       })()
     }, [height, fontSize, value, _count]);
-
+  console.log(_countFetch);
 
 
       return (
@@ -113,24 +113,28 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
                     {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
                 </> : false
             }
-            footer={<>{!autoScroll ? <PaginationComponent /> : null}{props.footer}</>}
+            footer={!autoScroll ? <><PaginationComponent />{props.footer }</> : props.footer }
             {...props}
         >
-          {autoScroll ? <Table.ScrollContainer mah={"calc(100dvh - 30rem)"} maw={"68.5rem"}
-            h={"calc(100dvh - 30rem)"}
+          {autoScroll ? <Table.ScrollContainer  classNames={{
+            scrollContainer: styles.scrollCustom,
+            scrollContainerInner: "h-full"
+          }} mah={"calc(100dvh - 30rem)"} maw={"68.5rem"}
+            h={"calc(100dvh - 30rem)"} mih={"100%"}
             minWidth={"100%"}
           >
             <Table className={styles.TableWithSort}
               data-style={style}
               data-width={`${Math.floor(100 / ar.length)}`}
               stickyHeader
+
               stickyHeaderOffset={0}>
               {headerBar && <RowHeading total={initCount}
                 ar={ar}
                 autoScroll={autoScroll} />}
               <Table.Tbody>
-                {rows && rows.map((item: any, index: number) => <RowData style={style} {...item}
-                  key={item.id + "_00" + index} />)}
+                {rows  && _countFetch && _countFetch > 0  ? rows.map((item: any, index: number) => <RowData style={style} {...item}
+                  key={item.id + "_00" + index} />) : null}
               </Table.Tbody>
             </Table>
           </Table.ScrollContainer> : <table className={styles.TableWithSort}

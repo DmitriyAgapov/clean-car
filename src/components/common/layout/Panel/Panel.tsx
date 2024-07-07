@@ -32,6 +32,7 @@ export enum PanelRouteStyle {
     price = 'price',
     finance = 'finance',
     financeByTypeServiceId = 'financeByTypeServiceId',
+    financeByType = 'financeByType',
     financeId = 'financeId',
     bids = 'bids',
     bid_histories = 'bid_histories',
