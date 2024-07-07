@@ -306,24 +306,24 @@
   &[data-variant="textPadding"] {
 	@apply bg-gray-4/70;
 	> header {
-	  @apply px-8 pt-12 pb-6 tablet-max:px-3 ;
+	  @apply px-8 pt-10 pb-6 tablet-max:px-3 ;
 	}
 
 	> footer {
-	  @apply px-8 pb-12 pt-6 ;
+	  @apply px-8 pb-8 pt-4 ;
 	  @screen tablet {
 		@apply flex  gap-6 justify-end items-end tablet-max:px-3 ;
 	  }
 	}
 
 	> [data-panel="body"] {
-	  @apply  px-8 py-6 tablet-max:px-3 ;
+	  @apply  px-8 py-0 tablet-max:px-3 ;
 	}
 	> [data-panel="body"]:first-child {
-	  padding-top: 3rem;
+	  padding-top: 2rem;
 	}
 	> [data-panel="body"]:last-child {
-	  padding-bottom: 3rem;
+	  padding-bottom: 1rem;
 	}
 
   }
@@ -344,16 +344,16 @@
 	}
   }
   &[data-variant="dataPaddingWithoutFooter"] {
-	border-bottom-left-radius: 0;
-	border-bottom: 0 !important;
-	border-bottom-right-radius: 0;
+	//border-bottom-left-radius: 0;
+	//border-bottom: 0 !important;
+	//border-bottom-right-radius: 0;
 	@apply border border-gray-2;
 	> header {
 	  @apply lg:px-8 pt-8 pb-4   border-b border-b-[#242529];
 	}
 
 	> footer {
-	  @apply px-8 pb-16 pt-4 flex gap-6 justify-end items-end;
+	  //@apply px-8 pb-16 pt-4 flex gap-6 justify-end items-end;
 	}
 
 	> [data-panel="body"] {
@@ -361,17 +361,17 @@
 	}
   }
   &[data-variant="suffixFooter"] {
-	margin-top: -2.5rem;
-	border-top-left-radius: 0;
-	border-top: 0 !important;
-	border-top-right-radius: 0;
-	@apply border border-gray-2;
+	//margin-top: -2.5rem;
+	//border-top-left-radius: 0;
+	//border-top: 0 !important;
+	//border-top-right-radius: 0;
+	//@apply border border-gray-2;
 	> header {
-	  @apply lg:px-8 pt-8 pb-4;
+	  //@apply lg:px-8 pt-8 pb-4;
 	}
 
 	> footer {
-	  @apply px-8 pb-8 pt-4 flex gap-6 justify-end items-end;
+	  //@apply px-8 pb-8 pt-4 flex gap-6 justify-end items-end;
 	}
 
 	> [data-panel="body"] {
@@ -736,13 +736,14 @@
 	}
 
   }
+
   &[data-background="withSuffix"] {
-	border: 0.0625rem solid var(--borderPanelColor);
+	border: 0.0625rem solid transparent;
 
 
 
-	@apply bg-gray-4/70;
-	backdrop-filter: blur(2px);
+	//@apply bg-gray-4/70;
+	//backdrop-filter: blur(2px);
 	[data-directory] {
 	  width: .75rem;
 	  height: .75rem;

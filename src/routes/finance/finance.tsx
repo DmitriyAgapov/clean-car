@@ -22,7 +22,7 @@ localRootStore.params.setSearchParams({
   page_size: 10,
   start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
 })
-const FinanceBottom = observer((props: { data: any }) => {
+const FinanceBottom = observer((props: { data: any, className?: string }) => {
     const { width, height } = useViewportSize()
     const store = useStore()
     const [open, setOpen] = React.useState<boolean>(false);
@@ -35,7 +35,7 @@ const FinanceBottom = observer((props: { data: any }) => {
             background={PanelColor.withSuffix}
             footerClassName={'!p-2 !pt-4 '}
             bodyClassName={'!pt-0 !pb-0'}
-            className={`top-0 !grid-cols-1 mobile_total_block ${open ? " open-state" : " close-state"} !border-gray-2 !border relative z-50`}
+            className={props.className  + " " + `top-0 !grid-cols-1 mobile_total_block ${open ? " open-state" : " close-state"} !border-gray-2 !border relative z-50`}
             footer={  <Button className={'w-full'} action={() => setOpen(prevState => !prevState)} type={'button'} text={open ? 'Свернуть отчет' : 'Развернуть отчет'} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>}
           >
               <ul className={'grid col-span-full !gap-0'}>
@@ -309,7 +309,7 @@ const FinacePage = () => {
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const isReadyy = localStore.params.getIsReady
-  const {isLoading, data, mutate} = useSWR(isReadyy ? ['report', localStore.params.getSearchParams] : null , ([url, args]) => store.financeStore.getReport(undefined,args))
+  const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams], ([url, args]) => store.financeStore.getReport(undefined,args))
 
   useEffect(() => {
     localStore.setData = {
@@ -363,11 +363,12 @@ const FinacePage = () => {
         <TableWithSortNew store={localRootStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
-
+          footerClassName={"px-0 -mb-4"}
+          footer={<FinanceBottom data={data} className={"!-mb-4"}/>}
           autoScroll={true}
           style={PanelRouteStyle.finance}
           background={PanelColor.glass}
-          className={'col-span-full table-groups tablet-max:pb-28'}
+          className={'col-span-full table-groups tablet-max:pb-28 overflow-y-visible pb-4'}
           initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
           filter={true}
           state={isLoading}
@@ -379,7 +380,7 @@ const FinacePage = () => {
             { label: 'Эвакуация', name: 'evac' },
             { label: 'Всего', name: 'total' },
           ]} />
-        <FinanceBottom data={data} />
+
       </Section>
   )
 }

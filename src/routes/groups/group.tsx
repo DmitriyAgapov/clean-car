@@ -75,7 +75,7 @@ const GroupPage = () => {
         className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto] tablet-max:-mx-3'}
         footerClassName={'flex  justify-end mobile:!justify-center tablet-max:!px-3  tablet-max:border-t mt-6 pt-4 border-gray-2'}
         headerClassName={'border-bottom-none'}
-        bodyClassName={'!py-0'}
+        bodyClassName={'!py-0 tablet:!px-0'}
         header={
           <>
             <Heading text={group.name} color={HeadingColor.accent} variant={HeadingVariant.h3} />

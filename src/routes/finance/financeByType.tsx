@@ -18,9 +18,9 @@ import TableWithScroll from "components/common/layout/TableWithSort/TableWithScr
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
-  page: 1,
-  page_size: 10,
-  start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+  // page: 1,
+  // page_size: 10,
+  // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
 })
 
 const FinaceByTypePage = () => {
@@ -31,18 +31,20 @@ const FinaceByTypePage = () => {
 
   const params = useParams()
 
-  const {isLoading, data, mutate} = useSWR(isReadyy ? ["by-type", localStore.params.getSearchParams] : null , ([url, args]) => agent.Balance.getServiceReport(args).then(r => r.data))
+  const {isLoading, data, mutate} = useSWR(["by-type", localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReport(args).then(r => r.data))
 
 
   useEffect(() => {
+
+    console.log(isReadyy,data);
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({
         id: item.id,
-          service_type_name: item.name,
+        service_type_name: item.name,
         bids_count: item.bids_count}))}
     localStore.setIsLoading = isLoading
-  },[data, isLoading])
+  },[data])
 
   useDidUpdate(
     () => {
@@ -75,9 +77,10 @@ const FinaceByTypePage = () => {
                 size={ButtonSizeType.sm} />
             </>
           } />
-        <TableWithSortNew store={localRootStore}
+        <TableWithSortNew store={localStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
+          autoScroll={true}
           style={PanelRouteStyle.finance}
           background={PanelColor.glass}
           className={'col-span-full table-groups tablet-max:pb-28'}

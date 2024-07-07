@@ -67,7 +67,7 @@ export const UploadedPhotosFirstStep = () => {
                 <p className={'col-span-2'}>Пожалуйста, прикрепите минимум 2 фото</p>
             )}
             <div className={''}>
-                <p className={'text-xs'}>
+                <p className={'text-xs mb-0 mt-2'}>
                     Загружено <span className={'text-accent text-lg'}>{img?.length}/</span>
                     <span className={'text-gray-1 text-lg'}>8</span>
                 </p>

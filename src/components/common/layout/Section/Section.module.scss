@@ -5,12 +5,17 @@
 	position: relative;
   gap: 2.5rem;
   z-index: 5;
+  align-items: start;
+  min-height: 45rem;
   grid-template-rows: min-content;
   //padding-bottom: 1rem;
   &[data-variant="centered"] {
 	align-self: center;
 	align-items: center;
 	//grid-row: 2/3;
+	> div {
+	  align-self: center;
+	}
   }
   &[data-variant="withSuffix"] {
 	grid-template-rows: min-content 1fr;
@@ -41,4 +46,8 @@
 	//  grid-column: 2/-2;
 	//}
   //}
+  > [data-variant="dataPadding"], > [data-variant="textPadding"] , > [data-variant="default"] {
+	align-self: stretch;
+	max-height:clamp(50dvh, auto, 150dvh);
+  }
 }

@@ -86,7 +86,7 @@ export default function GroupPageEditAction(props: any) {
           <Panel
         variant={PanelVariant.textPadding}
         state={false}
-            bodyClassName={'!py-0'}
+            bodyClassName={'!py-0 tablet:!px-0'}
         className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto] tablet-max:-mx-3'}
         header={<label className={'account-form__input flex-1'} htmlFor='cleanm'>
           Название группы

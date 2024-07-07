@@ -132,7 +132,7 @@ const PricePage = ():JSX.Element => {
       <Panel
         state={currentPriceById.loading}
         className={'col-span-full grid grid-rows-[auto_1fr] px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-6 '}
-        variant={PanelVariant.withGapOnly}
+        variant={PanelVariant.default}
         background={PanelColor.glass}
         routeStyle={PanelRouteStyle.price}
         bodyClassName={'flex'}

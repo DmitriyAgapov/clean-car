@@ -153,11 +153,12 @@ const MyProfilePage = () => {
   const [edit, setEdit] = React.useState(false)
   const userData = React.useMemo(() => {
     const avatar = store.userStore.myProfileData.user.avatar;
-
+    console.log(company);
     if(user) {
       if(edit) {
         return <UserProfileEditForm action={(val) => setEdit(val)}/>
       }
+      console.log((user.company?.company_type === CompanyType.customer || user.company?.company_type === CompanyType.fizlico));
       return (
         <Panel state={store.usersStore.loadingUsers}
           className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
@@ -169,8 +170,8 @@ const MyProfilePage = () => {
             <>
               <div className={'flex rounded-full mr-2 user__photo'}
                 // style={avatar ? {background: `url(${avatar})`, backgroundSize: "cover"} :{ background: 'var(--gradient-directory)' }}
-                data-app-type={store.appStore.appType !== "admin" ? (user.company?.company_type === CompanyType.customer || user.company?.company_type === CompanyType.fizlico) ? 'customer' : 'performers' : "admin"}>
-                {!avatar ? <span className={'text-black font-sans uppercase text-3xl leading-none m-auto w-24 h-24 '}>
+                data-app-type={store.appStore.appType !== "admin" ? (company?.company_type === CompanyType.customer || company?.company_type === CompanyType.fizlico) ? 'customer' : company?.company_type === CompanyType.performer ? 'performer' : "admin" : "admin"}>
+                {!avatar ? <span className={'text-black font-sans uppercase text-3xl leading-none m-auto w-24 h-24 flex items-center justify-center'}>
                 {user.first_name[0]}
                 {user.last_name[0]}
               </span>: <Image src={avatar} alt={''} width={98} height={98} className={'rounded-full aspect-square'} data-directory={store.appStore.appType}/>}

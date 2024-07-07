@@ -640,7 +640,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         <hr className={'col-span-full border-transparent my-2'} />
 
 
-                        <Group grow className={'col-span-full flex-1 gap-0 tablet-max:pt-4 pb-6'} align={'stretch'}>
+                        <Group grow className={'col-span-full flex-1 gap-0 tablet-max:pt-4 pb-4'} align={'stretch'}>
                             <UploadedPhotosFirstStep />
                         </Group>
                     </PanelForForms>
@@ -771,7 +771,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             variant={HeadingVariant.h4}
                             text={'Факт/лимит 35/100'}
                             color={HeadingColor.accent}
-                            className={'col-span-2 mt-6'}
+                            className={'col-span-2 mt-0'}
                         />
                     </PanelForForms>
                     {formData.values.service_type === '3' ? (
@@ -1045,7 +1045,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             </>
                         ) : (
                             <div className={'col-span-full subgrid contents'}>
-                              <div className={"col-span-2  row-span-2  relative z-[999] mobile:mb-8 grid  justify-evenly items-center"}>
+                              <div className={"col-span-2  row-span-2  relative z-[999] mobile:mb-8 grid  justify-evenly items-start content-start"}>
                                 <div className={"text-base"}>{step4.description}</div>
                                 <div>
                                   <Select className={"col-span-2"}

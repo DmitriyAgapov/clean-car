@@ -65,7 +65,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
     const _count = localStore.params.getItemsCount
     const rows = toJS(localStore.getData)?.results
     const initCount = _count
-    const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading && localStore.params.getIsReady
+    // const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading && localStore.params.getIsReady
     const { ref: refBody, width, height } = useElementSize();
 
     const fontSize = store.appStore.fontSizeBodyCalc()
@@ -77,7 +77,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
       setHeightVal((prevState) => height !== prevState ? height : prevState);
       const correct = widthV > 1920 ? 5 : 3;
       (() => {
-          if(value > 0) {
+          if(value > 0 && !autoScroll) {
             const footehH = Math.ceil(fontSize * 7.5);
             const headerH = Math.ceil(fontSize * 9);
             const _height = Math.floor(value - footehH - headerH);
@@ -105,7 +105,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
             // style={autoScroll ? {maxHeight: (heightV - Number(fontSize) * 22.5) +'px'} : {}}
             routeStyle={style}
             variant={variant ? variant : PanelVariant.dataPadding}
-            footerClassName={'px-6 pt-2 pb-4 h-24'}
+            footerClassName={'px-6 pt-2 pb-4 h-24' + " " + props.footerClassName}
             headerClassName={''}
             header={search || filter ?
                 <>
@@ -113,12 +113,13 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
                     {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
                 </> : false
             }
-            footer={!autoScroll ? <PaginationComponent /> : null}
+            footer={<>{!autoScroll ? <PaginationComponent /> : null}{props.footer}</>}
             {...props}
         >
-          {autoScroll ? <Table.ScrollContainer mah={"calc(100dvh - 30rem)"}
+          {autoScroll ? <Table.ScrollContainer mah={"calc(100dvh - 30rem)"} maw={"68.5rem"}
             h={"calc(100dvh - 30rem)"}
-            minWidth={"100%"}>
+            minWidth={"100%"}
+          >
             <Table className={styles.TableWithSort}
               data-style={style}
               data-width={`${Math.floor(100 / ar.length)}`}

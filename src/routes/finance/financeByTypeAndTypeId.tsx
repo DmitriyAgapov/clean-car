@@ -17,40 +17,63 @@ import dayjs from 'dayjs'
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
-  page: 1,
-  page_size: 10,
-  start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+  // page: 1,
+  // page_size: 10,
+  // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
 })
 
 const financeByTypeAndTypeId = () => {
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
-  const isReadyy = localStore.params.getIsReady
-
   const params = useParams()
+  const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
+  const ar = React.useMemo(() => {
+    const init = [
+      { label: 'Дата', name: 'date' },
+      { label: 'Заявка', name: 'bid_id' },
+      { label: 'Партнер', name: 'partner' },
+      { label: 'Заказчик', name: 'company' },
+      { label: 'Адрес', name: 'address' }
+    ]
+    data?.results.forEach((el:any) => {
+        const {id, date, bid_id, partner, company, address, amount, ...props} = el;
 
-  const {isLoading, data, mutate} = useSWR(isReadyy ? [`by-type/${params.service_type}`,localStore.params.getSearchParams] : null , ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
-  console.log(data);
+        for(const key in props) {
+          let t:{label: string, name: string}|undefined  = init.filter((el:any) => el.label == key)[0]
 
+          !t ?  init.push({label: key, name: key[props]}) : null
+        }
+    })
+    init.push(  { label: 'Итог', name: 'amount' },)
+    if(!data || data?.results.length === 0) return []
+    return init
+  }, [data])
+  console.log(ar);
   useEffect(() => {
     localStore.setData = {
       ...data,
-      results: data?.results?.map((item:any) => ({
-        date: dayjs(item.date).format('DD.MM.YY'),
-        id: item.id,
-        bid_id: `№ ${item.bid_id}`,
-        partner: item.partner,
-        company: item.company,
-        address: item.address,
-        amount: item.amount
-      }))}
-    localStore.setIsLoading = isLoading
-  },[data, isLoading])
+      results: data?.results?.map((item:any) =>{
+        const {id, date, bid_id, partner, company, address, amount, ...props} = item;
 
+
+        return ({
+          id: item.id,
+          date: dayjs(item.date).format('DD.MM.YY'),
+          bid_id: `№ ${item.bid_id}`,
+          partner: item.partner,
+          company: item.company,
+          address: item.address,
+          ...props,
+          total_amount: item.amount,
+        })
+      })}
+    localStore.setIsLoading = isLoading
+  },[data])
+  console.log(localStore.data)
   useDidUpdate(
     () => {
-      if(location.pathname === '/account/finance/by-type') {
+      if(location.pathname === `/account/finance/by-type/${params.service_type}`) {
         mutate()
       }
     },
@@ -58,7 +81,7 @@ const financeByTypeAndTypeId = () => {
   );
   if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
 
-  if (!location.pathname.includes('/account/finance/by-type')) return <Outlet />
+  if (!location.pathname.includes(`/account/finance/by-type/${params.service_type}`)) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
         <Panel headerClassName={'flex justify-between'}
@@ -78,25 +101,18 @@ const financeByTypeAndTypeId = () => {
                 size={ButtonSizeType.sm} />
             </>
           } />
-        <TableWithSortNew store={localRootStore}
+        <TableWithSortNew store={localStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
 
           autoScroll={true}
-          style={PanelRouteStyle.finance}
+          style={PanelRouteStyle.financeByTypeServiceId}
           background={PanelColor.glass}
           className={'col-span-full table-groups tablet-max:pb-28'}
           initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
           filter={true}
           state={isLoading}
-          ar={[
-            { label: 'Дата', name: 'date' },
-            { label: 'Заявка', name: 'bid_id' },
-            { label: 'Партнер', name: 'partner' },
-            { label: 'Заказчик', name: 'company' },
-            { label: 'Адрес', name: 'address' },
-            { label: 'Всего', name: 'amount' },
-          ]} />
+          ar={ar} />
       </Section>
   )
 }

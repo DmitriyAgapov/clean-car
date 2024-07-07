@@ -112,11 +112,17 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         onValuesChange: (values, previous) => console.log(values),
         validate: yupResolver(CreateFilialSchema),
         enhanceGetInputProps: (payload) => {
-            // if (payload.field === 'working_time') {
-            //     return {
-            //         className: 'mb-2 w-full flex-grow  !flex-[0_0_16rem] col-span-3',
-            //     }
-            // }
+            if (payload.field === 'company_id') {
+                return {
+                    className: 'mb-2 w-full flex-grow  !flex-[0_0_32%] col-span-3',
+                }
+            }
+            if (payload.field === 'company_filials') {
+                return {
+                    className: 'mb-2 w-full flex-grow  !flex-[0_0_32%] col-span-3',
+                }
+            }
+
             if (payload.field === 'address') {
                 return {
                     className: `mb-2  desktop:!flex-[1_0_64%] col-span-3   ${store.appStore.appType === "admin" && ''} col-span-3`,
@@ -410,7 +416,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             {...formData.getInputProps('height')}
                           />
                         )}
-                        {formData.values.type !== CompanyType.customer && <Select
+                       <Select
                             withCheckIcon={false}
                             label={'Город'}
                             searchable={true}
@@ -426,7 +432,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                                     label: o.name,
                                     value: String(o.id),
                                 }))}
-                        />}
+                        />
                         {formData.values.type === CompanyType.customer ? null : <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>}
                     </PanelForForms>
                     <PanelForForms
