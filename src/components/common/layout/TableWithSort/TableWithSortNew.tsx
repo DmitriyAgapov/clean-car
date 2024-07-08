@@ -119,7 +119,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
           {autoScroll ? <Table.ScrollContainer  classNames={{
             scrollContainer: styles.scrollCustom,
             scrollContainerInner: "h-full"
-          }} mah={"calc(100dvh - 20rem)"} maw={"68.5rem"}
+          }} mah={"calc(100dvh - 22.5rem)"} maw={"68.5rem"}
             h={"calc(100dvh - 20rem)"} mih={"100%"}
             minWidth={"100%"}
           >
@@ -139,7 +139,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
               <Table.Tbody style={{height: "100%"}}>
               </Table.Tbody>
               <Table.Tfoot>
-                {rows  && _countFetch && _countFetch > 0  ? <RowData style={style} {...props.footerProps}
+                {props.footerProps  && _countFetch && _countFetch > 0  ? <RowData style={style} {...props.footerProps}
                   key={props.footerProps.id + "_00"} />: null}
               </Table.Tfoot>
             </Table>

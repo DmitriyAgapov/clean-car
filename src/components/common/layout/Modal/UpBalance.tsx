@@ -10,14 +10,12 @@ import DList from 'components/common/ui/DList/DList'
 import { useForm } from '@mantine/form'
 import { useSWRConfig } from 'swr'
 
-enum PurposeOfTransaction {
-    "Пополнение баланса (счета)" = "1",
-    "Оплата услуг" = "2",
-    "Возврат" = "3",
-    "Начисление бонуса" = "4",
-    "Списание бонуса"  = "5",
-    "Штраф по ПДД"  = "6",
-    "Штраф компании (в рамках договора)"  = "7"
+export enum PurposeOfTransaction {
+    "Пополнение баланса (счета)" = 1,
+    "Оплата услуг" = 2,
+    "Возврат" = 3,
+    "Бонус" = 4,
+    "Штраф"  = 5
 }
 interface UpBalanceParams {
     opened: boolean;
@@ -70,7 +68,7 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
                             {...formData.getInputProps('amount')}
                             // onChange={(value: any) => setAmount(Number(value))}
                         />
-                        <Select label={'Цель зачисления'}  {...formData.getInputProps('purpose')} disabled={upBalance} data={upBalance ? [{label: Object.keys(PurposeOfTransaction)[0], value: "1"}] : Array.from(Object.entries(PurposeOfTransaction)).slice(3).map((el:string[]) => ({label: el[0], value: el[1]}))}/>
+                        <Select label={'Цель зачисления'}  {...formData.getInputProps('purpose')} disabled={upBalance} data={upBalance ? [{label: Object.values(PurposeOfTransaction)[0], value: Object.keys(PurposeOfTransaction)[0]}] : Array.from(Object.entries(PurposeOfTransaction).filter((v) => isNaN(Number(v[0])))).slice(3).map((el:any[]) => ({label: el[0], value: el[1].toString()}))}/>
                             {!upBalance ? <Textarea label={'Комментарий'} minRows={2} /> : null}
                         </div>
                         <div data-content={'modal_company'}>

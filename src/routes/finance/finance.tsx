@@ -14,7 +14,6 @@ import { NumberFormatter } from '@mantine/core'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import agent from 'utils/agent'
 import dayjs from 'dayjs'
-import TableWithScroll from "components/common/layout/TableWithSort/TableWithScroll";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -308,7 +307,6 @@ const FinacePage = () => {
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
-  const isReadyy = localStore.params.getIsReady
   const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams], ([url, args]) => store.financeStore.getReport(undefined,args))
 
   useEffect(() => {

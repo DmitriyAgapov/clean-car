@@ -2,21 +2,18 @@ import React, { useEffect } from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import Button, {  ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { observer, useLocalObservable } from 'mobx-react-lite'
 import { Navigate, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
-import { useDidUpdate, useViewportSize } from '@mantine/hooks'
-import { NumberFormatter } from '@mantine/core'
+import { useDidUpdate } from '@mantine/hooks'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
-import agent, { PaginationProps } from "utils/agent";
+import agent from "utils/agent";
 import dayjs from 'dayjs'
-import { SvgBackArrow } from "components/common/ui/Icon";
-import styles from "components/common/layout/TableWithSort/TableWithSort.module.scss";
-import label from "utils/labels";
+import { SvgBackArrow } from 'components/common/ui/Icon'
+import { observer, useLocalObservable } from 'mobx-react-lite'
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -29,7 +26,6 @@ const financeByTypeAndTypeId = () => {
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
-
   const navigate = useNavigate()
   const params = useParams()
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
@@ -43,7 +39,6 @@ const financeByTypeAndTypeId = () => {
       ]
       data?.results.forEach((el: any) => {
           const { id, date, bid_id, partner, company, address, amount, ...props } = el
-
           for (const key in props) {
               let t: { label: string; name: string } | undefined = init.filter((el: any) => el.label == key)[0]
 
@@ -63,7 +58,6 @@ const financeByTypeAndTypeId = () => {
           results: data?.results?.map((item: any) => {
               const { id, date, bid_id, partner, company, address, amount, ...props } = item
               return {
-                  // idNum: item.bid_id,
                   date: dayjs(item.date).format('DD.MM.YY'),
                   bid_id: `№ ${item.bid_id}`,
                   partner: item.partner,
@@ -75,10 +69,7 @@ const financeByTypeAndTypeId = () => {
           }),
       }
       if (data && _data) {
-          const _res = _data.results
           const { bids_count, total_amount, ...props } = data.total
-
-          // _res.push({total_total_label: "Итого", bids_count: bids_count, ...props, total_amount: total_amount + " ₽"})
           setFooter({ total_total_label: 'Итого', bids_count: bids_count, ...props, total_amount: total_amount + ' ₽' })
           localStore.setData = {
               ..._data,
@@ -88,7 +79,7 @@ const financeByTypeAndTypeId = () => {
 
       localStore.setIsLoading = isLoading
   }, [data])
-  console.log(localStore.data)
+
   useDidUpdate(
     () => {
       if(location.pathname === `/account/finance/by-type/${params.service_type}`) {
@@ -112,7 +103,7 @@ const financeByTypeAndTypeId = () => {
                   text={
                     <>
                       <SvgBackArrow />
-                      Назад к компании
+                      Назад
                     </>
                   }
                   className={

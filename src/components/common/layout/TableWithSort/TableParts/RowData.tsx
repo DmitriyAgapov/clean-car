@@ -37,7 +37,6 @@ const RowData = observer((props: any) => {
 		}
 		return ''
 	}, [])
-	console.log(props);
 	const handleClick = React.useCallback(() => {
 		if (props.query && props.query.rootRoute) {
 			return navigate(props.query.rootRoute)
@@ -122,14 +121,22 @@ const RowData = observer((props: any) => {
 						<p className={'m-0'}>{_txtAr[0]} / <NumberFormatter className={`${Number(_txtAr[1].replace(' ₽', '')) > 0 && "text-accent"} !leading-tight`} thousandSeparator={" "}  suffix=" ₽" value={_txtAr[1]}/></p>
 					</td>)
 				} else if(key === "bids_count") {
-
 						ar.push(<td key={key} colSpan={4}
 							className={styles.tableCell} data-label={label(key)}>
 
 							<p className={'m-0'}>{props[key]}</p>
 						</td>,)
 
-				}  else if(key === "wrapper") {
+				} else if(key === "bids_count_v") {
+						ar.push(<td key={key} colSpan={3}
+							className={styles.tableCell} data-label={label(key)}>
+
+							<p className={'m-0'}>{props[key]}</p>
+						</td>,)
+
+				}
+
+				else if(key === "wrapper") {
 
 						ar.push(<td key={key} colSpan={1000}
 							className={styles.tableCell} data-label={label(key)}>

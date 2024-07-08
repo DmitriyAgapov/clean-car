@@ -1062,14 +1062,14 @@ th, td {
       padding-right: 2rem !important;
       padding-left: 1rem;
       right: 0;
-      background:  rgba(9, 9, 9, 0.9);
+      background: #111216;
       p {
         color: var(--accentColor) !important;
       }
 
     }
     &[data-name="amount"] {
-      background: rgba(9,9,9,1);
+      background: #111216;
     }
 
     &:last-child {
@@ -1201,17 +1201,31 @@ th, td {
   }
   &[data-style="financeByTypeServiceId"] {
 
-      height: 100%;
+    height: 100%;
     tfoot {
-      tr{
+      tr {
         z-index: 9;
-        background: rgba(9, 9, 9, 1);
+        background: #111216;
         position: sticky;
         bottom: 0;
         left: 0;
 
         td {
           padding-bottom: 2rem;
+          &:last-child p {
+            display: block;
+            padding: 2rem 1rem 1.5rem;
+            background: linear-gradient(182.19deg, #090909 2.89%, rgba(9, 9, 9, 0.28) 101.32%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: absolute;
+            bottom: 0;
+            border-top-left-radius: 0.5rem;
+            left: 0;
+            border-bottom: 0;
+            border-color: rgba(255,255,255, 0.15);
+            border-top-right-radius: .5rem;
+
+          }
         }
 
         * {
