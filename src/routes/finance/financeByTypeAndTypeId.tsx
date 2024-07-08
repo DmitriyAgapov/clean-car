@@ -15,6 +15,8 @@ import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import agent, { PaginationProps } from "utils/agent";
 import dayjs from 'dayjs'
 import { SvgBackArrow } from "components/common/ui/Icon";
+import styles from "components/common/layout/TableWithSort/TableWithSort.module.scss";
+import label from "utils/labels";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -32,56 +34,60 @@ const financeByTypeAndTypeId = () => {
   const params = useParams()
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
   const ar = React.useMemo(() => {
-    const init = [
-      { label: 'Дата', name: 'date' },
-      { label: 'Заявка', name: 'bid_id' },
-      { label: 'Партнер', name: 'partner' },
-      { label: 'Заказчик', name: 'company' },
-      { label: 'Адрес', name: 'address' }
-    ]
-    data?.results.forEach((el:any) => {
-        const {id, date, bid_id, partner, company, address, amount, ...props} = el;
+      const init = [
+          { label: 'Дата', name: 'date' },
+          { label: 'Заявка', name: 'bid_id' },
+          { label: 'Партнер', name: 'partner' },
+          { label: 'Заказчик', name: 'company' },
+          { label: 'Адрес', name: 'address' },
+      ]
+      data?.results.forEach((el: any) => {
+          const { id, date, bid_id, partner, company, address, amount, ...props } = el
 
-        for(const key in props) {
-          let t:{label: string, name: string}|undefined  = init.filter((el:any) => el.label == key)[0]
+          for (const key in props) {
+              let t: { label: string; name: string } | undefined = init.filter((el: any) => el.label == key)[0]
 
-          !t ?  init.push({label: key, name: key[props]}) : null
-        }
-    })
-    init.push(  { label: 'Итог', name: 'amount' },)
-    if(!data || data?.results.length === 0) return []
-    return init
+              !t ? init.push({ label: key, name: key[props] }) : null
+          }
+      })
+      init.push({ label: 'Итог', name: 'amount' })
+      if (!data || data?.results.length === 0) return []
+      return init
   }, [data])
+
+  const [_footer, setFooter] = React.useState<any>(null)
+
   useEffect(() => {
     const _data = {
       ...data,
-      results: data?.results?.map((item:any) =>{
-        const {id, date, bid_id, partner, company, address, amount, ...props} = item;
-        return ({
-          // idNum: item.bid_id,
-          date: dayjs(item.date).format('DD.MM.YY'),
-          bid_id: `№ ${item.bid_id}`,
-          partner: item.partner,
-          company: item.company,
-          address: item.address,
-          ...props,
-          total_amount: item.amount + " ₽",
-        })
-      })}
-    if(data && _data) {
-      const _res = _data.results;
-      const {bids_count, total_amount, ...props} = data.total
-      _res.push({wrapper: ""})
-      _res.push({total_total_label: "Итого", bids_count: bids_count, ...props, total_amount: total_amount + " ₽"})
-
-      localStore.setData = {
-        ..._data,
-        results: _res
+          results: data?.results?.map((item: any) => {
+              const { id, date, bid_id, partner, company, address, amount, ...props } = item
+              return {
+                  // idNum: item.bid_id,
+                  date: dayjs(item.date).format('DD.MM.YY'),
+                  bid_id: `№ ${item.bid_id}`,
+                  partner: item.partner,
+                  company: item.company,
+                  address: item.address,
+                  ...props,
+                  total_amount: item.amount + ' ₽',
+              }
+          }),
       }
-    }
+      if (data && _data) {
+          const _res = _data.results
+          const { bids_count, total_amount, ...props } = data.total
 
-    localStore.setIsLoading = isLoading
-  },[data])
+          // _res.push({total_total_label: "Итого", bids_count: bids_count, ...props, total_amount: total_amount + " ₽"})
+          setFooter({ total_total_label: 'Итого', bids_count: bids_count, ...props, total_amount: total_amount + ' ₽' })
+          localStore.setData = {
+              ..._data,
+              results: _data.results,
+          }
+      }
+
+      localStore.setIsLoading = isLoading
+  }, [data])
   console.log(localStore.data)
   useDidUpdate(
     () => {
@@ -91,6 +97,7 @@ const financeByTypeAndTypeId = () => {
     },
     [location.pathname]
   );
+
   if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
 
   if (!location.pathname.includes(`/account/finance/by-type/${params.service_type}`)) return <Outlet />
@@ -131,7 +138,8 @@ const financeByTypeAndTypeId = () => {
         <TableWithSortNew store={localStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
-
+          footerProps={_footer}
+          footerClassName={"table width-full"}
           autoScroll={true}
           style={PanelRouteStyle.financeByTypeServiceId}
           background={PanelColor.glass}

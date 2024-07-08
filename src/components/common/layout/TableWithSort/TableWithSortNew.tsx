@@ -27,6 +27,7 @@ type TableWithSortProps = {
     initFilterParams?: FilterData[] | undefined
     total?: number | undefined
     withOutLoader?: boolean
+    footerProps?:any
     filter?: boolean
     pageSize?: number
     variant?: PanelVariant
@@ -95,7 +96,6 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
           }
       })()
     }, [height, fontSize, value, _count]);
-  console.log(_countFetch);
 
 
       return (
@@ -136,6 +136,12 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
                 {rows  && _countFetch && _countFetch > 0  ? rows.map((item: any, index: number) => <RowData style={style} {...item}
                   key={item.id + "_00" + index} />) : null}
               </Table.Tbody>
+              <Table.Tbody style={{height: "100%"}}>
+              </Table.Tbody>
+              <Table.Tfoot>
+                {rows  && _countFetch && _countFetch > 0  ? <RowData style={style} {...props.footerProps}
+                  key={props.footerProps.id + "_00"} />: null}
+              </Table.Tfoot>
             </Table>
           </Table.ScrollContainer> : <table className={styles.TableWithSort}
             data-style={style}

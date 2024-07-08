@@ -1055,7 +1055,7 @@ th, td {
 
     &[data-name="amount"], &[data-label="total_amount"], {
       position: sticky;
-      z-index: 99;
+      z-index: 8;
       //overflow: hidden;
       //width: 100%;
       //min-width: 7rem;
@@ -1202,18 +1202,21 @@ th, td {
   &[data-style="financeByTypeServiceId"] {
 
       height: 100%;
+    tfoot {
+      tr{
+        z-index: 9;
+        background: rgba(9, 9, 9, 1);
+        position: sticky;
+        bottom: 0;
+        left: 0;
 
-    tr:last-child:not(:first-child) {
-      z-index: 999;
-      background: rgba(9,9,9, 1);
-      position: sticky;
-      bottom: 0;
-      left: 0;
-      td {
-        padding-bottom: 2rem;
-      }
-      * {
-        @apply text-active;
+        td {
+          padding-bottom: 2rem;
+        }
+
+        * {
+          @apply text-active;
+        }
       }
     }
   }

@@ -53,12 +53,9 @@ export class LocalRootStore  {
     const _initAr = this.getData
     if(data && data.count && this.count_data !== data.count) {
       this.count_data = data.count
-
-
     }
     if(data && data.results) {
       data.results.forEach((item:any, index:number) => {
-
         this.inFinitiveScrollResults.set(String(item.id), item)
       })
     }
