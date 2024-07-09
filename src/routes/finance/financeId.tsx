@@ -79,7 +79,7 @@ const FinaceIdPage = () => {
   }, [openedf, data, isLoading])
 
 
-  if (!location.pathname.includes('/account/finance/report')) return <Outlet />
+  if (location.pathname.includes('/account/finance/report')) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
           <Panel

@@ -339,7 +339,7 @@ const FinacePage = () => {
   );
   // if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
 
-  if (location.pathname !==  '/account/finance/report') return <Outlet />
+  if (!location.pathname.includes('/account/finance/report')) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
         <Panel headerClassName={'flex justify-between'}

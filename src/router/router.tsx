@@ -268,7 +268,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: ':service_type',
-                        element: <FinanceByTypeAndTypeId/>
+                        element: <FinanceByTypeAndTypeIdAndCompany/>
                     }
                 ]
             },

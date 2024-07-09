@@ -19,7 +19,7 @@ function StickyHeader(props: { map: any, autoScroll: boolean }) {
     )
 }
 
-const RowHeading = ({ ar, sort, action, total, autoScroll }: any) => {
+const RowHeading = ({ ar, sort, action, total, autoScroll, view = false }: any) => {
 	const localStore = useLocalStore()
 	// console.log(localStore.params.getSearchParams.ordering && localStore.params.getSearchParams.ordering.length > 0)
 
@@ -68,6 +68,26 @@ const RowHeading = ({ ar, sort, action, total, autoScroll }: any) => {
 		localStore.params.setSearchParams({page: 1, ordering: newVal.reversed ? `-${ar[index].name}` : ar[index].name})
 
 	}, [count, ar, localStore.params.searchParams])
+	if(view) {
+		return <div data-panel={"header_row"}>
+			{ar.map((arItem: { label: string, name: string }, index: number) => {
+				if(autoScroll) return (
+					<div data-panel={"header_cell"} key={`rh-${index}`}
+						data-name={localStore.data?.canSort === false ? null : arItem.name}
+						// style={(index !== 0 && index !== ar.length - 1) ? ({ width: `${100 / ar.length}%` } ): {}}
+						className={styles.tableheading}
+						onClick={() => localStore.data?.canSort === false ? void null : handleSortKey(index)}
+						data-sort-selected={localStore.data?.canSort === false ? null : index === count.index}
+						data-sort-reversed={localStore.data?.canSort === false ? null : index === count.index && count.reversed === true}>
+						<div style={{ display: 'flex', alignItems: "center", gap: ".5rem" }}>
+							<span>{arItem.label}</span>
+							{localStore.data?.canSort === false ? null : <SvgSort />}
+						</div>
+					</div>
+				)
+			})}
+		</div>
+	}
 	return (
 		<StickyHeader autoScroll={autoScroll} map={ar.map((arItem: { label: string, name: string }, index: number) => {
 			if(autoScroll) return (

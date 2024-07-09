@@ -1202,7 +1202,7 @@ th, td {
   &[data-style="financeByTypeServiceId"] {
 
     height: 100%;
-    tfoot {
+    tfoot, footer {
       tr {
         z-index: 9;
         background: #111216;
@@ -1510,9 +1510,6 @@ svg {
 }
 }
 
-.mobileButton {
-
-}
 .TableWithSortPure {
 border-top: 1px solid #242529;
 width: 100%;

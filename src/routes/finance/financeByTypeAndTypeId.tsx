@@ -22,12 +22,14 @@ localRootStore.params.setSearchParams({
   // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
 })
 
-const financeByTypeAndTypeId = () => {
+const FinanceByTypeAndTypeId = () => {
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
+
   const params = useParams()
+  console.log(params);
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
   const ar = React.useMemo(() => {
       const init = [
@@ -91,7 +93,7 @@ const financeByTypeAndTypeId = () => {
 
   // if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
   //
-  if (!location.pathname.includes(`/account/finance/by-type/${params.service_type}`)) return <Outlet />
+  if (location.pathname.includes(`/account/finance/report/${params.service_type}`)) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
         <Panel headerClassName={'flex justify-between'}
@@ -129,6 +131,7 @@ const financeByTypeAndTypeId = () => {
         <TableWithSortNew store={localStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
+
           footerProps={_footer}
           footerClassName={"table width-full"}
           autoScroll={true}
@@ -143,4 +146,4 @@ const financeByTypeAndTypeId = () => {
   )
 }
 
-export default observer(financeByTypeAndTypeId)
+export default observer(FinanceByTypeAndTypeId)

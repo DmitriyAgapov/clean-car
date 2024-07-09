@@ -175,6 +175,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
           search={true}
           footerHeight={"7rem"}
           footerProps={_footer}
+          view={true}
           autoScroll={true}
           style={PanelRouteStyle.financeByTypeServiceId}
           background={PanelColor.glass}

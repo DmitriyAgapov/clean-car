@@ -1,0 +1,394 @@
+
+.TableWithSortGrid {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  align-content: stretch;
+
+  [data-panel="header"] {
+
+  }
+
+  &[data-style="financeByTypeServiceId"], &[data-style="financeByType"] {
+
+	[data-panel="cell"] {
+	  font-size: .75rem;
+	  font-weight: 500;
+	  //display: block;
+	  padding: 1rem 0;
+	  height: 3rem;
+
+	  &:first-child {
+		padding-left: 2rem;
+	  }
+
+	  &:last-child {
+		padding-right: 2rem;
+	  }
+	}
+
+	[data-panel="header_cell"], [data-panel="cell"] {
+
+	  @apply font-medium;
+	  //padding-top: .75rem;
+	  //padding-bottom: .75rem;
+	  display: inline-flex;
+	  align-items: center;
+	  align-content: center;
+	  align-self: center;
+	  //line-height: 1rem;
+	  gap: .5rem;
+	  justify-content: flex-start;
+	  padding-left: 0.5rem;
+	  letter-spacing: 0.05em;
+	  line-height: 1;
+	  @apply px-2;
+	  span {
+		vertical-align: text-bottom;
+		line-height: .625rem;
+	  }
+
+	  white-space: nowrap;
+
+	  &:first-child {
+		padding-left: 2rem;
+		width: 7rem;
+	  }
+
+
+
+	  span {
+		padding-top: .125rem;
+	  }
+	}
+
+	[data-panel="header_row"] {
+	  background-color: #090909;
+	  z-index: 11000;
+	  display: grid;
+	  grid-template-columns: subgrid;
+	  grid-column: 1/-1;
+		position: sticky;
+	  top: 0;
+	  @screen desktop-max {
+		display: none;
+	  }
+	  @screen lg {
+		height: 1.5rem;
+	  }
+	}
+
+	[data-panel="footer_row"] {
+	  display: grid;
+	  grid-template-columns: subgrid;
+	  grid-column: 1/-1;
+	  position: sticky;
+	  bottom: 0;
+
+	  z-index: 9;
+	  background: #111216;
+	  position: sticky;
+	  bottom: 0;
+	  left: 0;
+	[data-panel="content_row"] {
+	  cursor: initial;
+	}
+	  [data-panel="cell"] {
+		padding-bottom: 2rem;
+
+		&:last-child p {
+		  display: block;
+		  padding: 2rem 1rem 1.5rem;
+		  background: linear-gradient(182.19deg, #090909 2.89%, rgba(9, 9, 9, 0.28) 101.32%);
+		  border: 1px solid rgba(255, 255, 255, 0.15);
+		  position: absolute;
+		  bottom: 0;
+		  border-top-left-radius: 0.5rem;
+		  left: 0;
+		  border-bottom: 0;
+		  border-color: rgba(255, 255, 255, 0.15);
+		  border-top-right-radius: .5rem;
+
+		}
+	  }
+
+	  * {
+		@apply text-active;
+	  }
+
+	  [data-label="bids_count_v"] {
+		grid-column: span 3;
+	  }
+	}
+
+	[data-panel="content_row"], [data-panel="header_row"] {
+
+      &:hover {
+        td {
+          transition-duration: 0s;
+        }
+        td:last-child {
+          background: transparent;
+          transition-duration: 0s;
+        }
+      }
+    }
+	[data-panel="content_row"], [data-panel="header_row"] {
+	  display: grid;
+	  grid-template-columns: subgrid;
+	  grid-column: 1/-1;
+
+	  [data-panel="header_cell"], [data-panel="cell"] {
+		//width: 100%;
+		&[data-label="service_type_name"], &[data-label="partner"], &[data-label="Компания"], &[data-name="service_type_name"], {
+		  p {
+			@apply text-active uppercase;
+		  }
+		}
+
+		&[data-label="service_type_name"], &[data-name="service_type_name"], {
+		  p {
+			@apply text-active uppercase;
+		  }
+		;
+		}
+
+		&[data-label="bids_count"], &[data-name="bids_count"], {
+		  max-width: 20rem;
+		  padding-right: 2rem !important;
+		  padding-left: 1rem;
+		}
+
+
+		&:last-child {
+		  //width: 100%;
+		  //min-width: 8rem;
+
+		  padding-right: 2rem;
+		}
+        &[data-name="amount"], &[data-label="total_amount"], {
+          position: sticky;
+          z-index: 8;
+          //overflow: hidden;
+          //width: 100%;
+          //min-width: 7rem;
+          padding-right: 2rem !important;
+          padding-left: 1rem;
+          right: 0;
+          background: #111216;
+          p {
+            color: var(--accentColor) !important;
+          }
+
+        }
+        &[data-name="amount"] {
+          background: #111216;
+        }
+
+        &:last-child {
+          //width: 100%;
+          //min-width: 8rem;
+
+          padding-right: 2rem;
+        }
+	  }
+
+	  &:hover {
+		td {
+		  transition-duration: 0s;
+		}
+
+		td:last-child {
+		  background: transparent;
+		  transition-duration: 0s;
+		}
+	  }
+	}
+	[data-panel="content_row"] {
+	  width: 100%;
+	  //grid-auto-flow: column;
+	  //grid-template-columns: 6rem 2fr 1fr 1fr;
+
+	  &:hover {
+		background-attachment: fixed;
+		background: -moz-linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
+		background: -webkit-linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
+		background: -o-linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
+		background: -ms-linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
+		background: linear-gradient(114.94deg, rgba(0, 255, 240, 0.42) 17.48%, rgba(77, 91, 83, 0.1) 84.13%);
+		background-attachment: fixed;
+	  }
+
+	  cursor: pointer;
+
+	  &:hover {
+		color: #ffffff;
+	  }
+	}
+	[data-panel="content"] {
+	  display: grid;
+	  grid-template-columns: subgrid;
+	  grid-column: 1/-1;
+	  align-content: start;
+		padding-bottom: 1rem;
+
+	  [data-panel="content_row"]:not(:first-child) {
+		border-top: .125rem solid;
+		@apply border-gray-3;
+	  }
+
+	  [data-panel="content_row"]:last-child {
+		border-bottom: 2px solid;
+		@apply border-gray-3;
+	  }
+	}
+
+	[data-panel="header_cell"] {
+	  position: relative;
+	  overflow: visible;
+	  z-index: 11000;
+
+	  span {
+		white-space: nowrap;
+	  }
+	}
+
+	tr {
+
+	}
+
+	@screen mobile {
+	  margin-left: -.75rem !important;
+	  margin-right: -.75rem !important;
+
+
+	  [data-label="Компания"] {
+		grid-column: 1/-3;
+		margin-top: 1rem;
+
+		&:before {
+		  content: none;
+		}
+	  }
+
+	  [data-label="Тип"] {
+		grid-column: 1/-3;
+		margin-top: -1rem;
+		@apply text-xs;
+		p {
+		  text-wrap: wrap;
+		}
+	  }
+
+	}
+  }
+
+  &[data-style="financeByTypeServiceId"] {
+
+	height: 100%;
+
+	[data-panel="footer_row"] {
+	  //padding-top: 1rem;
+	  [data-panel="content_row"] {
+		z-index: 9;
+		background: #111216;
+		position: sticky;
+		bottom: 0;
+		left: 0;
+
+
+		[data-panel="cell"] {
+		  padding-bottom: 2.5rem;
+
+		  &:last-child p {
+			display: block;
+			padding: 2rem 1rem 1.5rem;
+			background: linear-gradient(182.19deg, #090909 2.89%, rgba(9, 9, 9, 0.28) 101.32%);
+			border: 1px solid rgba(255, 255, 255, 0.15);
+			position: absolute;
+			bottom: 0;
+			border-top-left-radius: 0.5rem;
+			left: 0;
+			border-bottom: 0;
+			border-color: rgba(255, 255, 255, 0.15);
+			border-top-right-radius: .5rem;
+
+		  }
+		}
+
+		* {
+		  @apply text-active;
+		}
+	  }
+	}
+  }
+
+  [data-orientation="horizontal"] {
+	height: .875rem;
+	z-index: 10;
+  }
+  [data-orientation="vertical"] {
+
+	z-index: 10;
+  }
+
+}
+
+
+.scrollCustom {
+  &[data-scrollbars=xy], &[data-scrollbars=x], &[data-offset-scrollbars=x] {
+	padding-bottom: 0;
+
+	> div {
+	  height: 100%;
+	  display: block !important;
+
+	  tbody + tbody {
+		//height: 100%;
+		tr {
+		  //height: 100%;
+		  min-height: 0;
+		  //max-height: 100%;
+		  //display: block;
+		  border: 0;
+
+		}
+
+		tr:hover {
+		  background: none;
+		  cursor: initial;
+
+		  td:last-child {
+			background: #111216;
+		  }
+		}
+
+		td {
+		  height: 0;
+		  display: none;
+		}
+
+		td:not(:last-child) {
+		  opacity: 0;
+		}
+
+		td:last-child {
+		  p {
+			color: transparent !important;
+		  }
+		}
+
+	  }
+	}
+  }
+
+  & + [data-orientation="horizontal"] {
+	height: .875rem;
+	z-index: 10;
+  }
+  & ~ [data-orientation="vertical"] {
+	padding-block: 1.5rem 0;
+	z-index: 10;
+  }
+
+}
