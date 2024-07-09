@@ -77,8 +77,7 @@ const FinaceIdPage = () => {
     if(isLoading && !data) return null
     if(data && data.root_company) return <UpBalance upBalance={false} companyName={data.root_company.name} id={data.root_company.id} opened={openedf} onClose={closef} />
   }, [openedf, data, isLoading])
-  console.log(localStore);
-  console.log(data);
+
 
   if (!location.pathname.includes('/account/finance/report')) return <Outlet />
   return (
@@ -117,9 +116,9 @@ const FinaceIdPage = () => {
                       </div>
 
 
-                        {data?.root_company?.company_type === 'Клиент' &&        <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
-                            <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
-                            <Button text={'Бонусы и штрафы'}  action={openf} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />
+                        {(data?.root_company?.company_type === 'Клиент' || data?.root_company.company_type === "Партнер") &&        <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
+                          {data?.root_company?.company_type === 'Клиент' &&        <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />}
+                          {(data?.root_company.company_type === "Партнер"  || data?.root_company.company_type === "Клиент") &&  <Button text={'Бонусы и штрафы'}  action={openf} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />}
                         </div>
                         }
 
