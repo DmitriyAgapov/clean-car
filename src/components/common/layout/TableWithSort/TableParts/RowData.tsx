@@ -127,16 +127,16 @@ const RowData = observer((props: any) => {
                         ar.push(
                             <td key={key} className={styles.tableCell} data-label={label(key)}>
                                 {(_id && _ar.some((v) => key == v)) ? (
-                                    <a onClick={(event) => {
+                                    <a className={'m-0 inline-block hover:border-b border-b border-b-active/30 hover:border-b-active'} onClick={(event) => {
                                             event.stopPropagation()
                                             navigate(
-                                                `/account/finance/by-type/${key == 'wash' ? 1 : key == 'tire' ? 2 : key == 'evac' ? 3 : ''}/${_id}/`, { state: { ...searchParams } }
+                                                `/account/finance/report/${_id}/${key == 'wash' ? 1 : key == 'tire' ? 2 : key == 'evac' ? 3 : ''}`, { state: { ...searchParams } }
                                             )
                                         }}
 
                                     >
                                         <>
-                                            {_txtAr[0] + '/'}
+                                            {_txtAr[0] + '/ '}
                                             <NumberFormatter
                                                 className={`${Number(_txtAr[1].replace(' ₽', '')) > 0 && 'text-accent'} !leading-tight`}
                                                 thousandSeparator={' '}
@@ -197,8 +197,9 @@ const RowData = observer((props: any) => {
 				}
 			} else if(typeof props[key] == 'object') {
 			if (key == 'company' || key == 'partner' ) {
+				console.log(props[key].id);
 					ar.push(<td key={props[key].name} className={styles.tableCell} data-label={label(props[key].name)}>
-						<LinkStyled variant={ButtonVariant.text} to={`${props[key].id}`} text={props[key].name} className={'m-0 inline-block text-active hover:border-b border-b border-b-active/30 hover:border-b-active'} />
+						<LinkStyled variant={ButtonVariant.text} to={`/account/companies/${key == 'company' ? "customer" : 'performer'}/${props[key].id}`} text={props[key].name} className={'m-0 inline-block text-active hover:border-b border-b border-b-active/30 hover:border-b-active'} />
 					</td>)
 				}
 			}
