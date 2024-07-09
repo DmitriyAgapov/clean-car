@@ -13,12 +13,14 @@ import { observer } from 'mobx-react-lite'
 import { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
 import { NumberFormatter } from '@mantine/core'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
+import { useLocalStore } from "stores/localStore";
 
 
 const RowData = observer((props: any) => {
 	const navigate = useNavigate()
 	const location = useLocation()
-
+	const localStore = useLocalStore()
+	const searchParams = localStore.params.getSearchParams
 	const querys = React.useCallback(() => {
 		let queryString = ''
 		if (props.query) {
@@ -37,7 +39,9 @@ const RowData = observer((props: any) => {
 		}
 		return ''
 	}, [])
+
 	const handleClick = React.useCallback(() => {
+		console.log(props);
 		if (props.query && props.query.rootRoute) {
 			return navigate(props.query.rootRoute)
 		}
@@ -48,6 +52,7 @@ const RowData = observer((props: any) => {
 
 	const propsRender = React.useMemo(() => {
 		const ar = []
+		// console.log(props);
 		for (const key in props) {
 
 			if (key == "bid"  || typeof props[key] !== 'object' ) {
@@ -114,12 +119,49 @@ const RowData = observer((props: any) => {
 				} 	else if (key == "style") {
 
 				} else if (key == "tire" || key == "evac"  || key == "wash" || key == "total") {
+					// console.log(props);
+					const _ar = ["tire", "evac", "wash"]
 					const _txtAr = props[key].split('/')
+					const  _id = props.attributes?.id
 
-					ar.push(<td key={key}
-						className={styles.tableCell} data-label={label(key)}>
-						<p className={'m-0'}>{_txtAr[0]} / <NumberFormatter className={`${Number(_txtAr[1].replace(' ₽', '')) > 0 && "text-accent"} !leading-tight`} thousandSeparator={" "}  suffix=" ₽" value={_txtAr[1]}/></p>
-					</td>)
+                        ar.push(
+                            <td key={key} className={styles.tableCell} data-label={label(key)}>
+                                {(_id && _ar.some((v) => key == v)) ? (
+                                    <a onClick={(event) => {
+                                            event.stopPropagation()
+                                            navigate(
+                                                `/account/finance/by-type/${key == 'wash' ? 1 : key == 'tire' ? 2 : key == 'evac' ? 3 : ''}/${_id}/`, { state: { ...searchParams } }
+                                            )
+                                        }}
+
+                                    >
+                                        <>
+                                            {_txtAr[0] + '/'}
+                                            <NumberFormatter
+                                                className={`${Number(_txtAr[1].replace(' ₽', '')) > 0 && 'text-accent'} !leading-tight`}
+                                                thousandSeparator={' '}
+                                                suffix=' ₽'
+                                                value={_txtAr[1]}
+                                            />
+                                        </>
+                                    </a>
+                                ) : (
+                                    <p className={'m-0'}>
+                                        {_txtAr[0]} /{' '}
+                                        <NumberFormatter
+                                            className={`${Number(_txtAr[1].replace(' ₽', '')) > 0 && 'text-accent'} !leading-tight`}
+                                            thousandSeparator={' '}
+                                            suffix=' ₽'
+                                            value={_txtAr[1]}
+                                        />
+                                    </p>
+                                )}
+                                {/* <a  onClick={(event) => { */}
+                                {/* 	event.stopPropagation() */}
+                                {/* 	navigate(`/account/finance/by-type/${key == "wash" ? 1 : key == "tire" ? 2 : key == "evac" ? 3 : ""}/${_id}`)}}>click</a> */}
+                            </td>,
+                        )
+
 				} else if(key === "bids_count") {
 						ar.push(<td key={key} colSpan={4}
 							className={styles.tableCell} data-label={label(key)}>

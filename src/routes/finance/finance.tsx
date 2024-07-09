@@ -14,6 +14,7 @@ import { NumberFormatter } from '@mantine/core'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import agent from 'utils/agent'
 import dayjs from 'dayjs'
+import { CompanyType } from "stores/companyStore";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -308,7 +309,7 @@ const FinacePage = () => {
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams], ([url, args]) => store.financeStore.getReport(undefined,args))
-
+  console.log(data);
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -319,7 +320,7 @@ const FinacePage = () => {
         wash: `${item.wash_count} / ${item.wash_total_sum} ₽`,
         evac: `${item.evac_count} / ${item.evac_total_sum} ₽`,
         total: `${item.total_count} / ${item.total_sum} ₽`
-    }, ...item.has_child && {
+    }, ...item.type !== CompanyType.fizlico && {
         id: item.id}
       , attributes: {
           ...item
@@ -336,9 +337,9 @@ const FinacePage = () => {
     },
     [location.pathname]
   );
-  if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
+  // if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
 
-  if ('/account/finance/report' !== location.pathname) return <Outlet />
+  if (location.pathname !==  '/account/finance/report') return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
         <Panel headerClassName={'flex justify-between'}
@@ -361,13 +362,15 @@ const FinacePage = () => {
         <TableWithSortNew store={localRootStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
-          footerClassName={"px-0 -mb-4"}
-          footer={<FinanceBottom data={data} className={"!-mb-4"}/>}
+          footerClassName={"px-0"}
+          footerHeight={"11rem"}
+          footer={<FinanceBottom data={data}/>}
           autoScroll={true}
           style={PanelRouteStyle.finance}
+          bodyClassName={"!pb-6"}
           background={PanelColor.glass}
-          className={'col-span-full table-groups tablet-max:pb-28 overflow-y-visible pb-4'}
-          initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
+          className={'col-span-full table-groups tablet-max:pb-28'}
+          initFilterParams={[ FilterData.city, FilterData.start_date, FilterData.end_date]}
           filter={true}
           state={isLoading}
           ar={[

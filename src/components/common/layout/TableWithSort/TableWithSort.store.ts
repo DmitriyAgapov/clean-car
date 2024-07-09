@@ -19,6 +19,7 @@ export type TableSearchParams = { page: number; page_size?: number, q?: string,
 }
 export class TableWithSortStore {
 
+	clean?: boolean | null = null
 	tableBodyHeight?: number = undefined
 	rowHeight?: number = undefined
 	rowHeightT: any = null
@@ -64,7 +65,10 @@ export class TableWithSortStore {
 	get getFilterState() {
 		return this.filterState
 	}
-	setSearchParams(params:any) {
+	setSearchParams(params:any, clean?:boolean) {
+		if(clean) {
+			this.searchParams = params
+		}
 		this.searchParams = {
 			...this.searchParams,
 			...params
@@ -83,6 +87,10 @@ export class TableWithSortStore {
 	get getSearchParams() {
 		return this.searchParams
 	}
+	get getClean() {
+		return this.clean
+	}
+
 	*init() {
 		return this.searchParams
 	}

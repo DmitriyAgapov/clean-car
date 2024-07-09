@@ -57,7 +57,7 @@ const FinaceByTypePage = () => {
   console.log(localRootStore);
   if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
 
-  if (!location.pathname.includes('/account/finance/by-type')) return <Outlet />
+  if (location.pathname !== '/account/finance/by-type') return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
         <Panel headerClassName={'flex justify-between'}
@@ -83,9 +83,9 @@ const FinaceByTypePage = () => {
 
           autoScroll={true}
           style={PanelRouteStyle.financeByType}
-
+          footerHeight={"7rem"}
           background={PanelColor.glass}
-          className={'col-span-full table-groups tablet-max:pb-28'}
+          className={'col-span-full table-groups tablet-max:pb-28  self-stretch'}
           initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
           filter={true}
           state={isLoading}

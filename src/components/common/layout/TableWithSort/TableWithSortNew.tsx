@@ -28,6 +28,7 @@ type TableWithSortProps = {
     total?: number | undefined
     withOutLoader?: boolean
     footerProps?:any
+    footerHeight?:string
     filter?: boolean
     pageSize?: number
     variant?: PanelVariant
@@ -97,7 +98,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
       })()
     }, [height, fontSize, value, _count]);
 
-
+  console.log(`calc(100dvh - 20rem ${props.footerHeight ? "- " + props.footerHeight : "- 0"})`);
       return (
         <Panel ref={refBody} state={false}
             background={background ? background : PanelColor.glass}
@@ -119,8 +120,8 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
           {autoScroll ? <Table.ScrollContainer  classNames={{
             scrollContainer: styles.scrollCustom,
             scrollContainerInner: "h-full"
-          }} mah={"calc(100dvh - 22.5rem)"} maw={"68.5rem"}
-            h={"calc(100dvh - 20rem)"} mih={"100%"}
+          }} mah={`calc(100dvh - 20rem ${props.footerHeight ? "- " + props.footerHeight : "- 0px"})`} maw={"68.5rem"}
+            h={`calc(100dvh - 20rem ${props.footerHeight ? "- " + props.footerHeight : "- 0px"})`} mih={"100%"}
             minWidth={"100%"}
           >
             <Table className={styles.TableWithSort}

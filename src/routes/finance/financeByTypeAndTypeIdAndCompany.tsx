@@ -27,9 +27,24 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const navigate = useNavigate()
+  const searchParams = localStore.params.getSearchParams
+  const getClean = localStore.params.getClean
   const params = useParams()
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}/${params.company_id}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByTypeAndCompany(params.service_type as string,params.company_id as string, args).then(r => r.data))
-
+ React.useEffect(() => {
+   if(location.state) {
+     console.log('useDidUpdate');
+     const {company_city, ...state} = location.state
+     const _res = {...(company_city ? {balance__company__city: company_city} : {}), ...state}
+     console.log(_res);
+     localStore.params.setSearchParams(_res, true)
+   } else if(!location.state) {
+     console.log('useDidUpdate not state');
+     localStore.params.setSearchParams({
+       // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+     }, true)
+   }
+ }, [location.state])
   const ar = React.useMemo(() => {
 
     const init = [
@@ -58,10 +73,10 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
   useEffect(() => {
     const itemWithProps  = data?.results?.filter((el:any) => el.bid_id !== "")
     let purposeRes:any
-    if(itemWithProps) {
+    if(itemWithProps && itemWithProps.length && itemWithProps.length > 0) {
       const { id, date, bid_id, user, company, amount, description, purpose, ...otherProps } = itemWithProps[0]
       purposeRes = Object.fromEntries(Object.entries(otherProps))
-      console.log(purposeRes);
+
     }
     console.log(purposeRes);
     localStore.setData = {
@@ -81,10 +96,8 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
              total_amount: (amount + ' ₽')[0] === "-" ? String(amount + ' ₽').slice(1) : amount + ' ₽',
          }
        } else {
-         console.log(purpose > 3);
          let _r = {}
          for (const key in purposeRes) {
-           console.log(key);
            _r = {
              ..._r,
              [key]: ""
@@ -97,25 +110,24 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
            executor: "",
            company: company?.name,
            ..._r,
-           purpose: purpose > 4 ? "-" + amount + ' ₽' : amount + ' ₽',
+           bonus: amount + ' ₽',
            description: description,
-           total_amount: purpose > 4 ? "-" + amount + ' ₽' : amount + ' ₽',
+           total_amount: amount + ' ₽',
          }
        }
       }),
     }
     if (data) {
-      const { bids_count, total_amount, ...props } = data.total
-      setFooter({ total_total_label: 'Итого', bids_count_v: bids_count, ...props, purpose: "", description: "", total_amount: (total_amount + ' ₽')[0] === "-" ? String(total_amount + ' ₽').slice(1) : total_amount + ' ₽', })
-
+      const {bonus, total_amount,  ...props } = data.total
+      setFooter({ total_total_label: 'Итого', bids_count_v: "", ...props, bonus: bonus , description: "", total_amount: total_amount + ' ₽' })
     }
-
     localStore.setIsLoading = isLoading
   }, [data])
   console.log(localStore.data);
   useDidUpdate(
     () => {
       if(location.pathname === `/account/finance/by-type/${params.service_type}/${params.company_id}`) {
+        console.log('123');
         mutate()
       }
     },
@@ -123,7 +135,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
   );
   if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
 
-  if (!location.pathname.includes(`/account/finance/by-type/${params.service_type}/${params.company_id}`)) return <Outlet />
+  // if (location.pathname !== `/account/finance/by-type/${params.service_type}/${}`) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
         <Panel headerClassName={'flex justify-between'}
@@ -161,12 +173,12 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
         <TableWithSortNew store={localStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
+          footerHeight={"7rem"}
           footerProps={_footer}
-          footerClassName={"table width-full"}
           autoScroll={true}
           style={PanelRouteStyle.financeByTypeServiceId}
           background={PanelColor.glass}
-          className={'col-span-full table-groups tablet-max:pb-28'}
+          className={'col-span-full table-groups tablet-max:pb-28 self-stretch'}
           initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
           filter={true}
           state={isLoading}

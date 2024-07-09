@@ -89,8 +89,8 @@ const financeByTypeAndTypeId = () => {
     [location.pathname]
   );
 
-  if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
-
+  // if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
+  //
   if (!location.pathname.includes(`/account/finance/by-type/${params.service_type}`)) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>

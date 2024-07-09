@@ -5,7 +5,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from 'stores/store'
 import { observer, useLocalObservable } from 'mobx-react-lite'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
@@ -18,8 +18,8 @@ import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
-  page: 1,
-  page_size: 10,
+  // page: 1,
+  // page_size: 10,
   start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
 })
 
@@ -44,8 +44,10 @@ const FinaceIdPage = () => {
       if(data?.results) {
         _ar.push(...data?.results)
       }
+    console.log(_ar);
       localStore.setData = {
           ...data,
+          count: Number(data?.count) + 1,
           results: _ar.map((item: any) => ({
               ...{
                   name: item.name,
@@ -75,9 +77,10 @@ const FinaceIdPage = () => {
     if(isLoading && !data) return null
     if(data && data.root_company) return <UpBalance upBalance={false} companyName={data.root_company.name} id={data.root_company.id} opened={openedf} onClose={closef} />
   }, [openedf, data, isLoading])
+  console.log(localStore);
+  console.log(data);
 
-
-
+  if (!location.pathname.includes('/account/finance/report')) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
           <Panel
@@ -124,10 +127,25 @@ const FinaceIdPage = () => {
               }
           />
           <TableWithSortNew
-              store={localRootStore}
+
+
+
+
+
+
+
+
+
+
+
+
+
+              store={localStore}
               variant={PanelVariant.dataPaddingWithoutFooter}
               search={true}
-            footerClassName={"px-0 -mb-4"}
+            footerClassName={"px-0"}
+            footerHeight={"7rem"}
+            autoScroll={true}
             footer={<Panel variant={PanelVariant.suffixFooter} background={PanelColor.withSuffix}>
               <ul className={'finance_total_headers col-span-2'}>
                 <li className={'text-accent uppercase'}>{store.appStore.appType ==="admin" ? "Прибыль" : "Итог"}</li>
@@ -175,10 +193,10 @@ const FinaceIdPage = () => {
             </Panel>}
               style={PanelRouteStyle.financeId}
               background={PanelColor.glass}
-              className={'col-span-full table-groups self-stretch'}
+              className={'col-span-full table-groups'}
               initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
               filter={true}
-              state={false}
+              state={isLoading}
               ar={[
                   { label: 'Компания', name: 'company' },
                   { label: 'Шиномонтаж', name: 'tire' },
