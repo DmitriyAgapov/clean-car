@@ -80,7 +80,7 @@ const FinaceIdPage = () => {
   console.log(localStore);
   console.log(data);
 
-  if (location.pathname !== `/account/finance/report/${params.company_id}`) return <Outlet />
+  if (!location.pathname.includes('/account/finance/report')) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
           <Panel
