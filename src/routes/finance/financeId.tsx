@@ -33,7 +33,7 @@ const FinaceIdPage = () => {
   const [openedf, { open:openf, close:closef }] = useDisclosure(false)
   const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
 
-  const {isLoading, data, mutate} = useSWR([`reportId_${params.company_id}`, Number(params.company_id), localStore.params.getSearchParams] , ([url, id, args]) => store.financeStore.getReport(id, args))
+  const {isLoading, data, mutate} = useSWR([`reportId_${params.company_id}`, localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getReport(Number(params.company_id),  args))
 
   useEffect(() => {
       const _root = data?.root_company
@@ -63,7 +63,7 @@ const FinaceIdPage = () => {
   }, [data])
 
   useDidUpdate(() => {
-      if (location.pathname === `/account/finance/report/${params.company_id}`) {
+      if (location.pathname === `/account/finance/report`) {
           mutate()
       }
   }, [location.pathname])

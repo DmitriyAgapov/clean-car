@@ -117,7 +117,7 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
             footer={!autoScroll ? <><PaginationComponent />{props.footer }</> : props.footer }
             {...props}
         >
-          {autoScroll ? <Table.ScrollContainer  classNames={{
+          {autoScroll ? <Table.ScrollContainer style={{width: "100%"}} classNames={{
             scrollContainer: styles.scrollCustom,
             scrollContainerInner: "h-full"
           }} mah={`calc(100dvh - 20rem ${props.footerHeight ? "- " + props.footerHeight : "- 0px"})`} maw={"68.5rem"}
@@ -133,11 +133,15 @@ const TableWithSortNew = observer(({ variant, withOutLoader, autoScroll, search 
               {headerBar && <RowHeading total={initCount}
                 ar={ar}
                 autoScroll={autoScroll} />}
-              <Table.Tbody>
+              <Table.Tbody style={{height: 0}}>
                 {rows  && _countFetch && _countFetch > 0  ? rows.map((item: any, index: number) => <RowData style={style} {...item}
                   key={item.id + "_00" + index} />) : null}
               </Table.Tbody>
-              <Table.Tbody style={{height: "100%"}}>
+                <Table.Tbody style={{height: "100%"}}>
+                </Table.Tbody>
+              <Table.Tbody>
+                {/* {props.footerProps  && _countFetch && _countFetch > 0  ? <RowData style={style} {...props.footerProps} */}
+                {/*   key={props.footerProps.id + "_00"} />: null} */}
               </Table.Tbody>
               <Table.Tfoot>
                 {props.footerProps  && _countFetch && _countFetch > 0  ? <RowData style={style} {...props.footerProps}

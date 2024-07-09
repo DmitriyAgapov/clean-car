@@ -1140,7 +1140,7 @@ th, td {
     }
     tr {
       td, th {
-        width: 100%;
+        //width: 100%;
         &[data-label="service_type_name"], &[data-label="partner"],  &[data-label="Компания"], &[data-name="service_type_name"],  {
           p {
             @apply text-active uppercase;
@@ -1471,6 +1471,7 @@ font-size: .75rem;
 font-weight: 500;
 //display: block;
 padding: 1rem 0;
+  height: 3rem;
 
 &:first-child {
 padding-left: 2rem;
@@ -1805,6 +1806,39 @@ display: inline-flex;
     padding-bottom: 0;
     > div {
       height: 100%;
+      display: block !important;
+
+      tbody + tbody {
+        //height: 100%;
+        tr {
+          //height: 100%;
+          min-height: 0;
+          //max-height: 100%;
+          //display: block;
+          border: 0;
+
+        }
+        tr:hover {
+          background: none;
+          cursor: initial;
+          td:last-child {
+            background: #111216;
+          }
+        }
+        td {
+          height: 0;
+          display: none;
+        }
+        td:not(:last-child) {
+          opacity: 0;
+        }
+        td:last-child {
+          p {
+            color: transparent !important;
+          }
+        }
+
+      }
     }
   }
   [data-orientation="horizontal"] {
