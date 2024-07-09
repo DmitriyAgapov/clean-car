@@ -264,7 +264,13 @@ const router = createBrowserRouter([
             },
             {
               path: 'finance/report/:company_id',
-                element: <FinaceIdPage/>
+                element: <FinaceIdPage/>,
+                children: [
+                    {
+                        path: ':service_type',
+                        element: <FinanceByTypeAndTypeId/>
+                    }
+                ]
             },
             {
                 path: 'finance/by-type',
@@ -275,10 +281,6 @@ const router = createBrowserRouter([
 
                         id: `service_type_id`,
                         element: <FinanceByTypeAndTypeId/>
-                    },
-                    {
-                        path: ':service_type/:company_id',
-                        element: <FinanceByTypeAndTypeIdAndCompany/>
                     }
                 ]
             },
