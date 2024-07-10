@@ -120,7 +120,7 @@ const FinanceByTypeAndTypeId = () => {
                 color={HeadingColor.accent} />
               </div>
               <Button text={'Сохранить Excel'}
-                action={async () => await agent.Balance.getBalanceExportReport(localStore.params.getSearchParams)}
+                action={async () => await agent.Balance.getExportTypeReport(params.service_type as string, localStore.params.getSearchParams)}
                 trimText={true}
                 variant={ButtonVariant['accent-outline']}
                 // action={() => store.companyStore.addCompany()}
@@ -133,6 +133,7 @@ const FinanceByTypeAndTypeId = () => {
           search={true}
 
           footerProps={_footer}
+          view={true}
           footerClassName={"table width-full"}
           autoScroll={true}
           style={PanelRouteStyle.financeByTypeServiceId}

@@ -30,7 +30,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
   const searchParams = localStore.params.getSearchParams
   const getClean = localStore.params.getClean
   const params = useParams()
-  const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}/${params.company_id}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByTypeAndCompany(params.service_type as string,params.company_id as string, args).then(r => r.data))
+  const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}/${params.company_id}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getExportServiceReportByTypeAndCompany(params.service_type as string,params.company_id as string, args).then(r => r.data))
  React.useEffect(() => {
    if(location.state) {
      const {company_city, ...state} = location.state
