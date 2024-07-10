@@ -491,7 +491,7 @@ const Balance = {
   getServiceReport: (params?: PaginationProps) => requests.get('/balance/service_report/', params),
   getServiceReportByType: (service_id: number | string, params?: PaginationProps) => requests.get(`/balance/type_report/${service_id}`, params),
   getServiceReportByTypeAndCompany: (service_id: number | string, company_id: number | string, params?: PaginationProps) => requests.get(`/balance/${company_id}/verification_report/${service_id}/`, params),
-  getExportServiceReportByTypeAndCompany: (service_id: number | string, company_id: number | string, params?: PaginationProps) => requests.get(`/balance/${company_id}/export_verification_report/${service_id}`, params),
+  getExportServiceReportByTypeAndCompany: (service_id: number | string, company_id: number | string, params?: PaginationProps) => requests.getFile(`/balance/${company_id}/export_verification_report/${service_id}`, params),
 }
 const Filials = {
   getFilials: (company_type: string, company_id: number, params?: PaginationProps) => requests.get(`/${company_type}_branches/${company_id}/list/`, params),
