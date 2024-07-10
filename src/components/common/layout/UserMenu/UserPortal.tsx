@@ -9,6 +9,7 @@ import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserTypeEnum } from 'stores/userStore'
 import label from 'utils/labels'
+import { observer } from 'mobx-react-lite'
 
 const StyledAccounts = styled.ul`
   margin: 0;
@@ -90,7 +91,7 @@ const UserPortal = ({
   company: string
   accounts: any[]
   className?: string
-}) => {
+}):any => {
   const store = useStore()
   const navigate = useNavigate()
   const avatar = store.userStore.myProfileData.user.avatar;
@@ -139,4 +140,4 @@ const UserPortal = ({
       </Panel>
     )
 }
-export default UserPortal
+export default observer(UserPortal)

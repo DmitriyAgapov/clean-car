@@ -42,7 +42,7 @@ const Notification = observer(() => {
 })
 
 // @ts-ignore
-const UserMenuStyled = styled(UserPortal)`
+const UserMenuStyled = styled(UserPortal<UserPortal>)`
   border: 1px solid var(--borderPanelColor);
   background-color: var(--bgPanelColor);
   border-radius: 1.25rem;
@@ -98,26 +98,28 @@ const UserMenuStyled = styled(UserPortal)`
   }
 `
 
-const User = ({ last_name, first_name, status, photoUrl, action }: UserProps) => {
+const User = observer(({  action }: UserProps) => {
   const store = useStore()
   const companyType = store.appStore.appType
-  const avatar = store.userStore.myProfileData.user.avatar;
+  const user = store.userStore.userData
+  const avatar = user.avatar;
+
   return (
     <div className={styles.user} onClick={action}>
       <div className={styles.photo} data-directory={companyType}>
-        {avatar ? <Image src={avatar} width={40} height={40} alt={''} className={'rounded-full'}/> : <div className={'w-10 h-10 flex justify-center items-center text-black !text-lg'}>{String(first_name)[0]}{String(last_name)[0]}</div>}
+        {avatar ? <Image src={avatar} width={40} height={40} alt={''} className={'rounded-full'}/> : <div className={'w-10 h-10 flex justify-center items-center text-black !text-lg'}>{user.first_name[0] + user.last_name[0]}</div>}
       </div>
       <div className={styles.menuName}>
         <div className={styles.name}>
           {/* <span className={styles.first_name}></span> */}
-          <span className={styles.last_name}>{first_name} {(last_name && last_name.length !== 0) && last_name}</span>
+          <span className={styles.last_name}>{user.first_name} {(user.last_name && user.last_name.length !== 0) && user.last_name}</span>
         </div>
         <div className={styles.status}>{store.userStore.myProfileData.permissionGroupName}</div>
       </div>
       <SvgChevron className={styles.svg} />
     </div>
   )
-}
+})
 
 const UserMenu = () => {
   const store = useStore()

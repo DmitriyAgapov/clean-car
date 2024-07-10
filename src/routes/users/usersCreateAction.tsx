@@ -72,57 +72,63 @@ export default function UsersPageCreateAction() {
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create')) return <Navigate to={'/account'}/>
   // @ts-ignore
   return (
-    <Section type={SectionType.default}>
-      <Panel
-        className={'col-span-full'}
-        headerClassName={'flex justify-between flex-wrap'}
-        header={
-          <>
-            <Button
-              text={
-                <>
-                  <SvgBackArrow />
-                  Назад к списку пользователей{' '}
-                </>
+      <Section type={SectionType.default}>
+          <Panel
+              className={'col-span-full'}
+            headerClassName={'md:flex  justify-between flex-wrap'}
+              header={
+                  <>
+                      <div>
+                          <Button
+                              text={
+                                  <>
+                                      <SvgBackArrow />
+                                      Назад к списку пользователей{' '}
+                                  </>
+                              }
+                              className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4 self-end'}
+                            action={() => navigate('/account/users')}
+                              variant={ButtonVariant.text}
+                          />
+                          <Heading
+                              text={'Добавить пользователя'}
+                              variant={HeadingVariant.h1}
+                              className={'inline-block mr-auto flex-1 !mb-0 self-end'}
+                              color={HeadingColor.accent}
+                          />
+                      </div>
+                      {store.appStore.appType === 'admin' && (
+                          <div className={'flex gap-6 mobile:max-w-96 mobile:mt-6 self-end'}>
+                              <Button
+                                  text={'Скачать шаблон'}
+                                  href={'/Шаблон_пользователи.xlsx'}
+                                  variant={ButtonVariant['accent-outline']}
+                                  // action={() => navigate('/account/users/create')}
+                                  className={'inline-flex mr-5'}
+                                  size={ButtonSizeType.sm}
+                              />
+                              <FileButton
+                                  //@ts-ignore
+                                onChange={handleFileChange}
+                                  accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                              >
+                                  {(props) => (
+                                      <Button
+                                          text={!success ? 'Загрузить файл' : 'Загружено'}
+                                          className={'inline-flex mr-5 self-end'}
+                                          directory={ButtonDirectory.directory}
+                                          size={ButtonSizeType.sm}
+                                          {...props}
+                                      />
+                                  )}
+                              </FileButton>
+                          </div>
+                      )}
+                  </>
               }
-              className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
-              action={() => navigate('/account/users')}
-              variant={ButtonVariant.text}
-            />
-            <Heading
-              text={'Добавить пользователя'}
-              variant={HeadingVariant.h1}
-              className={'!mb-0 inline-block mr-auto flex-1'}
-              color={HeadingColor.accent}
-            />
-            {store.appStore.appType === "admin" && <><Button
-              text={'Скачать шаблон'}
-              href={'/Шаблон_пользователи.xlsx'}
-              variant={ButtonVariant["accent-outline"]}
-              // action={() => navigate('/account/users/create')}
-              className={'inline-flex mr-5'}
-              size={ButtonSizeType.sm}
-            />
-              <FileButton
-                //@ts-ignore
-                onChange={handleFileChange} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                {(props) => <Button
-                  text={!success ? 'Загрузить файл' : 'Загружено'}
+          />
 
-                  className={'inline-flex mr-5'}
-                  directory={ButtonDirectory.directory}
-                  size={ButtonSizeType.sm}
-                  {...props}
-                />}
-              </FileButton>
-            </>}
-
-              </>
-        }
-      />
-
-      <FormCreateUpdateUsers/>
-
-    </Section>
+          <FormCreateUpdateUsers />
+      </Section>
   )
 }

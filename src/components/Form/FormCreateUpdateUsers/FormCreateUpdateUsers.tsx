@@ -149,7 +149,8 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 				agent.Account.updateCompanyUser(senData.company_id, senData).then((res) => {
 					if (400 > res.status) {
 						const userId = edit ? form.values.id : res.data.id
-						revalidator.revalidate()
+						// revalidator.revalidate()
+						store.userStore.userData.id === userId ? store.userStore.loadMyProfile() : void null
 						// @ts-ignore
 						navigate(`/account/users/${_companyType}/${compId}/${userId}`)
 					}})
@@ -158,7 +159,8 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 					if (res && res.status && res.status < 400) {
 						// @ts-ignore
 						const userId = edit ? form.values.id : res.data.id
-						revalidator.revalidate()
+						// revalidator.revalidate()
+
 						// @ts-ignore
 						navigate(`/account/users/${_companyType}/${compId}/${userId}`)
 						}
@@ -185,7 +187,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			console.log(form.values.depend_on === "company" ? store.companyStore.getCompaniesAll?.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll);
 			// @ts-ignore
 			console.log(CompanyType[form.values.type]);
-			if(user.company.name === `${user.employee.first_name} ${user.employee.last_name}`) {
+			if(edit && user.company.name === `${user.employee.first_name} ${user.employee.last_name}`) {
 				console.log(`${user.employee.first_name} ${user.employee.last_name}`);
 				return ([{
 					name: user.company.name,

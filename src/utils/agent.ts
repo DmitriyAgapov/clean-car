@@ -487,6 +487,7 @@ const Balance = {
     amount: amount,
     description: description
 }),
+  getExportTypeReport: (serivice_id: string | number, params?: PaginationProps) => requests.getFile(`/balance/export_type_report/${serivice_id}/`, params),
   getServiceReport: (params?: PaginationProps) => requests.get('/balance/service_report/', params),
   getServiceReportByType: (service_id: number | string, params?: PaginationProps) => requests.get(`/balance/type_report/${service_id}`, params),
   getServiceReportByTypeAndCompany: (service_id: number | string, company_id: number | string, params?: PaginationProps) => requests.get(`/balance/${company_id}/verification_report/${service_id}/`, params),

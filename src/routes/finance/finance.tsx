@@ -309,7 +309,7 @@ const FinacePage = () => {
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams], ([url, args]) => store.financeStore.getReport(undefined,args))
-  console.log(data);
+
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -337,9 +337,9 @@ const FinacePage = () => {
     },
     [location.pathname]
   );
-  // if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
+  if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
 
-  if (!location.pathname.includes('/account/finance/report')) return <Outlet />
+  // if (!location.pathname.includes('/account/finance/report')) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
         <Panel headerClassName={'flex justify-between'}

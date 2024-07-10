@@ -16,7 +16,7 @@ import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { useLocalStore } from 'stores/localStore'
 
 function Cell(props: any) {
-    console.log(props.view)
+
     if (props.view) {
         return (
             <div data-label={label(props.key)} data-panel={'cell'} className={styles.tableCell} {...props}>
@@ -31,12 +31,8 @@ function Cell(props: any) {
     )
 }
 
-interface RowDataProps {
-    view?: any
-}
-
 const RowData = observer((props: any) => {
-    console.log(props)
+
     const navigate = useNavigate()
     const location = useLocation()
     const localStore = useLocalStore()
@@ -65,7 +61,7 @@ const RowData = observer((props: any) => {
     }, [])
 
     const handleClick = React.useCallback(() => {
-        console.log(props)
+
         if (props.query && props.query.rootRoute) {
             return navigate(props.query.rootRoute)
         }
@@ -112,13 +108,31 @@ const RowData = observer((props: any) => {
                         >
                             <Link
                                 to={`/account/bids/${props[key].company}/${props[key].bidId}`}
-                                className={`m-auto h-12 border-b border-b-accent/30 text-center inline-flex items-center max-h-4 justify-center  hover:border-accent text-accent `}
+                                className={`mx-2 h-12 border-b border-b-accent/30 text-center inline-flex items-center max-h-4 justify-center  hover:border-accent text-accent `}
                             >
-                                {props[key].bidId}
+                                {props[key].bidId || props[key]}
                             </Link>
                         </Cell>,
                     )
-                } else if (key === 'status') {
+                } else if (key === "bid_id") {
+                    console.log(props);
+                    ar.push(
+                        <Cell
+                            key={key}
+                            view={props.view}
+                            data-label={label(key)}
+                            className={styles.tableCell + ' ' + ' flex '}
+                        >
+                            <Link
+                                to={`/account/bids/${props.company.id}/${props[key].slice(2)}`}
+                                className={`mx-2 h-12 border-b border-b-accent/30 text-center inline-flex items-center max-h-4 justify-center  hover:border-accent text-accent `}
+                            >
+                                {props[key]}
+                            </Link>
+                        </Cell>,
+                    )
+                }
+                else if (key === 'status') {
                     ar.push(
                         <Cell key={key} view={props.view} data-label={label(key)} className={styles.tableCell}>
                             <Status variant={props[key]} />
@@ -169,10 +183,7 @@ const RowData = observer((props: any) => {
                                     }
                                     onClick={(event) => {
                                         event.stopPropagation()
-                                        navigate(
-                                            `/account/finance/report/${_id}/${key == 'wash' ? 1 : key == 'tire' ? 2 : key == 'evac' ? 3 : ''}`,
-                                            { state: { ...searchParams } },
-                                        )
+                                        navigate(`/account/finance/report/${_id}/${key == 'wash' ? 1 : key == 'tire' ? 2 : key == 'evac' ? 3 : ''}`, { state: { ...searchParams } },)
                                     }}
                                 >
                                     <>

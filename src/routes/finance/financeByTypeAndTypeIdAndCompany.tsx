@@ -78,7 +78,6 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
       purposeRes = Object.fromEntries(Object.entries(otherProps))
 
     }
-    console.log(purposeRes);
     localStore.setData = {
       ...data,
       results: data?.results?.map((item: any, index: number) => {
@@ -89,11 +88,11 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
              date: dayjs(date).format('DD.MM.YY'),
              bid_id: `№ ${bid_id}`,
              executor: user?.last_name[0] + '.' + ' ' + user?.first_name,
-             company: company?.name,
+             company: company,
              ...props,
              purpose: "-",
              description: description,
-             total_amount: (amount + ' ₽')[0] === "-" ? String(amount + ' ₽').slice(1) : amount + ' ₽',
+             total_amount: (amount + ' ₽')[0] === "-" ? String(amount.toFixed(2) + ' ₽').slice(1) : amount.toFixed(2) + ' ₽',
          }
        } else {
          let _r = {}
@@ -103,7 +102,6 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
              [key]: ""
            }
          }
-         console.log(purpose > 3 ? "-" + amount + ' ₽' : amount + ' ₽');
          return {
            date: dayjs(date).format('DD.MM.YY'),
            bid_id: ``,
@@ -112,22 +110,21 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
            ..._r,
            bonus: amount + ' ₽',
            description: description,
-           total_amount: amount + ' ₽',
+           total_amount: amount.toFixed(2) + ' ₽',
          }
        }
       }),
     }
     if (data) {
       const {bonus, total_amount,  ...props } = data.total
-      setFooter({ total_total_label: 'Итого', bids_count_v: "", ...props, bonus: bonus , description: "", total_amount: total_amount + ' ₽' })
+      setFooter({ total_total_label: 'Итого', bids_count_v: "", ...props, bonus: bonus , description: "", total_amount: Math.abs(total_amount).toFixed(2) + ' ₽' })
     }
     localStore.setIsLoading = isLoading
   }, [data])
-  console.log(localStore.data);
+
   useDidUpdate(
     () => {
       if(location.pathname === `/account/finance/by-type/${params.service_type}/${params.company_id}`) {
-        console.log('123');
         mutate()
       }
     },
@@ -162,7 +159,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
                   color={HeadingColor.accent} />
               </div>
               <Button text={'Сохранить Excel'}
-                action={async () => await agent.Balance.getBalanceExportReport(localStore.params.getSearchParams)}
+                action={async () => await agent.Balance.getExportTypeReport(params.service_type as string, localStore.params.getSearchParams)}
                 trimText={true}
                 variant={ButtonVariant['accent-outline']}
                 // action={() => store.companyStore.addCompany()}

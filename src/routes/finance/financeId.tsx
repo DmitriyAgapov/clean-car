@@ -29,6 +29,7 @@ const FinaceIdPage = () => {
   const store = useStore()
   const navigate = useNavigate()
   const params = useParams()
+  if (location.pathname !== `/account/finance/report/${params.company_id}`) return <Outlet />
   const [opened, { open, close }] = useDisclosure(false)
   const [openedf, { open:openf, close:closef }] = useDisclosure(false)
   const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
@@ -44,7 +45,6 @@ const FinaceIdPage = () => {
       if(data?.results) {
         _ar.push(...data?.results)
       }
-    console.log(_ar);
       localStore.setData = {
           ...data,
           count: Number(data?.count) + 1,
@@ -79,7 +79,7 @@ const FinaceIdPage = () => {
   }, [openedf, data, isLoading])
 
 
-  if (location.pathname.includes('/account/finance/report')) return <Outlet />
+
   return (
       <Section type={SectionType.withSuffix}>
           <Panel
@@ -116,7 +116,7 @@ const FinaceIdPage = () => {
                       </div>
 
 
-                        {(data?.root_company?.company_type === 'Клиент' || data?.root_company.company_type === "Партнер") &&        <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
+                        {store.appStore.appType === "admin" && (data?.root_company?.company_type === 'Клиент' || data?.root_company.company_type === "Партнер") &&        <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
                           {data?.root_company?.company_type === 'Клиент' &&        <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />}
                           {(data?.root_company.company_type === "Партнер"  || data?.root_company.company_type === "Клиент") &&  <Button text={'Бонусы и штрафы'}  action={openf} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />}
                         </div>
@@ -126,20 +126,7 @@ const FinaceIdPage = () => {
               }
           />
           <TableWithSortNew
-
-
-
-
-
-
-
-
-
-
-
-
-
-              store={localStore}
+            store={localStore}
               variant={PanelVariant.dataPaddingWithoutFooter}
               search={true}
             footerClassName={"px-0"}

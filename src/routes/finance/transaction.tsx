@@ -12,6 +12,7 @@ import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate } from '@mantine/hooks'
 import dayjs from "dayjs";
+import { PurposeOfTransaction } from "components/common/layout/Modal/UpBalance";
 const purpose:any = {
   "1": 'Пополнение баланса (счета)',
   "2": 'Оплата услуг',
@@ -46,7 +47,7 @@ const TransactionPage = () => {
         amount: String(item.amount).includes('-') ? `- ${String(item.amount).split('-')[1]} ₽` : `+ ${String(item.amount)} ₽`,
         ts_maker: item.ts_maker.first_name + " " + item.ts_maker.last_name,
         bid: {bidId: item.bid, company: store.appStore.appType === "admin" ? item.balance.company.id : store.userStore.myProfileData.company.id},
-        purpose: purpose[String(item.purpose)]
+        purpose: PurposeOfTransaction[item.purpose]
       }))
     }
     localStore.setIsLoading = isLoading
