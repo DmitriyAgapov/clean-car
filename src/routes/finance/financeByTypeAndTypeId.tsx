@@ -72,7 +72,7 @@ const FinanceByTypeAndTypeId = () => {
       }
       if (data && _data) {
           const { bids_count, total_amount, ...props } = data.total
-          setFooter({ total_total_label: 'Итого', bids_count: bids_count, ...props, total_amount: total_amount + ' ₽' })
+          setFooter({ total_total_label: 'Итого', bids_count: bids_count, ...props, total_amount: total_amount.toFixed(2) + ' ₽' })
           localStore.setData = {
               ..._data,
               results: _data.results,

@@ -119,6 +119,10 @@
 	  [data-label="bids_count_v"] {
 		grid-column: span 3;
 	  }
+	  [data-label="bids_count"] {
+		grid-column: span 4;
+	  }
+
 	}
 
 	[data-panel="content_row"], [data-panel="header_row"] {
