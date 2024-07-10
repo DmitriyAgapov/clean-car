@@ -308,13 +308,14 @@ const FinacePage = () => {
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
+  if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
   const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams], ([url, args]) => store.financeStore.getReport(undefined,args))
 
   useEffect(() => {
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({...{
-          company_name: item.name,
+        company_name: item.name,
         company_type: item.type,
         tire: `${item.tire_count} / ${item.tire_total_sum} ₽`,
         wash: `${item.wash_count} / ${item.wash_total_sum} ₽`,
@@ -337,7 +338,7 @@ const FinacePage = () => {
     },
     [location.pathname]
   );
-  if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
+
 
   // if (!location.pathname.includes('/account/finance/report')) return <Outlet />
   return (
@@ -374,8 +375,8 @@ const FinacePage = () => {
           filter={true}
           state={isLoading}
           ar={[
-            { label: 'Компания', name: 'company' },
-            { label: 'Тип компании', name: 'company_type' },
+            { label: 'Компания', name: 'account_bindings__company__name' }, // Работает
+            { label: 'Тип компании', name: 'company_type' }, // Работает
             { label: 'Шиномонтаж', name: 'tire' },
             { label: 'Мойка', name: 'wash' },
             { label: 'Эвакуация', name: 'evac' },

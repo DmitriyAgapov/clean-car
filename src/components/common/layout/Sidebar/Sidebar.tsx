@@ -148,7 +148,12 @@ function ListItem(props: { i: any }) {
             } to={props.i.url}>
                 {props.i.title}
             </Link>
-            {props.i.sublevel && <ul data-state-open={store.appStore.subLevel} className={styles.sublevel}>{props.i.sublevel.map((sub: any) => <li data-active={location.pathname.includes(sub.url)} key={sub.url} className={styles.sublevelItem}><Link onClick={() => store.appStore.setAsideClose()} to={sub.url}>{sub.title}</Link></li>)}</ul>}
+            {props.i.sublevel && <ul data-state-open={store.appStore.subLevel} className={styles.sublevel}>{props.i.sublevel.map((sub: any) => {
+              if(sub.url === "finance/by-type" && store.appStore.appType !== "admin") return
+              return (<li data-active={location.pathname.includes(sub.url)} key={sub.url} className={styles.sublevelItem}>
+                <Link onClick={() => store.appStore.setAsideClose()} to={sub.url}>{sub.title}</Link>
+              </li>)})}
+            </ul>}
         </li>
     )
 }

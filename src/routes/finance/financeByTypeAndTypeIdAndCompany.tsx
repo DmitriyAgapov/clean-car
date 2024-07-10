@@ -33,13 +33,12 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}/${params.company_id}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByTypeAndCompany(params.service_type as string,params.company_id as string, args).then(r => r.data))
  React.useEffect(() => {
    if(location.state) {
-     console.log('useDidUpdate');
      const {company_city, ...state} = location.state
      const _res = {...(company_city ? {balance__company__city: company_city} : {}), ...state}
-     console.log(_res);
+
      localStore.params.setSearchParams(_res, true)
    } else if(!location.state) {
-     console.log('useDidUpdate not state');
+
      localStore.params.setSearchParams({
        // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
      }, true)
@@ -48,8 +47,8 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
   const ar = React.useMemo(() => {
 
     const init = [
-      { label: 'Дата', name: 'date' },
-      { label: 'Заявка', name: 'bid_id' },
+      { label: 'Дата', name: 'created' },// работает
+      { label: 'Заявка', name: 'bid_id' }, // работает
       { label: 'Исполнитель', name: 'executor' },
       { label: 'Компания', name: 'company' }
     ]

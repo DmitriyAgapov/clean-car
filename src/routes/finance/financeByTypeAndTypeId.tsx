@@ -33,9 +33,9 @@ const FinanceByTypeAndTypeId = () => {
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
   const ar = React.useMemo(() => {
       const init = [
-          { label: 'Дата', name: 'date' },
+          { label: 'Дата', name: 'created' },
           { label: 'Заявка', name: 'bid_id' },
-          { label: 'Партнер', name: 'partner' },
+          { label: 'Партнер', name: 'performer' },
           { label: 'Заказчик', name: 'company' },
           { label: 'Адрес', name: 'address' },
       ]

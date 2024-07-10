@@ -132,7 +132,8 @@ const FinaceIdPage = () => {
             footerClassName={"px-0"}
             footerHeight={"7rem"}
             autoScroll={true}
-            footer={<Panel variant={PanelVariant.suffixFooter} background={PanelColor.withSuffix}>
+            footer={<Panel variant={PanelVariant.suffixFooter}
+              background={PanelColor.withSuffix}>
               <ul className={'finance_total_headers col-span-2'}>
                 <li className={'text-accent uppercase'}>{store.appStore.appType ==="admin" ? "Прибыль" : "Итог"}</li>
               </ul>
@@ -180,7 +181,7 @@ const FinaceIdPage = () => {
               style={PanelRouteStyle.financeId}
               background={PanelColor.glass}
               className={'col-span-full table-groups'}
-              initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
+              initFilterParams={[ FilterData.city, FilterData.start_date, FilterData.end_date]}
               filter={true}
               state={isLoading}
               ar={[

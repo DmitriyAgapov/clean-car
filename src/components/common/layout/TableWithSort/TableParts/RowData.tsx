@@ -61,7 +61,7 @@ const RowData = observer((props: any) => {
     }, [])
 
     const handleClick = React.useCallback(() => {
-
+        console.log(props);
         if (props.query && props.query.rootRoute) {
             return navigate(props.query.rootRoute)
         }
