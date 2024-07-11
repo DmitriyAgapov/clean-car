@@ -30,13 +30,12 @@ const FinanceBottom = observer((props: { data: any, className?: string }) => {
     if (width < 1024) {
         return (
           <Panel
-
             variant={PanelVariant.suffixFooter}
             background={PanelColor.withSuffix}
             footerClassName={'!p-2 !pt-4 '}
             bodyClassName={'!pt-0 !pb-0'}
             className={props.className  + " " + `top-0 !grid-cols-1 mobile_total_block ${open ? " open-state" : " close-state"} !border-gray-2 !border relative z-50`}
-            footer={  <Button className={'w-full'} action={() => setOpen(prevState => !prevState)} type={'button'} text={open ? 'Свернуть отчет' : 'Развернуть отчет'} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>}
+            footer={<Button className={'w-full'} action={() => setOpen(prevState => !prevState)} type={'button'} text={open ? 'Свернуть отчет' : 'Развернуть отчет'} size={ButtonSizeType.sm} variant={ButtonVariant["accent"]}/>}
           >
               <ul className={'grid col-span-full !gap-0'}>
 
@@ -310,7 +309,7 @@ const FinacePage = () => {
   const store = useStore()
   if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
   const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams], ([url, args]) => store.financeStore.getReport(undefined,args))
-
+  const {width, height} = useViewportSize()
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -339,7 +338,19 @@ const FinacePage = () => {
     [location.pathname]
   );
 
-
+  const footer = React.useMemo(() => {
+    if(!width) return null
+    if(width && width < 741) {
+      return ({
+        footer: <FinanceBottom data={data} />,
+        section: null
+      })
+    }
+    return  ({
+      footer: null,
+      section: <FinanceBottom data={data}/>
+    })
+  }, [width, data])
   // if (!location.pathname.includes('/account/finance/report')) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
@@ -365,12 +376,12 @@ const FinacePage = () => {
           search={true}
           footerClassName={"px-0"}
           footerHeight={"11rem"}
-          footer={<FinanceBottom data={data}/>}
+          footer={(footer && footer.section) ? footer.section : null}
           autoScroll={true}
           style={PanelRouteStyle.finance}
           bodyClassName={"!pb-6"}
           background={PanelColor.glass}
-          className={'col-span-full table-groups tablet-max:pb-28'}
+          className={'col-span-full table-groups tablet-max:pb-48 tablet-max:self-stretch'}
           initFilterParams={[ FilterData.city, FilterData.start_date, FilterData.end_date]}
           filter={true}
           state={isLoading}
@@ -382,7 +393,7 @@ const FinacePage = () => {
             { label: 'Эвакуация', name: 'evac' },
             { label: 'Всего', name: 'total' },
           ]} />
-
+        {(footer && footer.footer) ? footer.footer : null}
       </Section>
   )
 }

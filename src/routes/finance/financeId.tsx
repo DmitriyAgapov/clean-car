@@ -9,7 +9,7 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSortNew'
 import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
-import { useDidUpdate, useDisclosure } from '@mantine/hooks'
+import { useDidUpdate, useDisclosure, useViewportSize } from '@mantine/hooks'
 import { NumberFormatter } from '@mantine/core';
 import { SvgBackArrow } from "components/common/ui/Icon";
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
@@ -18,10 +18,149 @@ import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
-  // page: 1,
-  // page_size: 10,
-  start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+    // page: 1,
+    // page_size: 10,
+    start_date: dayjs().set('date', 1).format('YYYY-MM-DD'),
 })
+
+function FinanceBottomID(props: { data: any, className?: string }) {
+  const { width, height } = useViewportSize()
+  const [open, setOpen] = React.useState<boolean>(false);
+  const store = useStore()
+    if(!width) return null
+  if (width < 1024) {
+    return (
+        <Panel
+            variant={PanelVariant.suffixFooter}
+            background={PanelColor.withSuffix}
+            footerClassName={'!p-2 !pt-4 '}
+            bodyClassName={'!pt-0 !pb-0'}
+            className={
+                props.className +
+                ' ' +
+                `top-0 !grid-cols-1 mobile_total_block ${open ? ' open-state' : ' close-state'} !border-gray-2 !border relative z-50`
+            }
+            footer={
+                <Button
+                    className={'w-full'}
+                    action={() => setOpen((prevState) => !prevState)}
+                    type={'button'}
+                    text={open ? 'Свернуть отчет' : 'Развернуть отчет'}
+                    size={ButtonSizeType.sm}
+                    variant={ButtonVariant['accent']}
+                />
+            }
+        >
+            <ul className={'grid col-span-full !gap-0'}>
+                <li className={'finance_part finance_part__header'}>
+                    <ul>
+                        <li> {store.appStore.appType === 'admin' ? 'Прибыль' : 'Итог'}</li>
+                    </ul>
+                </li>
+                <li className={'finance_part'}>
+                    <ul>
+                        <li className={'finance_part__title'}>
+                            {store.appStore.appType === 'admin' ? 'Прибыль' : 'Итог'}
+                        </li>
+
+                        <li>
+                            <NumberFormatter
+                                thousandSeparator={' '}
+                                suffix=' ₽'
+                                value={props.data?.total.total_sum}
+                            />
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>Шиномонтаж</li>
+
+                        <li>
+                            <NumberFormatter
+                                thousandSeparator={' '}
+                                suffix=' ₽'
+                                value={props.data?.total.tire_total_sum}
+                            />
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>Мойка</li>
+                        <li>
+                            <NumberFormatter
+                                thousandSeparator={' '}
+                                suffix=' ₽'
+                                value={props.data?.total.wash_total_sum}
+                            />
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>Эвакуация</li>
+
+                        <li>
+                            <NumberFormatter
+                                thousandSeparator={' '}
+                                suffix=' ₽'
+                                value={props.data?.total.evac_total_sum}
+                            />
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </Panel>
+    )
+  }
+    return (
+        <Panel
+          variant={PanelVariant.suffixFooter}
+          background={PanelColor.withSuffix}
+        >
+            <ul className={'finance_total_headers col-span-2'}>
+                <li className={'text-accent uppercase'}>
+                    {store.appStore.appType === 'admin' ? 'Прибыль' : 'Итог'}
+                </li>
+            </ul>
+            <ul className={'finance_total_tire'} data-content-type={'values'}>
+                <li className={'text-accent uppercase'}>
+                    <NumberFormatter
+                        className={'text-accent'}
+                        thousandSeparator={' '}
+                        suffix=' ₽'
+                        value={props.data?.total.tire_total_sum}
+                    />
+                </li>
+            </ul>
+            <ul className={'finance_total_wash'} data-content-type={'values'}>
+                <li className={'text-accent uppercase'}>
+                    <NumberFormatter
+                        className={'text-accent'}
+                        thousandSeparator={' '}
+                        suffix=' ₽'
+                        value={props.data?.total.wash_total_sum}
+                    />
+                </li>
+            </ul>
+            <ul className={'finance_total_evac'} data-content-type={'values'}>
+                <li className={'text-accent uppercase'}>
+                    <NumberFormatter
+                        className={'text-accent'}
+                        thousandSeparator={' '}
+                        suffix=' ₽'
+                        value={props.data?.total.evac_total_sum}
+                    />
+                </li>
+            </ul>
+            <ul className={'finance_total'} data-content-type={'values'}>
+                <li className={'text-accent uppercase'}>
+                    <NumberFormatter
+                        className={'text-accent'}
+                        thousandSeparator={' '}
+                        suffix=' ₽'
+                        value={props.data?.total.total_sum}
+                    />
+                </li>
+            </ul>
+        </Panel>
+    )
+}
 
 const FinaceIdPage = () => {
   const location = useLocation()
@@ -32,24 +171,20 @@ const FinaceIdPage = () => {
   const [opened, { open, close }] = useDisclosure(false)
   const [openedf, { open:openf, close:closef }] = useDisclosure(false)
   const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
-
+  const {width, height} = useViewportSize()
   const {isLoading, data, mutate} = useSWR([`reportId_${params.company_id}`, localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getReport(Number(params.company_id),  args))
 
   useEffect(() => {
       const _root = data?.root_company
       const _ar = []
-      if(_root) {
-        _ar.push(_root)
-      }
-      if(data?.results) {
-        _ar.push(...data?.results)
-      }
+      if(_root) _ar.push(_root)
+      if(data?.results) _ar.push(...data?.results)
       localStore.setData = {
           ...data,
           count: Number(data?.count) + 1,
           results: _ar.map((item: any) => ({
               ...{
-                  name: item.name,
+                  company_name: item.name,
                   tire: `${item.tire_count} / ${item.tire_total_sum} ₽`,
                   wash: `${item.wash_count} / ${item.wash_total_sum} ₽`,
                   evac: `${item.evac_count} / ${item.evac_total_sum} ₽`,
@@ -67,6 +202,19 @@ const FinaceIdPage = () => {
       }
   }, [location.pathname])
 
+  const footer = React.useMemo(() => {
+    if(!width) return null
+    if(width && width < 741) {
+      return ({
+        footer: <FinanceBottomID data={data} />,
+        section: null
+      })
+    }
+    return  ({
+      footer: null,
+      section: <FinanceBottomID data={data}/>
+    })
+  }, [width, data])
   const memoModal = React.useMemo(() => {
     if(isLoading && !data) return null
     if(data && data.root_company) return <UpBalance upBalance={true} companyName={data.root_company.name} id={data.root_company.id} opened={opened} onClose={close} />
@@ -88,15 +236,8 @@ const FinaceIdPage = () => {
                   <>
                       <div>
                         {(store.appStore.appType === "admin" || !isMyCompany) && <Button
-                              text={
-                                  <>
-                                      <SvgBackArrow />
-                                      Назад к компании
-                                  </>
-                              }
-                              className={
-                                  'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'
-                              }
+                              text={<><SvgBackArrow />Назад к компании</>}
+                              className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'}
                               action={() => navigate((() => {
                                 if (data?.root_company.parent_id) {
                                   return `/account/finance/report/${data?.root_company.parent_id}`
@@ -113,14 +254,11 @@ const FinaceIdPage = () => {
                           color={HeadingColor.accent}
                         />
                       </div>
-
-
                         {store.appStore.appType === "admin" && (data?.root_company?.company_type === 'Клиент' || data?.root_company.company_type === "Партнер") &&        <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
                           {data?.root_company?.company_type === 'Клиент' &&        <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />}
                           {(data?.root_company.company_type === "Партнер"  || data?.root_company.company_type === "Клиент") &&  <Button text={'Бонусы и штрафы'}  action={openf} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />}
                         </div>
                         }
-
                   </>
               }
           />
@@ -131,51 +269,7 @@ const FinaceIdPage = () => {
             footerClassName={"px-0"}
             footerHeight={"7rem"}
             autoScroll={true}
-            footer={<Panel variant={PanelVariant.suffixFooter} background={PanelColor.withSuffix}>
-              <ul className={'finance_total_headers col-span-2'}>
-                <li className={'text-accent uppercase'}>{store.appStore.appType ==="admin" ? "Прибыль" : "Итог"}</li>
-              </ul>
-              <ul className={'finance_total_tire'} data-content-type={'values'}>
-                <li className={'text-accent uppercase'}>
-                  <NumberFormatter
-                    className={'text-accent'}
-                    thousandSeparator={' '}
-                    suffix=' ₽'
-                    value={data?.total.tire_total_sum}
-                  />
-                </li>
-              </ul>
-              <ul className={'finance_total_wash'} data-content-type={'values'}>
-                <li className={'text-accent uppercase'}>
-                  <NumberFormatter
-                    className={'text-accent'}
-                    thousandSeparator={' '}
-                    suffix=' ₽'
-                    value={data?.total.wash_total_sum}
-                  />
-                </li>
-              </ul>
-              <ul className={'finance_total_evac'} data-content-type={'values'}>
-                <li className={'text-accent uppercase'}>
-                  <NumberFormatter
-                    className={'text-accent'}
-                    thousandSeparator={' '}
-                    suffix=' ₽'
-                    value={data?.total.evac_total_sum}
-                  />
-                </li>
-              </ul>
-              <ul className={'finance_total'} data-content-type={'values'}>
-                <li className={'text-accent uppercase'}>
-                  <NumberFormatter
-                    className={'text-accent'}
-                    thousandSeparator={' '}
-                    suffix=' ₽'
-                    value={data?.total.total_sum}
-                  />
-                </li>
-              </ul>
-            </Panel>}
+            footer={footer?.section}
               style={PanelRouteStyle.financeId}
               background={PanelColor.glass}
               className={'col-span-full table-groups'}
@@ -192,6 +286,7 @@ const FinaceIdPage = () => {
           />
 
 
+        {footer?.footer}
         {memoModal}
         {memoModalF}
       </Section>

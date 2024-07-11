@@ -14,6 +14,7 @@ import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import agent from 'utils/agent'
 import dayjs from 'dayjs'
 import { SvgBackArrow } from 'components/common/ui/Icon'
+import { PurposeOfTransaction } from "components/common/layout/Modal/UpBalance";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -77,6 +78,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
       purposeRes = Object.fromEntries(Object.entries(otherProps))
 
     }
+    console.log(data);
     localStore.setData = {
       ...data,
       results: data?.results?.map((item: any, index: number) => {
@@ -89,7 +91,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
              executor: user?.last_name[0] + '.' + ' ' + user?.first_name,
              company: company,
              ...props,
-             purpose: "-",
+             bonus: purpose ? PurposeOfTransaction[purpose] : "-",
              description: description,
              total_amount: (amount + ' ₽')[0] === "-" ? String(amount.toFixed(2) + ' ₽').slice(1) : amount.toFixed(2) + ' ₽',
          }
@@ -175,7 +177,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
           autoScroll={true}
           style={PanelRouteStyle.financeByTypeServiceId}
           background={PanelColor.glass}
-          className={'col-span-full table-groups tablet-max:pb-28 self-stretch'}
+          className={'col-span-full table-groups tablet-max:pb-8 self-stretch'}
           initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
           filter={true}
           state={isLoading}

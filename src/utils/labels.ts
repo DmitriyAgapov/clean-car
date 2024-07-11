@@ -6,6 +6,8 @@ const label = (key:string|unknown) => {
     customer: "Заказчик",
     created: "Дата/время",
     customer_company_type: "Клиент",
+    description: "Комментарий",
+    // total_amount: "total_amount",
     performer_company_type: "Партнер",
     customer_k: "КЗ",
     customer_name: "Заказчика",
@@ -58,7 +60,9 @@ const label = (key:string|unknown) => {
     wash: "Мойка",
     total: "Итог",
     bid: "Заявка №",
+    bid_id: "Заявка",
     purpose: "Назначение",
+    bonus: "Бонус/Штраф",
     ts_maker: "Пользователь",
     car_class: "Класс",
     service_option: "Опция"

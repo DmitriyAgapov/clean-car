@@ -61,7 +61,7 @@ const RowData = observer((props: any) => {
     }, [])
 
     const handleClick = React.useCallback(() => {
-        console.log(props);
+
         if (props.query && props.query.rootRoute) {
             return navigate(props.query.rootRoute)
         }
@@ -115,7 +115,7 @@ const RowData = observer((props: any) => {
                         </Cell>,
                     )
                 } else if (key === "bid_id") {
-                    console.log(props);
+
                     ar.push(
                         <Cell
                             key={key}
@@ -282,6 +282,7 @@ const RowData = observer((props: any) => {
     const { width } = useViewportSize()
     const [open, setOpen] = useState(false)
     const rowPart = React.useMemo(() => {
+
         const res: any[] = []
         if (width && width < 745)
             res.push(
@@ -289,9 +290,9 @@ const RowData = observer((props: any) => {
                     <SvgChevron onClick={() => setOpen((prevState) => !prevState)} />
                 </Cell>,
             )
-        if (width && width < 745 && props?.attributes?.has_child !== false)
+        if (width && width < 745 && props?.attributes && props?.attributes?.has_child !== false)
             res.push(
-                <td data-position='button-mobile'>
+                <Cell view={props.view} data-position='button-mobile'>
                     <Button
                         text={'Подробнее'}
                         variant={ButtonVariant['accent']}
@@ -299,7 +300,7 @@ const RowData = observer((props: any) => {
                         size={ButtonSizeType.sm}
                         action={handleClick}
                     />
-                </td>,
+                </Cell>,
             )
         return res
     }, [width, props])

@@ -13,6 +13,7 @@ import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
 import { useStore } from "stores/store";
 import { useDebouncedValue, useElementSize, useViewportSize } from "@mantine/hooks";
+import agent from "utils/agent";
 
 
 type TableWithSortProps = {
@@ -90,14 +91,14 @@ const GridView = (props: {
   countFetch: any
   element: (item: any, index: number) => JSX.Element
 }) => {
+  const {width} = useViewportSize()
   const colsAmount = props.rows && props.rows.length ? Array.from(Object.entries(props.rows[0])).length : 0
   return (
-    <ScrollArea classNames={{
-      viewport: stylesGrid.scrollCustom,
-
-
-    }}   mah={`calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})`}
-      maw={'68.5rem'}
+    <ScrollArea
+      classNames={{viewport: stylesGrid.scrollCustom}}
+      mah={`calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})`}
+      scrollbars={width && width > 741 ? "xy" : "y"}
+      maw={props.props.ref}
       w={"100%"}
       h={`calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})`}
       mih={'100%'}
@@ -146,9 +147,13 @@ function TableView(props: {
     countFetch: any
     element: (item: any, index: number) => JSX.Element
 }) {
-    return (
+  const {width} = useViewportSize()
+  return (
         <Table.ScrollContainer
+          // @ts-ignore
+            scrollbars={width && width > 741 ? "xy" : "y"}
             style={{ width: '100%' }}
+
             classNames={{
                 scrollContainer: styles.scrollCustom,
                 scrollContainerInner: 'h-full',
@@ -164,6 +169,7 @@ function TableView(props: {
                 data-style={props.dataStyle}
                 data-width={`${Math.floor(100 / props.ar.length)}`}
                 stickyHeader
+
                 stickyHeaderOffset={0}
             >
                 {props.headerBar && <RowHeading total={props.total} ar={props.ar} autoScroll={props.autoScroll} />}
@@ -177,7 +183,7 @@ function TableView(props: {
                 </Table.Tbody>
                 <Table.Tfoot>
                     {props.props.footerProps && props.countFetch && props.countFetch > 0 ? (
-                        <RowData style={props.dataStyle} {...props.props.footerProps}  />
+                        <RowData style={props.dataStyle} {...props.props.footerProps} />
                     ) : null}
                 </Table.Tfoot>
             </Table>
@@ -244,31 +250,34 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
             {...props}
         >
           {autoScroll ? view ? <GridView key={props.footerProps?.id + "_00"}
-            props={props}
+            props={{...props, ref: width}}
             dataStyle={style}
             ar={ar}
             headerBar={headerBar}
             total={initCount}
             view={true}
+
             autoScroll={autoScroll}
             rows={rows}
             countFetch={_countFetch}
             element={(item: any, index: number) => <RowData style={style} view={item.view} {...item}
-            key={item.id + "_00" + index} />}/> : <TableView key={props.footerProps?.id + "_00"}
-            props={props}
-            dataStyle={style}
-            ar={ar}
-            headerBar={headerBar}
-            total={initCount}
-            autoScroll={autoScroll}
-            rows={rows}
-            countFetch={_countFetch}
-            element={(item: any, index: number) => <RowData style={style} {...item}
-              key={item.id + "_00" + index} />} /> : <table className={styles.TableWithSort}
-            data-style={style}
-            data-width={`${Math.floor(100 / ar.length)}`}>
-            {headerBar && <RowHeading total={initCount}
-              ar={ar} />}
+            key={item.id + "_00" + index} />}/> :
+            <TableView key={props.footerProps?.id + "_00"}
+                props={props}
+                dataStyle={style}
+                ar={ar}
+                headerBar={headerBar}
+                total={initCount}
+                autoScroll={autoScroll}
+                rows={rows}
+                countFetch={_countFetch}
+                element={(item: any, index: number) => <RowData style={style} {...item} key={item.id + "_00" + index}
+                />
+            } /> : <table className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
+            {/* Заголовок табилцы */}
+            {headerBar && <RowHeading total={initCount} ar={ar} />}
+
+
             <tbody>{rows && rows.map((item: any, index: number) =>
               <RowData style={style} {...item}
                 key={item.id + "_00" + index} />
@@ -279,7 +288,7 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
       )
 })
 
-const TableWithSort = (props: any) => {
+const TableWithSort = (props: TableWithSortProps & any & {store?: any}) => {
   return (
     <LocalStoreProvider stores={props.store}>
       <TableWithSortNew {...props} />
