@@ -16,6 +16,7 @@ import { LocalRootStore } from "stores/localStore";
 import { useDidUpdate } from "@mantine/hooks";
 import dayjs from "dayjs";
 import BidModalOptionsSelect from "routes/bids/BidComponents/BidModalOptionsSelect";
+import agent from "utils/agent";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({ordering: '-created'})
@@ -103,7 +104,7 @@ const BidsPage = () => {
 				<div className={`flex gap-6 tablet-max:max-w-96 ${store.appStore.appType === "admin" ? "mobile:mt-6" : ""}`}>
 					{store.userStore.getUserCan(PermissionNames["Управление заявками"], "create") && (<>
 						{store.appStore.appType === "admin" && <Button text={textData.loadExcel}
-							action={() => navigate("create")}
+							action={() => agent.Bids.getExportBids(localStore.params.searchParams)}
 							trimText={true}
 							className={"inline-flex tablet-max:flex-1"}
 							variant={ButtonVariant["accent-outline"]}

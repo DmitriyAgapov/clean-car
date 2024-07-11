@@ -260,7 +260,8 @@ const Bids = {
   loadBidPhotos: (company_id:  number|string, bid_id:  number|string) => requests.get(`/bid_photos/${company_id}/${bid_id}/list/`),
   getBidCountAdmin: () => requests.get('/bids/count/admin/'),
   getBidCountCustomer: (company_id: number) => requests.get(`/bids/${company_id}/count/customer/`),
-  getBidCountPerformer: (company_id: number) => requests.get(`/bids/${company_id}/count/performer/`)
+  getBidCountPerformer: (company_id: number) => requests.get(`/bids/${company_id}/count/performer/`),
+  getExportBids: (params: PaginationProps) => requests.getFile('/bids/export_bids/', params)
 }
 const Utils = {
   sendToSupport: (values:any) => requests.post(`/extra/contact_form/`, values),
