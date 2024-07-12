@@ -248,7 +248,7 @@ const FinaceIdPage = () => {
                               variant={ButtonVariant.text}
                           />}
                         <Heading
-                          text={'Отчет по заявкам'}
+                          text={'Отчет по заявкам' + " " + data?.root_company.name}
                           variant={HeadingVariant.h1}
                           className={'!mb-0 inline-block flex-1'}
                           color={HeadingColor.accent}

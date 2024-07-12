@@ -29,7 +29,6 @@ const FinanceByTypeAndTypeId = () => {
   const navigate = useNavigate()
 
   const params = useParams()
-  console.log(params);
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
   const ar = React.useMemo(() => {
       const init = [

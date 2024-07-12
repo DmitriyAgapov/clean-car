@@ -13,15 +13,7 @@ import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate } from '@mantine/hooks'
 import dayjs from "dayjs";
 import { PurposeOfTransaction } from "components/common/layout/Modal/UpBalance";
-const purpose:any = {
-  "1": 'Пополнение баланса (счета)',
-  "2": 'Оплата услуг',
-  "3": 'Возврат',
-  "4": 'Начисление бонуса',
-  "5": 'Списание бонуса',
-  "6": 'Штраф по ПДД',
-  "7": 'Штраф Компании (в рамках договора)'
-}
+
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
   ordering: "-created"

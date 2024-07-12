@@ -14,6 +14,7 @@ import { toJS } from "mobx";
 import { useStore } from "stores/store";
 import { useDebouncedValue, useElementSize, useViewportSize } from "@mantine/hooks";
 import agent from "utils/agent";
+import { useFontSize } from "utils/utils";
 
 
 type TableWithSortProps = {
@@ -93,12 +94,15 @@ const GridView = (props: {
 }) => {
   const {width} = useViewportSize()
   const colsAmount = props.rows && props.rows.length ? Array.from(Object.entries(props.rows[0])).length : 0
+
+  const { sectionWidth} = useFontSize(props.props.ref)
+  if(sectionWidth === 0) return <div/>
   return (
     <ScrollArea
       classNames={{viewport: stylesGrid.scrollCustom}}
       mah={`calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})`}
       scrollbars={width && width > 741 ? "xy" : "y"}
-      maw={props.props.ref}
+      maw={sectionWidth}
       w={"100%"}
       h={`calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})`}
       mih={'100%'}

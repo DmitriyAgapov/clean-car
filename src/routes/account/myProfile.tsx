@@ -13,11 +13,9 @@ import { FileButton, InputBase, TextInput } from '@mantine/core'
 import { useForm, yupResolver } from "@mantine/form";
 import {  UpdateUserProfileSchema } from "utils/validationSchemas";
 import { IMask, IMaskInput } from "react-imask";
-import NotificationCC from "components/common/ui/NotificationCC/NotificationCC";
 import agent from 'utils/agent'
 import { useDisclosure } from "@mantine/hooks";
 import { UploadUserPhoto } from "components/common/layout/Modal/UploadUserPhoto";
-import ImageCrop from "components/common/ui/Image/ImageCrop";
 import Image from "components/common/ui/Image/Image";
 
 const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }) => {
@@ -147,24 +145,21 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
 })
 const MyProfilePage = () => {
   const store = useStore()
-  const navigate = useNavigate()
-  const location = useLocation()
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
   const [edit, setEdit] = React.useState(false)
   const userData = React.useMemo(() => {
     const avatar = store.userStore.myProfileData.user.avatar;
-    console.log(company);
+
     if(user) {
       if(edit) {
         return <UserProfileEditForm action={(val) => setEdit(val)}/>
       }
-      console.log((user.company?.company_type === CompanyType.customer || user.company?.company_type === CompanyType.fizlico));
       return (
         <Panel state={store.usersStore.loadingUsers}
           className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
           variant={PanelVariant.textPadding}
           background={PanelColor.glass}
-          bodyClassName={'tablet:!pl-44 grid grid-cols-2 items-start content-start gap-8 tablet-max:grid-cols-1'}
+          bodyClassName={'tablet:!pl-44 grid grid-cols-2 items-start content-start gap-8 tablet-max:grid-cols-1 tablet-max:pb-8'}
           headerClassName={'flex gap-10'}
           header={
             <>

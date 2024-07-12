@@ -27,19 +27,17 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
   const location = useLocation()
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
+  if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
   const navigate = useNavigate()
-  const searchParams = localStore.params.getSearchParams
-  const getClean = localStore.params.getClean
   const params = useParams()
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}/${params.company_id}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByTypeAndCompany(params.service_type as string,params.company_id as string, args).then(r => r.data))
+
  React.useEffect(() => {
    if(location.state) {
      const {company_city, ...state} = location.state
      const _res = {...(company_city ? {balance__company__city: company_city} : {}), ...state}
-
      localStore.params.setSearchParams(_res, true)
    } else if(!location.state) {
-
      localStore.params.setSearchParams({
        // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
      }, true)
@@ -78,7 +76,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
       purposeRes = Object.fromEntries(Object.entries(otherProps))
 
     }
-    console.log(data);
+
     localStore.setData = {
       ...data,
       results: data?.results?.map((item: any, index: number) => {
@@ -131,7 +129,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
     },
     [location.pathname]
   );
-  if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
+
 
   // if (location.pathname !== `/account/finance/by-type/${params.service_type}/${}`) return <Outlet />
   return (
@@ -154,7 +152,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
                   action={() => navigate(-1)}
                   variant={ButtonVariant.text}
                 />
-                <Heading text={'Отчет по заявкам'}
+                <Heading text={'Отчет сверки' + " " + data?.results[0].company.name}
                   variant={HeadingVariant.h1}
                   className={'inline-block !mb-0'}
                   color={HeadingColor.accent} />
