@@ -7,6 +7,8 @@
 
   [data-panel="header_row"] {
 	height: 1.5rem;
+	position: relative;
+
   }
 
   &[data-style="financeByTypeServiceId"], &[data-style="financeByType"] {
@@ -251,10 +253,21 @@
 	[data-panel="header_cell"] {
 	  position: relative;
 	  overflow: visible;
-	  z-index: 11000;
+	  z-index: 9;
+
 
 	  span {
 		white-space: nowrap;
+	  }
+	  &[data-name="amount"] {
+		position: sticky !important;
+		z-index: 10 !important;
+		padding-right: 2rem !important;
+		padding-left: 1rem;
+		right: 0;
+		background: #111216 !important;
+		padding-top: .25rem;
+		padding-bottom: .25rem;
 	  }
 	}
 
@@ -339,6 +352,7 @@
 
 	  [data-panel="header_row"] {
 		display: none;
+
 	  }
 	  [data-panel="content_row"] {
 		background: transparent !important;

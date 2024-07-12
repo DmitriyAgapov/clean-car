@@ -225,7 +225,9 @@ const FinaceIdPage = () => {
     if(data && data.root_company) return <UpBalance upBalance={false} companyName={data.root_company.name} id={data.root_company.id} opened={openedf} onClose={closef} />
   }, [openedf, data, isLoading])
 
-
+  console.log(localStore.data);
+  const company_name = localStore.getData
+  console.log();
   if (location.pathname !== `/account/finance/report/${params.company_id}`) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
@@ -248,7 +250,7 @@ const FinaceIdPage = () => {
                               variant={ButtonVariant.text}
                           />}
                         <Heading
-                          text={'Отчет по заявкам' + " " + data?.root_company.name}
+                          text={'Отчет по заявкам' + ` ${company_name && company_name.root_company && company_name.root_company.name ? company_name.root_company.name : ""}`}
                           variant={HeadingVariant.h1}
                           className={'!mb-0 inline-block flex-1'}
                           color={HeadingColor.accent}

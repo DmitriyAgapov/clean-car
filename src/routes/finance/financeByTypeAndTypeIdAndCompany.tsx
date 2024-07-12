@@ -129,8 +129,8 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
     },
     [location.pathname]
   );
-
-
+  const company_name = localStore.getData
+  console.log(company_name && company_name.results && company_name.results[0].company.name);
   // if (location.pathname !== `/account/finance/by-type/${params.service_type}/${}`) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>
@@ -152,7 +152,7 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
                   action={() => navigate(-1)}
                   variant={ButtonVariant.text}
                 />
-                <Heading text={'Отчет сверки' + " " + data?.results[0].company.name}
+                <Heading text={'Отчет сверки ' + ` ${company_name && company_name.results ? company_name.results[0].company.name : ""}`}
                   variant={HeadingVariant.h1}
                   className={'inline-block !mb-0'}
                   color={HeadingColor.accent} />

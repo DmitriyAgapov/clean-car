@@ -20,7 +20,7 @@ export default function GroupPageEditAction(props: any) {
 
   const memoizedAndModificatedGroup = React.useMemo(() => {
     let modifCatedData = { ...group };
-    const except= store.appStore.appType === "admin" ? [null] : ["Компании", 'Управление справочниками']
+    const except= store.appStore.appType === "admin" ? [null] : [ 'Управление справочниками']
     const _ar:any[] = []
     modifyPermissions(group, modificationSchema, store.appStore.appType, except ).forEach((item: any) => {
       if(item) {
