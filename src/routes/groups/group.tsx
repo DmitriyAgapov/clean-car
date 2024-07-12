@@ -23,7 +23,7 @@ const GroupPage = () => {
 
   const memoizedAndModificatedGroup = React.useMemo(() => {
     let modifCatedData = { ...group };
-    const except= store.appStore.appType === "admin" ? [null] : ["Компании", 'Управление справочниками', 'Компании']
+    const except= store.appStore.appType === "admin" ? [null] : ['Управление справочниками']
     modifCatedData.permissions = modifyPermissions(group, modificationSchema, store.appStore.appType, except );
     return modifCatedData;
   }, [group]);

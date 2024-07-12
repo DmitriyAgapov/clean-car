@@ -46,7 +46,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 		<Modal.Root size={isMobile ? "auto" : '75rem'} fullScreen={isMobile}
 			xOffset={0}
 			yOffset={'10dvh'}
-			style={{ background: 'none' }} opened={opened} onClose={action} centered={true} >
+			style={{ background: 'none', alignSelf: "stretch" }} opened={opened} onClose={action} centered={true} >
 			<Modal.Overlay className={'bg-black/80'} />
 
 			<Modal.Content radius={20} className={styles.ModalBidFullImg} bg={'transparent !important'}

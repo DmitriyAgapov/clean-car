@@ -33,6 +33,7 @@ export default function GroupPageEditAction(props: any) {
   }, [group]);
 
   const [changes, setChanges] = useState(memoizedAndModificatedGroup)
+
   const handleChangeName = (event: any) => {
     setChanges((prevState: any) => ({
       ...prevState,

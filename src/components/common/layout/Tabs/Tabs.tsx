@@ -55,7 +55,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
     if (type == TabsType.price) {
 
         (data && data.length > 0) && data.forEach((item: any, index: number) => {
-          console.log(data)
+
             result.push(
                 <TabsVariantPrice
                     key={`tab_${index}`}

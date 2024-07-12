@@ -5,7 +5,6 @@ import { SectionType } from '../Section/Section'
 import { useStore } from "stores/store";
 import { Observer, observer } from "mobx-react-lite";
 import {  useViewportSize } from '@mantine/hooks'
-import Logo from "components/common/layout/Logo/Logo";
 import Footer from "components/common/layout/Footer/Footer";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { ButtonVariant } from "components/common/ui/Button/Button";

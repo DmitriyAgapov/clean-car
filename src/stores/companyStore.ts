@@ -229,7 +229,10 @@ export class CompanyStore {
         return this.companiesAndFilials
     }
     async loadAllOnlyCompanies(args:any) {
-        return await agent.Companies.getOnlyAllCompanies(args).then(r => r.data)
+        if(appStore.appType === "admin") {
+            return await agent.Companies.getOnlyAllCompanies(args).then(r => r.data)
+        }
+        return  await agent.Companies.getMyCompanies(args).then(r => r.data)
     }
     loadFilialsAndCompaniesByAdminAndNot = flow( function *(this: CompanyStore, company_type:string, companyOrFilial: string, company_id:number) {
         if(companyOrFilial === "company") {

@@ -105,8 +105,6 @@ export const modificationSchema = {
         {
             "name": "Компании",
             "create": null,
-            "read": null,
-            "update": null,
             "delete": null
         },
         {
@@ -159,8 +157,6 @@ export const modificationSchema = {
         {
             "name": "Компании",
             "create": null,
-            "read": null,
-            "update": null,
             "delete": null
         },
         {

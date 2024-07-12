@@ -642,11 +642,10 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
               }
 
               const _res = _res2.calc()
-              console.log(_res);
               const totalCustomer = addTotalPercent(_res.options?.reduce((acc:number, item:any) => item.unit !== "%" ? acc + item.values[0] : acc,  0),  data.price_positions.customer)
               const totalPerformer = addTotalPercent(_res.options?.reduce((acc:number, item:any) => item.unit !== "%" ? acc + item.values[_res.role !== "performer" ? 1 : 0] : acc, _res.role !== "performer" ? 0 : _res.service.values[0] ?? 0),  data.price_positions.performer)
               const totalProfit =  totalCustomer - totalPerformer
-              console.log(totalCustomer);
+
               const _tar = []
               !!totalCustomer && _tar.push(Math.round(totalCustomer * 100) / 100)
               !!totalPerformer && _tar.push(Math.round(totalPerformer * 100) / 100)
