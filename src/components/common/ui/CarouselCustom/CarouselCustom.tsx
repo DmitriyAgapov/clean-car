@@ -55,7 +55,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 				// h={"100%"}
 				mah={"100lvh"}>
 				<Modal.CloseButton w={48} h={48} pos={"absolute"} className={'outline-0'} right={8} top={8} style={{zIndex: 998}}/>
-				<Modal.Body className={'tablet-max:flex !px-0 !pb-0 !pt-8 overflow-hidden flex-1'}  mah={"85lvh"}>
+				<Modal.Body className={'tablet-max:flex !px-0 !pb-0 !pt-8 overflow-hidden flex-1 self-stretch'}  mah={"85lvh"}>
 
 					<Swiper
 						spaceBetween={20}
@@ -76,7 +76,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 
 								// onTouchEnd={(event) => console.log(event)}
 							>
-								<div className={"swiper-zoom-container"} style={{height: "auto"}}>
+								<div className={"swiper-zoom-container"} style={{height: "100%"}}>
 									<Image
 										src={i}
 											w={"100%"}
