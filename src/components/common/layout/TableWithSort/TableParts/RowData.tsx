@@ -70,7 +70,7 @@ const RowData = observer((props: any) => {
                 ? `/account/finance/report/${props.id}`
                 : location.pathname + queryCompanyType + querys() + `/${props.id}`
 
-        props.id ? navigate(route) : void null
+        props.id ? navigate(route, { state: { ...searchParams } }) : void null
     }, [])
 
     const propsRender = React.useMemo(() => {

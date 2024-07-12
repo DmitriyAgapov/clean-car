@@ -30,6 +30,17 @@ const FinanceByTypeAndTypeId = () => {
 
   const params = useParams()
   const {isLoading, data, mutate} = useSWR([`by-type/${params.service_type}`,localStore.params.getSearchParams], ([url, args]) => agent.Balance.getServiceReportByType(params.service_type as string, args).then(r => r.data))
+  React.useEffect(() => {
+    if(location.state) {
+      const {company_city, ...state} = location.state
+      const _res = {...(company_city ? {balance__company__city: company_city} : {}), ...state}
+      localStore.params.setSearchParams(_res, true)
+    } else if(!location.state) {
+      localStore.params.setSearchParams({
+        // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+      }, true)
+    }
+  }, [location.state])
   const ar = React.useMemo(() => {
       const init = [
           { label: 'Дата', name: 'created' },

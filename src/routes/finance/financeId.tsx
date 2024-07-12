@@ -173,7 +173,17 @@ const FinaceIdPage = () => {
   const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
   const {width, height} = useViewportSize()
   const {isLoading, data, mutate} = useSWR([`reportId_${params.company_id}`, localStore.params.getSearchParams] , ([url, args]) => store.financeStore.getReport(Number(params.company_id),  args))
-
+  React.useEffect(() => {
+    if(location.state) {
+      const {company_city, ...state} = location.state
+      const _res = {...(company_city ? {balance__company__city: company_city} : {}), ...state}
+      localStore.params.setSearchParams(_res, true)
+    } else if(!location.state) {
+      localStore.params.setSearchParams({
+        // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+      }, true)
+    }
+  }, [location.state])
   useEffect(() => {
       const _root = data?.root_company
       const _ar = []

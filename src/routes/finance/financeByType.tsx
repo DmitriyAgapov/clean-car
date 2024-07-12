@@ -20,7 +20,7 @@ const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
   // page: 1,
   // page_size: 10,
-  // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+  start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
 })
 
 const FinaceByTypePage = () => {
