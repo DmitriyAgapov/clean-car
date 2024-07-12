@@ -258,7 +258,7 @@ const RowData = observer((props: any) => {
                     }
                 }
             } else if (typeof props[key] == 'object') {
-                console.log(key);
+
                 if (key == 'company' || key == 'partner') {
                     ar.push(
                         <Cell

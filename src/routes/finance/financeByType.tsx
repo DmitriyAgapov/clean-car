@@ -64,7 +64,7 @@ const FinaceByTypePage = () => {
           variant={PanelVariant.withGapOnly}
           header={
             <>
-              <Heading text={'Отчет по заявкам'}
+              <Heading text={'Отчет по типам услуг'}
                 variant={HeadingVariant.h1}
                 className={'inline-block'}
                 color={HeadingColor.accent} />

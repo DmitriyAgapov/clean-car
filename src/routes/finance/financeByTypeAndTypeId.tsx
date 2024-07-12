@@ -100,7 +100,7 @@ const FinanceByTypeAndTypeId = () => {
     },
     [location.pathname]
   );
-
+  console.log(params.service_type && store.catalogStore.getServiceType(params.service_type).name);
   // if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
   //
   if (location.pathname.includes(`/account/finance/report/${params.service_type}`)) return <Outlet />
@@ -124,7 +124,7 @@ const FinanceByTypeAndTypeId = () => {
                   action={() => navigate(-1)}
                   variant={ButtonVariant.text}
                 />
-              <Heading text={'Отчет по заявкам'}
+              <Heading text={`Отчет по типу услуг ${params.service_type && store.catalogStore.getServiceType(params.service_type).name}`}
                 variant={HeadingVariant.h1}
                 className={'inline-block !mb-0'}
                 color={HeadingColor.accent} />
