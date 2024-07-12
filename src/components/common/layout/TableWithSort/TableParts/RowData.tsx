@@ -14,6 +14,7 @@ import { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
 import { NumberFormatter } from '@mantine/core'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { useLocalStore } from 'stores/localStore'
+import bid from "routes/bids/bid";
 
 function Cell(props: any) {
 
@@ -99,6 +100,8 @@ const RowData = observer((props: any) => {
                         </Cell>,
                     )
                 } else if (key === 'bid') {
+                    const text = props[key].bidId == null ? "" : props[key].bidId !== null ? props[key].bidId : props[key]
+
                     ar.push(
                         <Cell
                             key={key}
@@ -110,7 +113,7 @@ const RowData = observer((props: any) => {
                                 to={`/account/bids/${props[key].company}/${props[key].bidId}`}
                                 className={`mx-2 h-12 border-b border-b-accent/30 text-center inline-flex items-center max-h-4 justify-center  hover:border-accent text-accent `}
                             >
-                                {props[key].bidId || props[key]}
+                                {text}
                             </Link>
                         </Cell>,
                     )
@@ -179,7 +182,7 @@ const RowData = observer((props: any) => {
                             {_id && _ar.some((v) => key == v) ? (
                                 <a
                                     className={
-                                        'm-0 inline-block hover:border-b border-b border-b-active/30 hover:border-b-active'
+                                        'm-0 inline-block hover:border-b border-b border-b-accent/30 hover:border-b-accent'
                                     }
                                     onClick={(event) => {
                                         event.stopPropagation()
@@ -255,6 +258,7 @@ const RowData = observer((props: any) => {
                     }
                 }
             } else if (typeof props[key] == 'object') {
+                console.log(key);
                 if (key == 'company' || key == 'partner') {
                     ar.push(
                         <Cell
@@ -268,7 +272,7 @@ const RowData = observer((props: any) => {
                                 to={`/account/companies/${key == 'company' ? 'customer' : 'performer'}/${props[key].id}`}
                                 text={props[key].name}
                                 className={
-                                    'm-0 inline-block text-xs text-active hover:border-b border-b border-b-active/30 hover:border-b-active'
+                                    'm-0 inline-block text-xs text-accent hover:border-b border-b border-b-accent/30 hover:border-b-accent'
                                 }
                             />
                         </Cell>,

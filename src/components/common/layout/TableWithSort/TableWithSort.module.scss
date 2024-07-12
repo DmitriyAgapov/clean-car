@@ -1143,12 +1143,12 @@ th, td {
         //width: 100%;
         &[data-label="service_type_name"], &[data-label="partner"],  &[data-label="Компания"], &[data-name="service_type_name"],  {
           p {
-            @apply text-active uppercase;
+            @apply text-accent uppercase;
           };
         }
         &[data-label="service_type_name"], &[data-name="service_type_name"],  {
           p {
-            @apply text-active uppercase;
+            @apply text-accent uppercase;
           };
         }
 
@@ -1229,7 +1229,7 @@ th, td {
         }
 
         * {
-          @apply text-active;
+          @apply text-accent;
         }
       }
     }

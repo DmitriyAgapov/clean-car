@@ -115,7 +115,7 @@
 	  }
 
 	  * {
-		@apply text-active;
+		@apply text-accent;
 	  }
 
 	  [data-label="bids_count_v"] {
@@ -148,13 +148,13 @@
 		//width: 100%;
 		&[data-label="service_type_name"], &[data-label="partner"], &[data-label="Компания"], &[data-name="service_type_name"], {
 		  p {
-			@apply text-active uppercase;
+			@apply text-accent uppercase;
 		  }
 		}
 
 		&[data-label="service_type_name"], &[data-name="service_type_name"], {
 		  p {
-			@apply text-active uppercase;
+			@apply text-accent uppercase;
 		  }
 		;
 		}
@@ -335,7 +335,7 @@
 		}
 
 		* {
-		  @apply text-active;
+		  @apply text-accent;
 		}
 	  }
 	  @screen tablet-max {
