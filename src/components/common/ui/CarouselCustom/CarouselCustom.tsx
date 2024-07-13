@@ -54,7 +54,7 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 				// style={{flexDirection: "column"}}
 				// h={"100%"}
 				mah={"100lvh"}>
-				<Modal.CloseButton w={48} h={48} pos={"absolute"} className={'outline-0'} right={8} top={8} style={{zIndex: 998}}/>
+				<Modal.CloseButton w={48} h={48} pos={"absolute"} className={'!outline-0'} right={8} top={8} style={{zIndex: 998}}/>
 				<Modal.Body className={'tablet-max:flex !px-0 !pb-0 !pt-8 overflow-hidden flex-1 self-stretch'}  mah={"85lvh"}>
 
 					<Swiper

@@ -200,6 +200,7 @@ const FinaceIdPage = () => {
                   evac: `${item.evac_count} / ${item.evac_total_sum} ₽`,
                   total: `${item.total_count} / ${item.total_sum} ₽`,
                   id: item.id,
+                  has_child: item.has_child
               },
           })),
       }
@@ -235,9 +236,8 @@ const FinaceIdPage = () => {
     if(data && data.root_company) return <UpBalance upBalance={false} companyName={data.root_company.name} id={data.root_company.id} opened={openedf} onClose={closef} />
   }, [openedf, data, isLoading])
 
-  console.log(localStore.data);
   const company_name = localStore.getData
-  console.log();
+
   if (location.pathname !== `/account/finance/report/${params.company_id}`) return <Outlet />
   return (
       <Section type={SectionType.withSuffix}>

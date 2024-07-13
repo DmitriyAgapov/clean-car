@@ -17,6 +17,7 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import Errors from 'components/common/layout/Errors/Errors'
 import { useViewportSize } from '@mantine/hooks'
+import { UserPermissionVariants } from "stores/userStore";
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -53,6 +54,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   const isOnline = useNavigatorOnLine()
   const loc = useLocation()
   const { width } = useViewportSize();
+  // console.log(store.userStore.getUserCan());
   // console.log('st', (navigation.state === "idle" || store.appStore.getAppState) ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true );
   const { appStore, userStore, authStore } = store;
   if (!store.appStore.getNetWorkStatus)
@@ -79,11 +81,17 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
       )
   const exceptions = ['policy', '404', 'restore', 'register', 'support' ]
   const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
-
+  const _path = loc.pathname.split('/')[2].toString()
+  // @ts-ignore
+  const _permissionName = UserPermissionVariants[_path]
+  console.log(store.userStore.getUserCan(_permissionName, "read"));
+  // @ts-ignore
   if(!store.appStore.token && loc.pathname !== "/" && !isInException(loc.pathname)) {
     return (<Navigate to={'/'}/>)
   }
-
+  if(_permissionName) {
+    if(!store.userStore.getUserCan(_permissionName, "read")) return <Navigate to={'/account/profile'}/>
+  }
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
           <Header>

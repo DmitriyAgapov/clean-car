@@ -427,7 +427,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           formData.values.conductor = String(users[0].employee.id)
           store.bidsStore.formResultSet({ conductor: Number(users[0].employee.id) })
           result = users.map((c: any) => ({
-            label: c.employee.first_name + " " + c.employee.last_name,
+            label: c.employee.last_name + " " + c.employee.first_name,
             value: String(c.employee.id),
           }))
         }
@@ -436,7 +436,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         } else {
 
           result = users.map((c: any) => ({
-            label: c.employee.first_name + " " + c.employee.last_name,
+            label: c.employee.last_name + " " + c.employee.first_name,
             value: String(c.employee.id),
           }))
         }
@@ -445,7 +445,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
 
         result = [{
-          label: store.userStore.myProfileData.user.first_name + " " + store.userStore.myProfileData.user.last_name,
+          label: store.userStore.myProfileData.user.last_name + " " + store.userStore.myProfileData.user.first_name,
           value: String(store.userStore.myProfileData.user.id)
         }]
 

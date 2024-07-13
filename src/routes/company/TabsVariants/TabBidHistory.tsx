@@ -24,7 +24,7 @@ const TabBidHistory = ({companyId, company_type, state }:any) => {
 				// old_status: item.old_status ? item.old_status: " - ",
 				created_h: dayjs(item.created).format('DD-MM-YYYY hh:mm'),
 				new_status: item.new_status ? item.new_status : " - ",
-				user: item.user ? item.user.first_name + " " + item.user.last_name : " - ",
+				user: item.user ? item.user.last_name + " " + item.user.first_name : " - ",
 				additional_information: item.additional_information ? item.additional_information : " - ",
 
 				// updated: item.updated ? dayjs(item.updated).format('DD-MM-YYYY hh:mm') : ' - '

@@ -53,8 +53,8 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			initValues = {
 
 				id: user.employee.id,
-				company_id: user.company === undefined ? 1: user.company.id.toString(),
-				company_name: user.company === undefined ? "Администратор системы" : user.company.name,
+				company_id: user.company === undefined ? 1: user.company?.id.toString(),
+				company_name: user.company === undefined ? "Администратор системы" : user.company?.name,
 				depend_on: user.company?.parent === null ? 'company' : 'filials',
 				first_name: user.employee.first_name,
 				bid_visibility: user.employee.bid_visibility.toString(),
@@ -187,11 +187,11 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			console.log(form.values.depend_on === "company" ? store.companyStore.getCompaniesAll?.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll);
 			// @ts-ignore
 			console.log(CompanyType[form.values.type]);
-			if(edit && user.company.name === `${user.employee.first_name} ${user.employee.last_name}`) {
+			if(edit && user.company?.name === `${user.employee.first_name} ${user.employee.last_name}`) {
 				console.log(`${user.employee.first_name} ${user.employee.last_name}`);
 				return ([{
-					name: user.company.name,
-					id: user.company.id
+					name: user.company?.name,
+					id: user.company?.id
 				}])
 			}
 			// @ts-ignore
@@ -200,7 +200,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 		[form.values.depend_on, form.values.type])
 
 	const groupData = React.useMemo(() => {
-        // console.log('edit', edit && !!user.company.groups);
+        // console.log('edit', edit && !!user.company?.groups);
         // console.log('edit', edit && user.company);
         const _permissions = store.permissionStore.getCompanyPermissions
 

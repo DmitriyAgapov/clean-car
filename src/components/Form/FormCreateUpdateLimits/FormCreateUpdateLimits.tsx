@@ -115,7 +115,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                 formData.values.conductor = String(users[0].employee.id)
                 store.bidsStore.formResultSet({ conductor: Number(users[0].employee.id) })
                 result = users.map((c: any) => ({
-                    label: c.employee.first_name + " " + c.employee.last_name,
+                    label: c.employee.last_name + " " + c.employee.first_name,
                     value: String(c.employee.id),
                 }))
             }
@@ -123,7 +123,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                 result = []
             } else {
                 result = users.map((c: any) => ({
-                    label: c.employee.first_name + " " + c.employee.last_name,
+                    label: c.employee.last_name + " " + c.employee.first_name,
                     value: String(c.employee.id),
                 }))
             }
@@ -419,7 +419,7 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                                 data={
                                     conductors
                                         ? conductors?.results?.map((c: any) => ({
-                                              label: c.employee.first_name + ' ' + c.employee.last_name,
+                                              label: c.employee.last_name + " " + c.employee.first_name,
                                               value: String(c.employee.id),
                                           }))
                                         : null

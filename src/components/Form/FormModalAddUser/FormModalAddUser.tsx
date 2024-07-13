@@ -24,6 +24,7 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
       phone: '',
       group: '',
       is_active: "true",
+      bid_visibility: "true"
     }
 
     const form = useForm({
@@ -157,7 +158,7 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                     text={'Добавить сотрудника'}
                     action={async () => {
                         await store.usersStore
-                            .createUser(company_id, { ...form.values, phone: form.values.phone.replaceAll(' ', '') })
+                            .createUser(company_id, { ...form.values, phone: form.values.phone.replaceAll(' ', ''), is_active: form.values.is_active === "true", bid_visibility: form.values.bid_visibility === "true" })
                             .then((res) => res)
                             .then((res) => {
 
@@ -213,7 +214,7 @@ export const FormModalSelectUsers = observer(({ company_id, users }: { company_i
           <Select
             {...form.getInputProps('users')}
             // @ts-ignore
-            data={store.usersStore.currentCompanyUsers.map((item: any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))}
+            data={store.usersStore.currentCompanyUsers.map((item: any) => ({label: item.employee.last_name + ' ' + item.employee.first_name, value: String(item.employee.id)}))}
             label={"Выберите сотрудника"}
             placeholder={"Выберите сотрудника"}
             clearable

@@ -124,10 +124,13 @@ type SidebarProps = {
 function ListItem(props: { i: any }) {
     const location = useLocation()
     const store = useStore()
+    const [state, setState ] = React.useState()
     useEffect(() => {
-      let state = (props.i.sublevel && props.i.sublevel.length > 0) && props.i.sublevel.some((el:any) => location.pathname.includes(el.url) )
+      let state = location.pathname.includes(props.i.url) || (props.i.sublevel && props.i.sublevel.length > 0) && props.i.sublevel.some((el:any) => location.pathname.includes(el.url) )
+      console.log(state);
+      setState(state)
       state && store.appStore.setSublevelOpen()
-    }, [])
+    }, [location.pathname])
     return (
         <li
             data-sublevel={props.i.sublevel && 'true'}
@@ -147,7 +150,7 @@ function ListItem(props: { i: any }) {
             } to={props.i.url}>
                 {props.i.title}
             </Link>
-            {props.i.sublevel && <ul data-state-open={store.appStore.subLevel} className={styles.sublevel}>{props.i.sublevel.map((sub: any) => {
+            {props.i.sublevel && <ul data-state-open={state} className={styles.sublevel}>{props.i.sublevel.map((sub: any) => {
               if(sub.url === "finance/by-type" && store.appStore.appType !== "admin") return
               return (<li data-active={location.pathname.includes(sub.url)} key={sub.url} className={styles.sublevelItem}>
                 <Link onClick={() => store.appStore.setAsideClose()} to={sub.url}>{sub.title}</Link>

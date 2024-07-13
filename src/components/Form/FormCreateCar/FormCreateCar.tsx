@@ -260,7 +260,7 @@ const FormCreateCar = ({ car, edit }: any) => {
     const navigate = useNavigate()
 
     const formDataSelectUsers = React.useMemo(() => {
-        return store.usersStore.usersList.users.map((item:any) => ({label: item.employee.first_name + ' ' + item.employee.last_name, value: String(item.employee.id)}))
+        return store.usersStore.usersList.users.map((item:any) => ({label: item.employee.last_name + ' ' + item.employee.first_name, value: String(item.employee.id)}))
     },[store.usersStore.companyUsers])
 
     return (

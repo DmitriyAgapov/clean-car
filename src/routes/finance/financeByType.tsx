@@ -54,7 +54,6 @@ const FinaceByTypePage = () => {
     },
     [location.pathname]
   );
-  console.log(localRootStore);
   // if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
 
   if (location.pathname !== '/account/finance/by-type') return <Outlet />

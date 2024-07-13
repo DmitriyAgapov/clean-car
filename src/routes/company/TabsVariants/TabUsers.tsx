@@ -22,7 +22,7 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 			...data,
 			results: data?.results?.map((item: any & {rootRoute?: string} ) => ({
 				state: item.employee.is_active,
-				name: item.employee.first_name + ' ' + item.employee.last_name,
+				name: item.employee.last_name + ' ' + item.employee.first_name,
 				phone: item.employee.phone,
 				email: item.employee.email,
 				group: item.group.name,

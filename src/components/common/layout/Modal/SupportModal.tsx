@@ -36,7 +36,7 @@ function SupportForm(props:any) {
 	const initialValues= (() => {
 		if(isLoggedIn) {
 			return ({
-				name: store.userStore.myProfileData.user.first_name + " " + store.userStore.myProfileData.user.last_name ?? "",
+				name: store.userStore.myProfileData.user.last_name + " " + store.userStore.myProfileData.user.first_name ?? "",
 				phone: store.userStore.myProfileData.user.phone ?? '',
 				email: store.userStore.myProfileData.user.email ?? '',
 				text: ''

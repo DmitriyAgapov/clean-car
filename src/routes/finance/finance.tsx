@@ -308,7 +308,7 @@ const FinacePage = () => {
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const store = useStore()
   if(store.appStore.appType !== "admin") return  <Navigate to={`${store.userStore.myProfileData.company.id}`}/>
-  const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams], ([url, args]) => store.financeStore.getReport(undefined,args))
+  const {isLoading, data, mutate} = useSWR(['report', localStore.params.getSearchParams], ([url, args]) => store.financeStore.getReport(undefined,args), { revalidateOnMount: true })
   const {width, height} = useViewportSize()
   useEffect(() => {
     localStore.setData = {

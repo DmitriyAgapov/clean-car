@@ -140,7 +140,7 @@ const UserMenu = () => {
       <UserMenuStyled
         state={state}
         // @ts-ignore
-        name={store.userStore.currentUser?.first_name + ' ' + store.userStore.currentUser?.last_name}
+        name={store.userStore.currentUser?.last_name + ' ' + store.userStore.currentUser?.first_name}
         company={store.userStore.myProfileData.user?.account_bindings[0]?.group.name}
         accounts={['admin', 'user']}
       />

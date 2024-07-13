@@ -71,6 +71,7 @@ export const CreateModalUserSchema = Yup.object().shape({
 	phone: Yup.string().required('Обязательное поле'),
 	group: Yup.string().required('Обязательное поле'),
 	is_active: Yup.string().required('Обязательное поле'),
+	bid_visibility: Yup.string(),
 })
 export const SelectModalUserSchema = Yup.object().shape({
 	users: Yup.string().required('Выберите пользователя')

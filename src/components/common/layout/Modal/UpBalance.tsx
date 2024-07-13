@@ -85,9 +85,9 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
                         <DList
                             label={'Зачислил'}
                             title={
-                                store.userStore.myProfileData.user.first_name +
+                                store.userStore.myProfileData.user.last_name +
                                 ' ' +
-                                store.userStore.myProfileData.user.last_name
+                                store.userStore.myProfileData.user.first_name
                             }
                         />
                         </div>

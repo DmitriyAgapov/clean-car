@@ -17,7 +17,19 @@ interface Image {
   src: string
 }
 
-
+export enum UserPermissionVariants {
+  "profile" = "Управление пользователями",
+  "companies" = "Компании",
+  "filials"  = "Управление филиалами",
+  "users"  = "Управление пользователями",
+  "groups"  = "Управление пользователями",
+  "cars"  = "Управление автомобилями",
+  "bids"  = "Управление заявками",
+  "price"  = "Управление прайс-листом",
+  "limits"  = "Управление лимитами",
+  "references"  = "Управление справочниками",
+  "finance"  = "Финансовый блок",
+}
 export enum UserTypeEnum {
   admin = 'admin',
   customer = "customer",

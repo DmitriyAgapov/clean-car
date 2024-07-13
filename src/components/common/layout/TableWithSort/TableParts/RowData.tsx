@@ -15,6 +15,7 @@ import { NumberFormatter } from '@mantine/core'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { useLocalStore } from 'stores/localStore'
 import bid from "routes/bids/bid";
+import { useStore } from "stores/store";
 
 function Cell(props: any) {
 
@@ -33,7 +34,7 @@ function Cell(props: any) {
 }
 
 const RowData = observer((props: any) => {
-
+    const store = useStore()
     const navigate = useNavigate()
     const location = useLocation()
     const localStore = useLocalStore()
@@ -62,7 +63,10 @@ const RowData = observer((props: any) => {
     }, [])
 
     const handleClick = React.useCallback(() => {
-
+        const isFinance = location.pathname.includes('/account/finance/report')
+        const locationIsRoot = location.pathname === '/account/finance/report'
+        const locationIsCompanyWithChild = props.has_child
+        console.log('locationIsCompanyWithChild', locationIsCompanyWithChild, location.pathname);
         if (props.query && props.query.rootRoute) {
             return navigate(props.query.rootRoute)
         }
@@ -70,22 +74,35 @@ const RowData = observer((props: any) => {
             props.style === PanelRouteStyle.financeId
                 ? `/account/finance/report/${props.id}`
                 : location.pathname + queryCompanyType + querys() + `/${props.id}`
-
-        props.id ? navigate(route, { state: { ...searchParams } }) : void null
+        if(isFinance) {
+            if (locationIsRoot) {
+                props.id ? navigate(route, { state: { ...searchParams } }) : void null
+            } else if (locationIsCompanyWithChild && store.appStore.appType === "admin") {
+                props.id && props.has_child ? navigate(route, { state: { ...searchParams } }) : void null
+            }
+        } else {
+            props.id ? navigate(route, { state: { ...searchParams } }) : void null
+        }
+        // props.id ? navigate(route, { state: { ...searchParams } }) : void null
     }, [])
 
     const propsRender = React.useMemo(() => {
         const ar = []
 
         for (const key in props) {
-            if (key == 'bid' || typeof props[key] !== 'object') {
-                if (props[key] === 'Активна' ||  key !== "view" && props[key] === true) {
+
+            if (key == 'bid'  || typeof props[key] !== 'object') {
+                if (key === "has_child") {
+
+                } else if (props[key] === 'Активна' ||  key !== "view" && props[key] === true) {
+
                     ar.push(
                         <Cell key={key} view={props.view} data-label={label(key)}  className={styles.tableCell}>
                             <Chips state={true} />
                         </Cell>,
                     )
-                } else if (props[key] === 'Неактивна' || props[key] === false) {
+                } else if (props[key] === 'Неактивна' ||  key !== "has_child" && props[key] === false) {
+                    console.log(key);
                     ar.push(
                         <Cell key={key} view={props.view} data-label={label(key)} className={styles.tableCell}>
                             <Chips state={false} />

@@ -176,7 +176,7 @@ const MyProfilePage = () => {
             </>
           }>
           <DList label={'Пользователь'}
-            title={user.first_name + ' ' + user.last_name} />
+            title={user.last_name + ' ' + user.first_name} />
           <DList label={'Номер телефона'}
             title={user.phone} />
           <DList label={'E-mail'}
