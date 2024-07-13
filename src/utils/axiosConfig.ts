@@ -32,9 +32,9 @@ axios.interceptors.response.use(
     (response) => response,
     async (error) => {
         const config = await error.config
-        if(error.code === "ERR_NETWORK") {
+        if(error.code === "ERR_NETWORK" || error.code === "ECONNABORTED") {
          appStore.setNetWorkStatus(false)
-        } else if(!appStore.networkStatus && error.code !== "ERR_NETWORK") {
+        } else if(!appStore.networkStatus && (error.code !== "ERR_NETWORK" || error.code === "ECONNABORTED")) {
          appStore.setNetWorkStatus(true)
         }
         // console.log('/token/refresh/', config.url.includes('/token/refresh/'));

@@ -81,15 +81,14 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
       )
   const exceptions = ['policy', '404', 'restore', 'register', 'support' ]
   const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
-  const _path = loc.pathname.split('/')[2].toString()
+  const _path = loc.pathname.split('/')[2]
   // @ts-ignore
-  const _permissionName = UserPermissionVariants[_path]
-  console.log(store.userStore.getUserCan(_permissionName, "read"));
+  const _permissionName = _path ? UserPermissionVariants[_path.toString()] : false
   // @ts-ignore
   if(!store.appStore.token && loc.pathname !== "/" && !isInException(loc.pathname)) {
     return (<Navigate to={'/'}/>)
   }
-  if(_permissionName) {
+  if(_permissionName && !isInException(loc.pathname)) {
     if(!store.userStore.getUserCan(_permissionName, "read")) return <Navigate to={'/account/profile'}/>
   }
   return (
