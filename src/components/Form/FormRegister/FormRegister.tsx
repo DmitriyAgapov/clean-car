@@ -24,7 +24,8 @@ const FormRegister = () => {
     mask: "+7 000 000 00 00",
     autofix: true,
     // overwrite: true,
-    prepare: (appended: string | any[], masked: { value: string }) => {
+    skipInvalid: false,
+    prepare: (appended, masked) => {
       if (appended[0] === '8' && masked.value === "") {
         return appended.slice(1);
       }
@@ -90,6 +91,8 @@ const FormRegister = () => {
     //   // store.authStore.register()
     // }
   }, [form.values])
+
+
   return (
     <form className={'grid gap-y-2'} onSubmit={handleSubmit}>
       <Box className="tablet:flex gap-x-2">
@@ -99,7 +102,11 @@ const FormRegister = () => {
       <Box className="tablet:flex gap-x-2"> <
         // @ts-ignore
         InputBase
-        {...form.getInputProps('phone')} label={'Телефон'} component={IMaskInput}{...masked} placeholder='+7 000 000 0000'
+        {...form.getInputProps('phone')} label={'Телефон'} component={IMaskInput}{...masked} placeholder='+7 000 000 0000' onPaste={(e) => {
+        const numb = e.clipboardData.getData('Text');
+        form.setFieldValue('phone', numb)
+        return e
+      }}
       />
       <TextInput label={'E-mail'} {...form.getInputProps('email')} />
       </Box>

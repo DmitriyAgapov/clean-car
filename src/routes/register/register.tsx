@@ -7,20 +7,10 @@ import FormRegister from 'components/Form/FormRegister/FormRegister'
 
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-
-import { useStore } from 'stores/store'
 import Image from 'components/common/ui/Image/Image'
 import imageBg from '../../assets/images/bg/welcomebg.png'
-import { CarClasses } from 'components/common/layout/Modal/CarClasses'
-import { useDisclosure } from '@mantine/hooks'
-import { RegisterSuccess } from "components/common/layout/Modal/RegisterSuccess";
 
 export default function RegisterPage() {
-  const store = useStore()
-
-  useEffect(() => {
-    store.appStore.setAppRouteName('.регистрация')
-  })
   return (
     <Layout
       className={'page-intro'}
