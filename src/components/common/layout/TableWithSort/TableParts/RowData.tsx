@@ -303,7 +303,7 @@ const RowData = observer((props: any) => {
     const { width } = useViewportSize()
     const [open, setOpen] = useState(false)
     const rowPart = React.useMemo(() => {
-
+        console.log(props);
         const res: any[] = []
         if (width && width < 745)
             res.push(
@@ -311,7 +311,7 @@ const RowData = observer((props: any) => {
                     <SvgChevron onClick={() => setOpen((prevState) => !prevState)} />
                 </Cell>,
             )
-        if (width && width < 745 && props?.attributes && props?.attributes?.has_child !== false)
+        if (width && width < 745 && props.style !== "financeId" && props.style !== "financeByTypeServiceId"   || width && width < 745 && props.style == "financeId" && props?.attributes && props?.attributes?.has_child !== false )
             res.push(
                 <Cell view={props.view} data-position='button-mobile'>
                     <Button

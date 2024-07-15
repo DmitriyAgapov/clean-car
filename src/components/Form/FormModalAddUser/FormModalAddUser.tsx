@@ -146,6 +146,12 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                     { label: 'Неактивен', value: 'false' },
                 ]}
             />
+          <Select
+            {...form.getInputProps('bid_visibility')}
+            className={"col-span-full"}
+            label={"Пользователь видит заявки:"}
+            data={[{label: "Все", value: 'true'}, {label:'Свои', value: "false"}]}
+          />
             <footer className={'pt-12 col-span-full'}>
                 <Button
                     text={'Отменить'}
@@ -159,14 +165,13 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
                     action={async () => {
                         await store.usersStore
                             .createUser(company_id, { ...form.values, phone: form.values.phone.replaceAll(' ', ''), is_active: form.values.is_active === "true", bid_visibility: form.values.bid_visibility === "true" })
-                            .then((res) => res)
                             .then((res) => {
 
                             if (res.status === 201) {
                               store.usersStore.getUsers(company_id).then(() => {
-                                console.log(res);
+                                // console.log(res);
                                 if(res.data.id) {
-                                  console.log(res.data.id);
+                                  // console.log(res.data.id);
                                   store.usersStore.addToSelectedUsers(res.data.id)
 
                                 }

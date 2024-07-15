@@ -135,7 +135,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             }
             if (payload.field === 'company_name') {
                 return {
-                    className: `mb-2  col-span-3  !flex-[1_1_64%]`,
+                    className: `mb-2  col-span-3  ${formData.values.type === CompanyType.customer ? " !flex-[1_1_30%]" : " !flex-[1_1_64%]"}`,
                 }
             }
 
@@ -362,7 +362,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             data={filialsCompanyData}
                         />
                         <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
-                        <TextInput label={'Название филиала'} {...formData.getInputProps('company_name')} />
+                        <TextInput label={'Название филиала'} {...formData.getInputProps('company_name')}  />
                         {formData.values.type === CompanyType.performer && (
                           <InputBase
                             component={IMaskInput}

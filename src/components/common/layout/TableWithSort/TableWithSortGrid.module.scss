@@ -417,7 +417,9 @@
 		  &[data-label="total_amount"] {
 			grid-row: 1/2;
 			background: transparent;
-			grid-column: -3/-1  !important;
+			justify-content: end !important;
+			text-align: right;
+			grid-column: -4/-1  !important;
 			padding-left: 0 !important;
 			height: initial !important;
 			&:before {

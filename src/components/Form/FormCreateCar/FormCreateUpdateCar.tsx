@@ -182,6 +182,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     const formDataSelectUsers = React.useMemo(() => {
         return store.usersStore.usersList.users.map((item:any) => ({label: item.employee.last_name + ' ' + item.employee.first_name, value: String(item.employee.id)}))
     },[store.usersStore.companyUsers]);
+
     const createCarApi = React.useCallback(() => {
       const data = {
         id: form.values.id,
@@ -508,7 +509,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                                         <Button
                                             text={'Добавить сотрудника'}
                                             size={ButtonSizeType.sm}
-                                            variant={ButtonVariant.accent}
+                                            // variant={ButtonVariant.accent}
                                             directory={ButtonDirectory.directory}
                                             action={async () => {
                                                 store.appStore.setModal({
@@ -539,7 +540,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                                 <Button
                                     text={'Выбрать сотрудника'}
                                     size={ButtonSizeType.sm}
-                                    variant={ButtonVariant.accent}
+                                    // variant={ButtonVariant.accent}
                                     directory={ButtonDirectory.directory}
                                     action={() => {
                                         store.appStore.setModal({

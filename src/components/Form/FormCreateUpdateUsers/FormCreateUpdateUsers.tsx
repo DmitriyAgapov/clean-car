@@ -296,7 +296,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         }}
                         {...form.getInputProps('type')}
                         defaultValue={form.values.type}
-                        data={Object.entries(UserTypeEnum).map((item: any) => ({
+                        data={Object.entries(UserTypeEnum).filter((item:string[]) => item[0] !== UserTypeEnum.fizlico).map((item: any) => ({
                             label: label(item[0]),
                             value: item[1],
                         }))}
@@ -366,7 +366,6 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         ]}
                     />
 	                <Select
-
 		                {...form.getInputProps('bid_visibility')}
 		                label="Пользователь видит заявки:"
 		                data={[{label: "Все", value: 'true'}, {label:'Свои', value: "false"}]}

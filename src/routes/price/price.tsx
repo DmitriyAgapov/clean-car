@@ -150,7 +150,7 @@ const PricePage = ():JSX.Element => {
             </div>
             <div className={'flex  mobile:flex-wrap  items-baseline  gap-6'}>
               <div className={'text-xs text-gray-2'}>
-                Дата и время регистрации: <span>{dateTransformShort(company.updated).date}</span>
+                Дата и время регистрации: <span>{dayjs(company.updated).format('DD.MM.YY hh:mm')}</span>
               </div>
               <div className={'flex flex-1 gap-6'}>
                 {isCreate && isCreate.is_active && <Heading className={'!m-0'}
