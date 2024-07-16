@@ -88,7 +88,8 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   if(!store.appStore.token && loc.pathname !== "/" && !isInException(loc.pathname)) {
     return (<Navigate to={'/'}/>)
   }
-  if(_permissionName && !isInException(loc.pathname)) {
+  if(_permissionName && !isInException(loc.pathname.split("/").slice(0,3).join('/'))) {
+    console.log(_permissionName && !isInException(loc.pathname), _permissionName);
     if(!store.userStore.getUserCan(_permissionName, "read")) return <Navigate to={'/account/profile'}/>
   }
   return (

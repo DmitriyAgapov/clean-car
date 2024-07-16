@@ -141,11 +141,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             onValuesChange: (values, previous) => console.log(values),
             validate: yupResolver(CreateCompanySchema),
             enhanceGetInputProps: (payload) => {
-            // if (payload.field === 'working_time') {
-            //     return {
-            //         // className: 'mb-2 w-full  col-span-3',
-            //     }
-            // }
+
             // if (payload.field === 'service_percent') {
             //     return {
             //         // className: 'mb-2   col-span-3'
@@ -168,9 +164,29 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             // }
             if (payload.field === 'address') {
                 return {
+                    disabled: store.appStore.appType !== "admin",
                     className: 'mb-2 w-full desktop:!flex-[1_0_64%] col-span-3',
                 }
             }
+            if (payload.field === 'contacts') {
+                return {
+                    disabled: false,
+                    className: 'mb-2 w-full desktop:!flex-[1_0_64%] col-span-3',
+                }
+            }
+            if (payload.field === 'working_time') {
+                return {
+                    disabled: false,
+                    className: 'mb-2 w-full !flex-[1_1_30%] col-span-3',
+                }
+            }
+             if (payload.field === 'workload') {
+                return {
+                    disabled: false,
+                    className: 'mb-2 w-full !flex-[1_1_30%] col-span-3',
+                }
+            }
+
             // if (payload.field === 'inn') {
             //     return {
             //         // className: 'mb-2 w-full col-span-3',
@@ -185,6 +201,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
 
 
             return {
+                disabled: store.appStore.appType !== "admin",
                 className: 'mb-2 w-full !flex-[1_1_30%] col-span-3',
             }
         },
@@ -473,7 +490,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             />
                         )}
 
-                        {formData.values.type === CompanyType.performer && (
+                        {formData.values.type === CompanyType.performer && store.appStore.appType === "admin" &&(
                             <NumberInput
                                 type={'text'}
                                 label={'Процент сервиса'}

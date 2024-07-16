@@ -129,6 +129,7 @@ export function InputAutocompleteNew(props:any) {
 
           withinPortal={false}
           store={combobox}
+
       >
           <Combobox.Target>
             <div   {...props}>
@@ -140,7 +141,7 @@ export function InputAutocompleteNew(props:any) {
                  {'Адрес'}
                   <TextInput
                       ref={ref}
-                      disabled={!values.city}
+                      disabled={props.disabled || !values.city}
                       {...props.ctx.getInputProps('address')}
                       placeholder='Введите адрес'
                       value={value}

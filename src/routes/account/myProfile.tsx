@@ -3,7 +3,6 @@ import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import { observer } from "mobx-react-lite";
-import { useLocation, useNavigate } from "react-router-dom";
 import React from "react";
 import DList from "components/common/ui/DList/DList";
 import { CompanyType } from "stores/companyStore";
@@ -61,6 +60,7 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
         store.userStore.loadMyProfile().then(() => action(false))
       }
   }, [form.values])
+  const avatar = store.userStore.userData.avatar;
   return (
     <Panel
       footerClassName={
@@ -73,13 +73,13 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
       headerClassName={'flex gap-10'}
       header={
         <>
-          <div className={'w-24 h-24 flex rounded-full mr-2'}
-            style={{ background: 'var(--gradient-directory)' }}
-            data-app-type={'admin'}>
-              <span className={'text-black font-sans uppercase text-3xl leading-none m-auto'}>
+          <div className={'flex rounded-full mr-2 user__photo'}
+            // style={{ background: 'var(--gradient-directory)' }}
+            data-app-type={store.appStore.appType !== "admin" ? (company?.company_type === CompanyType.customer || company?.company_type === CompanyType.fizlico) ? 'customer' : company?.company_type === CompanyType.performer ? 'performer' : "admin" : "admin"}>
+            {!avatar ? <span className={'text-black font-sans uppercase text-3xl leading-none m-auto w-24 h-24 flex items-center justify-center'}>
                 {user.first_name[0]}
-                {user.last_name[0]}
-              </span>
+              {user.last_name[0]}
+              </span>: <Image src={avatar} alt={''} width={98} height={98} className={'rounded-full aspect-square'} data-directory={store.appStore.appType}/>}
           </div>
           <DList label={'Дата и время регистрации'}
             title={'08.10.23 07:14'} />
@@ -147,9 +147,8 @@ const MyProfilePage = () => {
   const store = useStore()
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
   const [edit, setEdit] = React.useState(false)
+  const avatar = store.userStore.userData.avatar;
   const userData = React.useMemo(() => {
-    const avatar = store.userStore.myProfileData.user.avatar;
-
     if(user) {
       if(edit) {
         return <UserProfileEditForm action={(val) => setEdit(val)}/>
@@ -206,7 +205,7 @@ const MyProfilePage = () => {
       )
     }
       return null
-  }, [user, edit])
+  }, [user, edit, avatar])
 
     return (
       <Section type={SectionType.default} >

@@ -5,8 +5,6 @@ import styles from './Modal.module.scss'
 import { SvgClose } from 'components/common/ui/Icon'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import agent from 'utils/agent'
-import DList from 'components/common/ui/DList/DList'
 import { useForm } from '@mantine/form'
 import { useSWRConfig } from 'swr'
 import ImageCrop from "components/common/ui/Image/ImageCrop";
@@ -64,11 +62,12 @@ export function UploadUserPhoto({opened, onClose, id} :  UpBalanceParams) {
 
                         text={'Сохранить'}
                         action={async () => {
-                          store.userStore.upLoadImage()
-                            // return agent.Balance.upBalance(id, Number(formData.values.purpose), Number(formData.values.amount)).then((r) => {
-                            //         r.data.status === "success" && mutate(`company_${id}`).then(onClose)
-                            //     }
-                            // )
+                           store.userStore.upLoadImage()
+                              .then((r:any) => {
+                                if(r.status === 200) {
+                                  store.userStore.myProfileData.image = null
+                                  store.userStore.loadMyProfile().then(onClose)
+                           }})
                         }}
                         variant={ButtonVariant['accent-outline']}
                     />

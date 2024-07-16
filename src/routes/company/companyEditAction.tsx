@@ -16,6 +16,7 @@ import { useDidUpdate } from "@mantine/hooks";
 
 export default function CompanyPageEditAction() {
   const store = useStore()
+  if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
   const navigate = useNavigate()
   const params = useParams()
   const {isLoading, data:loaderData, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
@@ -30,7 +31,6 @@ export default function CompanyPageEditAction() {
     [location.pathname]
   );
 
-  if(!store.userStore.getUserCan(PermissionNames["Компании"], 'update')) return <Navigate to={'/account'}/>
   if(isLoading && !loaderData) return <Loader/>
   return (
     <Section type={SectionType.default}>
