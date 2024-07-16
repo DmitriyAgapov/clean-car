@@ -87,8 +87,8 @@ export const CreateCompanySchema = Yup.object().shape({
 		}
 	}),
 	legal_address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
-	inn: Yup.string().length(10, 'Длина ИНН должна быть 10 символов').required('Обязательное поле'),
-	ogrn: Yup.string().length(13, 'Длина ОГРН должна быть 13 символов').required('Обязательное поле'),
+	inn: Yup.string().required('Обязательное поле').length(10, 'Длина ИНН должна быть 10 символов').matches(/^[^0].*/,  { message: 'Не может начинаться с 0', excludeEmptyString: true }),
+	ogrn: Yup.string().required('Обязательное поле').length(13, 'Длина ОГРН должна быть 13 символов').matches(/^[^0].*/,  { message: 'Не может начинаться с 0', excludeEmptyString: true }),
 	contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
 	city: Yup.string().required('Обязательное поле'),
 	type: Yup.string(),

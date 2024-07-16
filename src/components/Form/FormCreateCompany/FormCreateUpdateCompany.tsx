@@ -10,7 +10,6 @@ import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useNavigate } from 'react-router-dom'
 import { type Company, CompanyType, Payment } from "stores/companyStore";
 import PanelForForms, { PanelColor} from 'components/common/layout/Panel/PanelForForms'
-
 import { PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import {  values as val } from "mobx";
