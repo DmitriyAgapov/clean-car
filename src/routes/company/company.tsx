@@ -92,7 +92,7 @@ const CompanyPage = () => {
 
           <Panel
               state={isLoading}
-              className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-3'}
+              className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-3 desktop-max:pb-12'}
               variant={PanelVariant.textPadding}
               background={PanelColor.glass}
               bodyClassName={''}

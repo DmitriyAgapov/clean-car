@@ -544,7 +544,7 @@ export class CompanyStore {
                 const response = yield agent.Companies.createCompanyPerformers(data, 'performer')
 
                 if (response.status > 199 && response.status < 299) {
-                    this.loadCompanyWithTypeAndId('performer', response.data.id)
+                    // this.loadCompanyWithTypeAndId('performer', response.data.id)
                     return response.data
                 }
                 return response.response
@@ -553,7 +553,7 @@ export class CompanyStore {
                 // @ts-ignore
                 const response = yield agent.Companies.createCompanyCustomer(data, 'customer')
                 if (response.status > 199 && response.status < 299) {
-                    this.loadCompanyWithTypeAndId('customer', response.data.id)
+                    // this.loadCompanyWithTypeAndId('customer', response.data.id)
                     return response.data
                 }
                 return response.response
@@ -566,7 +566,7 @@ export class CompanyStore {
         } finally {
             this.loadingCompanies = false
         }
-        this.hydrateStore()
+        // this.hydrateStore()
     })
 
     getFilials = flow(function* (this: CompanyStore) {

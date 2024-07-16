@@ -112,7 +112,7 @@ const UserPage = () => {
       />
       <Panel
         state={isLoading}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto] tablet-max:-mx-6'}
+        className={'col-span-full grid grid-rows-[auto_1fr_auto] tablet-max:-mx-6  desktop-max:pb-12'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
         bodyClassName={'desktop:pl-44 desktop:grid flex flex-col desktop:grid-cols-2 items-start content-start desktop:gap-8 gap-4'}

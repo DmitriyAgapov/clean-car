@@ -155,7 +155,7 @@ const MyProfilePage = () => {
       }
       return (
         <Panel state={store.usersStore.loadingUsers}
-          className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
+          className={'col-span-full grid grid-rows-[auto_1fr_auto]  desktop-max:pb-12'}
           variant={PanelVariant.textPadding}
           background={PanelColor.glass}
           bodyClassName={'tablet:!pl-44 grid grid-cols-2 items-start content-start gap-8 tablet-max:grid-cols-1 tablet-max:pb-8'}

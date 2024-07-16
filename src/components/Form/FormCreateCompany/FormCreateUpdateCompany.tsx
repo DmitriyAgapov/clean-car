@@ -234,9 +234,11 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             if(edit) {
                 store.companyStore.editCompany(data, CompanyType.performer, values.id).then((r) => {
                   navigate(`/account/companies/performer/${values.id}`)
-                }).catch((e) => {
-                    console.log('error');
-                }).finally(() => store.companyStore.loadCompanies())
+                })
+                // .catch((e) => {
+                //     console.log('error');
+                // })
+                // .finally(() => store.companyStore.loadCompanies())
             } else {
                 store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
                     if(r.status > 299) {}
@@ -244,9 +246,10 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         formData.setFieldValue('id', r.id)
                         navigate('/account/companies')
                     }
-                }).catch((e) => {
-                    console.log('error');
-                }).finally(() => store.companyStore.loadCompanies())
+                })
+                // .catch((e) => {
+                //     console.log('error');
+                // }).finally(() => store.companyStore.loadCompanies())
             }
         }
         if (values.type === CompanyType.customer) {
@@ -270,17 +273,20 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                 },
             }
             if(edit) {
-                store.companyStore.editCompany(data, CompanyType.customer, values.id).then((r) => {
+                store.companyStore.editCompany(data, CompanyType.customer, values.id)
+                .then((r) => {
                     !r.status ? navigate(`/account/companies/customer/${values.id}`) : 'Ошибка'
-                }).finally(() => store.companyStore.loadCompanies())
+                })
+                // .finally(() => store.companyStore.loadCompanies())
             } else {
                 store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
                     values.id = r.id
                     navigate('/account/companies')
-                }).finally(() => store.companyStore.loadCompanies())
+                })
+                // .finally(() => store.companyStore.loadCompanies())
             }
         }
-        store.companyStore.loadCompanies()
+        // store.companyStore.loadCompanies()
         mutate(`/account/companies/${values.company_type}/${values.company_id}`).then(r => console.log(`/account/companies/${values.company_type}/${values.id}/retrieve/`, r))
     }, [])
     // @ts-ignore
