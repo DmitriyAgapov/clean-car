@@ -367,7 +367,7 @@ const Profile = {
 }
 const Catalog = {
     getCarBrands: (params?: PaginationProps) => requests.get('/catalog/car_brands', params),
-    getCarModelWithBrand: (id: number) => requests.get(`/catalog/car_models/${id}/retrieve`),
+    getCarModelWithBrand: (id: string | number) => requests.get(`/catalog/car_models/${id}/retrieve`),
     getCarModelWithBrandNew: (id:string) =>  useSWR(`/catalog/car_models/${id}/retrieve`, (url) => requests.getNew(url).then(r => r.data)),
     createCarBrandWithNewBrand: (brand_name: string, car_class: string, model: string) =>
         requests.post('/catalog/car_models/create_with_new_brand/', {

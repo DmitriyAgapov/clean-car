@@ -349,6 +349,18 @@ export class CatalogStore {
 
         }
     })
+    async updateCarBrandNew({ id, car_type, model, brandId, brandName, }:{ id:number, car_type: string, model: string, brandId?: number | undefined | null, brandName?: string | undefined | null },) {
+
+        if (brandId) {
+            return  agent.Catalog.updateCarBrandWithExistBrand(id, brandId, car_type, model)
+
+        }
+        if(brandName){
+            return  agent.Catalog.updateCarBrandWithNewBrand(id,brandName, car_type, model)
+
+
+        }
+    }
     get carBrandsCurrent() {
         return values(this.carBrands)
     }

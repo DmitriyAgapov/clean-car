@@ -71,6 +71,7 @@ import RestorePasswordNew from "routes/restore/restorePasswordNew";
 import FinaceByTypePage from "routes/finance/financeByType";
 import FinanceByTypeAndTypeId from "routes/finance/financeByTypeAndTypeId";
 import FinanceByTypeAndTypeIdAndCompany from "routes/finance/financeByTypeAndTypeIdAndCompany";
+import ReferenceCarPageUpdate from "routes/reference/Cars/referenceCarPageUpdate";
 
 const router = createBrowserRouter([
     {
@@ -319,23 +320,26 @@ const router = createBrowserRouter([
                         element: <RefCarsPage />,
                         // loader: referencesLoader,
                         children: [
+
                             {
                                 path: ':id',
+                                id: "car_id",
                                 element: <ReferenceCarPage />,
                                 // loader: referencesLoader,
                                 children: [
                                     {
                                         path: 'edit',
-                                        element: <ReferenceCarPageCreate edit={true}/>,
+                                        element: <ReferenceCarPageUpdate/>,
                                         // loader: referencesLoader,
                                     },
                                 ],
                             },
-                            {
-                                path: 'create',
-                                element: <ReferenceCarPageCreate  edit={false}/>
-                            }
+
                         ],
+                    },
+                    {
+                        path: 'car_brands/create',
+                        element: <ReferenceCarPageCreate/>
                     },
                     {
                         path: 'cities',

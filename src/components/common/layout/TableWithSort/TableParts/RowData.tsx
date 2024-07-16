@@ -14,23 +14,24 @@ import { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
 import { NumberFormatter } from '@mantine/core'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { useLocalStore } from 'stores/localStore'
-import bid from "routes/bids/bid";
 import { useStore } from "stores/store";
 
 function Cell(props: any) {
 
     if (props.view) {
         return (
-            <div data-label={label(props.key)} data-panel={'cell'} className={styles.tableCell} {...props}>
+            <div data-panel={'cell'} className={styles.tableCell} {...props}>
                 {props.children}
             </div>
         )
+    } else {
+        return (
+          <td
+            className={styles.tableCell} {...props}>
+              {props.children}
+          </td>
+        )
     }
-    return (
-        <td data-label={label(props.key)} className={styles.tableCell} {...props}>
-            {props.children}
-        </td>
-    )
 }
 
 const RowData = observer((props: any) => {

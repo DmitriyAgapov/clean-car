@@ -103,7 +103,7 @@ const UserPortal = ({
 }): any => {
     const store = useStore()
     const navigate = useNavigate()
-    const avatar = store.userStore.myProfileData.user.avatar
+    const avatar = store.userStore.userData?.avatar
     if (state)
         return (
             <Panel

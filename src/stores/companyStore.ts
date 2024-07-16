@@ -354,8 +354,8 @@ export class CompanyStore {
             if (appStore.appType && appStore.appType !== UserTypeEnum.admin) {
                 console.log('is not admin')
                 type = appStore.appType
-                const { id, company_type } = yield userStore.currentUser.company
-                newid = id ? id : userStore.currentUser.company?.id
+                const { id, company_type } = yield userStore.myProfileData.company
+                newid = id ? id : userStore.myProfileData.company?.id
             } else {
                 newid = company_id
             }

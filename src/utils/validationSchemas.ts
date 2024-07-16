@@ -135,8 +135,15 @@ export const CreateFilialSchema = Yup.object().shape({
 	})
 })
 export const CreateCarBrandSchema = Yup.object().shape({
-	brandId: Yup.string().required('Нужна модель'),
-	brand: Yup.string().required('Нужна модель'),
+	brandId: Yup.string().when('brand',  (brand, schema) => {
+		console.log(brand, schema);
+		if(brand[0]) {
+			return schema.nullable()
+		} else {
+			return schema.required('Нужна модель')
+		}
+	}),
+	brand: Yup.string().nullable(),
 	modelName: Yup.string().required('Нужна модель'),
 	car_type: Yup.string().required('Выберите тип'),
 })

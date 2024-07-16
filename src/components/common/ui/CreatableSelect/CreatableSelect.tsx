@@ -63,6 +63,7 @@ export function SelectCreatable({ items, createAction, defaultValue,  label, ...
 						combobox.openDropdown();
 						combobox.updateSelectedOptionIndex();
 						setSearch(event.currentTarget.value);
+						setFieldValue('brand', event.target.value)
 					}}
 					onClick={() => combobox.openDropdown()}
 					onFocus={() => combobox.openDropdown()}
