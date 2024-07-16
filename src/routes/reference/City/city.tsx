@@ -10,10 +10,8 @@ import { PermissionNames } from "stores/permissionStore";
 import DList from "components/common/ui/DList/DList";
 import label from "utils/labels";
 import agent from "utils/agent";
-import { Loader } from "@mantine/core";
 import { textDataCities } from "routes/reference/City/cities";
 import useSWR from "swr";
-import { observer } from "mobx-react-lite";
 import { useDidUpdate } from "@mantine/hooks";
 
 const ReferenceCityPage = ():JSX.Element => {
@@ -32,7 +30,6 @@ const ReferenceCityPage = ():JSX.Element => {
     },
     [location.pathname]
   );
-  console.log(data,'car');
   const items = React.useMemo(() => {
 
     let itemsAr: JSX.Element[] = []
@@ -74,13 +71,20 @@ const ReferenceCityPage = ():JSX.Element => {
 
   return (
     <Section type={SectionType.default}>
-      <Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between'}
-        state={isLoading}
+      <Panel           className={'col-span-full'}
+        headerClassName={'flex justify-between flex-wrap items-end'}
         header={<>
           <div>
-            <Button text={<><SvgBackArrow />{textDataCities.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
-            <Heading text={textDataCities.referenceTitle} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
+            <Button text={<><SvgBackArrow />{textDataCities.createPageBack}</>}  className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'} action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />
+            <Heading text={textDataCities.referenceTitle} variant={HeadingVariant.h1}      className={'!mb-0 inline-block flex-1'} color={HeadingColor.accent} />
           </div>
+          {store.userStore.getUserCan(PermissionNames["Управление справочниками"], 'update') && <Button
+            text={'Редактировать'}
+            size={ButtonSizeType.sm}
+            action={() => navigate(`${location.pathname}/edit`)}
+            className={'inline-flex ml-auto mobile:mt-auto'}
+
+          />}
         </>}>
       </Panel>
       <Panel
@@ -90,12 +94,7 @@ const ReferenceCityPage = ():JSX.Element => {
         background={PanelColor.glass}
         bodyClassName={'desktop:pl-44 desktop:grid flex flex-col desktop:grid-cols-2 items-start content-start desktop:gap-8 gap-4'}
         headerClassName={'flex desktop:gap-10 gap-4'}
-        footer={store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
-          text={'Редактировать'}
-          action={() => navigate(location.pathname + '/edit')}
-          className={'justify-self-end ml-auto  tablet-max:!flex'}
-          variant={ButtonVariant.default}
-        />}
+
         header={
           <>
             <div
@@ -109,12 +108,6 @@ const ReferenceCityPage = ():JSX.Element => {
               </span>
             </div>
 
-            {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update') && <Button
-              text={'Редактировать'}
-              action={() => navigate(location.pathname + '/edit')}
-              className={'justify-self-end ml-auto  tablet-max:!hidden'}
-              variant={ButtonVariant.default}
-            />}
           </>
         }
       >

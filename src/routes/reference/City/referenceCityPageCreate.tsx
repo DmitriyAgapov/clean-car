@@ -26,7 +26,8 @@ function ReferenceCityPageCreate(props: any) {
   return (
     <Section type={SectionType.default}>
       <Panel variant={PanelVariant.withGapOnly}
-        headerClassName={'flex justify-between'}
+        className={'col-span-full'}
+        headerClassName={'tablet:flex justify-between flex-wrap'}
         header={<><div>
           <Button text={<>
           <SvgBackArrow />{textDataCities.createPageBack}</>} className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))} variant={ButtonVariant.text} />

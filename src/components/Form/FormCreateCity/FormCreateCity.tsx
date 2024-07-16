@@ -78,6 +78,7 @@ const FormCreateCity = (props: any) => {
   console.log(props);
   const {mutate} = useSWRConfig()
   return (
+
       <Formik  initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
         onSubmit={async (values, isSubmitting) => {
           console.log(values, 'values');
@@ -110,8 +111,8 @@ const FormCreateCity = (props: any) => {
           <Form  style={{display: 'contents'}}>
           <PanelForForms
             state={false}
-            className={'col-span-full grid grid-rows-[auto_1fr_auto]'}
-            variant={PanelVariant.textPadding}
+            className={'col-span-full grid grid-rows-[auto_1fr_auto] self-stretch'}
+
             background={PanelColor.glass}
             footerClassName={'!block px-8 !pb-8 !pt-2 tablet-max:px-5 tablet-max:pb-24'}
             bodyClassName={'ablet:grid gap-6 tablet:grid-cols-3 items-start'}
