@@ -184,6 +184,7 @@ export class CompanyStore {
     allFilials:IObservableArray = [] as any
     companiesCustomer:IObservableArray<Companies> = [] as any
     companiesPerformers:IObservableArray<Companies> = [] as any
+    companyPerformersIsZeroLength: boolean = false
     customersCompany = new Map([])
     currentCustomersCompany = 0
     loadingCompanies: boolean = false
@@ -193,8 +194,8 @@ export class CompanyStore {
     fullCompanyData = new Map([])
     companiesAndFilials: IObservableArray<any> = observable.array([])
     get getCompaniesPerformers() {
-        if(this.companiesPerformers.length === 0) {
-            this.getPerformersCompany()
+        if(this.companiesPerformers.length === 0 && !this.companyPerformersIsZeroLength) {
+            this.getPerformersCompany().finally(() => this.companyPerformersIsZeroLength = true)
         }
         return this.companiesPerformers
     }
