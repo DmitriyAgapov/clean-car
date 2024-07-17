@@ -658,8 +658,7 @@ export class CompanyStore {
         return await agent.Companies.getListCompanyPerformer(params)
         .then((response:any) => response)
         .then((response:any) => response.data)
-        .then((data:any) => runInAction(() =>{
-
+        .then((data:any) => runInAction(() => {
             this.companiesPerformers = data.results
         }))
         .catch((errors:any) => this.errors = errors)

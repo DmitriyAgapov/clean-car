@@ -141,11 +141,11 @@ export function InputAutocompleteNew(props:any) {
                  {'Адрес'}
                   <TextInput
                       ref={ref}
-                      disabled={props.disabled || !values.city}
+
                       {...props.ctx.getInputProps('address')}
                       placeholder='Введите адрес'
                       value={value}
-
+                    disabled={props.disabled || !values.city}
                       onChange={(event: { currentTarget: { value: React.SetStateAction<string> } }) => {
                           values.address_ready = false
                           setValue(event.currentTarget.value)

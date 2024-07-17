@@ -33,12 +33,12 @@ interface InitValues {
     height: number | null
     house: string | null
     id: string | number
-    inn: string | number
+    inn: string
     workload: string
     lat: string | number
     legal_address: string | null
     lon: string | number
-    ogrn: string | number
+    ogrn: string
     overdraft: string
     overdraft_sum: number
     payment: 'Постоплата' | 'Предоплата'
@@ -92,7 +92,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
 
     });
     const {width} = useViewportSize()
-    const [step, setStep] = useState(2)
+    const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
 
     const changeStep = (step?: number) => {
@@ -436,8 +436,9 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ctx={formData}
                         />
                         <NumberInput
-                            allowLeadingZeros
+                            allowLeadingZeros={true}
                             type={'text'}
+                            valueIsNumericString={true}
                             label={'ИНН'}
                             {...formData.getInputProps('inn')}
                             hideControls
@@ -445,9 +446,10 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             placeholder={'Введите ИНН'}
                         />
                         <NumberInput
-                            allowLeadingZeros
+                            allowLeadingZeros={true}
                             type={'text'}
                             label={'ОГРН'}
+                            valueIsNumericString={true}
                             {...formData.getInputProps('ogrn')}
                             hideControls
                             maxLength={13}
