@@ -92,7 +92,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
 
     });
     const {width} = useViewportSize()
-    const [step, setStep] = useState(1)
+    const [step, setStep] = useState(2)
     const [animate, setAnimate] = useState(false)
 
     const changeStep = (step?: number) => {
@@ -362,7 +362,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                 }
             >
                 <form
-                    onSubmit={formData.onSubmit(handleSubmit)}
+                    // onSubmit={formData.onSubmit(handleSubmit)}
                     onReset={formData.onReset}
                     style={{ display: 'contents' }}
                 >

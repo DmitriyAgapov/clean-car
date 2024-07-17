@@ -38,28 +38,28 @@ export function FormStep1(props: {
 
     useEffect(() => {
       const type = values.application_type === CompanyType.customer ? UserTypeEnum.customer : UserTypeEnum.performer
-      const getCompany = async () => {
+
         if(type === UserTypeEnum.customer) {
           if (values.company_filials == 'company') {
-            await store.companyStore.getCustomerCompany({name: searchString})
+             store.companyStore.getCustomerCompany({name: searchString})
           }
           if(values.company_filials == 'filials') {
-            await store.companyStore.getPerformersCompany({name: searchString})
+             store.companyStore.getPerformersCompany({name: searchString})
           }
           setCompanies(store.companyStore.companiesCustomer)
         } else if(type === UserTypeEnum.performer) {
           if (values.company_filials == 'company') {
-            await store.companyStore.getCustomerCompany({name: searchString})
+             store.companyStore.getCustomerCompany({name: searchString})
           }
           if(values.company_filials == 'filials') {
-            await store.companyStore.getPerformersCompany({name: searchString})
+             store.companyStore.getPerformersCompany({name: searchString})
           }
           setCompanies(store.companyStore.companiesPerformers)
         }
-      }
-      getCompany()
+
 
     }, [searchString, values.company_filials, values.type]);
+
     const handleChangeSearch = React.useCallback((e:any) => {
       setSearchString(e.currentTarget.value);
     }, [])
