@@ -882,7 +882,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                     formData.setTouched({ time: true })
                                     store.bidsStore.formResultSet({ time: timestamp })
                                 }}
-                                valueFormat='DD.MM.YYYY hh:mm'
+                                valueFormat='DD.MM.YYYY HH:mm'
                                 minDate={dayjs(new Date()).add(2, 'hours').toDate()}
                                 maxDate={dayjs(new Date()).add(2, 'hours').add(2, 'days').toDate()}
                                 label={step3.fields[4].label}
@@ -1002,7 +1002,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                         formData.setTouched({ time: true })
                                         store.bidsStore.formResultSet({ time: timestamp })
                                     }}
-                                    valueFormat='DD.MM.YYYY hh:mm'
+                                    valueFormat='DD.MM.YYYY HH:mm'
                                     minDate={dayjs(new Date()).add(2, 'hours').toDate()}
                                     maxDate={dayjs(new Date()).add(2, 'hours').add(2, 'days').toDate()}
                                     label={step3.fields[4].label}

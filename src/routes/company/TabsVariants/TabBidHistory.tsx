@@ -22,7 +22,7 @@ const TabBidHistory = ({companyId, company_type, state }:any) => {
 			...data,
 			results: data?.results?.map((item: any & {rootRoute?: string} ) => ({
 				// old_status: item.old_status ? item.old_status: " - ",
-				created_h: dayjs(item.created).format('DD-MM-YYYY hh:mm'),
+				created_h: dayjs(item.created).format('DD-MM-YYYY HH:mm'),
 				new_status: item.new_status ? item.new_status : " - ",
 				user: item.user ? item.user.last_name + " " + item.user.first_name : " - ",
 				additional_information: item.additional_information ? item.additional_information : " - ",
