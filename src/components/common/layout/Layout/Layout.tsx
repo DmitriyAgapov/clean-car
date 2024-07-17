@@ -89,8 +89,10 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
     return (<Navigate to={'/'}/>)
   }
   if(_permissionName && !isInException(loc.pathname.split("/").slice(0,3).join('/'))) {
-    console.log(_permissionName && !isInException(loc.pathname), _permissionName);
     if(!store.userStore.getUserCan(_permissionName, "read")) return <Navigate to={'/account/profile'}/>
+    if(!store.userStore.getUserCan("Управление пользователями", "read")) {
+      store.authStore.logout()
+    }
   }
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>

@@ -33,7 +33,7 @@ const themeOverride = createTheme({
         Input: Input.extend({
             classNames: {
                 wrapper: "",
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 tablet-max:text-base',
             },
         }),
         Select: Select.extend({
@@ -45,9 +45,9 @@ const themeOverride = createTheme({
                 error: 'form-error block',
                 root: '*:data-[error=true]:text-error relative !mb-0 pb-4 wrapper-custom tablet-max:!flex-1',
                 wrapper: ' !mb-0 ',
-                input: ' bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                input: ' bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10  tablet-max:text-base',
                 dropdown: '!bg-white rounded-[0.625rem]',
-                option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent data-[checked=true]:text-accent focus:!bg-transparent focus:!text-accent',
+                option: 'tracking-input text-gray-2 hover:!bg-transparent hover:!text-accent data-[checked=true]:text-accent focus:!bg-transparent focus:!text-accent  tablet-max:text-base',
             }
         }),
         Combobox: Combobox.extend({
@@ -83,7 +83,7 @@ const themeOverride = createTheme({
                 error: 'form-error block',
                 root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
                 wrapper: ' !mb-0 ',
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10  tablet-max:text-base',
             }
         }),
         Modal: Modal.extend({
@@ -99,13 +99,13 @@ const themeOverride = createTheme({
                 error: 'form-error block',
                 root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
                 wrapper: ' !mb-0 ',
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10  tablet-max:text-base',
             }
         }),
         Textarea: Textarea.extend({
             classNames: {
                 label: 'font-semibold',
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] h-full min-h-[6rem] overflow-hidden border-color-[var(--formBorder)] h-10',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] h-full min-h-[6rem] overflow-hidden border-color-[var(--formBorder)] h-10  tablet-max:text-base',
             }
         }),
         PasswordInput: PasswordInput.extend({
@@ -114,7 +114,7 @@ const themeOverride = createTheme({
                 error: 'form-error block',
                 root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
                 wrapper: ' !mb-0 ',
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10  tablet-max:text-base',
                 visibilityToggle: 'text-gray-2'
             }
         }),
@@ -129,7 +129,7 @@ const themeOverride = createTheme({
         TimeInput: TimeInput.extend({
             classNames: {
 
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10  tablet-max:text-base',
             }
         }),
         Checkbox: Checkbox.extend({
@@ -155,7 +155,7 @@ const themeOverride = createTheme({
                 error: 'form-error block',
                 root: '*:data-[error=true]:text-error relative !mb-0 pb-4',
                 wrapper: ' !mb-0 ',
-                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10',
+                input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10  tablet-max:text-base',
             }
         }),
     },

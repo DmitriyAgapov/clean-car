@@ -16,8 +16,10 @@ import agent from 'utils/agent'
 import { useDisclosure } from "@mantine/hooks";
 import { UploadUserPhoto } from "components/common/layout/Modal/UploadUserPhoto";
 import Image from "components/common/ui/Image/Image";
+import { PermissionName } from "stores/permissionStore";
 
 const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }) => {
+
   const store = useStore()
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
   const masked = IMask.createMask({
@@ -61,6 +63,7 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
       }
   }, [form.values])
   const avatar = store.userStore.userData.avatar;
+
   return (
     <Panel
       footerClassName={
@@ -145,6 +148,7 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
 })
 const MyProfilePage = () => {
   const store = useStore()
+
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
   const [edit, setEdit] = React.useState(false)
   const avatar = store.userStore.userData.avatar;
