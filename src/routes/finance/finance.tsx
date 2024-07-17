@@ -49,7 +49,7 @@ const FinanceBottom = observer((props: { data: any, className?: string }) => {
                       </li>
                       <li className={"finance_part"}>
                           <ul>
-                              <li className={'finance_part__title'}>Заказчик</li>
+                              <li className={'finance_part__title'}>Клиент</li>
                               <li>{props.data?.total.total_customers.total_count}
                               </li>
                               <li>
@@ -182,7 +182,7 @@ const FinanceBottom = observer((props: { data: any, className?: string }) => {
               background={PanelColor.withSuffix}>
                 <ul className={"finance_total_headers col-span-2"}>
                     <li>
-                        <span data-directory={ButtonDirectory.customer}></span>Итог Заказчик
+                        <span data-directory={ButtonDirectory.customer}></span>Итог Клиент
                     </li>
                     <li>
                         <span data-directory={ButtonDirectory.performer}></span>Итог Партнер

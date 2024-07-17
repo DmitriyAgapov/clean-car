@@ -124,7 +124,7 @@ export class BidsStore {
             { label: '№', name: 'idnum' },
             { label: 'Статус', name: 'status' },
             { label: 'Дата/Время', name: 'created' },
-            { label: 'Заказчик', name: 'company' },
+            { label: 'Клиент', name: 'company' },
             { label: 'Партнер', name: 'performer' },
             { label: 'Водитель', name: 'conductor' },
             { label: 'Исполнитель', name: 'executor' },
@@ -146,21 +146,21 @@ export class BidsStore {
             description: 'Укажите основную информацию о заявке',
             fields: [
                 {
-                    label: 'Город Заказчика',
+                    label: 'Город Клиента',
                     name: 'city',
                     type: 'select',
                     value: 0,
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
-                    label: 'Заказчик',
+                    label: 'Клиент',
                     name: 'customer',
                     type: 'select',
                     value: 0,
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -169,7 +169,7 @@ export class BidsStore {
                     type: 'select',
                     options: [],
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -185,7 +185,7 @@ export class BidsStore {
                     type: 'select',
                     options: [],
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
             ],
@@ -200,7 +200,7 @@ export class BidsStore {
                     type: 'select',
                     value: 0,
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -209,7 +209,7 @@ export class BidsStore {
                     type: 'select',
                     value: 0,
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -217,7 +217,7 @@ export class BidsStore {
                     name: 'options',
                     type: 'checkbox',
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -233,7 +233,7 @@ export class BidsStore {
                     type: 'select',
                     options: [],
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
             ],
@@ -297,8 +297,8 @@ export class BidsStore {
             ],
         },
         step4: {
-            title: 'Шаг 4. Выбор исполнителя',
-            description: 'Город Исполнителя определяется автоматически. При необходимости вы можете изменить город.',
+            title: 'Шаг 4. Выбор Партнера',
+            description: 'Город Партнера определяется автоматически. При необходимости вы можете изменить город.',
             fields: [
                 {
                     label: 'Город',

@@ -74,13 +74,13 @@ const BidsPage = () => {
 			{ label: 'Дата/Время', name: 'created' }
 		]
 		const _last = [{ label: 'Водитель', name: 'conductor' },
-			{ label: 'Исполнитель', name: 'executor' },
+			{ label: 'Партнер', name: 'executor' },
 			{ label: 'ТС', name: 'car' },
 			{ label: 'Город', name: 'city__name' },
 			{ label: 'Услуга', name: 'service_type' }
 		]
 		if(store.appStore.appType === "performer" || store.appStore.appType === "admin")  {
-			_th.push({ label: 'Заказчик', name: 'company' })
+			_th.push({ label: 'Клиент', name: 'company' })
 		}
 		if(store.appStore.appType === "customer"  || store.appStore.appType === "admin")  {
 			_th.push({ label: 'Партнер', name: 'performer' })

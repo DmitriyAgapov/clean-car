@@ -77,7 +77,7 @@ const FormModalCreatePrice =  () => {
                     style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}
                 >
                     <Heading
-                        text={'Создать прайс-лист Заказчику'}
+                        text={'Создать прайс-лист Клиенту'}
                         className={'col-span-2 !mb-8'}
                         variant={HeadingVariant.h2}
                         color={HeadingColor.accent}

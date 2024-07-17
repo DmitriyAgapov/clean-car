@@ -146,7 +146,7 @@ export function FormStep1(props: {
           name={'application_type'}
           className={' w-fit'}
           options={[
-            { label: 'Заказчик', value: CompanyType.customer },
+            { label: 'Клиент', value: CompanyType.customer },
             { label: 'Партнер', value: CompanyType.performer },
           ]}
         />

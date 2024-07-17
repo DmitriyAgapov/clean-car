@@ -46,7 +46,7 @@ const FinanceByTypeAndTypeId = () => {
           { label: 'Дата', name: 'created' },
           { label: 'Заявка', name: 'bid_id' },
           { label: 'Партнер', name: 'performer' },
-          { label: 'Заказчик', name: 'company' },
+          { label: 'Клиент', name: 'company' },
           { label: 'Адрес', name: 'address' },
       ]
       data?.results.forEach((el: any) => {

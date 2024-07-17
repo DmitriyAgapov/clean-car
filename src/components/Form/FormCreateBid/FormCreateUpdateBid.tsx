@@ -1027,7 +1027,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             <>
                                 <Heading
                                     text={
-                                        formData.values.service_type === '1' ? 'Шаг 3. Выбор исполнителя' : step4.title
+                                        formData.values.service_type === '1' ? 'Шаг 3. Выбор партнера' : step4.title
                                     }
                                     color={HeadingColor.accent}
                                     variant={HeadingVariant.h2}
@@ -1039,7 +1039,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             <>
                                 <Heading
                                     className={'col-span-full'}
-                                    text={'Исполнители не найдены'}
+                                    text={'Партнер не найдены'}
                                     variant={HeadingVariant.h3}
                                 />
                             </>

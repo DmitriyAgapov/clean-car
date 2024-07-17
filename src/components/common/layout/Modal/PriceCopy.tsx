@@ -102,7 +102,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
                                 defaultValue={formData.type}
                                 className={'!flex-initial'}
                                 data={[
-                                    { label: 'Заказчик', value: CompanyType.customer },
+                                    { label: 'Клиент', value: CompanyType.customer },
                                     { label: 'Партнер', value: CompanyType.performer },
                                 ]}
                             />

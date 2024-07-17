@@ -194,7 +194,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
         <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
         {company_type === 'customer' && <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}>
-          <DList label={'Исполнители'} title={store.companyStore.companies.filter((c: any) =>
+          <DList label={'Партнеры'} title={store.companyStore.companies.filter((c: any) =>
             data[`${company_type}profile`].performer_company.includes(c.id)).map((item: any, index ) => (
             <span key={item.id} className={'text-xs font-normal'}>
                 {item.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '}
@@ -357,7 +357,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 >
                     <DList
                         className={'child:dt:text-accent'}
-                        label={'Заказчик'}
+                        label={'Клиент'}
                         title={<Heading variant={HeadingVariant.h4} text={data.company.name} />}
                     />
                     <DList
@@ -676,8 +676,8 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 tableParams.cols = 4
               }
               let labels:any = {
-                  "0": 'Заказчик',
-                  "1": "Исполнитель",
+                  "0": 'Клиент',
+                  "1": "Партнер",
                   "2": "Разница"
               }
               return (
@@ -702,13 +702,13 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
                                       className={'text-gray-2 font-medium text-xss uppercase tablet-max:hidden'}
                                   >
-                                      Заказчик
+                                    Клиент
                                   </Box>
                                   <Box
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
                                       className={'text-gray-2 font-medium text-xss  uppercase  tablet-max:hidden'}
                                   >
-                                      Исполнитель
+                                    Партнер
                                   </Box>
                                   <Box
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
@@ -904,7 +904,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 >
                     <div className={'col-span-2  pr-12'}>
                         <Heading text={'Фотографии До'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
-                        <p>Фотографии до оказания услуги. Загрузил Заказчик</p>
+                        <p>Фотографии до оказания услуги. Загрузил Клиент</p>
                     </div>
                     <div className={'col-span-3'}>
                         <CarouselCustom closeBtn={false} items={data.photos.results.filter((e: any) => e.is_before).map((item:any) => item.foto)} />

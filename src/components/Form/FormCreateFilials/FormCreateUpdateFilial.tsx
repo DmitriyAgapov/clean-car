@@ -40,7 +40,7 @@ interface InitValues {
     qc?: string | null
     service_percent: number
     street: string | null
-    type: 'Клиент' | 'Компания-исполнитель'
+    type: 'Клиент' | 'Партнер'
     working_time: string
 }
 
@@ -329,7 +329,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                       }}
                       defaultValue={formData.values.type}
                       data={[
-                          { label: 'Заказчик', value: CompanyType.customer },
+                          { label: 'Клиент', value: CompanyType.customer },
                           { label: 'Партнер', value: CompanyType.performer },
                       ]}
                     />

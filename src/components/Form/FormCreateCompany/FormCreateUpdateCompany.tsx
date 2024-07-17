@@ -48,7 +48,7 @@ interface InitValues {
     qc?: string | null
     service_percent: number
     street: string | null
-    type: 'Клиент' | 'Компания-исполнитель'
+    type: 'Клиент' | 'Партнер'
     working_time: string
 }
 
@@ -395,7 +395,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             defaultValue={formData.values.type}
                             className={'tablet:!flex-initial desktop:!flex-[0_1_33%] col-span-3'}
                             data={[
-                                { label: 'Заказчик', value: CompanyType.customer },
+                                { label: 'Клиент', value: CompanyType.customer },
                                 { label: 'Партнер', value: CompanyType.performer },
                             ]}
                         />
@@ -555,7 +555,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                     variant={HeadingVariant.h2}
                                 />
                                 <div className={''}>
-                                    Укажите информацию о счете компании и предпочтительных исполнителей, если такие есть
+                                    Укажите информацию о счете компании и предпочтительных партнеров, если такие есть
                                 </div>
                             </>
                         }

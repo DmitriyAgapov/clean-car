@@ -73,7 +73,7 @@ export class PriceStore {
     textData = {
         path: 'price',
         title: 'Прайс-листы',
-        create: 'Создать прайс-лист для заказчика',
+        create: 'Создать прайс-лист для Клиента',
         labelsForItem: ['Город', 'Часовой пояс', 'Статус'],
         referenceTitle: 'Город',
         createPage: 'Добавить город',

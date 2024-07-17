@@ -254,7 +254,7 @@ export function FormStep1(props: {
           allowDeselect={false}
           className={'!flex-[1_0_10rem]'}
           data={[
-            { label: 'Заказчик', value: CompanyType.customer },
+            { label: 'Клиент', value: CompanyType.customer },
             { label: 'Партнер', value: CompanyType.performer },
           ]}
         />

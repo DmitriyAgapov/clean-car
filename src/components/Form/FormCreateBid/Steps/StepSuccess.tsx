@@ -28,7 +28,7 @@ export function FormStepSuccess(props: {
   prop8?: (o: any) => { label: any; value: string }
 }) {
   const { values, touched, errors }:any = useFormikContext();
-  
+
   const navigate = useNavigate()
   const store = useStore()
 
@@ -62,7 +62,7 @@ export function FormStepSuccess(props: {
           variant={HeadingVariant.h2}
          />
         <div className={'text-base'}>
-          Укажите информацию о счете компании и предпочтительных исполнителей, если такие есть
+          Укажите информацию о счете компании и предпочтительных партнеров, если такие есть
         </div>
       </>}>
       <div className={'mt-10 flex flex-wrap gap-6'}>
