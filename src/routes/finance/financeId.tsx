@@ -168,7 +168,6 @@ const FinaceIdPage = () => {
   const store = useStore()
   const navigate = useNavigate()
   const params = useParams()
-  const [opened, { open, close }] = useDisclosure(false)
   const [openedf, { open:openf, close:closef }] = useDisclosure(false)
   const isMyCompany = params.company_id == store.userStore.myProfileData.company.id
   const {width, height} = useViewportSize()
@@ -226,10 +225,7 @@ const FinaceIdPage = () => {
       section: <FinanceBottomID data={data}/>
     })
   }, [width, data])
-  const memoModal = React.useMemo(() => {
-    if(isLoading && !data) return null
-    if(data && data.root_company) return <UpBalance upBalance={true} companyName={data.root_company.name} id={data.root_company.id} opened={opened} onClose={close} />
-  }, [opened, data, isLoading])
+
 
   const memoModalF = React.useMemo(() => {
     if(isLoading && !data) return null
@@ -299,7 +295,7 @@ const FinaceIdPage = () => {
 
 
         {footer?.footer}
-        {memoModal}
+
         {memoModalF}
       </Section>
   )

@@ -572,29 +572,29 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
 
                         <Select
                             label={'Овердрафт'}
-                          {...formData.getInputProps('overdraft')}
+                            {...formData.getInputProps('overdraft')}
                             className={' w-fit    tablet:!flex-[0_0_8rem] !flex-[1_0_20rem]'}
                             onOptionSubmit={(value: any) => {
                                 if (value === '2') {
                                     formData.setFieldValue('overdraft_sum', 0)
                                 }
                             }}
-
                             data={[
                                 { label: 'Да', value: '1' },
                                 { label: 'Нет', value: '2' },
                             ]}
                         />
                         <NumberInput
-                            onClick={() => console.log(formData.errors)}
-                            disabled={formData.values.overdraft === '2'}
+
+
                             label={'Сумма'}
                             thousandSeparator=' '
                             suffix={' ₽'}
                             hideControls
                             {...formData.getInputProps('overdraft_sum')}
+                          disabled={formData.values.overdraft === '2'}
                             allowNegative={false}
-                            min={1}
+                            min={0}
                             className={
                                 formData.errors.overdraft_sum
                                     ? ' filter grayscale'

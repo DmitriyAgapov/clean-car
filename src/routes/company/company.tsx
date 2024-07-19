@@ -13,8 +13,9 @@ import { CompanyType } from 'stores/companyStore'
 import { PermissionNames } from 'stores/permissionStore'
 import dayjs from 'dayjs'
 import agent from "utils/agent";
-import { useDidUpdate } from "@mantine/hooks";
+import { useDidUpdate, useDisclosure } from '@mantine/hooks'
 import useSWR from "swr";
+import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 const CompanyPage = () => {
   const store = useStore()
@@ -23,6 +24,7 @@ const CompanyPage = () => {
   // console.log(location);
   const params = useParams()
 
+  const [opened, { open, close }] = useDisclosure(false)
   const {isLoading, data, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
     revalidateOnMount: true
   })
@@ -48,51 +50,54 @@ const CompanyPage = () => {
     ]
   }, [data])
 
+
+  const memoModal = React.useMemo(() => {
+    console.log(opened, data, isLoading, params);
+    if(isLoading && !data) return null
+    if(data) return <UpBalance upBalance={true} companyName={data.name} id={Number(data.id)} opened={opened} onClose={close} />
+  }, [opened, data, isLoading, params])
+
   return (
       <Section type={SectionType.default}>
           <Panel
             headerClassName={'justify-between gap-4 flex'}
               variant={PanelVariant.withGapOnly}
               header={
-                  <>
-                      <div>
-                          <Button
-                              text={
-                                  <>
-                                      <SvgBackArrow />
-                                      Назад к списку компаний{' '}
-                                  </>
-                              }
-                              className={
-                                  'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                              }
-                              action={() => navigate('/account/companies')}
-                              variant={ButtonVariant.text}
-                          />
-                          <Heading
-                              text={'Компания'}
-                              variant={HeadingVariant.h1}
-                              className={'!mb-0 inline-block'}
-                              color={HeadingColor.accent}
-                          />
-                      </div>
+                <>
+                  <div>
+                    <Button text={
+                      <>
+                        <SvgBackArrow />
+                        Назад к списку компаний{" "}
+                      </>
+                    }
+                      className={
+                        "flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4"
+                      }
+                      action={() => navigate("/account/companies")}
+                      variant={ButtonVariant.text} />
+                    <Heading text={"Компания"}
+                      variant={HeadingVariant.h1}
+                      className={"!mb-0 inline-block"}
+                      color={HeadingColor.accent} />
+                  </div>
 
-                      {store.userStore.getUserCan(PermissionNames['Компании'], 'update') && (
-                          <LinkStyled
-                              text={'Редактировать'}
-                              to={'edit'}
-                              size={ButtonSizeType.sm}
-                              /* action={() => store.companyStore.addCompany()} */ className={'float-right mobile:mt-auto'}
-                              variant={ButtonVariant.default}
-                          />
-                      )}
+                  <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
+                    {store.appStore.appType === "admin" && params.company_type === "customer" && <Button text={"Пополнить счет"} action={open} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} />}
+                    {store.userStore.getUserCan(PermissionNames["Компании"], "update") && (
+                      <LinkStyled text={"Редактировать"}
+                        to={"edit"}
+                        size={ButtonSizeType.sm}
+                        /* action={() => store.companyStore.addCompany()} */
+                        className={"float-right mobile:mt-auto"}
+                        variant={ButtonVariant.default} />
+                    )}</div>
                   </>
-              }
-          />
+                  } />
 
-          <Panel
-              state={isLoading}
-              className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-3 desktop-max:pb-12'}
+                <Panel
+                state={isLoading}
+            className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-3 desktop-max:pb-12'}
               variant={PanelVariant.textPadding}
               background={PanelColor.glass}
               bodyClassName={''}
@@ -139,6 +144,7 @@ const CompanyPage = () => {
                   type={TabsType.company}
               />
           </Panel>
+        {memoModal}
       </Section>
   )
 }
