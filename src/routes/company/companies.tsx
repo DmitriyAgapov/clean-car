@@ -22,10 +22,10 @@ const CompaniesPage = () => {
   const navigate = useNavigate()
   const searchParams = localStore.params.getSearchParams
   const isReadyy = localStore.params.getIsReady
-  console.log(isReadyy);
+  // console.log(isReadyy);
   const {isLoading, data, mutate} = useSWR(isReadyy ? ['companies', {...localStore.params.getSearchParams}] : null , ([url, args]) => store.companyStore.loadAllOnlyCompanies(args))
   useEffect(() => {
-    console.log();
+    // console.log();
     localStore.setData = {
       ...data,
       results: data?.results?.map((item:any) => ({

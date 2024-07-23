@@ -72,11 +72,17 @@ import FinaceByTypePage from "routes/finance/financeByType";
 import FinanceByTypeAndTypeId from "routes/finance/financeByTypeAndTypeId";
 import FinanceByTypeAndTypeIdAndCompany from "routes/finance/financeByTypeAndTypeIdAndCompany";
 import ReferenceCarPageUpdate from "routes/reference/Cars/referenceCarPageUpdate";
+import Errors from "components/common/layout/Errors/Errors";
+import Root from "routes/root";
 
 const router = createBrowserRouter([
     {
         path: '*',
         element: <ErrorPageNotFound />
+    },
+    {
+      path: '/disconnect',
+      element: <Errors className={''}/>
     },
     {
         path: '/404',
@@ -85,6 +91,9 @@ const router = createBrowserRouter([
     {
         path: '/',
         element: <AuthPage />,
+        // index: true,
+
+        // loader: authUser,
         // errorElement: <ErrorPage />,
     },
     {
@@ -125,13 +134,17 @@ const router = createBrowserRouter([
         // loader: authUser,
         children: [
             {
+                path: 'welcome',
+                element: <Root/>
+            },
+            {
                 path: 'support',
                 element: <SupportPage/>
             },
             {
                 path: 'profile',
                 element: <MyProfilePage />,
-                loader: profileLoader,
+                loader: profileLoader
             },
             {
                 path: 'dashboard',
@@ -284,7 +297,6 @@ const router = createBrowserRouter([
                     },
                 ]
             },
-
             {
                 path: 'finance/transaction',
                 element: <TransactionPage/>,

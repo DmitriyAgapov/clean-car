@@ -127,7 +127,7 @@ function ListItem(props: { i: any }) {
     const [state, setState ] = React.useState()
     useEffect(() => {
       let state = location.pathname.includes(props.i.url) || (props.i.sublevel && props.i.sublevel.length > 0) && props.i.sublevel.some((el:any) => location.pathname.includes(el.url) )
-      console.log(state);
+      // console.log(state);
       setState(state)
       state && store.appStore.setSublevelOpen()
     }, [location.pathname])

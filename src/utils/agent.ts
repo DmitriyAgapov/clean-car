@@ -12,7 +12,6 @@ import useSWR from "swr";
 import { KeysBidCreate } from "stores/types/bidTypes";
 import { logger } from "utils/utils";
 import { Client } from "utils/schema";
-import company from "routes/company/company";
 
 export type PaginationProps = {
   name?: string | number | URLSearchParams,
@@ -73,7 +72,8 @@ export const requests = {
 
     })
   .then((response:any) => response)
-  .catch(handleErrors),
+  // .catch(handleErrors)
+  ,
   getFile: (url: string,  pagination?:PaginationProps) =>
      axios({
       url: `${API_ROOT}${url}`,

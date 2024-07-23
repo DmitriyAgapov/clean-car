@@ -17,7 +17,8 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import Errors from 'components/common/layout/Errors/Errors'
 import { useViewportSize } from '@mantine/hooks'
-import { UserPermissionVariants } from "stores/userStore";
+import { UserPermissionVariants } from 'stores/userStore'
+import { notifications } from '@mantine/notifications'
 
 const sidebarMenu: { title: string; url: string }[] = [
   {
@@ -89,10 +90,23 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
     return (<Navigate to={'/'}/>)
   }
   if(_permissionName && !isInException(loc.pathname.split("/").slice(0,3).join('/'))) {
-    if(!store.userStore.getUserCan(_permissionName, "read")) return <Navigate to={'/account/profile'}/>
-    if(!store.userStore.getUserCan("Управление пользователями", "read")) {
-      store.authStore.logout()
+    const _actionToDo = loc.pathname.includes('edit') ? "update" : loc.pathname.includes('create') ? "create" : "read"
+    if(!store.userStore.getUserCan(_permissionName, _actionToDo)){
+      notifications.show({
+        id: 'no-access',
+        withCloseButton: true,
+        autoClose: 5000,
+        title: 'Нет доступа к разделу',
+        message: '',
+        color: 'var(--errorColor)',
+        // style: { backgroundColor: 'red' },
+        loading: false,
+      })
+      return <Navigate to={'/account/welcome'}/>
     }
+    // if(!store.userStore.getUserCan("Управление пользователями", "read")) {
+    //   store.authStore.logout()
+    // }
   }
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>

@@ -67,7 +67,7 @@ const RowData = observer((props: any) => {
         const isFinance = location.pathname.includes('/account/finance/report')
         const locationIsRoot = location.pathname === '/account/finance/report'
         const locationIsCompanyWithChild = props.has_child
-        console.log('locationIsCompanyWithChild', locationIsCompanyWithChild, location.pathname);
+        // console.log('locationIsCompanyWithChild', locationIsCompanyWithChild, location.pathname);
         if (props.query && props.query.rootRoute) {
             return navigate(props.query.rootRoute)
         }
@@ -103,7 +103,7 @@ const RowData = observer((props: any) => {
                         </Cell>,
                     )
                 } else if (props[key] === 'Неактивна' ||  key !== "has_child" && props[key] === false) {
-                    console.log(key);
+                    // console.log(key);
                     ar.push(
                         <Cell key={key} view={props.view} data-label={label(key)} className={styles.tableCell}>
                             <Chips state={false} />
@@ -304,7 +304,7 @@ const RowData = observer((props: any) => {
     const { width } = useViewportSize()
     const [open, setOpen] = useState(false)
     const rowPart = React.useMemo(() => {
-        console.log(props);
+        // console.log(props);
         const res: any[] = []
         if (width && width < 745)
             res.push(

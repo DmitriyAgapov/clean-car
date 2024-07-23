@@ -115,17 +115,17 @@ export class CompanyStore {
         //         this.getAllCompanies()
         //     }
         // })
-        reaction(() => this.filials,
-          (filials) => {
-              console.log('userIsLoggedIn', authStore.isLoggedIn);
-              console.log('get filials', (filials.length === 0 && this.loadingState.filials))
-            if(filials.length === 0 && authStore.userIsLoggedIn && !this.loadingState.filials) {
-                console.log('get filials')
-                this.getAllFilials()
-                this.loadingState.filials = true
-            }
-          }
-        )
+        // reaction(() => this.filials,
+        //   (filials) => {
+        //       // console.log('userIsLoggedIn', authStore.isLoggedIn);
+        //       // console.log('get filials', (filials.length === 0 && this.loadingState.filials))
+        //     if(filials.length === 0 && authStore.userIsLoggedIn && !this.loadingState.filials) {
+        //         // console.log('get filials')
+        //         this.getAllFilials()
+        //         this.loadingState.filials = true
+        //     }
+        //   }
+        // )
         // reaction(() => this.allFilials.results,
         //           (filials) => {
         //               console.log('get allFilials', filials)

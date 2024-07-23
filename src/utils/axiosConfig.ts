@@ -31,6 +31,7 @@ axios.interceptors.request
 axios.interceptors.response.use(
     (response) => response,
     async (error) => {
+	    console.log(error);
         const config = await error.config
         if(error.code === "ERR_NETWORK" || error.code === "ECONNABORTED") {
          appStore.setNetWorkStatus(false)

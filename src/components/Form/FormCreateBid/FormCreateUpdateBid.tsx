@@ -15,7 +15,6 @@ import { CreateBidSchema, CreateBidSchemaStep2, CreateBidSchemaStep3, CreateBidS
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import { createFormActions, createFormContext } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
-import { SvgClose } from "components/common/ui/Icon";
 import MapWithDots from "components/common/Map/Map";
 import InputAutocompleteWithCity from "components/common/ui/InputAutocomplete/InputAutocompleteWithCityDependency";
 import FormBidResult from "routes/bids/FormBidResult/FormBidResult";

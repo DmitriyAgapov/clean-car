@@ -8,37 +8,22 @@ import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 
 export default function Root() {
   return (
-    <Layout className={'page-intro'}>
+    // <Layout className={'page-intro'}>
       <Section type={SectionType.centered}>
         <Panel
           className={'col-span-6'}
           header={
             <Heading text={'Добро пожаловать в CleanCar.'} variant={HeadingVariant.h1} color={HeadingColor.accent} />
           }
-          footer={
-            <>
-              <LinkStyled
-                text={'У меня уже есть аккаунт'}
-                variant={ButtonVariant['accent-outline']}
-                size={ButtonSizeType.base}
-                to={'/auth'}
-              />
-              <LinkStyled
-                text={'Зарегистрироваться'}
-                variant={ButtonVariant['accent-outline']}
-                size={ButtonSizeType.base}
-                to={'/register'}
-              />
-            </>
-          }
+
         >
-          <p>
-            Мы рады, что вы выбрали нас.
-            <br />
-            Пожалуйста, заполните данные для регистрации{' '}
-          </p>
+          {/* <p> */}
+          {/*   Мы рады, что вы выбрали нас. */}
+          {/*   <br /> */}
+          {/*   Пожалуйста, заполните данные для регистрации{' '} */}
+          {/* </p> */}
         </Panel>
       </Section>
-    </Layout>
+    // </Layout>
   )
 }
