@@ -15,16 +15,19 @@ import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
 import agent from 'utils/agent'
 import dayjs from 'dayjs'
 import { CompanyType } from "stores/companyStore";
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
   page: 1,
   page_size: 10,
-  start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+  start_date: dayjs().set('date', 1).hour(0).minute(0).second(0).format(),
 })
 const FinanceBottom = observer((props: { data: any, className?: string }) => {
     const { width, height } = useViewportSize()
     const store = useStore()
+
     const [open, setOpen] = React.useState<boolean>(false);
     if(!width) return <div className={'hidden'}/>
     if (width < 1024) {

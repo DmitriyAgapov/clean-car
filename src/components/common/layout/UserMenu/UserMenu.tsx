@@ -21,7 +21,6 @@ const Notification = observer(() => {
   const store = useStore()
   const interval = useInterval(() => {
     store.bidsStore.loadEventCount()
-    console.log(store.bidsStore.getEventCount);
   }, 8000);
 
   useEffect(() => {

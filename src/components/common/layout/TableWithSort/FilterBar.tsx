@@ -15,6 +15,9 @@ import { CarType } from "stores/carStore";
 import { useViewportSize } from '@mantine/hooks'
 import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
 import { keys, toJS } from 'mobx'
+import utc from 'dayjs/plugin/utc'
+dayjs.extend(utc)
+
 
 interface FilterBarProps {
   state: boolean
@@ -348,11 +351,11 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                     },
                   },
                 }}
-                value={localStore.params.getSearchParams.start_date ? dayjs(localStore.params.getSearchParams.start_date).toDate() : null}
+                value={localStore.params.getSearchParams.start_date ? dayjs.utc(localStore.params.getSearchParams.start_date).hour(0).minute(0).second(0).toDate() : null}
                 clearable
                 onChange={(value) => {
                   setInitParams()
-                  const timestamp = dayjs(String(value)).format('YYYY-MM-DD')
+                  const timestamp = dayjs(String(value)).format()
                   if (value !== null) {
                     localStore.params.setSearchParams({
                       start_date: timestamp
@@ -387,10 +390,10 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                     },
                   },
                 }}
-                value={localStore.params.getSearchParams.end_date ? dayjs(localStore.params.getSearchParams.end_date).toDate() : null}
+                value={localStore.params.getSearchParams.end_date ? dayjs.utc(localStore.params.getSearchParams.end_date).toDate() : null}
                 onChange={(value) => {
                   setInitParams()
-                  const timestamp = dayjs(String(value)).format('YYYY-MM-DD')
+                  const timestamp = dayjs(String(value)).format()
                   if (value !== null) {
                     localStore.params.setSearchParams({
                       end_date: timestamp
