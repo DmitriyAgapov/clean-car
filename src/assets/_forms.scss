@@ -129,6 +129,9 @@ button {
 	font-size: .875rem;
 	max-width: 100%;
 	line-height: 1.125rem;
+	@screen tablet-max {
+	  font-size: 1rem;
+	}
 
   }
   &[data-error="true"] {

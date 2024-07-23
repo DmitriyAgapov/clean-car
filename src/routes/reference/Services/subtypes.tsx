@@ -60,7 +60,7 @@ const ServicesSubTypesPage = () => {
                     </>
                 }
             ></Panel>
-          <Panel variant={PanelVariant.textPadding} className={'!mt-0'} background={PanelColor.glass} bodyClassName={'grid tablet:grid-cols-3 gap-6'} header={<p>{textData.description}</p>}>
+          <Panel variant={PanelVariant.textPadding} className={'!mt-0  tablet-max:pb-12'} background={PanelColor.glass} bodyClassName={'grid tablet:grid-cols-3 gap-6'} header={<p>{textData.description}</p>}>
               {data && data.results && data.results.length > 0 && data.results.map((card:any) => <FormCard title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full '}
                   actions={<LinkStyled to={String(card.id)} className={'!text-xs text-accent uppercase'}  variant={ButtonVariant.text} text={'Подробнее'} />}>
                   <div className={`absolute w-4 h-4 right-3 top-3 rounded-full ${card.is_active ? 'bg-active' : 'bg-red-500'}`}/>

@@ -448,7 +448,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                                                 return (
                                                     <FormCard
                                                         actions={null}
-                                                        className={'relative'}
+                                                        className={'relative tablet-max:mb-2'}
                                                         title={el[1].employee?.first_name}
                                                         children={
                                                             <>

@@ -239,7 +239,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
             )
             break
           case FilterData.company_type_c:
-            console.log('company_type_c')
+            // console.log('company_type_c')
             elements.push(
               <Select
                 clearable
@@ -254,7 +254,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                     })
                     // setParams((prevState) => ({...prevState, service_type: value}))
                   } else {
-                    let newParams: any =localStore.params
+                    let newParams: any = localStore.params
                     delete localStore.params.company_type
                     // setParams(newParams)
                   }
@@ -265,7 +265,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                   'Клиент',
                   'Партнер',
                   // 'Физическое лицо',
-                  'Администратор системы',
+                  // 'Администратор системы',
                 ].map((el: string) => ({
                   label: el,
                   value: el,
