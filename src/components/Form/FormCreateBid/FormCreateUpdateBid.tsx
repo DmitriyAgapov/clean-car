@@ -376,40 +376,41 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         })
 
     } else if(step === 4) {
-          await store.bidsStore.sendFiles(formData.values.photo_new, true).then(() =>
+          await store.bidsStore.sendFiles(formData.values.photo_new, true)
+          .then(() =>
             store.bidsStore.formCreateBid()
-          .then((res) => {
-            if (res && res.status !== 201) {
-              notifications.show({
-                id: 'bid-created_error',
-                withCloseButton: true,
-                autoClose: 5000,
-                title: "Ошибка создания заявки",
-                message: null,
-                color: 'var(--errorColor)',
-                loading: false,
-              })
-            } else {
-              mutate('bids')
-              notifications.show({
-                id: 'bid-created_success',
-                withCloseButton: true,
-                autoClose: 5000,
-                title: 'Заявка создана',
-                message: 'Успешное создание',
-                color: 'var(--accentColor)',
-                // style: { backgroundColor: 'red' },
-                loading: false,
-              })
-
-            }
-          }).finally(() => {
-            changeStep();
-            setTimeout(() => {
-              store.bidsStore.clearPhotos();
-              store.bidsStore.formResultsClear()
-            }, 2000)
-          })
+            .then((res) => {
+              // console.log(res);
+              if (res && res.status !== 201) {
+                // notifications.show({
+                //   id: 'bid-created_error',
+                //   withCloseButton: true,
+                //   autoClose: 5000,
+                //   title: "Ошибка создания заявки",
+                //   message: null,
+                //   color: 'var(--errorColor)',
+                //   loading: false,
+                // })
+              } else {
+                console.log('No error');
+                mutate('bids')
+                notifications.show({
+                  id: 'bid-created_success',
+                  withCloseButton: true,
+                  autoClose: 5000,
+                  title: 'Заявка создана',
+                  message: 'Успешное создание',
+                  color: 'var(--accentColor)',
+                  // style: { backgroundColor: 'red' },
+                  loading: false,
+                })
+                changeStep()
+                setTimeout(() => {
+                  store.bidsStore.clearPhotos();
+                  store.bidsStore.formResultsClear()
+                }, 2000)
+              }
+            })
           )
         // })()
     } else {

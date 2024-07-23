@@ -100,7 +100,8 @@
           height: 1.5rem;
           grid-column: -2/-1;
           grid-row: 1/2;
-          padding: 0;
+          border: none !important;
+          padding: 0 !important;
 
           svg {
             rotate: 180deg;
@@ -119,7 +120,7 @@
         }
 
         &[data-position="button-mobile"] {
-
+          padding-right: 0 !important;
           &:before {
             content: none;
           }
@@ -1179,8 +1180,11 @@ th, td {
       }
     }
     @screen mobile {
-      margin-left: -.75rem !important;
-      margin-right: -.75rem !important;
+      &:not(table) {
+        margin-left: -.75rem !important;
+        margin-right: -.75rem !important;
+      }
+
 
 
       [data-label="Компания"] {
@@ -1197,6 +1201,24 @@ th, td {
         p {
           text-wrap: wrap;
         }
+      }
+
+    }
+  }
+  &[data-style="financeByType"] {
+    //background: red;
+    @screen tablet-max {
+      [data-label="service_type_name"] {
+        &:before {
+          content: none;
+        }
+        grid-column: 1/4;
+      }
+      [data-label="bids_count"] {
+        &:before {
+          content: none;
+        }
+        grid-column: -3/-2 !important;
       }
 
     }
@@ -1637,6 +1659,7 @@ width: 100% !important;
 
 &[data-position="button-mobile"] {
   margin-bottom: .5rem;
+  padding-right: 0;
   &:before {
 	content: none;
   }

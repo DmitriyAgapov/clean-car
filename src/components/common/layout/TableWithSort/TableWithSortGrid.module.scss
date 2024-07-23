@@ -158,13 +158,13 @@
 		  }
 		;
 		}
-
-		&[data-label="bids_count"], &[data-name="bids_count"], {
-		  max-width: 20rem;
-		  padding-right: 2rem !important;
-		  padding-left: 1rem;
+		@screen tablet {
+		  &[data-label="bids_count"], &[data-name="bids_count"], {
+			max-width: 20rem;
+			padding-right: 2rem !important;
+			padding-left: 1rem;
+		  }
 		}
-
 
 		&:last-child {
 		  //width: 100%;
@@ -394,7 +394,10 @@
 		  }
 		}
 
-
+		&[data-label="bids_count"] {
+		  grid-column: 1/-1;
+		  padding-right: 0 !important;
+		}
 	  }
 
 	  [data-panel="footer_row"] {

@@ -89,7 +89,8 @@ const FinanceByTypeAndTypeIdAndCompany = () => {
              executor: user?.last_name[0] + '.' + ' ' + user?.first_name,
              company: company,
              ...props,
-             bonus: purpose ? PurposeOfTransaction[purpose] : "-",
+             // bonus: purpose ? PurposeOfTransaction[purpose] : "-",
+             bonus: "",
              description: description,
              total_amount: (amount + ' ₽')[0] === "-" ? String(amount.toFixed(2) + ' ₽').slice(1) : amount.toFixed(2) + ' ₽',
          }

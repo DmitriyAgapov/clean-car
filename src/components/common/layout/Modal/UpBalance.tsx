@@ -9,6 +9,7 @@ import agent from 'utils/agent'
 import DList from 'components/common/ui/DList/DList'
 import { useForm } from '@mantine/form'
 import { useSWRConfig } from 'swr'
+import { values } from 'mobx'
 
 export enum PurposeOfTransaction {
     "Пополнение баланса (счета)" = 1,
@@ -36,17 +37,30 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
             amount: 0,
             purpose: "1",
             company_id: id.toString(),
+            service_type: "",
             description: ""
         }
   })
-  React.useEffect(() => {
-    formData.setValues({
-      amount: 0,
-      purpose: "1",
-      company_id: id.toString(),
-      description: ""
-    })
-  }, [opened]);
+    React.useEffect(() => {
+      let _values:any
+     if(upBalance) {
+      _values = {
+        amount: 0,
+        purpose: "1",
+        company_id: id.toString(),
+        description: upBalance ? `Пополнить счет` : ""
+      }
+     } else  {
+       _values = {
+         amount: 0,
+         // purpose: "1",
+         company_id: id.toString(),
+         description: upBalance ? `Пополнить счет` : "",
+         service_type: null
+       }
+     }
+      formData.setValues(_values)
+    }, [opened, upBalance]);
 	return (
         <Modal.Root size={600} opened={opened} onClose={onClose} centered>
             <Modal.Overlay className={'bg-black/90'} />
@@ -78,7 +92,11 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
                             // onChange={(value: any) => setAmount(Number(value))}
                         />
                         <Select label={'Цель зачисления'}  {...formData.getInputProps('purpose')} disabled={upBalance} data={upBalance ? [{label: Object.values(PurposeOfTransaction)[0], value: Object.keys(PurposeOfTransaction)[0]}] : Array.from(Object.entries(PurposeOfTransaction).filter((v) => isNaN(Number(v[0])))).slice(3).map((el:any[]) => ({label: el[0], value: el[1].toString()}))}/>
-                            {!upBalance ? <Textarea label={'Комментарий'} {...formData.getInputProps('description')} minRows={2} /> : null}
+                        {!upBalance ? <Select label={'Тип услуги'} {...formData.getInputProps('service_type')} data={values(store.catalogStore.services).map((i: any) => ({
+                          label: i.name,
+                          value: String(i.id),
+                        }))} /> : null}
+                        {!upBalance ? <Textarea label={'Комментарий'} {...formData.getInputProps('description')} minRows={2} /> : null}
                         </div>
                         <div data-content={'modal_company'}>
                         <DList label={'Компания'} title={companyName} />
@@ -106,8 +124,10 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
                         action={async () => {
                             const _val = Number(formData.values.purpose) === 5 ? -Math.abs(formData.values.amount) : Number(formData.values.purpose) === 4 ? Math.abs(formData.values.amount) : Math.abs(formData.values.amount)
                             console.log(_val);
-                            return agent.Balance.upBalance(id, Number(formData.values.purpose), _val, formData.values.description).then((r) => {
-                                    r.data.status === "success" && mutate(`company_${id}`).then(onClose)
+                            return agent.Balance.upBalance(id, Number(formData.values.purpose), _val, formData.values.description, Number(formData.values.service_type)).then((r) => {
+                                    if(r && r.data && r.data.status === "success") {
+                                      mutate(`company_${id}`).then(onClose)
+                                    }
                                 }
                             )
                         }}

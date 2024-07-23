@@ -371,7 +371,8 @@ const FinacePage = () => {
                 size={ButtonSizeType.sm} />
             </>
           } />
-        <TableWithSortNew store={localRootStore}
+        <TableWithSortNew
+          store={localRootStore}
           variant={PanelVariant.dataPaddingWithoutFooter}
           search={true}
           footerClassName={"px-0"}

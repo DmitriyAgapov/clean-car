@@ -195,7 +195,7 @@ const FormCreateUpdateCarBrand = () => {
                   variant={ButtonVariant['accent-outline']} />,
               ],
               //@ts-ignore
-              text: `Вы уверены, что хотите удалить ${brands} ${modelName}`,
+              text: `Вы уверены, что хотите удалить ${formData.values.brand} ${formData.values.modelName}`,
               state: true,
             })
           }}

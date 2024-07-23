@@ -31,7 +31,7 @@ const CompanyPage = () => {
   useDidUpdate(
     () => {
       if(location.pathname === `/account/companies/${params.company_type}/${params.id}`) {
-        mutate().then(r => console.log('updated', r))
+        mutate()
         // revalidator.revalidate()
       }
     },
@@ -52,7 +52,6 @@ const CompanyPage = () => {
 
 
   const memoModal = React.useMemo(() => {
-    console.log(opened, data, isLoading, params);
     if(isLoading && !data) return null
     if(data) return <UpBalance upBalance={true} companyName={data.name} id={Number(data.id)} opened={opened} onClose={close} />
   }, [opened, data, isLoading, params])

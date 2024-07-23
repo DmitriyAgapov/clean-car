@@ -10,11 +10,9 @@ import TableWithSortNew from 'components/common/layout/TableWithSort/TableWithSo
 import useSWR from 'swr'
 import { LocalRootStore } from 'stores/localStore'
 import { useDidUpdate, useViewportSize } from '@mantine/hooks'
-import { NumberFormatter } from '@mantine/core'
 import { FilterData } from 'components/common/layout/TableWithSort/DataFilter'
-import agent, { PaginationProps } from "utils/agent";
+import agent from "utils/agent";
 import dayjs from 'dayjs'
-import TableWithScroll from "components/common/layout/TableWithSort/TableWithScroll";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
@@ -77,7 +75,7 @@ const FinaceByTypePage = () => {
             </>
           } />
         <TableWithSortNew store={localStore}
-          variant={PanelVariant.dataPaddingWithoutFooter}
+          variant={PanelVariant.dataPadding}
           search={true}
 
           autoScroll={true}

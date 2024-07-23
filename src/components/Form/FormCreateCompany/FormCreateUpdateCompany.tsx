@@ -293,6 +293,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     return (
         <FormProvider form={formData}>
             <PanelForForms
+                className={'!overflow-x-visible'}
                 ref={targetRef}
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
@@ -542,7 +543,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     <PanelForForms
                         state={step !== 2}
                         animate={animate}
-                        className={'!bg-transparent'}
+                        className={'!bg-transparent !overflow-x-visible'}
                         bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
                         footerClassName={''}

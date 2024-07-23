@@ -263,7 +263,7 @@ const FinaceIdPage = () => {
                         />
                       </div>
                         {store.appStore.appType === "admin" && (data?.root_company?.company_type === 'Клиент' || data?.root_company.company_type === "Партнер") &&        <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
-                          {data?.root_company?.company_type === 'Клиент' &&        <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />}
+                          {/* {data?.root_company?.company_type === 'Клиент' &&        <Button text={'Пополнить счет'}  action={open} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />} */}
                           {(data?.root_company.company_type === "Партнер"  || data?.root_company.company_type === "Клиент") &&  <Button text={'Бонусы и штрафы'}  action={openf} variant={ButtonVariant['accent-outline']}  size={ButtonSizeType.sm} />}
                         </div>
                         }
