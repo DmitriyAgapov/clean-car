@@ -12,7 +12,7 @@ export function CarClasses(props: { opened: boolean; onClose: () => void}) {
 	return (
 		<Modal.Root size={959} opened={props.opened} onClose={props.onClose} centered>
 			<Modal.Overlay className={'bg-black/90'}/>
-			<Modal.Content radius={20} className={styles.ModalCarClasses}>
+			<Modal.Content radius={20} className={styles.ModalCarClasses + " " + "tablet-max:*:!block tablet-max:*:!px-3"}>
 				<Modal.Header className={'static '}>
 					<Modal.Title><Heading
 						text={`Классификация автомобилей`}

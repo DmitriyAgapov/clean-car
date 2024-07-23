@@ -117,6 +117,7 @@ const UserPortal = ({
                         text={'Управление аккаунтом'}
                         className={'!text-sm !flex !h-10'}
                         action={() => {
+                            action()
                             navigate('/account/profile')
                         }}
                         size={ButtonSizeType.sm}

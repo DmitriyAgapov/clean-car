@@ -270,6 +270,40 @@
             }
           }
         }
+        [data-label="Тип"] {
+          grid-row: 2/3;
+          height: 0;
+          border-top: 1px solid  gray !important;
+          &:before {
+            content: attr(data-label);
+            font-size: .625rem;
+            @apply text-gray-2;
+          }
+        }
+        [data-label="Филиал"] {
+          grid-row: 3/4 !important;
+          grid-column: 1/-1 !important;
+          height: initial !important;
+          border-top: 0 !important;
+          overflow: visible !important;
+          &:before {
+            content: attr(data-label) !important;
+            font-size: .625rem;
+            @apply text-gray-2;
+          }
+        }
+      }
+      [data-state-mobile="false"] {
+         [data-label="Филиал"] {
+           grid-row: 3/4;
+           height: 0;
+           overflow: hidden;
+           &:before {
+             content: attr(data-label);
+             font-size: .625rem;
+             @apply text-gray-2;
+           }
+         }
       }
       [data-label] {
         grid-column: 1/-1;
@@ -280,16 +314,7 @@
       [data-label="idnum"] {
         display: none;
       }
-      [data-label="Филиал"] {
-        grid-row: 3/4;
-        height: 0;
-        overflow: hidden;
-        &:before {
-          content: attr(data-label);
-          font-size: .625rem;
-          @apply text-gray-2;
-        }
-      }
+
       [data-label="Тип"] {
         grid-row: 2/3;
         height: 0;
@@ -886,10 +911,10 @@ th, td {
 }
 @screen lg-max {
   &[data-label="Модель"] {
-	grid-column: 4/6;
+	grid-column: 4/6 !important;
 	display: grid;
 	&:before {
-	  content: attr(data-label);
+	  content: attr(data-label) !important;
 	}
   }
   &[data-label="Марка"] {
@@ -897,6 +922,8 @@ th, td {
 	grid-column: 1/4;
 	display: grid;
   }
+
+
 }
 }
 @screen lg-max {

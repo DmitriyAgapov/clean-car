@@ -294,7 +294,7 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
 
   switch (label) {
     case "Основная информация":
-      result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type}>
+      result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8 tablet-max:pb-16'} company_type={company_type}>
        <DList label={'Марка'} title={data.brand.name} />
        <DList label={'Модель'} title={data.model.name} />
        <DList label={'Тип'} title={data.model.car_type} />

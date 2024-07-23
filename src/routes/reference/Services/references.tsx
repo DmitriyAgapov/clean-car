@@ -11,6 +11,8 @@ import { FormCard } from 'components/Form/FormCards/FormCards'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { textDataCars } from "routes/reference/Cars/cars";
 import agent from "utils/agent";
+import notificationCC from "components/common/ui/NotificationCC/NotificationCC";
+import { notifications } from '@mantine/notifications'
 
 const ServicesPage = () => {
     const store = useStore()
@@ -48,7 +50,16 @@ const ServicesPage = () => {
                     <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
                       <Button text={"Обновить прайс-листы"}
                         action={() => {
-                          agent.Price.updatePrice().then(() => console.log('Price updated'))
+                          agent.Price.updatePrice().then(() =>  notifications.show({
+                            id: 'updatePrice_success',
+                            withCloseButton: true,
+                            autoClose: 5000,
+                            title: 'Прайс обновлен',
+                            message: '',
+                            color: 'var(--accentColor)',
+                            // style: { backgroundColor: 'red' },
+                            loading: false,
+                          }))
                         }}
                         // trimText={true}
                         /* action={() => store.companyStore.addCompany()} */
@@ -69,7 +80,7 @@ const ServicesPage = () => {
                   </>
                 }></Panel>
           <Panel variant={PanelVariant.textPadding}
-            className={"!mt-0"}
+            className={"!mt-0 tablet-max:pb-16"}
             background={PanelColor.glass}
             bodyClassName={"grid tablet:grid-cols-3 gap-6"}
             header={<p>{textData.description}</p>}>

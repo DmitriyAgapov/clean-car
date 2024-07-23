@@ -513,7 +513,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                                             directory={ButtonDirectory.directory}
                                             action={async () => {
                                                 store.appStore.setModal({
-                                                    className: '!px-10 gap-4 !justify-stretch',
+                                                    className: '!px-10 gap-4 !justify-stretch tablet-max:overflow-auto tablet-max:!content-normal',
                                                     component: (
                                                         <FormModalAddUser
                                                             group={await store.permissionStore.loadCompanyPermissions(

@@ -4,6 +4,8 @@ const label = (key:string|unknown) => {
     admin_k: "КА",
     admin_name: "Администратора",
     customer: "Клиент",
+    model: "Модель",
+    model__car_type: "Тип",
     created: "Дата/время",
     customer_company_type: "Клиент",
     description: "Комментарий",

@@ -21,6 +21,7 @@ import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess
 import { useSWRConfig } from "swr";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
 import TransferListNew from 'components/common/ui/TransferList/TransferListNew'
+import CompanyModalOptionsSelect from "routes/company/CompanyComponents/CompanyModalOptionsSelect";
 
 interface InitValues {
     address: string | null
@@ -539,6 +540,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             {...formData.getInputProps('contacts')}
                             placeholder={'Введите Контактные данные'}
                         />
+
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}
@@ -613,8 +615,9 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
                         <hr className={'mt-0 mb-2 flex-[1_0_100%] w-full border-gray-2'} />
+
                         {formData.values.performers_list === '1' && (
-                            <TransferListNew active={formData.values.performer_company} />
+                          <CompanyModalOptionsSelect/>
                         )}
                     </PanelForForms>
                     <PanelForForms

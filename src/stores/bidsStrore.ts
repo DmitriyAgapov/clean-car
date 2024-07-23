@@ -493,15 +493,16 @@ export class BidsStore {
             try {
                 if(appStore.appType === "admin") {
                     const {data, status}:any = await agent.Bids.getBidCountAdmin()
-                    action(() => this.eventCounts = data)
+                    console.log(data, status);
+                    runInAction(() => this.eventCounts = data)
                 }
                 if(appStore.appType === "customer") {
                     const {data, status}:any = await agent.Bids.getBidCountCustomer(userStore.myProfileData.company.id)
-                    action(() => this.eventCounts = data)
+                    runInAction(() => this.eventCounts = data)
                 }
                 if(appStore.appType === "performer") {
                     const {data, status}:any = await agent.Bids.getBidCountPerformer(userStore.myProfileData.company.id)
-                    action(() => this.eventCounts = data)
+                    runInAction(() => this.eventCounts = data)
                 }
             } catch (e) {
                 console.log(e);

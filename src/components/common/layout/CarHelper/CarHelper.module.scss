@@ -13,3 +13,51 @@
   	}
   }
 }
+.listItem {
+	@screen tablet-max {
+	  padding-left: 1.5rem;
+	  &:not(:first-child):before {
+		@apply  text-[#929398] text-xss uppercase;
+	  }
+		&:nth-child(1) {
+		  &:before {
+			content: 'Класс:';
+			margin-right: 4px;
+		  }
+		  margin-bottom: .5rem;
+		}
+	  	&:nth-child(2) {
+		  &:before {
+			content: 'Тип:';
+			margin-right: 4px;
+		  }
+		}
+
+	  	&:nth-child(3) {
+		  &:before {
+			content: 'Пример:';
+			margin-right: 4px;
+		  }
+		}
+	  	&:nth-child(4) {
+		  &:before {
+			content: 'Шиномонтаж:';
+			margin-right: 4px;
+		  }
+		}
+	  	&:nth-child(5) {
+		  &:before {
+			content: 'Мойка:';
+			margin-right: 4px;
+		  }
+		}
+	  	&:nth-child(6) {
+		  &:before {
+			content: 'Эвакуация:';
+			margin-right: 4px;
+		  }
+		}
+
+
+	}
+}

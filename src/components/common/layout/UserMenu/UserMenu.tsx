@@ -21,7 +21,7 @@ const Notification = observer(() => {
   const store = useStore()
   const interval = useInterval(() => {
     store.bidsStore.loadEventCount()
-    // console.log(store.bidsStore.getEventCount.bid_count);
+    console.log(store.bidsStore.getEventCount);
   }, 8000);
 
   useEffect(() => {
@@ -138,6 +138,7 @@ const UserMenu = () => {
         last_name={store.userStore.currentUser?.last_name}
       />
       <UserMenuStyled
+        action={() => setState((prevState) => !prevState)}
         state={state}
         // @ts-ignore
         name={store.userStore.currentUser?.last_name + ' ' + store.userStore.currentUser?.first_name}

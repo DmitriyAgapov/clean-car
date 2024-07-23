@@ -152,12 +152,13 @@ const FormModalAddUser =  ({company_id, group}: {company_id: any, group: any[]})
             label={"Пользователь видит заявки:"}
             data={[{label: "Все", value: 'true'}, {label:'Свои', value: "false"}]}
           />
-            <footer className={'pt-12 col-span-full'}>
+            <footer className={'pt-12 col-span-full  tablet-max:flex tablet-max:flex-col'}>
                 <Button
+                  type={'button'}
                     text={'Отменить'}
                     action={() => store.appStore.closeModal()}
                     variant={ButtonVariant.cancel}
-                    className={'max-w-fit'}
+                    className={'tablet:max-w-fit'}
                 />
                 <Button
                     type={'button'}
@@ -231,18 +232,19 @@ export const FormModalSelectUsers = observer(({ company_id, users }: { company_i
 
 
           />)}/>
-          <footer className={"pt-12"}>
-            <Button text={"Отменить"}
+          <footer className={"pt-12 tablet-max:flex tablet-max:flex-col"}>
+            <Button type={'button'} text={"Отменить"}
               action={() => store.appStore.closeModal()}
               variant={ButtonVariant["accent-outline"]}
-              className={"max-w-fit"} />
-            <Button text={"Добавить сотрудника"}
+              className={"tablet:max-w-fit"}
+            />
+            <Button  text={"Добавить сотрудника"}
               action={async () => {
                 store.usersStore.addToSelectedUsers(Number(form.values.users))
                 store.appStore.closeModal()
               }}
-              className={'!px-4 flex-1'}
-              type={'submit'}
+              className={'tablet:!px-4 tablet:flex-1'}
+              type={'button'}
               disabled={!form.isValid()}
               variant={ButtonVariant.accent} /></footer>
         </form>

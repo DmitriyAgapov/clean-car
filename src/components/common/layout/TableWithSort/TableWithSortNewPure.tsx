@@ -76,7 +76,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
 
     const {width} = useViewportSize()
     const [open, setOpen] = useState(false);
-  console.log(props);
+  // console.log(props);
     const propsRender = React.useMemo(() => {
         const ar = []
         for (const key in props) {
@@ -124,7 +124,9 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
   return (
     <Table.Tr data-single={isSingle} className={styles.tableRowPure} onClick={(width && width > 1023) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={!isSingle ? open : null}>
           {propsRender}
-          {(width && width < 1024 && !isSingle) && <td data-position={'icon-open'} onClick={() => setOpen(prevState => !prevState)}>
+          {(width && width < 1024 && !isSingle) && <td data-position={'icon-open'}
+            // onClick={() => setOpen(prevState => !prevState)}
+          >
               <SvgChevron/>
           </td>}
           {/* {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm}/></td>} */}
