@@ -134,7 +134,7 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                   <Button text={"Завершить"}
                     variant={ButtonVariant.accent}
                     size={btnSize}
-                    action={() => handleChangeBidStatus(BidsStatus["Завершено"])} />
+                    action={() => handleChangeBidStatus(BidsStatus["Завершена"])} />
                 </>
               )
             default:
@@ -162,7 +162,7 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                 case BidsStatus["В работе"]:
                     return BidText.CustomerVRabote
 
-                case BidsStatus["Выполнено"]:
+                case BidsStatus["Выполнена"]:
                     return (
                         <>
                             <Button
@@ -175,14 +175,14 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                                 text={"Принять работу"}
                                 variant={ButtonVariant.accent}
                                 size={btnSize}
-                                action={() => handleChangeBidStatus(BidsStatus["Завершено"])}
+                                action={() => handleChangeBidStatus(BidsStatus["Завершена"])}
                             />
                         </>
                     )
 
                 case BidsStatus["Ожидает"]:
                     return BidText.CustomerOzhidaet
-                case BidsStatus["Завершено"]:
+                case BidsStatus["Завершена"]:
 
                     return BidText.CustomerZavershen
                 case BidsStatus["Разбор"]:
@@ -256,14 +256,14 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                                     store.bidsStore.setActiveTab("Фото")
                                     store.bidsStore.setModalCurrentState(true)
                                   } else {
-                                    handleChangeBidStatus(BidsStatus["Выполнено"])
+                                    handleChangeBidStatus(BidsStatus["Выполнена"])
                                   }
                                 }}
                             />
                         </>
                     )
 
-                case BidsStatus["Выполнено"]:
+                case BidsStatus["Выполнена"]:
                     return (<div className={'grid gap-6'}>{BidText.PerformerVipolnena}<Button text={'Закрыть'} action={() => navigate('/account/bids')} variant={ButtonVariant.accent} size={ButtonSizeType.base}/></div>)
                 case BidsStatus["В обработке"]:
                   return (
@@ -283,7 +283,7 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                       />
                     </>
                   )
-                case BidsStatus["Завершено"]:
+                case BidsStatus["Завершена"]:
                     return BidText.PerformerResheno
                 case BidsStatus["Разбор"]:
                     return BidText.PerformerRazbor

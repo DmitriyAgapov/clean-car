@@ -17,10 +17,10 @@ export enum BidsStatus {
     'Ожидает' = 3,
     'Согласовано' = 4,
     'В работе' = 5,
-    'Выполнено' = 6,
+    'Выполнена' = 6,
     'Разбор' = 7,
     'Отмена' = 8,
-    'Завершено' = 9
+    'Завершена' = 9
 }
 
 export type ReverseEnum = {[K in keyof typeof BidsStatus as typeof BidsStatus[K]]: K}

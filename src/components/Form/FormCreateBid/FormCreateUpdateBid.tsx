@@ -882,7 +882,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                     day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80',
                                 }}
                                 {...formData.getInputProps('time')}
-                              className={'tablet:col-start-2'}
+                                className={'tablet:col-start-2'}
                                 dropdownType='modal'
                                 modalProps={{
                                     centered: true,

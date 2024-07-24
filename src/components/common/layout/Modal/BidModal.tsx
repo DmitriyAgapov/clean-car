@@ -94,7 +94,7 @@ const BidModal = (props: { opened: boolean; onClose: () => void; update: () => v
 								)}
 							</FileButton>
 							<Button  text={'Завершить заявку'} variant={ButtonVariant.accent} type={"button"}  disabled={temp.length < 2} action={() => {
-								handleChangeBidStatus(BidsStatus["Выполнено"])
+								handleChangeBidStatus(BidsStatus["Выполнена"])
 							}}/>
 						</footer>
 					</div>

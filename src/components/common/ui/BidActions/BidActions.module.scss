@@ -8,13 +8,13 @@
   &[data-variant='Разбор'] {
 	color: rgba(3, 134, 93, 1);
   }
-  &[data-variant='Выполнено'], &[data-variant='Завершена'], &[data-variant='Подтверждена'],  {
+  &[data-variant='Выполнена'], &[data-variant='Завершена'], &[data-variant='Подтверждена'],  {
 	color: rgba(19, 255, 113, 1);
   }
   &[data-variant='Отмена'] {
 	color: rgba(244, 86, 95, 1);
   }
-  &[data-variant='Ждет подтверждение'] {
+  &[data-variant='Ждет подтверждения'] {
 	color: rgba(182, 193, 190, 1);
   }
   &[data-variant='В работе'] {

@@ -89,17 +89,16 @@ const FormModalCreatePrice =  () => {
                         action={() => store.appStore.closeModal()}
                         variant={ButtonVariant["accent-outline"]}
                />
-                      <Button text={"Сохранить"}
+                      <Button
+                        text={"Сохранить"}
                         type={'button'}
                         isOnce={true}
                         disabled={values.company_id === 0}
                         action={() => {
-                          console.log(values)
                           agent.Price.createPrice(values.filial_id !== 0 ? values.filial_id : values.company_id)
                             .then(r => {
                               if(r.status === 201) {
                                 mutate().then(() => {
-                                  // console.log('mutate')
                                     store.appStore.closeModal()
                                   }
                                 )
