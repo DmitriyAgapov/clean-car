@@ -153,8 +153,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         store.bidsStore.formResultSet({car: store.userStore.myProfileData.user.cars.length === 1 ? store.userStore.myProfileData.user.cars[0].id : null, conductor: store.userStore.myProfileData.user.id, phone: store.userStore.myProfileData.user.phone})
       }
       return initValues
-
     }, [edit, bid])
+
   const formData = useForm({
       name: 'createBidForm',
       initialValues: initData,
@@ -178,9 +178,9 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       },
       enhanceGetInputProps: (payload) => {
           if (payload.field === 'city') {
-              if (store.appStore.appType === 'customer') {
+            if (store.userStore.myProfileState.company.company_type  === CompanyType.customer || store.userStore.myProfileState.company.company_type  === CompanyType.fizlico) {
                   return {
-                      className: 'hidden',
+                      className: '!hidden',
                   }
               }
           }
@@ -197,9 +197,9 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                   formData.values.phone = null
               }
 
-              if (store.appStore.appType === 'customer') {
+              if (store.userStore.myProfileState.company.company_type  === CompanyType.customer || store.userStore.myProfileState.company.company_type  === CompanyType.fizlico) {
                   return {
-                      className: 'hidden',
+                      className: '!hidden',
                   }
               }
           }
@@ -271,6 +271,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [formData.values.conductor, cars])
 
  const carsData = React.useMemo(() => {
+   console.log(car);
    //@ts-ignore
      if(car && car.length === 1) {
        store.bidsStore.formResultSet({ car: Number(car[0].id) })
@@ -573,9 +574,13 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                 onLoad={handleChangeCompany}
                                 onOptionSubmit={handleChangeCompany}
                                 searchable
-                                data={store.companyStore.companies
+                                data={(() => {
+                                  if(store.userStore.myProfileState.company.company_type !== CompanyType.fizlico) {
+                                    return store.companyStore.companies
                                     .filter((c: any) => c.company_type === 'Клиент')
                                     .map((c: any) => ({ label: c.name, value: String(c.id) }))}
+                                  return [{label: store.userStore.myProfileState.company.name, value: store.userStore.myProfileState.company.id.toString()}]
+                                })()}
                             />
                             <Select
                                 withAsterisk

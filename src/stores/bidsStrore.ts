@@ -376,8 +376,9 @@ export class BidsStore {
             (customer, oldCustomer) => {
                 if(authStore.userIsLoggedIn) {
                     if (customer !== "0" && customer !== 0 && customer !== null) {
+                        console.log(customer);
                         runInAction(async () => {
-                            await usersStore.getUsers(customer)
+                       userStore.myProfileState.company.company_type !== CompanyType.fizlico && await usersStore.getUsers(customer)
                             await carStore.getCarsByCompony(customer)
                             await companyStore.getCustomerCompanyData(customer)
                         })
