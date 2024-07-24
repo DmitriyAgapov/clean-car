@@ -786,7 +786,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             state={step !== 3}
                             animate={animate}
                             className={'!bg-transparent'}
-                            bodyClassName={'grid !grid-cols-3 gap-4'}
+                            bodyClassName={'grid !grid-cols-3 gap-4 items-end'}
                             variant={PanelVariant.textPadding}
                             background={PanelColor.default}
                             header={
@@ -813,7 +813,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                         : ''
                                 }
                             />
-                            <hr className={'col-span-full border-transparent my-2'} />
+
                             <InputAutocompleteWithCity
                                 {...formData.getInputProps('address_to')}
                                 label={'Куда привезти?'}
@@ -827,9 +827,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                         : ''
                                 }
                             />
-                            <hr className={'col-span-full border-transparent my-2'} />
+                            {/* <hr className={'col-span-full border-transparent my-0'} /> */}
                             <Select
                                 {...formData.getInputProps('tire_destroyed')}
+                                className={'tablet:col-start-1'}
                                 onOptionSubmit={(values) => store.bidsStore.formResultSet({ tire_destroyed: values })}
                                 label={'Сколько колес вышло из строя?'}
                                 data={[
@@ -842,6 +843,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             />
                             <Select
                                 {...formData.getInputProps('truck_type')}
+                              className={'tablet:col-start-2'}
                                 onOptionSubmit={(values) => store.bidsStore.formResultSet({ truck_type: values })}
                                 label={'Тип эвакуатора?'}
                                 data={[
@@ -849,9 +851,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                     { label: 'манипулятор ', value: 'манипулятор' },
                                 ]}
                             />
-                            <hr className={'col-span-full border-transparent my-2'} />
+
                             <Select
                                 {...formData.getInputProps('important')}
+                              className={'tablet:col-start-1'}
                                 onOptionSubmit={(values) => {
                                     // console.log(values);
                                     if (values !== 'time') {
@@ -879,6 +882,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                     day: 'text-white data-[disabled=true]:text-white/40 data-[selected=true]:text-accent hover:text-accent/80',
                                 }}
                                 {...formData.getInputProps('time')}
+                              className={'tablet:col-start-2'}
                                 dropdownType='modal'
                                 modalProps={{
                                     centered: true,
@@ -1034,7 +1038,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             <>
                                 <Heading
                                     text={
-                                        formData.values.service_type === '1' ? 'Шаг 3. Выбор партнера' : step4.title
+                                        formData.values.service_type === '1' || formData.values.service_type === '2' ? 'Шаг 3. Выбор партнера' : step4.title
                                     }
                                     color={HeadingColor.accent}
                                     variant={HeadingVariant.h2}

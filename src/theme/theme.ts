@@ -8,7 +8,7 @@ import {
     mergeMantineTheme,
     Checkbox,
     Textarea,
-  Notification,
+    Notification,
     TextInput,
     Popover,
     InputBase,
@@ -18,7 +18,7 @@ import {
     PasswordInput,
     Switch,
 } from '@mantine/core'
-import { TimeInput } from '@mantine/dates';
+import { DateTimePicker, TimeInput } from '@mantine/dates'
 
 // @ts-ignore
 const themeOverride = createTheme({
@@ -38,8 +38,11 @@ const themeOverride = createTheme({
         }),
         Select: Select.extend({
             defaultProps: {
-                withCheckIcon: false
+                withCheckIcon: false,
+                comboboxProps: {
+                    position: 'bottom', middlewares: { flip: false, shift: true } }
             },
+
             classNames: {
                 label: 'font-semibold',
                 error: 'form-error block',
@@ -130,6 +133,11 @@ const themeOverride = createTheme({
             classNames: {
 
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] border-color-[var(--formBorder)] h-10  tablet-max:text-base',
+            }
+        }),
+        DateTimePicker: DateTimePicker.extend({
+            classNames: {
+                root: '*:data-[error=true]:text-error relative !mb-0 pb-4 wrapper-custom tablet-max:!flex-1',
             }
         }),
         Checkbox: Checkbox.extend({
