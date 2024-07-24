@@ -1055,7 +1055,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                 />
                             </>
                         ) : (
-                            <div className={'col-span-full subgrid contents'}>
+                            <div className={'col-span-full subgrid contents overflow-hidden'}>
                               <div className={"col-span-2  row-span-2  relative z-[999] mobile:mb-8 grid  justify-evenly items-start content-start"}>
                                 <div className={"text-base"}>{step4.description}</div>
                                 <div>

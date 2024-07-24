@@ -294,7 +294,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     return (
         <FormProvider form={formData}>
             <PanelForForms
-                className={'!overflow-x-visible'}
+
                 ref={targetRef}
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
@@ -327,12 +327,12 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                 }
                 actionNext={
                     step !== 3 ? (
-                        formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
+                        formData.values.type == CompanyType.customer ? (
                             <Button
                                 type={'button'}
                                 action={() => {
                                     formData.validate()
-                                    if(step === 1 && edit && formData.values.type == CompanyType.customer) {
+                                    if(step === 1 && edit && formData.values.type == CompanyType.customer && store.appStore.appType !== "admin") {
                                         handleSubmit(formData.values)
                                     }
                                     if (step === 2) {
@@ -342,7 +342,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                     }
                                 }}
                                 disabled={!formData.isValid()}
-                                text={step === 1 && edit && formData.values.type == CompanyType.customer ? "Сохранить" : step === 1 ? 'Далее' : 'Сохранить'}
+                                text={step === 1 && edit && formData.values.type == CompanyType.customer && store.appStore.appType !== "admin" ? "Сохранить" : step === 1 ? 'Далее' : 'Сохранить'}
                                 className={'float-right'}
                                 variant={ButtonVariant.accent}
                             />
@@ -548,8 +548,8 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     <PanelForForms
                         state={step !== 2}
                         animate={animate}
-                        className={'!bg-transparent !overflow-x-visible'}
-                        bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+                        className={'!bg-transparent'}
+                        bodyClassName={'!flex tablet-max:flex-col tablet-max:*:width-full tablet:flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
                         footerClassName={''}
                         background={PanelColor.default}

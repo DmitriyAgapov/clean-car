@@ -43,7 +43,7 @@ export const WorkLoadStatus = ({status, className, hasDot = true}: {hasDot?:bool
 const ElMapPanel = (item:any) => {
     const store = useStore()
     console.log(item);
-    return <div className={'bg-black/90 rounded-md relative border-2 border-accent px-2 w-56 py-4 pt-10 -mb-5 relative z-10'}>
+    return <div className={'bg-black/90 rounded-md relative border-2 border-accent px-2 w-56 py-4 pt-10 -mb-5 relative z-10 overflow-hidden'}>
         <WorkLoadStatus status={item.workload}/>
         <Heading text={item.name} className={'text-white font-normal text-xs font-sansSerif !mb-1'} variant={HeadingVariant.h6}/>
         <p className={'text-white !mt-1  font-sansSerif '}>{item.address}</p>

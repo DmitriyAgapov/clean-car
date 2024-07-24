@@ -130,7 +130,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             }
             if (payload.field === 'type') {
                 return {
-                    className: `mb-2  col-span-5  !flex-[1_1_30%]  ${store.appStore.appType !== "admin" && 'hidden'}`,
+                    className: `mb-2  col-span-5  !flex-[1_1_30%]  ${store.appStore.appType !== "admin" && '!hidden'}`,
                 }
             }
             if (payload.field === 'company_name') {
@@ -218,6 +218,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             }
         }
     }, [])
+
     React.useEffect(() => {
         const _v = store.companyStore.getCompanyCity(formData.values.company_id)
         if(_v) {
@@ -228,13 +229,12 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     }, [formData.values.company_id]);
 
     const filialsCompanyData = React.useMemo(() => {
-
-            store.companyStore.loadAllFilials()
-            if (formData.values.company_filials === 'filials') {
-                return store.companyStore.getFilialsAll.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-            } else {
-                return store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-            }
+        store.companyStore.loadAllFilials()
+        if (formData.values.company_filials === 'filials') {
+            return store.companyStore.getFilialsAll.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+        } else {
+            return store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+        }
 
     }, [formData.values.type, formData.values.company_filials])
 
@@ -358,10 +358,11 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             }}
                             defaultValue={formData.values.company_id}
                             label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
+                            disabled={filialsCompanyData.length === 0}
                             {...formData.getInputProps('company_id')}
                             data={filialsCompanyData}
                         />
-                        <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
+                        <hr className='my-2 flex-[1_0_100%] w-full border-transparent' />
                         <TextInput label={'Название филиала'} {...formData.getInputProps('company_name')}  />
                         {formData.values.type === CompanyType.performer && (
                           <InputBase
