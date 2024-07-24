@@ -77,7 +77,11 @@ const FormRegister = () => {
       phone: form.values.phone.replaceAll(' ', ''),
       city: Number(form.values.city)
     }
-    return store.authStore.registerPerson(_d).then(open)
+    return store.authStore.registerPerson(_d).then(r => {
+      if(r && r.status === 201) {
+        open()
+      }
+    })
 
     // console.log(form.values);
     // store.authStore.setLastname(values.lastName)

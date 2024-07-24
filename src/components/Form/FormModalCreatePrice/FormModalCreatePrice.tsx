@@ -90,16 +90,16 @@ const FormModalCreatePrice =  () => {
                         variant={ButtonVariant["accent-outline"]}
                />
                       <Button text={"Сохранить"}
-                        type={'submit'}
+                        type={'button'}
+                        isOnce={true}
                         disabled={values.company_id === 0}
                         action={() => {
                           console.log(values)
                           agent.Price.createPrice(values.filial_id !== 0 ? values.filial_id : values.company_id)
                             .then(r => {
                               if(r.status === 201) {
-                                revalidator.revalidate();
                                 mutate().then(() => {
-                                  console.log('mutate')
+                                  // console.log('mutate')
                                     store.appStore.closeModal()
                                   }
                                 )

@@ -59,7 +59,7 @@ const CompanyPage = () => {
   return (
       <Section type={SectionType.default}>
           <Panel
-            headerClassName={'justify-between gap-4 flex'}
+            headerClassName={'justify-between gap-4 tablet:flex'}
               variant={PanelVariant.withGapOnly}
               header={
                 <>
@@ -100,7 +100,7 @@ const CompanyPage = () => {
               variant={PanelVariant.textPadding}
               background={PanelColor.glass}
               bodyClassName={''}
-              footerClassName={'flex  justify-end mobile:!justify-center'}
+              footerClassName={'flex justify-end mobile:!justify-center'}
               headerClassName={'border-bottom-none'}
               header={
                   <>

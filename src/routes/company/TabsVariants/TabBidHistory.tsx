@@ -16,7 +16,7 @@ const TabBidHistory = ({companyId, company_type, state }:any) => {
 	const params = useParams()
 	const localStoreF = useLocalStore<LocalRootStore>(() => localRootStoreF)
 	const {isLoading, data} = useSWR([`bid_${params.company_id}_${params.id}-history`,  params.company_id, params.id, localStoreF.params.getSearchParams] , ([url,  company_id,id, args]) => client.bidsHistory({company_id: company_id as string, id: Number(id), ...args}))
-	console.log(data);
+
 	useEffect(() => {
 		localStoreF.setData = {
 			...data,
@@ -33,7 +33,8 @@ const TabBidHistory = ({companyId, company_type, state }:any) => {
 	},[data, localStoreF.params.getSearchParams])
 
 	return	<Tabs.Panel  state={state} name={'bid_history'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent pb-0'}>
-			<TableWithSortNew		store={localRootStoreF}
+			<TableWithSortNew
+				store={localRootStoreF}
 				state={isLoading}
 				className={'!rounded-none  !bg-none overflow-visible !border-0 row-span-5 pb-0'}
 				bodyClassName={'!bg-none !rounded-none !bg-transparent  !pb-0'}

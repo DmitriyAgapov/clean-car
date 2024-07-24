@@ -351,7 +351,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                     },
                   },
                 }}
-                value={localStore.params.getSearchParams.start_date ? dayjs.utc(localStore.params.getSearchParams.start_date).hour(0).minute(0).second(0).toDate() : null}
+                value={localStore.params.getSearchParams.start_date ? dayjs(localStore.params.getSearchParams.start_date).utc(true).toDate() : null}
                 clearable
                 onChange={(value) => {
                   setInitParams()
@@ -390,7 +390,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                     },
                   },
                 }}
-                value={localStore.params.getSearchParams.end_date ? dayjs.utc(localStore.params.getSearchParams.end_date).toDate() : null}
+                value={localStore.params.getSearchParams.end_date ? dayjs.utc(localStore.params.getSearchParams.end_date).utc(true).toDate() : null}
                 onChange={(value) => {
                   setInitParams()
                   const timestamp = dayjs(String(value)).format()

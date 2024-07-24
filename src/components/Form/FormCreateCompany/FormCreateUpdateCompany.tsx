@@ -332,6 +332,9 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                 type={'button'}
                                 action={() => {
                                     formData.validate()
+                                    if(step === 1 && edit && formData.values.type == CompanyType.customer) {
+                                        handleSubmit(formData.values)
+                                    }
                                     if (step === 2) {
                                         handleSubmit(formData.values)
                                     } else {
@@ -339,7 +342,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                     }
                                 }}
                                 disabled={!formData.isValid()}
-                                text={step === 1 ? 'Далее' : 'Сохранить'}
+                                text={step === 1 && edit && formData.values.type == CompanyType.customer ? "Сохранить" : step === 1 ? 'Далее' : 'Сохранить'}
                                 className={'float-right'}
                                 variant={ButtonVariant.accent}
                             />

@@ -449,7 +449,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 cols: 6,
                 nameColSpan: 3,
                 valuesSpan: 1,
-                valueStyle: 'text-accent font-medium text-sm tablet-max:before:content-[attr(data-label)":_"]'
+                valueStyle: 'text-accent font-medium text-sm tablet-max:before:content-[attr(data-label)":_"] tablet-max:before:text-gray-2 tablet-max:before:font-medium tablet-max:before:text-sm tablet-max:before:pr-2 tablet-max:before:uppercase'
               }
               const addTotalPercent = (value: number, ar: any[]) => {
                 let initVal = 0
@@ -460,11 +460,6 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                 service: { label: null, values: [], unit: '₽' }, options: [], role: store.appStore.appType, count: data.price_positions.performer.length,
                 calc: function() {
                   //Исполнитель
-
-
-
-
-
                   if(this.role === "performer") {
                     const el = data.price_positions.performer;
                     for(let i = 0; el.length > i; i++) {
@@ -692,10 +687,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                           </Box>
                           {store.appStore.appType !== 'admin' ?
                             store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && (
-                              <Box
-                                  className={'text-gray-2 font-medium text-xss'}
-                                  style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
-                              >Стоимость</Box>
+                              <Box className={'text-gray-2 font-medium text-xss'} style={{ gridColumn: `span ${tableParams.valuesSpan}` }}>Стоимость</Box>
                           ) : store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && (
                               <>
                                   <Box
@@ -730,6 +722,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                                   value: string | number, index: number
                               ) => (
                                   <Box
+                                    data-label={labels[index]}
                                       className={tableParams.valueStyle}
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
                                   >

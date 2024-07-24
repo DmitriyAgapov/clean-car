@@ -16,6 +16,7 @@ const label = (key:string|unknown) => {
     performer: "Партнер",
     amount: "Факт/лимит",
     is_day: "Тип лимита",
+    date: "Дата.",
     company__parent: "Филиал",
     executor: "Исполнитель",
     employee: "Пользователь",

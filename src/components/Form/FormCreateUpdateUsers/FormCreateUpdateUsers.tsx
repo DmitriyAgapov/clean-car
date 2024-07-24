@@ -219,7 +219,10 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
     }, [form.values.type, form.values.company_id, edit])
 
 	useEffect(() => {
-		store.permissionStore.loadCompanyPermissionsResults(form.values.company_id)
+		if(form.values.company_id) {
+
+			store.permissionStore.loadCompanyPermissionsResults(form.values.company_id)
+		}
 	}, [form.values.company_id]);
 	const masked = IMask.createMask({
 		mask: "+7 000 000 00 00",
@@ -367,6 +370,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     />
 	                <Select
 		                {...form.getInputProps('bid_visibility')}
+		                className={'z-50 overflow-hidden relative'}
 		                label="Пользователь видит заявки:"
 		                data={[{label: "Все", value: 'true'}, {label:'Свои', value: "false"}]}
 	                />

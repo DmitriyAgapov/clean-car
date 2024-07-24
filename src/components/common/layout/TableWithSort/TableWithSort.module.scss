@@ -650,15 +650,16 @@ grid-template-columns: repeat(6, 1fr) 4rem 1.5rem;
 
 }
 [data-state-mobile="false"] {
-[data-label="date"] {
+[data-label="Дата."] {
   height: 0;
   overflow: hidden;
 }
 }
 [data-state-mobile="true"] {
 grid-template-columns: repeat(6, 1fr) 4rem 1.5rem;
-[data-label="date"] {
-  grid-row: initial;
+[data-label="Дата."] {
+  grid-row: initial ;
+  height: 0;
 }
 }
 
@@ -670,9 +671,7 @@ width: initial !important;
 [data-label="idnum"] {
 display: none;
 }
-[data-label="date"] {
 
-}
 [data-label="Клиент"] {
 grid-row: 1/2;
 grid-column: 1/-3;

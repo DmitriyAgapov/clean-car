@@ -3,6 +3,7 @@ import { Status } from "utils/schema";
 import appStore from "stores/appStore";
 import actions from "routes/price/actions";
 import { LocalRootStore } from "stores/localStore";
+import dayjs from 'dayjs';
 export type TableSearchParams = { page: number; page_size?: number, q?: string,
 	service_type?: string,
 	company_type?: string,
@@ -71,7 +72,9 @@ export class TableWithSortStore {
 		}
 		this.searchParams = {
 			...this.searchParams,
-			...params
+			...params,
+		...(params.start_date ? {start_date: dayjs(String(params.start_date)).hour(0).minute(0).second(0).format()} : {}),
+		...(params.end_date ? {end_date: dayjs(String(params.end_date)).hour(0).minute(0).second(0).format()} : {})
 		}
 	}
 	deleteParams(paramsName:any) {

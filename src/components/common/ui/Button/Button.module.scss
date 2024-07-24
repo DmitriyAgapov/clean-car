@@ -85,12 +85,20 @@ user-select: none ;
 	@apply font-sans font-semibold;
 	align-items: center;
 
-	&:hover, &:focus {
+	&:hover {
 	  background: var(--accentColor);
 	  border-color: var(--accentColor);
 	  color: black;
-	  filter: drop-shadow(0 0 26px #00ffaebd);
+	  @screen lg {
+		filter: drop-shadow(0 0 26px #00ffaebd);
+	  }
+
 	}
+   &:focus {
+	 background: var(--accentColor);
+	 border-color: var(--accentColor);
+	 color: black;
+   }
   }
 
 

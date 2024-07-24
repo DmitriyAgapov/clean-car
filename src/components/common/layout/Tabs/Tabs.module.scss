@@ -89,6 +89,13 @@
 
     }
   }
+  &[data-name="filials"] {
+    [data-label="state"] {
+      &:before {
+        content: none;
+      }
+    }
+  }
 
 }
 .tabPanelPure {

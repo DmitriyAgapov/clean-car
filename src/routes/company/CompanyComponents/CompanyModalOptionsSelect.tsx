@@ -110,7 +110,7 @@ const CompanyOptionsModal = observer((props: { opened: boolean; onClose: () => v
                             {/* </div> */}
                         </div>
                         <div className={'px-6 py-4 border-t border-t-gray-2'}>
-	                        <ScrollArea.Autosize mah={350} maw={420} mx="auto" w={400}>
+	                        <ScrollArea.Autosize mah={350} maw={420} mx="auto" w={330}>
 		                        <Combobox.Options>
 			                        {options.length > 0 ? options : <Combobox.Empty>Не найдено....</Combobox.Empty>}
 		                        </Combobox.Options>
@@ -119,7 +119,7 @@ const CompanyOptionsModal = observer((props: { opened: boolean; onClose: () => v
                         </div>
                     </Combobox>
 
-                    <footer className={'flex tablet-max:justify-stretch tablet:justify-end pb-4 px-8 pt-4 border-t border-t-gray-2 gap-4'}>
+                    <footer className={'flex tablet-max:justify-stretch  tablet:justify-end pb-4 px-8 pt-4 border-t border-t-gray-2 gap-4'}>
                         <Button
                             type={'button'}
                             size={ButtonSizeType.xs}

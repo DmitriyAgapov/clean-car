@@ -312,7 +312,7 @@ const RowData = observer((props: any) => {
                     <SvgChevron onClick={() => setOpen((prevState) => !prevState)} />
                 </Cell>,
             )
-        if (width && width < 745 && props.style !== "financeId" && props.style !== "financeByTypeServiceId"   || width && width < 745 && props.style == "financeId" && props?.attributes && props?.attributes?.has_child !== false )
+        if (width && width < 745 && props.style !== "financeId" && props.style !== "financeByTypeServiceId"  && props.style !== "bid_histories" || width && width < 745 && props.style == "financeId" && props?.attributes && props?.attributes?.has_child !== false )
             res.push(
                 <Cell view={props.view} data-position='button-mobile'>
                     <Button

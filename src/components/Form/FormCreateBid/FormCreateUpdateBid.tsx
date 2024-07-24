@@ -254,6 +254,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
           store.bidsStore.formResultSet({ company: Number(formData.values.company) })
       }
   }, [formData.values.company])
+
+
   const { cars }  = store.carStore.getCompanyCars
   const car = React.useMemo(() => {
     if(store.userStore.myProfileData.company.company_type === CompanyType.fizlico) {
