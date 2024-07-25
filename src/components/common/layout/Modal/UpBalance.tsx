@@ -8,8 +8,17 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import agent from 'utils/agent'
 import DList from 'components/common/ui/DList/DList'
 import { useForm } from '@mantine/form'
+import { yupResolver } from "mantine-form-yup-resolver";
 import { useSWRConfig } from 'swr'
 import { values } from 'mobx'
+import { CreateCarSchema, NotUpBalanceSchema, UpBalanceSchema } from "utils/validationSchemas";
+type initValues = {
+  amount: null | number
+  purpose: null |  string,
+  company_id: string
+  service_type: null | string
+  description: null | string
+}
 
 export enum PurposeOfTransaction {
     "Пополнение баланса (счета)" = 1,
@@ -33,19 +42,21 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
     const formData = useForm({
         name: 'upBalance',
         onValuesChange: values => console.log(values),
+        validate: yupResolver(!upBalance ? UpBalanceSchema : NotUpBalanceSchema ),
+      validateInputOnBlur: true,
         initialValues: {
-            amount: 0,
-            purpose: "1",
+            amount: null,
+            purpose: "4",
             company_id: id.toString(),
-            service_type: "",
-            description: ""
-        }
+            service_type: null,
+            description: null
+        } as initValues
   })
     React.useEffect(() => {
       let _values:any
      if(upBalance) {
       _values = {
-        amount: 0,
+        amount: null,
         purpose: "1",
         company_id: id.toString(),
         description: upBalance ? `Пополнить счет` : ""
@@ -61,6 +72,7 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
      }
       formData.setValues(_values)
     }, [opened, upBalance]);
+
 	return (
         <Modal.Root size={600} opened={opened} onClose={onClose} centered>
             <Modal.Overlay className={'bg-black/90'} />
@@ -111,20 +123,23 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
                         </div>
                     </form>
                 </Modal.Body>
-                <footer className={'tablet-max:!justify-stretch tablet:'}>
+                <footer className={'tablet-max:!justify-stretch tablet-max:!flex-col-reverse tablet:'}>
                     <Button
+                      type={'button'}
                         text={'Отменить'}
                         action={onClose}
                         variant={ButtonVariant.cancel}
                       size={ButtonSizeType.base}
                     />
                     <Button
-
+                        disabled={!formData.isValid()}
+                      type={'button'}
                         text={'Сохранить'}
                         action={async () => {
-                            const _val = Number(formData.values.purpose) === 5 ? -Math.abs(formData.values.amount) : Number(formData.values.purpose) === 4 ? Math.abs(formData.values.amount) : Math.abs(formData.values.amount)
+
+                            const _val = Number(formData.values.purpose) === 5 ? -Math.abs(formData.values.amount ?? 0) : Number(formData.values.purpose) === 4 ? Math.abs(formData.values.amount ?? 0) : Math.abs(formData.values.amount ?? 0)
                             console.log(_val);
-                            return agent.Balance.upBalance(id, Number(formData.values.purpose), _val, formData.values.description, Number(formData.values.service_type)).then((r) => {
+                            return agent.Balance.upBalance(id, Number(formData.values.purpose), _val, formData.values.description ?? "", Number(formData.values.service_type)).then((r) => {
                                     if(r && r.data && r.data.status === "success") {
                                       mutate(`company_${id}`).then(onClose)
                                     }
@@ -133,6 +148,7 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
                         }}
                         variant={ButtonVariant['accent-outline']}
                     />
+
                 </footer>
             </Modal.Content>
         </Modal.Root>

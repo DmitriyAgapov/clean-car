@@ -20,6 +20,21 @@ export  const SignInSchema = Yup.object().shape({
 	email: Yup.string().email('Некорректный email').required('Обязательное поле'),
 	password: Yup.string().required('Введите пароль')
 })
+export  const UpBalanceSchema = Yup.object().shape({
+	amount: Yup.string().not([0, "0"], 'Не может быть 0').required('Обязательное поле'),
+	purpose:  Yup.string().nonNullable().required('Обязательное поле'),
+	company_id:  Yup.string().required('Обязательное поле'),
+	service_type:  Yup.string().required('Обязательное поле'),
+	description:  Yup.string().min(5, 'Очень короткий комментарий').required('Обязательное поле'),
+})
+export  const NotUpBalanceSchema = Yup.object().shape({
+	amount: Yup.string().not([0, "0"], 'Не может быть 0').required('Обязательное поле'),
+	purpose:  Yup.string().nonNullable().required('Обязательное поле'),
+	company_id:  Yup.string().required('Обязательное поле'),
+	// service_type:  Yup.string().required('Обязательное поле'),
+	description:  Yup.string().min(5, 'Очень короткий комментарий').required('Обязательное поле'),
+})
+
 export const RestorePasswordNewSchema = Yup.object().shape({
 	password: Yup.string().required('Введите пароль'),
 	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),

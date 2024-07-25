@@ -182,12 +182,16 @@ export class UsersStore {
   }
 
   getUsers = flow(function *(this: UsersStore, company_id: any) {
-    const {data, status} = yield agent.Account.getCompanyUsers(Number(company_id))
-    if(status === 200) {
-      //
-      runInAction(() => this.companyUsers = data.results)
-      action(() => this.companyUsers = data.results)
-      return data.results
+    try {
+      const { data, status } = yield agent.Account.getCompanyUsers(Number(company_id))
+      if (status === 200) {
+        //
+        runInAction(() => this.companyUsers = data.results)
+        action(() => this.companyUsers = data.results)
+        return data.results
+      }
+    } catch (e) {
+       console.log(e)
     }
 
   })

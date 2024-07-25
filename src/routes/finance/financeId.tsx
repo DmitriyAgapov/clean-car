@@ -18,9 +18,9 @@ import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
-    // page: 1,
-    // page_size: 10,
-    start_date: dayjs().set('date', 1).format('YYYY-MM-DD'),
+  // page: 1,
+  // page_size: 10,
+  start_date: dayjs().set('date', 1).format(),
 })
 
 function FinanceBottomID(props: { data: any, className?: string }) {
@@ -179,7 +179,7 @@ const FinaceIdPage = () => {
       localStore.params.setSearchParams(_res, true)
     } else if(!location.state) {
       localStore.params.setSearchParams({
-        // start_date: dayjs().set('date', 1).format("YYYY-MM-DD"),
+        start_date: dayjs().set('date', 1).format(),
       }, true)
     }
   }, [location.state])

@@ -95,6 +95,7 @@ export class CompanyStore {
         makeAutoObservable(this, {
             stateMyCompany: computed,
             allCompanies: computed,
+            loadingState: observable,
             getFillialsData: computed,
         })
         makePersistable(this, {
@@ -447,7 +448,8 @@ export class CompanyStore {
         let result
         try {
             if (appStore.appType !== "admin") {
-                const { data, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type),
+                const _type = userStore.myProfileData.company.company_type === CompanyType.performer ? CompanyType.performer : CompanyType.customer
+                const { data, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(_type),
                     userStore.myProfileData.company.id,
                     params,
                 )
@@ -475,8 +477,8 @@ export class CompanyStore {
             }
         } else {
             try {
-                const type = userStore.myProfileData.company.company_type;
-                const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id, params)
+                const _type = userStore.myProfileState.company.company_type === CompanyType.performer ? CompanyType.performer : CompanyType.customer
+                const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(_type), userStore.myProfileData.company.id, params)
                 if (status === 200) {
                     this.allFilials = dataCars.results
                     data = dataCars.results
@@ -687,7 +689,6 @@ export class CompanyStore {
                         this.myCompany.company = data.results
                         this.companies = data.results
                     }))
-                 return this.stateMyCompany.company
             }
         // }
             }
@@ -732,9 +733,9 @@ export class CompanyStore {
         return this.companies
     }
     get getCompaniesAll() {
-        if(this.companies.length === 0) {
-            this.getAllCompanies()
-        }
+        // if(this.companies.length === 0) {
+        //     this.getAllCompanies()
+        // }
         return this.companies as any[]
     }
     getCompanyCity(id: any) {
@@ -744,16 +745,16 @@ export class CompanyStore {
         return false
     }
     get getFilialsAll() {
-        if(this.companies.length === 0) {
-            this.getAllFilials()
-        }
-        if(this.allFilials.length === 0) {
-            runInAction(() =>     {
-                console.log('load filials get');
-
-                this.loadAllFilials()
-            })
-        }
+        // if(this.companies.length === 0) {
+        //     this.getAllFilials()
+        // }
+        // if(this.allFilials.length === 0) {
+        //     runInAction(() =>     {
+        //         console.log('load filials get');
+        //
+        //         this.loadAllFilials()
+        //     })
+        // }
         return this.allFilials
     }
 

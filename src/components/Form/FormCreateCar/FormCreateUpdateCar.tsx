@@ -170,8 +170,10 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         }, 1200)
       width < 1025 ? scrollIntoView() : null
     }
+    const _allCompanies = store.companyStore.getCompaniesAll
     const companyVar = React.useMemo(() => {
-      const  res = form.values.depend_on === "company" ? store.companyStore.getCompaniesAll.filter((c:any) => c.company_type === "Клиент" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c)
+
+      const  res = form.values.depend_on === "company" ? _allCompanies.filter((c:any) => c.company_type === "Клиент" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
       if(res.length === 1) {
         form.values.company_id = String(res[0].id)
       }

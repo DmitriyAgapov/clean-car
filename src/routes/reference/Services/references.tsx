@@ -50,16 +50,20 @@ const ServicesPage = () => {
                     <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
                       <Button text={"Обновить прайс-листы"}
                         action={() => {
-                          agent.Price.updatePrice().then(() =>  notifications.show({
-                            id: 'updatePrice_success',
-                            withCloseButton: true,
-                            autoClose: 5000,
-                            title: 'Прайс обновлен',
-                            message: '',
-                            color: 'var(--accentColor)',
-                            // style: { backgroundColor: 'red' },
-                            loading: false,
-                          }))
+                          agent.Price.updatePrice().then((r:any) =>  {
+                            if(r && r.status < 300) {
+                              notifications.show({
+                                id: 'updatePrice_success',
+                                withCloseButton: true,
+                                autoClose: 5000,
+                                title: 'Прайс обновлен',
+                                message: '',
+                                color: 'var(--accentColor)',
+                                // style: { backgroundColor: 'red' },
+                                loading: false,
+                              })
+                            }
+                            })
                         }}
                         // trimText={true}
                         /* action={() => store.companyStore.addCompany()} */

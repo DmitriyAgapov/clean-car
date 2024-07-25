@@ -390,7 +390,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                     },
                   },
                 }}
-                value={localStore.params.getSearchParams.end_date ? dayjs.utc(localStore.params.getSearchParams.end_date).utc(true).toDate() : null}
+                value={localStore.params.getSearchParams.end_date ? dayjs(localStore.params.getSearchParams.end_date).utc(true).toDate() : null}
                 onChange={(value) => {
                   setInitParams()
                   const timestamp = dayjs(String(value)).format()

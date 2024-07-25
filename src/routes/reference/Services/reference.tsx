@@ -13,7 +13,8 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import AddType from "routes/reference/Services/addType";
 import AddOption from "routes/reference/Services/addOption";
 import { Pagination } from "@mantine/core";
-import agent from "utils/agent";
+import agent from 'utils/agent'
+import { notifications } from "@mantine/notifications";
 
 const ServicePage = () => {
     const store = useStore()
@@ -152,7 +153,20 @@ const ServicePage = () => {
                     <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
                       <Button text={"Обновить прайс-листы"}
                         action={() => {
-                          agent.Price.updatePrice().then(() => console.log("Price updated"));
+                          agent.Price.updatePrice().then((r:any) =>  {
+                            if(r && r.status < 300) {
+                              notifications.show({
+                                id: 'updatePrice_success',
+                                withCloseButton: true,
+                                autoClose: 5000,
+                                title: 'Прайс обновлен',
+                                message: '',
+                                color: 'var(--accentColor)',
+                                // style: { backgroundColor: 'red' },
+                                loading: false,
+                              })
+                            }
+                          })
                         }}
                         // trimText={true}
                         /* action={() => store.companyStore.addCompany()} */

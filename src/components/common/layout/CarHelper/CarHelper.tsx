@@ -9,7 +9,7 @@ const CarHelper = ():JSX.Element => {
 
 	return (
 		<Panel  background={PanelColor.glass} headerClassName={' contents'} bodyClassName={' contents'} variant={PanelVariant.withPaddingSmWithBody} header={<Header/>} className={styles.row + " " + 'grid overflow-hidden grid-cols-[6rem_1fr_1fr_1fr_1fr_1fr] gap-2.5 !bg-gray-2/20 carHelper  pb-10 !border-accent !border tablet-max:px-0 tablet-max:py-8 '}>
-			{carHelperTable.map((ar:any, index:number) => <ul className={'tablet:subgrid  col-span-full tablet-max:!bg-none tablet-max:my-4'} key={`${index}_rows`}>{ar.map((cell:any, index:number) => <li className={styles.listItem + " " + `${index === 0 ? 'text-accent text-sm  pl-6': 'font-medium text-xs' } `} key={`${index}_listEl`}>{cell}</li>)}</ul> )}
+			{carHelperTable.map((ar:any, index:number) => <ul className={'subgrid tablet-max:!block  col-span-full tablet-max:!bg-none tablet-max:my-4'} key={`${index}_rows`}>{ar.map((cell:any, index:number) => <li className={styles.listItem + " " + `${index === 0 ? 'text-accent text-sm  pl-6': 'font-medium text-xs' } `} key={`${index}_listEl`}>{cell}</li>)}</ul> )}
 		</Panel>
 	)
 }

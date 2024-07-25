@@ -7,7 +7,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { PermissionNames } from 'stores/permissionStore'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import TableWithSortNew, { PaginationComponent } from "components/common/layout/TableWithSort/TableWithSortNew";
+
+import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { CarClasses } from 'components/common/layout/Modal/CarClasses'
 import agent, { client } from "utils/agent";

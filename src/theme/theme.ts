@@ -107,7 +107,10 @@ const themeOverride = createTheme({
         }),
         Textarea: Textarea.extend({
             classNames: {
+                root: '*:data-[error=true]:text-error relative !mb-0 !pb-4 wrapper-custom tablet-max:!flex-1',
+                error: 'form-error block',
                 label: 'font-semibold',
+                wrapper: ' !mb-0 ',
                 input: 'text-gray-2 font-medium !placeholder:text-gray-3 bg-white data-[disabled=true]:bg-white rounded-[0.625rem] h-full min-h-[6rem] overflow-hidden border-color-[var(--formBorder)] h-10  tablet-max:text-base',
             }
         }),

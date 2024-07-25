@@ -12,7 +12,8 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { dateTransform } from "utils/utils";
 import AddType from "routes/reference/Services/addType";
 import AddOption from "routes/reference/Services/addOption";
-import agent from "utils/agent";
+import agent from 'utils/agent'
+import { notifications } from "@mantine/notifications";
 
 const ServicesSubTypePage = () => {
     const store = useStore()
@@ -49,7 +50,21 @@ const ServicesSubTypePage = () => {
                     <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
                       <Button text={"Обновить прайс-листы"}
                         action={() => {
-                          agent.Price.updatePrice().then(() => console.log("Price updated"));
+                          agent.Price.updatePrice().then((r:any) =>  {
+                            console.log(r);
+                            if(r && r.status < 300) {
+                              notifications.show({
+                                id: 'updatePrice_success',
+                                withCloseButton: true,
+                                autoClose: 5000,
+                                title: 'Прайс обновлен',
+                                message: '',
+                                color: 'var(--accentColor)',
+                                // style: { backgroundColor: 'red' },
+                                loading: false,
+                              })
+                            }
+                          })
                         }}
                         // trimText={true}
                         /* action={() => store.companyStore.addCompany()} */

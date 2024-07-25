@@ -189,6 +189,17 @@ const handleErrors = (err: AxiosError & any) => {
     //         })
     //     }
     // }
+    if(err.response && err.response.data && err.response.data.error_message ) {
+      notifications.show({
+        id: 'global-error',
+        withCloseButton: true,
+        autoClose: 5000,
+        title: "Ошибка",
+        message: err.response.data.error_message,
+        color: 'var(--errorColor)',
+        loading: false,
+      })
+    }
     return err
 }
 const Price = {
