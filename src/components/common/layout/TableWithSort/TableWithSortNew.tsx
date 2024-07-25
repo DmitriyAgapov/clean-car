@@ -12,7 +12,6 @@ import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
 import { useStore } from "stores/store";
 import { useDebouncedValue, useElementSize, useViewportSize } from "@mantine/hooks";
-import { useFontSize } from "utils/utils";
 import { PaginationComponent } from "components/common/layout/TableWithSort/TableParts/PaginationComponent";
 import { GridView, TableView } from "components/common/layout/TableWithSort/TableParts/TableView";
 
@@ -37,11 +36,6 @@ export type TableWithSortProps = {
     pageSize?: number
     variant?: PanelVariant
 } & PanelProps
-
-
-
-
-
 const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  autoScroll, search = false,headerBar = true, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
 }: TableWithSortProps) => {
     const store = useStore()
@@ -50,15 +44,13 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
     const rows = toJS(localStore.getData)?.results
     const _countFetch = toJS(localStore.getData)?.count
     const initCount = _count
-    // const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading && localStore.params.getIsReady
     const { ref: refBody, width, height } = useElementSize();
-
     const fontSize = store.appStore.fontSizeBodyCalc()
     const [heightVal, setHeightVal] = useState(0)
     const [value] = useDebouncedValue(heightVal, 500)
     const { height:heightV, width:widthV } = useViewportSize();
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
       setHeightVal((prevState) => height !== prevState ? height : prevState);
       const correct = widthV > 1920 ? 5 : 3;
       (() => {
@@ -107,7 +99,6 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
             headerBar={headerBar}
             total={initCount}
             view={true}
-
             autoScroll={autoScroll}
             rows={rows}
             countFetch={_countFetch}
