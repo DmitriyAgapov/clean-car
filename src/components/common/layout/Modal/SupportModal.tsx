@@ -105,7 +105,7 @@ const SupportModal = (props: { opened: boolean; onClose: () => void; update?: ()
 
 	return (
 		<Modal.Root size={996}
-
+			fullScreen
 			opened={props.opened}
 			onClose={props.onClose}
 			centered>

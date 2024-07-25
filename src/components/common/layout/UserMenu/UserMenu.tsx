@@ -101,7 +101,7 @@ const User = observer(({  action }: UserProps) => {
   const store = useStore()
   const companyType = store.appStore.appType
   const user = store.userStore.userData
-  const avatar = user.avatar;
+  const avatar = user?.avatar;
 
   return (
     <div className={styles.user} onClick={action}>
