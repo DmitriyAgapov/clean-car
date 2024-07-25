@@ -9,7 +9,8 @@ import { Box, InputBase, PasswordInput, TextInput, Select } from '@mantine/core'
 import 'yup-phone-lite'
 import { SignupSchemaNew } from "utils/validationSchemas";
 import { RegisterSuccess } from 'components/common/layout/Modal/RegisterSuccess'
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks'
+import { Link } from 'react-router-dom';
 
 const FormRegister = () => {
   const store = useStore()
@@ -129,7 +130,7 @@ const FormRegister = () => {
         />
       </div>
       <div className={styles.text}>
-        Нажимая «Зарегистрироваться», вы принимаете пользовательское соглашение и политику конфиденциальности
+        Нажимая «Зарегистрироваться», вы принимаете <Link to={'/policy#user_text'} className={'text-accent  hover:underline'}>пользовательское соглашение</Link> и <Link to={'/policy'} className={'text-accent hover:underline'}>политику конфиденциальности</Link>
       </div>
       {memoModal}
     </form>

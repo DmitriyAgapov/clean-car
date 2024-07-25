@@ -10,6 +10,7 @@ import { useSearchParams } from 'react-router-dom'
 
 export function BidPaymentResult(props: { opened: boolean; onClose: () => void; status: string}) {
 	const store = useStore()
+
 	const [searchParams, setSearchParams] = useSearchParams()
 	return (
 		<Modal.Root size={375} opened={props.opened} onClose={props.onClose} centered className={'z-[999]'}>
