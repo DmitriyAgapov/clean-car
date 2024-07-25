@@ -138,7 +138,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             label: form.values.depend_on === "company" ? 'Компания' : 'Филиал',
 
             disabled: edit,
-            className: ' !flex-[1_1_64%]'
+            className: ` !flex-[1_1_64%]  ${edit ? "!hidden" : ""}`
           })
         }
 
@@ -151,7 +151,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               // store.carStore.setBrand(prop);
             ,
             disabled: edit,
-            className: ' !flex-[1_1_30%]'
+            className: ` !flex-[1_1_30%] ${edit ? "!hidden" : ""}`
           })
         }
         return ({
@@ -225,8 +225,12 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         // console.log(form.values)
         !edit && store.usersStore.clearSelectedUsers()
         const company = store.companyStore.getCompaniesAll.filter((item:any) => item.id == Number(form.values.company_id))[0];
-        // console.log(company.company_type);
-        form.values.company_type = store.userStore.myProfileData.company.company_type !== CompanyType.fizlico ? company.company_type : CompanyType.fizlico;
+        console.log(form.values);
+        if(!edit) {
+          form.values.company_type = store.userStore.myProfileData.company.company_type !== CompanyType.fizlico ? company.company_type : CompanyType.fizlico;
+        } else {
+          form.setFieldValue('company_type', form.values.company_type === CompanyType.fizlico ? CompanyType.customer : CompanyType.performer )
+        }
         // console.log('submit', form.values);
           store.formStore.setFormDataCreateCar({
             id: store.formStore.formCreateCar.id,

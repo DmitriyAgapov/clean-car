@@ -12,8 +12,9 @@ export function CarClasses(props: { opened: boolean; onClose: () => void}) {
 	return (
 		<Modal.Root size={959} opened={props.opened} onClose={props.onClose} centered className={'z-[999]'}>
 			<Modal.Overlay className={'bg-black/90'}/>
-			<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all fixed top-5 right-9 z-[1000] tablet:hidden"} icon={<SvgClose className={'close__modal'} />}/>
+
 			<Modal.Content radius={20} className={styles.ModalCarClasses + " " + "tablet-max:*:!block tablet-max:*:!px-3"}>
+				<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all fixed top-5 right-9 z-[1000] tablet:hidden !outline-none"} icon={<SvgClose className={'close__modal'} />}/>
 				<Modal.Header className={'static'}>
 					<Modal.Title><Heading
 						text={`Классификация автомобилей`}

@@ -126,7 +126,11 @@ export function InputAutocompleteNew(props:any) {
               setValue(optionValue + ' ')
               combobox.closeDropdown()
           }}
-
+          position={'bottom'}
+          middlewares={{
+            flip: false,
+            shift: true
+          }}
           withinPortal={false}
           store={combobox}
 
@@ -190,8 +194,8 @@ export function InputAutocompleteNew(props:any) {
             </div>
           </Combobox.Target>
 
-          <Combobox.Dropdown hidden={data === null}>
-              <Combobox.Options>
+          <Combobox.Dropdown hidden={data === null} >
+              <Combobox.Options >
                   {options}
                   {empty && <Combobox.Empty>Не найдено</Combobox.Empty>}
               </Combobox.Options>
