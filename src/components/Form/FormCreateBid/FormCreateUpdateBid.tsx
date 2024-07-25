@@ -122,7 +122,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     const navigate = useNavigate()
     const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
     // @ts-ignore
-  const selectedPerformerAmount:any = store.bidsStore.AvailablePerformers.get(String(store.bidsStore.formResultsAll.performer))?.amount
+    const selectedPerformerAmount:any = store.bidsStore.AvailablePerformers.get(String(store.bidsStore.formResultsAll.performer))?.amount
     const changeStep = (step?: number) => {
         setAnimate((prevState) => !prevState)
         setTimeout(() => {
@@ -155,7 +155,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
       return initValues
     }, [edit, bid])
 
-  const formData = useForm({
+    const formData = useForm({
       name: 'createBidForm',
       initialValues: initData,
       validateInputOnBlur: true,
@@ -249,7 +249,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
 
 
-  React.useEffect(() => {
+    React.useEffect(() => {
       if (formData.values.company !== '0') {
           store.bidsStore.formResultSet({ company: Number(formData.values.company) })
       }
@@ -478,11 +478,19 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             <>
                                 <FileButton
                                     onChange={(e) => {
-                                      const _ar = formData.values.photo_new
-                                      e.forEach((i:any) => _ar.push(i))
-                                      formData.setFieldValue('photo_new', _ar, {
-                                        forceUpdate: true
-                                      })
+
+                                      const _ar = formData.getValues().photo_new
+
+                                        e.forEach((i: any) => {
+                                          if(_ar && _ar.length < 8) {
+                                            _ar.push(i)
+                                            formData.setFieldValue('photo_new', _ar, {
+                                              forceUpdate: true
+                                            })
+                                          }
+                                        })
+
+
                                       formData.setTouched({"photo_new": true})
                                     }}
                                     multiple
@@ -496,7 +504,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                             disabled={
                                                 store.bidsStore.formResult.company === 0 ||
                                                 store.bidsStore.formResult.company === null ||
-                                                store.bidsStore.getPhotos.length > 7
+                                              formData.getValues().photo_new.length > 7
                                             }
                                             {...props}
                                             text={'Добавить фото'}
@@ -533,7 +541,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         <Button
                             type={'button'}
                             action={handleNext}
-                          isOnce={true}
+                            isOnce={true}
                             disabled={
                                 !formData.isValid() || (store.bidsStore.AvailablePerformers.size === 0 && step === 4)
                             }
