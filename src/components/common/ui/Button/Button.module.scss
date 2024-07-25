@@ -89,9 +89,9 @@ user-select: none ;
 	  background: var(--accentColor);
 	  border-color: var(--accentColor);
 	  color: black;
-	  @screen lg {
-		filter: drop-shadow(0 0 26px #00ffaebd);
-	  }
+	  backdrop-filter: blur(0);
+	  filter: drop-shadow(0 0 26px #00ffaebd);
+	 
 
 	}
    &:focus {
