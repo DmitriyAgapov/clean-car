@@ -20,8 +20,8 @@ dayjs.extend(utc)
 
 const localRootStore =  new LocalRootStore()
 localRootStore.params.setSearchParams({
-  page: 1,
-  page_size: 10,
+  // page: 1,
+  // page_size: 10,
   start_date: dayjs().set('date', 1).format(),
 })
 const FinanceBottom = observer((props: { data: any, className?: string }) => {

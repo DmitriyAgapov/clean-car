@@ -48,11 +48,11 @@ export const GridView = (props: {
 	return (
 		<ScrollArea
 			classNames={{viewport: stylesGrid.scrollCustom}}
-			mah={`calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})`}
+			mah={width > 768 ? `calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})` : "auto"}
 			scrollbars={width && width > 741 ? "xy" : "y"}
 			maw={sectionWidth}
 			w={"100%"}
-			h={`calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})`}
+			h={width > 768 ? `calc(100dvh - 20rem ${props.props.footerHeight ? '- ' + props.props.footerHeight : '- 0px'})` : "auto"}
 			mih={'100%'}
 		>
 			<div className={stylesGrid.TableWithSortGrid + " " + "w-full"} style={{gridTemplateColumns: ` repeat(${colsAmount}, minmax(auto, 1fr))`}}

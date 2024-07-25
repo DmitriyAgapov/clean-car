@@ -280,7 +280,7 @@ const FinaceIdPage = () => {
             footer={footer?.section}
               style={PanelRouteStyle.financeId}
               background={PanelColor.glass}
-              className={'col-span-full table-groups'}
+              className={'col-span-full table-groups tablet-max:self-stretch'}
               initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
               filter={true}
               state={isLoading}

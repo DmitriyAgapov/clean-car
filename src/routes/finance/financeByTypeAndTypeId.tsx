@@ -148,7 +148,7 @@ const FinanceByTypeAndTypeId = () => {
           autoScroll={true}
           style={PanelRouteStyle.financeByTypeServiceId}
           background={PanelColor.glass}
-          className={'col-span-full table-groups tablet-max:pb-28'}
+          className={'col-span-full table-groups  tablet-max:pb-28  tablet-max:block '}
           initFilterParams={[FilterData.is_active, FilterData.city, FilterData.start_date, FilterData.end_date]}
           filter={true}
           state={isLoading}
