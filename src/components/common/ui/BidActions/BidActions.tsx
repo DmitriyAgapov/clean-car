@@ -160,7 +160,7 @@ const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () =
                         />
                     )
               case BidsStatus["Ждет оплаты"]:
-                console.log(link);
+
                   return <LinkStyled
                     text={"Оплатить заявку"}
                     variant={ButtonVariant.accent}

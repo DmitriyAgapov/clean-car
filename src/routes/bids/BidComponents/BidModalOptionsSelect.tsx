@@ -153,7 +153,7 @@ const BidModalOptionsSelect = () => {
 				<div className={'col-span-full subgrid'}>
 					<InputLabel className={'my-4'}>Выберите дополнительные опции (при необходимости)</InputLabel>
 					<Button text={'Выбрать доп.опции'}  type={'button'} variant={ButtonVariant["accent-outline"]} className={'!normal-case !h-10'} action={open} disabled={!values.service_type || !values.service_subtype }/>
-						{_selected_options.length ? 	<Pill.Group className={`col-span-full mt-4 ${_selected_options.length === 0 ? "hidden" : ''}`}> {_selected_options.map((item:any) => (
+						{_selected_options.length ? 	<Pill.Group className={`col-span-full flex mt-4 ${_selected_options.length === 0 ? "hidden" : ''}`}> {_selected_options.map((item:any) => (
 							<Pill key={item}
 								withRemoveButton
 								onRemove={() => {
