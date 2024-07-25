@@ -32,7 +32,7 @@ export const UploadedPhotosFirstStep = () => {
 			const newphoto = formData.values.photo_new.filter((number:number, index:number) => index !== props);
 			formData.setFieldValue('photo_new', newphoto)
 		}, [formData.values.photo_new])
-
+	console.log(img);
 		const uploadedFiles = React.useMemo(() => {
 			const _photos:any[] = []
 			if(formData.values.photo_new && formData.values.photo_new?.length > 0) {
