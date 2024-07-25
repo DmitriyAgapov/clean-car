@@ -154,10 +154,10 @@ const CompanyModalOptionsSelect = () => {
 		return <CompanyOptionsModal opened={opened} onClose={close} initVals={_selected_options}/>
 	}, [opened, values.performer_company, _selected_options])
 	return (
-				<div className={'grid flex-col justify-items-start flex-[1_0_100%] w-full'}>
+				<div className={'grid tablet-max:!flex flex-col justify-items-start flex-[1_0_100%] w-full tablet-max:!mb-16'}>
 					<InputLabel className={'my-4'}>Выберите партнеров (при необходимости)</InputLabel>
 
-						{_selected_options.length ? 	<Pill.Group className={`col-span-full mt-4 flex ${_selected_options.length === 0 ? "hidden" : ''}`}> {_selected_options.map((item:any) => (
+						{_selected_options.length ? 	<Pill.Group className={`col-span-full mt-4 tablet-max:!inline-flex ${_selected_options.length === 0 ? "hidden" : ''}`}> {_selected_options.map((item:any) => (
 							<Pill key={item}
 								withRemoveButton
 								onRemove={() => {

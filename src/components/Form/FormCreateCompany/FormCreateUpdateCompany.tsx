@@ -549,7 +549,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         state={step !== 2}
                         animate={animate}
                         className={'!bg-transparent'}
-                        bodyClassName={'!flex tablet-max:flex-col tablet-max:*:width-full tablet:flex-wrap gap-x-6 gap-y-3'}
+                        bodyClassName={'tablet:!flex tablet-max:flex-col tablet-max:*:width-full tablet:flex-wrap gap-x-6 gap-y-3  tablet-max:*:!w-full'}
                         variant={PanelVariant.textPadding}
                         footerClassName={''}
                         background={PanelColor.default}
