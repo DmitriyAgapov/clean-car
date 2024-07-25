@@ -159,7 +159,7 @@ const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () =
                             action={() => handleChangeBidStatus(BidsStatus["Отмена"])}
                         />
                     )
-              case BidsStatus["Ожидает оплаты"]:
+              case BidsStatus["Ждет оплаты"]:
                 console.log(link);
                   return <LinkStyled
                     text={"Оплатить заявку"}

@@ -92,7 +92,7 @@ export default function GroupPageCreateAction(props: any) {
           ></Panel>
           <Panel
               variant={PanelVariant.textPadding}
-              state={store.permissionStore.loadingPermissions}
+              state={false}
             bodyClassName={'!py-0 tablet:!px-0'}
               className={'grid  grid-rows-[auto_1fr_auto]'}
             footerClassName={'flex tablet-max:flex-col  !justify-between gap-5'}

@@ -46,7 +46,7 @@ const GroupPage = () => {
                 className={
                   'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                 }
-                action={() => navigate('/account/companies')}
+                action={() => navigate('/account/groups')}
                 variant={ButtonVariant.text}
               />
               <Heading

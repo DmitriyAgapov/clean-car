@@ -370,7 +370,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     />
 	                <Select
 		                {...form.getInputProps('bid_visibility')}
-		                className={'z-50 overflow-hidden relative'}
+		                className={'z-50 overflow-hidden relative col-span-3'}
 		                label="Пользователь видит заявки:"
 		                data={[{label: "Все", value: 'true'}, {label:'Свои', value: "false"}]}
 	                />
