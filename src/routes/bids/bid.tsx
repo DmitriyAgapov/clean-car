@@ -3,7 +3,15 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
+import {
+    Outlet,
+    useLoaderData,
+    useLocation,
+    useNavigate,
+    useParams,
+    useRevalidator,
+    useSearchParams,
+} from 'react-router-dom'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { dateTransformShort } from 'utils/utils'
@@ -15,7 +23,9 @@ import BidActions, { BidAdminActions } from "components/common/ui/BidActions/Bid
 import appStore from "stores/appStore";
 import { observer } from "mobx-react-lite";
 import useSWR from 'swr'
-import { useDidUpdate, useViewportSize } from '@mantine/hooks'
+import { useDidUpdate, useDisclosure, useViewportSize } from '@mantine/hooks'
+import { CarClasses } from "components/common/layout/Modal/CarClasses";
+import { BidPaymentResult } from "components/common/layout/Modal/BidPaymentResult";
 
 const BidPage = () => {
 	const store = useStore()
@@ -23,7 +33,16 @@ const BidPage = () => {
 	const location = useLocation()
 	const revalidator = useRevalidator()
 	const params = useParams()
+	const [sParams] = useSearchParams()
 	const { width } = useViewportSize();
+	const _status = sParams.get('status')
+	const [opened, { open, close }] = useDisclosure(false)
+
+	const memoModal = React.useMemo(() => {
+		if(!_status) return;
+		return <BidPaymentResult status={_status} opened={opened} onClose={close} />
+	}, [opened, _status])
+
 	// const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => agent.Bids.getBid(Number(params.company_id), Number(params.id)).then(r => r.data))
 	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => store.bidsStore.loadBid(Number(params.company_id), Number(params.id)))
 	useDidUpdate(
@@ -64,13 +83,16 @@ const BidPage = () => {
 	useEffect(() => {
 		store.bidsStore.clearPhotos()
 	}, [params.bid_id])
+	useEffect(() => {
+		_status && open()
+	}, [sParams])
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 
 	return (
         <Section type={SectionType.default}>
             <Panel
-	            state={false}
+                state={false}
                 variant={PanelVariant.withGapOnly}
                 headerClassName={'flex justify-between gap-4'}
                 header={
@@ -86,7 +108,7 @@ const BidPage = () => {
                                 className={
                                     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                                 }
-	                            action={() => navigate('/account/bids')}
+                                action={() => navigate('/account/bids')}
                                 variant={ButtonVariant.text}
                             />
                             <Heading
@@ -105,11 +127,15 @@ const BidPage = () => {
                 variant={PanelVariant.textPadding}
                 background={PanelColor.glass}
                 bodyClassName={''}
-	              footerClassName={'tablet-max:!pt-0'}
+                footerClassName={'tablet-max:!pt-0'}
                 headerClassName={'grid grid-cols-4 gap-4 border-bottom-none'}
-	              footer={width && width < 740 && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
-		              <BidActions status={data?.status as BidsStatus} update={mutate}/>
-	              )}
+                footer={
+                    width &&
+                    width < 740 &&
+                    store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
+                        <BidActions status={data?.status as BidsStatus} update={mutate} link={data?.payment_url} />
+                    )
+                }
                 header={
                     <>
                         <div className={'flex col-span-2 tablet-max:col-span-full justify-between'}>
@@ -120,13 +146,21 @@ const BidPage = () => {
                                 color={HeadingColor.accent}
                             />
                         </div>
-                        <div className={'flex  items-end gap-12 justify-start col-span-2 tablet-max:col-span-full tablet-max:block row-start-2'}>
+                        <div
+                            className={
+                                'flex  items-end gap-12 justify-start col-span-2 tablet-max:col-span-full tablet-max:block row-start-2'
+                            }
+                        >
                             <div className={'text-xs text-gray-2'}>
                                 Дата и время регистрации:{' '}
-                                <p className={'py-0'}>{(data && data?.company?.updated) && dateTransformShort(data?.company.updated).date}</p>
+                                <p className={'py-0'}>
+                                    {data && data?.company?.updated && dateTransformShort(data?.company.updated).date}
+                                </p>
                             </div>
                             <div className={'flex gap-6 items-center justify-around tablet-max:inline-flex'}>
-	                            {(data && data?.status) && <Status variant={data?.status as BidsStatus} size={ButtonSizeType.base} />}
+                                {data && data?.status !== null && (
+                                    <Status variant={data?.status as BidsStatus} size={ButtonSizeType.base} />
+                                )}
                                 <Heading
                                     className={'!m-0'}
                                     text={data?.company?.city?.name}
@@ -135,14 +169,25 @@ const BidPage = () => {
                             </div>
                         </div>
 
-                        {(width && width >740) && store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
-                            <BidActions status={data?.status as BidsStatus} update={mutate}/>
-                        )}
+                        {width &&
+                            width > 740 &&
+                            store.userStore.getUserCan(PermissionNames['Управление заявками'], 'update') && (
+                                <BidActions
+                                    status={data?.status as BidsStatus}
+                                    update={mutate}
+                                    link={data?.payment_url}
+                                />
+                            )}
                     </>
                 }
             >
-                <Tabs variant={'bid-tabs'} data={tabedData} type={TabsType.bid} className={'!grid grid-rows-[auto_1fr] max-h-fit h-full panel__tabs'}/>
-
+                <Tabs
+                    variant={'bid-tabs'}
+                    data={tabedData}
+                    type={TabsType.bid}
+                    className={'!grid grid-rows-[auto_1fr] max-h-fit h-full panel__tabs'}
+                />
+                {memoModal}
             </Panel>
         </Section>
     )

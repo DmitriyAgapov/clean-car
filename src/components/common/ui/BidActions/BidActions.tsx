@@ -10,6 +10,8 @@ import styles from "./BidActions.module.scss";
 import { useViewportSize } from "@mantine/hooks";
 import BidModal from "components/common/layout/Modal/BidModal";
 import { useSWRConfig } from "swr";
+import { useLocalStore } from "stores/localStore";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 const BidText = {
   CustomerVObrabotke: <p>Партнер открыл заявку.Ожидается обратная связь</p>,
@@ -32,7 +34,8 @@ export const BidAdminActions = () => {
     const store = useStore()
     let revalidator = useRevalidator()
     const params = useParams()
-    const { mutate } = useSWRConfig()
+    const { mutate, cache } = useSWRConfig()
+
 
     const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
         (async () => {
@@ -80,7 +83,7 @@ export const BidAdminActions = () => {
 }
 
 
-const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void }): JSX.Element => {
+const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () => void , link?:any}): JSX.Element => {
 
   const { height, width } = useViewportSize();
   const {cache, mutate } = useSWRConfig()
@@ -92,7 +95,7 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
     return  <BidModal update={update} opened={store.bidsStore.modalCurrentState}
       onClose={() => store.bidsStore.setModalCurrentState(false)} />
   }, [store.bidsStore.modalCurrentState]);
-
+  console.log(link);
   const btnSize = React.useMemo(() => {
     if((width && width < 740)) return ButtonSizeType.lg
     return ButtonSizeType.sm
@@ -156,6 +159,15 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                             action={() => handleChangeBidStatus(BidsStatus["Отмена"])}
                         />
                     )
+              case BidsStatus["Ожидает оплаты"]:
+                console.log(link);
+                  return <LinkStyled
+                    text={"Оплатить заявку"}
+                    variant={ButtonVariant.accent}
+                    size={btnSize}
+                    to={link}
+                  />
+
                 case BidsStatus["В обработке"]:
                     return BidText.CustomerVObrabotke
 
