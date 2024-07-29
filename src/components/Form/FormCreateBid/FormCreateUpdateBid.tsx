@@ -249,10 +249,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
 
 
-    React.useEffect(() => {
-      if (formData.values.company !== '0') {
-          store.bidsStore.formResultSet({ company: Number(formData.values.company) })
-      }
+  React.useEffect(() => {
+    if (formData.values.company !== '0') {
+        store.bidsStore.formResultSet({ company: Number(formData.values.company) })
+    }
   }, [formData.values.company])
 
 
@@ -271,7 +271,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [formData.values.conductor, cars])
 
  const carsData = React.useMemo(() => {
-   console.log(car);
+
    //@ts-ignore
      if(car && car.length === 1) {
        store.bidsStore.formResultSet({ car: Number(car[0].id) })

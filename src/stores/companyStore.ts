@@ -540,6 +540,7 @@ export class CompanyStore {
     })
 
     addCompany = flow(function* (this: CompanyStore, data: any, type: CompanyType) {
+        console.log(data);
         this.loadingCompanies = true
         try {
             if (type === CompanyType.performer) {

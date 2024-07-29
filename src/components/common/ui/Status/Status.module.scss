@@ -32,7 +32,7 @@
   &[data-variant='Согласовано'], &[data-rev-varian='Согласовано'],  {
 	background: rgb(0, 255, 178);
   }
-  &[data-variant='Отмена'], &[data-rev-varian='Отмена'],  {
+  &[data-variant='Отменена'], &[data-rev-varian='Отменена'],  {
 	background: rgba(244, 86, 95, 1);
   }
   &[data-variant='Ожидает'], &[data-rev-varian='Ожидает'],  {
@@ -42,7 +42,7 @@
 	background: rgb(255, 199, 1);
   }
   &[data-variant='Ждет оплаты'], &[data-rev-varian='Ждет оплаты'],  {
-	background: rgb(208, 1, 255);
+	background: #FF4D01;
   }
 
 

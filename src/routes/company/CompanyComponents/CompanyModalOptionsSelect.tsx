@@ -67,10 +67,10 @@ const CompanyOptionsModal = observer((props: { opened: boolean; onClose: () => v
 		</Combobox.Option>
 	));
 	return (
-        <Modal.Root  opened={props.opened} onClose={props.onClose} centered lockScroll={isMobile}  size={isMobile ? "auto" : "lg"} fullScreen={isMobile}>
+        <Modal.Root  opened={props.opened} onClose={props.onClose} centered lockScroll={isMobile}  size={isMobile ? "lg" : "lg"}>
             <Modal.Overlay className={'bg-black/90  backdrop-blur-xl'} />
-            <Modal.Content radius={20} className={'flex flex-col overflow-hidden'} >
-                <Modal.Header className={'static px-8 bg-transparent'} >
+            <Modal.Content radius={20} className={'flex flex-col'} >
+                <Modal.Header className={'static bg-transparent py-0 px-6'} >
                     <Modal.Title>
                         <Heading
                             text={`Партнеры`}
@@ -84,9 +84,9 @@ const CompanyOptionsModal = observer((props: { opened: boolean; onClose: () => v
                         icon={<SvgClose className={'close__modal'} />}
                     />
                 </Modal.Header>
-                <Modal.Body className={'!p-0 flex-1 grid grid-rows-[auto_1fr_auto]'}>
+                <Modal.Body className={'flex-1 grid grid-rows-[auto_1fr_auto]'}>
                     <Combobox store={combobox} onOptionSubmit={handleValueSelect}>
-                        <div className={'static px-7 pb-4'}>
+                        <div className={'static pb-4'}>
                             <Combobox.EventsTarget>
                                 <TextInput
 	                                  classNames={{
@@ -109,8 +109,8 @@ const CompanyOptionsModal = observer((props: { opened: boolean; onClose: () => v
                             {/*     /!* </PillsInput> *!/ */}
                             {/* </div> */}
                         </div>
-                        <div className={'px-6 py-4 border-t border-t-gray-2'}>
-	                        <ScrollArea.Autosize mah={350} maw={420} mx="auto" w={330}>
+                        <div className={'py-4 border-t border-t-gray-2'}>
+	                        <ScrollArea.Autosize mah={320} maw={420} type={"hover"} offsetScrollbars={"y"}>
 		                        <Combobox.Options>
 			                        {options.length > 0 ? options : <Combobox.Empty>Не найдено....</Combobox.Empty>}
 		                        </Combobox.Options>
@@ -119,14 +119,14 @@ const CompanyOptionsModal = observer((props: { opened: boolean; onClose: () => v
                         </div>
                     </Combobox>
 
-                    <footer className={'flex tablet-max:justify-stretch  tablet:justify-end pb-4 px-8 pt-4 border-t border-t-gray-2 gap-4'}>
+                    <footer className={'flex tablet-max:justify-stretch  tablet:justify-center pb-4 pt-4 border-t border-t-gray-2 gap-4'}>
                         <Button
                             type={'button'}
                             size={ButtonSizeType.xs}
                             text={'Отменить'}
 	                        action={props.onClose}
                             variant={ButtonVariant['accent-outline']}
-                            className={'!text-sm tablet-max:flex-1'}
+                            className={'!text-sm flex-1'}
                         />
                         <Button
                             type={'button'}
@@ -134,7 +134,7 @@ const CompanyOptionsModal = observer((props: { opened: boolean; onClose: () => v
                             action={handleSaveValues}
                             text={'Сохранить'}
                             variant={ButtonVariant.accent}
-                            className={'!text-sm  tablet-max:flex-1'}
+                            className={'!text-sm flex-1'}
                         />
                     </footer>
                 </Modal.Body>
@@ -170,37 +170,6 @@ const CompanyModalOptionsSelect = () => {
 						))}
 						</Pill.Group> : null}
 					<Button text={'Выбрать'}  type={'button'} variant={ButtonVariant["accent-outline"]} className={'!normal-case !h-10 mt-8'} action={open} />
-					{/* {values.service_subtype && */}
-					{/* 	values.service_subtype !== '0' && */}
-					{/* 	values.service_subtype && */}
-					{/* 	values.service_subtype !== '0' && */}
-					{/* 	store.catalogStore.ServiceSubtypesOptions.length !== 0 && ( */}
-					{/* 		<Checkbox.Group */}
-					{/* 			className={'col-span-2'} */}
-					{/* 			{...getInputProps('service_option')} */}
-					{/* 			classNames={{ */}
-					{/* 				label: 'text-accent label mb-4', */}
-					{/* 				error: 'absolute -bottom-2', */}
-					{/* 				root: 'relative pb-4', */}
-					{/* 			}} */}
-					{/* 			value={store.bidsStore.formResult.service_option.map((o: number) => String(o))} */}
-					{/* 			onChange={(vals) => { */}
-					{/* 				store.bidsStore.formResultSet({ */}
-					{/* 					service_option: vals.map((e) => Number(e)), */}
-					{/* 				}) */}
-					{/* 				values.service_option = val( */}
-					{/* 					store.bidsStore.formResultsAll.service_option, */}
-					{/* 				) */}
-					{/* 			}} */}
-					{/* 			label='Выберите дополнительные опции (при необходимости)' */}
-					{/* 		> */}
-					{/* 			<Group mt='xs'> */}
-					{/* 				{store.catalogStore.ServiceSubtypesOptions.map((i: any) => ( */}
-					{/* 					<Checkbox key={i.id} value={String(i.id)} label={i.name} /> */}
-					{/* 				))} */}
-					{/* 			</Group> */}
-					{/* 		</Checkbox.Group> */}
-					{/* 	)} */}
 					{memoModal}
 				</div>
 	)

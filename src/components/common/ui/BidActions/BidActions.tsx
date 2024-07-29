@@ -125,7 +125,7 @@ const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () =
               return (<Button text={"Отменить заявку"}
                   variant={ButtonVariant.accent}
                   size={btnSize}
-                  action={() => handleChangeBidStatus(BidsStatus["Отмена"])} />
+                  action={() => handleChangeBidStatus(BidsStatus["Отменена"])} />
               )
             case BidsStatus["Разбор"]:
               return (
@@ -133,7 +133,7 @@ const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () =
                   <Button text={"Отменить"}
                     variant={ButtonVariant["accent-outline"]}
                     size={btnSize}
-                    action={() => handleChangeBidStatus(BidsStatus["Отмена"])} />
+                    action={() => handleChangeBidStatus(BidsStatus["Отменена"])} />
                   <Button text={"Завершить"}
                     variant={ButtonVariant.accent}
                     size={btnSize}
@@ -156,7 +156,7 @@ const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () =
                             text={"Отменить заявку"}
                             variant={ButtonVariant.accent}
                             size={btnSize}
-                            action={() => handleChangeBidStatus(BidsStatus["Отмена"])}
+                            action={() => handleChangeBidStatus(BidsStatus["Отменена"])}
                         />
                     )
               case BidsStatus["Ждет оплаты"]:
@@ -200,7 +200,7 @@ const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () =
                 case BidsStatus["Разбор"]:
                   return BidText.CustomerRazbor
 
-                case BidsStatus["Отмена"]:
+                case BidsStatus["Отменена"]:
                   return BidText.CustomerOtmenena
 
                 default:
@@ -299,7 +299,7 @@ const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () =
                     return BidText.PerformerResheno
                 case BidsStatus["Разбор"]:
                     return BidText.PerformerRazbor
-                case BidsStatus["Отмена"]:
+                case BidsStatus["Отменена"]:
                     return BidText.PerformerOtmena
                 default:
                     result = null

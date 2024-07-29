@@ -38,7 +38,7 @@ const Logo = ({ className = "", position = "" }: LogoProps) => {
       {/* </Link> : null} */}
 
 
-      {store.appStore.appType !== "" ? <>  <Vector /><Link to={'/'} className={styles.routeName}>{routeName}</Link> <Text className={'col-span-2 text-black'}/></>: <TextAuth className={`col-span-2 tablet:max-w-sm max-w-xss`}/>}
+      {store.appStore.appType !== "" ? <>  <Vector /><Link to={'/'} className={styles.routeName}>{routeName}</Link> <Text className={'col-span-2 text-black'}/></>: <Link to={'/'} className={styles.routeName}><TextAuth className={`col-span-2 tablet:max-w-sm max-w-xss`}/></Link>}
 
 
     </div>
