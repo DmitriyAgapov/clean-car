@@ -675,21 +675,33 @@ export class CompanyStore {
         // if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
                  return await agent.Companies.getAllCompanies(params)
-                    .then((response:any) => response)
-                    .then((response:any) => response.data)
-                    .then((data:any) => runInAction(() => {
-                        this.companies = data.results
-                     }))
+                    .then((response:any) => {
+                        if(response && response.data) {
+                            runInAction(() => {
+                                this.companies = response.data.results
+                            })
+                            return response
+                        }
+                    })
                     // .catch((errors:any) => this.errors = errors)
 
                 }
            else {
                 return await agent.Companies.getMyCompanies(params)
-                    .then((response:any) => response.data)
-                    .then((data:any) => runInAction(() => {
-                        this.myCompany.company = data.results
-                        this.companies = data.results
-                    }))
+                .then((response:any) => {
+                    if(response && response.data) {
+                        runInAction(() => {
+                            this.myCompany.company = response.data.results
+                            this.companies = response.data.results
+                        })
+                        return response
+                    }
+                })
+                    // .then((response:any) => response.data)
+                    // .then((data:any) => runInAction(() => {
+                    //     this.myCompany.company = data.results
+                    //     this.companies = data.results
+                    // }))
             }
         // }
             }

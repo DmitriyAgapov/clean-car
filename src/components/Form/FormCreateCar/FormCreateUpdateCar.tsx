@@ -18,8 +18,8 @@ import PanelForForms, { PanelColor } from "components/common/layout/Panel/PanelF
 import { createFormActions, createFormContext } from "@mantine/form";
 import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
-import { CompanyType, CompanyTypeRus } from "stores/companyStore";
-import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
+import { CompanyType, CompanyTypeRus } from 'stores/companyStore'
+import { useDidUpdate, useScrollIntoView, useViewportSize } from "@mantine/hooks";
 import { PanelVariant } from "components/common/layout/Panel/Panel";
 
 interface CarCreateUpdate  {
@@ -68,7 +68,6 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
       if(store.userStore.myProfileData.company.company_type === CompanyType.fizlico) {
         initValues.company_type = CompanyType.fizlico
         initValues.company_id = store.userStore.myProfileData.company.id
-        console.log(store.userStore.myProfileData.user.id);
         initValues.employees = [store.userStore.myProfileData.user.id]
       }
       if(edit) {
@@ -145,6 +144,10 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         if(payload.field === "depend_on") {
           return ({
             onChange: (event:any) => {
+              console.log(event);
+              // if(store.appStore.appType === "admin") {
+              //   store.companyStore.getAllCompanies()
+              // }
               form.setFieldValue('depend_on', event)
             }
               // payload.form.values.model = null;
@@ -171,16 +174,46 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
       width < 1025 ? scrollIntoView() : null
     }
     const _allCompanies = store.companyStore.getCompaniesAll
-    const companyVar = React.useMemo(() => {
-
-      const  res = form.values.depend_on === "company" ? _allCompanies.filter((c:any) => c.company_type === "Клиент" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
-      if(res.length === 1) {
-        form.values.company_id = String(res[0].id)
+    // const _allFilials = store.companyStore.getFilialsAll
+    //
+    // const companyVar = React.useMemo(() => {
+    //   store.companyStore.loadAllFilials()
+    //   const  res = form.values.depend_on === "company" ? _allCompanies.filter((c:any) => c.company_type === "Клиент" && c.parent === null) : store.companyStore.getFilialsAll.filter((c:any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
+    //   if(res.length === 1) {
+    //     form.values.company_id = String(res[0].id)
+    //   }
+    //   return res
+    // },[form.values.depend_on])
+    const [cVar, setCVar] = React.useState([{name: "Нет ", id: "none"}])
+    React.useEffect( () => {
+      setCVar([{name: "Нет ", id: "none"}]);
+      const setRes = () => {
+        let res: any[] = []
+        if(form.values.depend_on === "company") {
+          res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
+        } else {
+          res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
+        }
+        if (res.length === 1) {
+          form.values.company_id = String(res[0].id)
+        }
+        setCVar(res)
       }
-      return res
-      },[form.values.depend_on])
-    const navigate = useNavigate()
+      (async () => {
+        if (form.values.depend_on === "company" || store.appStore.appType === "admin") {
+          const _res  = await store.companyStore.getAllCompanies()
+           if(_res) {
+             setRes()
+           }
+        }
+        if (form.values.depend_on === "filials") {
+          await store.companyStore.loadAllFilials()
+          setRes()
+        }
+      })()
+    },[form.values.depend_on])
 
+    const navigate = useNavigate()
     const formDataSelectUsers = React.useMemo(() => {
         return store.usersStore.usersList.users.map((item:any) => ({label: item.employee.last_name + ' ' + item.employee.first_name, value: String(item.employee.id)}))
     },[store.usersStore.companyUsers]);
@@ -351,7 +384,10 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                             label={'Принадлежит'}
                             {...form.getInputProps('depend_on', { dependOn: 'type' })}
                             defaultValue={form.values.depend_on}
-                            onOptionSubmit={() => form.setValues({ ...form.values, company_id: null, group: null })}
+                            onOptionSubmit={(values) => {
+                              console.log(values);
+                              form.setValues({ ...form.values, company_id: null, group: null })}
+                            }
                             data={[
                                 { label: 'Компании', value: 'company' },
                                 { label: 'Филиалы', value: 'filials' },
@@ -360,8 +396,9 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                         <Select
                             searchable
                             label={'Компании'}
+                            disabled={!cVar.length}
                             {...form.getInputProps('company_id', { dependOn: 'type' })}
-                            data={companyVar.map((item) => ({ label: item.name, value: String(item.id) }))}
+                            data={cVar.map((item) => ({ label: item.name, value: String(item.id) })) ?? ['Ytn']}
                         />
                         <hr className={'col-span-full flex-[1_100%]'} /></> }
                         <Select

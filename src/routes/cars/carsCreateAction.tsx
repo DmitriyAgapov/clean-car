@@ -4,7 +4,7 @@ import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import 'yup-phone-lite'
 import { useStore } from "stores/store";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
@@ -12,7 +12,8 @@ import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
 import { ActionIcon, FileButton } from "@mantine/core";
 import agent from "utils/agent";
-import { notifications } from "@mantine/notifications";
+import { notifications } from '@mantine/notifications'
+import { useDidUpdate } from "@mantine/hooks";
 
 export default function CarsPageCreateAction() {
   const store = useStore()
@@ -66,10 +67,13 @@ export default function CarsPageCreateAction() {
       })()
     }
   }, [])
-
+  const location = useLocation()
   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
   store.usersStore.clearSelectedUsers()
   store.formStore.formClear('formCreateCar')
+  // React.useEffect(() => {
+  //   store.companyStore.getAllCompanies()
+  // }, [location.pathname])
 
   return (
     <Section type={SectionType.default}>

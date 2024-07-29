@@ -26,6 +26,7 @@ import { PermissionNames } from "stores/permissionStore";
 import { useSWRConfig } from "swr";
 import { CompanyType } from "stores/companyStore";
 import BidModalOptionsSelect from "routes/bids/BidComponents/BidModalOptionsSelect";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 interface InitValues {
     address: string | null
@@ -466,7 +467,14 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
                 actionBack={
                     <>
-                        {step === 5 || step === 1 ? null : (
+                        {step === 5 ||step === 1 ? store.userStore.myProfileState.company.company_type === CompanyType.fizlico  ? <Button
+                            type={'button'}
+                            action={() => navigate('/account/bids')}
+                            text={'Закрыть'}
+                            className={'float-right'}
+                            variant={ButtonVariant["accent-outline"]}
+                          /> : null : (
+
                             <Button
                                 text={'Назад'}
                                 action={handleBack}
@@ -530,10 +538,9 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 }
                 actionNext={
                     step === 5 ? (
-                        <Button
-                            type={'button'}
-                            action={() => navigate('/account/bids')}
-                            text={'Закрыть'}
+                        <LinkStyled
+                            to={store.bidsStore.justCreatedBid.payment_url}
+                            text={'Оплатить'}
                             className={'float-right'}
                             variant={ButtonVariant.accent}
                         />
