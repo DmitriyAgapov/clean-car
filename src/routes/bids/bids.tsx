@@ -134,7 +134,7 @@ const BidsPage = () => {
 							className={'col-span-full table-groups table-bids'}
 							filter={true}
 							initFilterParams={[FilterData.city, FilterData.bidStatus, FilterData.service_type, FilterData.start_date, FilterData.end_date]}
-							state={localStore.params.getIsReady}
+							state={false}
 							ar={th}
 				/>
 		</Section>

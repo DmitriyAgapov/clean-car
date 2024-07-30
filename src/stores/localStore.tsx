@@ -87,12 +87,12 @@ export class LocalRootStore  {
     return this.isLoading
   }
   get getData() {
-    if(this.inFinitiveScroll) {
-      return ({
-        ...this.data,
-        results: values(this.inFinitiveScrollResults)
-      })
-    }
+    // if(this.inFinitiveScroll) {
+    //   return ({
+    //     ...this.data,
+    //     results: values(this.inFinitiveScrollResults)
+    //   })
+    // }
     return this.data
   }
 }
