@@ -677,7 +677,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
               }
               return (
                   <>
-                      <SimpleGrid cols={tableParams.cols} spacing={8} className={'mb-6 items-start flex-1 content-start tablet-max:flex tablet-max:flex-col'}>
+                      <SimpleGrid key={'grid_1'} cols={tableParams.cols} spacing={8} className={'mb-6 items-start flex-1 content-start tablet-max:flex tablet-max:flex-col'}>
                           {/*  Header  */}
                           <Box
                               style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
@@ -722,6 +722,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                                   value: string | number, index: number
                               ) => (
                                   <Box
+                                    key={`${index}_box`}
                                     data-label={labels[index]}
                                       className={tableParams.valueStyle}
                                       style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
@@ -739,10 +740,10 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                               Дополнительные опции
                           </Box>
 
-                          {_res.options?.map((o: any) => (
+                          {_res.options?.map((o: any, index: number) => (
                               <>
                                   <Box
-
+                                    key={`${index}_box_option`}
                                       className={'font-semibold font-sans  mt-2'}
                                       style={{ gridColumn: `span ${tableParams.nameColSpan}` }}
                                   >
@@ -751,6 +752,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                                   {
                                     store.userStore.getUserCan(PermissionNames['Финансовый блок'], 'read') && o.values.map((value: number, index: number) => (
                                       <Box
+                                        key={`${index}_box_option_values`}
                                           data-label={labels[index]}
                                           className={tableParams.valueStyle}
                                           style={{ gridColumn: `span ${tableParams.valuesSpan}` }}
@@ -761,7 +763,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                               </>
                           ))}
                       </SimpleGrid>
-                      <SimpleGrid  cols={tableParams.cols} spacing={8} className={'mb-0 flex-0  tablet-max:flex tablet-max:flex-col items-start'}>
+                      <SimpleGrid key={'grid_2'}  cols={tableParams.cols} spacing={8} className={'mb-0 flex-0  tablet-max:flex tablet-max:flex-col items-start'}>
                         {/* Стоимость услуги*/}
 
                         <>

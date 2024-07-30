@@ -82,6 +82,7 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
             routeStyle={style}
             variant={variant ? variant : PanelVariant.dataPadding}
             footerClassName={'px-6 pt-2 pb-4 h-24' + " " + props.footerClassName}
+
             headerClassName={''}
             header={search || filter ?
                 <>

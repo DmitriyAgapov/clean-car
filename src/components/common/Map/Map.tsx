@@ -9,6 +9,7 @@ import DList from "components/common/ui/DList/DList";
 import { values } from "mobx";
 import { createBidFormActions } from "components/Form/FormCreateBid/FormCreateUpdateBid";
 import { observer } from "mobx-react-lite";
+import { useWindowDimensions } from "utils/utils";
 // type MapProps = {}
 export const WorkLoadStatus = ({status, className, hasDot = true}: {hasDot?:boolean,className?:string, status: number}):any => {
     let result: React.ReactNode
@@ -102,8 +103,10 @@ const MapWithDots = () => {
 
     const centerLat = (Math.min(...arY) + Math.max(...arY)) / 2
     const centerLon = (Math.min(...arX) + Math.max(...arX)) / 2
+    const {width} = useWindowDimensions()
+    console.log(width);
+    React.useLayoutEffect(() => {
 
-    useEffect(() => {
         // @ts-ignore
         let polygon = L.polygon(fitB, {color: 'red'});
         // @ts-ignore
@@ -115,19 +118,25 @@ const MapWithDots = () => {
 
 
   const displayMap = useMemo(
-    () => (
-      // @ts-ignore
-      <MapContainer/* @ts-ignore */ ref={setMap} attributionControl={false} center={[centerLon, centerLat]} className={styles.Map} style={{ width: '100%', height: '100%'}} scrollWheelZoom={true} zoom={14}>
 
-        <TileLayer/* attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' */ url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+    () => {
+    if(!width) return <></>
+      // @ts-ignore
+      return <MapContainer
+        /* @ts-ignore */
+        ref={setMap} attributionControl={false} center={[centerLon, centerLat]} className={styles.Map} style={{ width: width && width < 768 ? 'calc(100dvw - 2rem)' : "100%", height: width && width < 768 ? 'calc(100dvw - 2rem)' : "100%"}} scrollWheelZoom={true} zoom={14}>
+
+        <TileLayer
+          /* attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' */
+          url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         {performers.map((item: any, index: number) => (
           <ElMap {...item} key={`perf_map_${index}`}/>
         ))}
       </MapContainer>
-    ),
-    [])
+    },
+    [width])
   if(performersAr.size > 0) return (
-        <div className={'rounded-md overflow-hidden bg-black/80 content-start col-span-3 row-start-1 col-start-3 row-span-2 '} style={{minHeight: '24rem', height:' 100%', width: '100%', position: 'relative', display: 'block' }}>
+        <div className={'rounded-md overflow-hidden bg-black/80 content-start col-span-3 row-start-1 col-start-3 row-span-2 tablet:min-h-96 aspect-square'} style={{ height:' 100%', width: '100%', position: 'relative', display: 'block' }}>
             {displayMap}
         </div>
     )

@@ -55,7 +55,7 @@ const FormModalAddUser =  (props: { company_id: any,  opened: boolean, onClose: 
 
 
     return (
-      <Modal.Root size={'md'} opened={props.opened} onClose={props.onClose} centered className={'z-[999]'}>
+      <Modal.Root size={'lg'} opened={props.opened} onClose={props.onClose} centered className={'z-[999]'}>
         <Modal.Overlay className={'bg-black/90'}/>
         <Modal.Content radius={20} className={styles.ModalUpBalance + " " + "tablet-max:*:!block tablet-max:*:!px-3"}>
           <Modal.Header className={'static'}>

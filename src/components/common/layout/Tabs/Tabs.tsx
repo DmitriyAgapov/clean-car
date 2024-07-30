@@ -152,6 +152,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
             )
         }
     }
+
     return result
 }
 const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
