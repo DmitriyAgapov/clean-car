@@ -91,6 +91,16 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                         className: 'w-max  !flex-[0_0_20rem] '
                     })
                 }
+                if(payload.field === "company") {
+                    return ({
+                        disabled: store.appStore.appType !== "admin",
+
+                        // className: 'w-max  !flex-[0_0_20rem] '
+                    })
+                }
+
+
+
                 return {
                     className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
                 }
@@ -202,10 +212,18 @@ const FormCreateUpdateLimits = ({ company, edit }: any) => {
                     setConductors(null)
                 }
             })()
-
         }
-
     },[formData.values.company])
+    React.useEffect(() => {
+        if(store.appStore.appType !== "admin") {
+            const _id = store.userStore.myProfileState.company.id.toString()
+            formData.setFieldValue('company', _id)
+            console.log('load company data')
+            agent.Cars.getCompanyCars(Number(_id)).then(r => setCars(r.data))
+            agent.Account.getCompanyUsers(Number(_id)).then(r => setConductors(r.data))
+            agent.Filials.getFilials('customer', Number(_id)).then(r => setFilials(r.data))
+        }
+    }, [])
     const navigate = useNavigate()
 
     const handleSubmit = React.useCallback(async (values: any) => {

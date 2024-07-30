@@ -314,12 +314,12 @@ const router = createBrowserRouter([
                     {
                         path: ':company_type/:id',
                         element: <GroupPage />,
-                        loader: groupsIdLoader,
+                        // loader: groupsIdLoader,
                     },
                     {
                         path: ':company_type/:id/edit',
                         element: <GroupPageEditAction />,
-                        loader: groupsIdLoader,
+                        // loader: groupsIdLoader,
                     },
                 ],
             },

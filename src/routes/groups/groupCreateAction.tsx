@@ -140,7 +140,7 @@ export default function GroupPageCreateAction(props: any) {
                           text={'Присвойте права группе'}
                           color={HeadingColor.accent}
                           variant={HeadingVariant.h4}
-                          className={'px-8'}
+                          className={'tablet:px-8'}
                       />
                   </div>
 

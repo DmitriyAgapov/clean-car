@@ -339,7 +339,7 @@ const Permissions = {
   getAllCompanyPermissions: (company_id:number, pagination?: PaginationProps) => requests.get(`/permissions/${company_id}/groups/list/`, pagination),
   getUserPermissions: (company_id: number, id:number ) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve`),
   createPermission: (company_id: number, data: any) => requests.post(`/permissions/${company_id}/groups/create/`, data),
-  getPermissionById: (company_id: number, id: number) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve/`, {}),
+  getPermissionById: (company_id: number | string, id: number | string) => requests.get(`/permissions/${company_id}/groups/${id}/retrieve/`, {}),
   putUpdatePermissions: (company_id: number, id: number, data: any) => requests.put(`/permissions/${company_id}/groups/${id}/update/`, {
     name: data.name,
     permissions: toJS(data.permissions),
@@ -477,6 +477,7 @@ const Account = {
   getCompanyUser: (company_id: number, id: number) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
   createCompanyUser: (company_id: number, data:any) => requests.post(`/accounts/${company_id}/users/create/`, data),
   updateCompanyUser: (company_id: number, data:any) => requests.put(`/accounts/${company_id}/profile/${data.id}/update/`, data),
+  changeUserProfile: (company_id: number, data:any) => requests.put(`/accounts/${company_id}/change_profile/${data.id}/`, data),
   createAdminUser: (data: any) => requests.post('/accounts_admin/user/create/', data),
   uploadUsers: (data: any) => requests.post('/accounts_admin/upload_users/', data, {
     // 'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

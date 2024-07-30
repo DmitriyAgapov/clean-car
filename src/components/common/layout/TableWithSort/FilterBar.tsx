@@ -108,7 +108,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 .filter((v) => isNaN(Number(v)))
                 .map((key, index) => ({
                   label: key,
-                  value: (index + 1).toString(),
+                  value: index.toString(),
                 }))}
               />,
             )

@@ -10809,6 +10809,7 @@ export class Limit implements ILimit {
     readonly updated?: dayjs.Dayjs | undefined;
     amount?: number | undefined;
     is_day?: boolean | undefined;
+    bid_count?: number | string;
     is_active?: boolean | undefined;
     company!: number;
     city?: number | undefined;

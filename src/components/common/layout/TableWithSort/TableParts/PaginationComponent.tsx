@@ -6,7 +6,8 @@ import { LocalRootStore, useLocalStore } from "stores/localStore";
 
 export const PaginationComponent = observer((): any => {
 	const localStore = useLocalStore<LocalRootStore>()
-	const initCount = localStore.countData
+	const initCount = localStore.getData?.count
+	console.log(localStore);
 	const { width } = useViewportSize()
 	const nextPageIsNotExist = localStore.getData?.next
 	const pageS = localStore.params.getSearchParams.page_size ?? 1
@@ -28,5 +29,5 @@ export const PaginationComponent = observer((): any => {
 				siblings={1}
 			/>
 		)
-	}, [width, nextPageIsNotExist])
+	}, [width, nextPageIsNotExist, initCount])
 })

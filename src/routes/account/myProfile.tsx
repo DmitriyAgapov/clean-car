@@ -56,7 +56,7 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
     return <UploadUserPhoto  id={user.id} opened={opened} onClose={close} />
   }, [opened])
   const handleSubmit = React.useCallback(async () => {
-      const response =  await agent.Account.updateCompanyUser(store.userStore.myProfileData.company.id, {id: store.userStore.currentUser.id,  ...form.values, phone: form.values.phone.replaceAll(' ', '')})
+      const response =  await agent.Account.changeUserProfile(store.userStore.myProfileData.company.id, {id: store.userStore.currentUser.id,  ...form.values, phone: form.values.phone.replaceAll(' ', '')})
 
       if(response.status === 200) {
         store.userStore.loadMyProfile().then(() => action(false))

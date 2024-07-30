@@ -11,7 +11,7 @@ import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from 'stores/companyStore'
 import { PermissionNames } from 'stores/permissionStore'
 import dayjs from 'dayjs'
-import { client } from 'utils/agent'
+import agent, { client } from 'utils/agent'
 import { useDidUpdate } from '@mantine/hooks'
 import useSWR from 'swr'
 import { Box, Divider } from "@mantine/core";
@@ -22,18 +22,14 @@ const LimitPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const revalidator = useRevalidator()
   // @ts-ignore
-  const {isLoading, data, mutate} = useSWR(`limit_${params.company_id}_${params.id}`, () => client.limitsRetrieve(params.company_id as string, Number(params.id)), {
+  const {isLoading, data, mutate} = useSWR(`limit_${params.company_id}_${params.id}`, () => agent.Limits.getLimit(params.company_id, params.id).then(r => r.data), {
     revalidateOnMount: true
   })
-
   useDidUpdate(
     () => {
       if(location.pathname.includes('limits')) {
-
         mutate()
-        revalidator.revalidate()
       }
     },
     [location.pathname]
@@ -133,7 +129,7 @@ const LimitPage = () => {
                   variant={HeadingVariant.h3}
                   // @ts-ignore
                   className={'text-gray-2 !text-2xl !mb-0'}
-                  text={<><span className={'text-accent'}>{data?.amount}/</span>100</>}
+                  text={<><span className={'text-accent'}>{data?.bid_count}/</span>{data?.amount}</>}
                 />
               }
             /></div>}

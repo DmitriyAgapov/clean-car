@@ -33,7 +33,7 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
       {...props}
         routeStyle={PanelRouteStyle.default_form}
       className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto]  overflow-x-clip'}
-      bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} tablet:grid  grid-cols-9 items-start gap-4 gap-y-4  content-start`}
+      bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} tablet:grid  grid-cols-9 items-start gap-4 gap-y-4  content-start relative z-50`}
       variant={props.variant ?? PanelVariant.textPadding}
       headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       footerClassName={props.footerClassName}

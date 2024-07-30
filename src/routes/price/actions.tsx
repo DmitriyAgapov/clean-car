@@ -29,10 +29,11 @@ export const PriceActionsHeader = observer(() => {
                 text={'Сохранить'}
                 disabled={store.priceStore.priceOnChange.size === 0}
                 type={'button'}
+                isOnce={true}
                 action={async () => {
                     store.appStore.setAppState(true)
                     await store.priceStore.handleSavePrice().then(() => {
-                        revalidator.revalidate()
+
                         navigate(location.pathname.split('/edit')[0])
                     })
                 }}

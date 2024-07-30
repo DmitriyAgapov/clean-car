@@ -313,7 +313,6 @@ export const groupsCreatLoader = async ({ params: { id } }: any) => {
         // @ts-ignore
         ar.push(permissionNameKey)
     }
-    console.log(ar);
     return {
         group: {
             id: Math.random(),

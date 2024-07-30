@@ -4,35 +4,42 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Navigate, useLoaderData, useLocation, useNavigate, useRevalidator } from "react-router-dom";
+import { Navigate, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { toJS } from 'mobx'
 import { PermissionNames } from "stores/permissionStore";
 import { modificationSchema, modifyPermissions } from "utils/utils";
+import agent from 'utils/agent'
+import useSWR from 'swr'
+import { observer } from 'mobx-react-lite'
 
-export default function GroupPageEditAction(props: any) {
+function GroupPageEditAction() {
   const store = useStore()
   const revalidator = useRevalidator()
   const navigate = useNavigate()
-  // @ts-ignore
-  const { group } = useLoaderData()
+  const params = useParams()
+  const {isLoading, data:group, mutate} = useSWR(`group_${params.id}`,() => agent.Permissions.getPermissionById(store.userStore.myProfileState.company.id as string, params.id as string).then(r => r.data))
+  const [changes, setChanges] = useState<any>(null)
 
-  const memoizedAndModificatedGroup = React.useMemo(() => {
-    let modifCatedData = { ...group };
-    const except= store.appStore.appType === "admin" ? [null] : ['Управление справочниками']
-    const _ar:any[] = []
-    modifyPermissions(group, modificationSchema, store.appStore.appType, except ).forEach((item: any) => {
-      if(item) {
-        _ar.push(item)
-      }
-    })
-    modifCatedData.permissions = _ar;
+  React.useEffect(() => {
+    let modifCatedData = null;
+    if(!isLoading && group) {
+      modifCatedData = { ...group }
+      const except = store.appStore.appType === "admin" ? [null] : ['Управление справочниками']
+      const _ar: any[] = []
+      modifyPermissions(group, modificationSchema, store.appStore.appType, except).forEach((item: any) => {
+        if (item) {
+          _ar.push(item)
+        }
+      })
+      modifCatedData.permissions = _ar;
+    }
+    setChanges(modifCatedData)
 
-    return modifCatedData;
-  }, [group]);
+  }, [group, isLoading]);
 
-  const [changes, setChanges] = useState(memoizedAndModificatedGroup)
+
 
   const handleChangeName = (event: any) => {
     setChanges((prevState: any) => ({
@@ -40,24 +47,26 @@ export default function GroupPageEditAction(props: any) {
       name: event.target.value,
     }))
   }
-  const handlePermissions = (event: any, id: string) => {
-    const indexAr = changes.permissions.findIndex((value: any) => {
-      if(value) {
-        return  value.name === id
+  const handlePermissions = React.useCallback((event: any, id: string) => {
+    if(changes && changes.permissions && changes.permissions.length) {
+      const indexAr = changes.permissions.findIndex((value: any) => {
+        if (value) {
+          return value.name === id
+        }
+      })
+      const newArrayItem = {
+        ...changes?.permissions[indexAr],
+        [event.target.name]: event.target.checked,
       }
-    })
-    const newArrayItem = {
-      ...changes.permissions[indexAr],
-      [event.target.name]: event.target.checked,
-    }
-    const newArray = toJS(changes.permissions)
-    newArray.splice(indexAr, 1, newArrayItem)
+      const newArray = toJS(changes?.permissions)
+      newArray.splice(indexAr, 1, newArrayItem)
 
-    setChanges((prevState: any) => ({
-      ...prevState,
-      permissions: newArray,
-    }))
-  }
+      setChanges((prevState: any) => ({
+        ...prevState,
+        permissions: newArray,
+      }))
+    }
+  }, [changes, isLoading])
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
@@ -86,12 +95,12 @@ export default function GroupPageEditAction(props: any) {
           ></Panel>
           <Panel
         variant={PanelVariant.textPadding}
-        state={false}
+        state={isLoading}
             bodyClassName={'!py-0 tablet:!px-0'}
         className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto] tablet-max:-mx-3'}
         header={<label className={'account-form__input flex-1'} htmlFor='cleanm'>
           Название группы
-          <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
+          <input id='name' name='name' type='text' value={changes?.name} onChange={handleChangeName} />
         </label>}
         footer={
           <>
@@ -104,7 +113,7 @@ export default function GroupPageEditAction(props: any) {
                     <Button
                       text={'Удалить'}
                       action={async () => {
-                        store.permissionStore.deletePermissionStore(changes.id).then(() => {
+                        store.permissionStore.deletePermissionStore(changes?.id).then(() => {
                           store.appStore.closeModal()
                           revalidator.revalidate()
                           navigate('/account/groups', { replace: false })
@@ -114,7 +123,7 @@ export default function GroupPageEditAction(props: any) {
                       variant={ButtonVariant['accent-outline']}
                     />,
                   ],
-                  text: `Вы уверены, что хотите удалить ${changes.name}`,
+                  text: `Вы уверены, что хотите удалить ${changes?.name}`,
                   state: true,
                 })
               }}
@@ -131,7 +140,7 @@ export default function GroupPageEditAction(props: any) {
                 text={'Сохранить'}
                 action={async () => {
                   // @ts-ignore
-                  store.permissionStore.setPermissionStore(changes.id, changes)
+                  store.permissionStore.setPermissionStore(changes?.id, changes)
                   revalidator.revalidate()
                   setTimeout(() => navigate('/account/groups'), 500)
                 }}
@@ -149,13 +158,14 @@ export default function GroupPageEditAction(props: any) {
               text={'Настройте права доступов'}
               color={HeadingColor.accent}
               variant={HeadingVariant.h3}
-              className={'px-8'}
+              className={'tablet:px-8'}
             />
 
-            <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} />
+          {changes && changes.permissions ? <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} /> : null}
 
         </div>
       </Panel>
     </Section>
   )
 }
+export default observer(GroupPageEditAction)

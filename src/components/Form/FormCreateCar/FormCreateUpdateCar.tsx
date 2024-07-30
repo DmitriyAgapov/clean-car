@@ -19,8 +19,9 @@ import { createFormActions, createFormContext } from "@mantine/form";
 import { IMaskInput } from "react-imask";
 import { UserTypeEnum } from "stores/userStore";
 import { CompanyType, CompanyTypeRus } from 'stores/companyStore'
-import { useDidUpdate, useScrollIntoView, useViewportSize } from "@mantine/hooks";
+import { useDidUpdate, useDisclosure, useScrollIntoView, useViewportSize } from '@mantine/hooks'
 import { PanelVariant } from "components/common/layout/Panel/Panel";
+import { BidPaymentResult } from "components/common/layout/Modal/BidPaymentResult";
 
 interface CarCreateUpdate  {
     number: string
@@ -251,56 +252,87 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         })
       }
     }, [form])
+  const [opened, { open, close }] = useDisclosure(false)
+  const memoModalSelectUser = React.useMemo(() => {
+
+    return <FormModalSelectUsers users={formDataSelectUsers}
+      company_id={form.values.company_id}
+      opened={opened}
+      onClose={close}
+    />
+  }, [opened, form.values, formDataSelectUsers])
+  const [openedCreate, { open:openCreate, close:closeCreate }] = useDisclosure(false)
+  const memoModalAddUser = React.useMemo(() => {
+
+    return <FormModalAddUser
+      company_id={Number(form.values.company_id)}
+      opened={openedCreate}
+      onClose={closeCreate}
+    />
+  }, [openedCreate, form.values])
     const handleCreateCar = React.useCallback(() => {
+        // Step 1
+        if (step === 1) {
+            // console.log(form.values)
+            !edit && store.usersStore.clearSelectedUsers()
+            const company = store.companyStore.getCompaniesAll.filter(
+                (item: any) => item.id == Number(form.values.company_id),
+            )[0]
+            console.log(form.values)
+            if (!edit) {
+                form.values.company_type =
+                    store.userStore.myProfileData.company.company_type !== CompanyType.fizlico
+                        ? company.company_type
+                        : CompanyType.fizlico
+            } else {
+                form.setFieldValue(
+                    'company_type',
+                    form.values.company_type === CompanyType.fizlico ? CompanyType.customer : CompanyType.performer,
+                )
+            }
+            // console.log('submit', form.values);
+            store.formStore.setFormDataCreateCar({
+                id: store.formStore.formCreateCar.id,
+                number: form.values.number,
+                height: form.values.height,
+                radius: form.values.radius,
+                company_id: Number(form.values.company_id),
+                company_type: form.values.company_type,
+                is_active: form.values.is_active === 'true',
+                brand: Number(form.values.brand),
+                model: Number(form.values.model),
+                employees: edit
+                    ? form.values.employees
+                    : store.usersStore.selectedUsers && store.usersStore.selectedUsers.size !== 0
+                      ? val(store.usersStore.selectedUsers).map((item: any) => item.employee.id)
+                      : form.values.employees,
+            })
 
-      // Step 1
-      if(step === 1) {
-        // console.log(form.values)
-        !edit && store.usersStore.clearSelectedUsers()
-        const company = store.companyStore.getCompaniesAll.filter((item:any) => item.id == Number(form.values.company_id))[0];
-        console.log(form.values);
-        if(!edit) {
-          form.values.company_type = store.userStore.myProfileData.company.company_type !== CompanyType.fizlico ? company.company_type : CompanyType.fizlico;
-        } else {
-          form.setFieldValue('company_type', form.values.company_type === CompanyType.fizlico ? CompanyType.customer : CompanyType.performer )
+            if (form.values.company_type === CompanyType.fizlico) {
+                createCarApi()
+            } else {
+                changeStep()
+            }
         }
-        // console.log('submit', form.values);
-          store.formStore.setFormDataCreateCar({
-            id: store.formStore.formCreateCar.id,
-            number: form.values.number,
-            height: form.values.height,
-            radius: form.values.radius,
-            company_id: Number(form.values.company_id),
-            company_type: form.values.company_type,
-            is_active: form.values.is_active === "true",
-            brand: Number(form.values.brand),
-            model: Number(form.values.model),
-            employees: edit ? form.values.employees :  (store.usersStore.selectedUsers && store.usersStore.selectedUsers.size !== 0) ? val(store.usersStore.selectedUsers).map((item: any) => item.employee.id) : form.values.employees,
-          });
-
-        if(form.values.company_type === CompanyType.fizlico) {
-          createCarApi()
-        } else {
-          changeStep();
-        }
-      }
-      if(step === 2) {
-          createCarApi()
+        if (step === 2) {
+            createCarApi()
 
             // changeStep(3)
-      }
-      // if(step === 3) {
-      //   console.log(form.values);
-      //   navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
-      // }
-      // changeStep()
+        }
+        // if(step === 3) {
+        //   console.log(form.values);
+        //   navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
+        // }
+        // changeStep()
     }, [form])
+
     return (
         <FormProvider form={form}>
             <PanelForForms
                 ref={targetRef}
                 state={false}
                 footerClassName={'px-8 pb-8 pt-2'}
+                bodyClassName={'content-stretch'}
                 variant={PanelVariant.default}
                 actionCancel={
                     <>
@@ -344,8 +376,9 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                 }
                 actionNext={
                     <Button
-                        type={step === 1 ? 'button' : step === 3 ? '' : 'submit'}
-                        // type={'button'}
+                        // type={step === 1 ? 'button' : step === 3 ? '' : 'submit'}
+                        type={'button'}
+                        isOnce={step === 2}
                         action={handleCreateCar}
                         disabled={!form.isValid()}
                         text={step === 1 ? 'Дальше' : step === 3 ? 'Перейти к автомобилю' : 'Сохранить'}
@@ -363,7 +396,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                     <PanelForForms
                         state={step !== 1}
                         animate={animate}
-                        className={'!bg-transparent'}
+                        className={'!bg-transparent grid grid-rows-[auto_1fr] overflow-visible self-stretch'}
                         bodyClassName={'tablet:!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
                         variant={PanelVariant.textPadding}
                         background={PanelColor.default}
@@ -380,27 +413,31 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                             </>
                         }
                     >
-                      {store.userStore.myProfileData.company.company_type !== CompanyType.fizlico && <><Select
-                            label={'Принадлежит'}
-                            {...form.getInputProps('depend_on', { dependOn: 'type' })}
-                            defaultValue={form.values.depend_on}
-                            onOptionSubmit={(values) => {
-                              console.log(values);
-                              form.setValues({ ...form.values, company_id: null, group: null })}
-                            }
-                            data={[
-                                { label: 'Компании', value: 'company' },
-                                { label: 'Филиалы', value: 'filials' },
-                            ]}
-                        />
-                        <Select
-                            searchable
-                            label={'Компании'}
-                            disabled={!cVar.length}
-                            {...form.getInputProps('company_id', { dependOn: 'type' })}
-                            data={cVar.map((item) => ({ label: item.name, value: String(item.id) })) ?? ['Ytn']}
-                        />
-                        <hr className={'col-span-full flex-[1_100%]'} /></> }
+                        {store.userStore.myProfileData.company.company_type !== CompanyType.fizlico && (
+                            <>
+                                <Select
+                                    label={'Принадлежит'}
+                                    {...form.getInputProps('depend_on', { dependOn: 'type' })}
+                                    defaultValue={form.values.depend_on}
+                                    onOptionSubmit={(values) => {
+                                        console.log(values)
+                                        form.setValues({ ...form.values, company_id: null, group: null })
+                                    }}
+                                    data={[
+                                        { label: 'Компании', value: 'company' },
+                                        { label: 'Филиалы', value: 'filials' },
+                                    ]}
+                                />
+                                <Select
+                                    searchable
+                                    label={'Компании'}
+                                    disabled={!cVar.length}
+                                    {...form.getInputProps('company_id', { dependOn: 'type' })}
+                                    data={cVar.map((item) => ({ label: item.name, value: String(item.id) })) ?? ['Ytn']}
+                                />
+                                <hr className={'col-span-full flex-[1_100%]'} />
+                            </>
+                        )}
                         <Select
                             label={'Марка'}
                             searchable
@@ -554,27 +591,13 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                                             size={ButtonSizeType.sm}
                                             // variant={ButtonVariant.accent}
                                             directory={ButtonDirectory.directory}
-                                            action={async () => {
-                                                store.appStore.setModal({
-                                                    className: '!px-10 gap-4 !justify-stretch tablet-max:overflow-auto tablet-max:!content-normal',
-                                                    component: (
-                                                        <FormModalAddUser
-                                                            group={await store.permissionStore.loadCompanyPermissions(
-                                                                Number(form.values.company_id),
-                                                            )}
-                                                            company_id={Number(form.values.company_id)}
-                                                        />
-                                                    ),
-                                                    text: `Вы уверены, что хотите удалить ${'name'}`,
-                                                    state: true,
-                                                })
-                                            }}
+                                            action={openCreate}
                                         />
                                     }
                                 />
                             )}
                         />
-
+                        {memoModalAddUser}
                         <FormCard
                             title={'Выбрать сотрудника из зарегистрированных пользователей'}
                             titleColor={HeadingColor.accent}
@@ -585,22 +608,11 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                                     size={ButtonSizeType.sm}
                                     // variant={ButtonVariant.accent}
                                     directory={ButtonDirectory.directory}
-                                    action={() => {
-                                        store.appStore.setModal({
-                                            className: '!px-10 gap-4 !justify-stretch grid-cols-1',
-                                            component: (
-                                                <FormModalSelectUsers
-                                                    company_id={Number(form.values.company_id)}
-                                                    users={formDataSelectUsers}
-                                                />
-                                            ),
-                                            text: `Вы уверены, что хотите удалить ${'name'}`,
-                                            state: true,
-                                        })
-                                    }}
+                                    action={open}
                                 />
                             }
                         />
+                        {memoModalSelectUser}
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 3}

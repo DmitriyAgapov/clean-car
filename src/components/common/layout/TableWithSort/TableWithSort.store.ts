@@ -4,6 +4,7 @@ import appStore from "stores/appStore";
 import actions from "routes/price/actions";
 import { LocalRootStore } from "stores/localStore";
 import dayjs from 'dayjs';
+import { BidsStatus } from "stores/bidsStrore";
 export type TableSearchParams = { page: number; page_size?: number, q?: string,
 	service_type?: string,
 	company_type?: string,
@@ -16,7 +17,7 @@ export type TableSearchParams = { page: number; page_size?: number, q?: string,
 	brand?:string
 	end_date?:string
 	is_active?: string | null | undefined
-	status?: Status | null | undefined
+	status?: BidsStatus | null | undefined
 }
 export class TableWithSortStore {
 

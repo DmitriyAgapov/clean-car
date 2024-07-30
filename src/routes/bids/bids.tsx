@@ -106,6 +106,7 @@ const BidsPage = () => {
 						{store.appStore.appType === "admin" && <Button text={textData.loadExcel}
 							action={() => agent.Bids.getExportBids(localStore.params.searchParams)}
 							trimText={true}
+								isOnce={true}
 							className={"inline-flex tablet-max:flex-1"}
 							variant={ButtonVariant["accent-outline"]}
 							size={ButtonSizeType.sm} />}

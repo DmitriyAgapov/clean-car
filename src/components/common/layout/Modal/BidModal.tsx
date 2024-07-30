@@ -54,6 +54,7 @@ const BidModal = (props: { opened: boolean; onClose: () => void; update: () => v
 		}
 		return _photos
 	}, [temp.length])
+	const [isSubmitting, setIsSubmitting] = React.useState(false)
 
 	return (
 		<Modal.Root size={685} opened={props.opened} onClose={props.onClose} centered>
@@ -93,7 +94,8 @@ const BidModal = (props: { opened: boolean; onClose: () => void; update: () => v
 									></Button>
 								)}
 							</FileButton>
-							<Button  text={'Завершить заявку'} variant={ButtonVariant.accent} type={"button"}  disabled={temp.length < 2} action={() => {
+							<Button  text={'Завершить заявку'}    loading={isSubmitting} variant={ButtonVariant.accent} type={"button"}  disabled={temp.length < 2} action={() => {
+								setIsSubmitting(true)
 								handleChangeBidStatus(BidsStatus["Выполнена"])
 							}}/>
 						</footer>

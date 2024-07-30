@@ -12,7 +12,7 @@ import paramsStore from "stores/paramStore";
 import authStore from "stores/authStore";
 
 export enum BidsStatus {
-    'Ждет оплаты',
+    'Ждет оплаты' = 0,
     'Новая' = 1,
     'В обработке' = 2,
     'Ожидает' = 3,

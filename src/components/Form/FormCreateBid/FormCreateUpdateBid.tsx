@@ -358,6 +358,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [step, store.bidsStore.formResult.service_type, formData.values.service_type])
 
   const { mutate } = useSWRConfig()
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
   const handleNext = React.useCallback(async () => {
     if(step === 2) {
       console.log('step 2');
@@ -379,6 +380,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
         })
 
     } else if(step === 4) {
+          setIsSubmitting(true)
           await store.bidsStore.sendFiles(formData.values.photo_new, true)
           .then(() =>
             store.bidsStore.formCreateBid()
@@ -394,8 +396,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 //   color: 'var(--errorColor)',
                 //   loading: false,
                 // })
+
               } else {
-                console.log('No error');
                 mutate('bids')
                 notifications.show({
                   id: 'bid-created_success',
@@ -414,7 +416,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                 }, 2000)
               }
             })
-          )
+          ).finally(() => setIsSubmitting(false))
         // })()
     } else {
       changeStep()
@@ -467,14 +469,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
 
                 actionBack={
                     <>
-                        {step === 5 ||step === 1 ? store.userStore.myProfileState.company.company_type === CompanyType.fizlico  ? <Button
-                            type={'button'}
-                            action={() => navigate('/account/bids')}
-                            text={'Закрыть'}
-                            className={'float-right'}
-                            variant={ButtonVariant["accent-outline"]}
-                          /> : null : (
-
+                        {step === 1 || step === 5 ? step === 5 && store.userStore.myProfileState.company.company_type === CompanyType.fizlico ? <Button
+                          text={'Закрыть'}
+                          action={() => navigate('/account/bids')}
+                          className={'lg:mb-0 mr-auto'}
+                          variant={ButtonVariant['accent-outline']}
+                        /> : null : (
                             <Button
                                 text={'Назад'}
                                 action={handleBack}
@@ -537,10 +537,17 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                     ) : null
                 }
                 actionNext={
-                    step === 5 ? (
-                        <LinkStyled
-                            to={store.bidsStore.justCreatedBid.payment_url}
-                            text={'Оплатить'}
+                    step === 5 ? step === 5 && store.userStore.myProfileState.company.company_type === CompanyType.fizlico ? <LinkStyled
+
+                      to={store.bidsStore.justCreatedBid.payment_url}
+                      text={'Оплатить'}
+                      className={'float-right'}
+                      variant={ButtonVariant.accent}
+                    /> : (
+                        <Button
+                            type={'button'}
+                            action={() => navigate('/account/bids')}
+                            text={'Закрыть'}
                             className={'float-right'}
                             variant={ButtonVariant.accent}
                         />
@@ -548,7 +555,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                         <Button
                             type={'button'}
                             action={handleNext}
-                            isOnce={true}
+                            loading={isSubmitting}
+                            isOnce={step === 4}
                             disabled={
                                 !formData.isValid() || (store.bidsStore.AvailablePerformers.size === 0 && step === 4)
                             }
