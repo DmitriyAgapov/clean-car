@@ -39,8 +39,7 @@ const themeOverride = createTheme({
         Select: Select.extend({
             defaultProps: {
                 withCheckIcon: false,
-                comboboxProps: {
-                    position: 'bottom', middlewares: { flip: false, shift: true } }
+                
             },
 
             classNames: {
