@@ -331,6 +331,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
             <PanelForForms
                 ref={targetRef}
                 state={false}
+              className={'!overflow-visible'}
                 footerClassName={'px-8 pb-8 pt-2'}
                 bodyClassName={'content-stretch'}
                 variant={PanelVariant.default}
@@ -395,8 +396,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                     <Progress total={3} current={step} />
                     <PanelForForms
                         state={step !== 1}
-                        animate={animate}
-                        className={'!bg-transparent grid grid-rows-[auto_1fr] overflow-visible self-stretch'}
+                      // animate={n}
+                        className={'!bg-transparent grid grid-rows-[auto_1fr] !overflow-visible self-stretch'}
                         bodyClassName={'tablet:!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
                         variant={PanelVariant.textPadding}
                         background={PanelColor.default}
@@ -498,7 +499,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}
-                        animate={animate}
+
                         className={'!bg-transparent'}
                         bodyClassName={'md:!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
                         variant={PanelVariant.textPadding}
@@ -616,7 +617,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 3}
-                        animate={animate}
+
                         className={'!bg-transparent'}
                         bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
                         variant={PanelVariant.textPadding}

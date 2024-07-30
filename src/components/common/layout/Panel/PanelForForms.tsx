@@ -33,9 +33,9 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
       {...props}
         routeStyle={PanelRouteStyle.default_form}
       className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto]  overflow-x-clip'}
-      bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} tablet:grid  grid-cols-9 items-start gap-4 gap-y-4  content-start relative z-50`}
+      bodyClassName={`${props.bodyClassName} ${props.animate === false ? 'slide-in-left-500' : props.animate === true ? 'slide-out-right-500' : null} tablet:grid  grid-cols-9 items-start gap-4 gap-y-4  content-start relative z-50`}
       variant={props.variant ?? PanelVariant.textPadding}
-      headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
+      headerClassName={props.animate === false ? 'slide-in-left' : props.animate === true ? 'slide-out-right' : ''}
       footerClassName={props.footerClassName}
       footer={(actionBack || actionCancel || actionNext) &&
           // <div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
