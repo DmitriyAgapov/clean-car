@@ -14,7 +14,7 @@ import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 import { SvgBackArrow } from "components/common/ui/Icon";
 
 const localRootStore =  new LocalRootStore()
-localRootStore.params.setSearchParams({ordering: 'expires'})
+localRootStore.params.setSearchParams({ordering: '-expires'})
 const PricesHistoryPage = () => {
 	const store = useStore()
 	const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)

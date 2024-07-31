@@ -63,8 +63,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         depend_on: 'company',
         number: '',
         radius: '',
-        company_id: store.userStore.myProfileData.company.company_type === "Администратор системы" ? null : String(store.userStore.myProfileData.company.id),
-        company_type: store.userStore.myProfileData.company.company_type === "Администратор системы" ? UserTypeEnum.performer : CompanyTypeRus(store.userStore.myProfileData.company.company_type),
+        company_id: store.userStore.myProfileData.company.company_type === CompanyType.admin ? null : String(store.userStore.myProfileData.company.id),
+        company_type: store.userStore.myProfileData.company.company_type === CompanyType.admin ? UserTypeEnum.performer : CompanyTypeRus(store.userStore.myProfileData.company.company_type),
         company_filials: store.userStore.myProfileData.company.parent === null ? 'company' : 'filials',
       }
       if(store.userStore.myProfileData.company.company_type === CompanyType.fizlico) {
@@ -109,7 +109,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         }
       }
       return initValues
-    }, [edit, car])
+    }, [edit, car, store.userStore.myProfileData.company])
   const test_data = {
     "brand": "2",
     "id": null,
@@ -132,8 +132,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
   const numRegex = new RegExp("^(([АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{1,2})(\d{2,3})|(\d{4}(?<!0000)[АВЕКМНОРСТУХ]{2})(\d{2})|(\d{3}(?<!000)(C?D|[ТНМВКЕ])\d{3}(?<!000))(\d{2}(?<!00))|([ТСК][АВЕКМНОРСТУХ]{2}\d{3}(?<!000))(\d{2})|([АВЕКМНОРСТУХ]{2}\d{3}(?<!000)[АВЕКМНОРСТУХ])(\d{2})|([АВЕКМНОРСТУХ]\d{4}(?<!0000))(\d{2})|(\d{3}(?<!000)[АВЕКМНОРСТУХ])(\d{2})|(\d{4}(?<!0000)[АВЕКМНОРСТУХ])(\d{2})|([АВЕКМНОРСТУХ]{2}\d{4}(?<!0000))(\d{2})|([АВЕКМНОРСТУХ]{2}\d{3}(?<!000))(\d{2,3})|(^Т[АВЕКМНОРСТУХ]{2}\d{3}(?<!000)\d{2,3}))")
   const form = useForm({
     name: 'createUpdateCar',
-    initialValues: test_data,
-    // initialValues: memoizedInitValues,
+    // initialValues: test_data,
+    initialValues: memoizedInitValues,
     validateInputOnBlur: true,
     onValuesChange: (values) => console.log(values),
     validate: yupResolver(CreateCarSchema),
@@ -264,8 +264,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         store.formStore.setFormDataCreateCar(data)
         store.formStore.sendCarFormData()
         .then(r => {
-          console.log(r.response);
-          if(r && r.response && r.response.status < 300) {
+          console.log(r);
+          if(r && r.status < 300) {
             r && r.data ? form.values.id = r.data.id : null
             navigate(`/account/cars`)
           }
@@ -299,17 +299,16 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                 (item: any) => item.id == Number(form.values.company_id),
             )[0]
             console.log(form.values)
-            if (!edit) {
-                form.values.company_type =
-                    store.userStore.myProfileData.company.company_type !== CompanyType.fizlico
-                        ? company.company_type
-                        : CompanyType.fizlico
-            } else {
-                form.setFieldValue(
-                    'company_type',
-                    form.values.company_type === CompanyType.fizlico ? CompanyType.customer : CompanyType.performer,
-                )
-            }
+            // if (!edit) {
+            //     form.setFieldValue('company_type', store.userStore.myProfileData.company.company_type !== CompanyType.fizlico
+            //             ? company.company_type
+            //             : CompanyType.fizlico)
+            // } else {
+            //     form.setFieldValue(
+            //         'company_type',
+            //         form.values.company_type === CompanyType.fizlico ? "customer" : "performer",
+            //     )
+            // }
             // console.log('submit', form.values);
             store.formStore.setFormDataCreateCar({
                 id: store.formStore.formCreateCar.id,

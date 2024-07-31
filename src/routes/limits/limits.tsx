@@ -26,7 +26,7 @@ const LimitsPage = () => {
   const revalidator =     useRevalidator()
   const isReadyy = localStore.params.getIsReady
   const {isLoading, data, mutate} = useSWR(isReadyy ? ['limits', localStore.params.getSearchParams] : null , ([url, args]) => store.limitStore.getAllLimits(args).then((res) => res.data))
-
+  console.log(data);
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -39,7 +39,7 @@ const LimitsPage = () => {
         employee: item.employee ? `${item.employee.first_name} ${item.employee.last_name}`  : ' - ',
         service_type: store.catalogStore.services.get(String(item.service_type)).name,
         is_day: item.is_day ? 'Дневной' : 'Месячный',
-        amount: `${item.amount}/100`,
+        amount: `${item.bid_count}/${item.amount}`,
         id: item.id,
         query: {
           company_id: item.company.id,

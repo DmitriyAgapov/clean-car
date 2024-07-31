@@ -183,6 +183,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 store.companyStore
                     .createFilial(data, 'performer', values.company_id)
                     .then((r) => {
+                    console.log(r);
                         // values.id = r.id
                         // revalidate.revalidate()
                         // navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
@@ -333,7 +334,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         }
                     >
                         <Select
-                      allowDeselect={false}
+                            allowDeselect={false}
                           disabled={edit}
                       {...formData.getInputProps('type')}
                       label={'Тип'}
@@ -364,9 +365,9 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         <Select
                             searchable
                             clearable
-                            onOptionSubmit={(value) => {
-                                console.log(formData.values)
-                            }}
+                            // onOptionSubmit={(value) => {
+                            //     console.log(formData.values)
+                            // }}
                             defaultValue={formData.values.company_id}
                             label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
                             disabled={filialsCompanyData.length === 0}

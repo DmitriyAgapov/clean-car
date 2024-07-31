@@ -619,7 +619,7 @@ export class CompanyStore {
 
                 return response.data
             }
-            return response.response
+            return response
         } catch (e) {
             // @ts-ignore
             new Error('Create COmpany failed', e)

@@ -6,11 +6,13 @@ import { SvgClose } from "components/common/ui/Icon";
 import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import { useViewportSize } from "@mantine/hooks";
+import { createFormRegisterActions } from "components/Form/FormRegister/FormRegister";
 
 export function RegisterSuccess(props: { opened: boolean; onClose: () => void}) {
 	const store = useStore()
 	const { height, width } = useViewportSize();
 	const isMobile = width && width < 740
+	createFormRegisterActions.reset()
 	return (
 		<Modal.Root size={600} opened={props.opened} onClose={props.onClose} centered fullScreen={!!isMobile} lockScroll={!!isMobile}>
 			<Modal.Overlay className={'bg-black/90'}/>
@@ -28,7 +30,7 @@ export function RegisterSuccess(props: { opened: boolean; onClose: () => void}) 
 					<p>Для активации личного кабинета, пожалуйста проверьте указанную почту. Мы отправили вам письмо с активной ссылкой</p>
 					<p className={'text-active text-sm'}><strong className={'mr-3'}>i</strong>Пожалуйста, проверьте папку СПАМ</p>
 				</Modal.Body>
-				<footer className={'mt-12 tablet-max:px-6'}><Button type={'button'} text={'Мне не пришло письмо'} variant={ButtonVariant["default"]} className={'w-full'} size={ButtonSizeType.lg}/> </footer>
+				{/* <footer className={'mt-12 tablet-max:px-6'}><Button type={'button'} text={'Мне не пришло письмо'} variant={ButtonVariant["default"]} className={'w-full'} size={ButtonSizeType.lg}/> </footer> */}
 			</Modal.Content>
 		</Modal.Root>
 	)

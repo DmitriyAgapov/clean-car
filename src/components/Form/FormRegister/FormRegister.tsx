@@ -3,7 +3,7 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import styles from 'components/Form/FormRegister/FormRegister.module.scss'
 import { IMask, IMaskInput } from "react-imask";
 import { useStore } from 'stores/store'
-import { useForm } from '@mantine/form'
+import { createFormActions, useForm } from '@mantine/form'
 import { yupResolver } from 'mantine-form-yup-resolver'
 import { Box, InputBase, PasswordInput, TextInput, Select } from '@mantine/core'
 import 'yup-phone-lite'
@@ -11,6 +11,16 @@ import { SignupSchemaNew } from "utils/validationSchemas";
 import { RegisterSuccess } from 'components/common/layout/Modal/RegisterSuccess'
 import { useDisclosure } from '@mantine/hooks'
 import { Link } from 'react-router-dom';
+
+export const createFormRegisterActions= createFormActions<{
+  first_name: '',
+  last_name: '',
+  phone: '',
+  email: '',
+  city: '',
+  password: '',
+  password2: ''
+}>('registerForm');
 
 const FormRegister = () => {
   const store = useStore()

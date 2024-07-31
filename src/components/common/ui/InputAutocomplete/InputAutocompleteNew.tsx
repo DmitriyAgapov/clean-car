@@ -65,7 +65,7 @@ export function InputAutocompleteNew(props:any) {
         // @ts-ignore
         // const cityNameLength = cityName.size
         // @ts-ignore
-        ref.current.focus();
+        // ref.current.focus();
         // @ts-ignore
         // ref.current.setSelectionRange(cityNameLength + 1, cityNameLength + 1)
       }
@@ -119,6 +119,7 @@ export function InputAutocompleteNew(props:any) {
 
     </Combobox.Option>
   ));
+  console.log(   {...props});
   // @ts-ignore
   return (
       <Combobox
@@ -136,7 +137,7 @@ export function InputAutocompleteNew(props:any) {
 
       >
           <Combobox.Target>
-            <div   {...props}>
+            <div>
               <label
                   className={`account-form__input w-full flex-grow  flex-[1_0_20rem] ${!values.city && 'filter grayscale'}`}
                   htmlFor={'address'}

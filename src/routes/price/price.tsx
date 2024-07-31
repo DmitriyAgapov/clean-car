@@ -87,11 +87,11 @@ const PricePage = ():JSX.Element => {
 
   const memoModal = React.useMemo(() => {
     if(!isHistory) {
-    return  <PriceCopy opened={opened} id={isCreate.id} title={company.name}
+    return  <PriceCopy opened={opened} id={isCreate?.id} title={company.name}
       onClose={close} />
       }
     return null
-  }, [opened]);
+  }, [opened, isCreate]);
 
   const [openedCar, { open:openCar, close:closeCar }] = useDisclosure(false)
   const memoModalCarClasses = React.useMemo(() => {
@@ -102,10 +102,10 @@ const PricePage = ():JSX.Element => {
       if(location.pathname === `/account/price/${params.id}`) {
         console.log('didupdate');
         store.priceStore.getCurrentPrice({params: params}, false).then(console.log);
-        store.appStore.setAppState(false)
+        // store.appStore.setAppState(false)
       }
     },
-    [location.pathname]
+    [location.pathname, params]
   );
   if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (

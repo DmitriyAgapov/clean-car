@@ -8,15 +8,14 @@ import DList from "components/common/ui/DList/DList";
 import { CompanyType } from "stores/companyStore";
 import { UserTypeEnum } from "stores/userStore";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { FileButton, InputBase, TextInput } from '@mantine/core'
+import { FileButton, InputBase, TextInput } from "@mantine/core";
 import { useForm, yupResolver } from "@mantine/form";
-import {  UpdateUserProfileSchema } from "utils/validationSchemas";
+import { UpdateUserProfileSchema } from "utils/validationSchemas";
 import { IMask, IMaskInput } from "react-imask";
-import agent from 'utils/agent'
+import agent from "utils/agent";
 import { useDisclosure } from "@mantine/hooks";
 import { UploadUserPhoto } from "components/common/layout/Modal/UploadUserPhoto";
 import Image from "components/common/ui/Image/Image";
-import { PermissionName } from "stores/permissionStore";
 
 const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }) => {
 
@@ -49,6 +48,11 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
     onValuesChange: (values, previous) => console.log(values),
     validate: yupResolver(UpdateUserProfileSchema),
   })
+  const warningEmailMsg = React.useMemo(() => {
+    let active = form.values.email !== user.email;
+    if(active) return <Heading  className={'col-span-full my-8 max-w-2xl mx-auto'} color={HeadingColor.accent} text={'При смене email вы выйдите из кабинета, и вам будет отправлено письмо с подтверждением емайл.'} variant={HeadingVariant.h3}/>
+    return null
+  }, [form.values.email, user.email])
 
   const [opened, { open, close }] = useDisclosure(false)
   const memoModal = React.useMemo(() => {
@@ -57,10 +61,13 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
   }, [opened])
   const handleSubmit = React.useCallback(async () => {
       const response =  await agent.Account.changeUserProfile(store.userStore.myProfileData.company.id, {id: store.userStore.currentUser.id,  ...form.values, phone: form.values.phone.replaceAll(' ', '')})
-
+      if(form.values.email !== user.email) {
+       return  store.authStore.logout()
+      }
       if(response.status === 200) {
         store.userStore.loadMyProfile().then(() => action(false))
       }
+
   }, [form.values])
   const avatar = store.userStore.userData.avatar;
 
@@ -140,7 +147,7 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
         }}
       />
       <TextInput label={'E-mail'} {...form.getInputProps('email')} />
-
+      {warningEmailMsg}
       {memoModal}
     </form>
     </Panel>

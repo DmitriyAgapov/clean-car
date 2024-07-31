@@ -205,6 +205,7 @@ export class AuthStore {
     //   )
   }
   logout() {
+    window.localStorage.clear()
      this.userIsLoggedIn = false
     appStore.setToken(null)
     appStore.setTokenRefresh(null)
