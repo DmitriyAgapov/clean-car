@@ -136,7 +136,7 @@ const MapWithDots = () => {
     },
     [width])
   if(performersAr.size > 0) return (
-        <div className={'rounded-md overflow-hidden bg-black/80 content-start col-span-3 row-start-1 col-start-3 row-span-2 tablet:min-h-96 aspect-square'} style={{ height:' 100%', width: '100%', position: 'relative', display: 'block' }}>
+        <div className={'rounded-md overflow-hidden bg-black/80 content-start col-span-3 row-start-1 col-start-3 row-span-2 tablet:min-h-96'} style={{ height:' 100%', width: '100%', position: 'relative', display: 'block' }}>
             {displayMap}
         </div>
     )

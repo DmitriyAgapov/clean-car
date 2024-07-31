@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 import Panel, { PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
+import { Transition } from '@mantine/core'
 
 
 export enum PanelColor {
@@ -29,13 +30,19 @@ export type PanelProps = {
 
 const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props }:{actionBack?: JSX.Element | null, actionCancel?: JSX.Element | null, actionNext?: JSX.Element, children: React.ReactNode} & PanelProps) => {
 
-    return <Panel
+    return <Transition
+      mounted={!props.animate}
+      transition="fade"
+      duration={400}
+      timingFunction="ease"
+    >{(styles) =>  <Panel
       {...props}
+      style={styles}
         routeStyle={PanelRouteStyle.default_form}
-      className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto]  overflow-x-clip'}
-      bodyClassName={`${props.bodyClassName} ${props.animate === false ? 'slide-in-left-500' : props.animate === true ? 'slide-out-right-500' : null} tablet:grid  grid-cols-9 items-start gap-4 gap-y-4  content-start relative z-50`}
+      className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto]'}
+      bodyClassName={`${props.bodyClassName} tablet:grid  grid-cols-9 items-start gap-4 gap-y-4  content-start`}
       variant={props.variant ?? PanelVariant.textPadding}
-      headerClassName={props.animate === false ? 'slide-in-left' : props.animate === true ? 'slide-out-right' : ''}
+      // headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       footerClassName={props.footerClassName}
       footer={(actionBack || actionCancel || actionNext) &&
           // <div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
@@ -50,9 +57,11 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
       }
       background={props.background ?? PanelColor.glass}
     >
-
         {children}
-    </Panel>
+
+    </Panel>}
+
+    </Transition>
 }
 
 export default PanelForForms;

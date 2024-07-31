@@ -1086,7 +1086,6 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
         })
         result.push({ label: key, data: resultInner })
       })
-    console.log(result);
       return result.map((item: any, index: number) => {
         return (
           <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
@@ -1230,7 +1229,6 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
           break
 
       case 'Шиномонтаж':
-        console.log(data.tire_positions);
           result = (
             <Tabs.PanelPure
               state={state}
@@ -1268,7 +1266,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
           )
           break;
       case 'Эвакуация':
-        console.log(data);
+
           result = (
               <Tabs.PanelPure
                   state={state}

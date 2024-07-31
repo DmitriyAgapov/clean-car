@@ -17,6 +17,7 @@ import { PriceCopy } from "components/common/layout/Modal/PriceCopy";
 import { observer } from "mobx-react-lite";
 import { CarClasses } from 'components/common/layout/Modal/CarClasses'
 import { ActionIcon, Affix, Overlay, Transition } from '@mantine/core'
+import priceStore from "stores/priceStore";
 
 function PriceActions(props: {  action: any }) {
   const store = useStore()
@@ -99,6 +100,8 @@ const PricePage = ():JSX.Element => {
   useDidUpdate(
     () => {
       if(location.pathname === `/account/price/${params.id}`) {
+        console.log('didupdate');
+        store.priceStore.getCurrentPrice({params: params}, false).then(console.log);
         store.appStore.setAppState(false)
       }
     },
@@ -130,7 +133,7 @@ const PricePage = ():JSX.Element => {
       </Panel>
 
       <Panel
-        state={currentPriceById.loading}
+        state={false}
         className={'col-span-full grid grid-rows-[auto_1fr] px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-6 '}
         variant={PanelVariant.default}
         background={PanelColor.glass}
@@ -173,7 +176,7 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-       <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>
+        {currentPriceById.loading ? "" : <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>}
         {memoModal}
       </Panel>
     </Section>

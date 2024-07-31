@@ -144,7 +144,8 @@ export class PriceStore {
     }
 
     async getCurrentPrice(props:any, history: boolean) {
-        action(() => {
+        console.log(props);
+        runInAction(() => {
             this.loading = true
             this.currentPrice = {}
         });
@@ -407,7 +408,9 @@ export class PriceStore {
                             dataTable: dataWash
                         }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }]
                     }
-                    this.loading = false
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 500)
                 })
             } else {
                 if(history) {

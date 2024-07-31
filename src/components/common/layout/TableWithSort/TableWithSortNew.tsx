@@ -73,6 +73,7 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
       })()
     }, [height, fontSize, value, _count]);
 
+      const {footerHeight, ...otherProps} = props
 
       return (
         <Panel ref={refBody} state={false}
@@ -82,7 +83,6 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
             routeStyle={style}
             variant={variant ? variant : PanelVariant.dataPadding}
             footerClassName={'px-6 pt-2 pb-4 h-24' + " " + props.footerClassName}
-
             headerClassName={''}
             header={search || filter ?
                 <>
@@ -91,7 +91,7 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
                 </> : false
             }
             footer={!autoScroll ? <><PaginationComponent />{props.footer }</> : props.footer }
-            {...props}
+            {...otherProps}
         >
           {autoScroll ? view ? <GridView key={props.footerProps?.id + "_00"}
             props={{...props, ref: width}}
@@ -132,9 +132,10 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
 })
 
 const TableWithSort = (props: TableWithSortProps & any & {store?: any}) => {
+  const {store, ...otherProps} = props
   return (
-    <LocalStoreProvider stores={props.store}>
-      <TableWithSortNew {...props} />
+    <LocalStoreProvider stores={store}>
+      <TableWithSortNew {...otherProps} />
     </LocalStoreProvider>
   )
 }
