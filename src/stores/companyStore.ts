@@ -475,6 +475,7 @@ export class CompanyStore {
                 data = dataCars.results
                 dataMeta = dataCars
             }
+            return dataCars
         } else {
             try {
                 const _type = userStore.myProfileState.company.company_type === CompanyType.performer ? CompanyType.performer : CompanyType.customer
@@ -484,6 +485,7 @@ export class CompanyStore {
                     data = dataCars.results
                     dataMeta = dataCars
                 }
+                return dataCars
             } catch (e) {
                 this.errors = e
             }
