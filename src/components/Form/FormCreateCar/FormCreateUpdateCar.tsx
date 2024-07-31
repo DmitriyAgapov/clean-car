@@ -22,7 +22,6 @@ import { CompanyType, CompanyTypeRus } from 'stores/companyStore'
 import { useDidUpdate, useDisclosure, useScrollIntoView, useViewportSize } from '@mantine/hooks'
 import { PanelVariant } from "components/common/layout/Panel/Panel";
 import { BidPaymentResult } from "components/common/layout/Modal/BidPaymentResult";
-import errors from "components/common/layout/Errors/Errors";
 
 interface CarCreateUpdate  {
     number: string
@@ -109,30 +108,10 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         }
       }
       return initValues
-    }, [edit, car, store.userStore.myProfileData.company])
-  const test_data = {
-    "brand": "2",
-    "id": null,
-    "car_type": "",
-    "city": "",
-    "employees": [
-      5
-    ],
-    "height": 1332,
-    "is_active": "true",
-    "limit": "",
-    "model": "7",
-    "depend_on": "company",
-    "number": "z 123 ad 123",
-    "radius": "R15",
-    "company_id": 5,
-    "company_type": "Физическое лицо",
-    "company_filials": "company"
-  }
+    }, [edit,  car, store.userStore.myProfileData.company])
   const numRegex = new RegExp("^(([АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{1,2})(\d{2,3})|(\d{4}(?<!0000)[АВЕКМНОРСТУХ]{2})(\d{2})|(\d{3}(?<!000)(C?D|[ТНМВКЕ])\d{3}(?<!000))(\d{2}(?<!00))|([ТСК][АВЕКМНОРСТУХ]{2}\d{3}(?<!000))(\d{2})|([АВЕКМНОРСТУХ]{2}\d{3}(?<!000)[АВЕКМНОРСТУХ])(\d{2})|([АВЕКМНОРСТУХ]\d{4}(?<!0000))(\d{2})|(\d{3}(?<!000)[АВЕКМНОРСТУХ])(\d{2})|(\d{4}(?<!0000)[АВЕКМНОРСТУХ])(\d{2})|([АВЕКМНОРСТУХ]{2}\d{4}(?<!0000))(\d{2})|([АВЕКМНОРСТУХ]{2}\d{3}(?<!000))(\d{2,3})|(^Т[АВЕКМНОРСТУХ]{2}\d{3}(?<!000)\d{2,3}))")
   const form = useForm({
     name: 'createUpdateCar',
-    // initialValues: test_data,
     initialValues: memoizedInitValues,
     validateInputOnBlur: true,
     onValuesChange: (values) => console.log(values),
