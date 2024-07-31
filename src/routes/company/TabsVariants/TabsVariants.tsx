@@ -72,8 +72,9 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
           />,
         ],
         text: <div className={'grid gap-12 mb-12'}><CreateInput text={'Сумма начисления'} name={'paymoney'} type={'number'}/>
-          <DList label={'Компания'} title={data.name}/>
-          <DList label={'Зачислил'}  title={data.name}/>
+
+          <DList label={'Компания'} title={data?.name}/>
+          <DList label={'Зачислил'}  title={data?.name}/>
         </div>,
         header: 'Пополнить счет',
         state: true,

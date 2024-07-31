@@ -183,9 +183,9 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 store.companyStore
                     .createFilial(data, 'performer', values.company_id)
                     .then((r) => {
-                        values.id = r.id
-                        revalidate.revalidate()
-                        navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                        // values.id = r.id
+                        // revalidate.revalidate()
+                        // navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
                     })
                     .then(() => store.companyStore.getAllFilials())
             }
@@ -228,13 +228,27 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         }
     }, [formData.values.company_id]);
 
-    const filialsCompanyData = React.useMemo(() => {
-        store.companyStore.loadAllFilials()
-        if (formData.values.company_filials === 'filials') {
-            return store.companyStore.getFilialsAll.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-        } else {
-            return store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-        }
+    const [filialsCompanyData, setFilialsCompanyData] = React.useState(['Пусто'])
+    React.useEffect(() => {
+        (async () => {
+            const data = await store.companyStore.loadAllFilials()
+            if(data.results && data.results.length !== 0) {
+            let res: any
+            if (formData.values.company_filials === 'filials') {
+                if(store.appStore.appType === "admin") {
+                    res = data.results.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                    console.log(res);
+                } else {
+                    res = data.results.map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                }
+                setFilialsCompanyData(res)
+            } else {
+                res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                console.log(res);
+                setFilialsCompanyData(res)
+            }
+            }
+        })()
 
     }, [formData.values.type, formData.values.company_filials])
 
@@ -340,6 +354,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             label={'Принадлежит'}
                             onOptionSubmit={(value) => {
                                 formData.setFieldValue('company_id', null)
+                                store.companyStore.loadAllFilials()
                             }}
                             data={[
                                 { label: 'Компании', value: 'company' },
@@ -351,10 +366,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                             clearable
                             onOptionSubmit={(value) => {
                                 console.log(formData.values)
-                            }}
-                            onFocus={() => {
-                                console.log('on focus')
-                                store.companyStore.loadAllFilials()
                             }}
                             defaultValue={formData.values.company_id}
                             label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
