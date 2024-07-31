@@ -412,7 +412,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: ':id',
-                        loader: priceLoader,
+                        // loader: priceLoader,
                         element: <PricePage />,
                         children: [
                             {

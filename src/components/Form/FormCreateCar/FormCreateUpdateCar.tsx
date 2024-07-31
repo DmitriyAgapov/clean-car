@@ -22,6 +22,7 @@ import { CompanyType, CompanyTypeRus } from 'stores/companyStore'
 import { useDidUpdate, useDisclosure, useScrollIntoView, useViewportSize } from '@mantine/hooks'
 import { PanelVariant } from "components/common/layout/Panel/Panel";
 import { BidPaymentResult } from "components/common/layout/Modal/BidPaymentResult";
+import errors from "components/common/layout/Errors/Errors";
 
 interface CarCreateUpdate  {
     number: string
@@ -109,10 +110,30 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
       }
       return initValues
     }, [edit, car])
+  const test_data = {
+    "brand": "2",
+    "id": null,
+    "car_type": "",
+    "city": "",
+    "employees": [
+      5
+    ],
+    "height": 1332,
+    "is_active": "true",
+    "limit": "",
+    "model": "7",
+    "depend_on": "company",
+    "number": "z 123 ad 123",
+    "radius": "R15",
+    "company_id": 5,
+    "company_type": "Физическое лицо",
+    "company_filials": "company"
+  }
   const numRegex = new RegExp("^(([АВЕКМНОРСТУХ]\d{3}(?<!000)[АВЕКМНОРСТУХ]{1,2})(\d{2,3})|(\d{4}(?<!0000)[АВЕКМНОРСТУХ]{2})(\d{2})|(\d{3}(?<!000)(C?D|[ТНМВКЕ])\d{3}(?<!000))(\d{2}(?<!00))|([ТСК][АВЕКМНОРСТУХ]{2}\d{3}(?<!000))(\d{2})|([АВЕКМНОРСТУХ]{2}\d{3}(?<!000)[АВЕКМНОРСТУХ])(\d{2})|([АВЕКМНОРСТУХ]\d{4}(?<!0000))(\d{2})|(\d{3}(?<!000)[АВЕКМНОРСТУХ])(\d{2})|(\d{4}(?<!0000)[АВЕКМНОРСТУХ])(\d{2})|([АВЕКМНОРСТУХ]{2}\d{4}(?<!0000))(\d{2})|([АВЕКМНОРСТУХ]{2}\d{3}(?<!000))(\d{2,3})|(^Т[АВЕКМНОРСТУХ]{2}\d{3}(?<!000)\d{2,3}))")
   const form = useForm({
     name: 'createUpdateCar',
-    initialValues: memoizedInitValues,
+    initialValues: test_data,
+    // initialValues: memoizedInitValues,
     validateInputOnBlur: true,
     onValuesChange: (values) => console.log(values),
     validate: yupResolver(CreateCarSchema),
@@ -243,12 +264,11 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         store.formStore.setFormDataCreateCar(data)
         store.formStore.sendCarFormData()
         .then(r => {
-          console.log(r);
-          form.values.id = r.data.id
-        })
-        .then(() =>  {
-          // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
-          navigate(`/account/cars`)
+          console.log(r.response);
+          if(r && r.response && r.response.status < 300) {
+            r && r.data ? form.values.id = r.data.id : null
+            navigate(`/account/cars`)
+          }
         })
       }
     }, [form])
@@ -396,7 +416,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                     <Progress total={3} current={step} />
                     <PanelForForms
                         state={step !== 1}
-                      // animate={n}
+                      animate={animate}
                         className={'!bg-transparent grid grid-rows-[auto_1fr] !overflow-visible self-stretch'}
                         bodyClassName={'tablet:!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
                         variant={PanelVariant.textPadding}
@@ -499,7 +519,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}
-
+                      animate={animate}
                         className={'!bg-transparent'}
                         bodyClassName={'md:!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
                         variant={PanelVariant.textPadding}
@@ -617,7 +637,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 3}
-
+                      animate={animate}
                         className={'!bg-transparent'}
                         bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3 !pb-6'}
                         variant={PanelVariant.textPadding}

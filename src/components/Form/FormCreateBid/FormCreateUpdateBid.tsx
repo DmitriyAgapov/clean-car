@@ -290,11 +290,13 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
     }, [formData.values.conductor, cars])
 
   const handleChangeCompany = React.useCallback((e:any) => {
+    formData.reset()
     if(e === null) {
       formData.values.company = '0'
       store.bidsStore.formResultSet({company: 0})
     }
     if(e !== "0") {
+
       formData.setFieldValue('company', e);
       store.bidsStore.formResultSet({ company: Number(e) })
     } else {
@@ -601,7 +603,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                   if(store.userStore.myProfileState.company.company_type !== CompanyType.fizlico) {
                                     return store.companyStore.companies
                                     .filter((c: any) => c.company_type === 'Клиент')
-                                    .map((c: any) => ({ label: c.name, value: String(c.id) }))}
+                                    .map((c: any) => ({ label: c.name, value: String(c.id) }))
+                                  }
                                   return [{label: store.userStore.myProfileState.company.name, value: store.userStore.myProfileState.company.id.toString()}]
                                 })()}
                             />

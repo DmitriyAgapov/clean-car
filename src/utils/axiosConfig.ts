@@ -2,7 +2,8 @@ import axios from "axios";
 import agent from "utils/agent";
 import {  runInAction } from "mobx";
 import appStore from "stores/appStore";
-import authStore from "stores/authStore";
+import authStore from 'stores/authStore'
+import { notifications } from '@mantine/notifications'
 
 axios.interceptors.request
 	.use(
@@ -31,13 +32,25 @@ axios.interceptors.request
 axios.interceptors.response.use(
     (response) => response,
     async (error) => {
-	    console.log(error);
         const config = await error.config
         if(error.code === "ERR_NETWORK" || error.code === "ECONNABORTED") {
          appStore.setNetWorkStatus(false)
         } else if(!appStore.networkStatus && (error.code !== "ERR_NETWORK" || error.code === "ECONNABORTED")) {
          appStore.setNetWorkStatus(true)
         }
+				// Сообщения об ошибках
+				if(error && error.response && error.response.status > 300) {
+					notifications.show({
+						id: 'axiosError',
+						withCloseButton: true,
+						autoClose: 5000,
+						title: error.code,
+						message: error.message + " " + error.config.url,
+						color: 'var(--errorColor)',
+						// style: { backgroundColor: 'red' },
+						loading: false,
+					})
+				}
         // console.log('/token/refresh/', config.url.includes('/token/refresh/'));
 
         if (error.response && error.response.status === 401 && !config.url.includes('/token/refresh/') && !config.url.includes('/token/')) {
