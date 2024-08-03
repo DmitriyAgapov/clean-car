@@ -61,7 +61,6 @@ const Button = React.forwardRef(({
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const {width} = useWindowDimensions()
   const handleAction = (event: any) => {
-    console.log('is once', isOnce);
     if(isOnce)  {
       setIsSubmitting(true)
     }

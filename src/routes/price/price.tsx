@@ -85,7 +85,7 @@ const PricePage = ():JSX.Element => {
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
 
   const memoModal = React.useMemo(() => {
-    if(!isHistory) {
+    if(!isHistory &&  store.appStore.appType === "admin") {
     return  <PriceCopy opened={opened} id={isCreate?.id} title={company.name}
       onClose={close} />
       }

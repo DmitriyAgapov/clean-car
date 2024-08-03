@@ -77,7 +77,6 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
       onValuesChange: (values, previous) => console.log(values),
       validate: yupResolver(CreateUserSchema),
       enhanceGetInputProps: (payload) => {
-
         if(payload.options.dependOn === 'depend_on') {
 					return ({
 						disabled: form.values.depend_on === "" || form.values.depend_on === null,
@@ -257,20 +256,6 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                             className={'float-right'}
                             variant={ButtonVariant.cancel}
                         />
-                        {/*   <Button */}
-                        {/*     type={'button'} */}
-                        {/*     text={'Чек'} */}
-                        {/*     action={(e) => { */}
-                        {/* 			e.preventDefault() */}
-                        {/*       console.log(form.errors) */}
-                        {/*       console.log(form.values) */}
-                        {/*       form.validate() */}
-                        {/*       console.log(form.isValid()) */}
-
-                        {/* 		}} */}
-                        {/*     className={'float-right'} */}
-                        {/*     variant={ButtonVariant['accent-outline']} */}
-                        {/* /> */}
                     </>
                 }
                 actionNext={
@@ -304,7 +289,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                             value: item[1],
                         }))}
                     />
-                    {!(form.values.type === null || form.values.type === UserTypeEnum.admin) && (
+                    {!(form.values.type === null || form.values.type === UserTypeEnum.admin) && !edit && (
                         <>
                             <Select
                                 onOptionSubmit={() => form.setValues({ ...form.values, company_id: null, group: null })}
@@ -328,7 +313,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                             />
                         </>
                     )}
-                    <hr className={'col-span-full border-gray-2'} />
+	                {!edit && <hr className={'col-span-full border-gray-2'} />}
                     <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
                     <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
                     <InputBase

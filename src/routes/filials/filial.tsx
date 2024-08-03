@@ -43,8 +43,6 @@ const FilialPage = () => {
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
   }, [data])
-
-  console.log(data);
   return (
       <Section type={SectionType.default}>
           <Panel

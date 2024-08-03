@@ -374,21 +374,22 @@ export class CompanyStore {
                 const company = yield agent.Companies.getCompanyData(type, newid)
                 const users = yield agent.Account.getCompanyUsers(newid)
                 const filials = yield agent.Filials.getFilials(type, newid)
-                const cars = yield agent.Cars.getCompanyCars(newid)
+                if(appStore.appType !== "performer") {
+                    const cars = yield agent.Cars.getCompanyCars(newid)
+                    data.cars = {
+                        data: cars.data.results,
+                        label: 'Автомобили',
+                    } as any
+                }
 
                 data.company = {
                     data: company.data,
                     company_type: type,
                     label: 'Основная информация',
                 }
-
                 data.users = {
                     data: users.data.results,
                     label: 'Сотрудники',
-                } as any
-                data.cars = {
-                    data: cars.data.results,
-                    label: 'Автомобили',
                 } as any
                 data.filials = {
                     data: filials.data.results,
@@ -610,14 +611,13 @@ export class CompanyStore {
         return filials
     }
     createFilial = flow(function* (this: CompanyStore, data: any, type: string, company_id: number) {
-
         this.loadingCompanies = true
         try {
             // @ts-ignore
             const response = yield agent.Filials.createFilial(type, company_id, data)
             if (response.status > 199 && response.status < 299) {
 
-                return response.data
+                return response
             }
             return response
         } catch (e) {

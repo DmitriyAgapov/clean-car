@@ -182,12 +182,14 @@ export class UsersStore {
   }
 
   getUsers = flow(function *(this: UsersStore, company_id: any) {
+    console.log(company_id);
     try {
       const { data, status } = yield agent.Account.getCompanyUsers(Number(company_id))
       if (status === 200) {
         //
-        runInAction(() => this.companyUsers = data.results)
-        action(() => this.companyUsers = data.results)
+        runInAction(() => {
+          this.companyUsers = data.results
+        })
         return data.results
       }
     } catch (e) {
@@ -231,9 +233,8 @@ export class UsersStore {
         if(company_id === userStore.myProfileData.company.id) {
           return  userStore.myProfileData.company
         }
-        const company = await agent.Filials.getFilial(company_type, company_id, id).then(r => r.data)
+        // const company = await agent.Filials.getFilial(company_type, company_id, id).then(r => r.data)
         return  await agent.Filials.getFilials(company_type, Number(company_id)).then((r: any) => {
-
           if (r.status === 200) {
             user.company = {
               ...r.data.results[0],

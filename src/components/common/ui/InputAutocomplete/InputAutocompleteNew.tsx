@@ -137,7 +137,7 @@ export function InputAutocompleteNew(props:any) {
 
       >
           <Combobox.Target>
-            <div>
+            <div className={props.className}>
               <label
                   className={`account-form__input w-full flex-grow  flex-[1_0_20rem] ${!values.city && 'filter grayscale'}`}
                   htmlFor={'address'}

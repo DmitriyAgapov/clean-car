@@ -175,20 +175,19 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 agent.Filials.editFilial(data, values.company_id, 'performer', values.id)
                     .then((r) => {
                         values.id = r.id
-                        revalidate.revalidate()
                         navigate(`/account/filials/performer/${values.company_id}/${company.id}`)
                     })
                     .then(() => store.companyStore.getAllFilials())
             } else {
-                store.companyStore
-                    .createFilial(data, 'performer', values.company_id)
+                store.companyStore.createFilial(data, 'performer', values.company_id)
                     .then((r) => {
-                    console.log(r);
-                        // values.id = r.id
-                        // revalidate.revalidate()
-                        // navigate(`/account/filials/performer/${values.company_id}/${r.id}`)
+                        if(r && r.status < 300 && r.data) {
+                            values.id = r.data.id
+                            store.companyStore.getAllFilials()
+                            navigate(`/account/filials/performer/${values.company_id}/${r.data.id}`)
+                        }
                     })
-                    .then(() => store.companyStore.getAllFilials())
+
             }
         }
         if (values.type == CompanyType.customer) {
@@ -244,14 +243,13 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 }
                 setFilialsCompanyData(res)
             } else {
+                await store.companyStore.loadCompanies()
                 res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-                console.log(res);
                 setFilialsCompanyData(res)
             }
             }
         })()
-
-    }, [formData.values.type, formData.values.company_filials])
+    }, [formData.values.type, formData.values.company_filials, formData.values.depend_on])
 
     // @ts-ignore
     return (
@@ -277,6 +275,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
                             <Button
                                 type={'button'}
+                                isOnce={true}
                                 action={() => {
                                     formData.validate()
                                     handleSubmit(formData.values)
@@ -289,6 +288,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         ) : (
                             <Button
                                 action={() => handleSubmit(formData.values)}
+                                isOnce={true}
                                 type={'submit'}
                                 disabled={!formData.isValid()}
                                 text={'Сохранить'}

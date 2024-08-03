@@ -80,13 +80,13 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           //     }}
           // />
       )
-  const exceptions = ['policy', '404', 'restore', 'register', 'support' ]
+  const exceptions = ['policy', '404', 'restore', 'register', 'support', 'profile' ]
   const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
   const _path = loc.pathname.split('/')[2]
   // @ts-ignore
   const _permissionName = _path ? UserPermissionVariants[_path.toString()] : false
   // @ts-ignore
-  if(!store.appStore.token && loc.pathname !== "/" && !isInException(loc.pathname)) {
+  if(!store.authStore.userIsLoggedIn && loc.pathname !== "/" && !isInException(loc.pathname)) {
     return (<Navigate to={'/'}/>)
   }
   if(_permissionName && !isInException(loc.pathname.split("/").slice(0,3).join('/'))) {

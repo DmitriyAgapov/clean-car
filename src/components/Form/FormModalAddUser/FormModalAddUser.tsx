@@ -136,11 +136,12 @@ const FormModalAddUser =  (props: { company_id: any,  opened: boolean, onClose: 
     )
 }
 export const FormModalSelectUsers = observer((props: { company_id: any, users: any, opened: boolean, onClose: () => void }) => {
+  console.log(props);
   const store = useStore();
   React.useEffect(() => {
     console.log(props.company_id);
     store.usersStore.getUsers(props.company_id)
-  }, [props.opened])
+  }, [props.opened, props.company_id])
   const initValues: {
     users: string | null
   } = {

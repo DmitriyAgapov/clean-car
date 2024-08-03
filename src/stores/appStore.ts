@@ -23,7 +23,7 @@ export class AppStore {
         if (token) {
           console.log('Has token');
           window.localStorage.setItem('jwt', token)
-          userStore.pullUser()
+          // userStore.pullUser()
           userStore.loadMyProfile()
         } else {
           console.log('no token');
@@ -40,15 +40,15 @@ export class AppStore {
         }
 
     })
-    reaction(() => this.tokenRefresh,
-      (tokenRefresh) => {
-        if (tokenRefresh) {
-          window.localStorage.setItem('jwt_refresh', tokenRefresh)
-        } else {
-          window.localStorage.removeItem('jwt_refresh')
-        }
-      },
-    )
+    // reaction(() => this.tokenRefresh,
+    //   (tokenRefresh) => {
+    //     if (tokenRefresh) {
+    //       window.localStorage.setItem('jwt_refresh', tokenRefresh)
+    //     } else {
+    //       window.localStorage.removeItem('jwt_refresh')
+    //     }
+    //   },
+    // )
 
     reaction(() => this.appType,
       (appType) => {

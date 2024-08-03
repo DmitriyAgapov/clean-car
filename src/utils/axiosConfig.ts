@@ -54,7 +54,8 @@ axios.interceptors.response.use(
         // console.log('/token/refresh/', config.url.includes('/token/refresh/'));
 
         if (error.response && error.response.status === 401 && !config.url.includes('/token/refresh/') && !config.url.includes('/token/')) {
-            const tokenRefresh = window.localStorage.getItem('jwt_refresh') || appStore.tokenRefresh
+            // const tokenRefresh = window.localStorage.getItem('jwt_refresh') || appStore.tokenRefresh
+            const tokenRefresh = window.localStorage.getItem('jwt_refresh')
             console.log('tokenRefresh', tokenRefresh)
             // config._retry = true;
             if (tokenRefresh && tokenRefresh !== 'undefined' && tokenRefresh !== undefined) {
@@ -62,7 +63,7 @@ axios.interceptors.response.use(
 	                console.log(r);
 	                runInAction(() => {
 		                localStorage.setItem('jwt', r.data.access)
-		                appStore.setToken(r.data.access)
+		                // appStore.setToken(r.data.access)
 		                // appStore.setTokenRefresh(r.data.refresh)
 		                // localStorage.setItem('jwt_refresh', r.data.refresh)
 	                })

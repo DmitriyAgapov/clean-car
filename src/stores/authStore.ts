@@ -33,8 +33,7 @@ export class AuthStore {
     reaction(() => this.userIsLoggedIn,
       (userIsLoggedIn) => {
 
-      if(userIsLoggedIn && appStore.token && appStore.token !== "") {
-
+      if(userIsLoggedIn && localStorage.getItem('jwt')) {
         userStore.pullUser()
         userStore.loadMyProfile()
       } else {
@@ -133,11 +132,16 @@ export class AuthStore {
           })
           return resolve
         } else {
-          const { access, refresh } = resolve.data
+          if(resolve && resolve.data) {
+            console.log('login success');
+            const { access, refresh } = resolve.data
+            localStorage.setItem('jwt', access)
+            localStorage.setItem('jwt_refresh', refresh)
+            appStore.setToken(access)
+            appStore.setTokenRefresh(refresh)
 
-          appStore.setToken(access)
-          appStore.setTokenRefresh(refresh)
-          this.userIsLoggedIn = true
+            this.userIsLoggedIn = true
+          }
           return resolve
         }
       }

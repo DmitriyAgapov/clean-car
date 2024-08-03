@@ -408,11 +408,11 @@ const router = createBrowserRouter([
             {
                 path: 'price',
                 element: <PricesPage />,
-                // loader: priceLoader,
+                loader: priceLoader,
                 children: [
                     {
                         path: ':id',
-                        // loader: priceLoader,
+                        loader: priceLoader,
                         element: <PricePage />,
                         children: [
                             {
@@ -425,7 +425,7 @@ const router = createBrowserRouter([
                     {
                         path: ':id/history',
                         element: <PricesHistoryPage/>,
-                        // loader: priceLoader,
+                        loader: priceLoader,
                         children: [
                             {
                                 path: ':bid_id',

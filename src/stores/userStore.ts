@@ -77,6 +77,7 @@ export class UserStore {
          }
        }
     )
+
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
         if (authStore.userIsLoggedIn) {

@@ -35,29 +35,29 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
   const form  = useForm({
     name: 'profileEdit',
     initialValues: {
-      first_name: user.first_name,
-      last_name: store.userStore.myProfileData.user.last_name,
-      phone: user.phone,
-      email: user.email,
-      bid_visibility: store.userStore.myProfileData.user.bid_visibility,
+      first_name: user?.first_name,
+      last_name: store.userStore.myProfileData.user?.last_name,
+      phone: user?.phone,
+      email: user?.email,
+      bid_visibility: store.userStore.myProfileData.user?.bid_visibility,
       is_active: true,
       company_id: store.userStore.myProfileData.company.id,
-      group: store.userStore.myProfileData.user.account_bindings[0].group.id ?? 0
+      group: store.userStore.myProfileData.user?.account_bindings[0].group.id ?? 0
     },
     validateInputOnBlur: true,
     onValuesChange: (values, previous) => console.log(values),
     validate: yupResolver(UpdateUserProfileSchema),
   })
   const warningEmailMsg = React.useMemo(() => {
-    let active = form.values.email !== user.email;
+    let active = form.values.email !== user?.email;
     if(active) return <Heading  className={'col-span-full my-8 max-w-2xl mx-auto'} color={HeadingColor.accent} text={'При смене email вы выйдите из кабинета, и вам будет отправлено письмо с подтверждением емайл.'} variant={HeadingVariant.h3}/>
     return null
-  }, [form.values.email, user.email])
+  }, [form.values.email, user?.email])
 
   const [opened, { open, close }] = useDisclosure(false)
   const memoModal = React.useMemo(() => {
 
-    return <UploadUserPhoto  id={user.id} opened={opened} onClose={close} />
+    return <UploadUserPhoto  id={user?.id} opened={opened} onClose={close} />
   }, [opened])
   const handleSubmit = React.useCallback(async () => {
       const response =  await agent.Account.changeUserProfile(store.userStore.myProfileData.company.id, {id: store.userStore.currentUser.id,  ...form.values, phone: form.values.phone.replaceAll(' ', '')})
@@ -87,8 +87,8 @@ const UserProfileEditForm = observer(({action}: {action: (val:boolean) => void }
             // style={{ background: 'var(--gradient-directory)' }}
             data-app-type={store.appStore.appType !== "admin" ? (company?.company_type === CompanyType.customer || company?.company_type === CompanyType.fizlico) ? 'customer' : company?.company_type === CompanyType.performer ? 'performer' : "admin" : "admin"}>
             {!avatar ? <span className={'text-black font-sans uppercase text-3xl leading-none m-auto w-24 h-24 flex items-center justify-center'}>
-                {user.first_name[0]}
-              {user.last_name[0]}
+                {user?.first_name[0]}
+              {user?.last_name[0]}
               </span>: <Image src={avatar} alt={''} width={98} height={98} className={'rounded-full aspect-square'} data-directory={store.appStore.appType}/>}
           </div>
           <DList label={'Дата и время регистрации'}
@@ -177,8 +177,8 @@ const MyProfilePage = () => {
                 // style={avatar ? {background: `url(${avatar})`, backgroundSize: "cover"} :{ background: 'var(--gradient-directory)' }}
                 data-app-type={store.appStore.appType !== "admin" ? (company?.company_type === CompanyType.customer || company?.company_type === CompanyType.fizlico) ? 'customer' : company?.company_type === CompanyType.performer ? 'performer' : "admin" : "admin"}>
                 {!avatar ? <span className={'text-black font-sans uppercase text-3xl leading-none m-auto w-24 h-24 flex items-center justify-center'}>
-                {user.first_name[0]}
-                {user.last_name[0]}
+                {user?.first_name[0]}
+                {user?.last_name[0]}
               </span>: <Image src={avatar} alt={''} width={98} height={98} className={'rounded-full aspect-square'} data-directory={store.appStore.appType}/>}
               </div>
               <DList label={'Дата и время регистрации'}
@@ -186,11 +186,11 @@ const MyProfilePage = () => {
             </>
           }>
           <DList label={'Пользователь'}
-            title={user.last_name + ' ' + user.first_name} />
+            title={user?.last_name + ' ' + user?.first_name} />
           <DList label={'Номер телефона'}
-            title={user.phone} />
+            title={user?.phone} />
           <DList label={'E-mail'}
-            title={user.email} />
+            title={user?.email} />
           <DList label={'Тип'}
             title={user.company?.company_type ?? UserTypeEnum.admin}
             directory={store.appStore.appType !== "admin" ? user.company?.company_type === CompanyType.customer ? 'customer' : 'performers' : "admin"} />

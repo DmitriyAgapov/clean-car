@@ -34,6 +34,36 @@ const CarsPageEditAction = () => {
     })
   }, [])
   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
+  console.log({
+    id: params.id,
+    number: data?.number,
+    height: data?.height,
+    radius: data?.radius,
+    city: String(data?.company.city.id),
+    company_id: String(data?.company.id),
+    company_type: data?.company.company_type,
+    is_active: data?.is_active ? 'true' : 'false',
+    depend_on: data?.company.parent === null ? 'company' : 'filials',
+    brand: String(data?.model.brand),
+    model: String(data?.model.id),
+    car_type: data?.model.car_type,
+    employees: data?.employees.map((e: any) => e.id),
+  });
+  console.log({
+    id: params.id,
+    number: data?.number,
+    height: data?.height,
+    radius: data?.radius,
+    city: String(data?.company.city.id),
+    company_id: String(data?.company.id),
+    company_type: data?.company.company_type,
+    is_active: data?.is_active ? 'true' : 'false',
+    depend_on: data?.company.parent === null ? 'company' : 'filials',
+    brand: String(data?.model.brand),
+    model: String(data?.model.id),
+    car_type: data?.model.car_type,
+    employees: data?.employees.map((e: any) => e.id),
+  });
   return (
       <Section type={SectionType.default}>
           <Panel
