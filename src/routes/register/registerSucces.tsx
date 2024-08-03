@@ -38,16 +38,18 @@ const cardsData = [
 function RegisterSuccessPage() {
   const store = useStore()
   let [searchParams, setSearchParams] = useSearchParams();
-  const uids= React.useMemo(() => {
+
+
+  useEffect(() => {
+    store.appStore.setAppRouteName('.регистрация')
+  })
+  useEffect(() => {
     const _uids:{
-      company_uid: string
-      token: string
-      user_uid: string
-    }  = {
-      company_uid: '',
-      token: '',
-      user_uid: ''
-    }
+      company_uid?: string
+      token?: string
+      user_uid?: string
+      result?: any
+    } | null  = {}
     for(const u of searchParams) {
       if(u[0] === "company_id") {
         // @ts-ignore
@@ -58,17 +60,10 @@ function RegisterSuccessPage() {
         _uids[u[0]] = u[1]
       }
     }
-    return _uids
-  }, [searchParams])
-
-  useEffect(() => {
-    store.appStore.setAppRouteName('.регистрация')
-  })
-  useEffect(() => {
-    if(uids.hasOwnProperty('token')) {
-     store.authStore.emailVerify(uids)
+    if(_uids.hasOwnProperty('token')) {
+     store.authStore.emailVerify(_uids).then(r => console.log(r))
     }
-  }, [uids]);
+  }, [searchParams]);
   // @ts-ignore
   return (
     <>
@@ -78,7 +73,7 @@ function RegisterSuccessPage() {
           <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'} variant={ButtonVariant.tech} />
         }
       >
-        <Section type={SectionType.centered}>
+        {store.authStore.isLoggedIn &&  <Section type={SectionType.centered}>
           <Panel
             footerClassName={'mt-16'}
             className={'!col-span-6 mb-12 tablet:!col-span-full desktop:!col-span-6'}
@@ -120,7 +115,7 @@ function RegisterSuccessPage() {
               <strong>Приятного пользования!</strong>
             </p>
           </Panel>
-          <Panel
+         <Panel
             className={
               '!col-span-6 desktop:!col-start-7 desktop:!col-span-6 tablet:!col-start-2 tablet:!col-end-12 tablet:!justify-self-center desktop:!justify-self-auto relative hidden desktop:!block !bg-transparent'
             }
@@ -131,7 +126,7 @@ function RegisterSuccessPage() {
               <CardFeaturesCircle key={c.id} icon={c.icon} title={c.title} text={c.text} />
             ))}
           </Panel>
-        </Section>
+        </Section>}
         <SvgAuthBgSec className={'authBgSec success'} />
       </Layout>
     </>

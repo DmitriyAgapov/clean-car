@@ -104,6 +104,7 @@ const UserPortal = ({
     const store = useStore()
     const navigate = useNavigate()
     const avatar = store.userStore.userData?.avatar
+    const user = store.userStore.userData
     if (state)
         return (
             <Panel
@@ -128,8 +129,8 @@ const UserPortal = ({
                 <div className={'user__photo'} data-directory={store.appStore.appType}>
                     {!avatar ? (
                         <div className='w-20 h-20 flex justify-center items-center text-black !text-lg'>
-                            {store.userStore.myProfileData.user.first_name[0]}
-                            {store.userStore.myProfileData.user.last_name[0]}
+                            {user.first_name[0]}
+                            {user.last_name[0]}
                         </div>
                     ) : (
                         <Image
@@ -142,7 +143,7 @@ const UserPortal = ({
                         />
                     )}
                 </div>
-                <div className={'user__name'}>{name}</div>
+                <div className={'user__name'}>{user.first_name}</div>
                 <div className={'user__company'}>{company}</div>
                 <hr />
                 <UserCompanies />

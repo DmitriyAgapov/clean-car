@@ -158,7 +158,7 @@ const MyProfilePage = () => {
 
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
   const [edit, setEdit] = React.useState(false)
-  const avatar = store.userStore.userData.avatar;
+  const avatar = store.userStore.userData?.avatar;
   const userData = React.useMemo(() => {
     if(user) {
       if(edit) {

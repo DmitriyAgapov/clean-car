@@ -170,7 +170,14 @@ export class AuthStore {
   async emailVerify(data:any) {
     return await agent.Account.accountEmailConfirmation(data)
       .then(r => {
-        this.login()
+      if(r && r.status === 200 && r.data) {
+        const { access, refresh } = r.data
+        localStorage.setItem('jwt', access)
+        localStorage.setItem('jwt_refresh', refresh)
+        appStore.setToken(access)
+        appStore.setTokenRefresh(refresh)
+        this.userIsLoggedIn = true
+      }
       })
       .catch(e => {
         console.log(e)

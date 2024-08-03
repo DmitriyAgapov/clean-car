@@ -106,12 +106,12 @@ const User = observer(({  action }: UserProps) => {
   return (
     <div className={styles.user} onClick={action}>
       <div className={styles.photo} data-directory={companyType}>
-        {avatar ? <Image src={avatar} width={40} height={40} alt={''} className={'rounded-full'}/> : <div className={'w-10 h-10 flex justify-center items-center text-black !text-lg'}>{user.first_name[0] + user.last_name[0]}</div>}
+        {avatar ? <Image src={avatar} width={40} height={40} alt={''} className={'rounded-full'}/> : <div className={'w-10 h-10 flex justify-center items-center text-black !text-lg'}>{user?.first_name[0] + user?.last_name[0]}</div>}
       </div>
       <div className={styles.menuName}>
         <div className={styles.name}>
           {/* <span className={styles.first_name}></span> */}
-          <span className={styles.last_name}>{(user.last_name && user.last_name.length !== 0) && user.last_name} {user.first_name}</span>
+          <span className={styles.last_name}>{(user?.last_name && user.last_name?.length !== 0) && user?.last_name} {user?.first_name}</span>
         </div>
         <div className={styles.status}>{store.userStore.myProfileData.permissionGroupName}</div>
       </div>
