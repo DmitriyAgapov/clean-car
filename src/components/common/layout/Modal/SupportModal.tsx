@@ -11,6 +11,7 @@ import { CreateUserSchema } from "utils/validationSchemas";
 import { yupResolver } from 'mantine-form-yup-resolver'
 import { IMask, IMaskInput } from 'react-imask';
 import agent from "utils/agent";
+import { useWindowDimensions } from "utils/utils";
 
 
 const masked = IMask.createMask({
@@ -102,10 +103,10 @@ function SupportForm(props:any) {
 const SupportModal = (props: { opened: boolean; onClose: () => void; update?: () => void }) => {
 	const store = useStore()
 	const [thx, setThx] = useState(false)
-
+	const {width} = useWindowDimensions()
 	return (
 		<Modal.Root size={996}
-			fullScreen
+			fullScreen={!!(width && width < 740)}
 			opened={props.opened}
 			onClose={props.onClose}
 			centered>

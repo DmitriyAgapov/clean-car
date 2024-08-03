@@ -9,7 +9,7 @@ import { observer } from 'mobx-react-lite';
 import { SvgBackArrow, SvgCleanCarLoader } from "components/common/ui/Icon";
 import { PermissionNames } from 'stores/permissionStore'
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
-import { CompanyTypeRus } from "stores/companyStore";
+import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
 
@@ -34,7 +34,7 @@ const CarPage = () => {
     store.appStore.setAppState(isLoading)
     return [
       { label: 'Основная информация', data: data, company_type: CompanyTypeRus(data?.company?.company_type)},
-      { label: 'Сотрудники', data: data, company_type: CompanyTypeRus(data?.company?.company_type), company_id: params.company_id }
+      (store.userStore.myProfileState.company.company_type !== CompanyType.fizlico && { label: 'Сотрудники', data: data, company_type: CompanyTypeRus(data?.company?.company_type), company_id: params.company_id })
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]

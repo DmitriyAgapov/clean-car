@@ -417,7 +417,7 @@ export class BidsStore {
 
         reaction(() => this.formResult.conductor,
             async (conductor)=> {
-                if(conductor !== "0" && conductor !== null && conductor !== 0) {
+                if(conductor !== "0" && conductor !== null && conductor !== 0 && this.formResult.company !== 0) {
                     //@ts-ignore
                     // runInAction(() => {
                     //     this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone
