@@ -237,7 +237,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             if (formData.values.company_filials === 'filials') {
                 if(store.appStore.appType === "admin") {
                     res = data.results.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-                    console.log(res);
                 } else {
                     res = data.results.map((f: any) => ({ label: f.name, value: f.id.toString() }))
                 }
@@ -365,9 +364,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                         <Select
                             searchable
                             clearable
-                            // onOptionSubmit={(value) => {
-                            //     console.log(formData.values)
-                            // }}
                             defaultValue={formData.values.company_id}
                             label={formData.values.company_filials === 'filials' ? 'Филиал' : 'Компания'}
                             disabled={filialsCompanyData.length === 0}
