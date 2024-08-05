@@ -232,7 +232,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     React.useEffect(() => {
         (async () => {
             const data = await store.companyStore.loadAllFilials()
-            if(data.results && data.results.length !== 0) {
             let res: any
             if (formData.values.company_filials === 'filials') {
                 if(store.appStore.appType === "admin") {
@@ -245,7 +244,6 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 await store.companyStore.loadCompanies()
                 res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
                 setFilialsCompanyData(res)
-            }
             }
         })()
     }, [formData.values.type, formData.values.company_filials, formData.values.depend_on])
