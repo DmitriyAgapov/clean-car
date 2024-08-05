@@ -225,9 +225,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     }, [])
 
     React.useEffect(() => {
-        console.log('city', formData.values.company_id);
         const _v = store.companyStore.getCompanyCity(formData.values.company_id)
-        console.log(_v);
         if(_v) {
             formData.setFieldValue('city', _v.toString())
         } else {
@@ -239,21 +237,19 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     React.useEffect(() => {
         (async () => {
             const data = await store.companyStore.loadAllFilials()
-            // if(data.results && data.results.length !== 0) {
-                let res: any
-                if (formData.values.company_filials === 'filials') {
-                    if(store.appStore.appType === "admin") {
-                        res = data.results.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-                    } else {
-                        res = data.results.map((f: any) => ({ label: f.name, value: f.id.toString() }))
-                    }
-                    setFilialsCompanyData(res)
+            let res: any
+            if (formData.values.company_filials === 'filials') {
+                if(store.appStore.appType === "admin") {
+                    res = data.results.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
                 } else {
-                    await store.companyStore.loadCompanies()
-                    res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-                    setFilialsCompanyData(res)
+                    res = data.results.map((f: any) => ({ label: f.name, value: f.id.toString() }))
                 }
-            // }
+                setFilialsCompanyData(res)
+            } else {
+                await store.companyStore.loadCompanies()
+                res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                setFilialsCompanyData(res)
+            }
         })()
     }, [formData.values.type, formData.values.company_filials, formData.values.depend_on])
 
