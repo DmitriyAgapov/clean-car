@@ -755,8 +755,19 @@ export class CompanyStore {
     }
     getCompanyCity(id: any) {
         const _res = this.companies.filter((c) => c.id == id)
+
         // @ts-ignore
-        if(_res && _res[0] && _res[0].city.id) return _res[0].city.id
+        if(_res && _res[0] && _res[0].city.id) {
+            // @ts-ignore
+            return _res[0].city.id
+        } else if(_res.length === 0) {
+            const _f = this.filials.filter((c) => c.id == id)
+            console.log(_f);
+            // @ts-ignore
+            if(_f && _f[0] && _f[0].city.id) return _f[0].city.id
+            const _af = this.allFilials.filter((c) => c.id == id)
+            if(_af && _af[0] && _af[0].city.id) return _af[0].city.id
+        }
         return false
     }
     get getFilialsAll() {
