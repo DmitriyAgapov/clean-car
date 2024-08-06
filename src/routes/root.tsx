@@ -3,8 +3,15 @@ import Layout from 'components/common/layout/Layout/Layout'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
+import { useStore } from 'stores/store'
+import { observer } from 'mobx-react-lite'
+import { Navigate } from 'react-router-dom'
 
-export default function Root() {
+function Root() {
+  const store = useStore()
+  if (store.appStore.appType !== "" && location.pathname !== 'policy') {
+    return <Navigate to={'/account/bids'} />
+  }
   return (
     // <Layout className={'page-intro'}>
       <Section type={SectionType.centered}>
@@ -25,3 +32,4 @@ export default function Root() {
     // </Layout>
   )
 }
+export default observer(Root)

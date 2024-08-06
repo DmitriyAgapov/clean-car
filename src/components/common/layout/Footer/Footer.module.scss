@@ -4,7 +4,8 @@
   justify-content: space-between;
   color: #ffffff50;
   font-size: .75rem;
-  margin-top: 2rem;
+  margin-top: auto;
+  @apply desktop-max:flex-col;
   @media screen and (min-width: 744px) {
 	font-size: .875rem;
   }

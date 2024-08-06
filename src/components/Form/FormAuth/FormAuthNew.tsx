@@ -44,16 +44,16 @@ const FormAuthNew = () => {
     store.authStore.setEmail(values.email)
     store.authStore.setPassword(values.password)
     return store.authStore.login()
-    // .then((r:any) => {
-    //     if(r.status === 200) {
-    //       console.log('success');
-    //       // mutate(`limits`)
-    //       navigate(`/account/bids`)
-    //     } else {
-    //       console.log(r)
-    //     }
-    //   })
-    //     .catch(e => console.log(e))
+    .then((r:any) => {
+        if(r.status === 200) {
+          console.log('success');
+          // mutate(`limits`)
+          navigate(`/account/welcome`)
+        } else {
+          console.log(r)
+        }
+      })
+        .catch(e => console.log(e))
 
 
   }, [])

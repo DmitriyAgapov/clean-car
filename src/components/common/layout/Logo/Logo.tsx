@@ -27,7 +27,7 @@ const Logo = ({ className = "", position = "" }: LogoProps) => {
   const store = useStore()
   const logoName = store.appStore.appName
   const routeName = store.appStore.appRouteName
-
+  const _route = store.authStore.userIsLoggedIn ? '/account/bids' : '/'
   return (
     <div className={styles.Logo + " " + className}
       data-app-type={store.appStore.appType}
@@ -38,7 +38,7 @@ const Logo = ({ className = "", position = "" }: LogoProps) => {
       {/* </Link> : null} */}
 
 
-      {store.appStore.appType !== "" ? <>  <Vector /><Link to={'/'} className={styles.routeName}>{routeName}</Link> <Text className={'col-span-2 text-black'}/></>: <Link to={'/'} className={styles.routeName}><TextAuth className={`col-span-2 tablet:max-w-sm max-w-xss`}/></Link>}
+      {store.appStore.appType !== "" ? <>  <Vector /><Link to={_route} className={styles.routeName}>{routeName}</Link> <Text className={'col-span-2 text-black'}/></>: <Link to={_route} className={styles.routeName}><TextAuth className={`col-span-2 tablet:max-w-sm max-w-xss`}/></Link>}
 
 
     </div>

@@ -12,22 +12,18 @@ import FormAuthNew from 'components/Form/FormAuth/FormAuthNew'
 import { observer } from 'mobx-react-lite'
 
 function AuthPage() {
-  const store = useStore()
-  const location = useLocation()
-  if (store.appStore.appType !== "" && location.pathname !== 'policy') {
-    return <Navigate to={'/account/bids'} />
-  }
+
   return (
     <Layout
       className={'page-intro'}
-      headerContent={
-        <Button
-          className={'!hidden tablet:!inline-flex ml-auto mr-8'}
-          text={'Помощь'}
-          variant={ButtonVariant['accent-outline']}
-          size={ButtonSizeType.sm}
-        />
-      }
+      // headerContent={
+      //   <Button
+      //     className={'!hidden tablet:!inline-flex ml-auto mr-8'}
+      //     text={'Помощь'}
+      //     variant={ButtonVariant['accent-outline']}
+      //     size={ButtonSizeType.sm}
+      //   />
+      // }
     >
       <Section type={SectionType.centered}>
         <Panel

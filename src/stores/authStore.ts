@@ -134,13 +134,16 @@ export class AuthStore {
         } else {
           if(resolve && resolve.data) {
             console.log('login success');
-            const { access, refresh } = resolve.data
-            localStorage.setItem('jwt', access)
-            localStorage.setItem('jwt_refresh', refresh)
-            appStore.setToken(access)
-            appStore.setTokenRefresh(refresh)
 
-            this.userIsLoggedIn = true
+            runInAction(() => {
+              const { access, refresh } = resolve.data
+              localStorage.setItem('jwt', access);
+              localStorage.setItem('jwt_refresh', refresh);
+              appStore.setToken(access)
+              appStore.setTokenRefresh(refresh)
+              this.userIsLoggedIn = true
+
+            })
           }
           return resolve
         }
