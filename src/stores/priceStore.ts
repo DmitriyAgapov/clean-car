@@ -145,6 +145,7 @@ export class PriceStore {
 
     async getCurrentPrice(props:any, history: boolean) {
         console.log(props);
+        action(() =>  this.loading = true)
         runInAction(() => {
             this.loading = true
             this.currentPrice = {}
@@ -288,7 +289,10 @@ export class PriceStore {
                 console.log('есть ID', props.params.id);
                 const tempAr:any[] = []
                 // console.log(mapEdWast(dataWash.wash_positions));
+
+                action(() =>  this.loading = false)
                 runInAction(() => {
+                    this.loading = false
                     this.currentPrice = {
                         tabs: [{
                             label: 'Мойка', data: dataWash,
@@ -296,8 +300,8 @@ export class PriceStore {
                             test: mapEdWast(dataWash.wash_positions)
                         }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option'), test: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire,  test: mapEdTire(dataTire.tire_positions, false) }]
                     }
-                    this.loading = false
-                })
+                });
+
                 // runInAction(() => {
                 //     dataWash && dataWash.wash_positions && dataWash.wash_positions.length !== 0 && tempAr.push({ label: 'Мойка', data: dataWash, dataTable: dataWash })
                 //     dataEvac && dataEvac.evacuation_positions && dataEvac.evacuation_positions.length !== 0 && tempAr.push({ label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') })
@@ -383,8 +387,11 @@ export class PriceStore {
                                 return obj;
                             })
                         }
-                        this.currentPrice = data
-                        this.loading = false
+                        action(() =>  this.loading = false)
+                        runInAction(() => {
+                            this.loading = false
+                            this.currentPrice = data
+                        });
                     }
                 } catch (e) {
                     console.log(e)
@@ -483,8 +490,11 @@ export class PriceStore {
                                 return obj;
                             })
                         }
-                        this.currentPrice = data
-                        this.loading = false
+                        action(() =>  this.loading = false)
+                        runInAction(() => {
+                            this.loading = false
+                            this.currentPrice = data
+                        });
                         console.log('admin list', data);
                         console.log('admin listRes', dataResults);
                     }

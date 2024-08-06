@@ -152,19 +152,21 @@
   }
 
   section {
-	@apply px-10 py-12 border-gray-2 border;
+	@apply tablet:px-10 tablet:py-12 border-gray-2 border;
 	background: rgba(36, 37, 41, .6);
 	@screen tablet-max {
-	  position: absolute;
+	  //position: absolute;
 	  top: 0;
 	  bottom: 0;
 	  right: 0;
-	  display: grid;
-	  align-content: center;
+	  //display: grid;
+	  //align-content: center;
 	  left: 0;
 	  border: 0;
 	  border-radius: 0;
-	  min-height: 100lvh;
+	  max-height: 100dvh !important;
+	  //margin: 5dvh 0 !important;
+	  //min-height: 100lvh;
 	  footer {
 		display: grid;
 	  }
@@ -172,6 +174,7 @@
 	header {
 	  @apply pt-0 bg-none;
 	  background: none !important;
+	  min-height: auto !important;
 	}
   }
 
@@ -213,8 +216,9 @@
   }
 }
 .ModalCarClasses {
+  @apply tablet-max:py-0;
   section {
-	@apply  py-8 border-0;
+	@apply  tablet:py-8 border-0;
 	background-color: transparent !important;
 	header {
 	  @apply pt-0 bg-none;

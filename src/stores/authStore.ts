@@ -25,8 +25,8 @@ export class AuthStore {
     })
     makePersistable(this, {
       name: 'authStore',
-      properties: ['userIsLoggedIn', 'inProgress','values'],
-      storage: window.localStorage,
+      properties: ['userIsLoggedIn'],
+      storage: localStorage,
     }, {
       fireImmediately: true,
     })

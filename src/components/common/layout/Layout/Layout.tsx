@@ -131,11 +131,11 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           {/*   overlay: 'bg-black/80 backdrop-blur-xl z-9999' */}
           {/* }} visible={store.appStore.getAppState ? store.appStore.getAppState :  (navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true )} loaderProps={{ children: <SvgCleanCarLoader/> }} />} */}
           <LoadingOverlay
-              transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }}
+              transitionProps={{ transition: 'fade', duration: 500, exitDuration: 500 }}
               classNames={{
-                  overlay: 'bg-black/80 backdrop-blur-xl',
+                  overlay: 'bg-black backdrop-blur-xl',
               }}
-              visible={false}
+              visible={store.appStore.getAppState}
               loaderProps={{ children: <SvgCleanCarLoader /> }}
           />
           <main>{children}</main>

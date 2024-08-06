@@ -28,53 +28,10 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
 			})
 		}
 	}, [formData]);
-	const [filials, setFilials] = useState<any[]|null>(null)
 	const {data, isLoading} = agent.Filials.getFilialsNew(`page_size=100`)
 	const {data:dataC, isLoading:isLoadingC} = agent.Companies.getOnlyAllCompaniesNew(`page_size=100`)
-	console.log(dataC, isLoadingC);
-	console.log(data, isLoading);
-	//  React.useEffect(    () => {
-	// 	 setFilials(null);
-	// 	 (async () => {
-	//
-	// 		 if (store.appStore.appType === "admin") {
-	// 			 // const { data, status } = await agent.Filials.getFilialsNew(`?page_size=1000`)
-	// 			 // console.log(data.results.filter((c: any) => c.company_type === formData.type));
-	// 			 console.log(store.companyStore.getFilialsAr);
-	// 			 // if (status === 200) {
-	// 				//  setFilials(data.results)
-	// 			 // }
-	// 			 // @ts-ignore
-	// 			 // return filials.filter((c: any) => c.company_type === formData.type).map((f: any) => ({ label: f.name, value: String(f.id) }))
-	// 		 } else {
-	// 			 console.log(store.companyStore.getFilialsAr);
-	// 			 setFilials(store.companyStore.getFilialsAr)
-	// 		 }
-	// 	 })()
-	// }, [formData.type])
-
-	// const [companies, setCompanies] = useState<any[]|null>(null)
-	//  React.useEffect( ():any => {
-	//
-	// 	 // (async () => {
-	// 		 setCompanies(null)
-	// 	if(store.appStore.appType === "admin") {
-	//
-	// 		// @ts-ignore
-	// 		console.log(formData.type);
-	// 		setCompanies(store.companyStore.allCompanies.companies.filter((c: any) => c.company_type === formData.type).filter((c: any) => c.parent === null))
-	// 	} else {
-	// 		// @ts-ignore
-	// 		setCompanies([store.userStore.myProfileData.company])
-	//
-	// 		// }})()
-	// 	}
-	// }, [formData.type])
 
 	const memoFileUpload = React.useMemo(() => {
-
-		// @ts-ignore
-
 
 		// @ts-ignore
 		return (

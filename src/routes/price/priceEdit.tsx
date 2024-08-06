@@ -6,7 +6,6 @@ import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Butt
 import { useStore } from "stores/store";
 import { useLocation, useNavigate, useNavigation, useParams, useRevalidator } from "react-router-dom";
 import { SvgBackArrow } from "components/common/ui/Icon";
-import { PermissionNames } from "stores/permissionStore";
 import { dateTransformShort } from "utils/utils";
 import { CompanyType } from "stores/companyStore";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
@@ -17,11 +16,10 @@ import PriceActions, { PriceActionsHeader } from "routes/price/actions";
 
 const PriceEditPage = ():JSX.Element => {
   const navigate = useNavigate()
-  const navigation = useNavigation();
   const location = useLocation()
   const params = useParams()
   const store = useStore()
-  const  {data} = store.priceStore.currentPriceById;
+  const  {data, loading} = store.priceStore.currentPriceById;
   const  textData  : any = store.priceStore.TextData
   const  company = store.companyStore.getCompanyById(Number(params.id))
 
@@ -29,6 +27,13 @@ const PriceEditPage = ():JSX.Element => {
     console.log('params changed, priceOnChange cleared');
     store.priceStore.clearPriceOnChange()
   }, [params.id])
+  React.useLayoutEffect(() => {
+    if(loading) {
+      store.appStore.setAppState(loading);
+    } else {
+      setTimeout(() => store.appStore.setAppState(loading), 1000);
+    }
+  }, [loading])
 
   return (
     <>
@@ -50,8 +55,9 @@ const PriceEditPage = ():JSX.Element => {
       </Panel>
 
       <Panel
+        state={loading}
         className={'col-span-full grid grid-rows-[auto_1fr] px-5 py-8 !gap-10'}
-        variant={PanelVariant.withGapOnly}
+        variant={PanelVariant.default}
         routeStyle={PanelRouteStyle.price}
         background={PanelColor.glass}
         bodyClassName={'flex '}

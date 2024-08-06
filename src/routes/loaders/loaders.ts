@@ -53,8 +53,9 @@ export const paginationParams = (urlData:string) => {
 export const priceLoader = async (props: any) => {
     // const paginationData = paginationParams(props.request.url as string)
     const is_history = props.request.url.includes('history')
-    console.log(props);
-    await priceStore.getCurrentPrice(props, false);
+    // console.log();
+    // props.params == undefined && appStore.setAppState(true);
+    !!Object.entries(props.params).length && priceStore.getCurrentPrice(props, false);
 
     // console.log('loader', !userStore.isAdmin);
     // async function fillData() {

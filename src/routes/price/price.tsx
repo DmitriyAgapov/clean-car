@@ -117,6 +117,13 @@ const PricePage = ():JSX.Element => {
     },
     [location.pathname, params]
   );
+  React.useLayoutEffect(() => {
+    if(currentPriceById.loading) {
+      store.appStore.setAppState(currentPriceById.loading);
+    } else {
+      setTimeout(() => store.appStore.setAppState(currentPriceById.loading), 1000);
+    }
+  }, [currentPriceById.loading])
   if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
     <Section type={SectionType.default} noScroll={true}>
@@ -143,7 +150,7 @@ const PricePage = ():JSX.Element => {
       </Panel>
 
       <Panel
-        state={currentPriceById.loading}
+        state={false}
         className={'col-span-full grid grid-rows-[auto_1fr] px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-6 '}
         variant={PanelVariant.default}
         background={PanelColor.glass}
@@ -186,7 +193,7 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-       <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>
+        {!currentPriceById.loading && <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>}
         {memoModal}
       </Panel>
     </Section>
