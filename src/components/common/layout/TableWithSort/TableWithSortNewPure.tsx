@@ -89,7 +89,7 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
                         <NumberInput
                           data-id={props.id}
                           w={72}
-                          className={'pb-0'}
+                          className={'!pb-0'}
                           // thousandSeparator=" "
                           hideControls
                           classNames={{

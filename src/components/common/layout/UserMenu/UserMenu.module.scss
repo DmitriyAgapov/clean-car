@@ -61,6 +61,9 @@
   display: block;
   flex: 1 1 auto;
   flex-flow: column;
+  @screen tablet-max {
+	max-width: 185px;
+  }
 }
 .svg {
   width: 1.125rem;

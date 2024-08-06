@@ -38,8 +38,6 @@ function RestorePasswordNewPage() {
       if(_user_uid) formData.setFieldValue('user_uid', _user_uid)
     }
   }, []);
-  console.log(formData.values);
-  console.log(store.userStore.currentUser);
   return (
       <Layout
           className={'page-intro'}

@@ -105,7 +105,7 @@ const UserPortal = ({
     const navigate = useNavigate()
     const avatar = store.userStore.userData?.avatar
     const user = store.userStore.userData
-    if (state)
+    if (state && user)
         return (
             <Panel
                 className={

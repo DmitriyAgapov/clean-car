@@ -4,7 +4,7 @@ import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/P
 import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
 import { Observer, observer } from "mobx-react-lite";
 import { useStore } from 'stores/store'
-import { useScrollIntoView, useViewportSize } from '@mantine/hooks'
+import { useDebouncedValue, useElementSize, useScrollIntoView, useViewportSize } from '@mantine/hooks'
 export enum TabsType {
   bid = 'bid',
   company = 'company',
@@ -159,7 +159,6 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
   const [state, setState] = useState('');
-  const { height, width } = useViewportSize();
   React.useEffect(() => {
     if(data && data.length > 0) {
       setState(data[0]?.label)

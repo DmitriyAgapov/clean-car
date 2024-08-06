@@ -304,17 +304,17 @@ const RowData = observer((props: any) => {
     const { width } = useViewportSize()
     const [open, setOpen] = useState(false)
     const rowPart = React.useMemo(() => {
-        // console.log(props);
+
         const res: any[] = []
         if (width && width < 745)
             res.push(
-                <Cell view={props.view} data-position={'icon-open'} onClick={() => setOpen((prevState) => !prevState)}>
+                <Cell key={`${ props.id }_${Math.random()}`} view={props.view} data-position={'icon-open'} onClick={() => setOpen((prevState) => !prevState)}>
                     <SvgChevron onClick={() => setOpen((prevState) => !prevState)} />
                 </Cell>,
             )
         if (width && width < 745 && props.style !== "financeId" && props.style !== "financeByTypeServiceId"  && props.style !== "bid_histories" || width && width < 745 && props.style == "financeId" && props?.attributes && props?.attributes?.has_child !== false )
             res.push(
-                <Cell view={props.view} data-position='button-mobile'>
+                <Cell  key={`${ props.id }_${Math.random()}`} view={props.view} data-position='button-mobile'>
                     <Button
                         text={'Подробнее'}
                         variant={ButtonVariant['accent']}

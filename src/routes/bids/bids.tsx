@@ -61,7 +61,6 @@ const BidsPage = () => {
 			}
 		}))}
 		localStore.setIsLoading = isLoading
-		return
 	},[data])
 
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />

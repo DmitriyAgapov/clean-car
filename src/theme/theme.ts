@@ -39,7 +39,7 @@ const themeOverride = createTheme({
         Select: Select.extend({
             defaultProps: {
                 withCheckIcon: false,
-                
+
             },
 
             classNames: {
@@ -63,7 +63,7 @@ const themeOverride = createTheme({
             },
             defaultProps: {
               transitionProps: { transition: 'fade', duration: 200 },
-                 withinPortal: false,
+                withinPortal: false,
         }}),
         Radio: Radio.extend({
             classNames: {

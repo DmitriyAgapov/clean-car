@@ -61,6 +61,7 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
             const _fSize = Math.ceil(fontSize * 3) + correct;
 
             const  _res = Math.ceil(_height / _fSize);
+            console.log(_height);
             if(refBody.current !== null && _height > 0 && _count !== _res) {
               if (store.appStore.bodyRef.clientWidth > 960) {
                 const val = !_count ? _res - 1 : _res

@@ -230,8 +230,9 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
               ) {
                 if (store.carStore.cars && store.carStore.cars.results?.length !== 0) {
                   const car = store.carStore.cars?.results?.filter(
-                    (c: any) => c.employees.filter((e: any) => e.id === Number(formData.values.conductor))[0],
+                    (c: any) =>  c.is_active !== false && c.employees.filter((e: any) => e.id === Number(formData.values.conductor))[0],
                   )
+                  console.log(car);
                   if (car && car.length === 1) {
                     formData.values.car = String(car[0].id)
                     if (store.bidsStore.formResult.car === 0) {
@@ -272,11 +273,12 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   }, [formData.values.conductor, cars])
 
  const carsData = React.useMemo(() => {
-
+   console.log(car);
    //@ts-ignore
      if(car && car.length === 1) {
        store.bidsStore.formResultSet({ car: Number(car[0].id) })
        formData.setFieldValue('car', String(car[0].id))
+
        return car.map((c: any) => ({ label: `${c.brand?.name}  ${c.model?.name}  ${c.number}`, value: String(c.id), }))
      }
      if(car && car.length > 0) {
@@ -633,8 +635,11 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                 searchable
                                 className={'self-start'}
                                 onOptionSubmit={(value) => {
-                                    formData.values.car = null
-                                    formData.values.phone = null
+                                    // formData.values.car = null
+
+                                    formData.setFieldValue('conductor', null)
+                                    formData.setFieldValue('car', null)
+                                    // formData.values.phone = null
                                     store.bidsStore.formResultSet({ conductor: Number(value) })
                                 }}
                                 disabled={
@@ -1082,7 +1087,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             </>
                         ) : (
                             <div className={'col-span-full subgrid contents overflow-hidden'}>
-                              <div className={"col-span-2  row-span-2  relative z-[999] mobile:mb-8 grid  justify-evenly items-start content-start"}>
+                              <div className={"col-span-2  row-span-2  z-[999] mobile:mb-8 grid  justify-evenly items-start content-start"}>
                                 <div className={"text-base"}>{step4.description}</div>
                                 <div>
                                   <Select className={"col-span-2"}

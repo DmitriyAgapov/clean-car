@@ -282,7 +282,7 @@
           }
         }
         [data-label="Филиал"] {
-          grid-row: 3/4 !important;
+          grid-row: initial !important;
           grid-column: 1/-1 !important;
           height: initial !important;
           border-top: 0 !important;
@@ -296,9 +296,10 @@
       }
       [data-state-mobile="false"] {
          [data-label="Филиал"] {
-           grid-row: 3/4;
-           height: 0;
-           overflow: hidden;
+           opacity: 0;
+           grid-row: initial !important;
+           height: 0 !important;
+           overflow: hidden !important;
            &:before {
              content: attr(data-label);
              font-size: .625rem;
@@ -1435,6 +1436,7 @@ text-transform: uppercase;
 //padding: 5px 0;
 cursor: pointer;
 
+
 &:hover {
 color: #ffffff;
 }
@@ -1509,10 +1511,12 @@ cursor: pointer;
 &:hover {
 color: #ffffff;
 }
-&:first-child {
-td {
-padding-top: 1rem;
-}
+&:first-child:not(:last-child) {
+//tbody {
+  td {
+    //padding: inherit;
+  }
+//}
 
 }
 }

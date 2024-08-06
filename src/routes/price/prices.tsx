@@ -11,7 +11,8 @@ import FormModalCreatePrice from "components/Form/FormModalCreatePrice/FormModal
 import { LocalRootStore } from "stores/localStore";
 import { observer, useLocalObservable } from "mobx-react-lite";
 import useSWR from "swr";
-import { useDidUpdate } from "@mantine/hooks";
+import { useDidUpdate, useDisclosure } from '@mantine/hooks'
+import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 const localRootStore =  new LocalRootStore()
 const PricesPage = () => {
@@ -36,8 +37,13 @@ const PricesPage = () => {
 		},
 		[location.pathname]
 	);
-	const { textData }:any = store.priceStore.allPrices
 
+	const [opened, { open, close }] = useDisclosure(false)
+	const { textData }:any = store.priceStore.allPrices
+	const memoModal = React.useMemo(() => {
+		if(isLoading && !data) return null
+		if(data) return <FormModalCreatePrice opened={opened} onClose={close} />
+	}, [opened])
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname !== `/account/price`) return <Outlet />
 
@@ -51,14 +57,7 @@ const PricesPage = () => {
 						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
 					</div>
 					{store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'create') && (<>
-						<Button text={textData.create} action={() => (async() => {
-							store.appStore.setModal({
-								className: "!px-10 gap-4 !justify-stretch",
-								component: <FormModalCreatePrice />,
-								text: `Вы уверены, что хотите удалить ${"name"}`,
-								state: true
-							});
-						})()} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
+						<Button text={textData.create} action={open} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
 			<TableWithSortNew
@@ -76,7 +75,7 @@ const PricesPage = () => {
 						{ label: 'Филиал', name: 'company__parent__name' }]})()
 				}
 			/>
-
+			{memoModal}
 		</Section>
 	)
 	// } else {

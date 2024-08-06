@@ -94,7 +94,7 @@ function RegisterSuccessPage() {
                   directory={ButtonDirectory.customer}
                   variant={ButtonVariant['accent']}
                   size={ButtonSizeType.base}
-                  to={'/account'}
+                  to={'/account/bids'}
                   className={'!mr-2 flex-1 tablet:flex-grow-0 max-w-md'}
                 />
                 <LinkStyled

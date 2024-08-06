@@ -165,6 +165,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
                 name: values.company_name,
                 performerprofile: {
                     address: values.address,
+                    height: values.height,
                     lat: Number(values.lat),
                     workload: Number(values.workload),
                     lon: Number(values.lon),
@@ -236,18 +237,22 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     const [filialsCompanyData, setFilialsCompanyData] = React.useState(['Пусто'])
     React.useEffect(() => {
         (async () => {
-            const data = await store.companyStore.loadAllFilials()
+            const data = await store.companyStore.loadAllFilials({page_size: 1000})
             let res: any
             if (formData.values.company_filials === 'filials') {
                 if(store.appStore.appType === "admin") {
                     res = data.results.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
                 } else {
                     res = data.results.map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                    console.log(res);
+                    if(res.length === 1) formData.setFieldValue('company_id', res[0].value.toString());
                 }
                 setFilialsCompanyData(res)
             } else {
+
                 await store.companyStore.loadCompanies()
                 res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                if(res.length === 1) formData.setFieldValue('company_id', res[0].value.toString());
                 setFilialsCompanyData(res)
             }
         })()

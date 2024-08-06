@@ -56,40 +56,13 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
   let result
   switch (label) {
     case "Основная информация":
-
-      const navigate = useNavigate()
-      const fundBill = {
-        actions: [
-          <Button text={'Отменить'} action={() => store.appStore.closeModal()} variant={ButtonVariant.default} />,
-          <Button
-            text={'Сохранить'}
-            action={() => {
-              // store.permissionStore.deletePermissionStoreAdmin(changes.id)
-              store.appStore.closeModal()
-              navigate('/account/groups')
-            }}
-            variant={ButtonVariant['accent-outline']}
-          />,
-        ],
-        text: <div className={'grid gap-12 mb-12'}><CreateInput text={'Сумма начисления'} name={'paymoney'} type={'number'}/>
-
-          <DList label={'Компания'} title={data?.name}/>
-          <DList label={'Зачислил'}  title={data?.name}/>
-        </div>,
-        header: 'Пополнить счет',
-        state: true,
-      };
-
-
       result = (<Tabs.Panel state={state} name={'info'}  className={'pt-8'} company_type={company_type+'_filial'}>
-
         {data.customerprofile ? null : <DList label={'Адрес'} title={data[`${company_type}profile`].address} />}
-
-
         {data.parent.name && <DList label={'Компания'}
           // @ts-ignore
           title={data.parent.name} />}
         {data?.performerprofile &&    <DList label={'Загруженность'} title={<WorkLoadStatus hasDot={false} status={data?.performerprofile.workload} className={'!top-0 !right-0 relative i:hidden'}/>} />}
+        {data?.performerprofile && data?.performerprofile.height && <DList label={'Максимальная высота авто'} title={data?.performerprofile.height + ' см'} className={'!top-0 !right-0 relative i:hidden'}/>}
 
       </Tabs.Panel>)
       break;
@@ -922,7 +895,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
     return result.map((item: any) => {
 
         return (
-            <div className={'col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4'} key={translite(item.label)}>
+            <div className={'col-span-full border-gray-4/70 border-b mobile:mx-4'} key={translite(item.label)}>
               <Heading
                 text={item.label}
                 variant={HeadingVariant.h6}
@@ -1023,7 +996,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
       })
       return result.map((item: any, index: number) => {
         return (
-          <div className={'col-span-full border-gray-4/70 border-b pb-4'} key={translite(item.label ?? `null_${index}`)}>
+          <div className={'col-span-full border-gray-4/70 border-b'} key={translite(item.label ?? `null_${index}`)}>
             <Heading text={item.label} variant={HeadingVariant.h6} className={`text-xs uppercase !mb-0 py-2  px-6  border-b border-gray-4/70 ${item.data[0].label === null ? 'px-6 sticky top-0 z-10  bg-[#090909]' : ''}`}/>
             {(() => {
               console.log(item);
@@ -1126,7 +1099,6 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
       })
     }, [data.tire_positions])
 
-
   switch (label) {
       case 'Мойка':
           result = (
@@ -1135,7 +1107,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   name={'wash'}
                 variant={PanelVariant.default}
                 background={PanelColor.default}
-                className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
+                className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start  table-price h-full' + ' ' + className}
                 bodyClassName={'!bg-transparent'}
               >
                 {!props.edit ? mapEdWast : <TableWithSortNewPure
@@ -1211,7 +1183,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
                   bodyClassName={'!bg-transparent'}
               >
-                {!props.edit ? <div className={" col-span-full border-gray-4/70 border-b pb-4  mobile:mx-4"}>
+                {!props.edit ? <div className={" col-span-full border-gray-4/70 border-b mobile:mx-4"}>
                   <TableWithSortNewPure
                   offsetSticky={0}
                   total={data.length}
@@ -1224,7 +1196,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   initFilterParams={[{ label: "Статус", value: "status" }, { label: "Город", value: "city" }]}
                   state={false}
                   ar={[{ label: "Тип услуги", name: "service_option" }, { label: "До 2 тонн", name: "service_option" }, { label: "от 2 тонн", name: "service_option_1" }]} /></div> :
-                  <div className={"col-span-full border-gray-4/70 border-b pb-4 mobile:mx-4"}>
+                  <div className={"col-span-full border-gray-4/70 border-b mobile:mx-4"}>
                     <TableWithSortNewPure meta={{ company_id: data.company, price_id: data.id, label: label}}
                   edit={true}
                   offsetSticky={-1}
@@ -1252,7 +1224,7 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
           return null
   }
   return (
-  <ScrollArea.Autosize style={{overflow: 'initial'}}  data-position={"tabs-panel-container"}  mah={width > 1024 ? '56dvh' : `auto`} classNames={{
+  <ScrollArea.Autosize style={{overflow: 'initial'}}  data-position={"tabs-panel-container"}  mah={width > 1024 ? width > 1600 ? '56dvh' : '52dvh' : `auto`} classNames={{
     root: 'tablet-max:-mx-5',
     scrollbar: 'z-50'
   }}>

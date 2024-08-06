@@ -79,7 +79,18 @@ const PricePage = ():JSX.Element => {
   const [opened, { open, close }] = useDisclosure(false);
 
   const  currentPriceById = store.priceStore.currentPriceById;
-  const  company = store.companyStore.getCompanyById(Number(params.id)) ?? store.userStore.myProfileData.company;
+  const  company = React.useMemo(() => {
+    let company = store.userStore.myProfileData.company;
+    if(params.id) {
+      const _c = store.companyStore.getCompanyById(Number(params.id))
+      if(_c) company = _c
+      if(!_c) {
+        const _f = store.companyStore.allFilials.filter((f: any) => f.id == params.id)[0]
+        if(_f) company = _f;
+      }
+    }
+    return company
+  }, [params.id])
   const isHistory = location.pathname.includes('history');
   // @ts-ignore
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
@@ -132,7 +143,7 @@ const PricePage = ():JSX.Element => {
       </Panel>
 
       <Panel
-        state={false}
+        state={currentPriceById.loading}
         className={'col-span-full grid grid-rows-[auto_1fr] px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-6 '}
         variant={PanelVariant.default}
         background={PanelColor.glass}

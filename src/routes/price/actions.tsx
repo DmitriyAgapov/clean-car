@@ -12,9 +12,8 @@ export const PriceActionsHeader = observer(() => {
 	const navigate = useNavigate()
 
 	const store = useStore()
-	const [opened, { open, close, toggle }] = useDisclosure(false)
     return (
-        <div className={`flex p-6 gap-6 rounded tablet-max:hidden`}>
+        <div className={`flex px-6 gap-6 rounded tablet-max:hidden`}>
             <Button
                 className={''}
                 text={'Отменить'}

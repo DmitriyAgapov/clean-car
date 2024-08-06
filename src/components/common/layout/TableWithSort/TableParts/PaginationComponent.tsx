@@ -9,7 +9,7 @@ export const PaginationComponent = observer((): any => {
 	let _count = localStore.getData?.count
 	const [counts, setCounts] = React.useState(null)
 	useEffect(() => {
-		console.log(counts);
+		// console.log(counts);
 		if(_count && counts !== _count) {
 			setCounts(_count)
 		}

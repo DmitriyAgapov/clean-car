@@ -157,6 +157,7 @@ const MyProfilePage = () => {
   const store = useStore()
 
   const { loading, permissions, user, company, error } = store.userStore.myProfileState;
+  console.log(company);
   const [edit, setEdit] = React.useState(false)
   const avatar = store.userStore.userData?.avatar;
   const userData = React.useMemo(() => {
@@ -192,8 +193,8 @@ const MyProfilePage = () => {
           <DList label={'E-mail'}
             title={user?.email} />
           <DList label={'Тип'}
-            title={user.company?.company_type ?? UserTypeEnum.admin}
-            directory={store.appStore.appType !== "admin" ? user.company?.company_type === CompanyType.customer ? 'customer' : 'performers' : "admin"} />
+            title={company?.company_type}
+            directory={store.appStore.appType !== "admin" ? company?.company_type === CompanyType.customer ? 'customer' : 'performer' : "admin"} />
 
           <DList label={'Группа'}
             title={store.userStore.myProfileData.permissionGroupName} />

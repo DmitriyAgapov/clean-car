@@ -37,7 +37,7 @@ function RestorePasswordPageSuccess() {
               color={HeadingColor.accent}
             />
           }
-          footer={<LinkStyled text={'Мне не пришло письмо'} to={'/restore'} />}
+          // footer={<LinkStyled text={'Мне не пришло письмо'} to={'/restore'} />}
         >
           <p>
             На указанный почтовый ящик, мы отправили письмо с активной ссылкой для смены пароля

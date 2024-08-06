@@ -38,7 +38,7 @@ const FormModalAddUser =  (props: { company_id: any,  opened: boolean, onClose: 
       validate: yupResolver(CreateModalUserSchema),
     })
     // @ts-ignore
-  const memData = React.useMemo(  ():any => {
+    const memData = React.useMemo(  ():any => {
     let ar = group
 
     // @ts-ignore
