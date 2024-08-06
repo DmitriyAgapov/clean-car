@@ -6,7 +6,7 @@ import Logo from 'components/common/layout/Logo/Logo'
 import Header from 'components/common/layout/Header/Header'
 import Footer from 'components/common/layout/Footer/Footer'
 import Burger from 'components/common/ui/Burger/Burger'
-import '../../../../assets/styles.scss'
+
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
 import { useNavigatorOnLine } from 'utils/utils'
