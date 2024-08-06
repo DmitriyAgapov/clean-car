@@ -15,20 +15,21 @@ export function CarClasses(props: { opened: boolean; onClose: () => void}) {
 
 			<Modal.Content radius={20} className={styles.ModalCarClasses}>
 
-				<Modal.Header>
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-10 right-4 z-[1000] tablet:hidden !outline-none"} icon={<SvgClose className={'close__modal'} />}/>
-
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5 tablet-max:hidden"} icon={<SvgClose className={'close__modal'} />}/>
-				</Modal.Header>
-				<Modal.Body className={'tablet-max:!px-2'}>
+				<Modal.Header className={'relative flex flex-row-reverse mt-8'}>
+					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all relative !outline-none"} icon={<SvgClose className={'close__modal'} />}/>
 					<Modal.Title>
 
 						<Heading
 							text={`Классификация автомобилей`}
 							variant={HeadingVariant.h2}
 							color={HeadingColor.accent}
-							// className={'pb-12'}
+							className={'!mb-0'}
 						/></Modal.Title>
+					{/* <Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5 tablet-max:hidden"} icon={<SvgClose className={'close__modal'} />}/> */}
+				</Modal.Header>
+
+				<Modal.Body className={'tablet-max:!px-2'}>
+
 				<CarHelper/>
 
 				</Modal.Body>
