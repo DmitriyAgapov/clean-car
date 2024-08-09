@@ -206,13 +206,15 @@ const FormModalCreatePrice =  (props: { opened: boolean, onClose: () => void }) 
             <Select clearable
               label={'Выберите компанию'}
               placeholder={'Компания'}
+              maxDropdownHeight={200}
               {...form.getInputProps('company_id')}
               onOptionSubmit={() => {
                 form.reset()
               }}
               data={memData.company} />
-            <Select label={'Статус'}
-              placeholder={'Компания'}
+            <Select label={'Выберите филиал'}
+              placeholder={'Филиал'}
+              maxDropdownHeight={200}
               {...form.getInputProps('filial_id')}
               disabled={memData.filials.length === 0}
               data={memData.filials} />

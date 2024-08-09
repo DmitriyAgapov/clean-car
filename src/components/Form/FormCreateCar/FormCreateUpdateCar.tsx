@@ -188,10 +188,16 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     const [cVar, setCVar] = React.useState([{name: "Нет ", id: "none"}])
     React.useEffect( () => {
       setCVar([{name: "Нет ", id: "none"}]);
-      const setRes = () => {
+      const setRes = async () => {
         let res: any[] = []
         if(form.values.depend_on === "company") {
-          res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
+          const _c = await store.companyStore.getAllCompanies().then(r => r.data).then(data => data.results)
+          if(store.appStore.appType !== "admin") {
+            res = _c
+          } else {
+            res = _c.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
+          }
+
         } else {
           res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
         }
@@ -432,7 +438,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                                     label={'Компании'}
                                     disabled={!cVar.length}
                                     {...form.getInputProps('company_id', { dependOn: 'type' })}
-                                    data={cVar.map((item) => ({ label: item.name, value: String(item.id) })) ?? ['Ytn']}
+                                    data={cVar.map((item) => ({ label: item.name, value: String(item.id) })) ?? ['Нет']}
                                 />
                                 <hr className={'col-span-full flex-[1_100%]'} />
                             </>

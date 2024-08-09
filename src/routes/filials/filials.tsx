@@ -14,11 +14,14 @@ import { useDidUpdate } from "@mantine/hooks";
 
 
 const localRootStore =  new LocalRootStore()
-
+localRootStore.params.setSearchParams({page_size: 10})
 const FilialsPage = () => {
-  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
+
   const store = useStore()
   const location = useLocation()
+
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
+  console.log(localRootStore);
   const isReadyy = localStore.params.getIsReady
   const {isLoading, data, mutate} = useSWR(isReadyy ? ['filials', localStore.params.getSearchParams] : null , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
   useDidUpdate(
@@ -76,11 +79,11 @@ const FilialsPage = () => {
         store={localRootStore}
         variant={PanelVariant.dataPadding}
         search={true}
-
+        className={'col-span-full table-groups table-bids'}
         style={PanelRouteStyle.filials}
         background={PanelColor.glass}
         filter={true}
-        state={isLoading}
+        state={false}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'company_type'},{ label: 'Принадлежит', name: 'parent'}]}     />
     </Section>
   )

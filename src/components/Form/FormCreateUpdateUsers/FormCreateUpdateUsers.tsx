@@ -178,23 +178,41 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			}
 		// }
 		},[form.values])
+	const [companyVar, setCompanyVar] = React.useState([{name: "Нет ", id: "none"}])
 	// @ts-ignore
-	const companyVar = React.useMemo(() => {
-// @ts-ignore
-			console.log(form.values.depend_on === "company" ? store.companyStore.getCompaniesAll?.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll);
-			//@ts-ignore
-			console.log(form.values.depend_on === "company" ? store.companyStore.getCompaniesAll?.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll);
-			// @ts-ignore
-			console.log(CompanyType[form.values.type]);
-			if(edit && user.company?.name === `${user.employee.first_name} ${user.employee.last_name}`) {
-				console.log(`${user.employee.first_name} ${user.employee.last_name}`);
-				return ([{
-					name: user.company?.name,
-					id: user.company?.id
-				}])
+	React.useEffect(() => {
+			setCompanyVar([{name: "Нет ", id: "none"}]);
+			const setRes = async () => {
+				let res: any[] = []
+				if(form.values.depend_on === "company") {
+					const _c = await store.companyStore.getAllCompanies().then(r => r.data).then(data => data.results)
+					console.log('123', _c);
+					if(store.appStore.appType !== "admin") {
+						res = _c
+					} else {
+						res = _c.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
+					}
+
+				} else {
+					res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
+				}
+				if (res.length === 1) {
+					form.values.company_id = String(res[0].id)
+				}
+				setCompanyVar(res)
 			}
-			// @ts-ignore
-			return form.values.depend_on === "company" ? store.companyStore.getCompaniesAll?.filter((c) => c.parent === null && c.company_type === CompanyType[form.values.type]) : store.companyStore.getFilialsAll
+			(async () => {
+				if (form.values.depend_on === "company" || store.appStore.appType === "admin") {
+					const _res  = await store.companyStore.getAllCompanies()
+					if(_res) {
+						setRes()
+					}
+				}
+				if (form.values.depend_on === "filials") {
+					await store.companyStore.loadAllFilials()
+					setRes()
+				}
+			})()
 		},
 		[form.values.depend_on, form.values.type])
 

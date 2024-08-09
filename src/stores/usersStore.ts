@@ -233,6 +233,19 @@ export class UsersStore {
         if(company_id === userStore.myProfileData.company.id) {
           return  userStore.myProfileData.company
         }
+        if(company_id !== userStore.myProfileData.company.id) {
+          return agent.Companies.getCompanyData(company_type, Number(company_id))
+            .then(r => {
+            if (r.status === 200) {
+              user.company = {
+                ...r.data,
+                groups: groups.results
+              }
+              return r.data
+            }
+          })
+        }
+        console.log(company_type, company_id);
         // const company = await agent.Filials.getFilial(company_type, company_id, id).then(r => r.data)
         return  await agent.Filials.getFilials(company_type, Number(company_id)).then((r: any) => {
           if (r.status === 200) {

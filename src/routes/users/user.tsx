@@ -37,7 +37,7 @@ const UserPage = () => {
   // console.log(userDatas, 'userdata');
   const companyType = params.company_type;
   // const company = companyType !== "admin" ? data.company : store.userStore.myProfileData.company;
-
+  console.log(data);
   const userData = React.useMemo(() => {
 
     if(!isLoading) return (
@@ -63,7 +63,7 @@ const UserPage = () => {
                 }
             />
           {data?.company?.id && <hr className={'mt-0 col-span-2'}/>}
-          {data?.company?.name && <DList label={'Компания'} title={data?.company.name} />}
+          {data?.company?.name && <DList label={'Компания'} title={data?.company?.name} />}
           {data?.company?.city.name && <DList label={'Город'} title={data?.company.city.name} />}
           {data?.company?.parent && <DList label={'Филиал'} title={data?.company.parent.name ?? data?.company.name} />}
         </>
