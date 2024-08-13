@@ -799,7 +799,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
           if(data.photos.results.length > 0) {
             result = (
                 <Tabs.Panel
-                    className={'pt-8 grid !grid-cols-5  !gap-y-3 !grid-flow-row  gap-x-12 content-start !py-8' + ' ' + className}
+                    className={'pt-8 grid !grid-cols-5  !gap-y-3 !grid-flow-row !grid-rows-[repeat(3,_minmax(0,_auto))]  gap-x-12 content-start !py-8' + ' ' + className}
                     state={state}
                     name={'bidService'}
                     variant={PanelVariant.default}
@@ -812,7 +812,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     <div className={'col-span-3'}>
                         <CarouselCustom closeBtn={false} items={data.photos.results.filter((e: any) => e.is_before).map((item:any) => item.foto)} />
                     </div>
-                    <hr className={'col-span-full border-gray-4/70 border'} />
+                    <hr className={'col-span-full border-gray-4/70 border mt-0'} />
                     <div className={'col-span-2   pr-12'}>
                         <Heading text={'Фотографии После'} variant={HeadingVariant.h3} color={HeadingColor.accent} />
                         <p>После оказания услуги загрузите пожалуйста фотографии</p>

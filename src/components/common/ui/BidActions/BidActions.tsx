@@ -276,7 +276,7 @@ const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () =
                     )
 
                 case BidsStatus["Выполнена"]:
-                    return (<div className={'grid gap-6'}>{BidText.PerformerVipolnena}<Button text={'Закрыть'} action={() => navigate('/account/bids')} variant={ButtonVariant.accent} size={ButtonSizeType.base}/></div>)
+                    return (<div className={'grid gap-2'}>{BidText.PerformerVipolnena}<Button text={'Закрыть'} action={() => navigate('/account/bids')} variant={ButtonVariant.accent} size={ButtonSizeType.sm}/></div>)
                 case BidsStatus["В обработке"]:
                   return (
                     <>
