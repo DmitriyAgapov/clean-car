@@ -2,6 +2,7 @@
 	background: transparent;
   @screen lg-max {
 	@apply mx-auto text-center;
+	grid-column: 1/-1;
 	background: var(--gradient-directory-200);
 	background-size: 200%;
 	background-position: 0 50%;
@@ -12,5 +13,6 @@
 	padding-bottom: .375rem;
 	border-radius: .625rem;
 	flex: 1 100%;
+	width: 100%;
   }
 }

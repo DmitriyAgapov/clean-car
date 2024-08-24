@@ -8,6 +8,7 @@
 	flex-direction: row-reverse;
 	flex: 1 1 calc(100vw - 40px - 40px - 10px - 20px);
 	margin-right: 10px;
+	grid-column: 1/3;
   }
 
 }
