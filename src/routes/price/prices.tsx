@@ -53,9 +53,9 @@ const PricesPage = () => {
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}
 				state={false}
 				header={<>
-					<div className={'mr-auto'}>
+
 						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
-					</div>
+
 					{store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'create') && (<>
 						<Button text={textData.create} action={open} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>

@@ -215,6 +215,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 size={'xs'}
                 value={localStore.params.getSearchParams.company__company_type || null}
                 onChange={(value) => {
+                  console.log(value);
                   setInitParams()
                   if (value !== null) {
                     localStore.params.setSearchParams({
@@ -250,6 +251,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 size={'xs'}
                 value={localStore.params.getSearchParams.company_type || null}
                 onChange={(value) => {
+                  console.log(value);
                   setInitParams()
                   if (value !== null) {
                     localStore.params.setSearchParams({

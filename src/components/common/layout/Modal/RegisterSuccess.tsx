@@ -17,7 +17,7 @@ export function RegisterSuccess(props: { opened: boolean; onClose: () => void}) 
 		<Modal.Root size={600} opened={props.opened} onClose={props.onClose} centered fullScreen={!!isMobile} lockScroll={!!isMobile}>
 			<Modal.Overlay className={'bg-black/90'}/>
 			<Modal.Content radius={20}  className="tablet:pt-20 tablet:pb-10 tablet:px-16   tablet-max:items-stretch tablet-max:content-center tablet-max:max-h-svh w-full">
-				<Modal.Header className={'static px-0 tablet-max:px-6'}>
+				<Modal.Header className={'static px-0 tablet-max:px-6  !bg-transparent'}>
 					<Modal.Title><Heading
 						text={`Добро пожаловать в CleanCar.`}
 						variant={HeadingVariant.h2}

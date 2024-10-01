@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
 import { Image, Modal } from '@mantine/core'
-import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
+import { Swiper, SwiperClass, SwiperSlide, useSwiper } from 'swiper/react'
 import 'swiper/css'
-
 import { observer } from 'mobx-react-lite'
-import BidImg from 'components/common/layout/Modal/BidImg'
 import { useDisclosure, useMediaQuery, useViewportSize } from '@mantine/hooks'
 import styles from 'components/common/layout/Modal/Modal.module.scss'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { Controller, Zoom } from 'swiper/modules'
 import 'swiper/css/zoom';
 
-const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => void, items: any[]}) => {
+const MemoFullImg = ({ items, opened, action, activeIndex }: {opened:boolean,action: () => void, items: any[], activeIndex?: number, }) => {
 
 	const [controlledSwiper, setControlledSwiper] = useState<any>(null);
-	const [ind, setInd] = useState(0)
+	const [ind, setInd] = useState(activeIndex ?? 0)
+	if(activeIndex) {
+		controlledSwiper?.activeIndex
+	}
 
 	// const [img, setImg] = useState(items[ind])
 	const handleImg = React.useCallback(
@@ -54,20 +54,23 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 				// style={{flexDirection: "column"}}
 				// h={"100%"}
 				mah={"100lvh"}>
-				<Modal.CloseButton w={48} h={48} pos={"absolute"} className={'!outline-0'} right={8} top={8} style={{zIndex: 998}}/>
-				<Modal.Body className={'tablet-max:flex !px-0 !pb-0 !pt-8 overflow-hidden flex-1 self-stretch'}  mah={"85lvh"}>
+				<Modal.CloseButton w={48} h={48} pos={"absolute"} className={'!outline-0 hover:!bg-transparent'} right={4} top={4} style={{zIndex: 998}}/>
+				<Modal.Body className={'tablet-max:flex !px-0 !pb-0 !pt-12 overflow-hidden flex-1 self-stretch'}  mah={"85lvh"}>
 
 					<Swiper
 						spaceBetween={20}
 						slidesPerView={1}
 						modules={[Controller, Zoom]}
 						// autoHeight
-						className={'max-h-svh max-w-6xl'}
+						className={'max-h-svh max-w-5xl'}
 						zoom={true}
 						// on={{
 						// 	sliderMove: (swiper:any,event:any) => console.log(event, swiper)}}
 						onSlideChange={(event: any) => setInd(event.activeIndex)}
-						onSwiper={setControlledSwiper}
+						onSwiper={(swiper:SwiperClass) => {
+							setControlledSwiper(swiper)
+							swiper.slideTo(activeIndex);
+						}}
 					>
 						{items.map((i) => (
 							<SwiperSlide key={i.id}
@@ -81,12 +84,14 @@ const MemoFullImg = ({ items, opened, action }: {opened:boolean,action: () => vo
 										src={i}
 											w={"100%"}
 											h={"100%"}
+										flex={"initial"}
+
 										// mih={'10rem'}
 										// miw={"100%"}
 										// h={'100%'}
 										style={{ objectFit: "contain", cursor: "pointer"}}
 										// mah={"60lvh"}
-										className={""} />
+										className={"aspect-video"} />
 								</div>
 							</SwiperSlide>
 							))}
@@ -141,10 +146,12 @@ const CarouselCustom = ({items, closeBtn = true}:{items:any [], closeBtn: boolea
 	const [controlledSwiper, setControlledSwiper] = useState<any>(null);
 	const [opened, { close, open }] = useDisclosure(false)
 	const { height, width } = useViewportSize();
+	const [activeIndex, setActiveIndex] = useState(0);
 
 	const itemsMemoized = React.useMemo(() => {
 
-		return items.map((i:any) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} style={{aspectRatio: "1/1"}} onClick={(event) => {
+		return items.map((i:any, index: number) => <SwiperSlide  key={i.id} className={'border-accent  border rounded-md relative overflow-hidden'} style={{aspectRatio: "1/1"}} onClick={(event) => {
+			setActiveIndex(index);
 			open()
 			}}>
 			<div className={'swiper-zoom-container'} data-swiper-zoom="5">
@@ -176,7 +183,7 @@ const CarouselCustom = ({items, closeBtn = true}:{items:any [], closeBtn: boolea
 				<span className={'text-gray-2'}>/</span>
 				<span className={'text-gray-2'}>{items.length}</span>
 			</div>}
-			{opened && <MemoFullImg opened={opened} items={items} action={close}/>}
+			{opened && <MemoFullImg activeIndex={activeIndex}  opened={opened} items={items} action={close}/>}
 		</>
 	);
 	return null

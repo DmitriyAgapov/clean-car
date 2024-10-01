@@ -6,12 +6,12 @@ import Logo from 'components/common/layout/Logo/Logo'
 import Header from 'components/common/layout/Header/Header'
 import Footer from 'components/common/layout/Footer/Footer'
 import Burger from 'components/common/ui/Burger/Burger'
-
+import dayjs from "dayjs"
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
 import { useNavigatorOnLine } from 'utils/utils'
 import { LoadingOverlay } from '@mantine/core'
-import { SvgCleanCarLoader, SvgDisconnect } from 'components/common/ui/Icon'
+import { SvgAccount, SvgCleanCarLoader, SvgDisconnect } from "components/common/ui/Icon";
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
@@ -89,6 +89,11 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   if(!store.authStore.userIsLoggedIn && loc.pathname !== "/" && !isInException(loc.pathname)) {
     return (<Navigate to={'/'}/>)
   }
+  console.log((exceptions.filter((value, index) => index != (1 || 4 || 0)  ? value : null).some(value => loc.pathname.includes(value)) || loc.pathname == "/"));
+  if(store.authStore.userIsLoggedIn && (['restore', 'register'].some(value => loc.pathname.includes(value)) || loc.pathname == "/")) {
+    return (<Navigate to={'/account/bids'}/>)
+  }
+
   if(_permissionName && !isInException(loc.pathname.split("/").slice(0,3).join('/'))) {
     const _actionToDo = loc.pathname.includes('edit') ? "update" : loc.pathname.includes('create') ? "create" : "read"
     if(!store.userStore.getUserCan(_permissionName, _actionToDo)){
@@ -151,10 +156,10 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
         </Footer>
         {!loc.pathname.includes('account') ? <Footer className={'tablet:px-6'}>
               {footerContent}
-              <div>2023 (c.)</div>
+              <div>2023 - {dayjs().format("YYYY")}</div>
               <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} className={'!text-sm'} to={'/policy'}></LinkStyled>
           </Footer> : null}
-
+          <SvgAccount className={styles.svg}/>
           <div className={'lineBg'}>
               <div />
               <div />

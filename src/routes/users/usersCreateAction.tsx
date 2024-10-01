@@ -115,7 +115,7 @@ export default function UsersPageCreateAction() {
                                   {(props) => (
                                       <Button
                                           text={!success ? 'Загрузить файл' : 'Загружено'}
-                                          className={'inline-flex mr-5 self-end'}
+                                          className={'inline-flex self-end'}
                                           directory={ButtonDirectory.directory}
                                           size={ButtonSizeType.sm}
                                           {...props}

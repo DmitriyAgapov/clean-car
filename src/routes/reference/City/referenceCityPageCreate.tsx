@@ -17,7 +17,8 @@ function ReferenceCityPageCreate(props: any) {
   const location = useLocation()
   const navigate = useNavigate()
   const params = useParams()
-  const {isLoading, data, mutate, isValidating} = useSWR(`ref_city_${params.id}`,() => agent.Catalog.getCity(Number(params.id)).then((res) => res.data))
+  console.log(location);
+  const {isLoading, data, mutate, isValidating} = useSWR(location.pathname.includes('edit') ? `ref_city_${params.id}` : false,() => agent.Catalog.getCity(Number(params.id)).then((res) => res.data))
 
   if(!store.userStore.getUserCan(PermissionNames["Управление справочниками"], 'create')) return <Navigate to={'/account'}/>
   return (

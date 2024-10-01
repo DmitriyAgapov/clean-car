@@ -22,14 +22,14 @@ const ReferencesPage = () => {
                 headerClassName={'flex justify-between'}
                 state={store.permissionStore.loadingPermissions}
                 header={
-                    <div>
+
                         <Heading
                             text={'Справочник CleanCar'}
                             variant={HeadingVariant.h1}
-                            className={'inline-block'}
+                          className={'inline-block  !mb-0'}
                             color={HeadingColor.accent}
                         />
-                    </div>
+
 
                 }
             >

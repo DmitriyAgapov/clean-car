@@ -16,14 +16,14 @@ import { observer } from "mobx-react-lite";
 import { Select } from "@mantine/core";
 import { textDataCities } from "routes/reference/City/cities";
 import { mutate, useSWRConfig } from "swr";
-import { backToUrlLevel } from "utils/utils";
+import { backToUrlLevel, logger } from "utils/utils";
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
 const dataCreate = {
     initValues: {
       id: 0,
         city: '',
         timezone: '',
-        status: 'true',
+        status: "true",
     },
     validateSchema: Yup.object().shape({
         city: Yup.string().required('Обязательное поле'),
@@ -63,8 +63,10 @@ const dataCreate = {
     ],
 }
 const FormCreateCity = (props: any) => {
+
   const location = useLocation()
   const navigate = useNavigate()
+  const revalidator = useRevalidator();
   const store = useStore()
   const params = useParams()
   const editStatus = props?.edit ?? false
@@ -72,37 +74,43 @@ const FormCreateCity = (props: any) => {
           id: props.id,
           city: props.city,
           timezone: props.timezone,
-          status: props.is_active,
+          status: props.is_active === "true",
   }
-  console.log(`refCity_${params.id}`);
-  console.log(props);
+  // console.log(`refCity_${params.id}`);
+  // console.log(props);
   const {mutate} = useSWRConfig()
+  // console.log(editInitValues);
   return (
 
       <Formik  initialValues={editStatus ? editInitValues : dataCreate.initValues}  validationSchema={dataCreate.validateSchema}
         onSubmit={async (values, isSubmitting) => {
-          console.log(values, 'values');
+          // console.log(values.status, 'values', values);
+          const _status = typeof values.status === "boolean" ? values.status : values.status == "true"
             if(location.pathname.includes('edit')) {
-              textDataCities.editAction(values.id, values.city, values.status === "true", values.timezone)
+              textDataCities.editAction(values.id, values.city, _status, values.timezone)
               .then((r: any) => {
                 if(r.status === 200) {
 
                   mutate(`@"refCity_2","2"`, {name: r.data.name}).then(r => {
-                    console.log('mutate', `@"refCity_2","2"`);
-                    console.log('mutated', `/catalog/cities/${params.id}/retrieve/`);
+                    // console.log('mutate', `@"refCity_2","2"`);
+                    // console.log('mutated', `/catalog/cities/${params.id}/retrieve/`);
                   })
-
-                  // revalidator.revalidate()
-                  navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`)
+                  store.catalogStore.getAllCities().then(() => console.log('cities updated')).then(() => {
+                    revalidator.revalidate()
+                    navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`)
+                  })
                 }
               })
             } else {
-              textDataCities.createAction(values.city, values.status === "true", values.timezone)
+              textDataCities.createAction(values.city, _status, values.timezone)
               .then((r: any) => {
                 if(r.status === 201) {
-                  // revalidator.revalidate()
+                  revalidator.revalidate()
                   mutate(`/catalog/cities/${params.id}/retrieve/`)
-                  mutate(`refCity_${params.id}`).then(r => navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`))
+                  store.catalogStore.getAllCities().then(() => console.log('cities updated')).then(() => {
+                    revalidator.revalidate()
+                    mutate(`refCity_${params.id}`).then(r => navigate(`${location.pathname.split('/').slice(0, location.pathname.split('/').length - 1).join('/')}`))
+                  })
                 }
               })
             }
@@ -234,7 +242,7 @@ const FormCreateCity = (props: any) => {
                   label={dataCreate.inputs[2].label}
                   placeholder={dataCreate.inputs[2].placeholder}
                   name={dataCreate.inputs[2].fieldName}
-                  defaultValue={values.status}
+                  defaultValue={values.status.toString()}
                   data={[
                       {
                           label: 'Активен',

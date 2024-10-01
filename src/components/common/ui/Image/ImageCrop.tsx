@@ -58,7 +58,7 @@ const ImageCrop = observer(() => {
         }
     }, [image])
 	return (
-        <div className='upload-example mx-auto' style={{ aspectRatio: "4 / 3", height: "auto"}}>
+        <div className='upload-example mx-auto' style={{ aspectRatio: "4 / 2", height: "auto"}}>
             <Cropper  className="upload-example__cropper" ref={cropperRef} src={image && image.src}  stencilProps={{
 	            aspectRatio: 1/1,
 

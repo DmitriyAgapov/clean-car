@@ -21,7 +21,6 @@ export type PaginationProps = {
   q?: string | number | URLSearchParams
   searchString?: string | number | URLSearchParams
 }
-type CreateCompanyPerformerFormData = Company<CompanyType.performer>
 
 interface FilterPropsCars {
   number?: number
@@ -37,16 +36,13 @@ const axiosSuggest = axios.create({
     "Content-Type": "application/json",
     "Accept": "application/json",
   }
-  }
-)
+  })
 const axiosUpload = axios.create({
   headers: {
     'Content-Type': 'multipart/form-data',
     'Authorization': `Bearer ${window.localStorage.getItem('jwt')}`
   }
-  }
-)
-
+  })
 
 //Константа для запросов
 export const API_ROOT = process.env.REACT_APP_PUBLIC_API
@@ -149,7 +145,6 @@ export const requests = {
 
 //Обработка ошибок
 const handleErrors = (err: AxiosError & any) => {
-  console.log(err);
 
     if(err && err.response && (err.response.status === 400 || err.response.status === 405)) {
       // @ts-ignore
@@ -172,23 +167,6 @@ const handleErrors = (err: AxiosError & any) => {
   } else if(!appStore.getNetWorkStatus) {
     appStore.setNetWorkStatus(true)
   }
-    // if (err && err.response && err.response.status === 401) {
-    //     const refr = window.localStorage.getItem('jwt_refresh')
-    //     if (refr) {
-    //     agent.Auth.tokenRefresh(refr)
-    //         .then((resolve: any) => resolve.data)
-    //         .then((data) => {
-    //             runInAction(() => {
-    //               appStore.setToken(null)
-    //               appStore.setToken(data.access)
-    //             })
-    //         })
-    //         .catch((err) => {
-    //             appStore.setTokenError(err.response.data)
-    //             authStore.logout()
-    //         })
-    //     }
-    // }
     if(err.response && err.response.data && err.response.data.error_message ) {
       notifications.show({
         id: 'global-error',
@@ -316,15 +294,15 @@ const Users = {
 
 }
 const Companies = {
-    createCompanyPerformers: ( data: CreateCompanyPerformerFormData, type: string ) => requests.post(`/companies/${type}/create/`, data),
-    editCompany: ( data: CreateCompanyPerformerFormData, type: string, id:number ) => requests.put(`/companies/${type}/${id}/update/`, data),
+    createCompanyPerformers: ( data: Company<CompanyType.performer>, type: string ) => requests.post(`/companies/${type}/create/`, data),
+    editCompany: ( data: Company<CompanyType.performer>, type: string, id:number ) => requests.put(`/companies/${type}/${id}/update/`, data),
 
     getCompanyData: (type: string, id: number ) => requests.get(`/companies/${type}/${id}/retrieve/`, {}),
     getCompanyDataNew: (type: string, id: string) => useSWR(`/companies/${type}/${id}/retrieve/`, (url) => requests.getNew(url).then(r => r.data)),
     // createCompanyPerformers: ( data: CreateCompanyPerformerFormData ) => {
     //   return  requests.post('/companies/performer/create/', data)
     // },
-    createCompanyCustomer: ( data: CreateCompanyPerformerFormData, type: string ) => requests.post('/companies/customer/create/', data),
+    createCompanyCustomer: ( data: Company<CompanyType.performer>, type: string ) => requests.post('/companies/customer/create/', data),
     getMyCompanies: (pagination?: PaginationProps) => requests.get('/companies/my_companies/list/', pagination),
     getListCompanyCustomer: (pagination?: PaginationProps) => requests.get('/companies/customer/list/', pagination),
     getListCompanyPerformer: (pagination?: PaginationProps) => requests.get('/companies/performer/list/', pagination),

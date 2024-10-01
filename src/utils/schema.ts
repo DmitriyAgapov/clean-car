@@ -5224,8 +5224,8 @@ export class Client implements IClient {
     /**
      * @param params
      */
-    customerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous24> {
-        const {company_id, q, ordering, page, cancelToken} = params
+    customerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, city?: number, is_active?: boolean, cancelToken?: CancelToken}): Promise<Anonymous24> {
+        const {company_id, q, ordering, page,city, is_active, cancelToken} = params
 
         let url_ = this.baseUrl + "/customer_branches/{company_id}/list/?";
         if (company_id === undefined || company_id === null)
@@ -5237,6 +5237,11 @@ export class Client implements IClient {
             url_ += "ordering=" + encodeURIComponent("" + ordering) + "&";
         if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (city !== undefined && city !== null)
+            url_ += "city=" + encodeURIComponent("" + city) + "&";
+        if (is_active !== undefined && is_active !== null)
+            url_ += "is_active=" + encodeURIComponent("" + is_active) + "&";
+
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -5748,8 +5753,8 @@ export class Client implements IClient {
      * @param ordering (optional) Which field to use when ordering the results.
      * @param page (optional) A page number within the paginated result set.
      */
-    performerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous26> {
-        const {company_id, q, ordering, page, cancelToken} = params
+    performerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, city?: number | string, is_active?: boolean,   cancelToken?: CancelToken}): Promise<Anonymous26> {
+        const {company_id, q, ordering, page, city, is_active, cancelToken} = params
 
         let url_ = this.baseUrl + "/performer_branches/{company_id}/list/?";
         if (company_id === undefined || company_id === null)
@@ -5761,6 +5766,10 @@ export class Client implements IClient {
             url_ += "ordering=" + encodeURIComponent("" + ordering) + "&";
         if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (city !== undefined && city !== null)
+            url_ += "city=" + encodeURIComponent("" + city) + "&";
+        if (is_active !== undefined && is_active !== null)
+            url_ += "is_active=" + encodeURIComponent("" + is_active) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {

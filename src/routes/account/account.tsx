@@ -18,7 +18,7 @@ const AccountPage = () => {
             className={'page-account'}
             headerContent={
                 <>
-                    <DateComponent />
+                    {/* <DateComponent /> */}
                     <UserMenu />
                 </>
             }
@@ -32,7 +32,7 @@ const AccountPage = () => {
             <Sidebar />
 
             <Outlet />
-            <SvgAccount className={styles.svg} />
+
         </Layout>
     )
 }

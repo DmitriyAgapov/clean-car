@@ -2,7 +2,7 @@ import { PanelColor, PanelVariant } from "components/common/layout/Panel/Panel";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import Tabs from "components/common/layout/Tabs/Tabs";
 import React, { useEffect } from "react";
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable, useLocalStore } from 'mobx-react-lite'
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useParams } from "react-router-dom";
@@ -13,8 +13,8 @@ const localRootStoreF = new LocalRootStore()
 
 const TabFilials = ({companyId, company_type, state }:any) => {
 	const store = useStore()
-	const localStoreF = useLocalStore<LocalRootStore>(() => localRootStoreF)
-	const {isLoading, data} = useSWR([`filials_${companyId}`, company_type, companyId,localStoreF.params.getSearchParams] , ([url, company_type, companyId, args]) => store.companyStoreNew.loadCompanyFiliales(company_type, companyId, args))
+	const localStoreF = useLocalObservable<LocalRootStore>(() => localRootStoreF)
+	const {isLoading, data} = useSWR([`filials_${companyId}`, company_type, companyId, {...localStoreF.params.getSearchParams}] , ([url, company_type, companyId, args]) => store.companyStoreNew.loadCompanyFiliales(company_type, companyId, args))
 
 	useEffect(() => {
 		localStoreF.setData = {

@@ -1,5 +1,5 @@
 import { Modal, NumberInput, Select, Textarea } from '@mantine/core'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useStore } from 'stores/store'
 import styles from './Modal.module.scss'
 import { SvgClose } from 'components/common/ui/Icon'
@@ -27,6 +27,9 @@ export function UploadUserPhoto({opened, onClose, id} :  UpBalanceParams) {
               company_id: id.toString()
           }
       })
+  useEffect(() => {
+    console.log('store.userStore.cropperRef', store.userStore.cropperRef?.current);
+  }, [store.userStore.cropperRef]);
 	return (
         <Modal.Root size={"xl"} opened={opened} onClose={onClose} centered>
             <Modal.Overlay className={'bg-black/90'} />
@@ -63,11 +66,12 @@ export function UploadUserPhoto({opened, onClose, id} :  UpBalanceParams) {
                         text={'Сохранить'}
                         action={async () => {
                            store.userStore.upLoadImage()
-                              .then((r:any) => {
-                                if(r.status === 200) {
+                              // .then((r:any) => {
+                              //   if(r.status === 200) {
                                   store.userStore.myProfileData.image = null
                                   store.userStore.loadMyProfile().then(onClose)
-                           }})
+                           // }}
+                           // )
                         }}
                         variant={ButtonVariant['accent-outline']}
                     />

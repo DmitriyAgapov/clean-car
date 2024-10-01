@@ -83,6 +83,7 @@ const BidPage = () => {
 	useEffect(() => {
 		store.bidsStore.clearPhotos()
 	}, [params.bid_id])
+
 	useEffect(() => {
 		_status && open()
 	}, [sParams])
@@ -96,29 +97,29 @@ const BidPage = () => {
                 variant={PanelVariant.withGapOnly}
                 headerClassName={'flex justify-between gap-4'}
                 header={
-                    <>
-                        <div className={'mr-auto'}>
-                            <Button
-                                text={
-                                    <>
-                                        <SvgBackArrow />
-                                        Назад к списку заявок{' '}
-                                    </>
-                                }
-                                className={
-                                    'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                                }
-                                action={() => navigate('/account/bids')}
-                                variant={ButtonVariant.text}
-                            />
-                            <Heading
-                                text={textData.title}
-                                variant={HeadingVariant.h1}
-                                className={'inline-block !mb-0'}
-                                color={HeadingColor.accent}
-                            />
-                        </div>
-                    </>
+
+                      <div className={'mr-auto'}>
+                          <Button
+                              text={
+                                  <>
+                                      <SvgBackArrow />
+                                      Назад к списку заявок{' '}
+                                  </>
+                              }
+                              className={
+                                  'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
+                              }
+                              action={() => navigate('/account/bids')}
+                              variant={ButtonVariant.text}
+                          />
+                          <Heading
+                              text={textData.title}
+                              variant={HeadingVariant.h1}
+                              className={'inline-block !mb-0'}
+                              color={HeadingColor.accent}
+                          />
+                      </div>
+
                 }
             ></Panel>
             <Panel

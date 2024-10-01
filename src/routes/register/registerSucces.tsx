@@ -97,13 +97,13 @@ function RegisterSuccessPage() {
                   to={'/account/bids'}
                   className={'!mr-2 flex-1 tablet:flex-grow-0 max-w-md'}
                 />
-                <LinkStyled
-                  text={'На сайт'}
-                  variant={ButtonVariant['accent-outline']}
-                  size={ButtonSizeType.base}
-                  to={'/auth'}
-                  className={' flex-1 tablet:flex-grow-0 max-w-md'}
-                />
+                {/* <LinkStyled */}
+                {/*   text={'На сайт'} */}
+                {/*   variant={ButtonVariant['accent-outline']} */}
+                {/*   size={ButtonSizeType.base} */}
+                {/*   to={'/auth'} */}
+                {/*   className={' flex-1 tablet:flex-grow-0 max-w-md'} */}
+                {/* /> */}
               </div>
             }
           >

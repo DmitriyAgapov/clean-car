@@ -61,7 +61,7 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
             const _fSize = Math.ceil(fontSize * 3) + correct;
 
             const  _res = Math.ceil(_height / _fSize);
-            console.log(_height);
+            // console.log(_height);
             if(refBody.current !== null && _height > 0 && _count !== _res) {
               if (store.appStore.bodyRef.clientWidth > 960) {
                 const val = !_count ? _res - 1 : _res
@@ -74,62 +74,62 @@ const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  auto
       })()
     }, [height, fontSize, value, _count]);
 
-      const {footerHeight, ...otherProps} = props
+    const {footerHeight, ...otherProps} = props
 
-      return (
-        <Panel ref={refBody} state={false}
-            background={background ? background : PanelColor.glass}
-            className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto] overflow-hidden'}
-            // style={autoScroll ? {maxHeight: (heightV - Number(fontSize) * 22.5) +'px'} : {}}
-            routeStyle={style}
-            variant={variant ? variant : PanelVariant.dataPadding}
-            footerClassName={'px-6 pt-2 pb-4 h-24' + " " + props.footerClassName}
-            headerClassName={''}
-            header={search || filter ?
-                <>
-                    {search && <TableSearch/>}
-                    {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
-                </> : false
-            }
-            footer={!autoScroll ? <><PaginationComponent />{props.footer }</> : props.footer }
-            {...otherProps}
-        >
-          {autoScroll ? view ? <GridView key={props.footerProps?.id + "_00"}
-            props={{...props, ref: width}}
-            dataStyle={style}
-            ar={ar}
-            headerBar={headerBar}
-            total={initCount}
-            view={true}
-            autoScroll={autoScroll}
-            rows={rows}
-            countFetch={_countFetch}
-            element={(item: any, index: number) => <RowData style={style} view={item.view} {...item}
-            key={item.id + "_00" + index} />}/> :
-            <TableView key={props.footerProps?.id + "_00"}
-                props={props}
-                dataStyle={style}
-                ar={ar}
-                headerBar={headerBar}
-                total={initCount}
-                autoScroll={autoScroll}
-                rows={rows}
-                countFetch={_countFetch}
-                element={(item: any, index: number) => <RowData style={style} {...item} key={item.id + "_00" + index}
-                />
-            } /> : <table className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
-            {/* Заголовок табилцы */}
-            {headerBar && <RowHeading total={initCount} ar={ar} />}
+    return (
+      <Panel ref={refBody} state={false}
+          background={background ? background : PanelColor.glass}
+          className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto] overflow-hidden'}
+          // style={autoScroll ? {maxHeight: (heightV - Number(fontSize) * 22.5) +'px'} : {}}
+          routeStyle={style}
+          variant={variant ? variant : PanelVariant.dataPadding}
+          footerClassName={'px-6 pt-2 pb-4 h-24' + " " + props.footerClassName}
+          headerClassName={''}
+          header={search || filter ?
+              <>
+                  {search && <TableSearch/>}
+                  {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
+              </> : false
+          }
+          footer={!autoScroll ? <><PaginationComponent />{props.footer }</> : props.footer }
+          {...otherProps}
+      >
+        {autoScroll ? view ? <GridView key={props.footerProps?.id + "_00"}
+          props={{...props, ref: width}}
+          dataStyle={style}
+          ar={ar}
+          headerBar={headerBar}
+          total={initCount}
+          view={true}
+          autoScroll={autoScroll}
+          rows={rows}
+          countFetch={_countFetch}
+          element={(item: any, index: number) => <RowData style={style} view={item.view} {...item}
+          key={item.id + "_00" + index} />}/> :
+          <TableView key={props.footerProps?.id + "_00"}
+              props={props}
+              dataStyle={style}
+              ar={ar}
+              headerBar={headerBar}
+              total={initCount}
+              autoScroll={autoScroll}
+              rows={rows}
+              countFetch={_countFetch}
+              element={(item: any, index: number) => <RowData style={style} {...item} key={item.id + "_00" + index}
+              />
+          } /> : <table className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
+          {/* Заголовок табилцы */}
+          {headerBar && <RowHeading total={initCount} ar={ar} />}
 
 
-            <tbody>{rows && rows.map((item: any, index: number) =>
-              <RowData style={style} {...item}
-                key={item.id + "_00" + index} />
-            )}</tbody>
-          </table>}
+          <tbody>{rows && rows.map((item: any, index: number) =>
+            <RowData style={style} {...item}
+              key={item.id + "_00" + index} />
+          )}</tbody>
+        </table>}
 
-        </Panel>
-      )
+      </Panel>
+    )
 })
 
 const TableWithSort = (props: TableWithSortProps & any & {store?: any}) => {

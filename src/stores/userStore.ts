@@ -184,15 +184,18 @@ export class UserStore {
       const form = new FormData();
       canvas.toBlob((blob:any) => {
         if (blob) {
-          (async () => await resizeFile(blob))()
+          (async () => await resizeFile(blob)
           .then((r:any) => {
-            form.append('avatar', r, 'avatar.jpg')
+            form.append('avatar', r, 'avatar.jpg');
+            console.log(form.get('avatar'));
+
           })
+            .then(() =>  agent.Account.uploadAvatar(form).then(r => {
+            return r
+          })))()
         }
       }, 'image/jpeg');
-      return agent.Account.uploadAvatar(form).then(r => {
-        return r
-      })
+
     }
   }
   async loadMyProfile() {

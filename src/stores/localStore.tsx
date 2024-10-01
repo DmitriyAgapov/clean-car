@@ -50,7 +50,7 @@ export class LocalRootStore  {
     this.params.setSearchParams({page: next, page_size: 10 })
   }
   set setData(data: any) {
-    const _initAr = this.getData
+    // const _initAr = this.getData
     if(data && data.count && this.count_data !== data.count) {
       this.count_data = data.count
     }

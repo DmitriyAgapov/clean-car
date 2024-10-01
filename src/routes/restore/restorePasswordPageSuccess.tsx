@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react'
 import Layout from 'components/common/layout/Layout/Layout'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { useStore } from 'stores/store'
-import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { observer } from 'mobx-react-lite'
-import Button, { ButtonDirectory, ButtonVariant } from 'components/common/ui/Button/Button'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
-import FormRestore from 'components/Form/FormRestore/FormRestore'
 import { useSearchParams } from 'react-router-dom'
 
 function RestorePasswordPageSuccess() {
@@ -21,9 +18,9 @@ function RestorePasswordPageSuccess() {
   return (
     <Layout
       className={'page-intro'}
-      headerContent={
-        <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'} variant={ButtonVariant.tech} />
-      }
+      // headerContent={
+      //   <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'} variant={ButtonVariant.tech} />
+      // }
     >
       <Section type={SectionType.centered}>
         <Panel
