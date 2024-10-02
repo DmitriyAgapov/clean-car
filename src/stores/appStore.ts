@@ -101,6 +101,7 @@ export class AppStore {
     )
   }
   location:any = window.location
+  pageTitle: string = ""
   appName = 'CleanCar'
   appRouteName = '.авторизация'
   appTheme = 'dark'
@@ -137,6 +138,12 @@ export class AppStore {
   get fontSizeBody() {
     console.log(this.font);
     return this.font
+  }
+  setTitle(title:string) {
+    this.pageTitle = `${title}  |  Clean Car`
+  }
+  addTitle(title:string) {
+    this.pageTitle = this.pageTitle + ` ${title}`
   }
   fontSizeBodyCalc() {
     const _fSize = Math.floor(Number(window.getComputedStyle(document.getElementsByTagName('html')[0]).getPropertyValue('font-size').replaceAll('px', "")))

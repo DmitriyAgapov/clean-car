@@ -60,7 +60,7 @@ export default function CarsPageCreateAction() {
           }
 
         })
-        // .catch(e => console.log(e))
+        .catch(e => console.log(e))
         .finally(() =>
           setLoading(false)
         )
@@ -93,13 +93,14 @@ export default function CarsPageCreateAction() {
             size={ButtonSizeType.sm} />
             <FileButton
               //@ts-ignore
-              onChange={handleFileChange} accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-              {(props) => <Button text={<span style={{ display: "block", width: 'fit-content' , color: 'black !important'}}>{!success ? 'Загрузить файл' : 'Загружено'}</span>}
+              onChange={handleFileChange}
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+              {(props) => (<Button text={<span style={{ display: "block", width: 'fit-content' , color: 'black !important'}}>{!success ? 'Загрузить файл' : 'Загружено'}</span>}
                 className={'inline-flex'}
                 directory={ButtonDirectory.directory}
                 size={ButtonSizeType.sm}
                 {...props}
-              />}
+              />)}
             </FileButton>
           </div>}
           </>

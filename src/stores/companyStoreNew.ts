@@ -153,8 +153,8 @@ export class CompanyStoreNew {
     }
 
     async loadCompanyFiliales(company_type:string, company_id:number, params:any ) {
-        console.log();
-        params.is_active = false
+        console.log(params);
+        // params.is_active = false
         if(company_type === "customer") {
              return client.customerBranchesList({company_id: company_id, ...params}).then((res) => res)
         }

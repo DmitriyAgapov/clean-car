@@ -37,10 +37,11 @@ const TabCars = ({companyId, company_type, state }:any) => {
 		localStoreF.setIsLoading = isLoading
 	},[data, localStoreF.params.getSearchParams])
 
-	return	<Tabs.Panel  state={state} name={'cars'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+	return	<Tabs.Panel  state={state} name={'cars'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0 !grid-rows-none'}  bodyClassName={'!bg-transparent'}>
 <TableWithSortNew		store={localRootStoreF}
 	state={isLoading}
-
+	footerHeight={"10rem"}
+	autoScroll={true}
 	search={true} filter={true}
 	className={'!rounded-none  !bg-none overflow-visible !border-0'}
 	bodyClassName={'!bg-none !rounded-none !bg-transparent'}

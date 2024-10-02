@@ -89,7 +89,7 @@ export function UpBalance({opened, onClose, id, upBalance = false, companyName} 
                     </Modal.Title>
 
                     <Modal.CloseButton
-                        className={'hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5 outline-0 focus-visible:outline-0'}
+                        className={'hover:rotate-90 hover:!bg-transparent transition-all absolute top-5 right-5 outline-0 focus-visible:outline-0'}
                         icon={<SvgClose className={'close__modal'} />}
                     />
                 </Modal.Header>

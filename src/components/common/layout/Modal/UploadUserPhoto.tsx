@@ -47,7 +47,7 @@ export function UploadUserPhoto({opened, onClose, id} :  UpBalanceParams) {
                     </Modal.Title>
 
                     <Modal.CloseButton
-                        className={'hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5 outline-0 focus-visible:outline-0'}
+                        className={'hover:rotate-90 hover:!bg-transparent transition-all absolute top-5 right-5 outline-0 focus-visible:outline-0'}
                         icon={<SvgClose className={'close__modal'} />}
                     />
                 </Modal.Header>
@@ -65,13 +65,8 @@ export function UploadUserPhoto({opened, onClose, id} :  UpBalanceParams) {
 
                         text={'Сохранить'}
                         action={async () => {
-                           store.userStore.upLoadImage()
-                              // .then((r:any) => {
-                              //   if(r.status === 200) {
-                                  store.userStore.myProfileData.image = null
-                                  store.userStore.loadMyProfile().then(onClose)
-                           // }}
-                           // )
+                        await store.userStore.upLoadImage()
+
                         }}
                         variant={ButtonVariant['accent-outline']}
                     />

@@ -93,7 +93,7 @@ const ServicesPage = () => {
               className={"relative w-full  group  overflow-hidden"}
               actions={
                 <div className={
-                  "absolute  group-hover:opacity-100 opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5  gap-2 px-8 flex items-center justify-center flex-col bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2"
+                  "absolute  group-hover:opacity-100 opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5 cursor-auto gap-2 px-8 flex items-center justify-center flex-col bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2"
                 }><LinkStyled to={String(card.id)}
                   className={"!text-xs uppercase w-full [-webkit-text-fill-color=initial]"}
                   variant={ButtonVariant["outline"]}

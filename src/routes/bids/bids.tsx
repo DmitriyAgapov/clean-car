@@ -93,12 +93,11 @@ const BidsPage = () => {
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={`${store.appStore.appType !== "admin" ? "flex" : ""} justify-between gap-4`}
 
 				header={<>
-
 					<Heading text={textData.title}
 						variant={HeadingVariant.h1}
 						className={'inline-block  !mb-0'}
 						color={HeadingColor.accent} />
-		
+
 				<div className={`flex gap-6 tablet-max:max-w-96 ${store.appStore.appType === "admin" ? "mobile:mt-6" : ""}`}>
 					{store.userStore.getUserCan(PermissionNames["Управление заявками"], "create") && (<>
 						{store.appStore.appType === "admin" && <Button text={textData.loadExcel}

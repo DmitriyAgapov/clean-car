@@ -118,7 +118,7 @@ const SupportModal = (props: { opened: boolean; onClose: () => void; update?: ()
 						color={HeadingColor.accent}
 						text={	thx ? 'Ваше письмо отправлено' : 'Обращение в службу поддержки'}
 						variant={HeadingVariant.h2} /></Modal.Title>
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5"}
+					<Modal.CloseButton className={"hover:rotate-90 hover:!bg-transparent transition-all absolute top-5 right-5"}
 						icon={<SvgClose className={'close__modal'} />} />
 				</Modal.Header>
 				<Modal.Body>

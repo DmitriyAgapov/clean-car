@@ -124,7 +124,7 @@ export function PriceCopy(props: { opened: boolean; onClose: () => void; id: num
 			<Modal.Content radius={20} className={styles.ModalBid}>
 				<Modal.Header className={'static '}>
 					<Modal.Title><Heading className={'!mb-0'} color={HeadingColor.accent} text={`Дублировать данные ${props.title}`} variant={HeadingVariant.h2}/></Modal.Title>
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
+					<Modal.CloseButton className={"hover:rotate-90 hover:!bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
 				</Modal.Header>
 				<Modal.Body>
 				<Text className={''}>Проверьте данные для дублирования или внесите необходимые корректировки. При изменении филиала информация по услугам будет обновлена</Text>

@@ -12,10 +12,12 @@ import paramsStore, { InitParams } from "stores/paramStore";
 import priceStore from "stores/priceStore";
 import bidsStore from "stores/bidsStrore";
 import paramStore from "stores/paramStore";
-
+import { sidebarMenu } from "components/common/layout/Sidebar/Sidebar";
 
 
 export const authUser = async ({ request, params }:any) => {
+    console.log(request.url, params);
+
     // const url = new URL(request.url)
     // const searchParams = url.searchParams
     // const paramsPage = url.searchParams.get('page')

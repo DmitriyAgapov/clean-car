@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import { useStore } from "stores/store";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
+import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 
 const localRootStoreF = new LocalRootStore()
 
@@ -38,14 +39,25 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 			}))}
 		localStoreF.setIsLoading = isLoading
 	},[data])
-
-	return	<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+	const ft = React.useMemo(() => {
+		const _ft = []
+		if(store.appStore.appType === "admin") {
+			_ft.push(FilterData.company_type)
+		}
+		_ft.push(FilterData.employee__is_active)
+		return _ft
+	}, [])
+	return	<Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0 !grid-rows-none'}  bodyClassName={'!bg-transparent'}>
 		<TableWithSortNew	store={localRootStoreF}
 			state={isLoading}
 			className={'!rounded-none  !bg-none overflow-visible !border-0'}
 			bodyClassName={'!bg-none !rounded-none !bg-transparent'}
 			background={PanelColor.default}
+			footerHeight={"10rem"}
+			autoScroll={true}
+
 			search={true} filter={true}
+			initFilterParams={[FilterData.city, FilterData.employee__is_active]}
 			style={PanelRouteStyle.users}
 			variant={PanelVariant.default}
 			footer={false}  ar={[

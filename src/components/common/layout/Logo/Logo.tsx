@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './Logo.module.scss'
 import { observer } from 'mobx-react-lite'
 import { useStore } from 'stores/store'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 export interface LogoProps {
   className?: string
@@ -26,6 +26,7 @@ const TextAuth = (props:any) => <svg width="399" height="15" viewBox="0 0 399 15
 const Logo = ({ className = "", position = "" }: LogoProps) => {
   const store = useStore()
   const logoName = store.appStore.appName
+  const location = useLocation()
   const routeName = store.appStore.appRouteName
   const _route = store.authStore.userIsLoggedIn ? '/account/bids' : '/'
   return (
@@ -38,7 +39,7 @@ const Logo = ({ className = "", position = "" }: LogoProps) => {
       {/* </Link> : null} */}
 
 
-      {store.appStore.appType !== "" ? <>  <Vector /><Link to={_route} className={styles.routeName}>{routeName}</Link> <Text className={'col-span-2 text-black'}/></>: <Link to={_route} className={styles.routeName}><TextAuth className={`col-span-2 tablet:max-w-sm max-w-xss`}/></Link>}
+      {store.appStore.appType !== "" && !location.pathname.includes('policy') ? <>  <Vector /><Link to={_route} className={styles.routeName}>{routeName}</Link> <Text className={'col-span-2 text-black'}/></>: <Link to={_route} className={styles.routeName}><TextAuth className={`col-span-2 tablet:max-w-sm max-w-xss`}/></Link>}
 
 
     </div>

@@ -16,7 +16,7 @@ export function CarClasses(props: { opened: boolean; onClose: () => void}) {
 			<Modal.Content radius={20} className={styles.ModalCarClasses}>
 
 				<Modal.Header className={'relative flex flex-row-reverse mt-8'}>
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all relative !outline-none"} icon={<SvgClose className={'close__modal'} />}/>
+					<Modal.CloseButton className={"hover:rotate-90 hover:!bg-transparent transition-all relative !outline-none"} icon={<SvgClose className={'close__modal'} />}/>
 					<Modal.Title>
 
 						<Heading

@@ -66,7 +66,8 @@ const UsersPage = () => {
     }
     _th.push(..._last)
     return _th
-  }, [])
+  }, []);
+
   const ft = React.useMemo(() => {
     const _ft = []
     if(store.appStore.appType === "admin") {

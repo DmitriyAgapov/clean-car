@@ -62,7 +62,7 @@ const BidModal = (props: { opened: boolean; onClose: () => void; update: () => v
 			<Modal.Content radius={20} className={styles.ModalBid}>
 				<Modal.Header className={'static '}>
 					<Modal.Title><Heading className={'!mb-0'} color={HeadingColor.accent} text={'Завершение заявки'} variant={HeadingVariant.h2}/></Modal.Title>
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
+					<Modal.CloseButton className={"hover:rotate-90 hover:!bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
 				</Modal.Header>
 				<Modal.Body>
 				<Text className={''}>Для завершения заявки, загрузите фото после, минимум 2 штуки</Text>

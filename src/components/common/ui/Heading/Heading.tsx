@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react'
 import styles from './Heading.module.scss'
+import { useStore } from "stores/store";
+import { useLocation } from 'react-router-dom';
 
 export enum HeadingVariant {
   h1 = 'h1',
@@ -39,8 +41,11 @@ const Heading = ({
   directory = null,
   color = HeadingColor.default,
 }: HeadingProps) => {
+  const store = useStore()
   switch (variant) {
+
     case 'h1':
+
       return (
         <h1 className={styles.Heading + ' ' + className} data-directory={directory} color={color}>
           {text}

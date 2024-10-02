@@ -20,7 +20,7 @@ const BackDrop = () => {
   return null
 }
 
-const sidebarMenu: { icon: React.ReactNode; title: string; url: string, urlMap: string, sublevel?: {
+export const sidebarMenu: { icon: React.ReactNode; title: string; url: string, urlMap: string, sublevel?: {
     url: string
     title: string
   }[] }[] = [
@@ -174,13 +174,6 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       url: 'bids',
     }
     ]
-    // if(process.env.NODE_ENV === "development") {
-    //   routeWithPermissions.push({
-    //     icon: <img src={'/icons/zayavki.png'} alt={''} />,
-    //     title: 'Дэш',
-    //     url: 'dashboard',
-    //   })
-    // }
     const addRouteWithPermissions = (el: any) => {
       if (store.userStore.currentUserPermissions.has(el.urlMap) && store.userStore.currentUserPermissions.get(el.urlMap)?.read) {
         if(store.userStore.myProfileData.company.company_type === "Партнер" && el.url === "cars") {} else {
@@ -189,7 +182,6 @@ const Sidebar = ({ children, items, type, ...props }: SidebarProps) => {
       }
     }
     sidebarMenu.forEach((el) => addRouteWithPermissions(el))
-
     setRoutes(routeWithPermissions)
   }, [store.userStore.myProfileData.permissions])
 

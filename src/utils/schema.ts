@@ -896,8 +896,8 @@ export class Client implements IClient {
      * @param page (optional) A page number within the paginated result set.
      * @param page_size (optional) Number of results to return per page.
      */
-    accountsUsersList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous2> {
-        const { company_id, q, ordering, page, page_size, cancelToken } = params;
+    accountsUsersList(params: {company_id: string, q?: string | null | undefined, employee__is_active?: string,  company__company_type?: string, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous2> {
+        const { company_id, q, ordering, page, page_size, company__company_type, employee__is_active, cancelToken } = params;
         let url_ = this.baseUrl + "/accounts/{company_id}/users/list/?";
         if (company_id === undefined || company_id === null)
             throw new Error("The parameter 'company_id' must be defined.");
@@ -910,6 +910,11 @@ export class Client implements IClient {
             url_ += "page=" + encodeURIComponent("" + page) + "&";
         if (page_size !== undefined && page_size !== null)
             url_ += "page_size=" + encodeURIComponent("" + page_size) + "&";
+        if (employee__is_active !== undefined && employee__is_active !== null)
+            url_ += "employee__is_active=" + encodeURIComponent("" + employee__is_active) + "&";
+        if (company__company_type !== undefined && company__company_type !== null)
+            url_ += "company__company_type=" + encodeURIComponent("" + company__company_type) + "&";
+
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -5224,8 +5229,8 @@ export class Client implements IClient {
     /**
      * @param params
      */
-    customerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, city?: number, is_active?: boolean, cancelToken?: CancelToken}): Promise<Anonymous24> {
-        const {company_id, q, ordering, page,city, is_active, cancelToken} = params
+    customerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, company__city?: number | string, is_active?: boolean, cancelToken?: CancelToken}): Promise<Anonymous24> {
+        const {company_id, q, ordering, page, page_size,company__city, is_active, cancelToken} = params
 
         let url_ = this.baseUrl + "/customer_branches/{company_id}/list/?";
         if (company_id === undefined || company_id === null)
@@ -5237,8 +5242,11 @@ export class Client implements IClient {
             url_ += "ordering=" + encodeURIComponent("" + ordering) + "&";
         if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
-        if (city !== undefined && city !== null)
-            url_ += "city=" + encodeURIComponent("" + city) + "&";
+         if (page_size !== undefined && page_size !== null)
+            url_ += "page_size=" + encodeURIComponent("" + page_size) + "&";
+
+        if (company__city !== undefined && company__city !== null)
+            url_ += "city__id=" + encodeURIComponent("" + company__city) + "&";
         if (is_active !== undefined && is_active !== null)
             url_ += "is_active=" + encodeURIComponent("" + is_active) + "&";
 
@@ -5753,8 +5761,8 @@ export class Client implements IClient {
      * @param ordering (optional) Which field to use when ordering the results.
      * @param page (optional) A page number within the paginated result set.
      */
-    performerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, city?: number | string, is_active?: boolean,   cancelToken?: CancelToken}): Promise<Anonymous26> {
-        const {company_id, q, ordering, page, city, is_active, cancelToken} = params
+    performerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, company__city?: number | string, is_active?: boolean,   cancelToken?: CancelToken}): Promise<Anonymous26> {
+        const {company_id, q, ordering, page,page_size, company__city, is_active, cancelToken} = params
 
         let url_ = this.baseUrl + "/performer_branches/{company_id}/list/?";
         if (company_id === undefined || company_id === null)
@@ -5766,8 +5774,10 @@ export class Client implements IClient {
             url_ += "ordering=" + encodeURIComponent("" + ordering) + "&";
         if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
-        if (city !== undefined && city !== null)
-            url_ += "city=" + encodeURIComponent("" + city) + "&";
+        if (page_size !== undefined && page_size !== null)
+            url_ += "page_size=" + encodeURIComponent("" + page_size) + "&";
+        if (company__city !== undefined && company__city !== null)
+            url_ += "city=" + encodeURIComponent("" + company__city) + "&";
         if (is_active !== undefined && is_active !== null)
             url_ += "is_active=" + encodeURIComponent("" + is_active) + "&";
         url_ = url_.replace(/[?&]$/, "");

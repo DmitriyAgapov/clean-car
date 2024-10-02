@@ -24,7 +24,7 @@ export function RegisterSuccess(props: { opened: boolean; onClose: () => void}) 
 						color={HeadingColor.accent}
 						// className={'pb-12'}
 					/></Modal.Title>
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
+					<Modal.CloseButton className={"hover:rotate-90 hover:!bg-transparent transition-all absolute top-5 right-5"} icon={<SvgClose className={'close__modal'} />}/>
 				</Modal.Header>
 				<Modal.Body className={'tablet:!p-0'}>
 					<p>Для активации личного кабинета, пожалуйста проверьте указанную почту. Мы отправили вам письмо с активной ссылкой</p>

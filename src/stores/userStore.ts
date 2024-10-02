@@ -191,6 +191,7 @@ export class UserStore {
 
           })
             .then(() =>  agent.Account.uploadAvatar(form).then(r => {
+            this.loadMyProfile()
             return r
           })))()
         }

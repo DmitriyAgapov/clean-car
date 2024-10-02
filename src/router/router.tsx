@@ -5,7 +5,6 @@ import RegisterPage from 'routes/register/register'
 import RestorePasswordPage from 'routes/restore/restorePasswordPage'
 import RegisterSuccessPage from 'routes/register/registerSucces'
 import {
-    authUser,
     groupsCreatLoader,
     groupsIdLoader, priceHistoryLoader,
     priceLoader,

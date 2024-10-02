@@ -7,7 +7,7 @@ import { useStore } from "stores/store";
 import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { SvgBackArrow } from "components/common/ui/Icon";
 import { PermissionNames } from "stores/permissionStore";
-import {  dateTransform } from "utils/utils";
+import { dateTransform, useWindowDimensions } from "utils/utils";
 import { FormCard } from "components/Form/FormCards/FormCards";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import AddType from "routes/reference/Services/addType";
@@ -22,7 +22,7 @@ const ServicePage = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const { data, textData, pageRequest }: any = useLoaderData()
-
+    const {width} = useWindowDimensions()
     let [searchParams, setSearchParams] = useSearchParams()
     const backToUrlLevel = location.pathname.split('/').slice(0, -1).join('/')
     const memoizedData = React.useMemo(() => {
@@ -250,15 +250,19 @@ const ServicePage = () => {
                 title={subtype.name}
                 titleVariant={HeadingVariant.h4}
                 className={'group relative w-full overflow-hidden'}
-                navigate={() => navigate(String(subtype.id))}
+                navigate={(event) => {
+                  event.stopPropagation();
+                  width && width < 960 ?  navigate(String(subtype.id)) : void null
+                }}
                 actions={
                   <div
                     className={
-                      'tablet:absolute tablet-max:mt-4  tablet:group-hover:opacity-100 tablet:opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5  gap-2 tablet:px-8 flex items-center justify-center tablet:flex-col tablet:bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2'
+                      'tablet:absolute tablet-max:mt-4 cursor-auto  tablet:group-hover:opacity-100 tablet:opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5  gap-2 tablet:px-8 flex items-center justify-center tablet:flex-col tablet:bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2'
                     }
                   >
                     <Button
-                      action={async () => {
+                      action={async (event) => {
+                        event.stopPropagation();
                         store.appStore.setModal({
                           header: (
                             <Heading
@@ -276,7 +280,8 @@ const ServicePage = () => {
                       text={'Добавить опцию'}
                     />
                     <Button
-                      action={async () => {
+                      action={async  (event) => {
+                        event.stopPropagation();
                         store.appStore.setModal({
                           header: (
                             <Heading

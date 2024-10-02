@@ -90,10 +90,6 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
   let result
   switch (label) {
     case "Основная информация":
-
-
-
-
       result = (<Tabs.Panel state={state}
         name={"info"}
         className={"pt-8"}

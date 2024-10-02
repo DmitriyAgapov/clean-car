@@ -61,7 +61,7 @@ export default function UsersPageCreateAction() {
             })
           }
         })
-        // .catch(e => console.log(e))
+        .catch(e => console.log(e))
           .finally(() => {
             setLoading(false)
           })

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react'
+import React, { FC, ReactNode, useEffect, useLayoutEffect } from 'react'
 import styles from './Layout.module.scss'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
@@ -19,7 +19,8 @@ import Errors from 'components/common/layout/Errors/Errors'
 import { useViewportSize } from '@mantine/hooks'
 import { UserPermissionVariants } from 'stores/userStore'
 import { notifications } from '@mantine/notifications'
-
+import PageTitle from "components/common/layout/PageTitle/PageTitle";
+import { sidebarMenu as sideMenu } from "components/common/layout/Sidebar/Sidebar";
 const sidebarMenu: { title: string; url: string }[] = [
   {
     title: 'Дашборд',
@@ -89,10 +90,14 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   if(!store.authStore.userIsLoggedIn && loc.pathname !== "/" && !isInException(loc.pathname)) {
     return (<Navigate to={'/'}/>)
   }
-  console.log((exceptions.filter((value, index) => index != (1 || 4 || 0)  ? value : null).some(value => loc.pathname.includes(value)) || loc.pathname == "/"));
   if(store.authStore.userIsLoggedIn && (['restore', 'register'].some(value => loc.pathname.includes(value)) || loc.pathname == "/")) {
     return (<Navigate to={'/account/bids'}/>)
   }
+  useLayoutEffect(() => {
+    const _title = [...sideMenu, {title: "Заявки", url: "bids"}].filter((item) => loc.pathname.includes(item.url))[0]?.title ?? "No title";
+    console.log(_title, loc.pathname);
+    appStore.setTitle(_title);
+  }, [loc.pathname]);
 
   if(_permissionName && !isInException(loc.pathname.split("/").slice(0,3).join('/'))) {
     const _actionToDo = loc.pathname.includes('edit') ? "update" : loc.pathname.includes('create') ? "create" : "read"
@@ -115,6 +120,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   }
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
+        <PageTitle title={store.appStore.pageTitle}/>
           <Header>
             {(width && width > 960 && store.appStore.appType != "") || store.appStore.appType === ""  ?
               // <Link to={'/'}  className={'inline-flex'}>

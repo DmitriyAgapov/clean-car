@@ -80,7 +80,7 @@ axios.interceptors.response.use(
                 })
                 // console.log(response)
 
-                return await axios(config)
+                return await axios(config).finally(	() =>	config._retry = true)
                 // .finally(	() =>	config._retry = true)
             }
 						if(!window.localStorage.getItem('jwt') && !window.localStorage.getItem('jwt_refresh')) {

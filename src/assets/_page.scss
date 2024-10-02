@@ -113,7 +113,11 @@ section[data-variant="centered"] {
   border: 1px solid #00FFAE;
 
 }
-
+.page-intro_policy {
+  & > footer {
+	margin-top: 2rem;
+  }
+}
 .notification_cleancar {
   border: 2px solid var(--mantine-color-red-filled) !important;
   border-radius: 8px;

@@ -10,10 +10,13 @@ import { useStore } from "stores/store";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 
 const localRootStoreF = new LocalRootStore()
-
+// localRootStoreF.params.setSearchParams({
+// 	page_size: 10
+// })
 const TabFilials = ({companyId, company_type, state }:any) => {
 	const store = useStore()
 	const localStoreF = useLocalObservable<LocalRootStore>(() => localRootStoreF)
+	console.log(localStoreF.params.getSearchParams);
 	const {isLoading, data} = useSWR([`filials_${companyId}`, company_type, companyId, {...localStoreF.params.getSearchParams}] , ([url, company_type, companyId, args]) => store.companyStoreNew.loadCompanyFiliales(company_type, companyId, args))
 
 	useEffect(() => {
@@ -25,8 +28,8 @@ const TabFilials = ({companyId, company_type, state }:any) => {
 				city: item.city.name,
 				id: item.id,
 				query: {
-					company_id: companyId,
-					rootRoute: `/account/filials/${company_type}/${companyId}/${item.id}`,
+					company_id: item.parent?.id || store.userStore.myProfileData.company.id,
+					rootRoute: `/account/filials/${company_type}/${item.parent?.id || store.userStore.myProfileData.company.id}/${item.id}`,
 				},
 			}))}
 		localStoreF.setIsLoading = isLoading
@@ -36,13 +39,15 @@ const TabFilials = ({companyId, company_type, state }:any) => {
 		name={'filials'}
 		variant={PanelVariant.dataPadding}
 		background={PanelColor.default}
-		className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+		className={'!bg-none !border-0 !grid-rows-none'}  bodyClassName={'!bg-transparent'}>
 		<TableWithSortNew
 			store={localRootStoreF}
 			state={isLoading}
+			footerHeight={"10rem"}
 			className={'!rounded-none  !bg-none overflow-visible !border-0'}
 			bodyClassName={'!bg-none !rounded-none !bg-transparent'}
 			background={PanelColor.default}
+			autoScroll={true}
 			search={true} filter={true}
 			initFilterParams={[FilterData.is_active,FilterData.city]}
 			variant={PanelVariant.default}

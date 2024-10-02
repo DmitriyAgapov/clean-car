@@ -24,7 +24,7 @@ export function BidPaymentResult(props: { opened: boolean; onClose: () => void; 
 						color={HeadingColor.accent}
 						// className={'pb-12'}
 					/></Modal.Title>
-					<Modal.CloseButton className={"hover:rotate-90 hover:bg-transparent transition-all absolute top-5 right-5 tablet-max:hidden"} icon={<SvgClose className={'close__modal'} />}/>
+					<Modal.CloseButton className={"hover:rotate-90 hover:!bg-transparent transition-all absolute top-5 right-5 tablet-max:hidden"} icon={<SvgClose className={'close__modal'} />}/>
 				</Modal.Header>
 				<Modal.Body className={'!p-0'}>
 				{/* <CarHelper/> */}
