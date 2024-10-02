@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -17,14 +17,14 @@ export default function UsersPageCreateAction() {
   const [loading, setLoading] = useState(false)
   const [success, setSucces] = useState(false)
   const navigate = useNavigate()
-
+  const resetRef = useRef<() => void>(null);
   useEffect(() => {
     store.companyStore.loadCompanies()
     store.companyStore.loadAllFilials()
   }, [])
 
   const handleFileChange = React.useCallback((files: File) => {
-    // setFile(files);
+
     const formData = new FormData();
     formData.append("users_xlsx", new Blob(["Name"], { type: "text/plain" }));
     formData.append('users_xlsx', new File([files], files.name, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }) )
@@ -48,6 +48,7 @@ export default function UsersPageCreateAction() {
               loading: false,
             })
           } else {
+            resetRef.current?.();
             notifications.show({
               id: 'file-users-not-uploaded',
               withCloseButton: true,
@@ -67,7 +68,7 @@ export default function UsersPageCreateAction() {
           })
       })()
     }
-  }, [])
+  }, [resetRef])
 
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create')) return <Navigate to={'/account'}/>
   // @ts-ignore
@@ -108,6 +109,7 @@ export default function UsersPageCreateAction() {
                                   size={ButtonSizeType.sm}
                               />
                               <FileButton
+                                resetRef={resetRef}
                                   //@ts-ignore
                                 onChange={handleFileChange}
                                   accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'

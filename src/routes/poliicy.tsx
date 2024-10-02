@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from "./policy.module.scss"
 import Layout from 'components/common/layout/Layout/Layout'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
@@ -7,7 +7,7 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import FormAuth from 'components/Form/FormAuth/FormAuth'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec, SvgBackArrow } from "components/common/ui/Icon";
 import { Box, NavLink, ScrollArea } from '@mantine/core'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
@@ -46,8 +46,16 @@ function PolicyPage() {
   const { height, width } = useViewportSize();
   const [active, setActive] = useState('policy_text')
   const navigate = useNavigate()
-
-
+  const location = useLocation()
+  useEffect(() => {
+    console.log(location.hash.slice(1));
+    if(location.hash.slice(1) !== active) {
+      setActive(location.hash.slice(1))
+    }
+    if(location.hash.slice(1) === "") {
+      setActive("policy_text")
+    }
+  }, [location.hash]);
   const content = React.useMemo(() => {
     viewport.current && viewport.current!.scrollTo({ top: 0, behavior: 'smooth' });
     if (width < 740) {
@@ -59,7 +67,7 @@ function PolicyPage() {
             />
         )
     } else {
-      return   <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={450}  mx="auto">
+      return   <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={350}  mx="auto">
         <div
           className={styles.text}
           // @ts-ignore
@@ -70,7 +78,7 @@ function PolicyPage() {
   }, [active, width])
   return (
       <Layout className={'page-intro page-intro_policy'}>
-          <Section type={SectionType.default}>
+          <Section type={SectionType.default} className={"!min-h-full"}>
               <Panel className={'desktop:!col-span-3 desktop:!col-start-12 row-start-2 '}>
                   <Box>
                       {links.map((el: any) => (
@@ -123,7 +131,7 @@ function PolicyPage() {
               ></Panel>
               <Panel
                   className={
-                      'tablet:justify-self-center desktop:justify-self-auto desktop:!col-span-11 tablet-max:-mx-5 tablet-max:px-2'
+                      'tablet:justify-self-center !max-h-none desktop:justify-self-auto desktop:!col-span-11 tablet-max:-mx-5 tablet-max:px-2'
                   }
                   variant={PanelVariant.textPadding}
                   background={PanelColor.glass}

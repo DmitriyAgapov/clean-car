@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
@@ -20,6 +20,7 @@ export default function CarsPageCreateAction() {
   const [loading, setLoading] = useState(false)
   const [success, setSucces] = useState(false)
   const navigate = useNavigate()
+  const resetRef = useRef<() => void>(null);
   const handleFileChange = React.useCallback((files: File) => {
     // setFile(files);
     const formData = new FormData();
@@ -28,7 +29,6 @@ export default function CarsPageCreateAction() {
     if (files) {
       (async () => {
         setLoading(true)
-
         agent.Cars.uploadCars(formData)
         .then(r => {
           if(r.status === 201) {
@@ -45,6 +45,7 @@ export default function CarsPageCreateAction() {
               loading: false,
             })
           } else {
+            resetRef.current?.();
             notifications.show({
               id: 'file-cars-not-uploaded',
               withCloseButton: true,
@@ -92,6 +93,7 @@ export default function CarsPageCreateAction() {
               className={"inline-flex desktop-max:flex-1"}
             size={ButtonSizeType.sm} />
             <FileButton
+              resetRef={resetRef}
               //@ts-ignore
               onChange={handleFileChange}
               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">

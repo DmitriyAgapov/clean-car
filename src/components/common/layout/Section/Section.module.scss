@@ -49,6 +49,6 @@
   //}
   > [data-variant="dataPadding"], > [data-variant="textPadding"] , > [data-variant="default"] {
 	align-self: stretch;
-	max-height:clamp(50dvh, auto, 150dvh);
+	max-height:clamp(50dvh, 100%, 150dvh);
   }
 }
