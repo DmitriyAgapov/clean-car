@@ -3,27 +3,26 @@ import Layout from 'components/common/layout/Layout/Layout'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor,  PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import { useStore } from 'stores/store'
-import { Navigate, useLocation } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
-import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import FormAuthNew from 'components/Form/FormAuth/FormAuthNew'
-import { observer } from 'mobx-react-lite'
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+
 
 function AuthPage() {
 
   return (
     <Layout
       className={'page-intro'}
-      // headerContent={
-      //   <Button
-      //     className={'!hidden tablet:!inline-flex ml-auto mr-8'}
-      //     text={'Помощь'}
-      //     variant={ButtonVariant['accent-outline']}
-      //     size={ButtonSizeType.sm}
-      //   />
-      // }
+      headerContent={
+        <Button
+          href={"mailto:info@clean-car.net"}
+          className={'!hidden tablet:!inline-flex ml-auto mr-8'}
+          text={'Помощь'}
+          variant={ButtonVariant['accent-outline']}
+          size={ButtonSizeType.sm}
+        />
+      }
     >
       <Section type={SectionType.centered}>
         <Panel
@@ -56,4 +55,4 @@ function AuthPage() {
   )
 }
 
-export default observer(AuthPage)
+export default AuthPage

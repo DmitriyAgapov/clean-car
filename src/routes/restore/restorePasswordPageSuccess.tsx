@@ -7,6 +7,7 @@ import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
 import { useSearchParams } from 'react-router-dom'
+import Button, { ButtonVariant } from "components/common/ui/Button/Button";
 
 function RestorePasswordPageSuccess() {
   const store = useStore()
@@ -18,9 +19,9 @@ function RestorePasswordPageSuccess() {
   return (
     <Layout
       className={'page-intro'}
-      // headerContent={
-      //   <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'} variant={ButtonVariant.tech} />
-      // }
+      headerContent={
+        <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'}  href={"mailto:info@clean-car.net"} variant={ButtonVariant.tech} />
+      }
     >
       <Section type={SectionType.centered}>
         <Panel

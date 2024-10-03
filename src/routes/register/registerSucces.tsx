@@ -39,23 +39,13 @@ function RegisterSuccessPage() {
   const store = useStore()
   let [searchParams, setSearchParams] = useSearchParams();
 
-
   useEffect(() => {
-    store.appStore.setAppRouteName('.регистрация')
-  })
-  useEffect(() => {
-    const _uids:{
-      company_uid?: string
-      token?: string
-      user_uid?: string
-      result?: any
-    } | null  = {}
+    const _uids:{ company_uid?: string, token?: string, user_uid?: string, result?: any } | null  = {}
     for(const u of searchParams) {
       if(u[0] === "company_id") {
         // @ts-ignore
         _uids.company_uid = u[1]
       } else {
-
         // @ts-ignore
         _uids[u[0]] = u[1]
       }
@@ -70,7 +60,7 @@ function RegisterSuccessPage() {
       <Layout
         className={'page-intro'}
         headerContent={
-          <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'} variant={ButtonVariant.tech} />
+          <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'}  href={"mailto:info@clean-car.net"} text={'Помощь'} variant={ButtonVariant.tech} />
         }
       >
         {store.authStore.isLoggedIn &&  <Section type={SectionType.centered}>

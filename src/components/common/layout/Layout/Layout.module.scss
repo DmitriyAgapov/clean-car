@@ -1,7 +1,7 @@
 .Layout {
   display: grid;
   grid-template-columns: var(--grid);
-  grid-template-rows: 2.5rem 1fr auto;
+  grid-template-rows: 3.5rem 1fr auto;
 
   min-height: 100svh;
   gap: 0 var(--gridGap);
@@ -12,6 +12,11 @@
 	display: grid;
 	grid-column: 1/-1;
 	grid-template-columns: subgrid;
+	@supports not (grid-template-columns: subgrid) {
+	  grid-template-columns: var(--grid);
+	  gap: 0 var(--gridGap);
+	}
+
   }
   //***** no scrollbar
 

@@ -56,6 +56,11 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   const isOnline = useNavigatorOnLine()
   const loc = useLocation()
   const { width } = useViewportSize();
+  useLayoutEffect(() => {
+    const _title = [...sideMenu, {title: "Заявки", url: "bids"}].filter((item) => loc.pathname.includes(item.url))[0]?.title ?? "No title";
+
+    appStore.setTitle(_title);
+  }, [loc.pathname]);
   // console.log(store.userStore.getUserCan());
   // console.log('st', (navigation.state === "idle" || store.appStore.getAppState) ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true );
   const { appStore, userStore, authStore } = store;
@@ -93,11 +98,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   if(store.authStore.userIsLoggedIn && (['restore', 'register'].some(value => loc.pathname.includes(value)) || loc.pathname == "/")) {
     return (<Navigate to={'/account/bids'}/>)
   }
-  useLayoutEffect(() => {
-    const _title = [...sideMenu, {title: "Заявки", url: "bids"}].filter((item) => loc.pathname.includes(item.url))[0]?.title ?? "No title";
-    console.log(_title, loc.pathname);
-    appStore.setTitle(_title);
-  }, [loc.pathname]);
+
 
   if(_permissionName && !isInException(loc.pathname.split("/").slice(0,3).join('/'))) {
     const _actionToDo = loc.pathname.includes('edit') ? "update" : loc.pathname.includes('create') ? "create" : "read"
@@ -120,7 +121,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   }
   return (
       <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
-        <PageTitle title={store.appStore.pageTitle}/>
+
           <Header>
             {(width && width > 960 && store.appStore.appType != "") || store.appStore.appType === ""  ?
               // <Link to={'/'}  className={'inline-flex'}>
@@ -150,7 +151,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
               loaderProps={{ children: <SvgCleanCarLoader /> }}
           />
           <main>{children}</main>
-       <Footer className={'flex desktop:!hidden tablet-max:!hidden !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+        {loc.pathname.includes('account') ?  <Footer className={'flex desktop:!hidden tablet-max:!hidden !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
           <div>
 
             <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
@@ -159,7 +160,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           <hr className={'mt-3 mb-2 -mr-8 border-accent'} />
 
           <Link to={'/policy'}  className={'text-xs hover:text-accent'}>Политика конфиденциальности</Link>
-        </Footer>
+        </Footer> : null}
         {!loc.pathname.includes('account') ? <Footer className={'tablet:px-6'}>
               {footerContent}
               <div>2023 - {dayjs().format("YYYY")}</div>

@@ -18,6 +18,7 @@ export type TabsProps = {
   data?: any
   className?: string
   type?: TabsType
+  activeTab?: (active:string) => void
 }
 const HeadersTabs = ({ data, state, setState, }: { data: any, state: any, setState: (event: any, key: string) => void }) => {
     // console.log(data);
@@ -155,7 +156,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
 
     return result
 }
-const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
+const Tabs = ({ data, className, activeTab, panels, items, type, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
   const [state, setState] = useState('');
@@ -166,12 +167,15 @@ const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps 
   }, [])
 
   const  handleChangeTabState = React.useCallback((event: Event, label: string) => {
-
+    if (activeTab) {
+      label && activeTab(label);
+    }
     setState(label);
 
   }, [])
 
   React.useEffect(() => {
+    console.log('atab', aTab);
     if(aTab !== null) {
       setState(aTab)
     }
@@ -197,7 +201,7 @@ Tabs.Tab = ({ title, state, type, ...props }: { title: string; state: boolean} |
       </li>
   )
 }
-Tabs.Panel = observer(({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
+Tabs.Panel = ({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
 
  if(state) return (
     <div data-company-type={company_type}  className={styles.tabPanel + " " + className} data-panel={"panel"}  data-state={state} data-name={name}>
@@ -205,8 +209,8 @@ Tabs.Panel = observer(({ children, state, name, className = " ", company_type, .
     </div>
   )
   return null
-})
-Tabs.PanelPure = observer(({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
+}
+Tabs.PanelPure = ({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
 
  if(state) return (
     <div data-company-type={company_type}  className={styles.tabPanelPure + " " + className} data-state={state} data-name={name}>
@@ -214,7 +218,7 @@ Tabs.PanelPure = observer(({ children, state, name, className = " ", company_typ
     </div>
   )
   return null
-})
+}
 
 Tabs.TabHeaderContainer = React.forwardRef(({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string}, ref:any) => (
   <div className={styles.tabHeaderWrapper} data-tab-position={"header"} ref={ref}>

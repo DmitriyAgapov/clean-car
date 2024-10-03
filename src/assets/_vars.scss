@@ -22,7 +22,8 @@
   --shadow: -9px 10px 11px rgba(0, 0, 0, 0.25);
   --columnWidth: 5.625rem;
   --sideGutter: calc((100vw - var(--container)) / 2 - .5rem - var(--gridGap));
-  --grid: var(--sideGutter) repeat(2, minmax(6rem, 1.33fr)) repeat(var(--totalCol), .95fr) var(--sideGutter);
+  --grid: var(--sideGutter) var(--gridNoMargin) var(--sideGutter);
+  --gridNoMargin: repeat(2, minmax(6rem, 1.33fr)) repeat(var(--totalCol), .95fr);
   --gridinner: repeat(var(--totalCol), 1fr);
   --centered: 2/-2;
   --full_centered: 1/-1;
@@ -43,7 +44,7 @@
 	--centered: 3/-3;
 	--scaling-font: 16px;
 	--sideGutter: 1.25rem;
-	--grid: var(--sideGutter) repeat(var(--totalCol), 1fr) var(--sideGutter);
+	--gridNoMargin: repeat(var(--totalCol), 1fr);
   }
   @media screen and (min-width: 960px) and (max-width: 1299px){
 	--container: 44.375rem;
@@ -52,7 +53,7 @@
 	--centered: 3/-3;
 	--scaling-font: 16px;
 	--sideGutter: 1.25rem;
-	--grid: var(--sideGutter) 56px repeat(var(--totalCol), 1fr) var(--sideGutter);
+	--gridNoMargin: 56px repeat(var(--totalCol), 1fr);
   }
   @media screen and (min-width: 1440px) {
 	--scaling-font:  clamp(16px, calc(100svh / 64), 24px);
@@ -64,7 +65,7 @@
 	--totalCol: 6;
 	--scaling-font: 16px;
 	--centered: 2/-2;
-	--grid: var(--sideGutter) repeat(var(--totalCol), 1fr) var(--sideGutter);
+	--gridNoMargin:  repeat(var(--totalCol), 1fr) ;
   }
 }
 

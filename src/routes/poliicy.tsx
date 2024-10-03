@@ -13,7 +13,7 @@ import { Box, NavLink, ScrollArea } from '@mantine/core'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { PermissionNames } from "stores/permissionStore";
 import { confirmText, policyText, userText } from 'utils/texts'
-import { useViewportSize } from '@mantine/hooks'
+import { usePrevious, useViewportSize, useWindowEvent } from '@mantine/hooks'
 const links: {
   label: string
   href: string
@@ -33,6 +33,11 @@ const links: {
 ]
 function PolicyPage() {
   const store = useStore()
+  const ref = useRef<any>(null);
+  // const [panelHeight, setPanelHeight] = useState<number | null>(null)
+
+
+
   const texts: {
     user_text: string | TrustedHTML
     policy_text: string | TrustedHTML
@@ -42,11 +47,26 @@ function PolicyPage() {
     policy_text: policyText,
     confirm_text: confirmText
   }
+
   const viewport = useRef<HTMLDivElement>(null);
   const { height, width } = useViewportSize();
+  // const previousValue = usePrevious([height, width]);
   const [active, setActive] = useState('policy_text')
   const navigate = useNavigate()
   const location = useLocation()
+  //
+  //
+  // useEffect(() => {
+  //   if(previousValue && (previousValue[0] == width ||previousValue[1] == height)) {
+  //     setPanelHeight(null)
+  //   }
+  //   if(ref && ref.current && !panelHeight) {
+  //     setPanelHeight(ref.current.clientHeight)
+  //     console.log(ref.current.clientHeight);
+  //     console.log();
+  //   }
+  // }, [ref, width, height]);
+
   useEffect(() => {
     console.log(location.hash.slice(1));
     if(location.hash.slice(1) !== active) {
@@ -56,6 +76,7 @@ function PolicyPage() {
       setActive("policy_text")
     }
   }, [location.hash]);
+
   const content = React.useMemo(() => {
     viewport.current && viewport.current!.scrollTo({ top: 0, behavior: 'smooth' });
     if (width < 740) {
@@ -67,7 +88,7 @@ function PolicyPage() {
             />
         )
     } else {
-      return   <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={350}  mx="auto">
+      return   <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={450}  mx="auto">
         <div
           className={styles.text}
           // @ts-ignore
@@ -130,6 +151,7 @@ function PolicyPage() {
                   // footer={<LinkStyled text={'У меня нет аккаунта'} to={'/register'} />}
               ></Panel>
               <Panel
+                ref={ref}
                   className={
                       'tablet:justify-self-center !max-h-none desktop:justify-self-auto desktop:!col-span-11 tablet-max:-mx-5 tablet-max:px-2'
                   }

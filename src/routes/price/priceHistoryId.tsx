@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import React, { JSX, useEffect } from 'react'
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
@@ -33,6 +33,10 @@ const PriceHistoryIdPage = ():JSX.Element => {
   // @ts-ignore
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
 
+  store.appStore.setAppState(currentPriceById.loading);
+  useEffect(() => {
+    store.appStore.getAppState ? store.appStore.setAppState(!!company) : void null
+  },[company])
   const memoModal = React.useMemo(() => {
     if(!isHistory) {
     return  <PriceCopy opened={opened} id={isCreate.id} title={company.name}
@@ -40,7 +44,12 @@ const PriceHistoryIdPage = ():JSX.Element => {
       }
     return null
   }, [opened]);
-
+  React.useEffect(() => {
+    // if(currentPriceById.loading) {
+    console.log('history');
+    store.appStore.setAppState(false);
+    // }
+  }, [])
   const [openedCar, { open:openCar, close:closeCar }] = useDisclosure(false)
   const memoModalCarClasses = React.useMemo(() => {
     return <CarClasses opened={openedCar} onClose={closeCar} />
@@ -97,7 +106,7 @@ const PriceHistoryIdPage = ():JSX.Element => {
 
           <Panel
               state={currentPriceById.loading}
-            className={'col-span-full grid grid-rows-[auto_1fr] px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-6 '}
+            className={'col-span-full grid grid-rows-[auto_1fr] self-stretch px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-6 '}
               variant={PanelVariant.withGapOnly}
               background={PanelColor.glass}
               routeStyle={PanelRouteStyle.price}
@@ -140,7 +149,8 @@ const PriceHistoryIdPage = ():JSX.Element => {
                       </div>
                       <div className={'flex  mobile:flex-wrap  items-baseline  gap-6'}>
                           <div className={'text-xs text-gray-2'}>
-                              Дата и время регистрации: <span>{dateTransformShort(company.updated).date}</span>
+                            <div>Дата создания: <span>{dayjs(isCreate.created).format('DD.MM.YY')}</span></div>
+                            <div>Дата изменения: <span>{dayjs(isCreate.updated).format('DD.MM.YY')}</span></div>
                           </div>
                           <div className={'flex flex-1 gap-6'}>
                               {isCreate && isCreate.is_active && (

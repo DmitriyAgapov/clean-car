@@ -19,9 +19,9 @@ function RestorePasswordPage() {
   return (
     <Layout
       className={'page-intro'}
-      // headerContent={
-      //   <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'} variant={ButtonVariant.tech} />
-      // }
+      headerContent={
+        <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'}  href={"mailto:info@clean-car.net"} text={'Помощь'} variant={ButtonVariant.tech} />
+      }
     >
       <Section type={SectionType.centered}>
         <Panel

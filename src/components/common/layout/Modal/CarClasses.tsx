@@ -7,8 +7,6 @@ import Heading, { HeadingColor, HeadingVariant } from "components/common/ui/Head
 import CarHelper from "components/common/layout/CarHelper/CarHelper";
 
 export function CarClasses(props: { opened: boolean; onClose: () => void}) {
-	const store = useStore()
-
 	return (
 		<Modal.Root size={"xl"} opened={props.opened} onClose={props.onClose} centered className={'z-[999]'}>
 			<Modal.Overlay className={'bg-black/90'}/>

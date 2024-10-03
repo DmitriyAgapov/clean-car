@@ -68,9 +68,7 @@ const RefCarsPage = () => {
   }, [data])
 
   const [opened, { open, close }] = useDisclosure(false)
-  const memoModal = React.useMemo(() => {
-      return <CarClasses opened={opened} onClose={close} />
-  }, [opened])
+
 
 
   if (location.pathname !== `/account/references/car_brands`) return <Outlet />
@@ -113,7 +111,7 @@ const RefCarsPage = () => {
                               variant={ButtonVariant['accent-outline']}
                               size={ButtonSizeType.sm}
                           />{' '}
-                          {memoModal}
+                        <CarClasses opened={opened} onClose={close} />
                           {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && (
                               <Button
                                   text={textDataCars.create}

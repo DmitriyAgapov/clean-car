@@ -19,6 +19,7 @@ const PricesHistoryPage = () => {
 	const store = useStore()
 	const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
 	const params = useParams()
+
 	const {isLoading, data} = useSWR(localStore.params.isReady && [`price_history_${params.id}`, Number(params.id), { ...localStore.params.getSearchParams}] , ([url,id, args]) => agent.Price.getHistoryPrice(id, args).then(r => r.data))
 
 	const navigate = useNavigate()
@@ -26,6 +27,8 @@ const PricesHistoryPage = () => {
 	const location = useLocation()
 	const  company = store.companyStore.getCompanyById(Number(params.id));
 
+	const  currentPriceById = store.priceStore.currentPriceById;
+	store.appStore.setAppState(currentPriceById.loading);
 	useEffect(() => {
 		localStore.setData = {
 			...data,
@@ -36,7 +39,8 @@ const PricesHistoryPage = () => {
 				service_type: p.service_type?.name
 			}))}
 		localStore.setIsLoading = isLoading
-	},[data])
+		store.appStore.getAppState ? store.appStore.setAppState(!!data) : void null
+	},[data, isLoading])
 
 	if (location.pathname.includes('history/')) return <Outlet />
 		return (

@@ -27,7 +27,8 @@ function PriceActions(props: {  action: any }) {
     !location.pathname.includes('history') && <>
       <LinkStyled to={`history`} text={'История'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
       <Button     action={props.action} type={'button'} text={'Дублировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
-    <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/></>
+    <LinkStyled to={'edit'} text={'Редактировать'} size={ButtonSizeType.sm} variant={ButtonVariant["accent-outline"]}/>
+    </>
   return store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'update') &&
           !location.pathname.includes('history') && ( <>{state && <Overlay color="#000" onClick={() => setState(false)} top={ "-50vh"} left={ "-50vw"} bottom={ "-50vh"} right={ "-50vw"} backgroundOpacity={0.85} zIndex={9999}/> }  <Affix position={{ bottom: 20, right: 10 }} className={'flex flex-col items-end gap-6'}>
         {state && <Transition transition="slide-up" mounted={state} >
@@ -75,6 +76,7 @@ const PricePage = ():JSX.Element => {
   const location = useLocation()
   const params = useParams()
 
+  const [date, setDate] = useState("")
   const  textData  : any = store.priceStore.TextData
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -91,9 +93,13 @@ const PricePage = ():JSX.Element => {
     }
     return company
   }, [params.id])
+
   const isHistory = location.pathname.includes('history');
   // @ts-ignore
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
+  useEffect(() => {
+    (currentPriceById?.data?.tabs && currentPriceById?.data?.tabs.length) && setDate(dayjs(currentPriceById?.data?.tabs[0]?.data.created).format('DD.MM.YY HH:mm'))
+  }, [currentPriceById.data.tabs]);
 
   const memoModal = React.useMemo(() => {
     if(!isHistory &&  store.appStore.appType === "admin") {
@@ -104,13 +110,12 @@ const PricePage = ():JSX.Element => {
   }, [opened, isCreate]);
 
   const [openedCar, { open:openCar, close:closeCar }] = useDisclosure(false)
-  const memoModalCarClasses = React.useMemo(() => {
-    return <CarClasses opened={openedCar} onClose={closeCar} />
-  }, [openedCar])
+
+
   useDidUpdate(
     () => {
       if(location.pathname === `/account/price/${params.id}`) {
-        console.log('didupdate');
+
         store.priceStore.getCurrentPrice({params: params}, false).then(console.log);
         // store.appStore.setAppState(false)
       }
@@ -118,12 +123,16 @@ const PricePage = ():JSX.Element => {
     [location.pathname, params]
   );
   React.useLayoutEffect(() => {
-    if(currentPriceById.loading) {
+    // if(currentPriceById.loading) {
       store.appStore.setAppState(currentPriceById.loading);
-    } else {
-      setTimeout(() => store.appStore.setAppState(currentPriceById.loading), 1000);
-    }
+    // }
   }, [currentPriceById.loading])
+
+  const handleActiveTab = (value:string) => {
+    const tabDate = dayjs(currentPriceById?.data?.tabs.filter((price:any) => price.label === value)[0]?.data?.created).format('DD.MM.YY HH:mm');
+
+    if(tabDate) setDate(tabDate)
+  }
   if (location.pathname.includes('create') || location.pathname.includes('edit') || (location.pathname.includes('history') && !params.bid_id)) return <Outlet />
   return (
     <Section type={SectionType.default} noScroll={true}>
@@ -143,7 +152,7 @@ const PricePage = ():JSX.Element => {
               variant={ButtonVariant['accent-outline']}
               size={ButtonSizeType.sm}
             />
-            {memoModalCarClasses}
+            <CarClasses opened={openedCar} onClose={closeCar} />
           </div>
         </>}>
 
@@ -170,7 +179,7 @@ const PricePage = ():JSX.Element => {
             </div>
             <div className={'flex  mobile:flex-wrap  items-baseline  gap-6'}>
               <div className={'text-xs text-gray-2'}>
-                Дата и время регистрации: <span>{dayjs(company.updated).format('DD.MM.YY HH:mm')}</span>
+                Дата создания: <span>{date}</span>
               </div>
               <div className={'flex flex-1 gap-6'}>
                 {isCreate && isCreate.is_active && <Heading className={'!m-0'}
@@ -193,7 +202,7 @@ const PricePage = ():JSX.Element => {
           </>
         }
       >
-        {!currentPriceById.loading && <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>}
+        {!currentPriceById.loading && <Tabs activeTab={handleActiveTab} data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'}/>}
         {memoModal}
       </Panel>
     </Section>
