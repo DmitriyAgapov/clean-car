@@ -58,7 +58,7 @@ function PolicyPage() {
         setPanelScroll({ height: ref.current.clientHeight, readyToShow: true })
       } else setPanelScroll({ height: null, readyToShow: true })
     }
-  }, [ref.current, width]);
+  }, [ref.current, width, height]);
 
   useEffect(() => {
     if(location.hash.slice(1) !== active) {
