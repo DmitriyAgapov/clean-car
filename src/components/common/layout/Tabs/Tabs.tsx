@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useEffect, useRef, useState } from 'react'
 import styles from './Tabs.module.scss'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
 import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
@@ -181,12 +181,19 @@ const Tabs = ({ data, className, activeTab, panels, items, type, variant=null }:
     }
     store.bidsStore.setActiveTab(null)
   }, [aTab]);
-
-
+  const ref = useRef(null)
+  useEffect(() => {
+    console.log('ref', ref);
+  }, [ref.current]);
+ const headerRef = useRef(null)
+  useEffect(() => {
+    // @ts-ignore
+    console.log('headerRef', headerRef.current?.children[0].clientHeight);
+  }, [headerRef.current]);
 
     return (
-        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} data-panel={"tabs"}>
-            <Tabs.TabHeaderContainer>
+        <div ref={ref} className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} data-panel={"tabs"}>
+            <Tabs.TabHeaderContainer ref={headerRef}>
               <HeadersTabs data={data} state={state} setState={handleChangeTabState} />
             </Tabs.TabHeaderContainer>
            <TabPanels data={data} state={state} items={items} type={type}/>

@@ -2,15 +2,16 @@
   grid-column: 2/-2;
   position: relative;
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
   //margin-bottom: clamp(1rem, 100%, 2rem);
   @media screen and (min-width: 1300px) {
 	grid-column: 2/-2;
   }
   @screen lg-max {
-    display: grid;
-    grid-template-columns: 2rem 1fr 2rem;
-    flex-wrap: wrap;
+    //display: grid;
+    //grid-template-columns: 2rem 1fr 2rem;
+    //flex-wrap: wrap;
     gap: 1.25rem .25rem;
   }
 }

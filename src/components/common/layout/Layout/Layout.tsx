@@ -49,9 +49,10 @@ interface ChildrenProps {
   className?: string
   headerContent?: ReactNode | ReactNode[]
   footerContent?: ReactNode | ReactNode[]
+  style?: any
 }
 
-const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent }) => {
+const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent,style }) => {
   const store = useStore()
   const isOnline = useNavigatorOnLine()
   const loc = useLocation()
@@ -86,7 +87,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           //     }}
           // />
       )
-  const exceptions = ['policy', '404', 'restore', 'register', 'support', 'profile' ]
+  const exceptions = ['policy', '404', 'restore', 'register', 'registerSucces', 'support', 'profile' ]
   const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
   const _path = loc.pathname.split('/')[2]
   // @ts-ignore
@@ -120,7 +121,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
     // }
   }
   return (
-      <div className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
+      <div style={style} className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
 
           <Header>
             {(width && width > 960 && store.appStore.appType != "") || store.appStore.appType === ""  ?
@@ -129,14 +130,14 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
            // {/* </Link> */}
               : null}
               {headerContent}
-              <Burger
+            {store.authStore.userIsLoggedIn ? <Burger
                   className={'lg:hidden'}
                   action={() =>
                       !userStore.currentUser
                           ?  store.appStore.setBurgerState()
                           : store.appStore.setAsideState()
                   }
-              />
+              /> : null}
           </Header>
           <MobileMenu items={sidebarMenu} />
           {/* {!store.appStore.loaderBlocked && <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{ */}

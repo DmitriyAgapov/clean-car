@@ -230,17 +230,17 @@ const MyProfilePage = () => {
                 <Heading
                   text={'Профиль Пользователя'}
                   variant={HeadingVariant.h1}
-                  className={'!mb-0 inline-block flex-1'}
+                  className={'!mb-0 inline-block flex-1 h-10'}
                   color={HeadingColor.accent}
                 />
 
-             <Button
+                {!edit && <Button
                 text={'Редактировать'}
                size={ButtonSizeType.sm}
                 action={() => setEdit(true)}
                 className={'inline-flex ml-auto'}
 
-              />
+              />}
             </>
           }
 

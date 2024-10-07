@@ -210,7 +210,7 @@ export const SvgSearch = ({ className }: { className?: string }) => (
 )
 
 export const SvgAccount = ({ className }: { className?: string | undefined }) => (
-  <svg className={className}  style={{ position: "fixed",margin: "auto", top: "430px",right: 0,left: 0,bottom: 0,zIndex: -1}}
+  <svg className={className}  style={{ position: "fixed", top: 0, left: "calc(50vw - 666px)", zIndex: -1}}
     width='1331'
     height='1448'
     viewBox='0 0 1331 1448'

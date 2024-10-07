@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styles from "./policy.module.scss"
 import Layout from 'components/common/layout/Layout/Layout'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
@@ -11,7 +11,6 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgAuthBg, SvgAuthBgSec, SvgBackArrow } from "components/common/ui/Icon";
 import { Box, NavLink, ScrollArea } from '@mantine/core'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { PermissionNames } from "stores/permissionStore";
 import { confirmText, policyText, userText } from 'utils/texts'
 import { usePrevious, useViewportSize, useWindowEvent } from '@mantine/hooks'
 const links: {
@@ -34,9 +33,7 @@ const links: {
 function PolicyPage() {
   const store = useStore()
   const ref = useRef<any>(null);
-  // const [panelHeight, setPanelHeight] = useState<number | null>(null)
-
-
+  const [panelScroll, setPanelScroll] = useState<{ height: number | null, readyToShow: boolean }>({ height: null, readyToShow: false })
 
   const texts: {
     user_text: string | TrustedHTML
@@ -54,21 +51,16 @@ function PolicyPage() {
   const [active, setActive] = useState('policy_text')
   const navigate = useNavigate()
   const location = useLocation()
-  //
-  //
-  // useEffect(() => {
-  //   if(previousValue && (previousValue[0] == width ||previousValue[1] == height)) {
-  //     setPanelHeight(null)
-  //   }
-  //   if(ref && ref.current && !panelHeight) {
-  //     setPanelHeight(ref.current.clientHeight)
-  //     console.log(ref.current.clientHeight);
-  //     console.log();
-  //   }
-  // }, [ref, width, height]);
 
   useEffect(() => {
-    console.log(location.hash.slice(1));
+    if(ref && ref.current) {
+      if(width > 1300) {
+        setPanelScroll({ height: ref.current.clientHeight, readyToShow: true })
+      } else setPanelScroll({ height: null, readyToShow: true })
+    }
+  }, [ref.current, width]);
+
+  useEffect(() => {
     if(location.hash.slice(1) !== active) {
       setActive(location.hash.slice(1))
     }
@@ -79,7 +71,7 @@ function PolicyPage() {
 
   const content = React.useMemo(() => {
     viewport.current && viewport.current!.scrollTo({ top: 0, behavior: 'smooth' });
-    if (width < 740) {
+    if (width < 1300) {
         return (
             <div
                 className={styles.text}
@@ -88,18 +80,23 @@ function PolicyPage() {
             />
         )
     } else {
-      return   <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={450}  mx="auto">
+
+      return <div>{panelScroll.height ? <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={panelScroll.height}  mx="auto">
         <div
+          data-height={panelScroll.height - 80 }
           className={styles.text}
+          style={{maxHeight: panelScroll.height - 80}}
           // @ts-ignore
           dangerouslySetInnerHTML={{ __html: texts[active] }}
         />
-      </ScrollArea.Autosize>
+      </ScrollArea.Autosize>: null}</div>
     }
-  }, [active, width])
+  }, [active, width, panelScroll]);
+
+
   return (
-      <Layout className={'page-intro page-intro_policy'}>
-          <Section type={SectionType.default} className={"!min-h-full"}>
+      <Layout className={'page-intro page-intro_policy desktop:!max-h-screen'} style={width > 1300 ? {maxHeight: "100lvh"} : {}}>
+          <Section type={SectionType.default} className={"!min-h-full grid-cols-[var(--gridNoMargin)]"} >
               <Panel className={'desktop:!col-span-3 desktop:!col-start-12 row-start-2 '}>
                   <Box>
                       {links.map((el: any) => (
@@ -152,11 +149,11 @@ function PolicyPage() {
               ></Panel>
               <Panel
                 ref={ref}
-                  className={
-                      'tablet:justify-self-center !max-h-none desktop:justify-self-auto desktop:!col-span-11 tablet-max:-mx-5 tablet-max:px-2'
-                  }
-                  variant={PanelVariant.textPadding}
-                  background={PanelColor.glass}
+                // style={width > 1300 && panelScroll.readyToShow ? {maxHeight: panelScroll.height} : {}}
+                className={'tablet:justify-self-center desktop:justify-self-auto desktop:!col-span-11 tablet-max:-mx-5 tablet-max:px-2'}
+                variant={PanelVariant.textPadding}
+                background={PanelColor.glass}
+                bodyClassName={"h-full"}
               >
                 {content}
               </Panel>

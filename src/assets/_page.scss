@@ -90,9 +90,15 @@
 	  margin-top: clamp(1rem, 100%, 4rem);
 	}
   }
-section[data-variant="centered"] {
-  min-height: initial;
-}
+  section[data-variant="centered"] {
+	min-height: initial;
+  }
+  & > footer {
+	margin-top: 2rem;
+	@media screen and (max-width: 767px){
+	  //margin: 2rem 0;
+	}
+  }
 }
 
 .page-price {
@@ -116,6 +122,9 @@ section[data-variant="centered"] {
 .page-intro_policy {
   & > footer {
 	margin-top: 2rem;
+	@media screen and (max-width: 767px){
+	  //margin: 2rem 0;
+	}
   }
 }
 .notification_cleancar {

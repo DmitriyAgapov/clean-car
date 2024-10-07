@@ -65,7 +65,7 @@ export function UploadUserPhoto({opened, onClose, id} :  UpBalanceParams) {
 
                         text={'Сохранить'}
                         action={async () => {
-                        await store.userStore.upLoadImage()
+                          await store.userStore.upLoadImage().finally(onClose)
 
                         }}
                         variant={ButtonVariant['accent-outline']}

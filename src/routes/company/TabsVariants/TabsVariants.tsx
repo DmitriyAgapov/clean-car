@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import DList from 'components/common/ui/DList/DList'
 import CardSimple from 'components/common/layout/Cards/CardSimple/CardSimple'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
@@ -1176,56 +1176,96 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
                   name={'evacuation'}
                   variant={PanelVariant.default}
                   background={PanelColor.default}
-                  className={'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className}
+                  className={
+                      'grid !grid-cols-3  !gap-y-3  gap-x-12 content-start !pb-8  table-price h-full' + ' ' + className
+                  }
                   bodyClassName={'!bg-transparent'}
               >
-                {!props.edit ? <div className={" col-span-full border-gray-4/70 border-b mobile:mx-4"}>
-                  <TableWithSortNewPure
-                  offsetSticky={0}
-                  total={data.length}
-                  variant={PanelVariant.default}
-                  search={false}
-                  background={PanelColor.default}
-                  className={"col-span-full table-groups"}
-                  filter={false}
-                  data={data}
-                  initFilterParams={[{ label: "Статус", value: "status" }, { label: "Город", value: "city" }]}
-                  state={false}
-                  ar={[{ label: "Тип услуги", name: "service_option" }, { label: "До 2 тонн", name: "service_option" }, { label: "от 2 тонн", name: "service_option_1" }]} /></div> :
-                  <div className={"col-span-full border-gray-4/70 border-b mobile:mx-4"}>
-                    <TableWithSortNewPure meta={{ company_id: data.company, price_id: data.id, label: label}}
-                  edit={true}
-                  offsetSticky={-1}
-                  total={data.evacuation_positions.length}
-                  variant={PanelVariant.default}
-                  search={false}
-                  background={PanelColor.default}
-                  state={false}
-                      routeStyle={PanelRouteStyle.price_evac}
-                  className={'col-span-full table-groups'}
-                  filter={false}
-                  data={data.evacuation_positions.map((item:any) => ({
-                    id: item.id,
-                    service_subtype: item.service_subtype.name,
-                    service_option: item.service_option ? item.service_option.name : null,
-                    amount: item.amount
-                  }))}
-                  ar={[{label: 'Тип услуги', name: 'service_subtype'}, {label: 'Доп. опции', name: 'service_option'}, {label: 'Cтоимость', name: 'amount'}, ]}
-                /></div>}
-
+                  {!props.edit ? (
+                      <div className={' col-span-full border-gray-4/70 border-b mobile:mx-4'}>
+                          <TableWithSortNewPure
+                              offsetSticky={0}
+                              total={data.length}
+                              variant={PanelVariant.default}
+                              search={false}
+                              background={PanelColor.default}
+                              className={'col-span-full table-groups'}
+                              filter={false}
+                              data={data}
+                              initFilterParams={[
+                                  { label: 'Статус', value: 'status' },
+                                  { label: 'Город', value: 'city' },
+                              ]}
+                              state={false}
+                              ar={[
+                                  { label: 'Тип услуги', name: 'service_option' },
+                                  { label: 'До 2 тонн', name: 'service_option' },
+                                  { label: 'от 2 тонн', name: 'service_option_1' },
+                              ]}
+                          />
+                      </div>
+                  ) : (
+                      <div className={'col-span-full border-gray-4/70 border-b mobile:mx-4'}>
+                          <TableWithSortNewPure
+                              meta={{ company_id: data.company, price_id: data.id, label: label }}
+                              edit={true}
+                              offsetSticky={-1}
+                              total={data.evacuation_positions.length}
+                              variant={PanelVariant.default}
+                              search={false}
+                              background={PanelColor.default}
+                              state={false}
+                              routeStyle={PanelRouteStyle.price_evac}
+                              className={'col-span-full table-groups'}
+                              filter={false}
+                              data={data.evacuation_positions.map((item: any) => ({
+                                  id: item.id,
+                                  service_subtype: item.service_subtype.name,
+                                  service_option: item.service_option ? item.service_option.name : null,
+                                  amount: item.amount,
+                              }))}
+                              ar={[
+                                  { label: 'Тип услуги', name: 'service_subtype' },
+                                  { label: 'Доп. опции', name: 'service_option' },
+                                  { label: 'Cтоимость', name: 'amount' },
+                              ]}
+                          />
+                      </div>
+                  )}
               </Tabs.PanelPure>
           )
           break;
       default:
           return null
   }
+  const ref = useRef<any>(null);
+  const [panelScroll, setPanelScroll] = useState<{ height: number | null, readyToShow: boolean, heightRem?: number }>({ height: null, readyToShow: false, heightRem: 0 })
+
+  useEffect(() => {
+    if(ref && ref.current) {
+      console.log(ref.current.parentNode.clientHeight);
+      const fSize = parseFloat(window.getComputedStyle(window.document.getElementsByTagName('body')[0], null).getPropertyValue('font-size'));
+
+      if(width > 1300) {
+        setPanelScroll({ height: ref.current.parentNode.clientHeight, readyToShow: true, heightRem: ref.current.parentNode.clientHeight / fSize * 16 })
+      } else setPanelScroll({ height: null, readyToShow: true, heightRem: ref.current.parentNode.clientHeight / fSize * 16 })
+    }}, [ref.current, width]);
+
+  useEffect(() => {
+    console.log('panel', panelScroll);
+  }, [panelScroll])
+
   return (
-  <ScrollArea.Autosize style={{overflow: 'initial'}}  data-position={"tabs-panel-container"}  mah={width > 1024 ? width > 1600 ? '56dvh' : '52dvh' : `auto`} classNames={{
+    <div ref={ref} style={!panelScroll.height ? {height: "100%"} : {maxHeight: panelScroll.height - 32 , overflow: "hidden"}}>
+      {panelScroll.readyToShow ? <ScrollArea.Autosize style={{overflow: 'hidden'}}   data-position={"tabs-panel-container"}
+        // @ts-ignore
+        mah={width > 1024 ? `${panelScroll.heightRem - 32}` : `auto`} classNames={{
     root: 'tablet-max:-mx-5',
-    scrollbar: 'z-50'
+    scrollbar: 'z-50',
   }}>
     {result}
-  </ScrollArea.Autosize>
+  </ScrollArea.Autosize> : null}
+    </div>
   )
 }
 export default observer(TabsVariants);
