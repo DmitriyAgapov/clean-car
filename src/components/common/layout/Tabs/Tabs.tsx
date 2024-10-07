@@ -182,14 +182,8 @@ const Tabs = ({ data, className, activeTab, panels, items, type, variant=null }:
     store.bidsStore.setActiveTab(null)
   }, [aTab]);
   const ref = useRef(null)
-  useEffect(() => {
-    console.log('ref', ref);
-  }, [ref.current]);
+
  const headerRef = useRef(null)
-  useEffect(() => {
-    // @ts-ignore
-    console.log('headerRef', headerRef.current?.children[0].clientHeight);
-  }, [headerRef.current]);
 
     return (
         <div ref={ref} className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} data-panel={"tabs"}>

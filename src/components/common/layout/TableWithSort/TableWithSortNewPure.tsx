@@ -124,11 +124,11 @@ const RowDataPure = observer(({edit, meta, ...props}: any) => {
   return (
     <Table.Tr data-single={isSingle} className={styles.tableRowPure} onClick={(width && width > 1023) ?  () => null: () => setOpen(prevState => !prevState)} data-state-mobile={!isSingle ? open : null}>
           {propsRender}
-          {(width && width < 1024 && !isSingle) && <td data-position={'icon-open'}
+          {(width && width < 1024 && !isSingle) ? <td data-position={'icon-open'}
             // onClick={() => setOpen(prevState => !prevState)}
           >
               <SvgChevron/>
-          </td>}
+          </td> : null}
           {/* {(width && width < 961) && <td data-position="button-mobile" ><Button text={'Подробнее'} variant={ButtonVariant['accent-outline']} className={'w-full col-span-full max-w-xs m-auto mt-4'} size={ButtonSizeType.sm}/></td>} */}
       </Table.Tr>
     )
