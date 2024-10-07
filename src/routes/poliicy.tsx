@@ -51,7 +51,15 @@ function PolicyPage() {
   const [active, setActive] = useState('policy_text')
   const navigate = useNavigate()
   const location = useLocation()
-
+  const handleResize = () => {
+    console.log('resize');
+    if(panelScroll.readyToShow) {
+      setPanelScroll(prevState => ({ height: 0, readyToShow: false }));
+      setTimeout(() => {
+        setPanelScroll(prevState => ({ height: ref.current.clientHeight, readyToShow: true }));
+      }, 300)
+    }
+  }
   useEffect(() => {
     console.log('rootHeight', ref.current.clientHeight);
     if(ref && ref.current && width) {
@@ -60,8 +68,13 @@ function PolicyPage() {
         setPanelScroll({ height: ref.current.clientHeight, readyToShow: true })
       } else setPanelScroll({ height: null, readyToShow: true })
     }
+
   }, [ref.current, width, height]);
 
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize)
+  }, []);
   useEffect(() => {
     if(location.hash.slice(1) !== active) {
       setActive(location.hash.slice(1))
@@ -154,7 +167,7 @@ function PolicyPage() {
               ></Panel>
               <Panel
                 ref={ref}
-                // style={width > 1300 && panelScroll.readyToShow ? {maxHeight: panelScroll.height} : {}}
+                style={width > 1300 && panelScroll.readyToShow ? {height: panelScroll.height} : {}}
                 className={'tablet:justify-self-center desktop:justify-self-auto desktop:!col-span-11 tablet-max:-mx-5 tablet-max:px-2'}
                 variant={PanelVariant.textPadding}
                 background={PanelColor.glass}
