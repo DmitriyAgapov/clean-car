@@ -20,7 +20,6 @@ const PricesPage = () => {
 	const location = useLocation()
 	const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
 	const {isLoading, data, mutate, isValidating} = useSWR(localStore.params.isReady && ['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
-
 	useEffect(() => {
 		localStore.setData = {
 			...data,
@@ -42,8 +41,8 @@ const PricesPage = () => {
 	const { textData }:any = store.priceStore.allPrices
 	const memoModal = React.useMemo(() => {
 		if(isLoading && !data) return null
-		if(data) return <FormModalCreatePrice opened={opened} onClose={close} />
-	}, [opened])
+		if(data) return <FormModalCreatePrice mutateSWR={mutate} opened={opened} onClose={close} />
+	}, [opened, mutate])
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname !== `/account/price`) return <Outlet />
 

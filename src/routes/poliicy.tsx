@@ -53,7 +53,7 @@ function PolicyPage() {
   const location = useLocation()
 
   useEffect(() => {
-    if(ref && ref.current) {
+    if(ref && ref.current && width) {
       if(width > 1300) {
         setPanelScroll({ height: ref.current.clientHeight, readyToShow: true })
       } else setPanelScroll({ height: null, readyToShow: true })
@@ -101,6 +101,7 @@ function PolicyPage() {
                   <Box>
                       {links.map((el: any) => (
                           <NavLink
+                            key={el.href}
                               className={''}
                               classNames={{
                                   root: 'hover:bg-transparent hover:!text-active data-[active]:text-accent',

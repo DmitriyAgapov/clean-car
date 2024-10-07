@@ -122,7 +122,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   }
   return (
       <div style={style} className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
-
+          <PageTitle title={appStore.pageTitle}/>
           <Header>
             {(width && width > 960 && store.appStore.appType != "") || store.appStore.appType === ""  ?
               // <Link to={'/'}  className={'inline-flex'}>

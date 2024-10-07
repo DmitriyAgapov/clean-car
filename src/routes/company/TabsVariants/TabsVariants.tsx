@@ -28,6 +28,7 @@ import { WorkLoadStatus } from "components/common/Map/Map";
 import agent from "utils/agent";
 import { CarClasses } from "components/common/layout/Modal/CarClasses";
 import { UpBalance } from "components/common/layout/Modal/UpBalance";
+import { CompanyType, CompanyTypeRus } from "stores/companyStore";
 
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -166,7 +167,11 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
             company: item.name,
             type: item.company_type,
             city: item.city.name,
-            id: item.id
+            id: item.id,
+          query: {
+            rootRoute: `/account/companies/${CompanyTypeRus(item.company_type)}/${item.id}`,
+          },
+
           }))}
       },[data])
       console.log(localStore);

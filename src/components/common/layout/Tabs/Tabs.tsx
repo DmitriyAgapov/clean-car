@@ -164,7 +164,7 @@ const Tabs = ({ data, className, activeTab, panels, items, type, variant=null }:
     if(data && data.length > 0) {
       setState(data[0]?.label)
     }
-  }, [])
+  }, [data])
 
   const  handleChangeTabState = React.useCallback((event: Event, label: string) => {
     if (activeTab) {

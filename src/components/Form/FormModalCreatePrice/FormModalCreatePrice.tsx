@@ -121,7 +121,7 @@ import data from "utils/getData";
 //         </Formik>
 //     )
 // }
-const FormModalCreatePrice =  (props: { opened: boolean, onClose: () => void }) => {
+const FormModalCreatePrice =  (props: { opened: boolean, onClose: () => void , mutateSWR: any}) => {
 
   const store = useStore()
   const {mutate} = useSWR('prices')
@@ -228,8 +228,9 @@ const FormModalCreatePrice =  (props: { opened: boolean, onClose: () => void }) 
                   _id && agent.Price.createPrice(_id)
                   .then(r => {
                     if(r.status === 201) {
-                      mutate().then(() => {
-                          props.onClose()
+                      mutate().then((r) => {
+                        props.mutateSWR()
+                        props.onClose()
                         }
                       )
                     }
