@@ -87,7 +87,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
           //     }}
           // />
       )
-  const exceptions = ['policy', '404', 'restore', 'register', 'registerSucces', 'support', 'profile' ]
+  const exceptions = ['policy', '404', 'restore', 'register',  'support', 'profile' ]
   const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
   const _path = loc.pathname.split('/')[2]
   // @ts-ignore
