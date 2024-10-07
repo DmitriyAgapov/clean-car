@@ -53,7 +53,9 @@ function PolicyPage() {
   const location = useLocation()
 
   useEffect(() => {
+    console.log('rootHeight', ref.current.clientHeight);
     if(ref && ref.current && width) {
+      console.log('rootHeight', ref.current.clientHeight);
       if(width > 1300) {
         setPanelScroll({ height: ref.current.clientHeight, readyToShow: true })
       } else setPanelScroll({ height: null, readyToShow: true })
@@ -70,6 +72,7 @@ function PolicyPage() {
   }, [location.hash]);
 
   const content = React.useMemo(() => {
+    console.log(panelScroll);
     viewport.current && viewport.current!.scrollTo({ top: 0, behavior: 'smooth' });
     if(!panelScroll.readyToShow) return null;
     if (width < 1300) {
@@ -82,7 +85,7 @@ function PolicyPage() {
         )
     } else {
 
-      return <div>{panelScroll.height ? <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={panelScroll.height}  mx="auto">
+      return <div style={!panelScroll.height ? {height: "100%"} : {maxHeight: panelScroll.height - 80 , overflow: "hidden"}}>{(panelScroll.height && panelScroll.readyToShow) ? <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={panelScroll.height}  mx="auto">
         <div
           data-height={panelScroll.height - 80 }
           className={styles.text}
