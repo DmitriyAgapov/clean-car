@@ -1,4 +1,6 @@
 import * as Yup from "yup";
+import YupPassword from 'yup-password'
+YupPassword(Yup) // extend yup
 import { CompanyType } from "stores/companyStore";
 import { useStore } from "stores/store";
 import rootStore from "stores";
@@ -33,15 +35,24 @@ export  const NotUpBalanceSchema = Yup.object().shape({
 	// service_type:  Yup.string().required('Обязательное поле'),
 	description:  Yup.string().min(5, 'Очень короткий комментарий').required('Обязательное поле'),
 })
-
+Yup.setLocale({
+	string: {
+		minLowercase: 'Localized message (path=${path};length=${length})',
+		minUppercase: 'Введите как минимум 1 букву в верхнем регистре',
+		minNumbers: 'Введите как минимум 1 цифру',
+		minSymbols: 'Localized message (path=${path};length=${length})',
+		maxRepeating: 'Localized message (path=${path};length=${length})',
+		minWords: 'Localized message (path=${path};length=${length})',
+	} as any, // when using typescript, you may want to append `as any` to the end
+     // of this object to avoid type errors.
+})
 export const RestorePasswordNewSchema = Yup.object().shape({
-	password: Yup.string().required('Введите пароль'),
+	password: Yup.string().password().minUppercase(1).minSymbols(0).min(8, "Длина не менее 8 знаков").required('Введите пароль'),
 	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),
 })
-const emailRegex:RegExp = new RegExp(`/^((?!\\.)[\\w-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$/gim;`);
-// @ts-ignore
-export const CreateRestorePwd = Yup.object().shape({ email: Yup.string()
-	.matches(emailRegex, "Invalid email address")})
+const emailRegex:RegExp = new RegExp(`^[\\w-\\+\\.\\_]+(\\.[\\w-\\+\\.\\_]+)*@[\\w-\\+\\.\\_]+(\\.[\\w\\+\\.\\_]+)*(\\.[A-Za-z]{2,})$`);
+
+export const CreateRestorePwd = Yup.object().shape({ 	email: Yup.string().matches(emailRegex, 'Неверный email').required('Введите email')})
 export const CreateUserSchema = Yup.object().shape({
 	first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
 	last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),

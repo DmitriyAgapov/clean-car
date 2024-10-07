@@ -28,6 +28,8 @@ function RestorePasswordNewPage() {
       password: '',
       password2: ''
     },
+    validateInputOnBlur: true,
+    validateInputOnChange: true,
     validate: yupResolver(RestorePasswordNewSchema),
   })
   useEffect(() => {
@@ -93,7 +95,7 @@ function RestorePasswordNewPage() {
                               text={'сохранить'}
                               disabled={!formData.isValid()}
                               action={() =>
-                                  agent.Account.accountNewPassword(formData.values).then((r) => navigate(`/`),
+                                  agent.Account.accountNewPassword(formData.values).then((r) => r.status == 200 ? navigate(`/`) : void null,
                                 )
                               }
                               size={ButtonSizeType.lg}

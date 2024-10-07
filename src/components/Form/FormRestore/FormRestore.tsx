@@ -16,7 +16,7 @@ const FormRestore = ({ message }: { message?: string }) => {
       email: ''
     },
     validateInputOnBlur: true,
-    // onValuesChange: (values, previous) => console.log(values),
+    onValuesChange: (values, previous) => console.log(values),
     validate: yupResolver(CreateRestorePwd),
   })
   return (

@@ -71,6 +71,7 @@ function PolicyPage() {
 
   const content = React.useMemo(() => {
     viewport.current && viewport.current!.scrollTo({ top: 0, behavior: 'smooth' });
+    if(!panelScroll.readyToShow) return null;
     if (width < 1300) {
         return (
             <div
