@@ -96,7 +96,7 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   if(!store.authStore.userIsLoggedIn && loc.pathname !== "/" && !isInException(loc.pathname)) {
     return (<Navigate to={'/'}/>)
   }
-  if(store.authStore.userIsLoggedIn && (['restore', 'register'].some(value => loc.pathname.includes(value)) || loc.pathname == "/")) {
+  if(store.authStore.userIsLoggedIn && (['restore'].some(value => loc.pathname.includes(value)) || loc.pathname == "/")) {
     return (<Navigate to={'/account/bids'}/>)
   }
 

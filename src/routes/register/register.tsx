@@ -9,8 +9,15 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import Image from 'components/common/ui/Image/Image'
 import imageBg from '../../assets/images/bg/welcomebg.png'
+import { useStore } from 'stores/store'
+import { Navigate, useLocation } from 'react-router-dom'
 
 export default function RegisterPage() {
+  const store = useStore()
+  const loc = useLocation()
+  if(store.authStore.userIsLoggedIn && (['register'].some(value => loc.pathname.includes(value)) || loc.pathname == "/")) {
+    return (<Navigate to={'/account/bids'}/>)
+  }
   return (
     <Layout
       className={'page-intro'}
