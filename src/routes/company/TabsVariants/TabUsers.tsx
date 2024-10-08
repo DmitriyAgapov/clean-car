@@ -53,7 +53,7 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 			className={'!rounded-none  !bg-none overflow-visible !border-0'}
 			bodyClassName={'!bg-none !rounded-none !bg-transparent'}
 			background={PanelColor.default}
-			footerHeight={"10rem"}
+			footerHeight={"12rem"}
 			autoScroll={true}
 
 			search={true} filter={true}

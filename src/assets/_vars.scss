@@ -55,8 +55,8 @@
 	--sideGutter: 1.25rem;
 	--gridNoMargin: 56px repeat(var(--totalCol), 1fr);
   }
-  @media screen and (min-width: 1440px) {
-	--scaling-font:  clamp(16px, calc(100svh / 64), 24px);
+  @media screen and (min-width: 1300px) {
+	--scaling-font:  clamp(16px, calc(100dvh / 64 - 1px), 24px);
   }
   @media screen and (max-width: 743px) {
 	--sideGutter: 0.75rem;

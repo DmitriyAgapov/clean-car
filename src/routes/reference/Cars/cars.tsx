@@ -132,6 +132,7 @@ const RefCarsPage = () => {
                   variant={PanelVariant.dataPadding}
                   search={true}
                   style={PanelRouteStyle.refcars}
+                footerHeight={"12rem"}
                   background={PanelColor.glass}
                   className={'col-span-full table-groups  h-full'}
                   filter={true}

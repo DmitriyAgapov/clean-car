@@ -87,6 +87,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
 }
 const localRootStore =  new LocalRootStore()
 const TabsVariants = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
+  console.log(props);
   const store = useStore()
   let result
   switch (label) {
@@ -177,6 +178,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
       console.log(localStore);
       result = (<Tabs.Panel state={state}> <TableWithSortNew
         store={localRootStore}
+        footerHeight={"12rem"}
         canSort={false}
         className={'!rounded-none  !bg-none overflow-visible !border-0'}
         bodyClassName={'!bg-none !rounded-none !bg-transparent'}
@@ -848,6 +850,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
 })
 
 export const TabsVariantPrice = ({ label, content_type, data, state, name, className, companyId, company_type, ...props }:any) => {
+
   let result
   const { width } = useViewportSize();
   //Разбор массива для Мойка

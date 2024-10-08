@@ -184,7 +184,9 @@ const Tabs = ({ data, className, activeTab, panels, items, type, variant=null }:
   const ref = useRef(null)
 
  const headerRef = useRef(null)
-
+  useEffect(() => {
+    console.log(ref, headerRef);
+  }, [ref, headerRef]);
     return (
         <div ref={ref} className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} data-panel={"tabs"}>
             <Tabs.TabHeaderContainer ref={headerRef}>

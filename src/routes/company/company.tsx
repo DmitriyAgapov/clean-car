@@ -43,7 +43,7 @@ const CompanyPage = () => {
       { label: 'Основная информация', data: data, company_type: params.company_type  },
       { label: 'Филиалы', company_type: params.company_type  },
       { label: 'Сотрудники', data: data, company_type: params.company_type  },
-      { label: 'Автомобили',  company_type: params.company_type  },
+      (params.company_type === "customer") && { label: 'Автомобили',  company_type: params.company_type  },
       (params.company_type === "customer") && { label: 'Партнеры', data: data?.customerprofile?.performer_company.map((el:number) => store.companyStore.getCompanyById(el)),  company_type: params.company_type  },
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }

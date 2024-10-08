@@ -43,7 +43,7 @@ const TabFilials = ({companyId, company_type, state }:any) => {
 		<TableWithSortNew
 			store={localRootStoreF}
 			state={isLoading}
-			footerHeight={"10rem"}
+			footerHeight={"12rem"}
 			className={'!rounded-none  !bg-none overflow-visible !border-0'}
 			bodyClassName={'!bg-none !rounded-none !bg-transparent'}
 			background={PanelColor.default}

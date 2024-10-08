@@ -8,12 +8,11 @@ import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import { observer } from 'mobx-react-lite'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { SvgAuthBg, SvgAuthBgSec } from 'components/common/ui/Icon'
-import FormRestore from 'components/Form/FormRestore/FormRestore'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useForm, yupResolver } from '@mantine/form'
 import agent from 'utils/agent'
-import { PasswordInput, TextInput } from '@mantine/core'
-import { RestorePasswordNewSchema, SignupSchemaNew } from "utils/validationSchemas";
+import { PasswordInput} from '@mantine/core'
+import { RestorePasswordNewSchema } from "utils/validationSchemas";
 
 function RestorePasswordNewPage() {
   const store = useStore()

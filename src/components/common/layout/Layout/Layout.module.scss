@@ -1,9 +1,9 @@
 .Layout {
   display: grid;
   grid-template-columns: var(--grid);
-  grid-template-rows: 3.5rem 1fr auto;
+  grid-template-rows: 4.5rem 1fr auto;
 
-  min-height: 100svh;
+  min-height: calc(100vh);
   gap: 0 var(--gridGap);
   overflow: hidden;
   position: relative;
@@ -15,6 +15,9 @@
 	@supports not (grid-template-columns: subgrid) {
 	  grid-template-columns: var(--grid);
 	  gap: 0 var(--gridGap);
+	}
+	@screen desktop {
+	  padding-bottom: .75rem;
 	}
 
   }
