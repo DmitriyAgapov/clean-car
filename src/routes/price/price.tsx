@@ -81,6 +81,7 @@ const PricePage = ():JSX.Element => {
   const [opened, { open, close }] = useDisclosure(false);
 
   const  currentPriceById = store.priceStore.currentPriceById;
+
   const  company = React.useMemo(() => {
     let company = store.userStore.myProfileData.company;
     if(params.id) {
@@ -98,6 +99,7 @@ const PricePage = ():JSX.Element => {
   // @ts-ignore
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
   useEffect(() => {
+    console.log('currentPriceById', currentPriceById.data);
     (currentPriceById?.data?.tabs && currentPriceById?.data?.tabs.length) && setDate(dayjs(currentPriceById?.data?.tabs[0]?.data.created).format('DD.MM.YY HH:mm'))
   }, [currentPriceById.data.tabs]);
 

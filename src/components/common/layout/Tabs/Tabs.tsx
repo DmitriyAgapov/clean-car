@@ -24,15 +24,15 @@ const HeadersTabs = ({ data, state, setState, }: { data: any, state: any, setSta
     // console.log(data);
     const result: any = []
     for (const key in data) {
+      if(data[key].data.is_active) {
         // @ts-ignore
         result.push(
-            <Tabs.Tab
-                onClick={(event: Event) => setState(event, data[key].label)}
-                title={data[key].label}
-                state={data[key].label == state}
-                key={data[key].label + `-tab`}
-            />,
+          <Tabs.Tab onClick={(event: Event) => setState(event, data[key].label)}
+            title={data[key].label}
+            state={data[key].label == state}
+            key={data[key].label + `-tab`} />,
         )
+      }
     }
     return result
 }
@@ -54,37 +54,36 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
         return result
     }
     if (type == TabsType.price) {
-
-        (data && data.length > 0) && data.forEach((item: any, index: number) => {
-
+        (data && data.length > 0 ) && data.forEach((item: any, index: number) => {
+          if(item.data.is_active) {
             result.push(
-                <TabsVariantPrice
-                    key={`tab_${index}`}
-                    state={state == item.label}
-                    data={item.dataTable}
-                    label={item.label}
-                    props={items}
-                    className={'!pb-0'}
-                />,
+              <TabsVariantPrice key={`tab_${index}`}
+                state={state == item.label}
+                data={item.dataTable}
+                label={item.label}
+                props={items}
+                className={'!pb-0'} />,
             )
+          }
         })
         return result
     }
     if (type == TabsType.priceEdit) {
         // console.log(data);
         data.forEach((item: any, index: number) => {
+          if(item.data.is_active) {
             result.push(
-                <TabsVariantPrice
-                    key={`tab_${index}`}
-                    edit={type == TabsType.priceEdit}
-                    state={state == item.label}
-                    data={item.data}
-                    label={item.label}
-                    props={items}
-                    className={'!pb-0'}
-                />
+              <TabsVariantPrice key={`tab_${index}`}
+                edit={type == TabsType.priceEdit}
+                state={state == item.label}
+                data={item.data}
+                label={item.label}
+                props={items}
+                className={'!pb-0'} />
             )
+          }
         })
+
         return result
     }
 
