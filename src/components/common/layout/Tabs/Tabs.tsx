@@ -24,7 +24,7 @@ const HeadersTabs = ({ data, state, setState, }: { data: any, state: any, setSta
     // console.log(data);
     const result: any = []
     for (const key in data) {
-      if(data[key].data.is_active) {
+      if(data[key].data && data[key].data.is_active) {
         // @ts-ignore
         result.push(
           <Tabs.Tab onClick={(event: Event) => setState(event, data[key].label)}

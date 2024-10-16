@@ -21,6 +21,7 @@ import { UserPermissionVariants } from 'stores/userStore'
 import { notifications } from '@mantine/notifications'
 import PageTitle from "components/common/layout/PageTitle/PageTitle";
 import { sidebarMenu as sideMenu } from "components/common/layout/Sidebar/Sidebar";
+import { routesTitles } from "utils/labels";
 const sidebarMenu: { title: string; url: string }[] = [
   {
     title: 'Дашборд',
@@ -58,8 +59,8 @@ const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', fo
   const loc = useLocation()
   const { width } = useViewportSize();
   useLayoutEffect(() => {
-    const _title = [...sideMenu, {title: "Заявки", url: "bids"}].filter((item) => loc.pathname.includes(item.url))[0]?.title ?? "No title";
-
+    const _title = [...sideMenu, ...routesTitles, {title: "Заявки", url: "bids"}].filter((item) => loc.pathname.includes(item.url))[0]?.title ?? "No title";
+    console.log(_title, loc.pathname);
     appStore.setTitle(_title);
   }, [loc.pathname]);
   // console.log(store.userStore.getUserCan());

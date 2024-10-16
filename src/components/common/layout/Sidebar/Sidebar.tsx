@@ -114,6 +114,7 @@ export const sidebarMenu: { icon: React.ReactNode; title: string; url: string, u
     urlMap: 'Управление справочниками',
   },
 ]
+
 type SidebarProps = {
     children?: React.ReactNode | React.ReactNode[]
     type?: SectionType
