@@ -83,7 +83,7 @@ const CompaniesPage = () => {
         background={PanelColor.glass}
         className={'col-span-full table-groups'}
         filter={true}
-        initFilterParams={[FilterData.city, FilterData.company_type_c]}
+        initFilterParams={[FilterData.city__id, FilterData.company_type_c]}
         state={isLoading}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'}, {label: 'Тип', name: 'company_type'},{ label: 'Город', name: 'city' }]}
       />

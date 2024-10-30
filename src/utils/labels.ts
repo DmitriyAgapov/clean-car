@@ -87,9 +87,23 @@ export const routesTitles: {
         url: 'policy',
     },
     {
+        title: 'Заявки',
+        url: 'bids',
+    },
+
+    {
         title: 'Служба поддержки',
         url: 'support',
     },
+    {
+        title: 'Отчет по типам услуг',
+        url: 'by-type',
+    },
+    {
+        title: 'Транзакции',
+        url: 'transaction',
+    },
+
     {
         title: 'Управление профилем',
         url: 'profile',
@@ -105,10 +119,6 @@ export const routesTitles: {
     {
         title: 'Авторизация',
         url: '/',
-    },
-
-
-
-
+    }
 ]
 export default label

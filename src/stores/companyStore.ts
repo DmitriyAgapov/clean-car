@@ -670,12 +670,13 @@ export class CompanyStore {
         .catch((errors:any) => this.errors = errors)
     }
 
-    async getAllCompanies (params?: PaginationProps) {
+    async getAllCompanies (params?: PaginationProps & any) {
         if(authStore.isLoggedIn) {
 
             this.loadingCompanies = true
         // if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
+                console.log(params);
                  return await agent.Companies.getAllCompanies(params)
                     .then((response:any) => {
                         if(response && response.data) {

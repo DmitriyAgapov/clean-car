@@ -72,7 +72,6 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                   } else if (value === null) {
                     localStore.params.deleteParams("company__city")
                   }
-
                 }}
                 comboboxProps={{ withinPortal: portalState }}
                 data={store.catalogStore.allCities.map((city: any) => ({
@@ -81,7 +80,34 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 }))}
               />,
             )
-            break
+            break;
+          case FilterData.city__id:
+            elements.push(
+              <Select
+                classNames={SelectStyles}
+                label={'Город'}
+                size={'xs'}
+                clearable
+                value={localStore.params.getSearchParams.city || null}
+                onChange={(value) => {
+                  setInitParams()
+                  if (value !== null) {
+                    localStore.params.setSearchParams({
+                      city: value
+                    })
+                  } else if (value === null) {
+                    localStore.params.deleteParams("city")
+                  }
+                }}
+                comboboxProps={{ withinPortal: portalState }}
+                data={store.catalogStore.allCities.map((city: any) => ({
+                  label: city.name,
+                  value: city.id.toString(),
+                }))}
+              />,
+            )
+            break;
+
           case FilterData.bidStatus:
             elements.push(
               <Select
@@ -215,8 +241,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 size={'xs'}
                 value={localStore.params.getSearchParams.company__company_type || null}
                 onChange={(value) => {
-                  console.log(value);
-                  setInitParams()
+                  setInitParams();
                   if (value !== null) {
                     localStore.params.setSearchParams({
                       company__company_type: value

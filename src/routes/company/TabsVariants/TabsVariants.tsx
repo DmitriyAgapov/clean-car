@@ -164,15 +164,14 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         localStore.setData = {
           canSort: false,
           results: data?.map((item:any) => ({
-            status: item.is_active as boolean,
-            company: item.name,
-            type: item.company_type,
-            city: item.city.name,
-            id: item.id,
+            status: item?.is_active as boolean,
+            company: item?.name,
+            type: item?.company_type,
+            city: item?.city.name,
+            id: item?.id,
           query: {
-            rootRoute: `/account/companies/${CompanyTypeRus(item.company_type)}/${item.id}`,
+            rootRoute: `/account/companies/${CompanyTypeRus(item?.company_type)}/${item?.id}`,
           },
-
           }))}
       },[data])
       console.log(localStore);

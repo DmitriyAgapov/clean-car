@@ -184,17 +184,26 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			setCompanyVar([{name: "Нет ", id: "none"}]);
 			const setRes = async () => {
 				let res: any[] = []
+				console.log([form.values.type]);
 				if(form.values.depend_on === "company") {
-					const _c = await store.companyStore.getAllCompanies().then(r => r.data).then(data => data.results)
-					console.log('123', _c);
+
+					const _params = {
+						// @ts-ignore
+						company_type: CompanyType[form.values.type]
+					}
+
+					const _c = await store.companyStore.getAllCompanies(_params).then(r => r.data).then(data => data.results)
+					// @ts-ignore
+					console.log('123', CompanyType[form.values.type]);
+					console.log('_params', form.values.type);
 					if(store.appStore.appType !== "admin") {
 						res = _c
 					} else {
-						res = _c.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
+						res = _c.filter((c: any) => c.parent === null);
 					}
-
 				} else {
-					res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
+					// @ts-ignore
+					res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === CompanyType[form.values.type] : c) ?? []
 				}
 				if (res.length === 1) {
 					form.values.company_id = String(res[0].id)
@@ -222,7 +231,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
         const _permissions = store.permissionStore.getCompanyPermissions
 
         // if(form.values.type !== UserTypeEnum.admin) {
-        console.log('edit a', _permissions)
+        // console.log('edit a', _permissions)
         return _permissions.map((p: any) => ({
             label: p.name,
             value: String(p.id),

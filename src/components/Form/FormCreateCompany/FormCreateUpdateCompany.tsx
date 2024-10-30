@@ -83,7 +83,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         overdraft_sum: 0,
         payment: Payment.postoplata,
         performers_list: '1',
-        service_percent: 15,
+        service_percent: 20,
         working_time: '',
         performer_company: [],
         performer_companies: []

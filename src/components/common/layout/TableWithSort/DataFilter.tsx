@@ -14,6 +14,7 @@ import { SvgClose } from 'components/common/ui/Icon'
 import { keys } from "mobx";
 export enum FilterData {
   city= 'city',
+  city__id= 'city__id',
   car_type= 'car_type',
   employee__is_active= 'employee__is_active',
   brand= 'brand',

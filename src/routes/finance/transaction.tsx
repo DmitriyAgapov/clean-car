@@ -40,8 +40,8 @@ const TransactionPage = () => {
         amount: String(item.amount).includes('-') ? `- ${String(item.amount).split('-')[1]} ₽` : `+ ${String(item.amount)} ₽`,
         ts_maker: item.ts_maker.last_name + " " + item.ts_maker.first_name,
         bid: {
-          bidId: item.bid.id,
-          company: store.appStore.appType === "admin" ? item.bid.company.id : store.userStore.myProfileData.company.id
+          bidId: item.bid?.id,
+          company: store.appStore.appType === "admin" ? item.bid?.company.id : store.userStore.myProfileData.company.id
         },
         purpose: PurposeOfTransaction[item.purpose]
       }))
