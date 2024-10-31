@@ -81,6 +81,7 @@
 	bottom: calc(50% - .5rem);
   }
   @screen lg-to-desktop {
+	overflow: hidden;
 	a {
 	  opacity: 0;
 	  position: absolute;
