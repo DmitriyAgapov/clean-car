@@ -43,10 +43,13 @@
 	& + * {
 	  padding-left: 1rem;
 	}
+
   }
   @screen lg-to-desktop {
 	grid-column: 2/ span 1;
 	margin-top: 5rem;
+	position: relative;
+	z-index: 99;
 	& + section {
 	  grid-column: 3/-2;
 	  margin-left: -2rem;
