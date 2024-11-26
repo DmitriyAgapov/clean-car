@@ -107,7 +107,7 @@ export const CreateModalPrice = Yup.object().shape({
 export const SelectModalUserSchema = Yup.object().shape({
 	users: Yup.string().required('Выберите пользователя')
 })
-
+let length = 64;
 export const CreateCompanySchema = Yup.object().shape({
 	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
 	address: Yup.string().when('address_ready', (address_ready, schema) => {
@@ -118,10 +118,22 @@ export const CreateCompanySchema = Yup.object().shape({
 		}
 	}),
 	legal_address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
-	inn: Yup.string().required('Обязательное поле').length(10, 'Длина ИНН должна быть 10 символов')
+	inn: Yup.string().test(
+		{
+		name: 'length',
+		exclusive: true,
+		message:  'Инн должен быть длиной 10 или 12 цифр' ,
+		test: (value) => [10,12].some(v => value && value.length == v)
+	}).required('Обязательное поле')
 	// .matches(/^[^0].*/,  { message: 'Не может начинаться с 0', excludeEmptyString: true })
 	,
-	ogrn: Yup.string().required('Обязательное поле').length(13, 'Длина ОГРН должна быть 13 символов')
+	ogrn: Yup.string().test(
+		{
+			name: 'length',
+			exclusive: true,
+			message:  'Длина ОГРН должна быть 13 или 15 символов' ,
+			test: (value) => [13,15].some(v => value && value.length == v)
+			}).required('Обязательное поле')
 	// .matches(/^[^0].*/,  { message: 'Не может начинаться с 0', excludeEmptyString: true })
 	,
 	contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),

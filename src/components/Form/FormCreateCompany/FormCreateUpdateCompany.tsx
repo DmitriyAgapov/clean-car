@@ -447,7 +447,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             label={'ИНН'}
                             {...formData.getInputProps('inn')}
                             hideControls
-                            maxLength={10}
+                            maxLength={12}
                             placeholder={'Введите ИНН'}
                         />
                         <NumberInput
@@ -457,7 +457,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             valueIsNumericString={true}
                             {...formData.getInputProps('ogrn')}
                             hideControls
-                            maxLength={13}
+                            maxLength={15}
                             placeholder={'Введите ОГРН'}
                         />
                         {formData.values.type === CompanyType.performer && (
