@@ -63,9 +63,9 @@ const UserPage = () => {
                 }
             />
           {data?.company?.id && <hr className={'mt-0 col-span-2'}/>}
-          {data?.company?.name && <DList label={'Компания'} title={data?.company?.name} />}
+          {data?.company?.name && data?.company?.parent ? <DList label={'Компания'} title={data?.company?.parent.name} /> : <DList label={'Компания'} title={data?.company?.name} />}
           {data?.company?.city.name && <DList label={'Город'} title={data?.company.city.name} />}
-          {data?.company?.parent && <DList label={'Филиал'} title={data?.company.parent.name ?? data?.company.name} />}
+          {data?.company?.parent && <DList label={'Филиал'} title={data?.company.name} />}
         </>
     )
     return null
