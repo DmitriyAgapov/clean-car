@@ -143,16 +143,21 @@ const CompanyOptionsModal = observer((props: { opened: boolean; onClose: () => v
     )
 })
 const CompanyModalOptionsSelect = () => {
-	const store = useStore()
+	const store = useStore();
 	const { values, touched,  errors, setFieldValue, getInputProps }:any = useFormContext();
-	const [opened, { open, close }] = useDisclosure(false)
-	const performers  = store.companyStore.getCompaniesPerformers
-	// console.log(performers);
+	const [opened, { open, close }] = useDisclosure(false);
+	const performers  = store.companyStore.getCompaniesPerformers;
+
+	React.useEffect(() => {
+		store.companyStore.getPerformersCompany()
+	}, []);
+
 	const _selected_options = values.performer_company;
 	// console.log(values);
 	const memoModal = React.useMemo(() => {
 		return <CompanyOptionsModal opened={opened} onClose={close} initVals={_selected_options}/>
-	}, [opened, values.performer_company, _selected_options])
+	}, [opened, values.performer_company, _selected_options]);
+
 	return (
 				<div className={'grid tablet-max:!flex flex-col justify-items-start flex-[1_0_100%] w-full tablet-max:!mb-16'}>
 					<InputLabel className={'my-4'}>Выберите партнеров (при необходимости)</InputLabel>

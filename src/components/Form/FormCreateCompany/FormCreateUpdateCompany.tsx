@@ -591,8 +591,6 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             ]}
                         />
                         <NumberInput
-
-
                             label={'Сумма'}
                             thousandSeparator=' '
                             suffix={' ₽'}
@@ -608,20 +606,23 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             }
                         />
 
-                        <Select
-                            label={'Список Партнеров'}
-                            {...formData.getInputProps('performers_list')}
-                            className={' w-fit  tablet:!flex-[0_0_auto]  !flex-[1_0_20rem]'}
-                            data={[
-                                { label: 'Да', value: '1' },
-                                { label: 'Нет', value: '2' },
-                            ]}
-                        />
+
+                        {/* <Select */}
+                        {/*     label={'Список Партнеров'} */}
+                        {/*     {...formData.getInputProps('performers_list')} */}
+                        {/*     className={' w-fit  tablet:!flex-[0_0_auto]  !flex-[1_0_20rem]'} */}
+                        {/*     data={[ */}
+                        {/*         { label: 'Да', value: '1' }, */}
+                        {/*         { label: 'Нет', value: '2' }, */}
+                        {/*     ]} */}
+                        {/* /> */}
+
+
                         <hr className={'mt-0 mb-2 flex-[1_0_100%] w-full border-gray-2'} />
 
-                        {formData.values.performers_list === '1' && (
+                        {/* {formData.values.performers_list === '1' && ( */}
                           <CompanyModalOptionsSelect/>
-                        )}
+                        {/* )} */}
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 3}
