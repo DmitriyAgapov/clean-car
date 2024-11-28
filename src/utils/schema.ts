@@ -4771,8 +4771,8 @@ export class Client implements IClient {
      * @param page (optional) A page number within the paginated result set.
      * @param page_size (optional) Number of results to return per page.
      */
-    companiesOnlyBranchesList(params: {q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous21> {
-        const {q, ordering, page, page_size, cancelToken} = params;
+    companiesOnlyBranchesList(params: {q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, city?: string | number | null | undefined, company_type?: string |  null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous21> {
+        const {q, ordering, page, page_size,company_type, city, cancelToken} = params;
         let url_ = this.baseUrl + "/companies/only_branches/list/?";
         if (q !== undefined && q !== null)
             url_ += "q=" + encodeURIComponent("" + q) + "&";
@@ -4780,6 +4780,11 @@ export class Client implements IClient {
             url_ += "ordering=" + encodeURIComponent("" + ordering) + "&";
         if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (city !== undefined && city !== null)
+            url_ += "city=" + encodeURIComponent("" + city) + "&";
+        if (company_type !== undefined && company_type !== null)
+            url_ += "company_type=" + encodeURIComponent("" + company_type) + "&";
+
         if (page_size !== undefined && page_size !== null)
             url_ += "page_size=" + encodeURIComponent("" + page_size) + "&";
         url_ = url_.replace(/[?&]$/, "");

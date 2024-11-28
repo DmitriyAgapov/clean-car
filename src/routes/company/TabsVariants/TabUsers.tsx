@@ -30,7 +30,7 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 				// @ts-ignore
 				company: item.company.name,
 				// @ts-ignore
-				city: item.company.city.name,
+				// city: item.company.city.name,
 				id: item.id,
 				query: {
 					company_id: item.company.id,
@@ -57,7 +57,7 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 			autoScroll={true}
 
 			search={true} filter={true}
-			initFilterParams={[FilterData.city, FilterData.employee__is_active]}
+			initFilterParams={[FilterData.employee__is_active]}
 			style={PanelRouteStyle.users}
 			variant={PanelVariant.default}
 			footer={false}  ar={[
@@ -67,7 +67,7 @@ const TabUsers = ({companyId, company_type, state }:any) => {
 			{ label: 'e-mail', name: 'email' },
 			{ label: 'Тип', name: 'company__company_type' },
 			{ label: 'Компания', name: 'company__name' },
-			{ label: 'Город', name: 'city' },
+			// { label: 'Город', name: 'city' },
 		]}/>
 
 	</Tabs.Panel>

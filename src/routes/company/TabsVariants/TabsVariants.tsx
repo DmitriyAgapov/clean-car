@@ -87,7 +87,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
 }
 const localRootStore =  new LocalRootStore()
 const TabsVariants = ({label, content_type, data, state, name, className, companyId, company_type, ...props}:TabsVariantsProps) => {
-  console.log(props);
+  // console.log(props);
   const store = useStore()
   let result
   switch (label) {
@@ -96,22 +96,8 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         name={"info"}
         className={"pt-8"}
         company_type={company_type}>
-        {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />}
-        <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
-        <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
-        {company_type === 'customer' && <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 row-span-2'}>
-          <DList label={'Партнеры'} title={store.companyStore.companies.filter((c: any) =>
-            data[`${company_type}profile`].performer_company.includes(c.id)).map((item: any, index ) => (
-            <span key={item.id} className={'text-xs font-normal'}>
-                {item.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '}
-            </span>))} />
-
-          <CardSimple.Footer>
-            <Button variant={ButtonVariant.text} className={'text-accent'} text={'Подробнее'} action={ () => store.bidsStore.setActiveTab("Партнеры")} />
-          </CardSimple.Footer>
-        </CardSimple>}
-
-        {company_type === 'customer' ? data.balance && <DList label={'Счет'} title={<>
+        {/* {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />} */}
+        {company_type === 'customer' ? data.balance && <DList className={"row-span-2"} label={'Счет'} title={<>
           <Heading text={data.balance.total + ' ₽'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
           <Heading text={data[`${company_type}profile`].overdraft_sum + ' ₽' + ' с овердрафтом'}  variant={HeadingVariant.h4} color={HeadingColor.accent} />
         </>
@@ -121,8 +107,24 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         </>
 
         }/>}
+        <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
+        <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
+
         <DList label={'Адрес'} title={data[`${company_type}profile`].address} />
         <DList label={'Юридический адрес'} title={data[`${company_type}profile`].legal_address} />
+        <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts}  className={"col-span-2 col-start-1 row-start-6"}/>
+        {company_type === 'customer' && <CardSimple className={'p-5 grid gap-y-9 bg-gray-3 rounded-062 col-span-2 col-start-1 tablet:row-start-5'}>
+        <DList label={'Партнеры'} title={store.companyStore.companies.filter((c: any) =>
+          data[`${company_type}profile`].performer_company.includes(c.id)).map((item: any, index ) => (
+          <span key={item.id} className={'text-xs font-normal'}>
+                {item.name}{!(index === data[`${company_type}profile`].performer_company.length - 1) && ', '}
+            </span>))} />
+
+        <CardSimple.Footer>
+          <Button variant={ButtonVariant.text} className={'text-accent'} text={'Подробнее'} action={ () => store.bidsStore.setActiveTab("Партнеры")} />
+        </CardSimple.Footer>
+      </CardSimple>}
+
         {/* //TODO  Высота въезда*/}
         {company_type === 'performer' && <>
           <DList label={'Макс. высота транспорта, в см'} title={<>{data[`${company_type}profile`].height} <sub className={'bottom-0 text-white/75'}> см</sub></>} />
@@ -130,7 +132,7 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         </>}
         {data?.performerprofile &&    <DList label={'Загруженность'} title={<WorkLoadStatus hasDot={false} status={data?.performerprofile.workload} className={'!top-0 !right-0 relative i:hidden'}/>} />}
         {data.active_services && data.active_services.length > 0 && <DList label={'Подключенные услуги'} className={'tablet:!col-[2_/_2_span] tablet:!row-start-4'} title={<>{data.active_services.map((s:string, index:number) => <span key={`s_${index}`} className={'text-accent'}>{s}{!(index === data.active_services.length - 1) && ', '}</span>)}</>} />}
-        <DList label={'Контакты для связи'} title={data[`${company_type}profile`].contacts}  className={'tablet:!col-[2_/_2_span] tablet:!row-start-5'}/>
+
 
       </Tabs.Panel>)
       break;

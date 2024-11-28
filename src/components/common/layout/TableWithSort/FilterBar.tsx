@@ -1,20 +1,17 @@
 import styles from 'components/common/layout/TableWithSort/TableWithSort.module.scss'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import React, { JSX, useState } from 'react'
+import React from 'react'
 import { Select } from '@mantine/core'
 import { BidsStatus } from 'stores/bidsStrore'
 import { DateInput } from '@mantine/dates'
 import dayjs from 'dayjs'
-import { ctx, FilterData } from "components/common/layout/TableWithSort/DataFilter";
+import {  FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import { useStore } from 'stores/store'
 import { LocalRootStore, useLocalStore } from "stores/localStore";
 import { observer } from 'mobx-react-lite'
-import { TableSearchParams, TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
-import { Status } from 'utils/schema'
+import { TableSearchParams } from "components/common/layout/TableWithSort/TableWithSort.store";
 import { CarType } from "stores/carStore";
 import { useViewportSize } from '@mantine/hooks'
-import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { keys, toJS } from 'mobx'
 import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 
@@ -32,10 +29,8 @@ const SelectStyles = {
     dropdown: '!rounded-[0.25rem]'
 }
 const FilterElements = observer(({ filters, values }: { filters: any, values?: TableSearchParams }) => {
-    const  localStore = useLocalStore<any>()
-
-
-    const params = values
+    const  localStore = useLocalStore<any>();
+    const params = values;
     const { width } = useViewportSize()
     const portalState = React.useMemo(() => {
         return width && width > 740 ? true : false
@@ -276,7 +271,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                 size={'xs'}
                 value={localStore.params.getSearchParams.company_type || null}
                 onChange={(value) => {
-                  console.log(value);
+                  // console.log(value);
                   setInitParams()
                   if (value !== null) {
                     localStore.params.setSearchParams({
@@ -285,6 +280,7 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
                     // setParams((prevState) => ({...prevState, service_type: value}))
                   } else {
                     let newParams: any = localStore.params
+                    localStore.params.deleteParams("company_type")
                     delete localStore.params.company_type
                     // setParams(newParams)
                   }

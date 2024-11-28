@@ -11,6 +11,7 @@ import { observer, useLocalObservable } from "mobx-react-lite";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
+import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 
 
 const localRootStore =  new LocalRootStore()
@@ -83,6 +84,7 @@ const FilialsPage = () => {
         style={PanelRouteStyle.filials}
         background={PanelColor.glass}
         filter={true}
+        initFilterParams={[FilterData.city__id, FilterData.company_type_c]}
         state={false}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'company_type'},{ label: 'Принадлежит', name: 'parent'}]}     />
     </Section>
