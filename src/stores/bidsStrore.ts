@@ -788,6 +788,8 @@ export class BidsStore {
     async loadBid(company_id: number, bid_id: number) {
         const photos = await agent.Bids.loadBidPhotos(company_id, bid_id).then(r => r.data)
         const bid = await agent.Bids.getBid(company_id, bid_id).then(r => r.data)
+        console.log(bid);
+        console.log(photos);
         const _res = {
             ...bid,
             photos: photos,

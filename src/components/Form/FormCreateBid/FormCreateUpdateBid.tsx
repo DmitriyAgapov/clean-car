@@ -611,7 +611,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                 })()}
                             />
                             <Select
-                                withAsterisk
+                                // withAsterisk
                                 {...formData.getInputProps('city')}
                                 clearable
                                 label={step1.fields[0].label}
@@ -1089,9 +1089,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             <div className={'col-span-full subgrid contents overflow-hidden'}>
                               <div className={"col-span-2  row-span-2  z-[999] mobile:mb-8 grid  justify-evenly items-start content-start"}>
                                 <div className={"text-base"}>{step4.description}</div>
-                                <div>
+                                <div className={'mt-6'}>
                                   <Select className={"col-span-2"}
                                     required
+                                    withAsterisk={false}
                                     label={step4.fields[0].label}
                                     searchable
                                     value={String(store.bidsStore.formResult.city)}
@@ -1101,6 +1102,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                     }))} />
                                   <Select className={"col-span-2"}
                                     required
+                                    withAsterisk={false}
                                     {...formData.getInputProps("performer")}
                                     label={step4.fields[1].label}
                                     searchable

@@ -6,8 +6,6 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Tabs, { TabsProps } from '../../../components/common/layout/Tabs/Tabs'
 import { useStore } from 'stores/store'
-import CreateInput from 'components/common/ui/CreateInput/CreateInput'
-import { useNavigate, useParams } from 'react-router-dom'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
 import { translite } from 'utils/utils'
 import { CAR_RADIUS } from 'stores/priceStore'
@@ -1260,9 +1258,9 @@ export const TabsVariantPrice = ({ label, content_type, data, state, name, class
       } else setPanelScroll({ height: null, readyToShow: true, heightRem: ref.current.parentNode.clientHeight / fSize * 16 })
     }}, [ref.current, width]);
 
-  useEffect(() => {
-    console.log('panel', panelScroll);
-  }, [panelScroll])
+  // useEffect(() => {
+  //   console.log('panel', panelScroll);
+  // }, [panelScroll])
 
   return (
     <div ref={ref} style={!panelScroll.height ? {height: "100%"} : {maxHeight: panelScroll.height - 32 , overflow: "hidden"}}>

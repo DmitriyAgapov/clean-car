@@ -48,7 +48,7 @@ const CompanyPage = () => {
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
-  }, [data])
+  }, [data, params])
 
 
   const memoModal = React.useMemo(() => {
