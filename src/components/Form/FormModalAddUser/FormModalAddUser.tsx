@@ -181,7 +181,7 @@ export const FormModalSelectUsers = observer((props: { company_id: any, users: a
               <Select
                 {...form.getInputProps('users')}
                 // @ts-ignore
-                data={store.usersStore.currentCompanyUsers.map((item: any) => ({ label: item.employee.last_name + ' ' + item.employee.first_name, value: String(item.employee.id) }))}
+                data={store.usersStore.currentCompanyUsers.filter(el => el.company.id == props.company_id).map((item: any) => ({ label: item.employee.last_name + ' ' + item.employee.first_name, value: String(item.employee.id) }))}
                 label={"Выберите сотрудника"}
                 placeholder={"Выберите сотрудника"}
                 clearable

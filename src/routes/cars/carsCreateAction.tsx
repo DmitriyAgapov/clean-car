@@ -10,10 +10,9 @@ import { useStore } from "stores/store";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
-import { ActionIcon, FileButton } from "@mantine/core";
+import { FileButton } from "@mantine/core";
 import agent from "utils/agent";
 import { notifications } from '@mantine/notifications'
-import { useDidUpdate } from "@mantine/hooks";
 
 export default function CarsPageCreateAction() {
   const store = useStore()
@@ -68,13 +67,9 @@ export default function CarsPageCreateAction() {
       })()
     }
   }, [])
-  const location = useLocation()
   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
   store.usersStore.clearSelectedUsers()
   store.formStore.formClear('formCreateCar')
-  // React.useEffect(() => {
-  //   store.companyStore.getAllCompanies()
-  // }, [location.pathname])
 
   return (
     <Section type={SectionType.default}>

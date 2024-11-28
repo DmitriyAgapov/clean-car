@@ -72,6 +72,7 @@ const UsersPage = () => {
     const _ft = []
     if(store.appStore.appType === "admin") {
       _ft.push(FilterData.company_type)
+      _ft.push(FilterData.company__city__id)
     }
     _ft.push(FilterData.employee__is_active)
     return _ft

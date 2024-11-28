@@ -7,7 +7,6 @@ import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import { useStore } from "stores/store";
-import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 
 const localRootStoreF = new LocalRootStore()

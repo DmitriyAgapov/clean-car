@@ -102,6 +102,32 @@ const FilterElements = observer(({ filters, values }: { filters: any, values?: T
               />,
             )
             break;
+          case FilterData.company__city__id:
+            elements.push(
+              <Select
+                classNames={SelectStyles}
+                label={'Город'}
+                size={'xs'}
+                clearable
+                value={localStore.params.getSearchParams.company__city || null}
+                onChange={(value) => {
+                  setInitParams()
+                  if (value !== null) {
+                    localStore.params.setSearchParams({
+                      company__city: value
+                    })
+                  } else if (value === null) {
+                    localStore.params.deleteParams("company__city")
+                  }
+                }}
+                comboboxProps={{ withinPortal: portalState }}
+                data={store.catalogStore.allCities.map((city: any) => ({
+                  label: city.name,
+                  value: city.id.toString(),
+                }))}
+              />,
+            )
+            break;
 
           case FilterData.bidStatus:
             elements.push(
