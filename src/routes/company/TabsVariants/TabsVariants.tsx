@@ -752,7 +752,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                       />
                     }
                   />
-                  {store.appStore.appType === "performer" && <p className={'col-span-2'}>Ознакомьтесь с услугой. И при необходимости внесите изменения. Сервис передаст их на согласование</p>}
+                  {/* {store.appStore.appType === "performer" && <p className={'col-span-2'}>Ознакомьтесь с услугой. И при необходимости внесите изменения. Сервис передаст их на согласование</p>} */}
                   {/* {(store.appStore.appType === "customer" || store.appStore.appType === "admin") && <p className={'col-span-2'}>Исполнитель отредактировал перечень услуг. Пожалуйста проверьте и подтвердите изменения </p>} */}
 
                   {data.address_from && <DList
@@ -760,11 +760,11 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     label={'Адрес забора'}
                     title={data.address_from}
                   />}
-                    {!data.schedule && <DList
-                      className={'child:dt:text-accent'}
-                      label={'Важность'}
-                      title={data.schedule !== null ? 'По времени' : 'Побыстрее'}
-                    />}
+                    {/* {!data.schedule && <DList */}
+                    {/*   className={'child:dt:text-accent'} */}
+                    {/*   label={'Важность'} */}
+                    {/*   title={data.schedule !== null ? 'По времени' : 'Побыстрее'} */}
+                    {/* />} */}
                     {data.schedule && <DList
                       className={'child:dt:text-accent'}
                       label={'Время'}
