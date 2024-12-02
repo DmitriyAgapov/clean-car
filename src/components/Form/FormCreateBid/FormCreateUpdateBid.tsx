@@ -366,7 +366,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
   const handleNext = React.useCallback(async () => {
     if(step === 2) {
       console.log('step 2');
-        store.bidsStore.loadCurrentPerformers(Number(store.bidsStore.formResult.company), {
+        store.bidsStore.loadCurrentPerformers(Number(store.bidsStore.formResult.company),Number(store.bidsStore.formResult.city), {
           car_id: store.bidsStore.formResult.car,
           subtype_id: store.bidsStore.formResult.service_subtype,
           options_idx: store.bidsStore.formResult.service_option
@@ -1077,15 +1077,7 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                             </>
                         }
                     >
-                        {store.bidsStore.AvailablePerformers.size === 0 ? (
-                            <>
-                                <Heading
-                                    className={'col-span-full'}
-                                    text={'Партнер не найдены'}
-                                    variant={HeadingVariant.h3}
-                                />
-                            </>
-                        ) : (
+
                             <div className={'col-span-full subgrid contents overflow-hidden'}>
                               <div className={"col-span-2  row-span-2  z-[999] mobile:mb-8 grid  justify-evenly items-start content-start"}>
                                 <div className={"text-base"}>{step4.description}</div>
@@ -1095,6 +1087,14 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                     withAsterisk={false}
                                     label={step4.fields[0].label}
                                     searchable
+                                    onOptionSubmit={(val: any) => {
+                                      store.bidsStore.formResultSet({ city: Number(val) });
+                                      (async () => await store.bidsStore.loadCurrentPerformers(Number(store.bidsStore.formResult.company),Number(store.bidsStore.formResult.city), {
+                                        car_id: store.bidsStore.formResult.car,
+                                        subtype_id: store.bidsStore.formResult.service_subtype,
+                                        options_idx: store.bidsStore.formResult.service_option
+                                      }))()
+                                    }}
                                     value={String(store.bidsStore.formResult.city)}
                                     data={val(store.catalogStore.cities).map((i: any) => ({
                                       label: i.name,
@@ -1124,10 +1124,19 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                 </>
                               } </div> : null}
                             </div>
-                                <MapWithDots />
+                              {store.bidsStore.AvailablePerformers.size === 0 ? (
+                                <>
+                                  <Heading
+                                    className={'col-span-full'}
+                                    text={'Партнер не найдены'}
+                                    variant={HeadingVariant.h3}
+                                  />
+                                </>
+                              ) : ( <MapWithDots />
+                                )}
 
                             </div>
-                        )}
+
 
                     </PanelForForms>
                     <FormBidResult state={step !== 5} animate={animate} {...store.bidsStore.justCreatedBid} />

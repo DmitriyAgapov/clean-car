@@ -240,7 +240,7 @@ const Bids = {
   getAllBids: (params: PaginationProps) => requests.get('/bids/all_bids/list', params),
   //@ts-ignore
   getAllBidsNew: (params: string) =>  useSWR(`${userStore.isAdmin ? `/bids/all_bids/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/bids/${userStore.myProfileData.company?.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`, fetcherNew, {refreshInterval: 10000, use: [logger]}),
-  getAvailablePerformers: (company_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/bid_performers/`, data),
+  getAvailablePerformers: (company_id:number, city_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) => requests.post(`/bids/${company_id}/${city_id}/bid_performers/`, data),
   createBid: (customer_id: number, data: CreateBidData) => requests.post(`/bids/${customer_id}/create/`, data),
   getBid: (company_id: number, id: number) => requests.get(`/bids/${company_id}/${id}/retrieve/`),
   getBidNew: (company_id: string, id: string) => useSWR(`/bids/${company_id}/${id}/retrieve/`, fetcherNew),

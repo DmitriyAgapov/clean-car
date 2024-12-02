@@ -568,9 +568,9 @@ export class BidsStore {
             )
         }
     }
-    async loadCurrentPerformers(customer_id: number, data: { car_id: number, subtype_id: number, options_idx: number[] }) {
+    async loadCurrentPerformers(customer_id: number, city_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) {
         this.currentPerformers.clear()
-        const { data:performers, status }:any = await agent.Bids.getAvailablePerformers(customer_id, {
+        const { data:performers, status }:any = await agent.Bids.getAvailablePerformers(customer_id, city_id, {
             car_id: this.formResult.car,
             subtype_id: this.formResult.service_subtype,
             options_idx: this.formResult.service_option
