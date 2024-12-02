@@ -1088,6 +1088,10 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                                     label={step4.fields[0].label}
                                     searchable
                                     onOptionSubmit={(val: any) => {
+                                      formData.setFieldValue('performer', null, {
+                                        forceUpdate: true
+                                      })
+                                      store.bidsStore.formResultSet({ performer: null });
                                       store.bidsStore.formResultSet({ city: Number(val) });
                                       (async () => await store.bidsStore.loadCurrentPerformers(Number(store.bidsStore.formResult.company),Number(store.bidsStore.formResult.city), {
                                         car_id: store.bidsStore.formResult.car,
@@ -1127,8 +1131,8 @@ const FormCreateUpdateBid = ({ bid, edit }: any) => {
                               {store.bidsStore.AvailablePerformers.size === 0 ? (
                                 <>
                                   <Heading
-                                    className={'col-span-full'}
-                                    text={'Партнер не найдены'}
+                                    className={'rounded-md overflow-hidden content-start col-span-3 row-start-1 col-start-3 row-span-2 tablet:min-h-96'}
+                                    text={'Партнеры не найдены'}
                                     variant={HeadingVariant.h3}
                                   />
                                 </>
