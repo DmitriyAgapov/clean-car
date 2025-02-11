@@ -98,7 +98,7 @@ function PolicyPage() {
         )
     } else {
 
-      return <div style={!panelScroll.height ? {height: "100%"} : {maxHeight: panelScroll.height - 80 , overflow: "hidden"}}>{(panelScroll.height && panelScroll.readyToShow) ? <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={panelScroll.height}  mx="auto">
+      return <div style={!panelScroll.height ? {height: "100%"} : {maxHeight: panelScroll.height  , overflow: "hidden"}}>{(panelScroll.height && panelScroll.readyToShow) ? <ScrollArea.Autosize viewportRef={viewport}  offsetScrollbars={'y'} mah={panelScroll.height}  mx="auto">
         <div
           data-height={panelScroll.height - 80 }
           className={styles.text}
@@ -149,7 +149,8 @@ function PolicyPage() {
                                   className={
                                       'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'
                                   }
-                                  action={() => navigate(-1)}
+                                  // action={() => navigate(-1)}
+                                  href={'/'}
                                   variant={ButtonVariant.text}
                               />
                               <Heading
