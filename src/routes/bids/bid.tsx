@@ -158,7 +158,7 @@ const BidPage = () => {
                             <div className={'text-xs text-gray-2'}>
                                 Дата и время регистрации:
                                 <p className={'py-0 mt-0'}>
-                                    {data && data?.company?.updated && dateTransformShort(data?.company.updated).date}
+                                    {data && data?.created && dateTransformShort(data?.created).date}
                                 </p>
                             </div>
                             <div className={'flex gap-6 items-center justify-around tablet-max:inline-flex'}>
