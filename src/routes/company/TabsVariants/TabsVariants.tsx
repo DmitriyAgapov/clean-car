@@ -343,7 +343,7 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                     />
                     <DList
                         className={'child:dt:text-accent'}
-                        label={'Номер телефона'}
+                        label={'Адрес'}
                         title={<Heading variant={HeadingVariant.h4} text={data.performer.performerprofile.address} />}
                     />
                     </Panel>}
