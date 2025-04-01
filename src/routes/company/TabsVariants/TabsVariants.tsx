@@ -411,11 +411,16 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
                             label={'Партнер'}
                             title={<Heading variant={HeadingVariant.h4} text={data.performer.name} />}
                         />
-                      {data.performer.address && <DList
-                            className={'child:dt:text-accent'}
-                            label={'Адрес'}
-                            title={<Heading variant={HeadingVariant.h4} text={data.performer.address} />}
-                        />}
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Номер телефона'}
+                        title={<Heading variant={HeadingVariant.h4} text={data.performer.performerprofile.contacts} />}
+                    />
+                    <DList
+                        className={'child:dt:text-accent'}
+                        label={'Адрес'}
+                        title={<Heading variant={HeadingVariant.h4} text={data.performer.performerprofile.address} />}
+                    />
                     </Panel>}
                     {/* /!* //todo: address *!/ */}
                     {/* <DList className={'child:dt:text-accent'}  label={'Адрес выезда'}  title={data.address} /> */}
