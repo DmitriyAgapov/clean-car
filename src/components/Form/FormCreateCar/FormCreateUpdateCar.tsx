@@ -60,7 +60,7 @@ const availibleCompanies = useMemo(() => {
             })
         }
         return null
-    }, [data?.data?.results, edit, car.company_id]);
+    }, [data?.data?.results, edit]);
   const {width} = useViewportSize()
     const store = useStore()
     const memoizedInitValues = React.useMemo(() => {
