@@ -8,34 +8,34 @@ import useSWR from "swr";
 import { useParams } from "react-router-dom";
 import { useStore } from "stores/store";
 import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
+import agent from "utils/agent";
 
 const localRootStoreF = new LocalRootStore()
 
-const TabCars = ({companyId, company_type, state }:any) => {
-	const store = useStore()
-	const params = useParams()
+const TabUserCars = ({companyId, userId, company_type, state }:any) => {
+	const store = useStore();
+	const params = useParams();
 	const localStoreF = useLocalStore<LocalRootStore>(() => localRootStoreF)
-	const {isLoading, data} = useSWR([`cars_${companyId}`, company_type, companyId,localStoreF.params.getSearchParams] , ([url, company_type, companyId, args]) => store.companyStoreNew.loadCompanyCars(company_type, companyId, args))
-	console.log(data);
+	const {isLoading, data} = useSWR([`user_cars_${userId}`, userId, companyId] , ([url, userId, companyId]) => agent.Account.getCompanyUser(companyId, userId).then(r => r.data))
+
 	useEffect(() => {
 		localStoreF.setData = {
 			...data,
-			results: data?.results?.map((item: any & {rootRoute?: string} ) => ({
+			count: data?.cars?.length,
+			results: data?.cars?.map((item: any & {rootRoute?: string} ) => ({
 				state: item.is_active,
 				brand: item.brand.name,
 				model: item.model.name,
 				car_type: item.model.car_type,
 				number: item.number,
-				filial: item.company.name || '-',
-				city: item.company.city.name,
 				id: item.id,
 				query: {
-					company_id: item.company.id,
-					rootRoute: `/account/cars/${item.company.id}/${item.id}`,
+					company_id: data.company.id,
+					rootRoute: `/account/cars/${data.company.id}/${item.id}`,
 				},
 			}))}
 		localStoreF.setIsLoading = isLoading
-	},[data, localStoreF.params.getSearchParams])
+	},[data,  localStoreF.params.getSearchParams])
 
 	return	<Tabs.Panel  state={state} name={'cars'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0 !grid-rows-none'}  bodyClassName={'!bg-transparent'}>
 <TableWithSortNew		store={localRootStoreF}
@@ -48,10 +48,9 @@ const TabCars = ({companyId, company_type, state }:any) => {
 	background={PanelColor.default}
 	variant={PanelVariant.default}
 	footer={false}
-	ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
-/>
+	ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}]}/>
 
 	</Tabs.Panel>
 }
 
-export default observer(TabCars)
+export default observer(TabUserCars)

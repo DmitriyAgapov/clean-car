@@ -311,15 +311,33 @@ const router = createBrowserRouter([
                         loader: groupsCreatLoader,
                     },
                     {
+                        path: ':id/create',
+                        element: <GroupPageCreateAction />,
+                        loader: groupsCreatLoader,
+                    },
+                    {
                         path: ':company_type/:id',
                         element: <GroupPage />,
                         // loader: groupsIdLoader,
+                        children: [
+                            {
+                                path: ':groupId',
+                                element: <GroupPage />,
+                                // loader: groupsIdLoader,
+                            },
+                        ]
                     },
                     {
                         path: ':company_type/:id/edit',
                         element: <GroupPageEditAction />,
                         // loader: groupsIdLoader,
                     },
+                    {
+                        path: ':company_type/:id/:groupId/edit',
+                        element: <GroupPageEditAction />,
+                        // loader: groupsIdLoader,
+                    },
+
                 ],
             },
             {
@@ -425,16 +443,13 @@ const router = createBrowserRouter([
                         path: ':id/history',
                         element: <PricesHistoryPage/>,
                         loader: priceLoader,
-                        children: [
-                            {
-                                path: ':bid_id',
-                                loader: priceHistoryLoader,
-                                element: <PriceHistoryIdPage/>,
-                            },
-                        ],
-
                     }
                 ],
+            },
+            {
+                path: 'price/:id/history/:type/:bid_id',
+                loader: priceHistoryLoader,
+                element: <PriceHistoryIdPage/>,
             },
 
         ],

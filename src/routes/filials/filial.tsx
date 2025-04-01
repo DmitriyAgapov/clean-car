@@ -1,48 +1,62 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from 'stores/store'
-import { observer } from 'mobx-react-lite'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 import { dateTransform } from 'utils/utils'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from "stores/companyStore";
 import { PermissionNames } from "stores/permissionStore";
-import agent, { client } from "utils/agent";
+import agent from "utils/agent";
 import useSWR from "swr";
 import { useDidUpdate } from '@mantine/hooks'
-import { WorkLoadStatus } from 'components/common/Map/Map';
+import { observer } from "mobx-react-lite";
 
 const FilialPage = () => {
   const store = useStore()
   const location = useLocation()
   const params = useParams()
+
+  const [sparams, setsParams] = useSearchParams()
+    if(sparams?.get('activeTab')) {
+        store.bidsStore.setActiveTab(sparams?.get('activeTab'));
+    }
+
   const navigate = useNavigate()
   const {isLoading, data, mutate} = useSWR(`/filial/${params.company_type}/${params.id}/retrieve`, () => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
+    console.log(store.bidsStore.ActiveTab);
   useDidUpdate(
     () => {
       if(location.pathname === `/account/filials/${params.company_type}/${params.company_id}/${params.id}`) {
         mutate()
       }
+        if(sparams?.get('activeTab')) {
+            store.bidsStore.setActiveTab(sparams?.get('activeTab'));
+        }
     },
     [location.pathname]
+
   );
-
+    const currentATab = store.companyStore.getActiveTab
+    const handleActiveTab = React.useCallback((active:string) => {
+        store.companyStore.setActiveTab(active);
+    }, [currentATab])
   const tabedData = React.useMemo(() => {
-
+      console.log(data);
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },
-      { label: 'Филиалы', company_type: params.company_type , company_id: params.id  },
+      { label: 'Филиалы', data: data, company_type: params.company_type , company_id: params.id  },
       { label: 'Сотрудники', data: data, company_type: params.company_type, company_id: params.id  },
-      params.company_type !== "performer" && { label: 'Автомобили',  company_type: params.company_type , company_id: params.id  },
+      (params.company_type !== "performer") && { label: 'Автомобили', data: data,  company_type: params.company_type , company_id: params.id  },
+      { label: "Права доступа", data: data, company_type: params.company_type , company_id: params.id  },
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
-  }, [data])
+  }, [data, isLoading]);
   return (
       <Section type={SectionType.default}>
           <Panel
@@ -68,6 +82,7 @@ const FilialPage = () => {
 
                     <div className={'flex col-span-2  tablet-max:col-span-full justify-between'}>
                       <Heading text={data?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+                        {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create') && currentATab === "Права доступа" && <Button text={'Создать группу'} href={`/account/groups/${params.id}/create`} className={"mb-auto"} variant={ButtonVariant.default} size={ButtonSizeType.sm}/>}
                   </div>
                       <div className={'flex items-baseline justify-between  tablet-max:col-span-full tablet-max:block row-start-2'}>
                           <div className={'text-xs text-gray-2'}>
@@ -98,7 +113,7 @@ const FilialPage = () => {
                   </>
               }
           >
-              <Tabs variant={'bid-tabs'} data={tabedData}  type={TabsType.filial} />
+              <Tabs variant={'bid-tabs'} data={tabedData} activeTab={handleActiveTab} initActiveTab={sparams?.get('activeTab') as string}  type={TabsType.filial} />
           </Panel>
       </Section>
 

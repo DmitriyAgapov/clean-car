@@ -19,7 +19,7 @@ function GroupPageEditAction() {
   const revalidator = useRevalidator()
   const navigate = useNavigate()
   const params = useParams()
-  const {isLoading, data:group, mutate} = useSWR(`group_${params.id}`,() => agent.Permissions.getPermissionById(store.userStore.myProfileState.company.id as string, params.id as string).then(r => r.data))
+  const {isLoading, data:group, mutate} = useSWR(`group_${params.id}_${params.groupId}`,() => agent.Permissions.getPermissionById(params.groupId ? params.id as string : store.userStore.myProfileState.company.id as string,params.groupId ? params.groupId as string :  params.id as string).then(r => r.data))
   const [changes, setChanges] = useState<any>(null)
 
   React.useEffect(() => {
@@ -140,7 +140,7 @@ function GroupPageEditAction() {
                 text={'Сохранить'}
                 action={async () => {
                   // @ts-ignore
-                  store.permissionStore.setPermissionStore(changes?.id, changes)
+                  store.permissionStore.setPermissionStore(params.id || changes?.id, params.groupdId, changes)
                   revalidator.revalidate()
                   setTimeout(() => navigate('/account/groups'), 500)
                 }}

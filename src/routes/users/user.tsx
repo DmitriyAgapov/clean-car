@@ -9,12 +9,13 @@ import { observer } from 'mobx-react-lite'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import DList from 'components/common/ui/DList/DList'
 import { PermissionNames } from "stores/permissionStore";
-import label from "utils/labels";
+
 import useSWR from "swr";
 import { useDidUpdate } from '@mantine/hooks'
 import dayjs from 'dayjs';
 import { CompanyType } from "stores/companyStore";
 import Image from "components/common/ui/Image/Image";
+import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
 
 const UserPage = () => {
   const store = useStore()
@@ -38,38 +39,15 @@ const UserPage = () => {
   const companyType = params.company_type;
   // const company = companyType !== "admin" ? data.company : store.userStore.myProfileData.company;
   console.log(data);
-  const userData = React.useMemo(() => {
+    const tabedData = React.useMemo(() => {
+        console.log(data);
+        return [
+            { label: 'Основная информация', data: data, company_type: params.company_type  },
+            { label: 'История', data: data, company_type: params.company_type , company_id: params.id  },
+            (params.company_type !== "performer") && { label: 'Автомобили', data: data,  company_type: params.company_type , company_id: params.id  },
+        ]
+    }, [data, isLoading]);
 
-    if(!isLoading) return (
-        <>
-            <DList label={'Пользователь'} title={data.employee?.last_name + ' ' + data?.employee?.first_name} />
-            <DList label={'Номер телефона'} title={data?.employee?.phone} />
-            <DList label={'E-mail'} title={data?.employee?.email} />
-            <DList label={'Пользователь видит заявки'} title={data?.employee?.bid_visibility ? "Да" : "Нет"} />
-            <DList
-                  label={'Тип'}
-                  title={label(companyType ? companyType : "admin")}
-                  directory={companyType}
-              />
-
-          {data?.group && data?.group.name && <DList label={'Группа'} title={data?.group.name} />}
-            <DList
-
-                label={'Статус'}
-                title={
-                    <span className={data?.employee?.is_active ? 'text-active' : 'text-error'}>
-                        {data?.employee?.is_active ? 'Активный' : 'Не активный'}
-                    </span>
-                }
-            />
-          {data?.company?.id && <hr className={'mt-0 col-span-2'}/>}
-          {data?.company?.name && data?.company?.parent ? <DList label={'Компания'} title={data?.company?.parent.name} /> : <DList label={'Компания'} title={data?.company?.name} />}
-          {data?.company?.city.name && <DList label={'Город'} title={data?.company.city.name} />}
-          {data?.company?.parent && <DList label={'Филиал'} title={data?.company.name} />}
-        </>
-    )
-    return null
-  }, [data, isLoading])
 
   if (location.pathname.includes('edit')) return <Outlet />
   return (
@@ -112,10 +90,10 @@ const UserPage = () => {
       />
       <Panel
         state={isLoading}
-        className={'col-span-full grid grid-rows-[auto_1fr_auto] tablet-max:-mx-6  desktop-max:pb-12'}
+       className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-6'}
         variant={PanelVariant.textPadding}
         background={PanelColor.glass}
-        bodyClassName={'desktop:pl-44 desktop:grid flex flex-col desktop:grid-cols-2 items-start content-start desktop:gap-8 gap-4'}
+        bodyClassName={''}
         headerClassName={'flex desktop:gap-10 gap-4'}
         header={
         <>
@@ -137,7 +115,7 @@ const UserPage = () => {
             title={dayjs(data?.employee.date_joined).format('DD.MM.YYYY HH:mm')} />
         </>
         }>
-        {userData}
+          <Tabs variant={'bid-tabs'} data={tabedData}   type={TabsType.user} />
       </Panel>
     </Section>
   )

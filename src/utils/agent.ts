@@ -186,7 +186,7 @@ const Price = {
     priceDoubling: (company_id: number, id: number) => requests.post(`/price/${company_id}/${id}/doubling/`, {}),
     getAllPrice: (pagination?: PaginationProps) => requests.get('/price/all_companies/list', pagination),
     getAllCompanyPrices: (company_id: number | string, pagination?: PaginationProps) => requests.get(`/price/${company_id}/active_list/`, pagination),
-    getHistoryPrice: (company_id:number, pagination?: any) => requests.get(`/price/${company_id}/history/`, pagination),
+    getHistoryPrice: (company_id:number | string, pagination?: any) => requests.get(`/price/${company_id}/history/`, pagination),
     getCurentCompanyPriceEvac: (company_id: number) => requests.get(`/price/${company_id}/active_evacuation`, {}),
     getCompanyPriceEvac: (company_id: number, id: number) => requests.get(`/price/${company_id}/${id}/evacuation/`, {}),
     getCurentCompanyPriceTire: (company_id: number) => requests.get(`/price/${company_id}/active_tire`, {}),
@@ -285,6 +285,13 @@ const Auth = {
 
 }
 const Users = {
+    getHistoryUser:( company_id: number| string, id : number | string) => requests.get(`/history/${company_id}/${id}/users/`),
+    transferUser: (data: {
+        employee_id: number | string,
+        old_company_id: string | number,
+        new_company_id: string | number,
+        new_group_id: string | number
+    }) => requests.post(`/accounts/${data.old_company_id}/transfer/`, data),
     getAllUsers:  (pagination?: PaginationProps) => requests.get('/accounts/all_users/', pagination),
     getAllUsersTest:  (params: string, pagination?: PaginationProps) => useSWR(`${userStore.isAdmin ? `/accounts/all_users${params ? `?${params}` : '?page=1&page_size=10'}` : `/accounts/${userStore.myProfileData.company?.id}/users/list${params ? `?${params}` : '?page=1&page_size=10'}`}`,(url) => requests.getNew(url).then(r => r.data)),
     getUser: ({ company_id, id }: { company_id: number; id: number }) => requests.get(`/accounts/${company_id}/users/${id}/retrieve/`),
@@ -294,6 +301,7 @@ const Users = {
 
 }
 const Companies = {
+    companyWithChildren: (company_id: string | number, company_type?: string, pagination?: PaginationProps) => requests.get(`/companies/${company_id}/avalible/list/`, pagination),
     createCompanyPerformers: ( data: Company<CompanyType.performer>, type: string ) => requests.post(`/companies/${type}/create/`, data),
     editCompany: ( data: Company<CompanyType.performer>, type: string, id:number ) => requests.put(`/companies/${type}/${id}/update/`, data),
 
@@ -428,6 +436,8 @@ const Catalog = {
         requests.get(`/catalog/services/${id}/subypes/`, params)
 }
 const Cars = {
+  getCarHistory: (company_id: string | number, car_id: string | number)=> requests.get(`/history/${company_id}/${car_id}/car/`),
+  transferCar: (data: { car_id: number | string, old_company_id: number | string, new_company_id: number | string }) => requests.post(`/cars/${data.old_company_id}/transfer/`, data),
   getCompanyCars: (company_id: number, params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars/${company_id}/list/`, params),
   getAdminCars: ( params?: PaginationProps, filter?: FilterPropsCars) => requests.get(`/cars_admin/list/`, params),
   getCarsNew: (params: string, company_id?: string | number,  pagination?: PaginationProps) => useSWR(`${userStore.isAdmin ? `/cars_admin/list${params ? `?${params}` : '?page=1&page_size=10'}` : `/cars/${company_id ? company_id : userStore.myProfileData.company?.id}/list${params ? `?${params}` : '?page=1&page_size=10'}`}`,(url) => requests.getNew(url).then(r => r.data)),

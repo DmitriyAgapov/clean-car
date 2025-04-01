@@ -7,9 +7,9 @@ import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from 'co
 import Tabs, { TabsProps } from '../../../components/common/layout/Tabs/Tabs'
 import { useStore } from 'stores/store'
 import TableWithSortNewPure from 'components/common/layout/TableWithSort/TableWithSortNewPure'
-import { translite } from 'utils/utils'
+import { transformCompaniesToTree, translite } from 'utils/utils'
 import { CAR_RADIUS } from 'stores/priceStore'
-import { Box, Grid, NumberInput, ScrollArea, SimpleGrid, Text } from '@mantine/core'
+import { Box, ScrollArea, SimpleGrid, Text, Tree, useTree  } from '@mantine/core'
 import { observer, useLocalStore } from 'mobx-react-lite'
 import CarouselCustom from 'components/common/ui/CarouselCustom/CarouselCustom'
 import { BidsStatus } from 'stores/bidsStrore'
@@ -21,13 +21,19 @@ import TabFilials from 'routes/company/TabsVariants/TabFilials'
 import TabCars from 'routes/company/TabsVariants/TabCars'
 import TabUsers from 'routes/company/TabsVariants/TabUsers'
 import TabBidHistory from 'routes/company/TabsVariants/TabBidHistory'
-import { useDisclosure, useViewportSize } from '@mantine/hooks'
+import { useViewportSize } from '@mantine/hooks'
 import { WorkLoadStatus } from "components/common/Map/Map";
 import agent from "utils/agent";
-import { CarClasses } from "components/common/layout/Modal/CarClasses";
-import { UpBalance } from "components/common/layout/Modal/UpBalance";
 import { CompanyType, CompanyTypeRus } from "stores/companyStore";
-
+import TabPermissions from "routes/company/TabsVariants/TabPermissions";
+import useSWR from "swr";
+import FilialsTree from 'components/FilialsTree/FilialsTree'
+import  label from "utils/labels";
+import TabHistory from "routes/company/TabsVariants/TabHistory";
+import TabCarUsers from './TabCarUsers'
+import TabUserCars from "routes/company/TabsVariants/TabUserCars";
+import TabCarHistory from "routes/company/TabsVariants/TabCarHistory";
+const lbl = label
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
 }
@@ -50,8 +56,67 @@ type TabsVariantsProps = {
   parentCompany?: string
   props?: any
 } & TabsProps & {className?: string, children?: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps
+export const TabsVariantsUser =  ({label, parentCompany, data, state, name, className, companyId, company_type, props}:TabsVariantsProps) => {
+
+  if(!data) {
+    return  null
+  }
+  const userData = React.useMemo(() => {
+    return (
+        <Tabs.Panel  state={state} name={'users'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0 grid-cols-2 my-4'}  bodyClassName={'!bg-transparent'}>
+          <DList label={'Пользователь'} title={data.employee?.last_name + ' ' + data?.employee?.first_name} />
+          <DList label={'Номер телефона'} title={data?.employee?.phone} />
+          <DList label={'E-mail'} title={data?.employee?.email} />
+          <DList label={'Пользователь видит заявки'} title={data?.employee?.bid_visibility ? "Да" : "Нет"} />
+          <DList
+              label={'Тип'}
+              title={lbl(company_type ? company_type : "admin")}
+              directory={company_type}
+          />
+
+          {data?.group && data?.group.name && <DList label={'Группа'} title={data?.group.name} />}
+          <DList
+
+              label={'Статус'}
+              title={
+                <span className={data?.employee?.is_active ? 'text-active' : 'text-error'}>
+                        {data?.employee?.is_active ? 'Активный' : 'Не активный'}
+                    </span>
+              }
+          />
+
+          {data?.company?.name && data?.company?.parent ? <DList label={'Компания'} title={data?.company?.parent.name} /> : <DList label={'Компания'} title={data?.company?.name} />}
+          {data?.company?.city.name && <DList label={'Город'} title={data?.company.city.name} />}
+          {data?.company?.parent && <DList label={'Филиал'} title={data?.company.name} />}
+        </Tabs.Panel>
+    )
+  }, [data, state])
+  let result
+  switch (label) {
+    case "Основная информация":
+      result = userData
+      break;
+    case 'История':
+      result = (<TabHistory state={state} company_id={data?.company.id} user_id={data.employee?.id} company_type={company_type} />)
+      break;
+    case 'Автомобили':
+      result = (<TabUserCars userId={data?.employee?.id} state={state} companyId={data?.company.id} company_type={company_type} />)
+      break;
+    // case 'Автомобили':
+    //   result = (<TabCars state={state} companyId={companyId} company_type={company_type} />)
+    //   break;
+
+    default:
+      return null;
+  }
+  return  result
+}
 export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, className, companyId, company_type, props}:TabsVariantsProps) => {
-  const store = useStore()
+
+  if(!data) {
+    return  null
+  }
+
   let result
   switch (label) {
     case "Основная информация":
@@ -60,6 +125,7 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
         {data.parent.name && <DList label={'Компания'}
           // @ts-ignore
           title={data.parent.name} />}
+        <FilialsTree data={data} company_type={company_type}/>
         {data?.performerprofile &&    <DList label={'Загруженность'} title={<WorkLoadStatus hasDot={false} status={data?.performerprofile.workload} className={'!top-0 !right-0 relative i:hidden'}/>} />}
         {data?.performerprofile && data?.performerprofile.height && <DList label={'Максимальная высота авто'} title={data?.performerprofile.height + ' см'} className={'!top-0 !right-0 relative i:hidden'}/>}
 
@@ -73,7 +139,12 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
       // result = null
       result = (<TabFilials state={state} companyId={companyId} company_type={company_type} />)
       break;
-
+    case 'Права доступа':
+      result = (<TabPermissions state={state} companyId={companyId} company_type={company_type} />)
+      break;
+    case 'Автомобили':
+      result = (<TabCars state={state} companyId={companyId} company_type={company_type} />)
+      break;
     // case 'Автомобили':
     //   result = (<TabCars state={state} companyId={companyId} company_type={company_type} />)
     //   break;
@@ -143,12 +214,13 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
       // result = null
       result = (<TabFilials state={state} companyId={companyId} company_type={company_type} />)
       break;
-
+    case 'Права доступа':
+      result = (<TabPermissions state={state} companyId={companyId} company_type={company_type} />)
+      break;
     case 'Автомобили':
       result = (<TabCars state={state} companyId={companyId} company_type={company_type} />)
       break;
     case 'Партнеры':
-
       const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
 
       // const memoizedPerf = React.useMemo(() => {
@@ -220,7 +292,10 @@ export const TabsVariantsCars = ({label, content_type, data, state, name, classN
       break;
 
     case 'Сотрудники':
-      result = (<TabUsers state={state} companyId={companyId} company_type={company_type} />)
+      result = (<TabCarUsers state={state} carId={data.id} companyId={companyId} company_type={company_type} />)
+      break;
+    case 'История':
+      result = (<TabCarHistory state={state} company_id={data?.company.id} car_id={data.id} company_type={company_type} />)
       break;
     // case 'Филиалы':
     //   console.log(data);

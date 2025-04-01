@@ -19,6 +19,7 @@ import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import agent from 'utils/agent'
 import { useScrollIntoView } from '@mantine/hooks'
 import { PanelVariant } from 'components/common/layout/Panel/Panel'
+import { getAllChildrenObjects } from "utils/utils";
 
 interface InitValues {
     address: string | null
@@ -235,17 +236,23 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     }, [formData.values.company_id]);
 
     const [filialsCompanyData, setFilialsCompanyData] = React.useState(['Пусто'])
-    console.log(filialsCompanyData);
+
     React.useEffect(() => {
         (async () => {
-            const data = await store.companyStore.loadAllFilials({page_size: 1000})
+            let data;
+            if(edit) {
+                data = await agent.Companies.companyWithChildren(Number(company.id)).then(r => r.data)
+
+            } else {
+                data = await store.companyStore.loadAllFilials({ page_size: 1000 })
+            }
             let res: any
             if (formData.values.company_filials === 'filials') {
                 if(store.appStore.appType === "admin") {
                     res = data.results.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
                 } else {
                     res = data.results.map((f: any) => ({ label: f.name, value: f.id.toString() }))
-                    console.log(res);
+
                     if(res.length === 1) formData.setFieldValue('company_id', res[0].value.toString());
                 }
                 setFilialsCompanyData(res)
@@ -253,15 +260,12 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
 
                 const _company = await store.companyStore.loadCompanies();
                 res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-                console.log(res);
+
                 if(res.length === 1) formData.setFieldValue('company_id', res[0].value.toString());
                 if(_company && !res.length) {
                     console.log(_company);
                     res = _company.map((f: any) => ({ label: f.name, value: f.id.toString() }))
                 }
-
-
-
                 setFilialsCompanyData(res)
             }
         })()

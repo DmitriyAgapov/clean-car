@@ -32,7 +32,9 @@ const PriceHistoryIdPage = ():JSX.Element => {
   const isHistory = location.pathname.includes('history');
   // @ts-ignore
   const isCreate = currentPriceById.data?.tabs && currentPriceById.data?.tabs[0]?.data;
-
+    useEffect(() => {
+        console.log(store.priceStore.currentPriceById);
+    }, [store.priceStore.currentPriceById]);
   store.appStore.setAppState(currentPriceById.loading);
   useEffect(() => {
     store.appStore.getAppState ? store.appStore.setAppState(!!company) : void null
@@ -74,7 +76,7 @@ const PriceHistoryIdPage = ():JSX.Element => {
                               className={
                                   'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
                               }
-                              action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'), {})}
+                              action={() => navigate(location.pathname.split('/').slice(0, -2).join('/'), {})}
                               variant={ButtonVariant.text}
                           />
                           <Heading
@@ -149,8 +151,8 @@ const PriceHistoryIdPage = ():JSX.Element => {
                       </div>
                       <div className={'flex  mobile:flex-wrap  items-baseline  gap-6'}>
                           <div className={'text-xs text-gray-2'}>
-                            <div>Дата создания: <span>{dayjs(isCreate.created).format('DD.MM.YY')}</span></div>
-                            <div>Дата изменения: <span>{dayjs(isCreate.updated).format('DD.MM.YY')}</span></div>
+                            <div>Дата создания: <span>{dayjs(isCreate?.created).format('DD.MM.YY')}</span></div>
+                            <div>Дата изменения: <span>{dayjs(isCreate?.updated).format('DD.MM.YY')}</span></div>
                           </div>
                           <div className={'flex flex-1 gap-6'}>
                               {isCreate && isCreate.is_active && (

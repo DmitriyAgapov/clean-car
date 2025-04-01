@@ -116,7 +116,8 @@ export const priceHistoryLoader = async (props: any) => {
     // const paginationData = paginationParams(props.request.url as string)
     const is_history = props.request.url.includes('history')
     console.log(props);
-     await priceStore.getCurrentPrice(props, true);
+
+     await priceStore.getHistoryPrice(props);
 
     // console.log('loader', !userStore.isAdmin);
     // async function fillData() {

@@ -29,6 +29,11 @@ const PricesHistoryPage = () => {
 
 	const  currentPriceById = store.priceStore.currentPriceById;
 	store.appStore.setAppState(currentPriceById.loading);
+	const type:Record<string, string> = {
+		"Эвакуация": "evacuation",
+		"Шиномонтаж": "tire",
+		"Мойка": "wash"
+	}
 	useEffect(() => {
 		localStore.setData = {
 			...data,
@@ -36,14 +41,17 @@ const PricesHistoryPage = () => {
 				id: p.id,
 				created: dayjs(p.created).format('DD.MM.YYYY HH:mm'),
 				expires:  p.expires === null ? " " : dayjs(p.expires).format('DD.MM.YYYY HH:mm'),
-				service_type: p.service_type?.name
+				service_type: p.service_type?.name,
+				query: {
+					service_type: type[String(p.service_type?.name)]
+				}
 			}))}
 		localStore.setIsLoading = isLoading
 		store.appStore.getAppState ? store.appStore.setAppState(!!data) : void null
 	},[data, isLoading])
 
 	if (location.pathname.includes('history/')) return <Outlet />
-		return (
+	return (
 		<Section type={SectionType.default}>
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}
 				state={false}

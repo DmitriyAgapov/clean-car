@@ -100,7 +100,7 @@ export class CompanyStore {
         })
         makePersistable(this, {
             name: 'companyStore',
-            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers', 'loadingState', 'allFilials'],
+            properties: ['fullCompanyData', 'activeTab', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers', 'loadingState', 'allFilials'],
             storage: window.localStorage,
 
         }, { fireImmediately: true })
@@ -191,9 +191,16 @@ export class CompanyStore {
     loadingCompanies: boolean = false
     errors: any
     targetCompanyId:null | number = null
+    activeTab: string | null = null
     targetCompany = {}
     fullCompanyData = new Map([])
     companiesAndFilials: IObservableArray<any> = observable.array([])
+    setActiveTab(tab:string|null) {
+        this.activeTab = tab;
+    }
+    get getActiveTab() {
+        return this.activeTab
+    }
     get getCompaniesPerformers() {
         if(this.companiesPerformers.length === 0 && !this.companyPerformersIsZeroLength) {
             this.getPerformersCompany().finally(() => this.companyPerformersIsZeroLength = true)

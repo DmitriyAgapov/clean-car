@@ -426,3 +426,58 @@ export function formatPhone(phone:string) {
       digits.replace(/^(\d)(\d+)(\d\d\d)(\d\d)(\d\d)$/, '+$1 $2 $3 $4 $5') :
       digits.replace(/^(\d)(\d+)(\d\d\d)(\d\d)(\d\d)$/, '+$1$2 $3‒$4‒$5');
 }
+
+export const transformCompaniesToTree = (companies:any, parentPath = '', level = 0) =>
+    [].concat(...companies.map((company: {
+        parent: any;
+        id: any; name: any; children: any; groups: any[]; }) => {
+        const nodePath = parentPath ? `${parentPath}/${company.id}` : `${company.id}`;
+
+        const companyNode = {
+            parent: company.parent,
+            id: company.id,
+            value: nodePath,
+            label: company.name,
+        };
+
+        const childrenNodes = (company.children && level < 5)
+            ? transformCompaniesToTree(company.children, nodePath, level + 1)
+            : [];
+
+        const groupNodes = company.groups
+            ? company.groups.map(group => ({
+                parent: company.parent,
+                id: company.id,
+                value: `${nodePath}/groups/${group.id}`,
+                label: group.name,
+            }))
+            : [];
+
+        const allChildren = [...childrenNodes, ...groupNodes];
+
+        return allChildren.length > 0
+            ? { ...companyNode, children: allChildren }
+            : companyNode;
+    }));
+
+// @ts-ignore
+export function getAllChildrenObjects(company: {
+    id: any;
+    children: string | any[]; }) {
+    let result = [company];
+
+    // Если есть дети, обрабатываем их
+    if (company.children && company.children.length > 0) {
+        for (const child of company.children) {
+            // Добавляем текущего ребенка в результат
+
+            if(result.filter(el => el.id == child.id).length == 0) {
+                result.push(child);
+                // Рекурсивно добавляем всех его детей
+                // result = result.concat(getAllChildrenObjects(child));
+            }
+        }
+    }
+
+    return result;
+}

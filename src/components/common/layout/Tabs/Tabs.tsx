@@ -1,9 +1,10 @@
 import React, { ReactElement, ReactNode, useEffect, useRef, useState } from 'react'
 import styles from './Tabs.module.scss'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
-import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
+import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial, TabsVariantsUser } from "routes/company/TabsVariants/TabsVariants";
 import { Observer, observer } from "mobx-react-lite";
 import { useStore } from 'stores/store'
+import label from "utils/labels";
 import { useDebouncedValue, useElementSize, useScrollIntoView, useViewportSize } from '@mantine/hooks'
 export enum TabsType {
   bid = 'bid',
@@ -18,6 +19,7 @@ export type TabsProps = {
   data?: any
   className?: string
   type?: TabsType
+    initActiveTab?: string
   activeTab?: (active:string) => void
 }
 const HeadersTabs = ({ data, state, setState, }: { data: any, state: any, setState: (event: any, key: string) => void }) => {
@@ -104,6 +106,23 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
         })
         return result
     }
+    if (type == TabsType.user) {
+        data.forEach((item: any, index: number) => {
+            result.push(
+                <TabsVariantsUser
+                    company_type={item.company_type}
+                    companyId={item.company_id}
+                    key={`tab_${index}`}
+                    state={state == item.label}
+                    data={item.data}
+                    label={item.label}
+                    props={items}
+                />,
+            )
+        })
+        return result
+    }
+
     if (type == TabsType.filial) {
         data.forEach((item: any, index: number) => {
             result.push(
@@ -156,7 +175,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
 
     return result
 }
-const Tabs = ({ data, className, activeTab, panels, items, type, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
+const Tabs = ({ data, className, activeTab, panels, items, type, initActiveTab, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
   const [state, setState] = useState('');
@@ -167,6 +186,7 @@ const Tabs = ({ data, className, activeTab, panels, items, type, variant=null }:
   }, [data])
 
   const  handleChangeTabState = React.useCallback((event: Event, label: string) => {
+
     if (activeTab) {
       label && activeTab(label);
     }

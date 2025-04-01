@@ -109,14 +109,14 @@ export class PermissionStore {
       this.errors = 'error'
     }
   })
-  createPermission = flow(function*(this: PermissionStore, data: any) {
+  createPermission = flow(function*(this: PermissionStore, data: any, company_id) {
     this.loadingPermissions = true
     try {
       // if(userStore.isAdmin) {
       //    agent.PermissionsAdmin.createAdminPermission(data)
       // }
       if(userStore.myProfileData.company.id) {
-        return  yield agent.Permissions.createPermission(userStore.myProfileData.company.id, data)
+        return  yield agent.Permissions.createPermission(company_id || userStore.myProfileData.company.id, data)
       }
 
     } catch (error) {
@@ -155,12 +155,13 @@ export class PermissionStore {
     this.loadingPermissions = false
   })
 
-  setPermissionStore = flow(function *(this: PermissionStore, id: number, data: any) {
+  setPermissionStore = flow(function *(this: PermissionStore, id: number, groupId: number | undefined, data: any) {
     this.loadingPermissions = true
-    let company_id = userStore.myProfileData.company.id;
+    let company_id = id || userStore.myProfileData.company.id;
+
     if (company_id) {
       try {
-        return  yield agent.Permissions.putUpdatePermissions(company_id, data.id, data).then((r) => {
+        return  yield agent.Permissions.putUpdatePermissions(company_id, groupId || data.id, data).then((r) => {
           if (r.status === 200) {
 
             userStore.loadMyProfile()
@@ -176,10 +177,10 @@ export class PermissionStore {
         this.loadingPermissions = false
       }
     }
-    // else {
-    //   console.log('is admin');
-    //   this.setPermissionStoreAdmin(id, data)
-    // }
+    else {
+      console.log('is admin');
+      this.setPermissionStoreAdmin(id, data)
+    }
     this.loadingPermissions = false
   })
   deletePermissionStore = flow(function *(this: PermissionStore, id: number) {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import "yup-phone-lite";
 import {values as val} from "mobx";
 import { useStore } from "stores/store";
@@ -22,6 +22,9 @@ import { CompanyType, CompanyTypeRus } from 'stores/companyStore'
 import { useDidUpdate, useDisclosure, useScrollIntoView, useViewportSize } from '@mantine/hooks'
 import { PanelVariant } from "components/common/layout/Panel/Panel";
 import { BidPaymentResult } from "components/common/layout/Modal/BidPaymentResult";
+import useSWR from "swr";
+import agent from "utils/agent";
+import { getAllChildrenObjects } from "utils/utils";
 
 interface CarCreateUpdate  {
     number: string
@@ -46,6 +49,18 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     offset: 60,
 
   });
+    console.log(car);
+    const {data, isLoading} = useSWR(edit && `availible_companies_for_${car.company_id}`, () => agent.Companies.companyWithChildren(car.company_id))
+const availibleCompanies = useMemo(() => {
+        if(edit && data?.data?.results[0]) {
+            const allAvailibleCompanies = getAllChildrenObjects(data?.data?.results[0])
+            return ({
+                companies: data?.data?.results[0],
+                filials:  allAvailibleCompanies.filter((el:any) => el.parent != null),
+            })
+        }
+        return null
+    }, [data?.data?.results, edit, car.company_id]);
   const {width} = useViewportSize()
     const store = useStore()
     const memoizedInitValues = React.useMemo(() => {
@@ -137,8 +152,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
           return ({
             label: form.values.depend_on === "company" ? 'Компания' : 'Филиал',
 
-            disabled: edit,
-            className: ` !flex-[1_1_64%]  ${edit ? "!hidden" : ""}`
+            // disabled: edit,
+            // className: ` !flex-[1_1_64%]  ${edit ? "!hidden" : ""}`
           })
         }
 
@@ -154,8 +169,8 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
               // payload.form.values.model = null;
               // store.carStore.setBrand(prop);
             ,
-            disabled: edit,
-            className: ` !flex-[1_1_30%] ${edit ? "!hidden" : ""}`
+            // disabled: edit,
+            // className: ` !flex-[1_1_30%] ${edit ? "!hidden" : ""}`
           })
         }
         return ({
@@ -195,11 +210,20 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
           if(store.appStore.appType !== "admin") {
             res = _c
           } else {
-            res = _c.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
+              if(edit && availibleCompanies && availibleCompanies.companies) {
+                  res = [availibleCompanies.companies]
+              } else {
+                  res = _c.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
+              }
           }
 
         } else {
-          res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
+
+            if(edit && availibleCompanies && availibleCompanies.filials) {
+                res = availibleCompanies.filials
+            } else {
+                res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
+            }
         }
         if (res.length === 1) {
           form.values.company_id = String(res[0].id)
@@ -239,12 +263,22 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
         employees: val(store.usersStore.selectedUsers).map((item: any) => item.employee.id),
       }
       if (edit) {
-        store.formStore.setFormDataCreateCar(data)
-        store.formStore.sendCarFormDataEdit()
-        .then(() =>  {
-          // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
-          navigate(`/account/cars`)
-        })
+          if(data.company_id.toString() !== memoizedInitValues.company_id) {
+              agent.Cars.transferCar({
+                  car_id: data.id,
+                  old_company_id: memoizedInitValues.company_id,
+                  new_company_id: data.company_id
+              }).then(() =>  {
+                  // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
+                  navigate(`/account/cars`)
+              })
+          } else {
+              store.formStore.setFormDataCreateCar(data)
+              store.formStore.sendCarFormDataEdit().then(() => {
+                  // navigate(`/account/cars/${form.values.company_id}/${form.values.id}`)
+                  navigate(`/account/cars`)
+              })
+          }
       } else {
         store.formStore.setFormDataCreateCar(data)
         store.formStore.sendCarFormData()
@@ -435,6 +469,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
                                 />
                                 <Select
                                     searchable
+
                                     label={'Компании'}
                                     disabled={!cVar.length}
                                     {...form.getInputProps('company_id', { dependOn: 'type' })}

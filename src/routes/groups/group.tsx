@@ -20,8 +20,9 @@ const GroupPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-  const params = useParams()
-  const {isLoading, data:group, mutate} = useSWR(`group_${params.id}`,() => agent.Permissions.getPermissionById(store.userStore.myProfileState.company.id as string, params.id as string).then(r => r.data))
+  const params = useParams();
+    console.log(params);
+  const {isLoading, data:group, mutate} = useSWR(`group_${params.id}_${params.groupId}`,() => agent.Permissions.getPermissionById(params.groupId ? params.id as string : store.userStore.myProfileState.company.id as string,params.groupId ? params.groupId as string :  params.id as string).then(r => r.data))
 
   const memoizedAndModificatedGroup = React.useMemo(() => {
     let modifCatedData = null;
@@ -32,7 +33,7 @@ const GroupPage = () => {
     }
     if(!modifCatedData && isLoading) return
     return <PermissionTable data={modifCatedData.permissions} />;
-  }, [group, isLoading]);
+  }, [group, isLoading, params.id]);
 
   return (
     <Section type={SectionType.default}>

@@ -34,7 +34,8 @@ const CarPage = () => {
     store.appStore.setAppState(isLoading)
     return [
       { label: 'Основная информация', data: data, company_type: CompanyTypeRus(data?.company?.company_type)},
-      (store.userStore.myProfileState.company.company_type !== CompanyType.fizlico && { label: 'Сотрудники', data: data, company_type: CompanyTypeRus(data?.company?.company_type), company_id: params.company_id })
+      (store.userStore.myProfileState.company.company_type !== CompanyType.fizlico && { label: 'Сотрудники', data: data, company_type: CompanyTypeRus(data?.company?.company_type), company_id: params.company_id }),
+      { label: 'История', data: data, company_type: params.company_type , company_id: params.id  },
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]

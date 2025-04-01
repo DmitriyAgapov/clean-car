@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { yupResolver } from "mantine-form-yup-resolver";
 import { CreateUserSchema } from "utils/validationSchemas";
 import { InputBase, Select, Switch, TextInput } from '@mantine/core'
@@ -13,6 +13,9 @@ import { useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { CompanyTypeRus, CompanyType } from "stores/companyStore";
 import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import agent from "utils/agent";
+import { PermissionNames } from "stores/permissionStore";
+import useSWR from "swr";
+import { getAllChildrenObjects } from "utils/utils";
 
 interface InitValues {
 	id: string | number
@@ -34,6 +37,18 @@ export const createUserFormActions= createFormActions<InitValues>('createUserFor
 
 const FormCreateUpdateUsers =({ user, edit }: any) => {
 	const store = useStore()
+	const {data, isLoading} = useSWR(edit && `availible_companies_for_${user.company?.id}`, () => agent.Companies.companyWithChildren(user.company?.id))
+	const availibleCompanies = useMemo(() => {
+		if(edit && data?.data?.results[0]) {
+			const allAvailibleCompanies = getAllChildrenObjects(data?.data?.results[0])
+			return ({
+				companies: data?.data?.results[0],
+				filials:  allAvailibleCompanies.filter((el:any) => el.parent != null),
+			})
+		}
+		return null
+	}, [data?.data?.results, edit, user?.company?.id]);
+
 	const initData = React.useMemo(() => {
 		let initValues: InitValues = {
 			id: 0,
@@ -85,7 +100,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
         }
 				if(payload.field === 'type') {
 					return ({
-
+						disabled: edit,
 						className: `w-full !flex-[1_1_30%] col-span-3 ${store.appStore.appType !== "admin" && 'hidden'}`,
 					})
         }
@@ -145,6 +160,22 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 				group: Number(form.values.group)
 			}
 			if(edit) {
+				if(senData.company_id.toString() !== initData.company_id?.toString() && initData.company_id) {
+					console.log('Редактируем')
+					agent.Users.transferUser({
+						new_company_id: senData.company_id.toString(),
+						old_company_id: initData.company_id.toString(),
+						employee_id: senData.id.toString(),
+						new_group_id: senData.group.toString()
+					}).then((res) => {
+						if (400 > res.status) {
+							const userId = edit ? form.values.id : res.data.id
+							// revalidator.revalidate()
+							store.userStore.userData.id === userId ? store.userStore.loadMyProfile() : void null
+							// @ts-ignore
+							navigate(`/account/users/${_companyType}/${compId}/${userId}`)
+						}})
+				} else {
 				agent.Account.updateCompanyUser(senData.company_id, senData).then((res) => {
 					if (400 > res.status) {
 						const userId = edit ? form.values.id : res.data.id
@@ -153,6 +184,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 						// @ts-ignore
 						navigate(`/account/users/${_companyType}/${compId}/${userId}`)
 					}})
+				}
 			} else {
 				await agent.Account.createCompanyUser(senData.company_id, senData).then((res) => {
 					if (res && res.status && res.status < 400) {
@@ -184,30 +216,33 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			setCompanyVar([{name: "Нет ", id: "none"}]);
 			const setRes = async () => {
 				let res: any[] = []
-				console.log([form.values.type]);
 				if(form.values.depend_on === "company") {
-
 					const _params = {
 						// @ts-ignore
 						company_type: CompanyType[form.values.type]
 					}
 
 					const _c = await store.companyStore.getAllCompanies(_params).then(r => r.data).then(data => data.results)
-					// @ts-ignore
-					console.log('123', CompanyType[form.values.type]);
-					console.log('_params', form.values.type);
+
 					if(store.appStore.appType !== "admin") {
 						res = _c
 					} else {
 						res = _c.filter((c: any) => c.parent === null);
 					}
+					if(edit && availibleCompanies && availibleCompanies.companies) {
+						res = [availibleCompanies.companies]
+					}
 				} else {
 					// @ts-ignore
 					res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === CompanyType[form.values.type] : c) ?? []
+					if(edit && availibleCompanies && availibleCompanies.filials) {
+						res = availibleCompanies.filials
+					}
 				}
 				if (res.length === 1) {
 					form.values.company_id = String(res[0].id)
 				}
+				console.log(res);
 				setCompanyVar(res)
 			}
 			(async () => {
@@ -223,7 +258,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 				}
 			})()
 		},
-		[form.values.depend_on, form.values.type])
+		[form.values.depend_on, form.values.type, availibleCompanies])
 
 	const groupData = React.useMemo(() => {
         // console.log('edit', edit && !!user.company?.groups);
@@ -262,6 +297,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			return appended
 		},
 	});
+	console.log(companyVar);
 	// @ts-ignore
 	return (
         <FormProvider form={form}>
@@ -286,6 +322,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                     </>
                 }
                 actionNext={
+				<>
                     <Button
                         type={'submit'}
                         action={handleCreateUser}
@@ -294,6 +331,15 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         className={'float-right'}
                         variant={ButtonVariant.accent}
                     />
+					<Button
+                        type={'button'}
+                        action={() => form.validate()}
+                        // disabled={!form.isValid()}
+                        text={'validate'}
+                        className={'float-right'}
+                        variant={ButtonVariant.accent}
+                    />
+				</>
                 }
             >
                 <form
@@ -316,7 +362,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                             value: item[1],
                         }))}
                     />
-                    {!(form.values.type === null || form.values.type === UserTypeEnum.admin) && !edit && (
+                    {!(form.values.type === null || form.values.type === UserTypeEnum.admin) && store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create') && (
                         <>
                             <Select
                                 onOptionSubmit={() => form.setValues({ ...form.values, company_id: null, group: null })}
@@ -328,15 +374,17 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                                     { label: 'Филиалы', value: 'filials' },
                                 ]}
                             />
-                            <Select
+							{/*@TODO С новой ручкой хрен выберешь филиал или компания*/}
+							<Select
                                 searchable
+								disabled={companyVar.length === 0}
                                 label={form.values.depend_on === 'company' ? 'Компании' : 'Филиал'}
                                 {...form.getInputProps('company_id', { dependOn: 'type' })}
                                 onOptionSubmit={(e) => {
                                     form.setValues({ ...form.values, group: null })
                                     store.permissionStore.loadCompanyPermissionsResults(Number(e))
                                 }}
-                                data={companyVar.map((item: any) => ({ label: item.name, value: String(item.id) }))}
+                                data={companyVar.map((item: any) => ({ label: item.name, value: String(item.id) })) ?? []}
                             />
                         </>
                     )}

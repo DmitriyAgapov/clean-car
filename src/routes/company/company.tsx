@@ -28,6 +28,13 @@ const CompanyPage = () => {
   const {isLoading, data, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
     revalidateOnMount: true
   })
+  const {isLoading:loading, data:dataFilials, mutate:mutateF} = useSWR(`filials_${params.id}`, () => agent.Filials.getFilials(params.company_type as string, Number(params.id)).then(r => r.data), {
+    revalidateOnMount: true
+  })
+    const {isLoading:loadingPermissions, data:dataPermission} = useSWR(`company_permissions_${params.id}`, () => agent.Permissions.getAllCompanyPermissions(Number(params.id)).then(r => r.data), {
+    revalidateOnMount: true
+  })
+    console.log(dataPermission);
   useDidUpdate(
     () => {
       if(location.pathname === `/account/companies/${params.company_type}/${params.id}`) {
@@ -39,16 +46,17 @@ const CompanyPage = () => {
   );
 
   const tabedData = React.useMemo(() => {
+      console.log(dataPermission);
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },
-      { label: 'Филиалы', company_type: params.company_type  },
+      { label: 'Филиалы', data: dataFilials, company_type: params.company_type  },
       { label: 'Сотрудники', data: data, company_type: params.company_type  },
-      (params.company_type === "customer") && { label: 'Автомобили',  company_type: params.company_type  },
+      (params.company_type === "customer") && { label: 'Автомобили', data: data,  company_type: params.company_type  },
       (params.company_type === "customer") && { label: 'Партнеры', data: data?.customerprofile?.performer_company.map((el:number) => store.companyStore.getCompanyById(el)),  company_type: params.company_type  },
-      // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
+      { label: 'Права доступа', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
-  }, [data, params])
+  }, [data, dataFilials, dataPermission, params])
 
 
   const memoModal = React.useMemo(() => {

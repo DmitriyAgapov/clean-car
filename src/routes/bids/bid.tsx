@@ -46,8 +46,6 @@ const BidPage = () => {
 	// const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => agent.Bids.getBid(Number(params.company_id), Number(params.id)).then(r => r.data))
 	const {isLoading, data, mutate, isValidating}:any = useSWR([`bids/${params.company_id}/${params.id}`, {company_id: params.company_id as string, id: Number(params.id)}], ([url, args]) => store.bidsStore.loadBid(Number(params.company_id), Number(params.id)))
 
-
-	console.log(data);
 	useDidUpdate(
 		() => {
 			if (location.pathname === `/account/bids/${params.company_id}/${params.id}`) {
@@ -158,7 +156,7 @@ const BidPage = () => {
                             <div className={'text-xs text-gray-2'}>
                                 Дата и время регистрации:
                                 <p className={'py-0 mt-0'}>
-                                    {data && data?.company?.updated && dateTransformShort(data?.company.updated).date}
+                                    {data && data?.created && dateTransformShort(data?.created).date}
                                 </p>
                             </div>
                             <div className={'flex gap-6 items-center justify-around tablet-max:inline-flex'}>
