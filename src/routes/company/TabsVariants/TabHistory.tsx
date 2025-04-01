@@ -27,10 +27,10 @@ const TabHistory = ({company_id, user_id, company_type, state }:any) => {
 		localStoreF.setData = {
 			...data,
 			results: data?.results?.map((item: any & {rootRoute?: string} ) => ({
-				created: dayjs(item.created).format('DD-MM-YYYY'),
+				created: dayjs(item.created).format('DD.MM.YYYY hh:mm'),
 				action: actions[item.action],
 				changes: Array.from(Object.entries(item.changes)).map(el => `${el[0]}:${el[1]}`).join('\r\n').toString(),
-				user: item.user
+				user: item.user.last_name + " " + item.user.first_name,
 			}))}
 		localStoreF.setIsLoading = isLoading
 	},[data])
@@ -51,8 +51,9 @@ const TabHistory = ({company_id, user_id, company_type, state }:any) => {
 			footerHeight={"12rem"}
 			autoScroll={true}
 			filter={false}
+
 			search={true}
-			style={PanelRouteStyle.users}
+			style={PanelRouteStyle.user_history}
 			variant={PanelVariant.default}
 			footer={false}  ar={[
 			{ label: 'Дата', name: 'created' },

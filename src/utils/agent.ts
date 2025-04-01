@@ -285,7 +285,7 @@ const Auth = {
 
 }
 const Users = {
-    getHistoryUser:( company_id: number| string, id : number | string) => requests.get(`/history/${company_id}/${id}/users/`),
+    getHistoryUser:( company_id: number| string, id : number | string) => requests.get(`/history/${company_id}/${id}/user/`),
     transferUser: (data: {
         employee_id: number | string,
         old_company_id: string | number,

@@ -23,15 +23,15 @@ const TabCarHistory = ({company_id, car_id, company_type, state }:any) => {
 		update: "Обновлено",
 		delete: "Удалено"
 	}
-	console.log(data);
+
 	useEffect(() => {
 		localStoreF.setData = {
 			...data,
 			results: data?.results?.map((item: any & {rootRoute?: string} ) => ({
-				created: dayjs(item.created).format('DD-MM-YYYY'),
+				created: dayjs(item.created).format('DD.MM.YYYY hh:mm'),
 				action: actions[item.action],
-				changes: Array.from(Object.entries(item.changes)).map(el => `${el[0]}:${el[1]}`).join('\r\n').toString(),
-				user: item.user
+				changes: Array.from(Object.entries(item.changes)).map(el => `${el[0]}:${el[1]}`).join(', ').toString(),
+				user: item.user.last_name + " " + item.user.first_name,
 			}))}
 		localStoreF.setIsLoading = isLoading
 	},[data])
@@ -53,7 +53,7 @@ const TabCarHistory = ({company_id, car_id, company_type, state }:any) => {
 			autoScroll={true}
 			filter={false}
 			search={true}
-			style={PanelRouteStyle.users}
+			style={PanelRouteStyle.car_history}
 			variant={PanelVariant.default}
 			footer={false}  ar={[
 			{ label: 'Дата', name: 'created' },

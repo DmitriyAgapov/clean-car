@@ -43,6 +43,8 @@ export enum PanelRouteStyle {
     users = 'users',
     groups = 'groups',
     refcars = 'refcars',
+    user_history = 'user_history',
+    car_history = 'car_history',
     price_history = 'price_history',
     price_tire = 'price_tire'
 
