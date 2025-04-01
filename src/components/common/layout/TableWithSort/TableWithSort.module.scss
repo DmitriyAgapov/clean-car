@@ -192,7 +192,56 @@
     }
 
   }
+  &[data-style="car_history"], &[data-style="user_history"],  {
+    th, td, {
+      max-width: 8rem;
+      overflow: hidden;
+      position: relative;
 
+      & p {
+        margin: 0;
+        background: -webkit-linear-gradient(360deg, #fff 70%, rgba(33, 36, 46, 1) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: block;
+        line-height: 14px;
+        vertical-align: middle;
+        position: relative;
+        overflow: hidden;
+        font-weight: 600;
+      }
+
+      & p:after {
+        //content: "";
+        position: absolute;
+        right: 0px;
+        width: 50%;
+        top: 0;
+        bottom: 0;
+        background: linear-gradient(to right, rgba(40, 40, 40, 0), rgb(23 25 32) 50%);
+      }
+    }
+    th:nth-child(1), td:nth-child(1), {
+      @screen desktop {
+        max-width: 10rem;
+        width: 10rem;
+      }
+    }
+    th:nth-child(2), td:nth-child(2), {
+      @screen desktop {
+        max-width: 7rem;
+        width: 7rem;
+      }
+    }
+    th:nth-child(4), td:nth-child(4), {
+      @screen desktop {
+        max-width: 10rem;
+        width: 10rem;
+      }
+    }
+
+
+  }
   &[data-style="prices"] {
     th,td {
       //width: 2rem;
@@ -1786,6 +1835,7 @@ line-height: .625rem;
 
 white-space: nowrap;
 }
+
 
 &[data-style="users"] {
 th, td, {

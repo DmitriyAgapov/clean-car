@@ -47,12 +47,13 @@ const TabFilials = ({companyId, company_type, state }:any) => {
 	const params = useParams()
 	const localStoreF = useLocalObservable<LocalRootStore>(() => localRootStoreF)
 	const {isLoading, data} = useSWR([`filials_${companyId}`, company_type, companyId, {}] , ([url, company_type, companyId, args]) => store.companyStoreNew.loadCompanyFiliales(company_type || params.company_type, params.id || companyId, args))
-
+	console.log(data);
 	useEffect(() => {
 		const filter = localStoreF.params.getSearchParams
 		const sortedAndFilteredDate = ['is_active', 'company__city'];
 		let _res = [];
 		const _arBeforee= data?.results[0]?.children;
+
 		if(localStoreF.params.getSearchParams && !!_arBeforee) {
 			_res = filterFilials(_arBeforee, filter);
 
@@ -60,6 +61,7 @@ const TabFilials = ({companyId, company_type, state }:any) => {
 		if(localStoreF.params.getSearchParams.ordering && !!_res) {
 			_res = sortFilials(_res, filter.ordering?.includes("city") ? filter.ordering === "-city" ? "city.id" : "-city.id" : filter.ordering)
 		}
+		console.log(_res);
 		localStoreF.setData = {
 			...data,
 			results: _res.map((item: any & { rootRoute?: string }) => ({

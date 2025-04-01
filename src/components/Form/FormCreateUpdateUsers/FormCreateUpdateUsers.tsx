@@ -331,14 +331,6 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
                         className={'float-right'}
                         variant={ButtonVariant.accent}
                     />
-					<Button
-                        type={'button'}
-                        action={() => form.validate()}
-                        // disabled={!form.isValid()}
-                        text={'validate'}
-                        className={'float-right'}
-                        variant={ButtonVariant.accent}
-                    />
 				</>
                 }
             >

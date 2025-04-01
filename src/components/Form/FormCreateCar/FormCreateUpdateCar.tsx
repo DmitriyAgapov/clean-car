@@ -49,7 +49,7 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     offset: 60,
 
   });
-    console.log(car);
+
     const {data, isLoading} = useSWR(edit && `availible_companies_for_${car.company_id}`, () => agent.Companies.companyWithChildren(car.company_id))
 const availibleCompanies = useMemo(() => {
         if(edit && data?.data?.results[0]) {

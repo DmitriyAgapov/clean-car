@@ -143,7 +143,13 @@ export class PriceStore {
         return agent.Price.priceDoubling(company_id, price_id)
     }
     async getHistoryPrice(props:any) {
-        this.loading = true;
+        console.log(props);
+        action(() =>  this.loading = true)
+        runInAction(() => {
+            this.loading = true
+            this.currentPrice = {}
+        });
+        console.log(props)
         const mapEd = (ar:[], compareField:string) => {
             let newMap = new Map([])
             if(ar && ar.length > 0) {
@@ -265,7 +271,7 @@ export class PriceStore {
 
             return result
         }
-        let tempId = props.params.id
+        let tempId = props.params.id;
         const tempAr:any[] = []
         switch (props.params.type) {
             case "evacuation":
@@ -290,6 +296,7 @@ export class PriceStore {
                 break;
             case "wash":
                 const { data: dataWash } = await agent.Price.getCompanyPriceWash(tempId, props.params.bid_id);
+                console.log(dataWash);
                 runInAction(() => {
                     dataWash && dataWash.wash_positions.length !== 0 && tempAr.push({ label: 'Мойка', data: dataWash, dataTable: dataWash })
                     this.currentPrice = {

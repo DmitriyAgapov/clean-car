@@ -33,7 +33,7 @@ const CarsPageEditAction = () => {
     })
   }, [])
   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
-
+    console.log(data)
   return (
       <Section type={SectionType.default}>
           <Panel
@@ -95,7 +95,7 @@ const CarsPageEditAction = () => {
                       company_id: String(data?.company.id),
                       company_type: data?.company.company_type,
                       is_active: data?.is_active ? 'true' : 'false',
-                      depend_on: data?.company.parent === null ? 'company' : 'filials',
+                      depend_on: data?.company.parent === null || data?.company.parent?.id === undefined ? 'company' : 'filials',
                       brand: String(data?.model.brand),
                       model: String(data?.model.id),
                       car_type: data?.model.car_type,

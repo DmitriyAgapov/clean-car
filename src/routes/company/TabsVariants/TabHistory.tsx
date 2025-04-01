@@ -30,7 +30,7 @@ const TabHistory = ({company_id, user_id, company_type, state }:any) => {
 				created: dayjs(item.created).format('DD.MM.YYYY hh:mm'),
 				action: actions[item.action],
 				changes: Array.from(Object.entries(item.changes)).map(el => `${el[0]}:${el[1]}`).join('\r\n').toString(),
-				user: item.user.last_name + " " + item.user.first_name,
+				user: item.user ? (item.user?.last_name + " " + item.user?.first_name) : "-",
 			}))}
 		localStoreF.setIsLoading = isLoading
 	},[data])
