@@ -12,6 +12,7 @@ import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
+import { flattenCompanies } from "utils/utils";
 
 
 const localRootStore =  new LocalRootStore()
@@ -38,7 +39,7 @@ const FilialsPage = () => {
     let ar = data?.results;
     if(data?.results && data?.results?.length == 1 && data?.results[0].children && !store.userStore.isAdmin) {
       // @ts-ignore
-      ar = data?.results[0].children
+      ar = flattenCompanies(data?.results)
     }
     localStore.setData = {
       ...data,
