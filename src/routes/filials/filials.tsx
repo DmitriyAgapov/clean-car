@@ -39,7 +39,7 @@ const FilialsPage = () => {
     let ar = data?.results;
     if(data?.results && data?.results?.length == 1 && data?.results[0].children && !store.userStore.isAdmin) {
       // @ts-ignore
-      ar = flattenCompanies(data?.results)
+      ar = flattenCompanies(data?.results).filter(item => item.parent !== null);
     }
     localStore.setData = {
       ...data,

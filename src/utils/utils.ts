@@ -501,3 +501,25 @@ export function flattenCompanies(data:any[]) {
     extract(data);
     return result;
 }
+
+export function flattenHierarchy(obj: any) {
+    const result = [];
+
+    // Функция для рекурсивного добавления родителей
+    function addParents(node: { parent: any; }) {
+        if (node.parent) {
+            addParents(node.parent); // сначала добавляем родителя
+            result.push({ ...node.parent, parent: undefined }); // убираем вложенность, чтобы избежать циклической структуры
+        }
+    }
+
+    addParents(obj); // добавляем всех родителей
+    result.push({ ...obj, parent: undefined }); // добавляем сам объект
+
+    // Убираем дубликаты (если они возникли из-за вложенности)
+    const uniqueResult = result.filter((item, index, self) =>
+        index === self.findIndex((t) => t.id === item.id)
+    );
+
+    return uniqueResult;
+}
