@@ -1,16 +1,13 @@
-import React, { JSX, useEffect } from 'react'
+import React, { JSX, useEffect, useState } from 'react'
 import Section, { SectionType } from "components/common/layout/Section/Section";
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from "components/common/ui/Heading/Heading";
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
 import { useStore } from "stores/store";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import {  useLocation, useNavigate, useParams } from "react-router-dom";
 import { SvgBackArrow } from "components/common/ui/Icon";
-import { PermissionNames } from "stores/permissionStore";
-import { dateTransformShort } from "utils/utils";
 import { CompanyType } from "stores/companyStore";
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
-import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import dayjs from "dayjs";
 import { useDisclosure } from "@mantine/hooks";
 import { PriceCopy } from "components/common/layout/Modal/PriceCopy";
@@ -36,9 +33,11 @@ const PriceHistoryIdPage = ():JSX.Element => {
         console.log(store.priceStore.currentPriceById);
     }, [store.priceStore.currentPriceById]);
   store.appStore.setAppState(currentPriceById.loading);
+
   useEffect(() => {
     store.appStore.getAppState ? store.appStore.setAppState(!!company) : void null
   },[company])
+
   const memoModal = React.useMemo(() => {
     if(!isHistory) {
     return  <PriceCopy opened={opened} id={isCreate.id} title={company.name}
@@ -52,11 +51,16 @@ const PriceHistoryIdPage = ():JSX.Element => {
     store.appStore.setAppState(false);
     // }
   }, [])
+    const [date, setDate] = useState("")
   const [openedCar, { open:openCar, close:closeCar }] = useDisclosure(false)
   const memoModalCarClasses = React.useMemo(() => {
     return <CarClasses opened={openedCar} onClose={closeCar} />
   }, [openedCar])
+    const handleActiveTab = (value:string) => {
+        const tabDate = dayjs(currentPriceById?.data?.tabs.filter((price:any) => price.label === value)[0]?.data?.created).format('DD.MM.YY HH:mm');
 
+        if(tabDate) setDate(tabDate)
+    }
   return (
       <Section type={SectionType.default}>
           <Panel
@@ -107,7 +111,7 @@ const PriceHistoryIdPage = ():JSX.Element => {
           ></Panel>
 
           <Panel
-              state={currentPriceById.loading}
+              state={false}
             className={'col-span-full grid grid-rows-[auto_1fr] self-stretch px-5 mobile:px-3 py-8 mobile:pb-0 mobile:-mb-8 !gap-6 '}
               variant={PanelVariant.withGapOnly}
               background={PanelColor.glass}
@@ -180,7 +184,7 @@ const PriceHistoryIdPage = ():JSX.Element => {
                   </>
               }
           >
-              <Tabs data={currentPriceById.data.tabs} type={TabsType.price} className={'page-price flex-[1_auto]'} />
+              <Tabs data={currentPriceById.data.tabs}  activeTab={handleActiveTab} type={TabsType.price} className={'page-price flex-[1_auto]'} />
               {memoModal}
           </Panel>
       </Section>

@@ -929,7 +929,9 @@ export const TabsVariantBids = observer(({ label, content_type, data, state, nam
 })
 
 export const TabsVariantPrice = ({ label, content_type, data, state, name, className, companyId, company_type, ...props }:any) => {
-
+  useEffect(() => {
+    console.log(data, state, label);
+  }, [data, state, label]);
   let result
   const { width } = useViewportSize();
   //Разбор массива для Мойка

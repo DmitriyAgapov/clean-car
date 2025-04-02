@@ -57,8 +57,9 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
         return result
     }
     if (type == TabsType.price) {
+        console.log(data);
         (data && data.length > 0 ) && data.forEach((item: any, index: number) => {
-          if(item.data.is_active) {
+          // if(item.data.is_active) {
             result.push(
               <TabsVariantPrice key={`tab_${index}`}
                 state={state == item.label}
@@ -67,7 +68,7 @@ const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[]
                 props={items}
                 className={'!pb-0'} />,
             )
-          }
+          // }
         })
         return result
     }

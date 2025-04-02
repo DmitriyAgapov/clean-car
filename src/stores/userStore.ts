@@ -178,6 +178,9 @@ export class UserStore {
     // Clear the event target value to give the possibility to upload the same image:
     event = ''
   }
+  get getMyProfileData() {
+    return this.myProfileData;
+  }
   async upLoadImage() {
     const canvas = this.cropperRef.current?.getCanvas();
     if (canvas) {

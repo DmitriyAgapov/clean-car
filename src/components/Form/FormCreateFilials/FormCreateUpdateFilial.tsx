@@ -128,6 +128,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         onValuesChange: (values, previous) => console.log(values),
         validate: yupResolver(CreateFilialSchema),
         enhanceGetInputProps: (payload) => {
+
             if (payload.field === 'company_id') {
                 return {
                     disabled: edit && !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
@@ -136,6 +137,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
             }
             if (payload.field === 'company_filials') {
                 return {
+                    disabled: edit && !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
                     className: 'mb-2 w-full flex-grow  !flex-[0_0_32%] col-span-3',
                 }
             }

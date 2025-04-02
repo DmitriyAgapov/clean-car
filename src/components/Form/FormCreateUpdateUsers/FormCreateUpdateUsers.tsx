@@ -95,12 +95,22 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
       onValuesChange: (values, previous) => console.log(values),
       validate: yupResolver(CreateUserSchema),
       enhanceGetInputProps: (payload) => {
-        if(payload.options.dependOn === 'depend_on') {
+
+        // if(payload.options.dependOn === 'depend_on') {
+		// 			return ({
+		// 				disabled: form.values.depend_on === "" || form.values.depend_on === null  || !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
+		// 				className: 'w-full  !flex-[1_1_30%] col-span-3'
+		// 			})
+        // }
+
+		if(payload.options.dependOn === 'depend_on' || payload.field === 'depend_on') {
 					return ({
-						disabled: form.values.depend_on === "" || form.values.depend_on === null  || !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
+						disabled: form.values.depend_on === "" || form.values.depend_on === null  || edit && !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
 						className: 'w-full  !flex-[1_1_30%] col-span-3'
 					})
         }
+
+
 				if(payload.field === 'type') {
 					return ({
 						disabled: edit,
@@ -115,10 +125,11 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
         }
 	      if(payload.field === 'company_id') {
 		      return ({
-			      disabled: companyVar?.length === 0 || payload.form.values.depend_on === null || !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
+			      disabled: companyVar?.length === 0 || payload.form.values.depend_on === null || edit && !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
 			      className: 'w-full  !flex-[1_1_30%] col-span-3'
 		      })
 	      }
+
 				if(payload.field === 'is_active') {
 					return ({
 						className: `w-full  !flex-[1_1_30%] col-span-3 ${store.appStore.appType !== "admin" && 'col-span-3'}`
