@@ -37,11 +37,12 @@ export const createUserFormActions= createFormActions<InitValues>('createUserFor
 
 const FormCreateUpdateUsers =({ user, edit }: any) => {
 	const store = useStore()
-	const {data, isLoading} = useSWR(`availible_companies_for_${user.company?.id}_edit`, () => agent.Companies.companyWithChildren(user.company?.id))
+	const {company} = store.userStore.getMyProfileData;
+	const company_id = user?.company?.id || company.id;
+	const {data, isLoading} = useSWR(`availible_companies_for_${company_id}`, () => agent.Companies.companyWithChildren(company_id))
 
 	const availibleCompanies = useMemo(() => {
-		if(edit && data?.data?.results[0]) {
-			// const allAvailibleCompanies = getAllChildrenObjects(data?.data?.results);
+		if(data?.data?.results[0]) {
 			const allCompaniesAndFilialls = flattenCompanies(data.data.results);
 			return ({
 				companies: allCompaniesAndFilialls.filter((el:any) => el.parent == null),
@@ -49,10 +50,8 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			})
 		}
 		return null
-	}, [data?.data?.results, edit, user?.company?.id]);
-	useEffect(() => {
-		console.log(availibleCompanies);
-	}, [availibleCompanies]);
+	}, [data?.data?.results, edit]);
+
 	const initData = React.useMemo(() => {
 		let initValues: InitValues = {
 			id: 0,
@@ -217,38 +216,17 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 	const [companyVar, setCompanyVar] = React.useState([{name: "Нет ", id: "none"}])
 	// @ts-ignore
 	React.useEffect(() => {
-			setCompanyVar([{name: "Нет ", id: "none"}]);
+		if(availibleCompanies) {
+			setCompanyVar([ { name: "Нет ", id: "none" } ]);
 			const setRes = async () => {
 				let res: any[] = []
 
-				if(form.values.depend_on === "company") {
-					const _params = {
-						// @ts-ignore
-						company_type: CompanyType[form.values.type]
-					}
-					if(!edit) {
-						console.log('!edit')
-						const _c = await store.companyStore.getAllCompanies(_params).then(r => r.data).then(data => data.results)
+				if (form.values.depend_on === "company") {
 
-						if (store.appStore.appType !== "admin") {
-							res = _c
-						} else {
-							res = _c.filter((c: any) => c.parent === null);
-						}
-					}
-					if(edit && availibleCompanies && availibleCompanies.companies) {
-						console.log('availibleCompanies.companies', availibleCompanies.companies)
-						res = availibleCompanies.companies
-					}
+					res = availibleCompanies.companies
+
 				} else {
-					if(!edit) {
-						// @ts-ignore
-						res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === CompanyType[form.values.type] : c) ?? []
-					}
-					if(edit && availibleCompanies && availibleCompanies.filials) {
-						console.log('availibleCompanies.filials')
-						res = availibleCompanies.filials
-					}
+					res = availibleCompanies.filials
 				}
 				if (res.length === 1) {
 					form.values.company_id = String(res[0].id)
@@ -258,8 +236,8 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			}
 			(async () => {
 				if (form.values.depend_on === "company" || store.appStore.appType === "admin") {
-					const _res  = await store.companyStore.getAllCompanies()
-					if(_res) {
+					const _res = await store.companyStore.getAllCompanies()
+					if (_res) {
 						setRes()
 					}
 				}
@@ -268,6 +246,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 					setRes()
 				}
 			})()
+		}
 		},
 		[form.values.depend_on, form.values.type, availibleCompanies])
 

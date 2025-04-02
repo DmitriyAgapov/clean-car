@@ -23,7 +23,7 @@ const FilialsPage = () => {
   const location = useLocation()
 
   const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
-  console.log(localRootStore);
+
   const isReadyy = localStore.params.getIsReady
   const {isLoading, data, mutate} = useSWR(isReadyy ? ['filials', localStore.params.getSearchParams] : null , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
   useDidUpdate(

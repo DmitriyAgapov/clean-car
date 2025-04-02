@@ -50,10 +50,13 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     offset: 60,
 
   });
+    const store = useStore()
+    const {company} = store.userStore.getMyProfileData;
+    const company_id = car?.company_id || company.id;
+    const {data, isLoading} = useSWR(`availible_companies_for_${company_id}`, () => agent.Companies.companyWithChildren(company_id))
 
-    const {data, isLoading} = useSWR(edit && `availible_companies_for_${car.company_id}`, () => agent.Companies.companyWithChildren(car.company_id))
-const availibleCompanies = useMemo(() => {
-        if(edit && data?.data?.results[0]) {
+    const availibleCompanies = useMemo(() => {
+        if(data?.data?.results[0]) {
             const allCompaniesAndFilialls = flattenCompanies(data.data.results);
             return ({
                 companies: allCompaniesAndFilialls.filter((el:any) => el.parent == null),
@@ -62,8 +65,10 @@ const availibleCompanies = useMemo(() => {
         }
         return null
     }, [data?.data?.results, edit]);
+
   const {width} = useViewportSize()
-    const store = useStore()
+
+
     const memoizedInitValues = React.useMemo(() => {
       let initValues:CarCreateUpdate & any = {
         brand: null,
@@ -207,26 +212,15 @@ const availibleCompanies = useMemo(() => {
     React.useEffect( () => {
       setCVar([{name: "Нет ", id: "none"}]);
       const setRes = async () => {
-        let res: any[] = []
-        if(form.values.depend_on === "company") {
-            if(!edit) {
-                  const _c = await store.companyStore.getAllCompanies().then(r => r.data).then(data => data.results)
-                  if(store.appStore.appType !== "admin") {
-                    res = _c
-                  } else {
-                          res = _c.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
-                      }
-          }
-
-            if(edit && availibleCompanies && availibleCompanies.companies) {
-                res = availibleCompanies.companies
-            }
+          console.log(availibleCompanies)
+        let res:any = []
+          const {company} = store.userStore.getMyProfileData;
+        if(form.values.depend_on === "company" && availibleCompanies) {
+            res = availibleCompanies.companies
 
         } else {
-            if(!edit) {
-                res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
-            }
-            if(edit && availibleCompanies && availibleCompanies.filials) {
+            if(availibleCompanies) {
+
                 res = availibleCompanies.filials
             }
         }
@@ -247,7 +241,7 @@ const availibleCompanies = useMemo(() => {
           setRes()
         }
       })()
-    },[form.values.depend_on])
+    },[form.values.depend_on, availibleCompanies])
 
     const navigate = useNavigate()
     const formDataSelectUsers = React.useMemo(() => {

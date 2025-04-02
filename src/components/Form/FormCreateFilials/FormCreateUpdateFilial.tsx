@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { yupResolver } from 'mantine-form-yup-resolver'
 import { CreateFilialSchema } from 'utils/validationSchemas'
 import { InputBase, NumberInput, Select, TextInput } from '@mantine/core'
@@ -19,7 +19,9 @@ import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
 import agent from 'utils/agent'
 import { useScrollIntoView } from '@mantine/hooks'
 import { PanelVariant } from 'components/common/layout/Panel/Panel'
-import { getAllChildrenObjects } from "utils/utils";
+import { flattenCompanies, getAllChildrenObjects } from "utils/utils";
+import { PermissionNames } from "stores/permissionStore";
+import useSWR from "swr";
 
 interface InitValues {
     address: string | null
@@ -77,7 +79,20 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         offset: 60,
 
     });
+    const {company:cmpny} = store.userStore.getMyProfileData;
+    const company_id = company?.id || cmpny.id;
+    const {data, isLoading} = useSWR(`availible_companies_for_${company_id}`, () => agent.Companies.companyWithChildren(company_id))
 
+    const availibleCompanies = useMemo(() => {
+        if(data?.data?.results) {
+            const allCompaniesAndFilialls = flattenCompanies(data.data.results);
+            return ({
+                companies: allCompaniesAndFilialls.filter((el:any) => el.parent == null),
+                filials:  allCompaniesAndFilialls.filter((el:any) => el.parent != null),
+            })
+        }
+        return null
+    }, [data?.data?.results, edit]);
     const [step, setStep] = useState(1)
     const [animate, setAnimate] = useState(false)
 
@@ -115,6 +130,7 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
         enhanceGetInputProps: (payload) => {
             if (payload.field === 'company_id') {
                 return {
+                    disabled: edit && !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
                     className: 'mb-2 w-full flex-grow  !flex-[0_0_32%] col-span-3',
                 }
             }
@@ -238,38 +254,39 @@ const FormCreateUpdateFilial = ({ company, edit }: any) => {
     const [filialsCompanyData, setFilialsCompanyData] = React.useState(['Пусто'])
 
     React.useEffect(() => {
-        (async () => {
-            let data;
-            if(edit) {
-                data = await agent.Companies.companyWithChildren(Number(company.id)).then(r => r.data)
+        if(availibleCompanies) {
+            (async () => {
+                let data;
 
-            } else {
-                data = await store.companyStore.loadAllFilials({ page_size: 1000 })
-            }
-            let res: any
-            if (formData.values.company_filials === 'filials') {
-                if(store.appStore.appType === "admin") {
-                    res = data.results.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                let res: any
+                if (formData.values.company_filials === 'filials') {
+                    // @ts-ignore
+                    data = availibleCompanies.filials;
+                    if (store.appStore.appType === "admin") {
+                        res = data.filter((c: any) => c.company_type === formData.values.type).map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                    } else {
+                        // @ts-ignore
+
+                        res = data.map((f: any) => ({ label: f.name, value: f.id.toString() }))
+
+                        if (res.length === 1) formData.setFieldValue('company_id', res[0].value.toString());
+                    }
+                    setFilialsCompanyData(res)
                 } else {
-                    res = data.results.map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                    // @ts-ignore
+                    data = availibleCompanies.companies;
+                    res = data.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
 
-                    if(res.length === 1) formData.setFieldValue('company_id', res[0].value.toString());
+                    if (res.length === 1) formData.setFieldValue('company_id', res[0].value.toString());
+                    if (data && !data.length) {
+                        console.log(data);
+                        res = data.map((f: any) => ({ label: f.name, value: f.id.toString() }))
+                    }
+                    setFilialsCompanyData(res)
                 }
-                setFilialsCompanyData(res)
-            } else {
-
-                const _company = await store.companyStore.loadCompanies();
-                res = store.companyStore.getCompaniesAll.filter((c: any) => c.company_type === formData.values.type).filter((c: any) => c.parent === null).map((f: any) => ({ label: f.name, value: f.id.toString() }))
-
-                if(res.length === 1) formData.setFieldValue('company_id', res[0].value.toString());
-                if(_company && !res.length) {
-                    console.log(_company);
-                    res = _company.map((f: any) => ({ label: f.name, value: f.id.toString() }))
-                }
-                setFilialsCompanyData(res)
-            }
-        })()
-    }, [formData.values.type, formData.values.company_filials, formData.values.depend_on])
+            })()
+        }
+    }, [formData.values.type, formData.values.company_filials, formData.values.depend_on, availibleCompanies])
 
     // @ts-ignore
     return (
