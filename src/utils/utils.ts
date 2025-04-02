@@ -481,3 +481,23 @@ export function getAllChildrenObjects(company: {
 
     return result;
 }
+
+export function flattenCompanies(data:any[]) {
+    const result:any[] = [];
+
+    function extract(companies:any[]) {
+        for (const company of companies) {
+            // Копируем объект компании без children
+            const { children, ...companyWithoutChildren } = company;
+            result.push(companyWithoutChildren);
+
+            // Рекурсивно обрабатываем дочерние элементы
+            if (children && children.length > 0) {
+                extract(children);
+            }
+        }
+    }
+
+    extract(data);
+    return result;
+}

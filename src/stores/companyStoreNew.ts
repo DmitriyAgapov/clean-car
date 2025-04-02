@@ -139,8 +139,8 @@ export class CompanyStoreNew {
     }
 
     async loadAllCompaniesList(params?: SearchParamsType) {
-        const _sPrms = new SearchParams()
-        params && _sPrms.setParams(params)
+        const _sPrms = new SearchParams();
+        params && _sPrms.setParams(params);
         this.isLoading = true
         const companies = await client.companiesOnlyCompaniesList(_sPrms)
         runInAction(() => {
@@ -160,7 +160,7 @@ export class CompanyStoreNew {
             // console.log(_res);
             const res = client.customerBranchesList({company_id: company_id, ...params}).then((res) => res)
             // console.log(res);
-             return  _res
+            return  _res
         }
         if(company_type === "performer") {
             // return   client.performerBranchesList({company_id: company_id, ...params}).then((res) => res)

@@ -24,7 +24,8 @@ import { PanelVariant } from "components/common/layout/Panel/Panel";
 import { BidPaymentResult } from "components/common/layout/Modal/BidPaymentResult";
 import useSWR from "swr";
 import agent from "utils/agent";
-import { getAllChildrenObjects } from "utils/utils";
+import { flattenCompanies } from "utils/utils";
+import { PermissionNames } from "stores/permissionStore";
 
 interface CarCreateUpdate  {
     number: string
@@ -53,10 +54,10 @@ const FormCreateUpdateCar = ({ car, edit }: any) => {
     const {data, isLoading} = useSWR(edit && `availible_companies_for_${car.company_id}`, () => agent.Companies.companyWithChildren(car.company_id))
 const availibleCompanies = useMemo(() => {
         if(edit && data?.data?.results[0]) {
-            const allAvailibleCompanies = getAllChildrenObjects(data?.data?.results[0])
+            const allCompaniesAndFilialls = flattenCompanies(data.data.results);
             return ({
-                companies: data?.data?.results[0],
-                filials:  allAvailibleCompanies.filter((el:any) => el.parent != null),
+                companies: allCompaniesAndFilialls.filter((el:any) => el.parent == null),
+                filials:  allCompaniesAndFilialls.filter((el:any) => el.parent != null),
             })
         }
         return null
@@ -151,7 +152,7 @@ const availibleCompanies = useMemo(() => {
         if (payload.field === "company_id") {
           return ({
             label: form.values.depend_on === "company" ? 'Компания' : 'Филиал',
-
+              disabled:  !store.userStore.getUserCan(PermissionNames['Компании'], "update")
             // disabled: edit,
             // className: ` !flex-[1_1_64%]  ${edit ? "!hidden" : ""}`
           })
@@ -169,9 +170,11 @@ const availibleCompanies = useMemo(() => {
               // payload.form.values.model = null;
               // store.carStore.setBrand(prop);
             ,
+              disabled:  !store.userStore.getUserCan(PermissionNames['Компании'], "update")
             // disabled: edit,
             // className: ` !flex-[1_1_30%] ${edit ? "!hidden" : ""}`
           })
+
         }
         return ({
           className: ' !flex-[1_1_30%]'
@@ -206,23 +209,25 @@ const availibleCompanies = useMemo(() => {
       const setRes = async () => {
         let res: any[] = []
         if(form.values.depend_on === "company") {
-          const _c = await store.companyStore.getAllCompanies().then(r => r.data).then(data => data.results)
-          if(store.appStore.appType !== "admin") {
-            res = _c
-          } else {
-              if(edit && availibleCompanies && availibleCompanies.companies) {
-                  res = [availibleCompanies.companies]
-              } else {
-                  res = _c.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
-              }
+            if(!edit) {
+                  const _c = await store.companyStore.getAllCompanies().then(r => r.data).then(data => data.results)
+                  if(store.appStore.appType !== "admin") {
+                    res = _c
+                  } else {
+                          res = _c.filter((c: any) => c.company_type === "Клиент" && c.parent === null)
+                      }
           }
 
-        } else {
+            if(edit && availibleCompanies && availibleCompanies.companies) {
+                res = availibleCompanies.companies
+            }
 
+        } else {
+            if(!edit) {
+                res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
+            }
             if(edit && availibleCompanies && availibleCompanies.filials) {
                 res = availibleCompanies.filials
-            } else {
-                res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === "Клиент" : c) ?? []
             }
         }
         if (res.length === 1) {

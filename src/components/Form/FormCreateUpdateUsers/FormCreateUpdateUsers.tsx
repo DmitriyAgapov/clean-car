@@ -15,7 +15,7 @@ import PanelForForms from "components/common/layout/Panel/PanelForForms";
 import agent from "utils/agent";
 import { PermissionNames } from "stores/permissionStore";
 import useSWR from "swr";
-import { getAllChildrenObjects } from "utils/utils";
+import { flattenCompanies, getAllChildrenObjects } from "utils/utils";
 
 interface InitValues {
 	id: string | number
@@ -37,18 +37,22 @@ export const createUserFormActions= createFormActions<InitValues>('createUserFor
 
 const FormCreateUpdateUsers =({ user, edit }: any) => {
 	const store = useStore()
-	const {data, isLoading} = useSWR(edit && `availible_companies_for_${user.company?.id}`, () => agent.Companies.companyWithChildren(user.company?.id))
+	const {data, isLoading} = useSWR(`availible_companies_for_${user.company?.id}_edit`, () => agent.Companies.companyWithChildren(user.company?.id))
+
 	const availibleCompanies = useMemo(() => {
 		if(edit && data?.data?.results[0]) {
-			const allAvailibleCompanies = getAllChildrenObjects(data?.data?.results[0])
+			// const allAvailibleCompanies = getAllChildrenObjects(data?.data?.results);
+			const allCompaniesAndFilialls = flattenCompanies(data.data.results);
 			return ({
-				companies: data?.data?.results[0],
-				filials:  allAvailibleCompanies.filter((el:any) => el.parent != null),
+				companies: allCompaniesAndFilialls.filter((el:any) => el.parent == null),
+				filials:  allCompaniesAndFilialls.filter((el:any) => el.parent != null),
 			})
 		}
 		return null
 	}, [data?.data?.results, edit, user?.company?.id]);
-
+	useEffect(() => {
+		console.log(availibleCompanies);
+	}, [availibleCompanies]);
 	const initData = React.useMemo(() => {
 		let initValues: InitValues = {
 			id: 0,
@@ -94,7 +98,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
       enhanceGetInputProps: (payload) => {
         if(payload.options.dependOn === 'depend_on') {
 					return ({
-						disabled: form.values.depend_on === "" || form.values.depend_on === null,
+						disabled: form.values.depend_on === "" || form.values.depend_on === null  || !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
 						className: 'w-full  !flex-[1_1_30%] col-span-3'
 					})
         }
@@ -112,7 +116,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
         }
 	      if(payload.field === 'company_id') {
 		      return ({
-			      disabled: companyVar?.length === 0 || payload.form.values.depend_on === null,
+			      disabled: companyVar?.length === 0 || payload.form.values.depend_on === null || !store.userStore.getUserCan(PermissionNames['Компании'], "update"),
 			      className: 'w-full  !flex-[1_1_30%] col-span-3'
 		      })
 	      }
@@ -216,26 +220,33 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 			setCompanyVar([{name: "Нет ", id: "none"}]);
 			const setRes = async () => {
 				let res: any[] = []
+
 				if(form.values.depend_on === "company") {
 					const _params = {
 						// @ts-ignore
 						company_type: CompanyType[form.values.type]
 					}
+					if(!edit) {
+						console.log('!edit')
+						const _c = await store.companyStore.getAllCompanies(_params).then(r => r.data).then(data => data.results)
 
-					const _c = await store.companyStore.getAllCompanies(_params).then(r => r.data).then(data => data.results)
-
-					if(store.appStore.appType !== "admin") {
-						res = _c
-					} else {
-						res = _c.filter((c: any) => c.parent === null);
+						if (store.appStore.appType !== "admin") {
+							res = _c
+						} else {
+							res = _c.filter((c: any) => c.parent === null);
+						}
 					}
 					if(edit && availibleCompanies && availibleCompanies.companies) {
-						res = [availibleCompanies.companies]
+						console.log('availibleCompanies.companies', availibleCompanies.companies)
+						res = availibleCompanies.companies
 					}
 				} else {
-					// @ts-ignore
-					res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === CompanyType[form.values.type] : c) ?? []
+					if(!edit) {
+						// @ts-ignore
+						res = store.companyStore.getFilialsAll.filter((c: any) => store.appStore.appType === "admin" ? c.company_type === CompanyType[form.values.type] : c) ?? []
+					}
 					if(edit && availibleCompanies && availibleCompanies.filials) {
+						console.log('availibleCompanies.filials')
 						res = availibleCompanies.filials
 					}
 				}

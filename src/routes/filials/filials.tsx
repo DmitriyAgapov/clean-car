@@ -33,11 +33,16 @@ const FilialsPage = () => {
     },
     [location.pathname]
   );
-
+  // @ts-ignore
   useEffect(() => {
+    let ar = data?.results;
+    if(data?.results && data?.results?.length == 1 && data?.results[0].children && !store.userStore.isAdmin) {
+      // @ts-ignore
+      ar = data?.results[0].children
+    }
     localStore.setData = {
       ...data,
-      results: data?.results?.map((item: any) => ({
+      results: ar?.map((item: any) => ({
         status: item.is_active as boolean,
         company: item.name,
         city: item.city.name,
