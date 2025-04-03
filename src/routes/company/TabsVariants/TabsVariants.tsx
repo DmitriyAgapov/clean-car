@@ -33,6 +33,7 @@ import TabHistory from "routes/company/TabsVariants/TabHistory";
 import TabCarUsers from './TabCarUsers'
 import TabUserCars from "routes/company/TabsVariants/TabUserCars";
 import TabCarHistory from "routes/company/TabsVariants/TabCarHistory";
+import { UserTypeEnum } from "stores/userStore";
 const lbl = label
 export type CAR_RADIUS_KEYS = {
   [K in keyof typeof CAR_RADIUS]: string | number;
@@ -116,7 +117,6 @@ export const TabsVariantsFilial =  ({label, parentCompany, data, state, name, cl
   if(!data) {
     return  null
   }
-
   let result
   switch (label) {
     case "Основная информация":
@@ -166,16 +166,16 @@ const TabsVariants = ({label, content_type, data, state, name, className, compan
         className={"pt-8"}
         company_type={company_type}>
         {/* {company_type === 'customer' && <DList label={'Оплата'} title={data[`${company_type}profile`].payment} />} */}
-        {company_type === 'customer' ? data.balance && <DList className={"row-span-2"} label={'Счет'} title={<>
+        {company_type === 'customer' ? (data.balance && <DList className={"row-span-2"} label={'Счет'} title={<>
           <Heading text={data.balance.total + ' ₽'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
           <Heading text={data[`${company_type}profile`].overdraft_sum + ' ₽' + ' с овердрафтом'}  variant={HeadingVariant.h4} color={HeadingColor.accent} />
         </>
 
-        }/> : <DList label={'Процент сервиса'} title={<>
+        }/>)  : store.appStore.appType == "admin" ? <DList label={'Процент сервиса'} title={<>
           <Heading text={data.performerprofile.service_percent + ' %'}  variant={HeadingVariant.h2} color={HeadingColor.accent} />
         </>
 
-        }/>}
+        }/> : null}
         <DList label={'ИНН'} title={data[`${company_type}profile`].inn ?? "0"} />
         <DList label={'ОГРН'} title={data[`${company_type}profile`].ogrn} />
 

@@ -113,7 +113,7 @@ const FormCreateUpdateUsers =({ user, edit }: any) => {
 
 				if(payload.field === 'type') {
 					return ({
-						disabled: edit,
+						disabled: edit && store.appStore.appType !== "admin",
 						className: `w-full !flex-[1_1_30%] col-span-3 ${store.appStore.appType !== "admin" && 'hidden'}`,
 					})
         }
