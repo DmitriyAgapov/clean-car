@@ -9,21 +9,21 @@ import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'componen
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import FormModalCreatePrice from "components/Form/FormModalCreatePrice/FormModalCreatePrice";
 import { LocalRootStore } from "stores/localStore";
-import { observer, useLocalStore } from "mobx-react-lite";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import useSWR from "swr";
-import { useDidUpdate } from "@mantine/hooks";
+import { useDidUpdate, useDisclosure } from '@mantine/hooks'
+import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 const localRootStore =  new LocalRootStore()
 const PricesPage = () => {
 	const store = useStore()
 	const location = useLocation()
-	const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-	const {isLoading, data, mutate, isValidating} = useSWR(['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
-
+	const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
+	const {isLoading, data, mutate, isValidating} = useSWR(localStore.params.isReady && ['prices', {company_id:store.userStore.myProfileData.company.id, params:localStore.params.getSearchParams}] , ([url, args]) => store.priceStore.getAllPrices(args))
 	useEffect(() => {
 		localStore.setData = {
 			...data,
-			results: data?.results
+			results: data?.results.map((item:any) => ({...{id: item.id, company_name: item.name,   root_company: item.root_company}, ...store.appStore.appType === "admin" && {company_type: item.company_type}}))
 		}
 		localStore.setIsLoading = isLoading
 	},[data])
@@ -36,8 +36,13 @@ const PricesPage = () => {
 		},
 		[location.pathname]
 	);
-	const { textData }:any = store.priceStore.allPrices
 
+	const [opened, { open, close }] = useDisclosure(false)
+	const { textData }:any = store.priceStore.allPrices
+	const memoModal = React.useMemo(() => {
+		if(isLoading && !data) return null
+		if(data) return <FormModalCreatePrice mutateSWR={mutate} opened={opened} onClose={close} />
+	}, [opened, mutate])
 	if (location.pathname.includes('create') || location.pathname.includes('edit')) return <Outlet />
 	if (location.pathname !== `/account/price`) return <Outlet />
 
@@ -47,30 +52,29 @@ const PricesPage = () => {
 			<Panel variant={PanelVariant.withGapOnly} headerClassName={'flex justify-between gap-4'}
 				state={false}
 				header={<>
-					<div className={'mr-auto'}>
+
 						<Heading text={textData.title} variant={HeadingVariant.h1} className={'inline-block !mb-0'} color={HeadingColor.accent} />
-					</div>
+
 					{store.userStore.getUserCan(PermissionNames['Управление прайс-листом'], 'create') && (<>
-						<Button text={textData.create} action={() => (async() => {
-							store.appStore.setModal({
-								className: "!px-10 gap-4 !justify-stretch",
-								component: <FormModalCreatePrice />,
-								text: `Вы уверены, что хотите удалить ${"name"}`,
-								state: true
-							});
-						})()} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
+						<Button text={textData.create} action={open} trimText={true} className={'inline-flex'} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
 					</>)}</>}>
 			</Panel>
 			<TableWithSortNew
 				store={localRootStore}
 				variant={PanelVariant.dataPadding}
 				search={true}
+				style={PanelRouteStyle.prices}
 				background={PanelColor.glass}
 				className={'col-span-full table-groups h-full'}
 				filter={false}
-				ar={store.priceStore.allPrices.textData.tableHeaders}
+				ar={(() => {
+					if(store.appStore.appType === "admin") {
+						return store.priceStore.allPrices.textData.tableHeaders
+					} return [{ label: 'Компания', name: 'name' },
+						{ label: 'Филиал', name: 'company__parent__name' }]})()
+				}
 			/>
-
+			{memoModal}
 		</Section>
 	)
 	// } else {

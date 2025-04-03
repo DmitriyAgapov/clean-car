@@ -4,7 +4,7 @@ import catalogStore from "stores/catalogStore";
 import { makePersistable } from "mobx-persist-store";
 import usersStore from "stores/usersStore";
 import carStore from "stores/carStore";
-import companyStore from "stores/companyStore";
+import companyStore, { CompanyType } from "stores/companyStore";
 import { CurrentBidProps } from "stores/types/bidTypes";
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
@@ -12,12 +12,13 @@ import paramsStore from "stores/paramStore";
 import authStore from "stores/authStore";
 
 export enum BidsStatus {
+    'Ждет оплаты' = 0,
     'Новая' = 1,
-    'Обрабатывается' = 2,
-    'Ждет подтверждение' = 3,
-    'Подтверждена' = 4,
+    'В обработке' = 2,
+    'Ожидает' = 3,
+    'Согласовано' = 4,
     'В работе' = 5,
-    'Выполнено' = 6,
+    'Выполнена' = 6,
     'Разбор' = 7,
     'Отменена' = 8,
     'Завершена' = 9
@@ -119,12 +120,12 @@ export class BidsStore {
     textData = {
         title: 'Заявки',
         create: 'Создать',
-        loadExcel: 'Загрузить Excel',
+        loadExcel: 'Сохранить Excel',
         tableHeaders: [
             { label: '№', name: 'idnum' },
             { label: 'Статус', name: 'status' },
             { label: 'Дата/Время', name: 'created' },
-            { label: 'Заказчик', name: 'company' },
+            { label: 'Клиент', name: 'company' },
             { label: 'Партнер', name: 'performer' },
             { label: 'Водитель', name: 'conductor' },
             { label: 'Исполнитель', name: 'executor' },
@@ -146,21 +147,21 @@ export class BidsStore {
             description: 'Укажите основную информацию о заявке',
             fields: [
                 {
-                    label: 'Город Заказчика',
+                    label: 'Город Клиента',
                     name: 'city',
                     type: 'select',
                     value: 0,
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
-                    label: 'Заказчик',
+                    label: 'Клиент',
                     name: 'customer',
                     type: 'select',
                     value: 0,
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -169,7 +170,7 @@ export class BidsStore {
                     type: 'select',
                     options: [],
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -185,7 +186,7 @@ export class BidsStore {
                     type: 'select',
                     options: [],
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
             ],
@@ -200,7 +201,7 @@ export class BidsStore {
                     type: 'select',
                     value: 0,
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -209,7 +210,7 @@ export class BidsStore {
                     type: 'select',
                     value: 0,
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -217,7 +218,7 @@ export class BidsStore {
                     name: 'options',
                     type: 'checkbox',
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
                 {
@@ -233,7 +234,7 @@ export class BidsStore {
                     type: 'select',
                     options: [],
                     required: true,
-                    placeholder: 'Выберите город заказчика',
+                    placeholder: 'Выберите город Клиента',
                     defaultValue: '1',
                 },
             ],
@@ -297,8 +298,8 @@ export class BidsStore {
             ],
         },
         step4: {
-            title: 'Шаг 4. Выбор исполнителя',
-            description: 'Город Исполнителя определяется автоматически. При необходимости вы можете изменить город.',
+            title: 'Шаг 4. Выбор Партнера',
+            description: 'Город Партнера определяется автоматически. При необходимости вы можете изменить город.',
             fields: [
                 {
                     label: 'Город',
@@ -367,7 +368,7 @@ export class BidsStore {
         makeAutoObservable(this, {}, { autoBind: true })
         makePersistable(this, {
             name: 'bidsStore',
-            properties: ['formResult', 'bids', 'loadedPhoto', 'currentBidPhotos', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid', 'refreshBids'],
+            properties: ['formResult', 'bids', 'loadedPhoto', 'currentBidPhotos', 'photo', 'currentPerformers', 'justCreatedBid', 'currentBid', 'refreshBids', 'activeTab'],
             storage: window.localStorage,
         }, {fireImmediately: true})
 
@@ -376,8 +377,9 @@ export class BidsStore {
             (customer, oldCustomer) => {
                 if(authStore.userIsLoggedIn) {
                     if (customer !== "0" && customer !== 0 && customer !== null) {
+                        console.log(customer);
                         runInAction(async () => {
-                            await usersStore.getUsers(customer)
+                       userStore.myProfileState.company.company_type !== CompanyType.fizlico && await usersStore.getUsers(customer)
                             await carStore.getCarsByCompony(customer)
                             await companyStore.getCustomerCompanyData(customer)
                         })
@@ -415,10 +417,12 @@ export class BidsStore {
 
         reaction(() => this.formResult.conductor,
             async (conductor)=> {
-                if(conductor !== "0" && conductor !== null && conductor !== 0) {
+                if(conductor !== "0" && conductor !== null && conductor !== 0 && this.formResult.company !== 0) {
                     //@ts-ignore
-                    action(() => this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone);
-                    carStore.getCarsByCompony(this.formResult.company);
+                    // runInAction(() => {
+                    //     this.formResult.phone === usersStore.companyUsers.filter((user:any) => user.employee.id === this.formResult.conductor)[0].employee.phone
+                    // });
+                    await carStore.getCarsByCompony(this.formResult.company);
                 }
             }
         )
@@ -491,15 +495,16 @@ export class BidsStore {
             try {
                 if(appStore.appType === "admin") {
                     const {data, status}:any = await agent.Bids.getBidCountAdmin()
-                    this.eventCounts = data
+                    console.log(data, status);
+                    runInAction(() => this.eventCounts = data)
                 }
                 if(appStore.appType === "customer") {
                     const {data, status}:any = await agent.Bids.getBidCountCustomer(userStore.myProfileData.company.id)
-                    this.eventCounts = data
+                    runInAction(() => this.eventCounts = data)
                 }
                 if(appStore.appType === "performer") {
                     const {data, status}:any = await agent.Bids.getBidCountPerformer(userStore.myProfileData.company.id)
-                    this.eventCounts = data
+                    runInAction(() => this.eventCounts = data)
                 }
             } catch (e) {
                 console.log(e);
@@ -563,9 +568,9 @@ export class BidsStore {
             )
         }
     }
-    async loadCurrentPerformers(customer_id: number, data: { car_id: number, subtype_id: number, options_idx: number[] }) {
+    async loadCurrentPerformers(customer_id: number, city_id:number, data: { car_id: number, subtype_id: number, options_idx: number[] }) {
         this.currentPerformers.clear()
-        const { data:performers, status }:any = await agent.Bids.getAvailablePerformers(customer_id, {
+        const { data:performers, status }:any = await agent.Bids.getAvailablePerformers(customer_id, city_id, {
             car_id: this.formResult.car,
             subtype_id: this.formResult.service_subtype,
             options_idx: this.formResult.service_option
@@ -607,7 +612,8 @@ export class BidsStore {
         })
         Promise.all(fd).then((res: any) => runInAction(() => (this.photo.photosPreviewAr = res)))
     }
-    sendFiles(files: File[], state: boolean, bid_id?: string, company_id?: string) {
+    async sendFiles(files: File[], state: boolean, bid_id?: string, company_id?: string) {
+        console.log(files, state, bid_id, company_id);
         async function* uploadFiles(this: BidsStore) {
             let i = 0;
             let result: any = null;
@@ -624,7 +630,7 @@ export class BidsStore {
                 i++;
             }
         }
-        (async () => {
+        await (async () => {
             for await (const result of uploadFiles.call(this)) {
                 if (result && result.data) {
                     this.loadedPhoto.push(result.data);
@@ -779,7 +785,19 @@ export class BidsStore {
             ...value,
         }
     }
+    async loadBid(company_id: number, bid_id: number) {
+        const photos = await agent.Bids.loadBidPhotos(company_id, bid_id).then(r => r.data)
+        const bid = await agent.Bids.getBid(company_id, bid_id).then(r => r.data)
+        console.log(bid);
+        console.log(photos);
+        const _res = {
+            ...bid,
+            photos: photos,
+        }
+        return _res
+    }
     loadBids(args:any) {
+        console.log(args);
         if(appStore.appType === "admin") {
             return client.bidsAllBidsList(args)
         } else {

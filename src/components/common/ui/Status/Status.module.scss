@@ -1,5 +1,6 @@
 .Status {
-	width: 61px;
+	width: auto;
+  min-width: 4rem;
   	display: flex;
   color: black;
   height: 1rem;
@@ -16,24 +17,34 @@
   &[data-variant='Новая'], &[data-rev-varian='Новая'],  {
 	background: #FBFF4A;
   }
-  &[data-variant='Обрабатывается'], &[data-rev-varian='Обрабатывается'],  {
-	background: rgba(182, 193, 190, 1);
+  &[data-variant='В обработке'], &[data-rev-varian='В обработке'],  {
+	background: rgb(143, 132, 131);
   }
   &[data-variant='Разбор'], &[data-rev-varian='Разбор'],  {
-	background: rgba(3, 134, 93, 1);
+	background: rgb(242, 224, 162);
   }
-  &[data-variant='Выполнено'], &[data-variant='Завершена'], &[data-variant='Подтверждена'],  &[data-rev-varian='Выполнено'], &[data-rev-varian='Завершена'], &[data-rev-varian='Подтверждена'],  {
-	background: rgba(19, 255, 113, 1);
+  &[data-variant='Выполнена'],  &[data-rev-varian='Выполнена'] {
+	background: rgb(0, 255, 224);
+  }
+  &[data-variant='Завершена'], &[data-rev-varian='Завершена'], {
+	background-color: #00D1FF;
+  }
+  &[data-variant='Согласовано'], &[data-rev-varian='Согласовано'],  {
+	background: rgb(0, 255, 178);
   }
   &[data-variant='Отменена'], &[data-rev-varian='Отменена'],  {
 	background: rgba(244, 86, 95, 1);
   }
-  &[data-variant='Ждет подтверждение'], &[data-rev-varian='Ждет подтверждение'],  {
-	background: rgba(182, 193, 190, 1);
+  &[data-variant='Ожидает'], &[data-rev-varian='Ожидает'],  {
+	background: rgb(248, 152, 64);
   }
   &[data-variant='В работе'], &[data-rev-varian='В работе'],  {
-	background: rgba(182, 193, 190, 1);
+	background: rgb(255, 199, 1);
   }
+  &[data-variant='Ждет оплаты'], &[data-rev-varian='Ждет оплаты'],  {
+	background: #FF4D01;
+  }
+
 
 
 

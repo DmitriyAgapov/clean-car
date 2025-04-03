@@ -1,9 +1,11 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useEffect, useRef, useState } from 'react'
 import styles from './Tabs.module.scss'
 import { PanelColor, PanelProps, PanelVariant } from 'components/common/layout/Panel/Panel'
-import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial } from "routes/company/TabsVariants/TabsVariants";
+import TabsVariants, { TabsVariantBids, TabsVariantPrice, TabsVariantsCars, TabsVariantsFilial, TabsVariantsUser } from "routes/company/TabsVariants/TabsVariants";
 import { Observer, observer } from "mobx-react-lite";
-import { useStore } from "stores/store";
+import { useStore } from 'stores/store'
+import label from "utils/labels";
+import { useDebouncedValue, useElementSize, useScrollIntoView, useViewportSize } from '@mantine/hooks'
 export enum TabsType {
   bid = 'bid',
   company = 'company',
@@ -17,32 +19,27 @@ export type TabsProps = {
   data?: any
   className?: string
   type?: TabsType
+    initActiveTab?: string
+  activeTab?: (active:string) => void
 }
-const HeadersTabs = ({
-    data,
-    state,
-    setState,
-}: {
-    data: any
-    state: any
-    setState: (event: any, key: string) => void
-}) => {
+const HeadersTabs = ({ data, state, setState, }: { data: any, state: any, setState: (event: any, key: string) => void }) => {
     // console.log(data);
     const result: any = []
     for (const key in data) {
+      // if(data[key].data && data[key].data.is_active) {
+      if(data[key].data) {
         // @ts-ignore
         result.push(
-            <Tabs.Tab
-                onClick={(event: Event) => setState(event, data[key].label)}
-                title={data[key].label}
-                state={data[key].label == state}
-                key={data[key].label + `-tab`}
-            />,
+          <Tabs.Tab onClick={(event: Event) => setState(event, data[key].label)}
+            title={data[key].label}
+            state={data[key].label == state}
+            key={data[key].label + `-tab`} />,
         )
+      }
     }
     return result
 }
-const TabPanels = observer(({ data, type, items, state }:{data:any, type:any, items:any[], state: string}) => {
+const TabPanels = ({ data, type, items, state }:{data:any, type:any, items:any[], state: string}) => {
     const result: any = []
     if (type == TabsType.bid) {
         data.forEach((item: any, index: number) => {
@@ -60,35 +57,37 @@ const TabPanels = observer(({ data, type, items, state }:{data:any, type:any, it
         return result
     }
     if (type == TabsType.price) {
-        data.forEach((item: any, index: number) => {
+        console.log(data);
+        (data && data.length > 0 ) && data.forEach((item: any, index: number) => {
+          // if(item.data.is_active) {
             result.push(
-                <TabsVariantPrice
-                    key={`tab_${index}`}
-                    state={state == item.label}
-                    data={item.dataTable}
-                    label={item.label}
-                    props={items}
-                    className={'!pb-0'}
-                />,
+              <TabsVariantPrice key={`tab_${index}`}
+                state={state == item.label}
+                data={item.dataTable}
+                label={item.label}
+                props={items}
+                className={'!pb-0'} />,
             )
+          // }
         })
         return result
     }
     if (type == TabsType.priceEdit) {
         // console.log(data);
         data.forEach((item: any, index: number) => {
+          if(item.data.is_active) {
             result.push(
-                <TabsVariantPrice
-                    key={`tab_${index}`}
-                    edit={type == TabsType.priceEdit}
-                    state={state == item.label}
-                    data={item.data}
-                    label={item.label}
-                    props={items}
-                    className={'!pb-0'}
-                />,
+              <TabsVariantPrice key={`tab_${index}`}
+                edit={type == TabsType.priceEdit}
+                state={state == item.label}
+                data={item.data}
+                label={item.label}
+                props={items}
+                className={'!pb-0'} />
             )
+          }
         })
+
         return result
     }
 
@@ -108,6 +107,23 @@ const TabPanels = observer(({ data, type, items, state }:{data:any, type:any, it
         })
         return result
     }
+    if (type == TabsType.user) {
+        data.forEach((item: any, index: number) => {
+            result.push(
+                <TabsVariantsUser
+                    company_type={item.company_type}
+                    companyId={item.company_id}
+                    key={`tab_${index}`}
+                    state={state == item.label}
+                    data={item.data}
+                    label={item.label}
+                    props={items}
+                />,
+            )
+        })
+        return result
+    }
+
     if (type == TabsType.filial) {
         data.forEach((item: any, index: number) => {
             result.push(
@@ -157,31 +173,45 @@ const TabPanels = observer(({ data, type, items, state }:{data:any, type:any, it
             )
         }
     }
+
     return result
-})
-const Tabs = ({ data, className, panels, items, type, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
+}
+const Tabs = ({ data, className, activeTab, panels, items, type, initActiveTab, variant=null }: TabsProps & {panels?: any, items?: any, variant?: string|null}) => {
   const store = useStore()
   const aTab = store.bidsStore.ActiveTab
-  const [state, setState] = useState(data[0].label);
+  const [state, setState] = useState('');
+  React.useEffect(() => {
+    if(data && data.length > 0) {
+      setState(data[0]?.label)
+    }
+  }, [data])
 
   const  handleChangeTabState = React.useCallback((event: Event, label: string) => {
+
+    if (activeTab) {
+      label && activeTab(label);
+    }
     setState(label);
+
   }, [])
 
   React.useEffect(() => {
+    console.log('atab', aTab);
     if(aTab !== null) {
       setState(aTab)
     }
-    store.bidsStore.setActiveTab(null);
+    store.bidsStore.setActiveTab(null)
   }, [aTab]);
+  const ref = useRef(null)
 
-
-
-
+ const headerRef = useRef(null)
+  useEffect(() => {
+    console.log(ref, headerRef);
+  }, [ref, headerRef]);
     return (
-        <div className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant}>
-            <Tabs.TabHeaderContainer>
-              <HeadersTabs data={data} state={state} setState={handleChangeTabState}/>
+        <div ref={ref} className={styles.Tabs + ' ' + (className ? className : "")} data-variant={variant} data-panel={"tabs"}>
+            <Tabs.TabHeaderContainer ref={headerRef}>
+              <HeadersTabs data={data} state={state} setState={handleChangeTabState} />
             </Tabs.TabHeaderContainer>
            <TabPanels data={data} state={state} items={items} type={type}/>
         </div>
@@ -195,16 +225,16 @@ Tabs.Tab = ({ title, state, type, ...props }: { title: string; state: boolean} |
       </li>
   )
 }
-Tabs.Panel = observer(({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
+Tabs.Panel = ({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
 
  if(state) return (
-    <div data-company-type={company_type}  className={styles.tabPanel + " " + className} data-state={state} data-name={name}>
+    <div data-company-type={company_type}  className={styles.tabPanel + " " + className} data-panel={"panel"}  data-state={state} data-name={name}>
       {children}
     </div>
   )
   return null
-})
-Tabs.PanelPure = observer(({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
+}
+Tabs.PanelPure = ({ children, state, name, className = " ", company_type, ...props }: {className?: string,company_type?: string, children: ReactNode | ReactNode[] | React.ReactElement | string, state: boolean, name?: string } & PanelProps) =>  {
 
  if(state) return (
     <div data-company-type={company_type}  className={styles.tabPanelPure + " " + className} data-state={state} data-name={name}>
@@ -212,11 +242,11 @@ Tabs.PanelPure = observer(({ children, state, name, className = " ", company_typ
     </div>
   )
   return null
-})
+}
 
-Tabs.TabHeaderContainer = ({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string}) => (
-  <div className={styles.tabHeaderWrapper}>
+Tabs.TabHeaderContainer = React.forwardRef(({ children }: { children: ReactNode | ReactNode[] | React.ReactElement | string}, ref:any) => (
+  <div className={styles.tabHeaderWrapper} data-tab-position={"header"} ref={ref}>
     <ul className={styles.containerHeader}>{children}</ul>
   </div>
-  )
+  ))
 export default observer(Tabs);

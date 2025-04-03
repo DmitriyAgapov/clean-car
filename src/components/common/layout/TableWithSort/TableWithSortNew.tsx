@@ -1,23 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./TableWithSort.module.scss";
+import stylesGrid from "./TableWithSortGrid.module.scss";
 import Panel, { PanelColor, PanelProps, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
-import { useSearchParams } from "react-router-dom";
-import { Pagination } from "@mantine/core";
+import { Pagination, ScrollArea, Table } from '@mantine/core'
 import DataFilter, { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import TableSearch from "components/common/layout/TableWithSort/TableSearch";
-import Heading, { HeadingVariant } from "components/common/ui/Heading/Heading";
 import { observer } from "mobx-react-lite";
 import { LocalRootStore, LocalStoreProvider, useLocalStore } from "stores/localStore";
 import RowHeading from "components/common/layout/TableWithSort/TableParts/RowHeading";
 import RowData from "components/common/layout/TableWithSort/TableParts/RowData";
 import { toJS } from "mobx";
 import { useStore } from "stores/store";
+import { useDebouncedValue, useElementSize, useViewportSize } from "@mantine/hooks";
+import { PaginationComponent } from "components/common/layout/TableWithSort/TableParts/PaginationComponent";
+import { GridView, TableView } from "components/common/layout/TableWithSort/TableParts/TableView";
 
 
-type TableWithSortProps = {
+export type TableWithSortProps = {
     data?: any[]
     state?: boolean
+    view?: boolean
+    autoScroll?: boolean
     className?: string
+    headerBar?: boolean
     background?: PanelColor
     ar: { label: string, name: string }[]
     style?: PanelRouteStyle
@@ -25,133 +30,115 @@ type TableWithSortProps = {
     initFilterParams?: FilterData[] | undefined
     total?: number | undefined
     withOutLoader?: boolean
+    footerProps?:any
+    footerHeight?:string
     filter?: boolean
     pageSize?: number
     variant?: PanelVariant
 } & PanelProps
-
-
-
-
-const TableWithSortNew = observer(({ variant, withOutLoader, search = false, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
+const TableWithSortNew = observer(({ variant, view = false, withOutLoader,  autoScroll, search = false,headerBar = true, filter = false, state = false, className, ar, background = PanelColor.default, style = PanelRouteStyle.default, initFilterParams, ...props
 }: TableWithSortProps) => {
+    const store = useStore()
     const localStore = useLocalStore<LocalRootStore>()
-    const store =useStore()
+    const _count = localStore.params.getItemsCount
     const rows = toJS(localStore.getData)?.results
-    const initCount = localStore.getData?.count || 0
-    const {data, params: {getSearchParams: {page_size: pageSize}}} = localStore
-    const noData = localStore.getData?.results?.length === 0 && !localStore.isLoading
-    let [searchParams, setSearchParams] = useSearchParams([['page', '1'], ['page_size', '10']])
+    const _countFetch = toJS(localStore.getData)?.count
+    const initCount = _count
+    const { ref: refBody, width, height } = useElementSize();
+    const fontSize = store.appStore.fontSizeBodyCalc()
+    const [heightVal, setHeightVal] = useState(0)
+    const [value] = useDebouncedValue(heightVal, 500)
+    const { height:heightV, width:widthV } = useViewportSize();
 
-    // @ts-ignore
-    const [sortedField, setSortedField] = useState<null | string>(null)
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    React.useLayoutEffect(() => {
+      setHeightVal((prevState) => height !== prevState ? height : prevState);
+      const correct = widthV > 1920 ? 5 : 3;
+      (() => {
+          if(value > 0 && !autoScroll) {
+            const footehH = Math.ceil(fontSize * 7.5);
+            const headerH = Math.ceil(fontSize * 9);
+            const _height = Math.floor(value - footehH - headerH);
+            const _fSize = Math.ceil(fontSize * 3) + correct;
 
-    const handleCurrentPage = React.useCallback((value: any) => {
-        localStore.params.setSearchParams({page: value})
-        if(withOutLoader) {
-            // console.log('withyout', searchParams);
-            searchParams.set('page', String(value))
-            // store.paramsStore.setParams({page: encodeURIComponent(value)});
-            setSearchParams(searchParams.toString())
+            const  _res = Math.ceil(_height / _fSize);
+            // console.log(_height);
+            if(refBody.current !== null && _height > 0 && _count !== _res) {
+              if (store.appStore.bodyRef.clientWidth > 960) {
+                const val = !_count ? _res - 1 : _res
+                localStore.params.setItemsCount(val)
+              } else {
+                localStore.params.setItemsCount(10)
+              }
+            }
+          }
+      })()
+    }, [height, fontSize, value, _count]);
 
-        } else  {
-            searchParams.set('page', String(value));
-            setSearchParams(searchParams.toString()
-            )        }
-        setCurrentPage(Number(value))
-    }, [sortedField, currentPage, searchParams, localStore.params.searchParams])
-
-    // React.useEffect(() => {
-    //     console.log(currentPage, 'currentPage');
-    //     const pageParams = searchParams.get('page')
-    //     searchParams.has('page') ? setCurrentPage(Number(pageParams)) : setCurrentPage(1)
-    // }, [currentPage, searchParams]);
-
-    const RowDataMemoized = React.useMemo(() => {
-        if(withOutLoader) {
-            let initPage = (currentPage === 1) ? currentPage - 1 : (currentPage - 1) * pageSize
-            if (data && data.length > 0) return data.slice(initPage, initPage + pageSize).map((item: any, index: number) => <RowData  {...item} key={item.id + '_00' + index} />)
-        }
-        if(data && data.length > 0) return data.map((item: any, index: number) => <RowData    {...item} key={item.id + '_00' + index} />)
-
-    }, [data, currentPage])
-
-    const handleHeaderAction = React.useCallback((e: any) => {
-        // @ts-ignore
-        searchParams.set('page', '1')
-        if(e.reversed) {
-            searchParams.set('ordering', encodeURIComponent(`-${ar[e.index].name}`))
-            // store.paramsStore.setParams({ordering: encodeURIComponent(`-${ar[e.index].name}`)});
-
-            setSortedField(`-${ar[e.index].name}`)
-        } else {
-            // @ts-ignore
-            searchParams.set('ordering', encodeURIComponent(`${ar[e.index].name}`))
-            // store.paramsStore.setParams({ordering: encodeURIComponent(`${ar[e.index].name}`)});
-
-            setSortedField(ar[e.index].name)
-        }
-        setSearchParams(searchParams.toString())
-    }, [sortedField, currentPage, searchParams])
-    useEffect(() => {
-        console.log('pageSize', localStore.params.searchParams.page_size);
-        console.log('initCount', localStore.getData?.count);
-        // store.appStore.setAppState(localStore.isLoading)
-    }, [localStore.params.searchParams]);
- useEffect(() => {
-
-        // store.appStore.setAppState(localStore.isLoading)
-    }, [rows, localStore.isLoading]);
+    const {footerHeight, ...otherProps} = props
 
     return (
-        <Panel
-            background={background ? background : PanelColor.glass}
-            className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto] overflow-hidden'}
-            routeStyle={style}
-            variant={variant ? variant : PanelVariant.dataPadding}
-            footerClassName={'px-6 pt-2 pb-6'}
-            headerClassName={''}
-            header={search || filter ?
-                <>
-                    {search && <TableSearch/>}
-                    {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
-                </> : null
-            }
-            footer={
-             (Math.ceil(initCount / localStore.params.searchParams.page_size)) > 1 && (
-               <Pagination
-                        classNames={{
-                            control:
-                                'hover:border-accent data-[active=true]:border-accent data-[active=true]:text-accent',
-                        }}
-                        total={Math.ceil(initCount / localStore.params.searchParams.page_size)}
-                        value={localStore.params.searchParams.page}
-                        onChange={value => localStore.params.setSearchParams({page: Number(value)})}
-                        // boundaries={2}
-                        defaultValue={5}
-                    />
-                )
-            }
-            {...props}
-        >
+      <Panel ref={refBody} state={false}
+          background={background ? background : PanelColor.glass}
+          className={styles.TableWithSortPanel + ' ' + className + ' col-span-full grid grid-rows-[auto_1fr_auto] overflow-hidden'}
+          // style={autoScroll ? {maxHeight: (heightV - Number(fontSize) * 22.5) +'px'} : {}}
+          routeStyle={style}
+          variant={variant ? variant : PanelVariant.dataPadding}
+          footerClassName={'px-6 pt-2 pb-4 h-24' + " " + props.footerClassName}
+          headerClassName={''}
+          header={search || filter ?
+              <>
+                  {search && <TableSearch/>}
+                  {(filter && initFilterParams && initFilterParams?.length > 0) && <DataFilter filterData={initFilterParams} />}
+              </> : false
+          }
+          footer={!autoScroll ? <><PaginationComponent />{props.footer }</> : props.footer }
+          {...otherProps}
+      >
+        {autoScroll ? view ? <GridView key={props.footerProps?.id + "_00"}
+          props={{...props, ref: width}}
+          dataStyle={style}
+          ar={ar}
+          headerBar={headerBar}
+          total={initCount}
+          view={true}
+          autoScroll={autoScroll}
+          rows={rows}
+          countFetch={_countFetch}
+          element={(item: any, index: number) => <RowData style={style} view={item.view} {...item}
+          key={item.id + "_00" + index} />}/> :
+          <TableView key={props.footerProps?.id + "_00"}
+              props={props}
+              dataStyle={style}
+              ar={ar}
+              headerBar={headerBar}
+              total={initCount}
+              autoScroll={autoScroll}
+              rows={rows}
+              countFetch={_countFetch}
+              element={(item: any, index: number) => <RowData style={style} {...item} key={item.id + "_00" + index}
+              />
+          } /> : <table className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
+          {/* Заголовок табилцы */}
+          {headerBar && <RowHeading total={initCount} ar={ar} />}
 
-            <table  className={styles.TableWithSort} data-style={style} data-width={`${Math.floor(100 / ar.length)}`}>
-                <RowHeading total={initCount} ar={ar} />
-                <tbody>
-                {!noData &&  ( (rows && rows.length > 0)  ?  rows.map((item: any, index: number) => <RowData    {...item} key={item.id + '_00' + index} />) :  <Heading className={'min-h-[40vh] flex items-center justify-center hidden'} text={'Нет данных'} variant={HeadingVariant.h3} />)}
-                </tbody>
-            </table>
-        </Panel>
+
+          <tbody>{rows && rows.map((item: any, index: number) =>
+            <RowData style={style} {...item}
+              key={item.id + "_00" + index} />
+          )}</tbody>
+        </table>}
+
+      </Panel>
     )
 })
 
-const TableWithSort = (props:any) => {
-    return (
-      <LocalStoreProvider stores={props.store}>
-          <TableWithSortNew {...props} />
-      </LocalStoreProvider>
-    )
+const TableWithSort = (props: TableWithSortProps & any & {store?: any}) => {
+  const {store, ...otherProps} = props
+  return (
+    <LocalStoreProvider stores={store}>
+      <TableWithSortNew {...otherProps} />
+    </LocalStoreProvider>
+  )
 }
 
 export default observer(TableWithSort);

@@ -1,15 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
+import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import FormCreateCompany from '../../components/Form/FormCreateCompany/FormCreateCompany'
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateCompany from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
-import { backToUrlLevel } from "utils/utils";
 
 export default function CompanyPageCreateAction(props: any) {
   const store = useStore()

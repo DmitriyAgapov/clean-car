@@ -5,6 +5,8 @@
 html {
   scroll-behavior: smooth;
   font-size: var(--scaling-font);
+  width:100vw;
+  overflow-x:hidden;
 }
 
 body {
@@ -15,6 +17,10 @@ body {
 
   color: var(--fontColor);
   line-height: 1.5;
+  &[data-scroll-locked] {
+		width: 100svw;
+		height: 100svh;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -98,4 +104,8 @@ hr {
 input::placeholder, textarea::placeholder {
   opacity: 1;
   color: #bdbdbd !important;
+}
+
+.leaflet-popup-tip {
+  background-color: #00FFAE !important;
 }

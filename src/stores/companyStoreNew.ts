@@ -17,12 +17,12 @@ export enum Payment {
 }
 export enum CompanyType {
   admin = "Администратор системы",
-  customer = "Компания-Заказчик",
-  performer = "Компания-Партнер"
+  customer = "Клиент",
+  performer = "Партнер"
 }
 export const CompanyTypeRus = (type:any) => {
-  if(type === "Компания-Заказчик") return "customer"
-  if(type === "Компания-Партнер") return "performer"
+  if(type === "Клиент") return "customer"
+  if(type === "Партнер") return "performer"
   return "admin"
 }
 
@@ -139,8 +139,8 @@ export class CompanyStoreNew {
     }
 
     async loadAllCompaniesList(params?: SearchParamsType) {
-        const _sPrms = new SearchParams()
-        params && _sPrms.setParams(params)
+        const _sPrms = new SearchParams();
+        params && _sPrms.setParams(params);
         this.isLoading = true
         const companies = await client.companiesOnlyCompaniesList(_sPrms)
         runInAction(() => {
@@ -153,11 +153,18 @@ export class CompanyStoreNew {
     }
 
     async loadCompanyFiliales(company_type:string, company_id:number, params:any ) {
+        // console.log(params);
+        // params.is_active = false
         if(company_type === "customer") {
-             return client.customerBranchesList({company_id: company_id, ...params}).then((res) => res)
+            const _res = agent.Filials.getFilials(company_type, company_id, params).then((res) => res.data);
+            // console.log(_res);
+            const res = client.customerBranchesList({company_id: company_id, ...params}).then((res) => res)
+            // console.log(res);
+            return  _res
         }
         if(company_type === "performer") {
-            return   client.performerBranchesList({company_id: company_id, ...params}).then((res) => res)
+            // return   client.performerBranchesList({company_id: company_id, ...params}).then((res) => res)
+            return   agent.Filials.getFilials(company_type, company_id, params).then((res) => res.data);
         }
     }
     async loadCompanyCars(company_type:string, company_id:number, params:any ) {
@@ -170,7 +177,7 @@ export class CompanyStoreNew {
         if(appStore.appType === "admin") {
             return client.companiesOnlyBranchesList(args)
         } else {
-            return this.loadCompanyFiliales(userStore.myProfileData.company.company_type === "Компания-заказчик" ? "customer" : "performer", userStore.myProfileData.company.id, args).then((res) => {
+            return this.loadCompanyFiliales(userStore.myProfileData.company.company_type === "Клиент" ? "customer" : "performer", userStore.myProfileData.company.id, args).then((res) => {
                 runInAction(() => {
                     if(res && res.results) {
                         companyStore.filials = res.results.map((f:any) => ({

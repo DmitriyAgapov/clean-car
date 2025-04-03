@@ -22,14 +22,14 @@ const ReferencesPage = () => {
                 headerClassName={'flex justify-between'}
                 state={store.permissionStore.loadingPermissions}
                 header={
-                    <div>
+
                         <Heading
                             text={'Справочник CleanCar'}
                             variant={HeadingVariant.h1}
-                            className={'inline-block'}
+                          className={'inline-block  !mb-0'}
                             color={HeadingColor.accent}
                         />
-                    </div>
+
 
                 }
             >
@@ -37,7 +37,7 @@ const ReferencesPage = () => {
                   Вы можете дополнять и расширять справочник под свои запросы. К созданию доступны: марки автомобилей, города. Раздел услуги — есть возможность интегрировать свои подтипы услуг.
                 </p>
             </Panel>
-          <Panel  bodyClassName={' subgrid  col-span-full  desktop-max:gap-y-6'} className={'grid xl:grid-cols-12 md:grid-cols-8   grid-cols-4 gap-8 justify-items-stretch col-span-full !backdrop:filter-none !bg-transparent content-stretch items-stretch desktop:mt-12'} variant={PanelVariant.withGapOnly}>
+          <Panel  bodyClassName={' subgrid  col-span-full  desktop-max:gap-y-6 content-start'} className={'grid xl:grid-cols-12 md:grid-cols-8   grid-cols-4 gap-8 justify-items-stretch col-span-full !backdrop:filter-none !bg-transparent content-stretch items-stretch desktop:mt-12'} variant={PanelVariant.withGapOnly}>
             <FormCard  title={'Автомобили'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 h-full w-full !py-8 !px-4'} navigate={() => navigate(location.pathname + '/car_brands')}/>
             <FormCard title={'Города'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 h-full w-full !py-8 !px-4'}  actions={null} navigate={() => navigate(location.pathname + '/cities')}/>
             <FormCard title={'Услуги'} titleVariant={HeadingVariant.h3} titleColor={HeadingColor.accent} className={'col-span-4 w-full h-full !py-8 !px-4'}  actions={null} navigate={() => navigate(location.pathname + '/services')}/>

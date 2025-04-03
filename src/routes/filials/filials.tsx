@@ -5,20 +5,27 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { Outlet, useLoaderData, useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import companyStore from "stores/companyStore";
-import { observer, useLocalStore } from "mobx-react-lite";
-import agent, { client } from "utils/agent";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
+import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
+import { flattenCompanies } from "utils/utils";
+
+
 const localRootStore =  new LocalRootStore()
+localRootStore.params.setSearchParams({page_size: 10})
 const FilialsPage = () => {
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+
   const store = useStore()
   const location = useLocation()
-  const {isLoading, data, mutate} = useSWR(['filials', localStore.params.getSearchParams] , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
+
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
+
+  const isReadyy = localStore.params.getIsReady
+  const {isLoading, data, mutate} = useSWR(isReadyy ? ['filials', localStore.params.getSearchParams] : null , ([url, args]) => store.companyStoreNew.loadFilialsList(args))
   useDidUpdate(
     () => {
       if(location.pathname === '/account/filials') {
@@ -27,10 +34,16 @@ const FilialsPage = () => {
     },
     [location.pathname]
   );
+  // @ts-ignore
   useEffect(() => {
+    let ar = data?.results;
+    if(data?.results && data?.results?.length == 1 && data?.results[0].children && !store.userStore.isAdmin) {
+      // @ts-ignore
+      ar = flattenCompanies(data?.results).filter(item => item.parent !== null);
+    }
     localStore.setData = {
       ...data,
-      results: data?.results?.map((item: any) => ({
+      results: ar?.map((item: any) => ({
         status: item.is_active as boolean,
         company: item.name,
         city: item.city.name,
@@ -62,7 +75,6 @@ const FilialsPage = () => {
             <LinkStyled
               text={'Создать филиал'}
               to={'create'}
-              // action={() => store.companyStore.addCompany()}
               className={'inline-flex'}
               directory={ButtonDirectory.directory}
               size={ButtonSizeType.sm}
@@ -74,13 +86,13 @@ const FilialsPage = () => {
         store={localRootStore}
         variant={PanelVariant.dataPadding}
         search={true}
+        className={'col-span-full table-groups table-bids'}
         style={PanelRouteStyle.filials}
         background={PanelColor.glass}
         filter={true}
-        state={isLoading}
+        initFilterParams={[FilterData.city__id, FilterData.company_type_c]}
+        state={false}
         ar={[{ label: 'Статус', name: 'is_active' }, {label: 'Компания', name: 'name'},  { label: 'Город', name: 'city' }, {label: 'Тип', name: 'company_type'},{ label: 'Принадлежит', name: 'parent'}]}     />
-
-
     </Section>
   )
 }

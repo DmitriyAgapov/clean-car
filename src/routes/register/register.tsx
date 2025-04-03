@@ -7,27 +7,28 @@ import FormRegister from 'components/Form/FormRegister/FormRegister'
 
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-
-import { useStore } from 'stores/store'
 import Image from 'components/common/ui/Image/Image'
 import imageBg from '../../assets/images/bg/welcomebg.png'
+import { useStore } from 'stores/store'
+import { Navigate, useLocation } from 'react-router-dom'
 
 export default function RegisterPage() {
   const store = useStore()
-
-  useEffect(() => {
-    store.appStore.setAppRouteName('.регистрация')
-  })
+  const loc = useLocation()
+  if(store.authStore.userIsLoggedIn && (['register'].some(value => loc.pathname.includes(value)) || loc.pathname == "/")) {
+    return (<Navigate to={'/account/bids'}/>)
+  }
   return (
     <Layout
       className={'page-intro'}
       headerContent={
-        <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'} text={'Помощь'} variant={ButtonVariant.tech} />
+        <Button className={'!hidden tablet:!inline-flex ml-auto mr-8'}  href={"mailto:info@clean-car.net"} text={'Помощь'} variant={ButtonVariant.tech} />
       }
     >
       <Section type={SectionType.centered}>
         <Panel
-          className={'col-span-6 mb-12 tablet:col-span-full desktop:col-span-6'}
+          footerClassName={'mt-16'}
+          className={'!col-span-6  desktop-max:!col-span-full w-full max-w-lg  tablet:px-6 tablet:justify-self-center desktop:justify-self-auto'}
           header={
             <Heading
               text={'Добро пожаловать в CleanCar.'}
@@ -52,9 +53,8 @@ export default function RegisterPage() {
           </p>
         </Panel>
         <Panel
-          bodyClassName={'!py-12'}
           className={
-            'col-span-6 desktop:col-start-9 desktop:col-span-6 tablet:col-start-2 tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto'
+            'desktop:!col-start-8 desktop:!col-span-7 desktop:m-8 !tablet:col-start-2 !tablet:col-end-12 tablet:justify-self-center desktop:justify-self-auto w-full max-w-xl tablet:py-4 tablet:px-2'
           }
           variant={PanelVariant.textPadding}
           background={PanelColor.glass}

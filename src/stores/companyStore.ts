@@ -15,13 +15,14 @@ export enum Payment {
     predoplata = 'Предоплата',
 }
 export enum CompanyType {
-  admin = "Администратор системы",
-  customer = "Компания-Заказчик",
-  performer = "Компания-Партнер"
+    admin = "Администратор системы",
+    customer = "Клиент",
+    performer = "Партнер",
+    fizlico = "Физическое лицо"
 }
 export const CompanyTypeRus = (type:any) => {
-  if(type === "Компания-Заказчик") return "customer"
-  if(type === "Компания-Партнер") return "performer"
+  if(type === "Клиент") return "customer"
+  if(type === "Партнер") return "performer"
   return "admin"
 }
 
@@ -44,16 +45,16 @@ export type Company<Type> = {
 export type CompanyProfile<Type> = Type extends CompanyType.customer ? CustomerProfile : PerformerProfile
 export interface CustomerProfile {
     customerprofile: {
-        address: string
+        address?: string
         inn?: string
         ogrn?: string
         legal_address?: string
         contacts?: string
         payment?: Payment
         bill?: string
-        lat: number
+        lat?: number
 
-        lon: number
+        lon?: number
         application_type?: string
         overdraft?: boolean
         overdraft_sum?: number
@@ -68,6 +69,7 @@ export interface PerformerProfile {
         legal_address?: string
         height?: number
         contacts?: string
+        workload: number,
         service_percent?: number
         application_type?: string
         working_time?: string
@@ -93,11 +95,12 @@ export class CompanyStore {
         makeAutoObservable(this, {
             stateMyCompany: computed,
             allCompanies: computed,
+            loadingState: observable,
             getFillialsData: computed,
         })
         makePersistable(this, {
             name: 'companyStore',
-            properties: ['fullCompanyData', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers', 'loadingState', 'allFilials'],
+            properties: ['fullCompanyData', 'activeTab', 'companies','companiesMap', 'filials', "customersCompany", 'companiesPerformers', 'loadingState', 'allFilials'],
             storage: window.localStorage,
 
         }, { fireImmediately: true })
@@ -113,17 +116,17 @@ export class CompanyStore {
         //         this.getAllCompanies()
         //     }
         // })
-        reaction(() => this.filials,
-          (filials) => {
-              console.log('userIsLoggedIn', authStore.isLoggedIn);
-              console.log('get filials', (filials.length === 0 && this.loadingState.filials))
-            if(filials.length === 0 && authStore.userIsLoggedIn && !this.loadingState.filials) {
-                console.log('get filials')
-                this.getAllFilials()
-                this.loadingState.filials = true
-            }
-          }
-        )
+        // reaction(() => this.filials,
+        //   (filials) => {
+        //       // console.log('userIsLoggedIn', authStore.isLoggedIn);
+        //       // console.log('get filials', (filials.length === 0 && this.loadingState.filials))
+        //     if(filials.length === 0 && authStore.userIsLoggedIn && !this.loadingState.filials) {
+        //         // console.log('get filials')
+        //         this.getAllFilials()
+        //         this.loadingState.filials = true
+        //     }
+        //   }
+        // )
         // reaction(() => this.allFilials.results,
         //           (filials) => {
         //               console.log('get allFilials', filials)
@@ -182,16 +185,25 @@ export class CompanyStore {
     allFilials:IObservableArray = [] as any
     companiesCustomer:IObservableArray<Companies> = [] as any
     companiesPerformers:IObservableArray<Companies> = [] as any
+    companyPerformersIsZeroLength: boolean = false
     customersCompany = new Map([])
     currentCustomersCompany = 0
     loadingCompanies: boolean = false
     errors: any
     targetCompanyId:null | number = null
+    activeTab: string | null = null
     targetCompany = {}
     fullCompanyData = new Map([])
+    companiesAndFilials: IObservableArray<any> = observable.array([])
+    setActiveTab(tab:string|null) {
+        this.activeTab = tab;
+    }
+    get getActiveTab() {
+        return this.activeTab
+    }
     get getCompaniesPerformers() {
-        if(this.companiesPerformers.length === 0) {
-            this.getPerformersCompany()
+        if(this.companiesPerformers.length === 0 && !this.companyPerformersIsZeroLength) {
+            this.getPerformersCompany().finally(() => this.companyPerformersIsZeroLength = true)
         }
         return this.companiesPerformers
     }
@@ -222,7 +234,75 @@ export class CompanyStore {
     async hydrateStoreFull() {
         await hydrateStore(this);
     }
+    get getCompaniesAndFilials() {
+        return this.companiesAndFilials
+    }
+    async loadAllOnlyCompanies(args:any) {
+        if(appStore.appType === "admin") {
+            return await agent.Companies.getOnlyAllCompanies(args).then(r => r.data)
+        }
+        return  await agent.Companies.getMyCompanies(args).then(r => r.data)
+    }
+    loadFilialsAndCompaniesByAdminAndNot = flow( function *(this: CompanyStore, company_type:string, companyOrFilial: string, company_id:number) {
+        if(companyOrFilial === "company") {
+            if (appStore.appType === "admin") {
+                if (company_type === "customer") {
+                    return yield  agent.Companies.getOnlyAllCompanies().then(r => r && r.data).then(r => {
+                        this.companiesAndFilials = r.results.filter((i:any) => i.company_type === "Клиент")
+                        return r.results
+                    })
+                }
+                if (company_type === "performer") {
+                    return yield  agent.Companies.getOnlyAllCompanies().then(r => r.data).then(r => {
+                        this.companiesAndFilials = r.results.filter((i:any) => i.company_type === "Партнер")
+                        return r.results
+                    })
+                }
+            }
+            if (appStore.appType !== "admin") {
+                if(company_id === userStore.myProfileData.company.id) {
 
+                    this.companiesAndFilials = [userStore.myProfileData.company] as IObservableArray
+
+                    return yield  [userStore.myProfileData.company]
+                } else {
+                    return yield  agent.Filials.getFilials(company_type, userStore.myProfileData.company.id).then(r => {
+                        this.companiesAndFilials = r.results
+                        return r.results
+                    })
+                }
+            }
+        }
+        if(companyOrFilial === 'filials') {
+            if (appStore.appType === "admin") {
+                // if (company_type === "customer") {
+                    return yield  agent.Companies.getOnlyBranchesCompanies().then(r => r && r.data).then(r => {
+                        this.companiesAndFilials = r.results
+                        return r.results
+                    })
+                // }
+                // if (company_type === "performer") {
+                //     return agent.Companies.getOnlyBranchesCompanies().then(r => r.data).then(r => r.results)
+                // }
+            }
+            if (appStore.appType !== "admin") {
+                console.log('homeNotAdmin');
+                if(company_id !== userStore.myProfileData.company.id) {
+                    console.log("r.data.results, !==");
+                    this.companiesAndFilials = [userStore.myProfileData.company] as IObservableArray
+
+                    return yield  [userStore.myProfileData.company]
+                } else {
+                    console.log('homeF');
+                    return yield  agent.Filials.getFilials(company_type, company_id).then(r => {
+                        console.log(r.data.results);
+                        this.companiesAndFilials = r.data.results
+                        return r.data.results
+                    })
+                }
+            }
+        }
+    })
     getCompanyById(id:number) {
         let company:any;
         if(this.companies.length !== 0) {
@@ -283,8 +363,8 @@ export class CompanyStore {
             if (appStore.appType && appStore.appType !== UserTypeEnum.admin) {
                 console.log('is not admin')
                 type = appStore.appType
-                const { id, company_type } = yield userStore.currentUser.company
-                newid = id ? id : userStore.currentUser.company?.id
+                const { id, company_type } = yield userStore.myProfileData.company
+                newid = id ? id : userStore.myProfileData.company?.id
             } else {
                 newid = company_id
             }
@@ -301,21 +381,22 @@ export class CompanyStore {
                 const company = yield agent.Companies.getCompanyData(type, newid)
                 const users = yield agent.Account.getCompanyUsers(newid)
                 const filials = yield agent.Filials.getFilials(type, newid)
-                const cars = yield agent.Cars.getCompanyCars(newid)
+                if(appStore.appType !== "performer") {
+                    const cars = yield agent.Cars.getCompanyCars(newid)
+                    data.cars = {
+                        data: cars.data.results,
+                        label: 'Автомобили',
+                    } as any
+                }
 
                 data.company = {
                     data: company.data,
                     company_type: type,
                     label: 'Основная информация',
                 }
-
                 data.users = {
                     data: users.data.results,
                     label: 'Сотрудники',
-                } as any
-                data.cars = {
-                    data: cars.data.results,
-                    label: 'Автомобили',
                 } as any
                 data.filials = {
                     data: filials.data.results,
@@ -375,8 +456,8 @@ export class CompanyStore {
         let result
         try {
             if (appStore.appType !== "admin") {
-                console.log('start');
-                const { data, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type),
+                const _type = userStore.myProfileData.company.company_type === CompanyType.performer ? CompanyType.performer : CompanyType.customer
+                const { data, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(_type),
                     userStore.myProfileData.company.id,
                     params,
                 )
@@ -396,21 +477,23 @@ export class CompanyStore {
         let dataMeta
         if(appStore.appType === "admin") {
             const { data: dataCars, status } = yield agent.Companies.getOnlyBranchesCompanies(params)
-            console.log(dataCars);
+
             if (status === 200) {
                 this.allFilials = dataCars.results
                 data = dataCars.results
                 dataMeta = dataCars
             }
+            return dataCars
         } else {
             try {
-                const type = userStore.myProfileData.company.company_type;
-                const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(userStore.myProfileData.company.company_type), userStore.myProfileData.company.id, params)
-                console.log(dataCars);        if (status === 200) {
-                    this.allFilials = dataCars
+                const _type = userStore.myProfileState.company.company_type === CompanyType.performer ? CompanyType.performer : CompanyType.customer
+                const { data: dataCars, status } = yield agent.Filials.getFilials(<CompanyType>CompanyTypeRus(_type), userStore.myProfileData.company.id, params)
+                if (status === 200) {
+                    this.allFilials = dataCars.results
                     data = dataCars.results
                     dataMeta = dataCars
                 }
+                return dataCars
             } catch (e) {
                 this.errors = e
             }
@@ -467,6 +550,7 @@ export class CompanyStore {
     })
 
     addCompany = flow(function* (this: CompanyStore, data: any, type: CompanyType) {
+        console.log(data);
         this.loadingCompanies = true
         try {
             if (type === CompanyType.performer) {
@@ -474,7 +558,7 @@ export class CompanyStore {
                 const response = yield agent.Companies.createCompanyPerformers(data, 'performer')
 
                 if (response.status > 199 && response.status < 299) {
-                    this.loadCompanyWithTypeAndId('performer', response.data.id)
+                    // this.loadCompanyWithTypeAndId('performer', response.data.id)
                     return response.data
                 }
                 return response.response
@@ -483,7 +567,7 @@ export class CompanyStore {
                 // @ts-ignore
                 const response = yield agent.Companies.createCompanyCustomer(data, 'customer')
                 if (response.status > 199 && response.status < 299) {
-                    this.loadCompanyWithTypeAndId('customer', response.data.id)
+                    // this.loadCompanyWithTypeAndId('customer', response.data.id)
                     return response.data
                 }
                 return response.response
@@ -496,7 +580,7 @@ export class CompanyStore {
         } finally {
             this.loadingCompanies = false
         }
-        this.hydrateStore()
+        // this.hydrateStore()
     })
 
     getFilials = flow(function* (this: CompanyStore) {
@@ -520,6 +604,9 @@ export class CompanyStore {
         this.loadingCompanies = false
         return this.filials
     })
+    get getFilialsAr() {
+        return this.filials
+    }
     get getFillialsData() {
         let filials: any[] = []
         if(this.companies.length === 0) {
@@ -531,16 +618,15 @@ export class CompanyStore {
         return filials
     }
     createFilial = flow(function* (this: CompanyStore, data: any, type: string, company_id: number) {
-
         this.loadingCompanies = true
         try {
             // @ts-ignore
             const response = yield agent.Filials.createFilial(type, company_id, data)
             if (response.status > 199 && response.status < 299) {
 
-                return response.data
+                return response
             }
-            return response.response
+            return response
         } catch (e) {
             // @ts-ignore
             new Error('Create COmpany failed', e)
@@ -580,42 +666,52 @@ export class CompanyStore {
         .catch((errors:any) => this.errors = errors)
     }
 
-    getPerformersCompany (params?: PaginationProps) {
+    async getPerformersCompany (params?: PaginationProps) {
         this.companiesPerformers.clear()
-        return agent.Companies.getListCompanyPerformer(params)
+        return await agent.Companies.getListCompanyPerformer(params)
         .then((response:any) => response)
         .then((response:any) => response.data)
-        .then((data:any) => runInAction(() =>{
-
+        .then((data:any) => runInAction(() => {
             this.companiesPerformers = data.results
         }))
         .catch((errors:any) => this.errors = errors)
     }
 
-    getAllCompanies (params?: PaginationProps) {
+    async getAllCompanies (params?: PaginationProps & any) {
         if(authStore.isLoggedIn) {
-        console.log('All companies');
-        this.loadingCompanies = true
+
+            this.loadingCompanies = true
         // if(userStore.getUserCan(PermissionNames["Управление пользователями"], "read")) {
             if(userStore.isAdmin) {
-                 agent.Companies.getAllCompanies(params)
-                    .then((response:any) => response)
-                    .then((response:any) => response.data)
-                    .then((data:any) => runInAction(() => {
-                        this.companies = data.results
-                     }))
+                console.log(params);
+                 return await agent.Companies.getAllCompanies(params)
+                    .then((response:any) => {
+                        if(response && response.data) {
+                            runInAction(() => {
+                                this.companies = response.data.results
+                            })
+                            return response
+                        }
+                    })
                     // .catch((errors:any) => this.errors = errors)
 
                 }
            else {
-                console.log('my companies');
-                agent.Companies.getMyCompanies(params)
-                    .then((response:any) => response.data)
-                    .then((data:any) => runInAction(() => {
-                        this.myCompany.company = data.results
-                        this.companies = data.results
-                    }))
-                 return this.stateMyCompany.company
+                return await agent.Companies.getMyCompanies(params)
+                .then((response:any) => {
+                    if(response && response.data) {
+                        runInAction(() => {
+                            this.myCompany.company = response.data.results
+                            this.companies = response.data.results
+                        })
+                        return response
+                    }
+                })
+                    // .then((response:any) => response.data)
+                    // .then((data:any) => runInAction(() => {
+                    //     this.myCompany.company = data.results
+                    //     this.companies = data.results
+                    // }))
             }
         // }
             }
@@ -660,19 +756,39 @@ export class CompanyStore {
         return this.companies
     }
     get getCompaniesAll() {
-        if(this.companies.length === 0) {
-            this.getAllCompanies()
-        }
+        // if(this.companies.length === 0) {
+        //     this.getAllCompanies()
+        // }
         return this.companies as any[]
     }
-    get getFilialsAll() {
-        if(this.companies.length === 0) {
-            this.getAllFilials()
+    getCompanyCity(id: any) {
+        const _res = this.companies.filter((c) => c.id == id)
+
+        // @ts-ignore
+        if(_res && _res[0] && _res[0].city.id) {
+            // @ts-ignore
+            return _res[0].city.id
+        } else if(_res.length === 0) {
+            const _f = this.filials.filter((c) => c.id == id)
+            console.log(_f);
+            // @ts-ignore
+            if(_f && _f[0] && _f[0].city.id) return _f[0].city.id
+            const _af = this.allFilials.filter((c) => c.id == id)
+            if(_af && _af[0] && _af[0].city.id) return _af[0].city.id
         }
-        runInAction(() =>     {
-            console.log('load filials get');
-            this.loadAllFilials()
-        })
+        return false
+    }
+    get getFilialsAll() {
+        // if(this.companies.length === 0) {
+        //     this.getAllFilials()
+        // }
+        // if(this.allFilials.length === 0) {
+        //     runInAction(() =>     {
+        //         console.log('load filials get');
+        //
+        //         this.loadAllFilials()
+        //     })
+        // }
         return this.allFilials
     }
 

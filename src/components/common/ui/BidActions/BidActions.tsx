@@ -1,28 +1,30 @@
-import { observer } from 'mobx-react-lite'
-import { useStore } from 'stores/store'
-import React from 'react'
-import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { useParams, useRevalidator } from 'react-router-dom'
-import { BidsStatus } from 'stores/bidsStrore'
-import { Button as Btn, Menu } from '@mantine/core'
-import { SvgMenu } from 'components/common/ui/Icon'
-import styles from './BidActions.module.scss'
-import { useDisclosure, useViewportSize } from '@mantine/hooks'
-import { BidModal } from 'components/common/layout/Modal/BidModal'
+import {observer} from "mobx-react-lite"
+import { useStore } from "stores/store";
+import React from "react";
+import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
+import { useNavigate, useNavigation, useParams, useRevalidator } from 'react-router-dom'
+import { BidsStatus } from "stores/bidsStrore";
+import { Button as Btn, Menu } from "@mantine/core";
+import { SvgMenu } from "components/common/ui/Icon";
+import styles from "./BidActions.module.scss";
+import { useViewportSize } from "@mantine/hooks";
+import BidModal from "components/common/layout/Modal/BidModal";
 import { useSWRConfig } from "swr";
+import { useLocalStore } from "stores/localStore";
+import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 
 const BidText = {
-  CustomerVObrabotke: <p>Исполнитель открыл заявку.Ожидается обратная связь</p>,
-  CustomerOzhidaet: <p>Исполнитель внес изменения. Пожалуйста ознакомьтесь с ними и примите решение по заявке.</p>,
-  CustomerVRabote:<p>Изменения подтверждены. Исполнитель начал выполнение заявки.</p>,
-  CustomerZavershen: <p>Заявка принята заказчиком. Заказ полностью завершен.</p>,
-  CustomerRazbor: <p>Выполненная работа отклонена Заказчиком. Происходит разбор причины</p>,
-  CustomerOtmenena: <p>Изменения по заявке со стороны Исполнителя не приняты. Заявка отклонена.</p>,
-  PerformerOzhidaet: <p>Вы внесли изменения в заявку. Ожидайте ответ от заказчика.</p>,
-  PerformerVipolnena: <p>Заявка выполнена. Ожидается обратная связь от заказчика.</p>,
-  PerformerResheno: <p>Заявка принята заказчиком. Заказ полностью завершен.</p>,
-  PerformerRazbor: <p>Выполненная работа отклонена Заказчиком. Происходит разбор причины.</p>,
-  PerformerOtmena: <p>Выполненная работа отклонена Заказчиком. Происходит разбор причины.</p>,
+  CustomerVObrabotke: <p>Партнер открыл заявку.Ожидается обратная связь</p>,
+  CustomerOzhidaet: <p>Партнер внес изменения. Пожалуйста ознакомьтесь с ними и примите решение по заявке.</p>,
+  CustomerVRabote:<p>Изменения подтверждены. Партнер начал выполнение заявки.</p>,
+  CustomerZavershen: <p>Заявка принята Клиентом. Заказ полностью завершен.</p>,
+  CustomerRazbor: <p>Выполненная работа отклонена Клиентом. Происходит разбор причины</p>,
+  CustomerOtmenena: <p>Изменения по заявке со стороны Партнера не приняты. Заявка отклонена.</p>,
+  PerformerOzhidaet: <p>Вы внесли изменения в заявку. Ожидайте ответ от клиента.</p>,
+  PerformerVipolnena: <p className={'flex-none'}>Заявка выполнена. Ожидается обратная связь от клиента.</p>,
+  PerformerResheno: <p>Заявка принята клиентом. Заказ полностью завершен.</p>,
+  PerformerRazbor: <p>Выполненная работа отклонена Клиентом. Происходит разбор причины.</p>,
+  PerformerOtmena: <p>Выполненная работа отклонена Клиентом. Происходит разбор причины.</p>,
 
 
 
@@ -32,14 +34,20 @@ export const BidAdminActions = () => {
     const store = useStore()
     let revalidator = useRevalidator()
     const params = useParams()
+    const { mutate, cache } = useSWRConfig()
+
+
     const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
         (async () => {
             if (params.company_id && params.id) {
                 await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
+                  .then(() => mutate('bids')
+                    .then(() => console.log('updated')))
                 revalidator.revalidate()
             }
         })()
     }, [])
+
     const items = React.useMemo(() => {
         const ar = new Set()
         for (let it in BidsStatus) {
@@ -60,6 +68,7 @@ export const BidAdminActions = () => {
         )
         return <>{res}</>
     }, [])
+
     return (
         <Menu shadow='md' width={200}>
             <Menu.Target>
@@ -74,36 +83,39 @@ export const BidAdminActions = () => {
 }
 
 
-const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void}): JSX.Element => {
-  const [opened, { open, close }] = useDisclosure(false);
+const BidActions = ({ status, update, link }: {status: BidsStatus, update?: () => void , link?:any}): JSX.Element => {
 
   const { height, width } = useViewportSize();
-  const { mutate } = useSWRConfig()
+  const {cache, mutate } = useSWRConfig()
   const params = useParams()
   const store = useStore()
+  const navigate = useNavigate()
   const memoModal = React.useMemo(() => {
-    return  <BidModal opened={store.bidsStore.modalCurrentState}
+    // @ts-ignore
+    return  <BidModal update={update} opened={store.bidsStore.modalCurrentState}
       onClose={() => store.bidsStore.setModalCurrentState(false)} />
   }, [store.bidsStore.modalCurrentState]);
+  console.log(link);
   const btnSize = React.useMemo(() => {
     if((width && width < 740)) return ButtonSizeType.lg
     return ButtonSizeType.sm
   }, [width])
-  let revalidator = useRevalidator()
-  const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
 
+  const handleChangeBidStatus = React.useCallback((status: BidsStatus) => {
     (async () => {
       if (params.company_id && params.id) {
-        await store.bidsStore.updateBitStatus(params.company_id, params.id, status)
+        await store.bidsStore.updateBitStatus(params.company_id, params.id, status).then(() => {
+          mutate(`bids/${params.company_id}/${params.id}`)
+          mutate(`/bids/${params.id}/photos/`)
 
+          console.log('status changed');
+        })
       }
     })().then(() => {
-      console.log('status changed');
-
-
+      // @ts-ignore
     }).finally(update)
-    mutate(`bids/${params.company_id}/${params.id}`)
-    mutate(`/bids/${params.id}/photos/`)
+    // mutate(`bids/${params.company_id}/${params.id}`)
+    // mutate(`/bids/${params.id}/photos/`)
   }, [])
     const currentActions = React.useMemo(() => {
         if (store.appStore.appType === "admin") {
@@ -147,13 +159,22 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                             action={() => handleChangeBidStatus(BidsStatus["Отменена"])}
                         />
                     )
-                case BidsStatus["Обрабатывается"]:
+              case BidsStatus["Ждет оплаты"]:
+
+                  return <LinkStyled
+                    text={"Оплатить заявку"}
+                    variant={ButtonVariant.accent}
+                    size={btnSize}
+                    to={link}
+                  />
+
+                case BidsStatus["В обработке"]:
                     return BidText.CustomerVObrabotke
 
                 case BidsStatus["В работе"]:
                     return BidText.CustomerVRabote
 
-                case BidsStatus["Выполнено"]:
+                case BidsStatus["Выполнена"]:
                     return (
                         <>
                             <Button
@@ -171,7 +192,7 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                         </>
                     )
 
-                case BidsStatus["Ждет подтверждение"]:
+                case BidsStatus["Ожидает"]:
                     return BidText.CustomerOzhidaet
                 case BidsStatus["Завершена"]:
 
@@ -211,10 +232,10 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                         </>
                     )
 
-                case BidsStatus["Ждет подтверждение"]:
+                case BidsStatus["Ожидает"]:
                     return BidText.PerformerOzhidaet
 
-                case BidsStatus["Подтверждена"]:
+                case BidsStatus["Согласовано"]:
                   return (
                     <>
                       <Button
@@ -237,27 +258,26 @@ const BidActions = ({ status, update }: {status: BidsStatus, update?: () => void
                         <>
                             <Button
                                 text={"Завершить заявку"}
+                                isOnce={false}
                                 variant={ButtonVariant.accent}
-                                type={'button'}
-
                                 size={btnSize}
                                 action={() => {
-                                  console.log(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0);
+                                  console.log(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0, 'after');
                                   if(store.bidsStore.getPhotos.filter((p:any) => !p.is_before).length === 0) {
                                     console.log('no photo');
                                     store.bidsStore.setActiveTab("Фото")
                                     store.bidsStore.setModalCurrentState(true)
                                   } else {
-                                    handleChangeBidStatus(BidsStatus["Выполнено"])
+                                    handleChangeBidStatus(BidsStatus["Выполнена"])
                                   }
                                 }}
                             />
                         </>
                     )
 
-                case BidsStatus["Выполнено"]:
-                    return BidText.PerformerVipolnena
-                case BidsStatus["Обрабатывается"]:
+                case BidsStatus["Выполнена"]:
+                    return (<div className={'grid gap-2'}>{BidText.PerformerVipolnena}<Button text={'Закрыть'} action={() => navigate('/account/bids')} variant={ButtonVariant.accent} size={ButtonSizeType.sm}/></div>)
+                case BidsStatus["В обработке"]:
                   return (
                     <>
                       <Button

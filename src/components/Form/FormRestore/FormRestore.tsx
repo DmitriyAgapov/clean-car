@@ -1,52 +1,29 @@
 import React from 'react'
-import * as Yup from 'yup'
-import { Field, Form, Formik } from 'formik'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import styles from './FormAuth.module.scss'
 import { useStore } from 'stores/store'
-
-const SignupSchema = Yup.object().shape({
-  cleanm: Yup.string().email('Некорректный email').required('Укажите email'),
-  pwd: Yup.string().min(8, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль'),
-})
+import { useForm, yupResolver } from '@mantine/form'
+import { TextInput } from '@mantine/core'
+import agent from "utils/agent";
+import { useNavigate } from 'react-router-dom'
+import { CreateRestorePwd, CreateUserSchema } from "utils/validationSchemas";
 
 const FormRestore = ({ message }: { message?: string }) => {
   const store = useStore()
+  const navigate = useNavigate()
+  const form = useForm({
+    name: 'formRestore',
+    initialValues: {
+      email: ''
+    },
+    validateInputOnBlur: true,
+    onValuesChange: (values, previous) => console.log(values),
+    validate: yupResolver(CreateRestorePwd),
+  })
   return (
-    <Formik
-      initialValues={{
-        cleanm: '',
-        pwd: '',
-      }}
-      validationSchema={SignupSchema}
-      onSubmit={(values, actions) => {
-        store.authStore.setEmail(values.cleanm)
-        store.authStore.setPassword(values.pwd)
-        store.authStore.login()
-        actions.setSubmitting(false)
-      }}
-    >
-      {({ submitForm, errors, touched }) => (
-        <Form className={styles.FormAuth}>
-          <div className={styles.inputGroup} data-form_error={errors.cleanm && touched.cleanm ? 'error' : null}>
-            <label htmlFor='email'>Ваш email</label>
-            <Field autoComplete='off' id='cleanm' name='cleanm' type='email' />
-            {errors.cleanm && touched.cleanm ? <div className={'form-error'}>{errors.cleanm}</div> : null}
-          </div>
-          <div className={styles.actionGroup}>
-            <Button
-              text={'отправить ссылку'}
-              size={ButtonSizeType.lg}
-              variant={ButtonVariant.accent}
-              action={(event) => {
-                event.preventDefault()
-                submitForm()
-              }}
-            />
-          </div>
-        </Form>
-      )}
-    </Formik>
+   <form className={'grid gap-4'}>
+     <TextInput {...form.getInputProps('email')} label={'Ваш e-mail'} size={"lg"} placeholder={'E-mail'}/>
+     <Button type={'button'} text={'отправить ссылку'} disabled={!form.isValid()} action={() => agent.Account.accountRestorePassword(form.values.email).then(() => navigate(`/restore/success?email=${form.values.email}`))} size={ButtonSizeType.lg} variant={ButtonVariant.accent}/>
+   </form>
   )
 }
 

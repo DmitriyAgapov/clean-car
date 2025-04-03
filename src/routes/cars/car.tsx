@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import Section, { SectionType } from 'components/common/layout/Section/Section'
-import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel'
-import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading'
+import React from "react";
+import Section, { SectionType } from 'components/common/layout/Section/Section';
+import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/Panel';
+import Heading, { HeadingColor, HeadingDirectory, HeadingVariant } from 'components/common/ui/Heading/Heading';
 import Button, { ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import { useLoaderData, useLocation, useNavigate, useNavigation, useParams } from "react-router-dom";
-import { useStore } from 'stores/store'
-import { observer } from 'mobx-react-lite'
+import {  useLocation, useNavigate, useNavigation, useParams } from "react-router-dom";
+import { useStore } from 'stores/store';
+import { observer } from 'mobx-react-lite';
 import { SvgBackArrow, SvgCleanCarLoader } from "components/common/ui/Icon";
 import { PermissionNames } from 'stores/permissionStore'
 import Tabs, { TabsType } from "components/common/layout/Tabs/Tabs";
-import { Loader } from "@mantine/core";
 import { CompanyType, CompanyTypeRus } from "stores/companyStore";
-import agent from "utils/agent";
 import useSWR from "swr";
 import { useDidUpdate } from "@mantine/hooks";
 
@@ -36,45 +34,13 @@ const CarPage = () => {
     store.appStore.setAppState(isLoading)
     return [
       { label: 'Основная информация', data: data, company_type: CompanyTypeRus(data?.company?.company_type)},
-      { label: 'Сотрудники', data: data, company_type: CompanyTypeRus(data?.company?.company_type), company_id: params.company_id }
+      (store.userStore.myProfileState.company.company_type !== CompanyType.fizlico && { label: 'Сотрудники', data: data, company_type: CompanyTypeRus(data?.company?.company_type), company_id: params.company_id }),
+      { label: 'История', data: data, company_type: params.company_type , company_id: params.id  },
       // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
   }, [isLoading])
 
-  const [state, setState] = useState(navigation.state)
-
-const dataMap = new Map([])
-  const userData = React.useMemo(() => {
-    return (
-        <>
-
-          {/*   <DList label={'Пользователь'} title={user.employee.first_name + ' ' + user.employee.last_name} /> */}
-          {/*   <DList label={'Номер телефона'} title={user.employee.phone} /> */}
-          {/*   <DList label={'E-mail'} title={user.employee.email} /> */}
-          {/*   <DList */}
-          {/*       label={'Тип'} */}
-          {/*       title={user.company.company_type} */}
-          {/*       directory={user.company.company_type === CompanyType.customer ? 'customer' : 'performers'} */}
-          {/*   /> */}
-
-          {/*   <DList label={'Группа'} title={user.group.name} /> */}
-          {/*   <DList */}
-
-          {/*       label={'Статус'} */}
-          {/*       title={ */}
-          {/*           <span className={user.employee.is_active ? 'text-active' : 'text-error'}> */}
-          {/*               {user.employee.is_active ? 'Активный' : 'Не активный'} */}
-          {/*           </span> */}
-          {/*       } */}
-          {/*   /> */}
-          {/*   {user.company.id && <hr className={'mt-0 col-span-2'}/>} */}
-          {/* {user.company.name && <DList label={'Компания'} title={user.company.name} />} */}
-          {/* {user.company.city.name && <DList label={'Город'} title={user.company.city.name} />} */}
-          {/* {user.company.city.name && <DList label={'Филиал'} title={user.company.city.name} />} */}
-        </>
-    )
-  }, [])
   if(navigation.state === 'loading') return <SvgCleanCarLoader/>
   return (
     <Section
@@ -82,8 +48,9 @@ const dataMap = new Map([])
 
     >
       <Panel
+        variant={PanelVariant.withGapOnly}
         className={'col-span-full'}
-        headerClassName={'flex justify-between flex-wrap items-end'}
+        headerClassName={'justify-between gap-4 flex'}
         header={
           <>
             <div>
@@ -95,7 +62,7 @@ const dataMap = new Map([])
                   </>
                 }
                 className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-5'}
-                action={() => navigate(-1)}
+                action={() => navigate('/account/cars')}
                 variant={ButtonVariant.text}
               />
               <Heading
@@ -105,13 +72,15 @@ const dataMap = new Map([])
                 color={HeadingColor.accent}
               />
             </div>
+            <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
             {store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update') && <Button
               trimText={true}
               text={'Редактировать'}
+              size={ButtonSizeType.sm}
               action={() => navigate(`/account/cars/${params.company_id}/${params.id}/edit`)}
               // className={'inline-flex'}
 
-            />}
+            />}</div>
           </>
         }
       />
@@ -139,12 +108,12 @@ const dataMap = new Map([])
                 />
                 <Heading
                   className={'!m-0'}
-                  text={data?.company?.company_type == 'Компания-Заказчик'
+                  text={data?.company?.company_type == 'Клиент'
                     ? data?.number
                     : data?.number}
                   variant={HeadingVariant.h4}
                   directory={
-                    data?.company?.company_type == 'Компания-Заказчик'
+                    data?.company?.company_type == 'Клиент'
                       ? HeadingDirectory.customer
                       : HeadingDirectory.performer
                   }

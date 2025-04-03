@@ -8,13 +8,13 @@
   &[data-variant='Разбор'] {
 	color: rgba(3, 134, 93, 1);
   }
-  &[data-variant='Выполнено'], &[data-variant='Завершена'], &[data-variant='Подтверждена'],  {
+  &[data-variant='Выполнена'], &[data-variant='Завершена'], &[data-variant='Подтверждена'],  {
 	color: rgba(19, 255, 113, 1);
   }
-  &[data-variant='Отменена'] {
+  &[data-variant='Отмена'] {
 	color: rgba(244, 86, 95, 1);
   }
-  &[data-variant='Ждет подтверждение'] {
+  &[data-variant='Ждет подтверждения'] {
 	color: rgba(182, 193, 190, 1);
   }
   &[data-variant='В работе'] {
@@ -26,17 +26,17 @@
   @screen tablet-max {
 	@apply flex mt-4 col-start-1 flex-1 flex-col pb-8;
 	a {
-
 	  width: 100%;
-
-
 	}
   }
   p {
-	@apply text-accent max-w-80 py-0;
+	@apply text-accent max-w-80 py-0 my-0;
 	@screen tablet-max {
-	  @apply flex-[1_0_20rem];
-	  width: initial !important;
+	  //@apply flex-[1_0_20rem];
+	  //width: initial !important;
+	  padding: 0 !important;
+	  margin: 0 !important;
+	  text-align: center;
 	}
   }
   button {

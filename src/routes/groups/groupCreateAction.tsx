@@ -4,29 +4,51 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Navigate, useLoaderData, useLocation, useNavigate, useRevalidator } from "react-router-dom";
+import { Navigate, useLoaderData, useNavigate, useParams, useRevalidator } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { toJS } from 'mobx'
 import { PermissionNames } from "stores/permissionStore";
+import { modificationSchema, modifyPermissions } from "utils/utils";
+import { useSWRConfig } from "swr";
 
 export default function GroupPageCreateAction(props: any) {
   const store = useStore()
-  const location = useLocation()
-
+  const { mutate } = useSWRConfig()
+    const params = useParams()
+    console.log(params);
   const revalidator = useRevalidator()
   const navigate = useNavigate()
   // @ts-ignore
   const { group } = useLoaderData()
-  const [changes, setChanges] = useState(group)
+
+  const memoizedAndModificatedGroup = React.useMemo(() => {
+    let modifCatedData = { ...group };
+    const except= store.appStore.appType === "admin" ? [null] : ['Управление справочниками']
+    const _ar:any[] = []
+    modifyPermissions(group, modificationSchema, store.appStore.appType, except ).forEach((item: any) => {
+      if(item) {
+        _ar.push(item)
+      }
+    })
+    modifCatedData.permissions = _ar;
+
+    return modifCatedData;
+  }, [group]);
+
+  const [changes, setChanges] = useState(memoizedAndModificatedGroup)
   const handleChangeName = (event: any) => {
     setChanges((prevState: any) => ({
       ...prevState,
       name: event.target.value,
     }))
   }
-  const handlePermissions = (event: any, id: number) => {
-    const indexAr = changes.permissions.findIndex((value: any) => value.id === id)
+  const handlePermissions = (event: any, id: string) => {
+    const indexAr = changes.permissions.findIndex((value: any) => {
+      if(value) {
+       return  value.name === id
+      }
+    })
     const newArrayItem = {
       ...changes.permissions[indexAr],
       [event.target.name]: event.target.checked,
@@ -39,6 +61,7 @@ export default function GroupPageCreateAction(props: any) {
       permissions: newArray,
     }))
   }
+
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create')) return <Navigate to={'/account'}/>
   return (
       <Section type={SectionType.default}>
@@ -70,9 +93,10 @@ export default function GroupPageCreateAction(props: any) {
           ></Panel>
           <Panel
               variant={PanelVariant.textPadding}
-              state={store.permissionStore.loadingPermissions}
+              state={false}
+            bodyClassName={'!py-0 tablet:!px-0'}
               className={'grid  grid-rows-[auto_1fr_auto]'}
-            footerClassName={'flex !justify-between gap-5'}
+            footerClassName={'flex tablet-max:flex-col  !justify-between gap-5'}
               footer={
                   <>
                       <Button
@@ -84,12 +108,21 @@ export default function GroupPageCreateAction(props: any) {
 
                       <Button
                           text={'Сохранить'}
-                          action={async () => {
+                          action={ () => {
                               // @ts-ignore
-                              store.permissionStore.createPermission(changes)
-                              .then(() => revalidator.revalidate())
+                               store.permissionStore.createPermission(changes, params.id ?? null)
+                              .then(() => {
+                                revalidator.revalidate()
+                                mutate('groups')
+                                  .then(() => {
+                                      if(params.id) {
+                                          navigate(-1)
+                                      } else navigate('/account/groups')
+                                })
+
+                              })
                               .finally(() => {
-                                navigate('/account/groups')
+
                               })
                               // navigate('/account/groups')
                           }}
@@ -112,7 +145,7 @@ export default function GroupPageCreateAction(props: any) {
                           text={'Присвойте права группе'}
                           color={HeadingColor.accent}
                           variant={HeadingVariant.h4}
-                          className={'px-8'}
+                          className={'tablet:px-8'}
                       />
                   </div>
 

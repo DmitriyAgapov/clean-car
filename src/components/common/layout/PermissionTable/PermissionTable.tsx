@@ -13,14 +13,14 @@ type PermissionTableRowProps = {
 type PermissionTableProps = {
   data: PermissionTableRowProps[]
   editable?: boolean
-  action?: (event: Event, id: number) => void
+  action?: (event: Event, id: string) => void
 }
 const PermissionTable = ({ data, editable = false, action }: PermissionTableProps) => {
-  const handleChange = (event: Event, id: number) => {
+  const handleChange = React.useCallback((event: Event, id: string) => {
     if (action) {
       action(event, id)
     }
-  }
+  }, [])
 
   return (
     <div className={styles.PermissionTable}>
@@ -31,12 +31,12 @@ const PermissionTable = ({ data, editable = false, action }: PermissionTableProp
         <div className={'flex justify-center'}>Добавление</div>
         <div className={'flex justify-center'}>Удаление</div>
       </div>
-      {data.map((row: PermissionTableRowProps) => (
-        <div key={row.id} className={styles.PermissionTableRow}>
+      {data.map((row: PermissionTableRowProps) => row && (
+        <div key={row.name} className={styles.PermissionTableRow}>
           <div>{row.name}</div>
           <div className={'flex justify-center items-center'}>
             <Checkbox
-              action={(event: Event) => handleChange(event, row.id)}
+              action={(event: Event) => handleChange(event, row.name)}
               name={'read'}
               disabled={!editable}
               available={editable}
@@ -45,7 +45,7 @@ const PermissionTable = ({ data, editable = false, action }: PermissionTableProp
           </div>
           <div className={'flex justify-center items-center'}>
             <Checkbox
-              action={(event: Event) => handleChange(event, row.id)}
+              action={(event: Event) => handleChange(event, row.name)}
               name={'update'}
               disabled={!editable}
               available={editable}
@@ -54,7 +54,7 @@ const PermissionTable = ({ data, editable = false, action }: PermissionTableProp
           </div>
           <div className={'flex justify-center items-center'}>
             <Checkbox
-              action={(event: Event) => handleChange(event, row.id)}
+              action={(event: Event) => handleChange(event, row.name)}
               name={'create'}
               disabled={!editable}
               available={editable}
@@ -63,7 +63,7 @@ const PermissionTable = ({ data, editable = false, action }: PermissionTableProp
           </div>
           <div className={'flex justify-center items-center'}>
             <Checkbox
-              action={(event: Event) => handleChange(event, row.id)}
+              action={(event: Event) => handleChange(event, row.name)}
               name={'delete'}
               disabled={!editable}
               available={editable}

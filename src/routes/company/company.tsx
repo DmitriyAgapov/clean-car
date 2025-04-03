@@ -6,102 +6,123 @@ import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Butt
 import { useStore } from 'stores/store'
 import { observer, useLocalStore } from "mobx-react-lite";
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
-import { useLocation, useNavigate, useParams, useRevalidator } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useRevalidator, useSearchParams } from "react-router-dom";
 import Tabs, { TabsType } from 'components/common/layout/Tabs/Tabs'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { CompanyType } from 'stores/companyStore'
 import { PermissionNames } from 'stores/permissionStore'
 import dayjs from 'dayjs'
 import agent from "utils/agent";
-import { useDidUpdate } from "@mantine/hooks";
+import { useDidUpdate, useDisclosure } from '@mantine/hooks'
 import useSWR from "swr";
+import { UpBalance } from "components/common/layout/Modal/UpBalance";
 
 const CompanyPage = () => {
   const store = useStore()
   const location = useLocation()
   const navigate = useNavigate()
-
+  // console.log(location);
   const params = useParams()
-  const revalidator = useRevalidator()
+
+  const [opened, { open, close }] = useDisclosure(false)
+    const [sparams, setsParams] = useSearchParams()
   const {isLoading, data, mutate} = useSWR(`company_${params.id}`, () => agent.Companies.getCompanyData(params.company_type as string, Number(params.id)).then(r => r.data), {
     revalidateOnMount: true
   })
-  console.log(data);
+  const {isLoading:loading, data:dataFilials, mutate:mutateF} = useSWR(`filials_${params.id}`, () => agent.Filials.getFilials(params.company_type as string, Number(params.id)).then(r => r.data), {
+    revalidateOnMount: true
+  })
+    const {isLoading:loadingPermissions, data:dataPermission} = useSWR(`company_permissions_${params.id}`, () => agent.Permissions.getAllCompanyPermissions(Number(params.id)).then(r => r.data), {
+    revalidateOnMount: true
+  })
+    console.log(dataPermission);
   useDidUpdate(
     () => {
-      if(location.pathname.includes('companies')) {
-
+      if(location.pathname === `/account/companies/${params.company_type}/${params.id}`) {
         mutate()
-        revalidator.revalidate()
+        // revalidator.revalidate()
       }
+        if(sparams?.get('activeTab')) {
+            store.bidsStore.setActiveTab(sparams?.get('activeTab'));
+        }
     },
     [location.pathname]
   );
-  console.log(location.pathname === `/account/companies/${params.company_type}/${params.id}`);
+  const currentATab = store.companyStore.getActiveTab;
+    const handleActiveTab = React.useCallback((active:string) => {
+        store.companyStore.setActiveTab(active);
+    }, [currentATab])
   const tabedData = React.useMemo(() => {
+      console.log(dataPermission);
     return [
       { label: 'Основная информация', data: data, company_type: params.company_type  },
-      { label: 'Филиалы', company_type: params.company_type  },
+      { label: 'Филиалы', data: dataFilials, company_type: params.company_type  },
       { label: 'Сотрудники', data: data, company_type: params.company_type  },
-      { label: 'Автомобили',  company_type: params.company_type  },
-      (params.company_type === "customer") && { label: 'Партнеры',  company_type: params.company_type  },
-      // { label: 'Прайс-лист', data: data, company_type: params.company_type  },
+      (params.company_type === "customer") && { label: 'Автомобили', data: data,  company_type: params.company_type  },
+      (params.company_type === "customer") && { label: 'Партнеры', data: data?.customerprofile?.performer_company.map((el:number) => store.companyStore.getCompanyById(el)),  company_type: params.company_type  },
+      { label: 'Права доступа', data: data, company_type: params.company_type  },
       // { label: 'История заявок', data: data, company_type: params.company_type  }
     ]
-  }, [isLoading])
+  }, [data, dataFilials, dataPermission, params])
+
+
+  const memoModal = React.useMemo(() => {
+    if(isLoading && !data) return null
+    if(data) return <UpBalance upBalance={true} companyName={data.name} id={Number(data.id)} opened={opened} onClose={close} />
+  }, [opened, data, isLoading, params])
 
   return (
       <Section type={SectionType.default}>
           <Panel
-              // state={isLoading}
+            headerClassName={'justify-between gap-4 tablet:flex'}
               variant={PanelVariant.withGapOnly}
               header={
-                  <>
-                      <div className={'mr-auto'}>
-                          <Button
-                              text={
-                                  <>
-                                      <SvgBackArrow />
-                                      Назад к списку компаний{' '}
-                                  </>
-                              }
-                              className={
-                                  'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                              }
-                              action={() => navigate(-1)}
-                              variant={ButtonVariant.text}
-                          />
-                          <Heading
-                              text={'Компания'}
-                              variant={HeadingVariant.h1}
-                              className={'!mb-0 inline-block'}
-                              color={HeadingColor.accent}
-                          />
-                      </div>
-                      {store.userStore.getUserCan(PermissionNames['Компании'], 'update') && (
-                          <LinkStyled
-                              text={'Редактировать'}
-                              to={'edit'}
-                              size={ButtonSizeType.sm}
-                              /* action={() => store.companyStore.addCompany()} */ className={'float-right mobile:mt-auto'}
-                              variant={ButtonVariant.default}
-                          />
-                      )}
-                  </>
-              }
-          />
+                <>
+                  <div>
+                    <Button text={
+                      <>
+                        <SvgBackArrow />
+                        Назад к списку компаний{" "}
+                      </>
+                    }
+                      className={
+                        "flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4"
+                      }
+                      action={() => navigate("/account/companies")}
+                      variant={ButtonVariant.text} />
+                    <Heading text={"Компания"}
+                      variant={HeadingVariant.h1}
+                      className={"!mb-0 inline-block"}
+                      color={HeadingColor.accent} />
+                  </div>
 
-          <Panel
-              state={isLoading}
-              className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-6'}
+                  <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6 self-end"}>
+                    {store.appStore.appType === "admin" && params.company_type === "customer" && <Button text={"Пополнить счет"} action={open} variant={ButtonVariant["accent-outline"]} size={ButtonSizeType.sm} />}
+                    {store.userStore.getUserCan(PermissionNames["Компании"], "update") && (
+                      <LinkStyled text={"Редактировать"}
+                        to={"edit"}
+                        size={ButtonSizeType.sm}
+                        /* action={() => store.companyStore.addCompany()} */
+                        className={"float-right mobile:mt-auto"}
+                        variant={ButtonVariant.default} />
+                    )}</div>
+                  </>
+                  } />
+
+                <Panel
+                state={isLoading}
+            className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto]  tablet-max:-mx-3 desktop-max:pb-12'}
               variant={PanelVariant.textPadding}
               background={PanelColor.glass}
               bodyClassName={''}
-              footerClassName={'flex  justify-end mobile:!justify-center'}
+              footerClassName={'flex justify-end mobile:!justify-center'}
               headerClassName={'border-bottom-none'}
               header={
-                  <>
-                      <Heading text={data?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+                    <>
+                        <div className={'flex col-span-2  tablet-max:col-span-full justify-between'}>
+                            <Heading text={data?.name} variant={HeadingVariant.h2} color={HeadingColor.accent} />
+                            {store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'create') && currentATab === "Права доступа" && <Button text={'Создать группу'} href={`/account/groups/${params.id}/create`} className={"mb-auto"} variant={ButtonVariant.default} size={ButtonSizeType.sm}/>}
+                      </div>
                       <div className={'flex  tablet-max:block  items-baseline justify-between '}>
                           <div className={'text-xs text-gray-2'}>
                               Дата и время регистрации:{' '}
@@ -134,12 +155,13 @@ const CompanyPage = () => {
                   </>
               }
           >
-              <Tabs
+              <Tabs  activeTab={handleActiveTab} initActiveTab={sparams?.get('activeTab') as string}
                   data={tabedData}
                 variant={'bid-tabs'}
                   type={TabsType.company}
               />
           </Panel>
+        {memoModal}
       </Section>
   )
 }

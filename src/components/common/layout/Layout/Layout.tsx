@@ -1,19 +1,27 @@
-import React, { FC, ReactNode, useEffect } from "react";
+import React, { FC, ReactNode, useEffect, useLayoutEffect } from 'react'
 import styles from './Layout.module.scss'
 import { useStore } from 'stores/store'
-import { Observer, observer } from "mobx-react-lite";
+import { observer } from 'mobx-react-lite'
 import Logo from 'components/common/layout/Logo/Logo'
 import Header from 'components/common/layout/Header/Header'
 import Footer from 'components/common/layout/Footer/Footer'
 import Burger from 'components/common/ui/Burger/Burger'
-import '../../../../assets/styles.scss'
+import dayjs from "dayjs"
 import MobileMenu from 'components/common/layout/MobileMenu/MobileMenu'
 import Modal from 'components/common/layout/Modal/Modal'
-import { useWindowDimensions } from "utils/utils";
-import { useNavigation, useSearchParams } from "react-router-dom";
-import { LoadingOverlay } from "@mantine/core";
-import { SvgCleanCarLoader } from "components/common/ui/Icon";
-
+import { useNavigatorOnLine } from 'utils/utils'
+import { LoadingOverlay } from '@mantine/core'
+import { SvgAccount, SvgCleanCarLoader, SvgDisconnect } from "components/common/ui/Icon";
+import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
+import { Link, Navigate, useLocation } from 'react-router-dom'
+import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
+import Errors from 'components/common/layout/Errors/Errors'
+import { useViewportSize } from '@mantine/hooks'
+import { UserPermissionVariants } from 'stores/userStore'
+import { notifications } from '@mantine/notifications'
+import PageTitle from "components/common/layout/PageTitle/PageTitle";
+import { sidebarMenu as sideMenu } from "components/common/layout/Sidebar/Sidebar";
+import { routesTitles } from "utils/labels";
 const sidebarMenu: { title: string; url: string }[] = [
   {
     title: 'Дашборд',
@@ -42,47 +50,136 @@ interface ChildrenProps {
   className?: string
   headerContent?: ReactNode | ReactNode[]
   footerContent?: ReactNode | ReactNode[]
+  style?: any
 }
 
-const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent }) => {
+const Layout: FC<ChildrenProps> = ({ children, headerContent, className = '', footerContent,style }) => {
   const store = useStore()
-  let [searchParams, setSearchParams] = useSearchParams()
-  const navigation = useNavigation();
-  const {width} = useWindowDimensions();
+  const isOnline = useNavigatorOnLine()
+  const loc = useLocation()
+  const { width } = useViewportSize();
+  useLayoutEffect(() => {
+    const _title = [...sideMenu, ...routesTitles, {title: "Заявки", url: "bids"}].filter((item) => loc.pathname.includes(item.url))[0]?.title ?? "No title";
+    console.log(_title, loc.pathname);
+    appStore.setTitle(_title);
+  }, [loc.pathname]);
+  // console.log(store.userStore.getUserCan());
   // console.log('st', (navigation.state === "idle" || store.appStore.getAppState) ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true );
   const { appStore, userStore, authStore } = store;
-  return (
-    <div className={styles.Layout + ' ' + className } data-theme={appStore.appTheme} data-app-type={appStore.appType}>
-      <Header>
-        {(width  && width > 960) && <Logo className={' logo-header'}/>}
-        {headerContent}
-        <Burger className={'desktop:hidden'} action={!userStore.currentUser ? () => store.appStore.setBurgerState() : () => store.appStore.setAsideState()}/>
-      </Header>
-      <MobileMenu items={sidebarMenu} />
-      {/* {!store.appStore.loaderBlocked && <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{ */}
-      {/*   overlay: 'bg-black/80 backdrop-blur-xl z-9999' */}
-      {/* }} visible={store.appStore.getAppState ? store.appStore.getAppState :  (navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true )} loaderProps={{ children: <SvgCleanCarLoader/> }} />} */}
-      <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }} classNames={{
-        overlay: 'bg-black/80 backdrop-blur-xl'
-      }} visible={store.appStore.AppState } loaderProps={{ children: <SvgCleanCarLoader/> }} />
-      <main className={'!contents'}>{children}</main>
-      <Footer className={'desktop:block hidden'}>
-        {footerContent}
-        <div>2023 (c.)</div>
-        <div>Политика конфиденциальности</div>
-      </Footer>
+  if (!store.appStore.getNetWorkStatus)
+      return (
+        <Errors className={className}/>
+          // <LoadingOverlay
+          //     transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 500 }}
+          //     classNames={{
+          //         overlay: 'bg-black/80 backdrop-blur-xl',
+          //     }}
+          //     visible={!store.appStore.getNetWorkStatus}
+          //     loaderProps={{
+          //         children: (
+          //
+          //
+          //             <div className={'flex flex-col  items-center'}>
+          //               <SvgDisconnect className={'mb-6'}/>
+          //                 <Heading text={'Нет соединения'} variant={HeadingVariant.h1} color={HeadingColor.accent}/>
+          //               {isOnline && <Button variant={ButtonVariant["accent-outline"]} action={() => location.reload()} text={'Обновить'}/>}
+          //             </div>
+          //         ),
+          //     }}
+          // />
+      )
+  const exceptions = ['policy', '404', 'restore', 'register',  'support', 'profile' ]
+  const isInException = (url:string) =>   exceptions.some((value:string) => url.includes(value))
+  const _path = loc.pathname.split('/')[2]
+  // @ts-ignore
+  const _permissionName = _path ? UserPermissionVariants[_path.toString()] : false
+  // @ts-ignore
+  if(!store.authStore.userIsLoggedIn && loc.pathname !== "/" && !isInException(loc.pathname)) {
+    return (<Navigate to={'/'}/>)
+  }
+  if(store.authStore.userIsLoggedIn && (['restore'].some(value => loc.pathname.includes(value)) || loc.pathname == "/")) {
+    return (<Navigate to={'/account/bids'}/>)
+  }
 
-      <div className={'lineBg'}>
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div className={'leftMask'} />
-        <div className={'rightMask'} />
+
+  if(_permissionName && !isInException(loc.pathname.split("/").slice(0,3).join('/'))) {
+    const _actionToDo = loc.pathname.includes('edit') ? "update" : loc.pathname.includes('create') ? "create" : "read"
+    if(!store.userStore.getUserCan(_permissionName, _actionToDo)){
+      notifications.show({
+        id: 'no-access',
+        withCloseButton: true,
+        autoClose: 5000,
+        title: 'Нет доступа к разделу',
+        message: '',
+        color: 'var(--errorColor)',
+        // style: { backgroundColor: 'red' },
+        loading: false,
+      })
+      return <Navigate to={'/account/welcome'}/>
+    }
+    // if(!store.userStore.getUserCan("Управление пользователями", "read")) {
+    //   store.authStore.logout()
+    // }
+  }
+  return (
+      <div style={style} className={styles.Layout + ' ' + className} data-theme={appStore.appTheme} data-app-type={appStore.appType}>
+          <PageTitle title={appStore.pageTitle}/>
+          <Header>
+            {(width && width > 960 && store.appStore.appType != "") || store.appStore.appType === ""  ?
+              // <Link to={'/'}  className={'inline-flex'}>
+              <Logo className={'logo-header tablet:pl-6'} />
+           // {/* </Link> */}
+              : null}
+              {headerContent}
+            {store.authStore.userIsLoggedIn ? <Burger
+                  className={'lg:hidden'}
+                  action={() =>
+                      !userStore.currentUser
+                          ?  store.appStore.setBurgerState()
+                          : store.appStore.setAsideState()
+                  }
+              /> : null}
+          </Header>
+          <MobileMenu items={sidebarMenu} />
+          {/* {!store.appStore.loaderBlocked && <LoadingOverlay transitionProps={{ transition: 'fade', duration: 1000, exitDuration: 1000 }} classNames={{ */}
+          {/*   overlay: 'bg-black/80 backdrop-blur-xl z-9999' */}
+          {/* }} visible={store.appStore.getAppState ? store.appStore.getAppState :  (navigation.state === "idle" ? false : (navigation.state === "loading" || navigation.state === 'submitting') ? true : true )} loaderProps={{ children: <SvgCleanCarLoader/> }} />} */}
+          <LoadingOverlay
+              transitionProps={{ transition: 'fade', duration: 500, exitDuration: 500 }}
+              classNames={{
+                  overlay: 'bg-black backdrop-blur-xl',
+              }}
+              visible={store.appStore.getAppState}
+              loaderProps={{ children: <SvgCleanCarLoader /> }}
+          />
+          <main>{children}</main>
+        {loc.pathname.includes('account') ?  <Footer className={'flex desktop:!hidden tablet-max:!hidden !col-span-full !px-8  pt-4 pb-4 mt-auto pl-5 pr-0.5'}>
+          <div>
+
+            <LinkStyled className={'!text-sm font-medium'} to={'/account/support'}  variant={ButtonVariant.text}  text={'Служба поддержки'}/>
+          </div>
+
+          <hr className={'mt-3 mb-2 -mr-8 border-accent'} />
+
+          <Link to={'/policy'}  className={'text-xs hover:text-accent'}>Политика конфиденциальности</Link>
+        </Footer> : null}
+        {!loc.pathname.includes('account') ? <Footer className={'tablet:px-6'}>
+              {footerContent}
+              <div>2023 - {dayjs().format("YYYY")}</div>
+              <LinkStyled text={'Политика конфиденциальности'} variant={ButtonVariant.text} className={'!text-sm'} to={'/policy'}></LinkStyled>
+          </Footer> : null}
+          <SvgAccount className={styles.svg}/>
+          <div className={'lineBg'}>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div className={'leftMask'} />
+              <div className={'rightMask'} />
+          </div>
+          <Modal />
       </div>
-      <Modal />
-    </div>
   )
 }
 

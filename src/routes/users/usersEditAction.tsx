@@ -11,14 +11,14 @@ import { useStore } from "stores/store";
 import { observer } from "mobx-react-lite";
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateUsers from "components/Form/FormCreateUpdateUsers/FormCreateUpdateUsers";
+import useSWR from "swr";
 
 const UsersPageEditAction = () => {
   const store = useStore()
   const navigate = useNavigate()
-  const location = useLocation()
-  const { user }: any = useLoaderData()
   const params = useParams()
-  console.log(location);
+  const {isLoading, data, mutate}:any = useSWR(`users_${params.company_id}_${params.id}`,() => store.usersStore.userLoader({company_type : params.company_type, id:Number(params.id), company_id:Number(params.company_id)}))
+
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update')) return <Navigate to={'/account'}/>
   return (
       <Section type={SectionType.default}>
@@ -46,27 +46,27 @@ const UsersPageEditAction = () => {
                           className={'tablet:!mb-0 inline-block mr-auto flex-1'}
                           color={HeadingColor.accent}
                       />
-                    {store.appStore.appType === "admin" && <div className={'flex gap-8 tablet-max:max-w-96'}><Button
-                      text={'Скачать шаблон'}
-                      variant={ButtonVariant["accent-outline"]}
-                      action={() => navigate('/account/users/create')}
-                      className={'inline-flex tablet-max:flex-1'}
-                      size={ButtonSizeType.sm}
-                    />
-                      <Button
-                        text={'Загрузить файл'}
-                        action={() => navigate('/account/users/create')}
-                        className={'inline-flex tablet-max:flex-1'}
-                        directory={ButtonDirectory.directory}
-                        size={ButtonSizeType.sm}
-                      />
-                    </div>}
+                    {/* {store.appStore.appType === "admin" && <div className={'flex gap-8 tablet-max:max-w-96'}><Button */}
+                    {/*   text={'Скачать шаблон'} */}
+                    {/*   variant={ButtonVariant["accent-outline"]} */}
+                    {/*   action={() => navigate('/account/users/create')} */}
+                    {/*   className={'inline-flex tablet-max:flex-1'} */}
+                    {/*   size={ButtonSizeType.sm} */}
+                    {/* /> */}
+                    {/*   <Button */}
+                    {/*     text={'Загрузить файл'} */}
+                    {/*     action={() => navigate('/account/users/create')} */}
+                    {/*     className={'inline-flex tablet-max:flex-1'} */}
+                    {/*     directory={ButtonDirectory.directory} */}
+                    {/*     size={ButtonSizeType.sm} */}
+                    {/*   /> */}
+                    {/* </div>} */}
                   </>
               }
           ></Panel>
 
-          <FormCreateUpdateUsers user={{ ...user, ...{} }} edit={true} />
+        {!isLoading && <FormCreateUpdateUsers user={{ ...data, company_type: params.company_type, ...{} }} edit={true} />}
       </Section>
   )
 }
-export default UsersPageEditAction
+export default observer(UsersPageEditAction)

@@ -1,15 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from "./InputAutocomplete.module.scss";
 import agent from "utils/agent";
-import { Combobox, TextInput, useCombobox, Loader } from '@mantine/core'
-import { useFormikContext } from 'formik'
-import { useStore } from "stores/store";
-import catalogStore from "stores/catalogStore";
-import { useFormContext } from "components/Form/FormCreateCompany/FormCreateUpdateCompany";
+import { Combobox, TextInput, useCombobox, Loader, Text } from '@mantine/core'
+import { observer } from 'mobx-react-lite'
 
 export function InputAutocompleteNew(props:any) {
 
-  const { values, isTouched,  errors } = props.ctx;
+  const { values, isTouched, setFieldValue,  errors } = props.ctx;
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -21,28 +18,37 @@ export function InputAutocompleteNew(props:any) {
   const [tempAdress, setTempAdress] = useState(values.city);
   const [empty, setEmpty] = useState(false);
   const abortController = useRef<AbortController>();
+
   async function getData(query: string) {
+    combobox.resetSelectedOption()
     try {
       const dataToform = { query: query, locations: [
           {
             // region: "Челябинская область",
             city: props.city,
-
+            flat: null
           }
         ],
-        restrict_value: true }
+        type: "address",
+        restrict_value: true,
+        from_bound:{
+          value: "street"
+        },
+        to_bound:{
+        value:"house"},
+      }
       // @ts-ignore
       const response = await agent.Utils.suggest(dataToform)
+
       // @ts-ignore
       setData(response)
 
-      combobox.resetSelectedOption()
+
       // @ts-ignore
       const {data} = response
       return data.suggestions
 
 
-    } catch (e) {
     } finally {
       setLoading(false)
     }
@@ -59,7 +65,7 @@ export function InputAutocompleteNew(props:any) {
         // @ts-ignore
         // const cityNameLength = cityName.size
         // @ts-ignore
-        ref.current.focus();
+        // ref.current.focus();
         // @ts-ignore
         // ref.current.setSelectionRange(cityNameLength + 1, cityNameLength + 1)
       }
@@ -86,14 +92,24 @@ export function InputAutocompleteNew(props:any) {
       setEmpty(result.length === 0);
       abortController.current = undefined;
     })
-    .catch(() => {});
+
   };
 
   const options = (data || []).map((item, index) => (
     <Combobox.Option value={item.value} key={index} onClick={() => {
-      values.address = item.value
-
+      // values.address = item.value
+      setFieldValue(item.value)
       setPrefix(item.label)
+      if(item.data.street_with_type) {
+        values.street = item.data.street_with_type
+      }
+      //Точность 7 - улица, точность 8 - дом.
+      if(item.data.fias_level >= 7) {
+        values.address_ready = true
+
+      } else {
+        values.address_ready = false
+      }
       if(item.data.geo_lat && item.data.geo_lon) {
           values.lat = item.data.geo_lat;
           values.lon = item.data.geo_lon;
@@ -103,52 +119,63 @@ export function InputAutocompleteNew(props:any) {
 
     </Combobox.Option>
   ));
+  console.log(   {...props});
   // @ts-ignore
   return (
       <Combobox
-          onOptionSubmit={(optionValue) => {
+          onOptionSubmit={(optionValue: string) => {
               setValue(optionValue + ' ')
               combobox.closeDropdown()
           }}
-          {...props}
-          withinPortal={true}
+          position={'bottom'}
+          middlewares={{
+            flip: false,
+            shift: true
+          }}
+          withinPortal={false}
           store={combobox}
+
       >
           <Combobox.Target>
+            <div className={props.className}>
               <label
                   className={`account-form__input w-full flex-grow  flex-[1_0_20rem] ${!values.city && 'filter grayscale'}`}
                   htmlFor={'address'}
                   data-form_error={errors.address && isTouched('address') && 'error'}
               >
-                  <text>{'Адрес'}{' '}
-                  <span style={{color: 'var(--input-asterisk-color, var(--mantine-color-error))', paddingLeft: 0}} className='mantine-InputWrapper-required mantine-Select-required' aria-hidden='true'>
-
-                      *
-                  </span></text>
+                 {'Адрес'}
                   <TextInput
                       ref={ref}
-                      disabled={!values.city}
+
+                      {...props.ctx.getInputProps('address')}
                       placeholder='Введите адрес'
                       value={value}
+                      disabled={props.disabled || !values.city}
                       onChange={(event: { currentTarget: { value: React.SetStateAction<string> } }) => {
+                          values.address_ready = false
                           setValue(event.currentTarget.value)
-                          console.log(values.city_name.length)
                           values.address = event.currentTarget.value
                           // @ts-ignore
                           fetchOptions(event.currentTarget.value)
                           combobox.resetSelectedOption()
                           combobox.openDropdown()
                       }}
-                      onClick={() => combobox.openDropdown()}
+                      onClick={() => {
+                        if(!values.address_ready) {
+                          combobox.openDropdown()
+                        }
+                      }}
                       onFocus={() => {
                           if (data && data.length !== 0) {
+                            if(!values.address_ready) {
                               combobox.openDropdown()
+                            }
                           }
                           if (data === null) {
                               fetchOptions(value)
                           }
                       }}
-                    error={errors.address && isTouched('address')}
+                      error={errors.address && isTouched('address')}
                       // leftSectionWidth={widthLeftProp}
                       // //@ts-ignore
                       // leftSection={<>{values.city_name}, </>}
@@ -158,15 +185,18 @@ export function InputAutocompleteNew(props:any) {
                       //   style: {fontSize: '.875rem', lineHeight: 'normal', fontWeight: 500, color: 'rgb(96 97 99 / 1)', fontFamily: "Montserrat, sans-serif"}
                       //
                       // }}
-                      onBlur={() => combobox.closeDropdown()}
+                      onBlur={() => {
+                        combobox.closeDropdown()
+                      }}
                       rightSection={loading && <Loader size={18} />}
                   />
                   {errors.address && isTouched('address') ? <div className={'form-error'}>{errors.address}</div> : null}
               </label>
+            </div>
           </Combobox.Target>
 
-          <Combobox.Dropdown hidden={data === null}>
-              <Combobox.Options onClick={(e) => console.log(options)}>
+          <Combobox.Dropdown hidden={data === null} >
+              <Combobox.Options >
                   {options}
                   {empty && <Combobox.Empty>Не найдено</Combobox.Empty>}
               </Combobox.Options>
@@ -175,4 +205,4 @@ export function InputAutocompleteNew(props:any) {
   )
 }
 
-export default InputAutocompleteNew;
+export default observer(InputAutocompleteNew);

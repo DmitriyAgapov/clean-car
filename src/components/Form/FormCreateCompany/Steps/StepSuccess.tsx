@@ -57,7 +57,7 @@ export function FormStepSuccess(props: {
 
       </div>}
       header={<>
-        <Heading text={`Шаг ${values.application_type == 'Компания-Партнер' && '2'|| props.title }. Компания создана `}
+        <Heading text={`Шаг ${values.application_type == 'Партнер' && '2'|| props.title }. Компания создана `}
           color={HeadingColor.accent}
           variant={HeadingVariant.h2}
          />

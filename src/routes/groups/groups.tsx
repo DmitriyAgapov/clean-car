@@ -5,45 +5,43 @@ import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Head
 import Button, { ButtonDirectory, ButtonSizeType } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
-import { observer, useLocalStore } from "mobx-react-lite";
-import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
+import { observer, useLocalObservable } from "mobx-react-lite";
 import moment from 'moment'
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
-import { client } from "utils/agent";
 import { useDidUpdate } from "@mantine/hooks";
 const localRootStore =  new LocalRootStore()
 const GroupsPage = () => {
     const store = useStore()
 
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
-  const {isLoading, data, mutate} = useSWR(['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
+  const {isLoading, data, mutate} = useSWR(localStore.params.isReady && ['groups', localStore.params.getSearchParams] , ([url, args]) => store.permissionStore.loadPermissions().then(r => r.data))
     const navigate = useNavigate()
     const location = useLocation()
 
-  useEffect(() => {
-    localStore.setData = {
-      ...data,
-        results: data?.results?.map((item: any) => ({
-        date: moment(item.created).format('DD.MM.YYYY HH:mm'),
-        name: item.name,
-        id: item.id,
-        query:{
-          group: store.appStore.appType
+    useEffect(() => {
+      localStore.setData = {
+        ...data,
+          results: data?.results?.map((item: any) => ({
+          date: moment(item.created).format('DD.MM.YYYY HH:mm'),
+          name: item.name,
+          id: item.id,
+          query:{
+            group: store.appStore.appType
+          }
+        }))}
+      localStore.setIsLoading = isLoading
+    },[data])
+    useDidUpdate(
+      () => {
+        if(location.pathname === '/account/groups') {
+          mutate().then(r => console.log(r))
         }
-      }))}
-    localStore.setIsLoading = isLoading
-  },[data])
-  useDidUpdate(
-    () => {
-      if(location.pathname === '/account/groups') {
-        mutate()
-      }
-    },
-    [location.pathname]
-  );
+      },
+      [location.pathname]
+    );
   // console.log(data);
   if ('/account/groups' !== location.pathname) return <Outlet />
   if (location.pathname.includes('edit')) return <Outlet />
@@ -57,7 +55,7 @@ const GroupsPage = () => {
                 header={
                     <>
                         <Heading
-                            text={'Группы'}
+                            text={'Права доступа'}
                             variant={HeadingVariant.h1}
                             className={'inline-block'}
                             color={HeadingColor.accent}

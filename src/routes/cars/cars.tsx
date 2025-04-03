@@ -3,34 +3,34 @@ import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel, { PanelColor, PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from "components/common/ui/Button/Button";
-import TableWithSort from 'components/common/layout/TableWithSort/TableWithSort'
-import { Outlet, useLoaderData, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Outlet,useLocation, useNavigate } from "react-router-dom";
 import { useStore } from 'stores/store'
-import { observer, useLocalStore } from "mobx-react-lite";
-import { Company, CompanyType } from "stores/companyStore";
-import { User } from 'stores/usersStore'
-import { UserTypeEnum } from "stores/userStore";
+import { observer, useLocalObservable } from "mobx-react-lite";
 import { PermissionNames } from "stores/permissionStore";
 import TableWithSortNew from "components/common/layout/TableWithSort/TableWithSortNew";
-import agent, { client } from "utils/agent";
-import FormCreateCarBrand from "components/Form/FormCreateCarBrand/FormCreateCarBrand";
 import { LocalRootStore } from "stores/localStore";
 import useSWR from "swr";
 import { useDidUpdate, useDisclosure } from "@mantine/hooks";
 import { FilterData } from "components/common/layout/TableWithSort/DataFilter";
 import { CarClasses } from "components/common/layout/Modal/CarClasses";
+
 const localRootStore =  new LocalRootStore()
+
 const CarsPage = () => {
+
   const store = useStore()
-  const localStore = useLocalStore<LocalRootStore>(() => localRootStore)
+  const localStore = useLocalObservable<LocalRootStore>(() => localRootStore)
   const location = useLocation()
   const navigate = useNavigate()
 
   const [opened, { open, close }] = useDisclosure(false)
-  const {isLoading, data, mutate} =useSWR(['cars', localStore.params.getSearchParams] , ([url, args]) => store.carStore.getAllCars(args))
+
   const memoModal = React.useMemo(() => {
     return <CarClasses opened={opened} onClose={close} />
   }, [opened])
+  const {isLoading, data, mutate} =useSWR(localStore.params.isReady && ['cars', {...localStore.params.getSearchParams}] , ([url, args]) => store.carStore.getAllCars(args))
+
+
   useEffect(() => {
     localStore.setData = {
       ...data,
@@ -39,7 +39,7 @@ const CarsPage = () => {
         is_active: item.is_active,
         brand: item.brand.name,
         model: item.model.name,
-        car_type: item.model.car_type,
+        model__car_type: item.model.car_type,
         number: item.number,
         company: item.company.name,
         city: item.company.city.name,
@@ -67,13 +67,13 @@ const CarsPage = () => {
         headerClassName={'md:flex justify-between'}
         header={
           <>
-          <div>
+
             <Heading text={"Автомобили"}
               variant={HeadingVariant.h1}
-              className={"inline-block mr-auto tablet-max:flex-1"}
+              className={"inline-block mr-auto tablet-max:flex-1 !mb-0  "}
               color={HeadingColor.accent} />
-          </div>
-            <div className={"flex gap-6 tablet-max:max-w-96"}>
+
+            <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
               <Button text={"Классификация автомобилей"}
                 action={open}
                 trimText={true}
@@ -96,15 +96,15 @@ const CarsPage = () => {
           </Panel>
           <TableWithSortNew
           store={localRootStore}
-        variant={PanelVariant.dataPadding}
-        search={true}
-        style={PanelRouteStyle.cars}
-        background={PanelColor.glass}
-        className={'col-span-full table-groups'}
-        filter={true}
-        initFilterParams={[FilterData.car_type, FilterData.brand]}
-        state={isLoading}
-        ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
+          variant={PanelVariant.dataPadding}
+          search={true}
+          style={PanelRouteStyle.cars}
+          background={PanelColor.glass}
+          className={'col-span-full table-groups'}
+          filter={true}
+          initFilterParams={[FilterData.is_active, FilterData.city, FilterData.brand]}
+          state={isLoading}
+          ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
       />
 
     </Section>

@@ -1,9 +1,9 @@
 .Layout {
   display: grid;
   grid-template-columns: var(--grid);
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 4.5rem 1fr auto;
 
-  min-height: 100vh;
+  min-height: calc(100vh);
   gap: 0 var(--gridGap);
   overflow: hidden;
   position: relative;
@@ -12,6 +12,14 @@
 	display: grid;
 	grid-column: 1/-1;
 	grid-template-columns: subgrid;
+	@supports not (grid-template-columns: subgrid) {
+	  grid-template-columns: var(--grid);
+	  gap: 0 var(--gridGap);
+	}
+	@screen desktop {
+	  padding-bottom: .75rem;
+	}
+
   }
   //***** no scrollbar
 
@@ -19,6 +27,9 @@
 	//max-height: 100lvh;
   //}
   //
+  //&[class*="page-account"] {
+	//min-height: calc(100svh - 2.75rem);
+  //}
 
 }
 

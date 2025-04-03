@@ -12,6 +12,8 @@ import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { dateTransform } from "utils/utils";
 import AddType from "routes/reference/Services/addType";
 import AddOption from "routes/reference/Services/addOption";
+import agent from 'utils/agent'
+import { notifications } from "@mantine/notifications";
 
 const ServicesSubTypePage = () => {
     const store = useStore()
@@ -19,7 +21,7 @@ const ServicesSubTypePage = () => {
     const location = useLocation()
     const params = useParams()
     const { data, page, pageRequest, textData }: any = useLoaderData()
-  console.log(params);
+
     return (
         <Section type={SectionType.default}>
             <Panel
@@ -27,47 +29,65 @@ const ServicesSubTypePage = () => {
                 headerClassName={'flex justify-between'}
 
                 header={
-                    <>
-                        <div>
-                            <LinkStyled
-                                text={
-                                    <>
-                                        <SvgBackArrow />
-                                        Назад к справочнику{' '}
-                                    </>
-                                }
-                                className={
-                                    'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                                }
-                              to={location.pathname.split('/').slice(0, -1).join('/')}
-                                variant={ButtonVariant.text}
-                            />
-                            <Heading
-                                text={data.results.parent.name}
-                                variant={HeadingVariant.h1}
-                                className={'inline-block !mb-0'}
-                                color={HeadingColor.accent}
-                            />
-                        </div>
-
-                    </>
-                }
-            ></Panel>
-          <Panel headerClassName={'!pb-2'} header={
-            <>
-              <div className={'flex items-baseline justify-between flex-1 '}>
-                <div className={'flex-1'}>
-                  <Heading
-                    text={data.results.name}
-                    variant={HeadingVariant.h2}
-                    color={HeadingColor.accent}
-                  />
-                  <div className={'flex flex-1 items-end gap-12'}>
-                    <div className={'text-xs text-gray-2'}>
-                      Дата и время регистрации: <span>{dateTransform(data.updated).date}</span>
+                  <>
+                    <div>
+                      <LinkStyled text={
+                        <>
+                          <SvgBackArrow />
+                          Назад к справочнику{" "}
+                        </>
+                      }
+                        className={
+                          "flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4"
+                        }
+                        to={location.pathname.split("/").slice(0, -1).join("/")}
+                        variant={ButtonVariant.text} />
+                      <Heading text={data.results.parent.name}
+                        variant={HeadingVariant.h1}
+                        className={"inline-block !mb-0"}
+                        color={HeadingColor.accent} />
                     </div>
+                    <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
+                      <Button text={"Обновить прайс-листы"}
+                        action={() => {
+                          agent.Price.updatePrice().then((r:any) =>  {
+                            console.log(r);
+                            if(r && r.status < 300) {
+                              notifications.show({
+                                id: 'updatePrice_success',
+                                withCloseButton: true,
+                                autoClose: 5000,
+                                title: 'Прайс обновлен',
+                                message: '',
+                                color: 'var(--accentColor)',
+                                // style: { backgroundColor: 'red' },
+                                loading: false,
+                              })
+                            }
+                          })
+                        }}
+                        // trimText={true}
+                        /* action={() => store.companyStore.addCompany()} */
+                        className={"inline-flex tablet-max:flex-1"}
+                        variant={ButtonVariant["accent-outline"]}
+                        size={ButtonSizeType.sm} />
+                    </div>
+                  </>
+                }></Panel>
+          <Panel headerClassName={"!pb-2 "}
+            header={
+              <>
+                <div className={"tablet:flex items-baseline justify-between flex-1 "}>
+                  <div className={"flex-1"}>
+                    <Heading text={data.results.name}
+                      variant={HeadingVariant.h2}
+                      color={HeadingColor.accent} />
+                    <div className={"tablet:flex flex-1 items-end gap-12"}>
+                      <p className={"text-xs text-gray-2"}>
+                        Дата и время регистрации: <span>{dateTransform(data.updated).date}</span>
+                    </p>
                     <Heading
-                      className={'!m-0'}
+                      className={'tablet:!m-0'}
                       text={data.results.is_active ? 'Активен' : 'Не активна'}
                       color={data.results.is_active ? HeadingColor.active : HeadingColor.notActive}
                       variant={HeadingVariant.h4}
@@ -101,9 +121,9 @@ const ServicesSubTypePage = () => {
                   />
                 )}
               </div>
-              <Heading color={HeadingColor.accent} text={'Дополнительные опции'} className={'mt-12 !mb-0'} variant={HeadingVariant.h4}/>
+              <Heading color={HeadingColor.accent} text={'Дополнительные опции'} className={'mt-8 tablet:mt-12 !mb-0'} variant={HeadingVariant.h4}/>
             </>
-          } variant={PanelVariant.textPadding} className={'!mt-0'} background={PanelColor.glass} bodyClassName={'grid grid-cols-3 gap-6'} >
+          } variant={PanelVariant.textPadding} className={'!mt-0  tablet-max:pb-8'} background={PanelColor.glass} bodyClassName={'grid tablet:grid-cols-3 gap-6'} >
 
               {data.results.options.map((card:any) => <FormCard key={card.id} title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full group  overflow-hidden'}
                 actions={

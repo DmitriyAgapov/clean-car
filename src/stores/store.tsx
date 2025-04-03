@@ -1,7 +1,7 @@
 import { useLocalObservable } from 'mobx-react-lite'
 import React from 'react'
 import rootStore, { RootStore } from './index'
-import { autorun, configure, toJS } from "mobx";
+import {  configure, toJS } from "mobx";
 configure({ enforceActions: "always" })
 
 const storeContext = React.createContext<RootStore | null>(null)

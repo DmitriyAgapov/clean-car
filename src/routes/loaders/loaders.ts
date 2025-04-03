@@ -12,10 +12,12 @@ import paramsStore, { InitParams } from "stores/paramStore";
 import priceStore from "stores/priceStore";
 import bidsStore from "stores/bidsStrore";
 import paramStore from "stores/paramStore";
-
+import { sidebarMenu } from "components/common/layout/Sidebar/Sidebar";
 
 
 export const authUser = async ({ request, params }:any) => {
+    console.log(request.url, params);
+
     // const url = new URL(request.url)
     // const searchParams = url.searchParams
     // const paramsPage = url.searchParams.get('page')
@@ -24,11 +26,11 @@ export const authUser = async ({ request, params }:any) => {
     // const paramsSearchString = url.searchParams.get('searchString')
     // paramsStore.setParams({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering })
     // console.log({ page: paramsPage ?? 1, page_size: paramsPageSize ?? 10, name: paramsSearchString, ordering: paramsOrdering });
-    if (!appStore.token) {
-        return redirect('/')
-    } else {
-        if (!userStore.currentUser) await userStore.pullUser()
-    }
+    // if (!appStore.token) {
+    //     return redirect('/')
+    // } else {
+    //     if (!userStore.currentUser) await userStore.pullUser()
+    // }
     return null
 }
 
@@ -53,8 +55,69 @@ export const paginationParams = (urlData:string) => {
 export const priceLoader = async (props: any) => {
     // const paginationData = paginationParams(props.request.url as string)
     const is_history = props.request.url.includes('history')
+    // console.log();
+    // props.params == undefined && appStore.setAppState(true);
+    !!Object.entries(props.params).length && priceStore.getCurrentPrice(props, false);
 
-    await priceStore.getCurrentPrice(props, is_history);
+    // console.log('loader', !userStore.isAdmin);
+    // async function fillData() {
+    //     let data: any[] | any = []
+    //     if (!userStore.isAdmin) {
+    //         const { data: dataEvac } = await agent.Price.getCurentCompanyPriceEvac(props.params.id);
+    //         const { data: dataTire } = await agent.Price.getCurentCompanyPriceTire(props.params.id);
+    //         const { data: dataWash } = await agent.Price.getCurentCompanyPriceWash(props.params.id);
+    //         if (props.params.id) {
+    //             data = {
+    //                 tabs: await Promise.all([{
+    //                     label: 'Мойка', data: dataWash,
+    //                     dataTable: dataWash
+    //                 }, { label: 'Эвакуация', data: dataEvac, dataTable: mapEd(dataEvac.evacuation_positions, 'service_option') }, { label: 'Шиномонтаж', data: dataTire, dataTable: dataTire }])
+    //             }
+    //         } else {
+    //             data = await Promise.all([dataWash, dataTire, dataEvac])
+    //             console.log(data);
+    //         }
+    //
+    //     } else {
+    //         const { data: dataResults, status } = await agent.Price.getAllPrice(paginationData as PaginationProps)
+    //         console.log(dataResults);
+    //         if(status === 200) {
+    //             data = {...dataResults, results: dataResults.results.map((i: any) => {
+    //                     let obj:any;
+    //                     for(const key in i) {
+    //                         if(i[key] === null) {
+    //                             obj = {
+    //                                 ...obj,
+    //                                 [key]: '-'
+    //                             }
+    //                         } else {
+    //                             obj = {
+    //                                 ...obj,
+    //                                 [key]: i[key]
+    //                             }
+    //                         }
+    //                     }
+    //                     return obj;
+    //                 })}
+    //         }
+    //     }
+    //     return data
+    // }
+    return null
+    // return defer({
+    //     data: await fillData(),
+    //     pageRequest: { page: paginationData.page ?? 1, page_size: paginationData.page_size ?? 10, searchString: paginationData.searchString},
+    //     // page: refUrlsRoot,
+    //     // textData: textData,
+    //     // dataModels: dataModels
+    // })
+}
+export const priceHistoryLoader = async (props: any) => {
+    // const paginationData = paginationParams(props.request.url as string)
+    const is_history = props.request.url.includes('history')
+    console.log(props);
+
+     await priceStore.getHistoryPrice(props);
 
     // console.log('loader', !userStore.isAdmin);
     // async function fillData() {
@@ -206,8 +269,6 @@ export const userLoader = async ({ params: { company_type, id, company_id } }: a
 
     if(appStore.appType === "admin") {
         let user = await usersStore.getUser(company_id, id, company_type);
-
-
         return defer({
             user: user,
         })
@@ -263,7 +324,7 @@ export const groupsCreatLoader = async ({ params: { id } }: any) => {
             permissions: ar.map((item: string) => ({
                 create: false,
                 delete: false,
-                id: Math.random(),
+                // id: Math.random(),
                 name: item,
                 read: false,
                 update: false,

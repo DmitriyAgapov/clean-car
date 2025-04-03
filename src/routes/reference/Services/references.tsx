@@ -9,6 +9,10 @@ import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'componen
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import { FormCard } from 'components/Form/FormCards/FormCards'
 import LinkStyled from 'components/common/ui/LinkStyled/LinkStyled'
+import { textDataCars } from "routes/reference/Cars/cars";
+import agent from "utils/agent";
+import notificationCC from "components/common/ui/NotificationCC/NotificationCC";
+import { notifications } from '@mantine/notifications'
 
 const ServicesPage = () => {
     const store = useStore()
@@ -25,55 +29,77 @@ const ServicesPage = () => {
                 headerClassName={'flex justify-between'}
                 state={store.permissionStore.loadingPermissions}
                 header={
-                    <>
-                        <div>
-                            <LinkStyled
-                                text={
-                                    <>
-                                        <SvgBackArrow />
-                                        Назад к справочнику{' '}
-                                    </>
-                                }
-                                className={
-                                    'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                                }
-                                to={location.pathname.split('/').slice(0, -1).join('/')}
-                                variant={ButtonVariant.text}
-                            />
-                            <Heading
-                                text={textData.title}
-                                variant={HeadingVariant.h1}
-                                className={'inline-block !mb-0'}
-                                color={HeadingColor.accent}
-                            />
-                        </div>
-
-                        {/* {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && ( */}
-                        {/*     <Button */}
-                        {/*         text={textData.create} */}
-                        {/*         action={() => navigate('create')} */}
-                        {/*         trimText={true} */}
-                        {/*      className={'inline-flex'} */}
-                        {/*         directory={ButtonDirectory.directory} */}
-                        {/*         size={ButtonSizeType.sm} */}
-                        {/*     /> */}
-                        {/* )} */}
-                    </>
-                }
-            ></Panel>
-          <Panel  variant={PanelVariant.textPadding} className={'!mt-0'} background={PanelColor.glass} bodyClassName={'grid grid-cols-3 gap-6'} header={<p>{textData.description}</p>}>
-              {data && data.results && data.results.length > 0 && data.results.map((card:any) => <FormCard title={card.name} titleVariant={HeadingVariant.h4}  className={'relative w-full  group  overflow-hidden'}
-                  actions={
-                    <div
-                      className={
-                        'absolute  group-hover:opacity-100 opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5  gap-2 px-8 flex items-center justify-center flex-col bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2'
+                  <>
+                    <div>
+                      <LinkStyled text={
+                        <>
+                          <SvgBackArrow />
+                          Назад к справочнику{" "}
+                        </>
                       }
-                    ><LinkStyled to={String(card.id)}
-                      className={'!text-xs uppercase w-full [-webkit-text-fill-color=initial]'}
-                      variant={ButtonVariant['outline']}
-                      size={ButtonSizeType.sm}
-                      text={"Подробнее"} />     </div>}>
-                      <div className={`absolute w-4 h-4 right-3 top-3 rounded-full ${card.is_active ? "bg-active" : "bg-red-500"}`} />
+                        className={
+                          "flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4"
+                        }
+                        to={location.pathname.split("/").slice(0, -1).join("/")}
+                        variant={ButtonVariant.text} />
+                      <Heading text={textData.title}
+                        variant={HeadingVariant.h1}
+                        className={"inline-block !mb-0"}
+                        color={HeadingColor.accent} />
+                    </div>
+                    <div className={"flex gap-6 tablet-max:max-w-96 mobile:mt-6"}>
+                      <Button text={"Обновить прайс-листы"}
+                        action={() => {
+                          agent.Price.updatePrice().then((r:any) =>  {
+                            if(r && r.status < 300) {
+                              notifications.show({
+                                id: 'updatePrice_success',
+                                withCloseButton: true,
+                                autoClose: 5000,
+                                title: 'Прайс обновлен',
+                                message: '',
+                                color: 'var(--accentColor)',
+                                // style: { backgroundColor: 'red' },
+                                loading: false,
+                              })
+                            }
+                            })
+                        }}
+                        // trimText={true}
+                        /* action={() => store.companyStore.addCompany()} */
+                        className={"inline-flex tablet-max:flex-1"}
+                        variant={ButtonVariant["accent-outline"]}
+                        size={ButtonSizeType.sm} />
+                    </div>
+                    {/* {store.userStore.getUserCan(PermissionNames['Управление справочниками'], 'create') && ( */}
+                    {/*     <Button */}
+                    {/*         text={textData.create} */}
+                    {/*         action={() => navigate('create')} */}
+                    {/*         trimText={true} */}
+                    {/*      className={'inline-flex'} */}
+                    {/*         directory={ButtonDirectory.directory} */}
+                    {/*         size={ButtonSizeType.sm} */}
+                    {/*     /> */}
+                    {/* )} */}
+                  </>
+                }></Panel>
+          <Panel variant={PanelVariant.textPadding}
+            className={"!mt-0 tablet-max:pb-16"}
+            background={PanelColor.glass}
+            bodyClassName={"grid tablet:grid-cols-3 gap-6"}
+            header={<p>{textData.description}</p>}>
+            {data && data.results && data.results.length > 0 && data.results.map((card: any) => <FormCard title={card.name}
+              titleVariant={HeadingVariant.h4}
+              className={"relative w-full  group  overflow-hidden"}
+              actions={
+                <div className={
+                  "absolute  group-hover:opacity-100 opacity-0 top-0.5 right-0.5 bottom-0.5 left-0.5 cursor-auto gap-2 px-8 flex items-center justify-center flex-col bg-black/80 hover:outline-accent rounded hover:outline hover:outline-2"
+                }><LinkStyled to={String(card.id)}
+                  className={"!text-xs uppercase w-full [-webkit-text-fill-color=initial]"}
+                  variant={ButtonVariant["outline"]}
+                  size={ButtonSizeType.sm}
+                  text={"Подробнее"} /></div>}>
+              <div className={`absolute w-4 h-4 right-3 top-3 rounded-full ${card.is_active ? "bg-active" : "bg-red-500"}`} />
                       <div>
                         <span className={"text-base text-accent"}>{card.subtypes.length}</span>
                         <span className={"text-sm text-gray-2 uppercase font-medium ml-2"}> основных услуг</span>

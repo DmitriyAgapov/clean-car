@@ -5,6 +5,7 @@ import { makePersistable, hydrateStore  } from 'mobx-persist-store';
 import userStore from "stores/userStore";
 import appStore from "stores/appStore";
 import paramsStore from "stores/paramStore";
+import { defer } from "react-router-dom";
 
 
 enum UserTypeEnum {
@@ -119,7 +120,7 @@ export class UsersStore {
     this.loadingErrors = ''
     let result;
     try {
-      const datas = yield agent.Account.createCompanyUser(companyid, data)
+      const datas:any = yield agent.Account.createCompanyUser(companyid, data)
       result = datas
       if(datas.response.status > 299) {
         this.loadingErrors = datas.response.data
@@ -139,7 +140,7 @@ export class UsersStore {
     this.loadingErrors = ''
     let result;
     try {
-      const datas = yield agent.Account.updateCompanyUser(companyid, data)
+      const datas:any = yield agent.Account.updateCompanyUser(companyid, data)
       result = datas
       if(datas.response.status > 299) {
         this.loadingErrors = datas.response.data
@@ -181,17 +182,115 @@ export class UsersStore {
   }
 
   getUsers = flow(function *(this: UsersStore, company_id: any) {
-    const {data, status} = yield agent.Account.getCompanyUsers(Number(company_id))
-    runInAction(() => this.companyUsers = data.results)
-    action(() => this.companyUsers = data.results)
-    return data.results
+    console.log(company_id);
+    try {
+      const { data, status } = yield agent.Account.getCompanyUsers(Number(company_id))
+      if (status === 200) {
+        //
+        runInAction(() => {
+          this.companyUsers = data.results
+        })
+        return data.results
+      }
+    } catch (e) {
+       console.log(e)
+    }
+
   })
 
   get currentCompanyUsers() {
     return this.companyUsers
   }
+  async userLoader({company_type, id, company_id}: any) {
+    let user:{
+      group?: any
+      company?:any
+      employee?: any
+    } = {}
+    const _employee = await agent.Account.getCompanyUser(Number(company_id), Number(id)).then((r:any) => {
+      if(r.status === 200) {
+        user.employee = r.data
+        return r.data
+      }
+    })
+    const groups = await agent.Permissions.getAllCompanyPermissions(company_id).then(r => r.data).then(r => r.results)
+    const _company = (async () => {
+      if(appStore.appType === "admin") {
+        if(company_type !== "admin") {
+          return agent.Companies.getCompanyData(company_type, Number(company_id)).then((r: any) => {
+            if (r.status === 200) {
+              // user.company = {
+              //   ...r.data,
+              //   groups: groups.results
+              // }
+              return r.data
+            }
+          })
+        } else {
+          return {...userStore.myProfileData.company,  groups: groups.results}
+        }
+      } else {
+        if(company_id === userStore.myProfileData.company.id) {
+          return  userStore.myProfileData.company
+        }
+        if(company_id !== userStore.myProfileData.company.id) {
+          return agent.Companies.getCompanyData(company_type, Number(company_id))
+            .then(r => {
+            if (r.status === 200) {
+              user.company = {
+                ...r.data,
+                groups: groups.results
+              }
+              return r.data
+            }
+          })
+        }
+        console.log(company_type, company_id);
+        // const company = await agent.Filials.getFilial(company_type, company_id, id).then(r => r.data)
+        return  await agent.Filials.getFilials(company_type, Number(company_id)).then((r: any) => {
+          if (r.status === 200) {
+            user.company = {
+              ...r.data.results[0],
+              groups: groups.results
+            }
+            return r.data.results[0]
+          }
+        })
+        // return  await agent.Companies.getCompanyData(company_type, Number(company_id)).then((r: any) => {
+        //   console.log(r);
+        //   if (r.status === 200) {
+        //     user.company = {
+        //       ...r.data,
+        //       groups: groups.results
+        //     }
+        //     return r.data
+        //   }
+        // })
+      }
+    })()
 
-  getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type: CompanyType) {
+    const _group = agent.Permissions.getUserPermissions(Number(company_id), Number(user.employee.group)).then((r:any) => {
+      if(r.status === 200) {
+        // user.group = r.data
+        return r.data
+      }
+    });
+    const _user = await Promise.all([_company, _employee, _group, groups]).then((r) => {
+      if(r) {
+        return {
+          employee: r[1],
+          company: {
+            ...r[0],
+            groups: r[3]
+          },
+          group: r[2],
+        }
+      }
+    })
+    console.log(_user);
+    return _user
+  }
+  getUser = flow(function* (this: UsersStore, companyid: number | string, id: string | number, company_type?: CompanyType) {
     let user: any = {}
     if(companyid && company_type && id) {
       try {
@@ -229,9 +328,9 @@ export class UsersStore {
 
   async loadUserList(args:any) {
     if(appStore.appType === "admin") {
-      return client.accountsAllUsers(args)
+      return agent.Account.accountsAllUsers(args).then(r => r.data)
     } else {
-      return client.accountsUsersList({company_id: userStore.myProfileData.company.id, ...args})
+      return agent.Account.accountsUsersList(userStore.myProfileData.company.id, args).then(r => r.data)
     }
   }
   async createNewUser( edit:boolean, values:any) {

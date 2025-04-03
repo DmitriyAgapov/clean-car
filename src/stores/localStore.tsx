@@ -1,7 +1,8 @@
 import { useLocalObservable } from 'mobx-react-lite'
 import React from 'react'
 import { TableWithSortStore } from "components/common/layout/TableWithSort/TableWithSort.store";
-import { makeAutoObservable, observable, ObservableMap, values } from "mobx";
+import { keys, makeAutoObservable, observable, ObservableMap, reaction, values } from 'mobx'
+import agent from "utils/agent";
 
 const storeContext = React.createContext(null)
 
@@ -35,12 +36,46 @@ export const useTransferStore = <T extends TransferComponentStore>(): T  => {
 export class LocalRootStore  {
   params: TableWithSortStore  = new TableWithSortStore()
   data: any | undefined | null  = null
+  count_data: number | null = null
   isLoading: boolean  = true
+  inFinitiveScroll: boolean = false
+  inFinitiveScrollResults  = new Map([])
   constructor() {
     makeAutoObservable(this)
   }
+  loadMore() {
+    this.inFinitiveScroll = true
+    const next = this.params.getSearchParams.page + 1
+
+    this.params.setSearchParams({page: next, page_size: 10 })
+  }
   set setData(data: any) {
+    // const _initAr = this.getData
+    if(data && data.count && this.count_data !== data.count) {
+      this.count_data = data.count
+    }
+    if(data && data.results) {
+      data.results.forEach((item:any, index:number) => {
+        this.inFinitiveScrollResults.set(String(item.id), item)
+      })
+    }
+    //
+    // if(this.inFinitiveScrollResults.size === 0) {
+    //   console.log('empty');
+    //   data?.results?.forEach((item:any, index:number) => this.inFinitiveScrollResults.set(item.id, item))
+    // } else if(this.inFinitiveScroll) {
+    //   // if(data.results && data.results?.length !== 0) {
+    //     data?.results?.forEach((item:any, index:number) => this.inFinitiveScrollResults.set(item.id, item))
+    //   // }
+    //   console.log(this.inFinitiveScrollResults);
+    //
+    // }
+
     this.data = data
+
+  }
+  get countData() {
+    return this.count_data
   }
   set initParams(args: any) {
     this.params.clearParams()
@@ -52,10 +87,21 @@ export class LocalRootStore  {
     return this.isLoading
   }
   get getData() {
+    // if(this.inFinitiveScroll) {
+    //   return ({
+    //     ...this.data,
+    //     results: values(this.inFinitiveScrollResults)
+    //   })
+    // }
     return this.data
   }
 }
-
+// export class EditPage extends LocalRootStore {
+//   constructor() {super();}
+//   async loadCompanies() {
+//     return agent.Companies
+//   }
+// }
 export class TransferComponentStore {
   selected: ObservableMap = observable.map([])
   unSelected: ObservableMap = observable.map([])
@@ -91,4 +137,3 @@ export class TransferComponentStore {
     this.selected.delete(id)
   }
 }
-

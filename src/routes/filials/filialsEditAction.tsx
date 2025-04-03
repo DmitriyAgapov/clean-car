@@ -4,10 +4,8 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Navigate, Outlet, useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Navigate,  useNavigate, useParams } from "react-router-dom";
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import FormCreateCompany from 'components/Form/FormCreateCompany/FormCreateCompany'
-import FormEditCompany from "components/Form/FormCreateCompany/FormEditCompany";
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateFilial from "components/Form/FormCreateFilials/FormCreateUpdateFilial";
 import { CompanyType, Payment } from "stores/companyStore";
@@ -22,9 +20,7 @@ export default function FilialsPageEditAction(props: any) {
   const { company_type, id } = useParams();
 
   const {isLoading, data:loaderData} = useSWR(`/filial/${params.company_type}/${params.id}/retrieve`, () => agent.Filials.getFilial(params.company_type as string, Number(params.company_id), Number(params.id)).then((r) => r.data))
-React.useEffect(() => {
-  console.log('loaderData', loaderData);
-}, [isLoading])
+
   if(!store.userStore.getUserCan(PermissionNames["Управление филиалами"], 'update')) return <Navigate to={'/account'}/>
   return (
       <Section type={SectionType.default}>
@@ -33,16 +29,9 @@ React.useEffect(() => {
               header={
                   <>
                       <Button
-                          text={
-                              <>
-                                  <SvgBackArrow />
-                                  Назад к компании
-                              </>
-                          }
-                          className={
-                              'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'
-                          }
-                          action={() => navigate(-1)}
+                          text={<><SvgBackArrow />Назад к компании</>}
+                          className={'inline-flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
+                          action={() => navigate(location.pathname.split('/').slice(0, -1).join('/'))}
                           variant={ButtonVariant.text}
                       />
                       <Heading
@@ -69,6 +58,7 @@ React.useEffect(() => {
                       inn: loaderData[`${company_type}profile`].inn,
                       ogrn: loaderData[`${company_type}profile`].ogrn,
                       legal_address: loaderData[`${company_type}profile`].legal_address,
+                      workload: loaderData[`${company_type}profile`].workload,
                       height: loaderData[`${company_type}profile`].height,
                       parent: loaderData.parent.parent_id,
                       // @ts-ignore

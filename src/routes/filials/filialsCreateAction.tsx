@@ -6,7 +6,6 @@ import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import FormCreateFilial from '../../components/Form/FormCreateFilials/FormCreateFilials'
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateFilial from "components/Form/FormCreateFilials/FormCreateUpdateFilial";
 
@@ -33,7 +32,7 @@ export default function FilialsPageCreateAction(props: any) {
         header={
           <>
             <Button text={<><SvgBackArrow />Назад к списку компаний{' '}</>}
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
+              className={'inline-flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
               action={() => navigate(-1)}
               variant={ButtonVariant.text}
             />

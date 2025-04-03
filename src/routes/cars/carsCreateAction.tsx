@@ -1,18 +1,72 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import Section, { SectionType } from 'components/common/layout/Section/Section'
 import Panel from 'components/common/layout/Panel/Panel'
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import { SvgBackArrow } from 'components/common/ui/Icon'
-import { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
-import { Navigate, useNavigate } from 'react-router-dom'
+import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import 'yup-phone-lite'
 import { useStore } from "stores/store";
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { PermissionNames } from "stores/permissionStore";
 import FormCreateUpdateCar from "components/Form/FormCreateCar/FormCreateUpdateCar";
+import { FileButton } from "@mantine/core";
+import agent from "utils/agent";
+import { notifications } from '@mantine/notifications'
 
 export default function CarsPageCreateAction() {
   const store = useStore()
+  const [loading, setLoading] = useState(false)
+  const [success, setSucces] = useState(false)
+  const navigate = useNavigate()
+  const resetRef = useRef<() => void>(null);
+  const handleFileChange = React.useCallback((files: File) => {
+    // setFile(files);
+    const formData = new FormData();
+    formData.append("cars_xlsx", new Blob(["Name"], { type: "text/plain" }));
+    formData.append('cars_xlsx', new File([files], files.name, { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }) )
+    if (files) {
+      (async () => {
+        setLoading(true)
+        agent.Cars.uploadCars(formData)
+        .then(r => {
+          if(r.status === 201) {
+            setSucces(true)
+            notifications.show({
+              id: 'file-cars-uploaded',
+              withCloseButton: true,
+              onClose: () => navigate('/account/cars'),
+              // onOpen: () => console.log('mounted'),
+              autoClose: 5000,
+              // title: "Ошибка",
+              message: 'Файл успешно загружен',
+              color: 'var(--accentColor)',
+              loading: false,
+            })
+          } else {
+            resetRef.current?.();
+            notifications.show({
+              id: 'file-cars-not-uploaded',
+              withCloseButton: true,
+              // onClose: () => navigate('/account/cars'),
+              // onOpen: () => console.log('mounted'),
+              autoClose: 5000,
+              title: "Ошибка",
+              message: null,
+              color: 'var(--errorColor)',
+              // style: { backgroundColor: 'red' },
+              loading: false,
+            })
+          }
+
+        })
+        .catch(e => console.log(e))
+        .finally(() =>
+          setLoading(false)
+        )
+      })()
+    }
+  }, [])
   if(!store.userStore.getUserCan(PermissionNames["Управление автомобилями"], 'update')) return <Navigate to={'/account'}/>
   store.usersStore.clearSelectedUsers()
   store.formStore.formClear('formCreateCar')
@@ -25,16 +79,27 @@ export default function CarsPageCreateAction() {
         header={<>
           <div>
             <LinkStyled text={<><SvgBackArrow />Назад к списку автомобилей{' '}</>} className={'flex flex-[1_100%] items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'} to={'/account/cars'} variant={ButtonVariant.text} />
-            <Heading text={'Добавить автомобиль'} variant={HeadingVariant.h1} className={'inline-block mr-auto flex-1'} color={HeadingColor.accent} />
+            <Heading text={'Добавить автомобиль'} variant={HeadingVariant.h1} className={'inline-block mr-auto flex-1 !mb-0'} color={HeadingColor.accent} />
           </div>
-          <div className={"flex gap-6 max-w-96"}>
-            <LinkStyled text={"Скачать шаблон"}
+          {store.appStore.appType === "admin" && <div className={"flex gap-6 mobile:max-w-96 mobile:mt-6"}>
+            <Button text={"Скачать шаблон"}
             variant={ButtonVariant["accent-outline"]}
-            to={"/account/cars/create"}
+              href={'/Шаблон_автомобили.xlsx'}
               className={"inline-flex desktop-max:flex-1"}
             size={ButtonSizeType.sm} />
-            <LinkStyled text={"Загрузить файл"} to={'/account/cars/create'}                 className={"inline-flex desktop-max:flex-1"} directory={ButtonDirectory.directory} size={ButtonSizeType.sm} />
-          </div>
+            <FileButton
+              resetRef={resetRef}
+              //@ts-ignore
+              onChange={handleFileChange}
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+              {(props) => (<Button text={<span style={{ display: "block", width: 'fit-content' , color: 'black !important'}}>{!success ? 'Загрузить файл' : 'Загружено'}</span>}
+                className={'inline-flex'}
+                directory={ButtonDirectory.directory}
+                size={ButtonSizeType.sm}
+                {...props}
+              />)}
+            </FileButton>
+          </div>}
           </>
         }
       >

@@ -38,35 +38,35 @@ export function FormStep1(props: {
 
     useEffect(() => {
       const type = values.application_type === CompanyType.customer ? UserTypeEnum.customer : UserTypeEnum.performer
-      const getCompany = async () => {
+
         if(type === UserTypeEnum.customer) {
           if (values.company_filials == 'company') {
-            await store.companyStore.getCustomerCompany({name: searchString})
+             store.companyStore.getCustomerCompany({name: searchString})
           }
           if(values.company_filials == 'filials') {
-            await store.companyStore.getPerformersCompany({name: searchString})
+             store.companyStore.getPerformersCompany({name: searchString})
           }
           setCompanies(store.companyStore.companiesCustomer)
         } else if(type === UserTypeEnum.performer) {
           if (values.company_filials == 'company') {
-            await store.companyStore.getCustomerCompany({name: searchString})
+             store.companyStore.getCustomerCompany({name: searchString})
           }
           if(values.company_filials == 'filials') {
-            await store.companyStore.getPerformersCompany({name: searchString})
+             store.companyStore.getPerformersCompany({name: searchString})
           }
           setCompanies(store.companyStore.companiesPerformers)
         }
-      }
-      getCompany()
+
 
     }, [searchString, values.company_filials, values.type]);
+
     const handleChangeSearch = React.useCallback((e:any) => {
       setSearchString(e.currentTarget.value);
     }, [])
     const options = React.useMemo(() => {
 
       if(companies.length !== 0) return companies.map((item:any) => (
-        <Combobox.Option value={item.id} onClick={() => setValues({...values, company_name: item.name, company_id: item.id, type: item.company_type === "Компания-Заказчик" ? UserTypeEnum.customer : UserTypeEnum.performer})}
+        <Combobox.Option value={item.id} onClick={() => setValues({...values, company_name: item.name, company_id: item.id, type: item.company_type === "Клиент" ? UserTypeEnum.customer : UserTypeEnum.performer})}
           key={item.id}>
           {item.name}
         </Combobox.Option>
@@ -254,7 +254,7 @@ export function FormStep1(props: {
           allowDeselect={false}
           className={'!flex-[1_0_10rem]'}
           data={[
-            { label: 'Заказчик', value: CompanyType.customer },
+            { label: 'Клиент', value: CompanyType.customer },
             { label: 'Партнер', value: CompanyType.performer },
           ]}
         />

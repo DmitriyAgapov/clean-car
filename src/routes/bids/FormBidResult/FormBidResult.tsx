@@ -15,6 +15,7 @@ interface BidResult {
 	important?: string
 	schedule?: string
 	service_option?: number[]
+	payment_url?: string
 	additional_data?: string[]
 	address?: string | null
 	customer_comment? : string | null
@@ -25,8 +26,8 @@ interface BidResult {
 	is_parking: boolean
 	truck_type?: string
 }
-const FormBidResult = observer(({service_type, is_parking, keys, create_amount, service_subtype, customer_comment, important, schedule, service_option, additional_data, address, address_to, address_from, wheel_lock, truck_type, ...props}:BidResult) => {
-
+const FormBidResult = observer(({service_type, is_parking, keys,payment_url, create_amount, service_subtype, customer_comment, important, schedule, service_option, additional_data, address, address_to, address_from, wheel_lock, truck_type, ...props}:BidResult) => {
+	console.log(props);
 	const store = useStore()
 	const { step1, step2 ,step3, step4, step5} = store.bidsStore.formDataAll
 	return <PanelForForms
@@ -92,11 +93,11 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
         title={address_to}
       />}
 
-			{!schedule && <DList
-				className={'child:dt:text-accent'}
-				label={'Важность'}
-				title={schedule !== null ? 'По времени' : 'Побыстрее'}
-			/>}
+			{/*{!schedule && <DList*/}
+			{/*	className={'child:dt:text-accent'}*/}
+			{/*	label={'Важность'}*/}
+			{/*	title={schedule !== null ? 'По времени' : 'Побыстрее'}*/}
+			{/*/>}*/}
 			{schedule && <DList
 				className={'child:dt:text-accent'}
 				label={'Время'}
@@ -146,7 +147,7 @@ const FormBidResult = observer(({service_type, is_parking, keys, create_amount, 
 				}
       />}
 			{create_amount && store.userStore.getUserCan(PermissionNames["Финансовый блок"], "read") && <DList
-        className={'child:dt:text-accent child:*:text-accent'}
+        className={'child:dt:text-accent child:*:text-accent mt-6'}
         label={'Стоимость услуги'}
         title={<Heading variant={HeadingVariant.h2} text={create_amount + " ₽"} />}
       />}

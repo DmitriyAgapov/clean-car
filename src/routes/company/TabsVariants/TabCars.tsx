@@ -16,7 +16,7 @@ const TabCars = ({companyId, company_type, state }:any) => {
 	const params = useParams()
 	const localStoreF = useLocalStore<LocalRootStore>(() => localRootStoreF)
 	const {isLoading, data} = useSWR([`cars_${companyId}`, company_type, companyId,localStoreF.params.getSearchParams] , ([url, company_type, companyId, args]) => store.companyStoreNew.loadCompanyCars(company_type, companyId, args))
-
+	console.log(data);
 	useEffect(() => {
 		localStoreF.setData = {
 			...data,
@@ -26,28 +26,30 @@ const TabCars = ({companyId, company_type, state }:any) => {
 				model: item.model.name,
 				car_type: item.model.car_type,
 				number: item.number,
-				filial: item.company.parent ? item.company.parent.name : '-',
+				filial: item.company.name || '-',
 				city: item.company.city.name,
 				id: item.id,
 				query: {
-					company_id: companyId,
-					rootRoute: `/account/cars/${companyId}/${item.id}`,
+					company_id: item.company.id,
+					rootRoute: `/account/cars/${item.company.id}/${item.id}`,
 				},
 			}))}
 		localStoreF.setIsLoading = isLoading
 	},[data, localStoreF.params.getSearchParams])
 
-	return	<Tabs.Panel  state={state} name={'cars'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0'}  bodyClassName={'!bg-transparent'}>
+	return	<Tabs.Panel  state={state} name={'cars'} variant={PanelVariant.dataPadding} background={PanelColor.default} className={'!bg-none !border-0 !grid-rows-none'}  bodyClassName={'!bg-transparent'}>
 <TableWithSortNew		store={localRootStoreF}
 	state={isLoading}
+	footerHeight={"12rem"}
+	autoScroll={true}
+	search={true} filter={true}
 	className={'!rounded-none  !bg-none overflow-visible !border-0'}
 	bodyClassName={'!bg-none !rounded-none !bg-transparent'}
 	background={PanelColor.default}
-	search={true} filter={true}
-
 	variant={PanelVariant.default}
 	footer={false}
-	ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}/>
+	ar={[{label: "Статус", name: 'is_active'}, {label: 'Марка', name: 'brand'},{label: 'Модель', name: 'model'}, {label: 'Тип', name: 'model__car_type'}, {label: 'Гос.номер', name: 'number'}, {label: 'Принадлежит', name: 'company'}, {label: 'Город', name: 'company__city__name'}]}
+/>
 
 	</Tabs.Panel>
 }

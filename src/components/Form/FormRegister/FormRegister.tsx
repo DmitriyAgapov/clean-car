@@ -1,102 +1,149 @@
 import React from 'react'
-import * as Yup from 'yup'
-import { Field, Form, Formik } from 'formik'
 import Button, { ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import styles from 'components/Form/FormRegister/FormRegister.module.scss'
-import 'yup-phone-lite'
+import { IMask, IMaskInput } from "react-imask";
 import { useStore } from 'stores/store'
+import { createFormActions, useForm } from '@mantine/form'
+import { yupResolver } from 'mantine-form-yup-resolver'
+import { Box, InputBase, PasswordInput, TextInput, Select } from '@mantine/core'
+import 'yup-phone-lite'
+import { SignupSchemaNew } from "utils/validationSchemas";
+import { RegisterSuccess } from 'components/common/layout/Modal/RegisterSuccess'
+import { useDisclosure } from '@mantine/hooks'
+import { Link } from 'react-router-dom';
 
-const SignupSchema = Yup.object().shape({
-  firstName: Yup.string().min(2, 'Слишком короткое!').max(50, 'Слишком длинное!').required('Обязательное поле'),
-  lastName: Yup.string().min(2, 'Слишком короткое!').max(50, 'Слишком длинное!').required('Обязательное поле'),
-  phone: Yup.string()
-    .max(16, 'Слишком длинное!')
-    .phone('RU', 'Введите правильный номер')
-    .required('Требуется номер телефона'),
-  cleanm: Yup.string().email('Неверный email').required('Укажите email'),
-  pwd: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль'),
-  pwd2: Yup.string().min(1, 'Пароль короткий').max(16, 'Много символов').required('Укажите пароль'),
-})
+export const createFormRegisterActions= createFormActions<{
+  first_name: '',
+  last_name: '',
+  phone: '',
+  email: '',
+  city: '',
+  password: '',
+  password2: ''
+}>('registerForm');
 
 const FormRegister = () => {
   const store = useStore()
+
+  const [opened, { open, close }] = useDisclosure(false)
+
+  const memoModal = React.useMemo(() => {
+    return <RegisterSuccess opened={opened} onClose={close} />
+  }, [opened])
+  // @ts-ignore
+  const masked = IMask.createMask({
+    mask: "+7 000 000 00 00",
+    autofix: true,
+    // overwrite: true,
+    skipInvalid: false,
+    prepare: (appended, masked) => {
+      if (appended[0] === '8' && masked.value === "") {
+        return appended.slice(1);
+      }
+      return appended
+    },
+  });
+
+  const [cities, setCities] = React.useState<any[] | null>(null)
+
+  React.useEffect(  () => {
+    (async () => {
+        const _c = await store.catalogStore.getCities()
+        setCities(_c.map((c: any) => ({
+          label: c.name,
+          value: String(c.id)
+        })))
+      }
+    )()
+  }, [])
+
+  const form = useForm({
+    name: 'registerForm',
+    initialValues: {
+      first_name: '',
+      last_name: '',
+      phone: '',
+      email: '',
+      city: '',
+      password: '',
+      password2: ''
+    },
+    validateInputOnBlur: true,
+    onValuesChange: (values, previous) => console.log(values),
+    validate: yupResolver(SignupSchemaNew),
+    enhanceGetInputProps: (payload) => {
+      if(payload.field === "password" || payload.field === "password2" ||  payload.field === "first_name" ||  payload.field === "last_name" || payload.field === "phone" || payload.field === "email") {
+        return ({
+          className: "flex-1",
+
+        })
+      }
+    }
+
+  })
+  const handleSubmit = React.useCallback((event:any) => {
+    event.preventDefault()
+    const _d = {
+      ...form.values,
+      phone: form.values.phone.replaceAll(' ', ''),
+      city: Number(form.values.city)
+    }
+    return store.authStore.registerPerson(_d).then(r => {
+      if(r && r.status === 201) {
+        open()
+      }
+    })
+
+    // console.log(form.values);
+    // store.authStore.setLastname(values.lastName)
+    // store.authStore.setFirstname(values.firstName)
+    // store.authStore.setPhone(values.phone)
+    // store.authStore.setEmail(values.cleanm)
+    // // if (values.pwd === values.pwd2) store.authStore.setPassword(values.pwd)
+    //
+    // if (Object.values(store.authStore.values).length > 0) {
+    //   // console.log('success', Object.values(store.authStore.values))
+    //   // store.authStore.register()
+    // }
+  }, [form.values])
+
+
   return (
-    <Formik
-      initialValues={{
-        firstName: '',
-        lastName: '',
-        phone: '',
-        cleanm: '',
-        pwd: '',
-        pwd2: '',
+    <form className={'grid gap-y-2'} onSubmit={handleSubmit}>
+      <Box className="tablet:flex gap-x-2">
+        <TextInput label={'Имя'} {...form.getInputProps('first_name')} />
+        <TextInput label={'Фамилия'} {...form.getInputProps('last_name')} />
+      </Box>
+      <Box className="tablet:flex gap-x-2"> <
+        // @ts-ignore
+        InputBase
+        {...form.getInputProps('phone')} label={'Телефон'} component={IMaskInput}{...masked} placeholder='+7 000 000 0000' onPaste={(e) => {
+        const numb = e.clipboardData.getData('Text');
+        form.setFieldValue('phone', numb)
+        return e
       }}
-      validationSchema={SignupSchema}
-      onSubmit={(values, actions) => {
-        store.authStore.setLastname(values.lastName)
-        store.authStore.setFirstname(values.firstName)
-        store.authStore.setPhone(values.phone)
-        store.authStore.setEmail(values.cleanm)
-        if (values.pwd === values.pwd2) store.authStore.setPassword(values.pwd)
-
-        if (Object.values(store.authStore.values).length > 0) {
-          // console.log('success', Object.values(store.authStore.values))
-          store.authStore.register()
-          actions.setSubmitting(false)
-        }
-      }}
-    >
-      {({ submitForm, errors, touched }) => (
-        <Form className={styles.FormAuth}>
-          <div className={styles.inputGroup} data-form_error={errors.firstName && touched.firstName ? 'error' : null}>
-            <label htmlFor='firstName'>Имя?</label>
-            <Field autoComplete='off' id='firstName' name='firstName' type='text' />
-            {errors.firstName && touched.firstName ? <div className={'form-error'}>{errors.firstName}</div> : null}
-          </div>
-          <div className={styles.inputGroup} data-form_error={errors.lastName && touched.lastName ? 'error' : null}>
-            <label htmlFor='lastName'>Фамилия?</label>
-            <Field autoComplete='off' id='lastName' name='lastName' type='text' />
-            {errors.lastName && touched.lastName ? <div className={'form-error'}>{errors.lastName}</div> : null}
-          </div>
-
-          <div className={styles.inputGroup} data-form_error={errors.phone && touched.phone ? 'error' : null}>
-            <label htmlFor='phone'>Ваш номер телефона</label>
-            <Field autoComplete='off' id='phone' name='phone' type='tel' />
-            {errors.phone && touched.phone ? <div className={'form-error'}>{errors.phone}</div> : null}
-          </div>
-          <div className={styles.inputGroup} data-form_error={errors.cleanm && touched.cleanm ? 'error' : null}>
-            <label htmlFor='email'>Ваш email</label>
-            <Field autoComplete='off' id='cleanm' name='cleanm' type='email' />
-            {errors.cleanm && touched.cleanm ? <div className={'form-error'}>{errors.cleanm}</div> : null}
-          </div>
-          <div className={styles.twoCol}>
-            <div className={styles.inputGroup} data-form_error={errors.pwd && touched.pwd ? 'error' : null}>
-              <label htmlFor='pwd'>Пароль</label>
-              <Field autoComplete='off' id='pwd' name='pwd' type='password' />
-              {errors.pwd && touched.pwd ? <div className={'form-error'}>{errors.pwd}</div> : null}
-            </div>
-            <div className={styles.inputGroup} data-form_error={errors.pwd2 && touched.pwd2 ? 'error' : null}>
-              <label htmlFor='pwd2'>Повторите пароль</label>
-              <Field autoComplete='off' id='pwd2' name='pwd2' type='password' />
-              {errors.pwd2 && touched.pwd2 ? <div className={'form-error'}>{errors.pwd2}</div> : null}
-            </div>
-          </div>
-          <div className={styles.actionGroup}>
-            <Button
-              text={'зарегистрироваться'}
-              size={ButtonSizeType.lg}
-              variant={ButtonVariant.accent}
-              action={(event) => {
-                event.preventDefault()
-                submitForm()
-              }}
-            />
-          </div>
-          <div className={styles.text}>
-            Нажимая «Зарегистрироваться», вы принимаете пользовательское соглашение и политику конфиденциальности
-          </div>
-        </Form>
-      )}
-    </Formik>
+      />
+      <TextInput label={'E-mail'} {...form.getInputProps('email')} />
+      </Box>
+      {(cities && cities.length !== 0) &&  <Select {...form.getInputProps('city')} disabled={cities.length === 0} label={'Город'} data={cities} />}
+      <Box className="tablet:flex gap-x-2">
+        <PasswordInput label={'Пароль'} {...form.getInputProps('password')} />
+        <PasswordInput label={'Подтвердите пароль'} {...form.getInputProps('password2')} />
+      </Box>
+      <div className={styles.actionGroup}>
+        <Button
+          disabled={!form.isValid()}
+          text={'зарегистрироваться'}
+          size={ButtonSizeType.lg}
+          type={'submit'}
+          variant={ButtonVariant.accent}
+        />
+      </div>
+      <div className={styles.text}>
+        Нажимая «Зарегистрироваться», вы принимаете <Link to={'/policy#user_text'} className={'text-accent  hover:underline'}>пользовательское соглашение</Link> и <Link to={'/policy'} className={'text-accent hover:underline'}>политику конфиденциальности</Link>
+      </div>
+      {memoModal}
+    </form>
   )
 }
 

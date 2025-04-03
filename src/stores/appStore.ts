@@ -1,4 +1,4 @@
-import { action, autorun, makeAutoObservable, observable, reaction } from "mobx";
+import { action, autorun, computed, makeAutoObservable, observable, reaction } from 'mobx'
 import { ReactNode } from "react";
 import userStore, { UserTypeEnum } from "./userStore";
 import { PermissionName, Permissions } from "stores/permissionStore";
@@ -11,7 +11,7 @@ export class AppStore {
     makeAutoObservable(this, {}, { autoBind: true } )
     makePersistable(this, {
       name: 'appStore',
-      properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions'],
+      properties: ['appTheme', 'appType','appName', 'appRouteName','appPermissions', 'token', 'tokenRefresh' ],
       storage: localStorage,
     }, {
       fireImmediately: true,
@@ -23,7 +23,7 @@ export class AppStore {
         if (token) {
           console.log('Has token');
           window.localStorage.setItem('jwt', token)
-          userStore.pullUser()
+          // userStore.pullUser()
           userStore.loadMyProfile()
         } else {
           console.log('no token');
@@ -40,15 +40,15 @@ export class AppStore {
         }
 
     })
-    reaction(() => this.tokenRefresh,
-      (tokenRefresh) => {
-        if (tokenRefresh) {
-          window.localStorage.setItem('jwt_refresh', tokenRefresh)
-        } else {
-          window.localStorage.removeItem('jwt_refresh')
-        }
-      },
-    )
+    // reaction(() => this.tokenRefresh,
+    //   (tokenRefresh) => {
+    //     if (tokenRefresh) {
+    //       window.localStorage.setItem('jwt_refresh', tokenRefresh)
+    //     } else {
+    //       window.localStorage.removeItem('jwt_refresh')
+    //     }
+    //   },
+    // )
 
     reaction(() => this.appType,
       (appType) => {
@@ -56,6 +56,15 @@ export class AppStore {
         console.log('appType in ""')
         action(() => authStore.logout())
       }
+    })
+    reaction(() => this.bodyRef,
+      (bodyRef) => {
+
+          // this.font = this.fontSizeBody
+        console.log('fsC',bodyRef);
+
+      // console.log('fs',fontSize);
+
     })
     reaction(() => this.appType,
       (appType => {
@@ -88,18 +97,15 @@ export class AppStore {
         if(appType !== "") {
           catalogStore.setLoadingStateFalse()
         }
-        if(appType === "") {
-          console.log('appType in ""')
-        }
-
-
       })
     )
   }
   location:any = window.location
+  pageTitle: string = ""
   appName = 'CleanCar'
   appRouteName = '.авторизация'
   appTheme = 'dark'
+  font: number = Number(window.getComputedStyle(document.getElementsByTagName('html')[0]).getPropertyValue('font-size').replaceAll('px', ""))
   token = window.localStorage.getItem('jwt')
   tokenRefresh = window.localStorage.getItem('jwt_refresh')
   appPermissions?: Permissions[]
@@ -110,8 +116,9 @@ export class AppStore {
   burgerState: boolean = false
   asideState: boolean = false
   appType: UserTypeEnum | string = ''
+  networkStatus: boolean = true
   appState: boolean = false
-
+  sublevel: boolean = false
   bodyRef = document.body
   modal: {
     component?: ReactNode
@@ -128,6 +135,23 @@ export class AppStore {
   get AppState() {
     return this.appState
   }
+  get fontSizeBody() {
+    console.log(this.font);
+    return this.font
+  }
+  setTitle(title:string) {
+    this.pageTitle = `${title}  |  Clean Car`
+  }
+  addTitle(title:string) {
+    this.pageTitle = this.pageTitle + ` ${title}`
+  }
+  fontSizeBodyCalc() {
+    const _fSize = Math.floor(Number(window.getComputedStyle(document.getElementsByTagName('html')[0]).getPropertyValue('font-size').replaceAll('px', "")))
+    action(() => this.font = _fSize)
+    return _fSize
+  }
+
+
   setAppState(state: boolean) {
     this.appState = state
   }
@@ -145,13 +169,13 @@ export class AppStore {
     let routeName = ''
     switch (this.appType) {
       case UserTypeEnum.admin:
-        routeName = 'администратор системы'
+        routeName = 'Администратор'
         break
       case UserTypeEnum.performer:
-        routeName = 'Кабинет партнера'
+        routeName = 'Партнёр'
         break
       case UserTypeEnum.customer:
-        routeName = 'Кабинет заказчика'
+        routeName = 'Клиент'
         break
     }
     this.appRouteName = routeName
@@ -173,7 +197,12 @@ export class AppStore {
       actions: null,
     }
   }
-
+  setNetWorkStatus(state: boolean) {
+    this.networkStatus = state
+  }
+  get getNetWorkStatus() {
+    return this.networkStatus
+  }
   setToken(token: string | null) {
     this.token = token
   }
@@ -196,10 +225,22 @@ export class AppStore {
     }
     this.burgerState = !this.burgerState
   }
-
+  get subLevel() {
+    return this.sublevel
+  }
+  setSublevelOpen() {
+    this.sublevel = true
+  }
+  setSublevelToggle() {
+    this.sublevel = !this.sublevel
+  }
+  setSublevelClose() {
+    this.sublevel = false
+  }
   setAsideClose() {
     if (!this.asideState && this.bodyRef.clientWidth < 960) {
       this.bodyRef.style.overflow = 'hidden'
+
     } else {
       this.bodyRef.style.overflow = 'initial'
     }

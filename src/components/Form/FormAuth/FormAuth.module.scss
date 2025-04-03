@@ -9,6 +9,9 @@
 }
 .inputGroup {
   margin: 1.876rem 0;
+  [data-error="true"] {
+	@apply text-error;
+  }
 }
 .actionGroup {
   margin-top: 2.5rem;

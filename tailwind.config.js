@@ -38,7 +38,17 @@ module.exports = withMT({
       borderRadius: {
         '062': '.625rem'
       },
+      animation: {
+        'progressFive': 'progress 6s ease-in-out ',
+      },
+      keyframes: {
+        progress: {
+          "from": { translate: '-20rem 0',     scale: "100% 1"},
+          "to": {translate: '0 0',     scale: "200% 1"},
+        }
+      },
       colors: {
+        // progress: "linear-gradient(270deg, #29725B 18.5%, var(--notification-color) 45.5%, #29725B 55.5%, #3FECAE 88.5%)",
         accent: '#00FFAE',
       },
       maxWidth: {
@@ -49,7 +59,9 @@ module.exports = withMT({
         tablet: '744px',
         "tablet-max": {'max': '743px'},
         // => @media (min-width: 640px) { ... }
+        "tablet-big-max": {'max': '1023px'},
         "desktop-max": {'max': '1299px'},
+        "lg-to-desktop": {'min': '961px', 'max': '1299px'},
         desktop: '1300px',
       },
       letterSpacing: {

@@ -1,8 +1,58 @@
 import * as Yup from "yup";
+import YupPassword from 'yup-password'
+YupPassword(Yup) // extend yup
 import { CompanyType } from "stores/companyStore";
 import { useStore } from "stores/store";
 import rootStore from "stores";
+import 'yup-phone-lite'
+export const SignupSchemaNew = Yup.object().shape({
+	first_name: Yup.string().min(2, 'Слишком короткое!').max(50, 'Слишком длинное!').required('Обязательное поле'),
+	last_name: Yup.string().min(2, 'Слишком короткое!').max(50, 'Слишком длинное!').required('Обязательное поле'),
+	phone: Yup.string()
+	.max(16, 'Слишком длинное!')
+	.phone('RU', 'Введите правильный номер')
+	.required('Требуется номер телефона'),
+	email: Yup.string().email('Неверный email').required('Укажите email'),
+	city: Yup.string().required('Выберите город'),
+	password: Yup.string().required('Введите пароль'),
+	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),
+})
+export  const SignInSchema = Yup.object().shape({
+	email: Yup.string().email('Некорректный email').required('Обязательное поле'),
+	password: Yup.string().required('Введите пароль')
+})
+export  const UpBalanceSchema = Yup.object().shape({
+	amount: Yup.string().not([0, "0"], 'Не может быть 0').required('Обязательное поле'),
+	purpose:  Yup.string().nonNullable().required('Обязательное поле'),
+	company_id:  Yup.string().required('Обязательное поле'),
+	service_type:  Yup.string().required('Обязательное поле'),
+	description:  Yup.string().min(5, 'Очень короткий комментарий').required('Обязательное поле'),
+})
+export  const NotUpBalanceSchema = Yup.object().shape({
+	amount: Yup.string().not([0, "0"], 'Не может быть 0').required('Обязательное поле'),
+	purpose:  Yup.string().nonNullable().required('Обязательное поле'),
+	company_id:  Yup.string().required('Обязательное поле'),
+	// service_type:  Yup.string().required('Обязательное поле'),
+	description:  Yup.string().min(5, 'Очень короткий комментарий').required('Обязательное поле'),
+})
+Yup.setLocale({
+	string: {
+		minLowercase: 'Localized message (path=${path};length=${length})',
+		minUppercase: 'Введите как минимум 1 букву в верхнем регистре',
+		minNumbers: 'Введите как минимум 1 цифру',
+		minSymbols: 'Localized message (path=${path};length=${length})',
+		maxRepeating: 'Localized message (path=${path};length=${length})',
+		minWords: 'Localized message (path=${path};length=${length})',
+	} as any, // when using typescript, you may want to append `as any` to the end
+     // of this object to avoid type errors.
+})
+export const RestorePasswordNewSchema = Yup.object().shape({
+	password: Yup.string().password().minUppercase(1).minSymbols(0).min(8, "Длина не менее 8 знаков").required('Введите пароль'),
+	password2: Yup.string().oneOf([Yup.ref('password'), ""], 'Пароли не совпадает').required('Введите подтверждение'),
+})
+const emailRegex:RegExp = new RegExp(`^[\\w-\\+\\.\\_]+(\\.[\\w-\\+\\.\\_]+)*@[\\w-\\+\\.\\_]+(\\.[\\w\\+\\.\\_]+)*(\\.[A-Za-z]{2,})$`);
 
+export const CreateRestorePwd = Yup.object().shape({ 	email: Yup.string().matches(emailRegex, 'Неверный email').required('Введите email')})
 export const CreateUserSchema = Yup.object().shape({
 	first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
 	last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
@@ -26,6 +76,13 @@ export const CreateUserSchema = Yup.object().shape({
 	}),
 	is_active: Yup.string()
 })
+export const UpdateUserProfileSchema = Yup.object().shape({
+	first_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+	last_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
+	phone: Yup.string().max(16, 'Слишком длинное!').phone('RU', 'Введите правильный номер').required('Обязательное поле'),
+	email: Yup.string().email('Неверный email').required('Обязательное поле'),
+})
+
 export const CreateModalUserSchema = Yup.object().shape({
 	first_name: Yup.string()
 	.min(2, 'Too Short!')
@@ -39,20 +96,50 @@ export const CreateModalUserSchema = Yup.object().shape({
 	phone: Yup.string().required('Обязательное поле'),
 	group: Yup.string().required('Обязательное поле'),
 	is_active: Yup.string().required('Обязательное поле'),
+	bid_visibility: Yup.string(),
 })
+export const CreateModalPrice = Yup.object().shape({
+	company_id: Yup.string()
+	.required('Обязательное поле'),
+	filial_id: Yup.string().nullable()
+})
+
 export const SelectModalUserSchema = Yup.object().shape({
 	users: Yup.string().required('Выберите пользователя')
 })
-
+let length = 64;
 export const CreateCompanySchema = Yup.object().shape({
 	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	address: Yup.string().when('address_ready', (address_ready, schema) => {
+		if(!address_ready[0]) {
+			return schema.oneOf([],'Адрес распознан неверно, уточните адрес').required('Обязательное поле')
+		} else {
+			return schema
+		}
+	}),
 	legal_address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
-	inn: Yup.string().length(10, 'Длина ИНН должна быть 10 символов').required('Обязательное поле'),
-	ogrn: Yup.string().length(13, 'Длина ОГРН должна быть 13 символов').required('Обязательное поле'),
+	inn: Yup.string().test(
+		{
+		name: 'length',
+		exclusive: true,
+		message:  'Инн должен быть длиной 10 или 12 цифр' ,
+		test: (value) => [10,12].some(v => value && value.length == v)
+	}).required('Обязательное поле')
+	// .matches(/^[^0].*/,  { message: 'Не может начинаться с 0', excludeEmptyString: true })
+	,
+	ogrn: Yup.string().test(
+		{
+			name: 'length',
+			exclusive: true,
+			message:  'Длина ОГРН должна быть 13 или 15 символов' ,
+			test: (value) => [13,15].some(v => value && value.length == v)
+			}).required('Обязательное поле')
+	// .matches(/^[^0].*/,  { message: 'Не может начинаться с 0', excludeEmptyString: true })
+	,
 	contacts: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
 	city: Yup.string().required('Обязательное поле'),
 	type: Yup.string(),
+	address_ready: Yup.boolean().required('Введите верный адрес'),
 	overdraft: Yup.string(),
 	overdraft_sum: Yup.number().when('overdraft', (overdraft, schema) => {
 
@@ -76,18 +163,33 @@ export const CreateCompanySchema = Yup.object().shape({
 })
 export const CreateFilialSchema = Yup.object().shape({
 	company_name: Yup.string().min(1, 'Слишком короткое!').max(255, 'Слишком длинное!').required('Обязательное поле'),
-	address: Yup.string().min(2, 'Слишком короткое!').required('Обязательное поле'),
+	// address: Yup.string().when('address_ready', (address_ready, schema) => {
+	// 	if(!address_ready[0]) {
+	// 		return schema.oneOf([],'Адрес распознан неверно, уточните адрес').required('Обязательное поле')
+	// 	} else {
+	// 		return schema
+	// 	}
+	// }),
+	// address_ready: Yup.boolean().required('Введите верный адрес'),
 	city: Yup.string().required('Обязательное поле'),
 	type: Yup.string(),
 	company_id: Yup.string().required('Обязательное поле'),
 	working_time: Yup.string().when('type', (type, schema) => {
+
 		if(type[0] === CompanyType.performer)
 			return schema.min(16, 'Укажите время работы правильно').max(16, 'Укажите время работы правильно').required("Обязательное поле")
 		return schema
 	})
 })
 export const CreateCarBrandSchema = Yup.object().shape({
-	brandId: Yup.string(),
+	brandId: Yup.string().when('brand',  (brand, schema) => {
+		console.log(brand, schema);
+		if(brand[0]) {
+			return schema.nullable()
+		} else {
+			return schema.required('Нужна модель')
+		}
+	}),
 	brand: Yup.string().nullable(),
 	modelName: Yup.string().required('Нужна модель'),
 	car_type: Yup.string().required('Выберите тип'),
@@ -98,14 +200,14 @@ export const CreateCarSchema = Yup.object().shape({
 	height: Yup.number().typeError('Введите число').required('Обязательное поле'),
 	radius: Yup.string().required('Обязательное поле'),
 	company_id: Yup.string().required('Обязательное поле'),
-	number: Yup.string().required("Обязательное поле")
+	number: Yup.string().min(11, 'Неверный номер').required("Обязательное поле")
 })
 export const CreateBidSchema = Yup.object().shape({
 	city: Yup.string().required('Обязательное поле'),
 	company: Yup.string().required('Обязательное поле'),
 	conductor: Yup.string().required('Обязательное поле'),
 	car: Yup.string().min(1).required('Обязательное поле'),
-	phone: Yup.string().required('Обязательное поле'),
+	phone: Yup.string()
 })
 export const CreateBidSchemaStep2 = Yup.object().shape({
 	service_type: Yup.string().required('Обязательное поле'),
@@ -113,17 +215,16 @@ export const CreateBidSchemaStep2 = Yup.object().shape({
 	service_option: Yup.array().when('service_subtype', (service_subtype, schema) => {
 		const store = rootStore
 		if(!store.catalogStore.CurrentServiceSubtypes.find((el:any) => (Number(service_subtype) === el.id) && el.in_price)) {
-			console.log('option req');
+			// console.log('option req');
 			return schema.min(1, 'Выберите опции')
 		} else {
-			console.log('option notreq');
+			// console.log('option notreq');
 			return schema
 		}
 	}),
 })
 export const CreateBidSchemaStep3 = Yup.object().shape({
 	address_from: Yup.string().when('service_type', (service_type, schema) => {
-
 		if(service_type[0] === "3") {
 			return schema.required("Обязательное поле")
 		}
@@ -170,4 +271,8 @@ export const CreateBidSchemaStep3 = Yup.object().shape({
 })
 export const CreateBidSchemaStep4 = Yup.object().shape({
 	performer: Yup.number().required('Обязательное поле')
+})
+export const CreateLimitSchema = Yup.object().shape({
+	company: Yup.string().required('Обязательное поле'),
+	service_type: Yup.string().required('Обязательное поле'),
 })

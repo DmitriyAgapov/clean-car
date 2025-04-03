@@ -25,16 +25,15 @@ export class AuthStore {
     })
     makePersistable(this, {
       name: 'authStore',
-      properties: ['userIsLoggedIn', 'inProgress','values'],
-      storage: window.localStorage,
+      properties: ['userIsLoggedIn'],
+      storage: localStorage,
     }, {
       fireImmediately: true,
     })
     reaction(() => this.userIsLoggedIn,
       (userIsLoggedIn) => {
 
-      if(userIsLoggedIn && appStore.token && appStore.token !== "") {
-
+      if(userIsLoggedIn && localStorage.getItem('jwt')) {
         userStore.pullUser()
         userStore.loadMyProfile()
       } else {
@@ -45,12 +44,22 @@ export class AuthStore {
   userIsLoggedIn: boolean = false
   inProgress = false
   errors: any = undefined
-  values = {
+  values: {
+    first_name: string,
+    last_name: string,
+    email: string,
+    password: string
+    password2: string,
+    city: null | number,
+    phone: string,
+  } = {
     first_name: '',
     last_name: '',
     phone: '',
     email: '',
     password: '',
+    password2: '',
+    city: null
   }
 
  refreshToken() {
@@ -65,8 +74,8 @@ export class AuthStore {
        },
      ).catch(
        action((err: AxiosError) => {
-         this.errors = err.response && err.response.data
-         throw err
+         this.errors = err
+         // throw err
        }),
      )
    }
@@ -103,78 +112,115 @@ export class AuthStore {
     this.values.password = ''
   }
 
-  login() {
+  async login() {
     this.inProgress = true
     this.errors = undefined
-    agent.Auth.login(this.values.email, this.values.password)
+    return await agent.Auth.login({email: this.values.email.toLowerCase(), password: this.values.password})
       .then((resolve: any) =>  {
         if(resolve && resolve.response && resolve.response.status > 299) {
           notifications.show({
-            id: 'bid-created',
+            id: 'notlogged_in',
             withCloseButton: true,
             // onClose: () => console.log('unmounted'),
             // onOpen: () => console.log('mounted'),
-            autoClose: 3000,
-            title: "Error",
-            message: `${resolve.response.data.detail}`,
+            autoClose: 5000,
+            // title: "Error",
+            title: `${resolve.response.data.detail}`,
+            message: null,
             color: 'red',
-            className: 'my-notification-class z-[9999] absolute top-12 right-12',
             loading: false,
           })
+          return resolve
         } else {
-          const { access, refresh } = resolve.data
+          if(resolve && resolve.data) {
+            console.log('login success');
 
-          appStore.setToken(access)
-          appStore.setTokenRefresh(refresh)
-          this.userIsLoggedIn = true
+            runInAction(() => {
+              const { access, refresh } = resolve.data
+              localStorage.setItem('jwt', access);
+              localStorage.setItem('jwt_refresh', refresh);
+              appStore.setToken(access)
+              appStore.setTokenRefresh(refresh)
+              this.userIsLoggedIn = true
+
+            })
+          }
+          return resolve
         }
       }
       )
-      .catch(
-        action((err: AxiosError) => {
-          this.errors = err.response && err.response.data
-          console.log(err);
-        }),
-      )
+      // .catch((err: AxiosError) => {
+      //     runInAction(() => {
+      //
+      //       console.log(err);
+      //       // this.errors = err.response && err.response.data
+      //     })
+      //   },
+      // )
       .finally(
         () => {
           this.inProgress = false
         })
 
   }
+  async registerPerson(data: {first_name:string, last_name:string, phone:string, email:string, password:string,  password2:string, city:number }) {
+    this.values = data
+    return await agent.Auth.register(data)
+  }
+  async restorePassword(email:string) {
+    return await agent.Account.accountRestorePassword(email)
+  }
+  async emailVerify(data:any) {
+    return await agent.Account.accountEmailConfirmation(data)
+      .then(r => {
+      if(r && r.status === 200 && r.data) {
+        const { access, refresh } = r.data
+        localStorage.setItem('jwt', access)
+        localStorage.setItem('jwt_refresh', refresh)
+        appStore.setToken(access)
+        appStore.setTokenRefresh(refresh)
+        this.userIsLoggedIn = true
+      }
+      })
+      .catch(e => {
+        console.log(e)
+    })
+  }
 
   register() {
     this.inProgress = true
     this.errors = undefined
-    return agent.Auth.register(
-      this.values.first_name,
-      this.values.last_name,
-      this.values.email,
-      this.values.phone,
-      this.values.password,
-    )
-      .then(
-        action((response: any) => {
-          authStore.values = { ...response, password: this.values.password }
-        }),
-      )
-      .then(action(() => this.login()))
-      .then(() => userStore.pullUser())
-      .catch(
-        action((err: AxiosError) => {
-          // @ts-ignore
-          this.errors = err.response && err.response.data && err.response.data.detail
-          throw err
-        }),
-      )
-      .finally(
-        action(() => {
-          this.inProgress = false
-        }),
-      )
+    // return agent.Auth.register(
+    //   this.values.first_name,
+    //   this.values.last_name,
+    //   this.values.email,
+    //   this.values.phone,
+    //   this.values.password,
+    //   this.values
+    // )
+    //   .then(
+    //     action((response: any) => {
+    //       authStore.values = { ...response, password: this.values.password }
+    //     }),
+    //   )
+    //   .then(action(() => this.login()))
+    //   .then(() => userStore.pullUser())
+    //   .catch(
+    //     action((err: AxiosError) => {
+    //       // @ts-ignore
+    //       this.errors = err.response && err.response.data && err.response.data.detail
+    //       throw err
+    //     }),
+    //   )
+    //   .finally(
+    //     action(() => {
+    //       this.inProgress = false
+    //     }),
+    //   )
   }
   logout() {
-    action(() => this.userIsLoggedIn = false)
+    window.localStorage.clear()
+     this.userIsLoggedIn = false
     appStore.setToken(null)
     appStore.setTokenRefresh(null)
     userStore.forgetUser()

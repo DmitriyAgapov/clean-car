@@ -1,0 +1,39 @@
+.text {
+  h2 {
+	font-size: 1.5em;
+  }
+  h3 {
+	display: inline-block;
+	font-size: 1.25rem;
+	margin-bottom: 0;
+  }
+
+  ol, ul {
+	counter-reset: li;
+	 ol > li {
+	  margin: .75rem 0;
+	  font-size: 1rem;
+	}
+  }
+	ul {
+	  li {
+		list-style: disc;
+		margin: .75rem 0 .75rem 1.25rem;
+	  }
+	}
+  ol > li {
+	font-size: 1.25rem;
+	position: relative;
+	line-height: 1.5;
+	&:before {
+	  //position: absolute;
+	  margin-right: .5rem;
+	  display: inline-block;
+	  font-size: 1em;
+
+	  //top: 0;
+	  counter-increment: li;
+	  content: counters(li, ".") ". ";
+	}
+  }
+}

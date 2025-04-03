@@ -6,22 +6,22 @@ import userStore, { UserTypeEnum } from "stores/userStore";
 import authStore from "stores/authStore";
 import paramsStore from "stores/paramStore";
 export const carHelperTable = [
-['А','Легковой', '1 класс', 'До 2 тонн'],
-['B','Легковой', '1 класс', 'До 2 тонн'],
-['C','Легковой', '2 класс', 'До 2 тонн'],
-['D','Легковой', '2 класс', 'До 2 тонн'],
-['E','Легковой', '2 класс', 'До 2 тонн'],
-['F','Легковой', '3 класс', 'От 2 тонн'],
-['S','Легковой', '3 класс', 'До 2 тонн'],
-['V','Внедорожный', '5 класс', 'От 2 тонн'],
-['M','Внедорожный', '4 класс', 'От 2 тонн'],
-['J','Внедорожный', '4 класс', 'От 2 тонн'],
-['J1','Внедорожный', '5 класс', 'От 2 тонн'],
-['K','Внедорожный', '3 класс', 'До 2 тонн'],
-['P','Внедорожный', '4 класс', 'От 2 тонн'],
-['CO1','Легковой', '6 класс', 'До 2 тонн'],
-['CO2','Коммерческий', '7 класс', 'От 2 тонн'],
-['CO3','Коммерческий', '8 класс', 'От 2 тонн']
+['А','Микро ','Smart, MINI','Легковой', '1 класс', 'До 2 тонн'],
+['B','Мини ','Fiesta, Vesta','Легковой', '1 класс', 'До 2 тонн'],
+['C','Компакт','Corolla, Octavia','Легковой', '2 класс', 'До 2 тонн'],
+['D','Стандарт','А4, Passat','Легковой', '2 класс', 'До 2 тонн'],
+['E','Комфорт','А6, Camry','Легковой', '2 класс', 'До 2 тонн'],
+['F','Люкс','А8, S','Легковой', '3 класс', 'От 2 тонн'],
+['S','Спорт','GTR, Mustang','Легковой', '3 класс', 'До 2 тонн'],
+['V','Микроавтобус','Viano, Transporter','Внедорожный', '5 класс', 'От 2 тонн'],
+['M','Минивэн','Caravan, S-Max','Внедорожный', '4 класс', 'От 2 тонн'],
+['J','Внедорожник','L200, Prado','Внедорожный', '4 класс', 'От 2 тонн'],
+['J1','Большой внедорожник','RAM, Tundra','Внедорожный', '5 класс', 'От 2 тонн'],
+['K','Кроссовер','RAV4, Sportage','Внедорожный', '3 класс', 'До 2 тонн'],
+['P','Пикап','Amarok, Hilux','Внедорожный', '4 класс', 'От 2 тонн'],
+['CO1','Каблук','Largus, Caddy','Легковой', '6 класс', 'До 2 тонн'],
+['CO2','Фургон','Transit, Next','Коммерческий', '7 класс', 'От 2 тонн'],
+['CO3','Длинномеры','длинномер','Коммерческий', '8 класс', 'От 2 тонн']
 ]
 
 export enum CarType {
@@ -154,11 +154,14 @@ export class CarStore {
     return this.cars
   })
   async getAllCars(params: any) {
+
       if (appStore.appType === UserTypeEnum.admin) {
-          return client.carsAdminList(params)
+        return agent.Cars.getAdminCars(params).then(r => r.data)
+          // return client.carsAdminList(params)
       }
       if(appStore.appType !== UserTypeEnum.admin) {
-        return client.carsList({ company_id: userStore.myProfileData.company.id, ...params })
+        return agent.Cars.getCompanyCars(userStore.myProfileData.company.id, params ).then(r => r.data)
+        // return client.carsList({ company_id: userStore.myProfileData.company.id, ...params })
       }
   }
   async getCarByCompanyId(company_id:string, id: number) {

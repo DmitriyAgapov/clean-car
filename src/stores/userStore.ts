@@ -1,5 +1,7 @@
 import { action, computed, makeAutoObservable, observable, ObservableMap, reaction, runInAction } from "mobx";
 import agent, { client } from "utils/agent";
+
+import { getMimeType } from 'advanced-cropper/extensions/mimes';
 import { AccountProps, CRUD,  PermissionNames } from "stores/permissionStore";
 import { GroupProps } from 'stores/permissionStore'
 import appStore from 'stores/appStore'
@@ -7,14 +9,32 @@ import companyStore, { Company, CompanyType } from 'stores/companyStore'
 import { makePersistable, clearPersistedStore } from 'mobx-persist-store';
 import label from 'utils/labels';
 import authStore from "stores/authStore";
-import { number, string } from "yup";
 import carStore from "stores/carStore";
+import bidsStore from "stores/bidsStrore";
+import resizeFile from "utils/imageResizer";
+interface Image {
+  type?: string
+  src: string
+}
 
-
+export enum UserPermissionVariants {
+  "profile" = "Управление пользователями",
+  "companies" = "Компании",
+  "filials"  = "Управление филиалами",
+  "users"  = "Управление пользователями",
+  "groups"  = "Управление пользователями",
+  "cars"  = "Управление автомобилями",
+  "bids"  = "Управление заявками",
+  "price"  = "Управление прайс-листом",
+  "limits"  = "Управление лимитами",
+  "references"  = "Управление справочниками",
+  "finance"  = "Финансовый блок",
+}
 export enum UserTypeEnum {
   admin = 'admin',
   customer = "customer",
-  performer = "performer"
+  performer = "performer",
+  fizlico = "fizlico"
 }
 
 export type User = {
@@ -57,6 +77,7 @@ export class UserStore {
          }
        }
     )
+
     reaction(() => this.myProfileData.permissions,
       (permissions) => {
         if (authStore.userIsLoggedIn) {
@@ -68,23 +89,23 @@ export class UserStore {
         }
       })
     reaction(() => this.myProfileData.company,
-      (company) => {
-        if(authStore.userIsLoggedIn) {
+      async (company) => {
+        if (authStore.userIsLoggedIn && appStore.token !== "") {
           if (company && companyStore.companies.length === 0) {
-            companyStore.getAllCompanies()
-            (appStore.appType !== UserTypeEnum.performer && appStore.appType !== "") && carStore.getCars(company.id)
+            runInAction(() => companyStore.getAllCompanies())
+            // (appStore.appType !== UserTypeEnum.performer && appStore.appType !== "") && carStore.getCars(company.id)
           }
         }
       })
     reaction(() => this.currentUserPermissions,
       (currentUserPermissions) => {
-          if(authStore.userIsLoggedIn && currentUserPermissions.size === 0) {
+          if(authStore.userIsLoggedIn && appStore.token !== "" && currentUserPermissions.size === 0) {
             console.log('create Permissions if it is not created:)');
             this.createUserPermissions()
           }
       })
   }
-
+  cropperRef: any;
   currentUser: User = {id: 0, email: '', first_name: '', last_name: '', is_staff: null, is_superuser: null};
   currentUserPermissions = observable.map([]);
   permissionsVariants = observable.map([]);
@@ -96,8 +117,10 @@ export class UserStore {
   myProfileData = {
     loading: false,
     company: <any> null,
+    image: <Image | null> null,
     user: <any> null,
     permissions: <any> null,
+    permissionGroupName: <any>  null,
     error:  null,
     roles: [] = []
   }
@@ -108,26 +131,89 @@ export class UserStore {
       roles.push(UserTypeEnum.admin)
     }
     if(this.myProfileData.user) {
-    if(this.myProfileData.user.account_bindings?.filter((value:any) => value.company.company_type == "Компания-Заказчик").length > 0) {
-      roles.push(UserTypeEnum.customer)
+      if(this.myProfileData.user.account_bindings?.filter((value:any) => value.company.company_type == "Клиент").length > 0) {
+        roles.push(UserTypeEnum.customer)
+      }
+      if(this.myProfileData.company.company_type === CompanyType.fizlico) {
+        roles.push(UserTypeEnum.customer)
+      }
+      if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Партнер").length > 0) {
+        roles.push(UserTypeEnum.performer)
+      }
     }
-
-    if(this.myProfileData.user?.account_bindings?.filter((value:any) => value.company.company_type == "Компания-Партнер").length > 0) {
-      roles.push(UserTypeEnum.performer)
-    }}
     return roles
   }
+  setCropperRef(ref:any) {
+    this.cropperRef = ref
+  }
+  onLoadImage = (event: any) => {
 
-  loadMyProfile() {
+    // Reference to the DOM input element
+    const  files  = event
+
+    // Ensure that you have a file before attempting to read it
+    if (files) {
+      // Create the blob link to the file to optimize performance:
+      const blob = URL.createObjectURL(files)
+
+      // Remember the fallback type:
+      const typeFallback = files.type
+
+      // Create a new FileReader to read this image binary data
+      const reader = new FileReader()
+
+      // Define a callback function to run, when FileReader finishes its job
+      reader.onload = (e) => {
+        // Note: arrow function used here, so that "this.image" refers to the image of Vue component
+        this.myProfileData.image = {
+          // Read image as base64 and set it as src:
+          src: blob,
+          // Determine the image type to preserve it during the extracting the image from canvas:
+          type: getMimeType(e.target?.result, typeFallback),
+        }
+      }
+      // Start the reader job - read file as a data url (base64 format) and get the real file type
+      reader.readAsArrayBuffer(files)
+    }
+    // Clear the event target value to give the possibility to upload the same image:
+    event = ''
+  }
+  get getMyProfileData() {
+    return this.myProfileData;
+  }
+  async upLoadImage() {
+    const canvas = this.cropperRef.current?.getCanvas();
+    if (canvas) {
+      const form = new FormData();
+      canvas.toBlob((blob:any) => {
+        if (blob) {
+          (async () => await resizeFile(blob)
+          .then((r:any) => {
+            form.append('avatar', r, 'avatar.jpg');
+            console.log(form.get('avatar'));
+
+          })
+            .then(() =>  agent.Account.uploadAvatar(form).then(r => {
+            this.loadMyProfile()
+            return r
+          })))()
+        }
+      }, 'image/jpeg');
+
+    }
+  }
+  async loadMyProfile() {
     this.loadingUser = true
-    return agent.Profile.getMyAccount()
+    return await agent.Profile.getMyAccount()
       .then((response:any) => response.data)
       .then(((data:any) => {
         runInAction(() => {
           this.myProfileData.user = data
           this.myProfileData.company = data.account_bindings[0].company
           this.myProfileData.permissions = data.account_bindings[0].group.permissions
+          this.myProfileData.permissionGroupName = data.account_bindings[0].group.name
           this.createUserPermissions()
+          bidsStore.loadEventCount()
         })
       }))
       .catch((error:any) => runInAction(() =>this.myProfileData.error = error))
@@ -144,36 +230,53 @@ export class UserStore {
       try {
         if(this.isAdmin) {
           // console.log('Create admin permissions');
+          // console.log(this.myProfileData.permissions);
           appStore.setAppType(UserTypeEnum.admin)
-          for (let permissionNameKey in PermissionNames) {
-            // @ts-ignore
-            ar.set(PermissionNames[permissionNameKey], {
-              read: true,
-              create: true,
-              delete: true,
-              name: permissionNameKey,
-              update:true
-            })
-          }
+          this.myProfileData.permissions.forEach((el:any) => ar.set(el.name, el))
+          // for (let permissionNameKey in PermissionNames) {
+          //   // @ts-ignore
+          //   ar.set(PermissionNames[permissionNameKey], {
+          //     read: true,
+          //     create: true,
+          //     delete: true,
+          //     name: permissionNameKey,
+          //     update:true
+          //   })
+          // }
         } else {
           const type = (this.myProfileData.user.account_bindings && this.myProfileData.user.account_bindings[0].company.company_type === CompanyType.performer) ? UserTypeEnum.performer : UserTypeEnum.customer ;
           appStore.setAppType(type)
           // console.log(`Create ${type}  permissions`);
 
           const perm = this.myProfileData.user.account_bindings.filter((item:any) => item.company.company_type === label(type+`_company_type`))
-          this.myProfileData.company = perm[0].company;
+          console.log(perm && perm.length > 0);
 
-          perm[0].group.permissions.forEach((item:any) => {
-            const exepctions = ['Компании', 'Расчетный блок',
-              // 'Финансовый блок',
-              'Индивидуальный расчет']
-            if(exepctions.indexOf(item.name) == -1) {
-              // @ts-ignore
-              ar.set(PermissionNames[item.name], item)
-            }
-          })
 
-          this.myProfileData.permissions = perm[0].group.permissions
+          if(perm && perm.length > 0) {
+            this.myProfileData.company = perm[0].company;
+
+
+            this.myProfileData.permissions = perm[0].group.permissions
+            perm[0].group.permissions.forEach((item: any) => {
+              const exepctions = ['Расчетный блок',
+                // 'Финансовый блок',
+                'Индивидуальный расчет']
+              if (exepctions.indexOf(item.name) == -1) {
+                // @ts-ignore
+                ar.set(PermissionNames[item.name], item)
+              }
+            })
+          } else {
+            this.myProfileData.permissions.forEach((item: any) => {
+              const exepctions = ['Компании', 'Расчетный блок',
+                // 'Финансовый блок',
+                'Индивидуальный расчет']
+              if (exepctions.indexOf(item.name) == -1) {
+                // @ts-ignore
+                ar.set(PermissionNames[item.name], item)
+              }
+            })
+          }
         }
         this.setCurrentPermissions(ar)
       } catch (e) {
@@ -183,8 +286,12 @@ export class UserStore {
       }
 
   }
+  get userData () {
+    return this.myProfileData.user
+  }
   get myProfileState() {
     return ({
+      image: this.myProfileData.image,
       user: this.myProfileData.user,
       loading: this.myProfileData.loading,
       permissions: this.myProfileData.permissions,
@@ -212,20 +319,21 @@ export class UserStore {
 
     // console.log(`userIsLoggedIn : ${authStore.userIsLoggedIn},  getUserCan -------`, authStore.userIsLoggedIn, 'Ключ--', key);
     if(authStore.userIsLoggedIn && appStore.token !== "") {
-      try {
+      // try {
         // if (this.isAdmin) {
           if (this.currentUserPermissions && this.currentUserPermissions.has(key)) {
             // console.log('Все ок с  правами', this.currentUserPermissions.get(key)[action])
-            return this.currentUserPermissions.get(key)[action]
+
+            if(this.currentUserPermissions.has(key)) return this.currentUserPermissions.get(key)[action]
           } else {
             // console.log('Нет прав, создаем')
-            this.createUserPermissions()
-            return this.currentUserPermissions.get(key)[action]
+            // this.createUserPermissions()
+            if(this.currentUserPermissions.has(key)) return this.currentUserPermissions.get(key)[action]
           }
         // }
-      } catch (e) {
-        console.log(e);
-      }
+      // } catch (e) {
+      //   console.log(e);
+      // }
     }
     // if(this.myProfileData.permissions && this.myProfileData.permissions.permissions.has(key)) {
     //   console.log('Все ок с  правами')
@@ -262,7 +370,9 @@ export class UserStore {
     this.myProfileData = {
       loading: false,
       company: <any> null,
+      image: null,
       user:<any> null,
+      permissionGroupName: <any> null,
       permissions: <any> null,
       error:  null,
       roles: [] = []

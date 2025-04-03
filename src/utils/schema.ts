@@ -896,8 +896,8 @@ export class Client implements IClient {
      * @param page (optional) A page number within the paginated result set.
      * @param page_size (optional) Number of results to return per page.
      */
-    accountsUsersList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous2> {
-        const { company_id, q, ordering, page, page_size, cancelToken } = params;
+    accountsUsersList(params: {company_id: string, q?: string | null | undefined, employee__is_active?: string,  company__company_type?: string, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous2> {
+        const { company_id, q, ordering, page, page_size, company__company_type, employee__is_active, cancelToken } = params;
         let url_ = this.baseUrl + "/accounts/{company_id}/users/list/?";
         if (company_id === undefined || company_id === null)
             throw new Error("The parameter 'company_id' must be defined.");
@@ -910,6 +910,11 @@ export class Client implements IClient {
             url_ += "page=" + encodeURIComponent("" + page) + "&";
         if (page_size !== undefined && page_size !== null)
             url_ += "page_size=" + encodeURIComponent("" + page_size) + "&";
+        if (employee__is_active !== undefined && employee__is_active !== null)
+            url_ += "employee__is_active=" + encodeURIComponent("" + employee__is_active) + "&";
+        if (company__company_type !== undefined && company__company_type !== null)
+            url_ += "company__company_type=" + encodeURIComponent("" + company__company_type) + "&";
+
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -4766,8 +4771,8 @@ export class Client implements IClient {
      * @param page (optional) A page number within the paginated result set.
      * @param page_size (optional) Number of results to return per page.
      */
-    companiesOnlyBranchesList(params: {q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous21> {
-        const {q, ordering, page, page_size, cancelToken} = params;
+    companiesOnlyBranchesList(params: {q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, city?: string | number | null | undefined, company_type?: string |  null | undefined, page_size?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous21> {
+        const {q, ordering, page, page_size,company_type, city, cancelToken} = params;
         let url_ = this.baseUrl + "/companies/only_branches/list/?";
         if (q !== undefined && q !== null)
             url_ += "q=" + encodeURIComponent("" + q) + "&";
@@ -4775,6 +4780,11 @@ export class Client implements IClient {
             url_ += "ordering=" + encodeURIComponent("" + ordering) + "&";
         if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (city !== undefined && city !== null)
+            url_ += "city=" + encodeURIComponent("" + city) + "&";
+        if (company_type !== undefined && company_type !== null)
+            url_ += "company_type=" + encodeURIComponent("" + company_type) + "&";
+
         if (page_size !== undefined && page_size !== null)
             url_ += "page_size=" + encodeURIComponent("" + page_size) + "&";
         url_ = url_.replace(/[?&]$/, "");
@@ -5224,8 +5234,8 @@ export class Client implements IClient {
     /**
      * @param params
      */
-    customerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous24> {
-        const {company_id, q, ordering, page, cancelToken} = params
+    customerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, company__city?: number | string, is_active?: boolean, cancelToken?: CancelToken}): Promise<Anonymous24> {
+        const {company_id, q, ordering, page, page_size,company__city, is_active, cancelToken} = params
 
         let url_ = this.baseUrl + "/customer_branches/{company_id}/list/?";
         if (company_id === undefined || company_id === null)
@@ -5237,6 +5247,14 @@ export class Client implements IClient {
             url_ += "ordering=" + encodeURIComponent("" + ordering) + "&";
         if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
+         if (page_size !== undefined && page_size !== null)
+            url_ += "page_size=" + encodeURIComponent("" + page_size) + "&";
+
+        if (company__city !== undefined && company__city !== null)
+            url_ += "city__id=" + encodeURIComponent("" + company__city) + "&";
+        if (is_active !== undefined && is_active !== null)
+            url_ += "is_active=" + encodeURIComponent("" + is_active) + "&";
+
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -5748,8 +5766,8 @@ export class Client implements IClient {
      * @param ordering (optional) Which field to use when ordering the results.
      * @param page (optional) A page number within the paginated result set.
      */
-    performerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, cancelToken?: CancelToken}): Promise<Anonymous26> {
-        const {company_id, q, ordering, page, cancelToken} = params
+    performerBranchesList(params: {company_id: string, q?: string | null | undefined, ordering?: string | null | undefined, page?: number | null | undefined, page_size?: number | null | undefined, company__city?: number | string, is_active?: boolean,   cancelToken?: CancelToken}): Promise<Anonymous26> {
+        const {company_id, q, ordering, page,page_size, company__city, is_active, cancelToken} = params
 
         let url_ = this.baseUrl + "/performer_branches/{company_id}/list/?";
         if (company_id === undefined || company_id === null)
@@ -5761,6 +5779,12 @@ export class Client implements IClient {
             url_ += "ordering=" + encodeURIComponent("" + ordering) + "&";
         if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (page_size !== undefined && page_size !== null)
+            url_ += "page_size=" + encodeURIComponent("" + page_size) + "&";
+        if (company__city !== undefined && company__city !== null)
+            url_ += "city=" + encodeURIComponent("" + company__city) + "&";
+        if (is_active !== undefined && is_active !== null)
+            url_ += "is_active=" + encodeURIComponent("" + is_active) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
@@ -10809,6 +10833,7 @@ export class Limit implements ILimit {
     readonly updated?: dayjs.Dayjs | undefined;
     amount?: number | undefined;
     is_day?: boolean | undefined;
+    bid_count?: number | string;
     is_active?: boolean | undefined;
     company!: number;
     city?: number | undefined;
@@ -14099,8 +14124,8 @@ export interface IAnonymous30 {
 }
 
 export enum Company_type {
-    КомпанияЗаказчик = "Компания-Заказчик",
-    КомпанияПартнер = "Компания-Партнер",
+    КомпанияЗаказчик = "Клиент",
+    КомпанияПартнер = "Партнер",
     Физическое_лицо = "Физическое лицо",
     Администратор_системы = "Администратор системы",
 }
@@ -14249,8 +14274,8 @@ export enum CarModelRetrieveCar_type {
 }
 
 export enum AllWithPricesCompany_type {
-    КомпанияЗаказчик = "Компания-Заказчик",
-    КомпанияПартнер = "Компания-Партнер",
+    КомпанияЗаказчик = "Клиент",
+    КомпанияПартнер = "Партнер",
     Физическое_лицо = "Физическое лицо",
     Администратор_системы = "Администратор системы",
 }

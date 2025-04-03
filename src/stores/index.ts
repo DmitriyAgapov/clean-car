@@ -11,6 +11,8 @@ import bidsStore, { BidsStore } from "stores/bidsStrore";
 import paramsStore, { ParamStore } from "stores/paramStore";
 import priceStore, { PriceStore } from "stores/priceStore";
 import companyStoreNew, { CompanyStoreNew } from "stores/companyStoreNew";
+import limitStore, { LimitStore } from "stores/limitStore";
+import financeStore, { FinanceStore } from "stores/financeStore";
 
 export type RootStore = {
   authStore: AuthStore
@@ -26,10 +28,14 @@ export type RootStore = {
   bidsStore: BidsStore
   paramsStore: ParamStore
   priceStore: PriceStore
+  limitStore: LimitStore
+  financeStore: FinanceStore
 }
 
 const rootStore: RootStore = {
   priceStore,
+  financeStore,
+  limitStore,
   bidsStore,
   paramsStore,
   authStore,

@@ -109,14 +109,14 @@ export class PermissionStore {
       this.errors = 'error'
     }
   })
-  createPermission = flow(function*(this: PermissionStore, data: any) {
+  createPermission = flow(function*(this: PermissionStore, data: any, company_id) {
     this.loadingPermissions = true
     try {
       // if(userStore.isAdmin) {
       //    agent.PermissionsAdmin.createAdminPermission(data)
       // }
       if(userStore.myProfileData.company.id) {
-         agent.Permissions.createPermission(userStore.myProfileData.company.id, data)
+        return  yield agent.Permissions.createPermission(company_id || userStore.myProfileData.company.id, data)
       }
 
     } catch (error) {
@@ -155,17 +155,20 @@ export class PermissionStore {
     this.loadingPermissions = false
   })
 
-  setPermissionStore = flow(function *(this: PermissionStore, id: number, data: any) {
+  setPermissionStore = flow(function *(this: PermissionStore, id: number, groupId: number | undefined, data: any) {
     this.loadingPermissions = true
-    let company_id = userStore.myProfileData.company.id;
+    let company_id = id || userStore.myProfileData.company.id;
+
     if (company_id) {
       try {
-        const response = yield agent.Permissions.putUpdatePermissions(company_id, data.id, data)
-      if (response.status === 200) {
-        const { data } = response
-        userStore.loadMyProfile()
-        return response
-      }
+        return  yield agent.Permissions.putUpdatePermissions(company_id, groupId || data.id, data).then((r) => {
+          if (r.status === 200) {
+
+            userStore.loadMyProfile()
+            return r
+          }
+        })
+
 
       } catch (error) {
         this.errors = 'error'
@@ -174,10 +177,10 @@ export class PermissionStore {
         this.loadingPermissions = false
       }
     }
-    // else {
-    //   console.log('is admin');
-    //   this.setPermissionStoreAdmin(id, data)
-    // }
+    else {
+      console.log('is admin');
+      this.setPermissionStoreAdmin(id, data)
+    }
     this.loadingPermissions = false
   })
   deletePermissionStore = flow(function *(this: PermissionStore, id: number) {
@@ -185,11 +188,7 @@ export class PermissionStore {
     let company_id = userStore.myProfileData.company.id;
     if (company_id) {
       try {
-        const response = yield agent.Permissions.deletePermission(company_id, id)
-        if (response.status === 200) {
-          const { data } = response
-          return response
-        }
+        return  yield agent.Permissions.deletePermission(company_id, id)
 
       } catch (error) {
         this.errors = 'error'
@@ -322,7 +321,7 @@ export class PermissionStore {
     this.loadingPermissions = true
     // @ts-ignore
     try {
-      const data = yield agent.PermissionsAdmin.getAllAdminPermissions()
+      const data:any = yield agent.PermissionsAdmin.getAllAdminPermissions()
       if (data.status === 200) {
         //@ts-ignore
         const { results } = data.data

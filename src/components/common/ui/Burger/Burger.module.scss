@@ -1,8 +1,9 @@
 .Burger {
   width: 2.5rem;
   height: 2.5rem;
-
-  display: flex;
+  justify-self: flex-end;
+	//margin-left: auto;
+  	@apply flex lg:hidden;
 	border: 2px solid var(--accentColor);
   border-radius: 100%;
 

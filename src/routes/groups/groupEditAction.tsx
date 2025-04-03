@@ -4,75 +4,103 @@ import Panel, { PanelColor, PanelVariant } from 'components/common/layout/Panel/
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
 import { useStore } from 'stores/store'
-import { Navigate, useLoaderData, useLocation, useNavigate, useRevalidator } from "react-router-dom";
+import { Navigate, useLoaderData, useLocation, useNavigate, useParams, useRevalidator } from 'react-router-dom'
 import { SvgBackArrow } from 'components/common/ui/Icon'
 import PermissionTable from 'components/common/layout/PermissionTable/PermissionTable'
 import { toJS } from 'mobx'
 import { PermissionNames } from "stores/permissionStore";
+import { modificationSchema, modifyPermissions } from "utils/utils";
+import agent from 'utils/agent'
+import useSWR from 'swr'
+import { observer } from 'mobx-react-lite'
 
-export default function GroupPageEditAction(props: any) {
+function GroupPageEditAction() {
   const store = useStore()
-  const location = useLocation()
   const revalidator = useRevalidator()
   const navigate = useNavigate()
-  // @ts-ignore
-  const { group } = useLoaderData()
-  const [changes, setChanges] = useState(group)
+  const params = useParams()
+  const {isLoading, data:group, mutate} = useSWR(`group_${params.id}_${params.groupId}`,() => agent.Permissions.getPermissionById(params.groupId ? params.id as string : store.userStore.myProfileState.company.id as string,params.groupId ? params.groupId as string :  params.id as string).then(r => r.data))
+  const [changes, setChanges] = useState<any>(null)
+
+  React.useEffect(() => {
+    let modifCatedData = null;
+    if(!isLoading && group) {
+      modifCatedData = { ...group }
+      const except = store.appStore.appType === "admin" ? [null] : ['Управление справочниками']
+      const _ar: any[] = []
+      modifyPermissions(group, modificationSchema, store.appStore.appType, except).forEach((item: any) => {
+        if (item) {
+          _ar.push(item)
+        }
+      })
+      modifCatedData.permissions = _ar;
+    }
+    setChanges(modifCatedData)
+
+  }, [group, isLoading]);
+
+
+
   const handleChangeName = (event: any) => {
     setChanges((prevState: any) => ({
       ...prevState,
       name: event.target.value,
     }))
   }
-  const handlePermissions = (event: any, id: number) => {
-    const indexAr = changes.permissions.findIndex((value: any) => value.id === id)
-    const newArrayItem = {
-      ...changes.permissions[indexAr],
-      [event.target.name]: event.target.checked,
-    }
-    const newArray = toJS(changes.permissions)
-    newArray.splice(indexAr, 1, newArrayItem)
+  const handlePermissions = React.useCallback((event: any, id: string) => {
+    if(changes && changes.permissions && changes.permissions.length) {
+      const indexAr = changes.permissions.findIndex((value: any) => {
+        if (value) {
+          return value.name === id
+        }
+      })
+      const newArrayItem = {
+        ...changes?.permissions[indexAr],
+        [event.target.name]: event.target.checked,
+      }
+      const newArray = toJS(changes?.permissions)
+      newArray.splice(indexAr, 1, newArrayItem)
 
-    setChanges((prevState: any) => ({
-      ...prevState,
-      permissions: newArray,
-    }))
-  }
+      setChanges((prevState: any) => ({
+        ...prevState,
+        permissions: newArray,
+      }))
+    }
+  }, [changes, isLoading])
   if(!store.userStore.getUserCan(PermissionNames["Управление пользователями"], 'update')) return <Navigate to={'/account'}/>
   return (
     <Section type={SectionType.default}>
       <Panel
         className={'col-span-full'}
+        headerClassName={'justify-between gap-4 flex'}
         header={
           <>
-            <Button
-              text={
-                <>
-                  <SvgBackArrow />
-                  Назад к списку групп{' '}
-                </>
-              }
-              className={'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
+          <div>
+            <Button text={
+              <>
+                <SvgBackArrow />
+                Назад к списку групп </>
+            }
+              className={     'flex items-center gap-2 font-medium text-[#606163] hover:text-gray-300 leading-none !mb-4'}
               action={() => navigate(-1)}
-              variant={ButtonVariant.text}
-            />
-            <Heading
-              text={'Редактирование группы'}
+              variant={ButtonVariant.text} />
+            <Heading text={"Редактирование группы"}
               variant={HeadingVariant.h1}
               className={'!mb-0 inline-block'}
-              color={HeadingColor.accent}
-            />
+              color={HeadingColor.accent} />
+
+          </div>
           </>
-        }
-      ></Panel>
-      <Panel
+          }
+          ></Panel>
+          <Panel
         variant={PanelVariant.textPadding}
-        state={false}
-        bodyClassName={'!pt-0 !px-0'}
-        className={'grid grid-rows-[auto_1fr_auto]'}
+        state={isLoading}
+            bodyClassName={'!py-0 tablet:!px-0'}
+        className={'col-span-full tablet:grid grid-rows-[auto_1fr_auto] tablet-max:-mx-3'}
         header={<label className={'account-form__input flex-1'} htmlFor='cleanm'>
           Название группы
-          <input id='name' name='name' type='text' value={changes.name} onChange={handleChangeName} />
+          <input id='name' name='name' type='text' value={changes?.name} onChange={handleChangeName} />
         </label>}
         footer={
           <>
@@ -85,7 +113,7 @@ export default function GroupPageEditAction(props: any) {
                     <Button
                       text={'Удалить'}
                       action={async () => {
-                        store.permissionStore.deletePermissionStore(changes.id).then(() => {
+                        store.permissionStore.deletePermissionStore(changes?.id).then(() => {
                           store.appStore.closeModal()
                           revalidator.revalidate()
                           navigate('/account/groups', { replace: false })
@@ -95,13 +123,13 @@ export default function GroupPageEditAction(props: any) {
                       variant={ButtonVariant['accent-outline']}
                     />,
                   ],
-                  text: `Вы уверены, что хотите удалить ${changes.name}`,
+                  text: `Вы уверены, что хотите удалить ${changes?.name}`,
                   state: true,
                 })
               }}
-              className={'justify-self-start mr-auto'}
+              className={'justify-self-start mr-auto  tablet-max:order-1'}
             />
-            <div className={'flex justify-end gap-5'}>
+            <div className={'flex tablet-max:flex-col  justify-end gap-4 tablet-max:!mb-4 '}>
               <Button
                 text={'Отменить'}
                 action={() => navigate(-1)}
@@ -112,30 +140,32 @@ export default function GroupPageEditAction(props: any) {
                 text={'Сохранить'}
                 action={async () => {
                   // @ts-ignore
-                  store.permissionStore.setPermissionStore(changes.id, changes)
+                  store.permissionStore.setPermissionStore(params.id || changes?.id, params.groupdId, changes)
                   revalidator.revalidate()
                   setTimeout(() => navigate('/account/groups'), 500)
                 }}
-                className={'float-right'}
+                className={'float-right tablet-max:-order-1  '}
                 variant={ButtonVariant.accent}
               />
             </div>
           </>
         }
+            footerClassName={'flex tablet-max:flex-col  justify-end mobile:!justify-center tablet-max:!px-3  tablet-max:border-t mt-6 pt-4 border-gray-2'}
         background={PanelColor.glass}
       >
         <div className={'accounts-group_body text-[#606163] py-6'}>
             <Heading
-              text={'Настройте права группы'}
+              text={'Настройте права доступов'}
               color={HeadingColor.accent}
               variant={HeadingVariant.h3}
-              className={'px-8'}
+              className={'tablet:px-8'}
             />
 
-            <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} />
+          {changes && changes.permissions ? <PermissionTable editable={true} data={changes.permissions} action={handlePermissions} /> : null}
 
         </div>
       </Panel>
     </Section>
   )
 }
+export default observer(GroupPageEditAction)

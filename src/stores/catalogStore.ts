@@ -179,7 +179,7 @@ export class CatalogStore {
         return []
     }
     async getAllRefCarModels(params?:any) {
-        return client.catalogCarModelsList(params)
+        return agent.Catalog.getCarModels(params).then(r => r.data)
     }
     async getCarBrandModels(id: number, params?: PaginationProps) {
         if (id) {
@@ -264,14 +264,14 @@ export class CatalogStore {
         return this.currentCarModelWithBrand
     }
     getCities = flow(function* (this: CatalogStore, params?: PaginationProps) {
-        let cities
+        let cities:any  = []
         // if (this.cities.size === 0) {
             try {
                 const { data } = yield agent.Catalog.getCities(params)
                 cities = data.results
-                this.cities = cities
+                // this.cities = cities
             } catch (error) {}
-            return this.allCities
+            return cities
         }
     )
     async getAllCities(params?: PaginationProps) {
@@ -349,6 +349,18 @@ export class CatalogStore {
 
         }
     })
+    async updateCarBrandNew({ id, car_type, model, brandId, brandName, }:{ id:number, car_type: string, model: string, brandId?: number | undefined | null, brandName?: string | undefined | null },) {
+
+        if (brandId) {
+            return  agent.Catalog.updateCarBrandWithExistBrand(id, brandId, car_type, model)
+
+        }
+        if(brandName){
+            return  agent.Catalog.updateCarBrandWithNewBrand(id,brandName, car_type, model)
+
+
+        }
+    }
     get carBrandsCurrent() {
         return values(this.carBrands)
     }

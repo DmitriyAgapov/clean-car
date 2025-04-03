@@ -2,13 +2,13 @@ import { useStore } from 'stores/store'
 import Panel from 'components/common/layout/Panel/Panel'
 import Button, { ButtonDirectory, ButtonSizeType, ButtonVariant } from 'components/common/ui/Button/Button'
 import Image from 'components/common/ui/Image/Image'
-import photo from 'assets/images/userphoto.png'
-import { SvgLogout, SvgPencil } from 'components/common/ui/Icon'
+import { SvgLogout } from 'components/common/ui/Icon'
 import styled from 'styled-components'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { UserTypeEnum } from 'stores/userStore'
 import label from 'utils/labels'
+import { observer } from 'mobx-react-lite'
 
 const StyledAccounts = styled.ul`
   margin: 0;
@@ -64,81 +64,102 @@ const StyledButton = styled(Button)`
   }
 `
 const UserCompanies = () => {
-  const store = useStore();
-  const userLinks = store.userStore.roles.map((item:UserTypeEnum) => <li key={item+'link'} >
-    <Link to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum[item])}>
-      <span className={`user__type-${item}`}>{label(item+'_k')}</span>Кабинет {label(item+'_name')}
-    </Link>
-  </li>)
-  if(userLinks.length > 0) return <StyledAccounts>
-    {userLinks}
-  </StyledAccounts>
-  return null
+    const store = useStore()
+    const userLinks = React.useMemo(() => {
+        const _links = store.userStore.roles.map((item: UserTypeEnum) => (
+            <li key={item + 'link'}>
+                <Link to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum[item])}>
+                    <span className={`user__type-${item}`}>{label(item + '_k')}</span>Кабинет {label(item + '_name')}
+                </Link>
+            </li>
+        ))
+        if (_links.length > 1) return <StyledAccounts>{userLinks}</StyledAccounts>
+        return (
+          <StyledAccounts><li key={store.userStore.roles[0] + 'link'}>
+                {/* <Link to={'/account'} onClick={() => store.appStore.setAppType(UserTypeEnum[store.userStore.roles[0]])}> */}
+                    <span className={`user__type-${store.userStore.roles[0]}`}>{label(store.userStore.roles[0] + '_k')}</span>Кабинет {label(store.userStore.roles[0] + '_name')}
+                {/* </Link> */}
+            </li></StyledAccounts>
+        )
+    }, [])
+
+    return userLinks
 }
 const UserPortal = ({
-  state,
-  name,
-  company,
-  accounts,
-  className,
-  action,
-  ...props
+    state,
+    name,
+    company,
+    accounts,
+    className,
+    action,
+    ...props
 }: {
-  action: () => void
-  state: boolean
-  name: string
-  company: string
-  accounts: any[]
-  className?: string
-}) => {
-  const store = useStore()
-  const navigate = useNavigate()
-  if (state)
-    return (
-      <Panel
-        className={
-          className +
-          ` scale-in-ver-top !absolute shadow-1 !m-0 right-0 max-w-xss w-full top-14 p-5 z-50 !bg-[#18191F]`
-        }
-        {...props}
-        footer={
-          <Button
-            text={'Управление аккаунтом'}
-            className={'!text-sm'}
-            action={() => {
-              navigate('/account/profile')
-            }}
-            size={ButtonSizeType.sm}
-            directory={ButtonDirectory.directory}
-          />
-        }
-      >
-        <div className={'user__photo'}>
-          <Image src={photo} alt={''} width={80} height={80} />
-          <Button
-            className={'bg-accent rounded-full p-1.5 inline-block'}
-            text={<SvgPencil />}
-            action={() =>  console.log('edit click')}
-            variant={ButtonVariant.icon}
-          />
-        </div>
-        <div className={'user__name'}>{name}</div>
-        <div className={'user__company'}>{company}</div>
-        <hr />
-        <UserCompanies />
-        <hr />
-        <StyledButton
-          className={'button-exit'}
-          text={
-            <>
-              <SvgLogout />
-              Выход{' '}
-            </>
-          }
-          action={() => store.authStore.logout()}
-          variant={ButtonVariant.icon}
-        />
-      </Panel>
-    )
+    action: () => void
+    state: boolean
+    name: string
+    company: string
+    accounts: any[]
+    className?: string
+}): any => {
+    const store = useStore()
+    const navigate = useNavigate()
+    const avatar = store.userStore.userData?.avatar
+    const user = store.userStore.userData
+    if (state && user)
+        return (
+            <Panel
+                className={
+                    className +
+                    ` scale-in-ver-top !absolute shadow-1 !m-0 right-0 max-w-xss w-full top-14 p-5 z-50 !bg-[#18191F]`
+                }
+                {...props}
+                footer={
+                    <Button
+                        text={'Управление аккаунтом'}
+                        className={'!text-sm !flex !h-10'}
+                        action={() => {
+                            action()
+                            navigate('/account/profile')
+                        }}
+                        size={ButtonSizeType.sm}
+                        directory={ButtonDirectory.directory}
+                    />
+                }
+            >
+                <div className={'user__photo'} data-directory={store.appStore.appType}>
+                    {!avatar ? (
+                        <div className='w-20 h-20 flex justify-center items-center text-black !text-lg'>
+                            {user.first_name[0]}
+                            {user.last_name[0]}
+                        </div>
+                    ) : (
+                        <Image
+                            src={avatar}
+                            alt={''}
+                            width={80}
+                            height={80}
+                            className={'rounded-full'}
+                            data-directory={store.appStore.appType}
+                        />
+                    )}
+                </div>
+                <div className={'user__name'}>{user.first_name}</div>
+                <div className={'user__company'}>{company}</div>
+                <hr />
+                <UserCompanies />
+                <hr />
+                <StyledButton
+                    className={'button-exit'}
+                    text={
+                        <>
+                            <SvgLogout />
+                            Выход{' '}
+                        </>
+                    }
+                    action={() => store.authStore.logout()}
+                    variant={ButtonVariant.icon}
+                />
+            </Panel>
+        )
 }
-export default UserPortal
+export default observer(UserPortal)

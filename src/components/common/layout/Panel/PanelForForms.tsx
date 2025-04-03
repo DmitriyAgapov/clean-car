@@ -1,20 +1,12 @@
 import React, { ReactNode } from 'react'
-import Panel, { PanelRouteStyle } from 'components/common/layout/Panel/Panel'
+import Panel, { PanelRouteStyle, PanelVariant } from "components/common/layout/Panel/Panel";
+import { Transition } from '@mantine/core'
 
-export enum PanelVariant {
-    default = 'default',
-    textPadding = 'textPadding',
-    dataPadding = 'dataPadding',
-    withGapOnly = 'withGapOnly',
-    modal = 'modal',
-    // withPaddingSm = 'withPaddingSm',
-    withPaddingSmWithBody = 'withPaddingSmWithBody',
-    // 'withPadding_1_2' = 'withPadding_1_2',
-}
 
 export enum PanelColor {
     default = 'default',
     glass = 'glass',
+    withSuffix = 'withSuffix',
 }
 
 export type PanelProps = {
@@ -38,19 +30,25 @@ export type PanelProps = {
 
 const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props }:{actionBack?: JSX.Element | null, actionCancel?: JSX.Element | null, actionNext?: JSX.Element, children: React.ReactNode} & PanelProps) => {
 
-    return <Panel
+    return <Transition
+      mounted={!props.animate}
+      transition="fade"
+      duration={400}
+      timingFunction="ease"
+    >{(styles) =>  <Panel
       {...props}
+      style={styles}
         routeStyle={PanelRouteStyle.default_form}
-      className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto]  overflow-x-hidden'}
-      bodyClassName={`${props.bodyClassName} ${!props.animate ? 'slide-in-left-500' : 'slide-out-right-500'} grid  grid-cols-9 items-start gap-4 gap-y-4  content-start`}
+      className={props.className + " " + 'col-span-full  grid grid-rows-[1fr_auto]'}
+      bodyClassName={`${props.bodyClassName} tablet:grid  grid-cols-9 items-start gap-4 gap-y-4  content-start`}
       variant={props.variant ?? PanelVariant.textPadding}
-      headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
+      // headerClassName={!props.animate ? 'slide-in-left' : 'slide-out-right'}
       footerClassName={props.footerClassName}
       footer={(actionBack || actionCancel || actionNext) &&
           // <div className={'accounts-group_header gap-4 text-[#606163] grid grid-cols-[1.25fr_2fr] grid- font-medium'}>
-              <div className={'flex flex-1 col-start-2 justify-end gap-5 flex-wrap'}>
-                  <div className={'mr-auto'}> {actionCancel}</div>
-                  <div className={'flex gap-5'}>
+              <div className={'grid tablet:flex tablet:flex-1 col-start-2 tablet:justify-end gap-5 tablet:flex-wrap'}>
+                  <div className={'tablet:mr-auto'}> {actionCancel}</div>
+                  <div className={'flex gap-5 flex-wrap'}>
                       {actionBack}
                       {actionNext}
                   </div>
@@ -59,9 +57,11 @@ const PanelForForms = ({actionCancel, actionNext, actionBack, children, ...props
       }
       background={props.background ?? PanelColor.glass}
     >
-
         {children}
-    </Panel>
+
+    </Panel>}
+
+    </Transition>
 }
 
 export default PanelForForms;

@@ -1,55 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { yupResolver } from 'mantine-form-yup-resolver'
 import { CreateCompanySchema } from 'utils/validationSchemas'
-import { Group, InputBase, NumberInput, Select, TextInput } from '@mantine/core'
+import {  InputBase, NumberInput, Select, TextInput } from '@mantine/core'
 import { createFormActions, createFormContext } from '@mantine/form'
 import { useStore } from 'stores/store'
 import { observer } from 'mobx-react-lite'
 import { IMask, IMaskInput } from 'react-imask'
 import Button, { ButtonVariant } from 'components/common/ui/Button/Button'
-import { useNavigate, useRevalidator } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { type Company, CompanyType, Payment } from "stores/companyStore";
-import PanelForForms, { PanelColor, PanelVariant } from 'components/common/layout/Panel/PanelForForms'
+import PanelForForms, { PanelColor} from 'components/common/layout/Panel/PanelForForms'
+import { PanelVariant } from "components/common/layout/Panel/Panel";
 import Heading, { HeadingColor, HeadingVariant } from 'components/common/ui/Heading/Heading'
-import { values, values as val } from "mobx";
+import {  values as val } from "mobx";
 import InputAutocompleteNew from 'components/common/ui/InputAutocomplete/InputAutocompleteNew'
 import moment, { MomentInput } from 'moment'
 import Progress from 'components/common/ui/Progress/Progress'
-import SelectCustom from 'components/common/ui/Select/Select'
-import { Field } from 'formik'
-import SelectFromList from 'components/common/SelectFromList/SelectFromList'
-import TransferList  from 'components/common/ui/TransferList/TransferList'
 import LinkStyled from "components/common/ui/LinkStyled/LinkStyled";
 import { CreateField } from "components/Form/FormCreateCompany/Steps/StepSuccess";
-import company from "routes/company/company";
 import { useSWRConfig } from "swr";
 import { useScrollIntoView, useViewportSize } from "@mantine/hooks";
-import data from "utils/getData";
-import TransferListNew from "components/common/ui/TransferList/TransferListNew";
+import TransferListNew from 'components/common/ui/TransferList/TransferListNew'
+import CompanyModalOptionsSelect from "routes/company/CompanyComponents/CompanyModalOptionsSelect";
 
 interface InitValues {
     address: string | null
-    legal_address: string | null
-    type: "Компания-Заказчик" | "Компания-исполнитель"
+    address_ready: boolean
     bill: string | number
     city: string | null
     city_name?: string | null | any
     company_name: string | null
     contacts: string | null
+    height: number | null
+    house: string | null
     id: string | number
-    inn: string | number
+    inn: string
+    workload: string
     lat: string | number
+    legal_address: string | null
     lon: string | number
-    ogrn: string | number
+    ogrn: string
     overdraft: string
     overdraft_sum: number
-    height: number | null
-    service_percent: number
-    payment: "Постоплата" | "Предоплата"
-    performers_list: string
-    working_time: string
-    performer_company: number[] | any
+    payment: 'Постоплата' | 'Предоплата'
     performer_companies: number[] | any
+    performer_company: number[] | any
+    performers_list: string
+    qc?: string | null
+    service_percent: number
+    street: string | null
+    type: 'Клиент' | 'Партнер'
+    working_time: string
 }
 
 export const [FormProvider, useFormContext, useForm] = createFormContext<any>()
@@ -60,6 +61,11 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
     const { mutate } = useSWRConfig()
     let initValues: InitValues = {
         address: '',
+        address_ready: false,
+        street: '',
+        workload: "1",
+        qc: null,
+        house: '',
         type: CompanyType.customer,
         bill: '100',
         city: '',
@@ -77,7 +83,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
         overdraft_sum: 0,
         payment: Payment.postoplata,
         performers_list: '1',
-        service_percent: 15,
+        service_percent: 20,
         working_time: '',
         performer_company: [],
         performer_companies: []
@@ -97,13 +103,17 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             store.companyStore.loadingCompanies = false
             setStep(step ? step : 2)
         }, 1200)
-        width < 940 ? scrollIntoView() : null
+        width < 1025   ? scrollIntoView() : null
     }
     if(edit) {
         initValues = {
+            address_ready: true,
             address: company.address,
+            street: company.address,
+            house: company.address,
             inn: company.inn,
             ogrn: company.ogrn,
+            workload: String(company.workload),
             city: company.city,
             city_name: store.catalogStore.getCity(Number(company.city)).name,
             height: company.height ?? null,
@@ -129,41 +139,74 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             name: 'createCompanyForm',
             initialValues: initValues,
             validateInputOnBlur: true,
-            // onValuesChange: (values, previous) => console.log(values),
+            onValuesChange: (values, previous) => console.log(values),
             validate: yupResolver(CreateCompanySchema),
             enhanceGetInputProps: (payload) => {
+
+            // if (payload.field === 'service_percent') {
+            //     return {
+            //         // className: 'mb-2   col-span-3'
+            //     }
+            // }
+            // if (payload.field === 'overdraft_sum') {
+            //     return {
+            //         // className: 'mb-2     col-span-3',
+            //     }
+            // }
+            // if (payload.field === 'overdraft') {
+            //     return {
+            //         // className: 'mb-2  flex-grow  col-span-3',
+            //     }
+            // }
+            // if (payload.field === 'height') {
+            //     return {
+            //         // className: 'mb-2    col-span-3',
+            //     }
+            // }
+            if (payload.field === 'address') {
+                return {
+                    disabled: store.appStore.appType !== "admin",
+                    className: 'mb-2 w-full desktop:!flex-[1_0_64%] col-span-3',
+                }
+            }
+            if (payload.field === 'contacts') {
+                return {
+                    disabled: false,
+                    className: 'mb-2 w-full desktop:!flex-[1_0_64%] col-span-3',
+                }
+            }
             if (payload.field === 'working_time') {
                 return {
-                    className: 'mb-2 w-full flex-grow  !flex-[0_0_16rem] col-span-3',
+                    disabled: false,
+                    className: 'mb-2 w-full !flex-[1_1_30%] col-span-3',
                 }
             }
-            if (payload.field === 'service_percent') {
+             if (payload.field === 'workload') {
                 return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_11rem] col-span-3'
-                }
-            }
-            if (payload.field === 'overdraft_sum') {
-                return {
-                    className: 'mb-2  flex-grow  tablet:!flex-[0_0_11rem] !flex-[1_0_20rem] col-span-3',
-                }
-            }
-            if (payload.field === 'overdraft') {
-                return {
-                    className: 'mb-2  flex-grow  tablet:!flex-[0_0_11rem] !flex-[1_0_20rem] col-span-3',
-                }
-            }
-            if (payload.field === 'height') {
-                return {
-                    className: 'mb-2  flex-grow  !flex-[0_0_22rem] col-span-3',
+                    disabled: false,
+                    className: 'mb-2 w-full !flex-[1_1_30%] col-span-3',
                 }
             }
 
+            // if (payload.field === 'inn') {
+            //     return {
+            //         // className: 'mb-2 w-full col-span-3',
+            //     }
+            // }
+            // if (payload.field === 'ogrn') {
+            //     return {
+            //         // className: 'mb-2 w-full col-span-3',
+            //     }
+            // }
+
+
+
             return {
-                className: 'mb-2 w-full flex-grow  !flex-[1_0_20rem] col-span-3',
+                disabled: store.appStore.appType !== "admin",
+                className: 'mb-2 w-full !flex-[1_1_30%] col-span-3',
             }
         },
     })
-
 
     const navigate = useNavigate()
     const momentFormat = 'HH:mm'
@@ -181,6 +224,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                     legal_address: values.legal_address,
                     contacts: values.contacts,
                     height: Number(values.height),
+                    workload: Number(values.workload),
                     // application_type: values.application_type,
                     lat: Number(values.lat),
                     lon: Number(values.lon),
@@ -191,16 +235,22 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
             if(edit) {
                 store.companyStore.editCompany(data, CompanyType.performer, values.id).then((r) => {
                   navigate(`/account/companies/performer/${values.id}`)
-                }).catch((e) => {
-                    console.log('error');
-                }).finally(() => store.companyStore.loadCompanies())
+                })
+                // .catch((e) => {
+                //     console.log('error');
+                // })
+                // .finally(() => store.companyStore.loadCompanies())
             } else {
                 store.companyStore.addCompany(data, CompanyType.performer).then((r) => {
-                    formData.setFieldValue('id', r.id)
-                    changeStep(3)
-                }).catch((e) => {
-                    console.log('error');
-                }).finally(() => store.companyStore.loadCompanies())
+                    if(r.status > 299) {}
+                    else {
+                        formData.setFieldValue('id', r.id)
+                        navigate('/account/companies')
+                    }
+                })
+                // .catch((e) => {
+                //     console.log('error');
+                // }).finally(() => store.companyStore.loadCompanies())
             }
         }
         if (values.type === CompanyType.customer) {
@@ -224,80 +274,100 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                 },
             }
             if(edit) {
-                store.companyStore.editCompany(data, CompanyType.customer, values.id).then((r) => {
+                store.companyStore.editCompany(data, CompanyType.customer, values.id)
+                .then((r) => {
                     !r.status ? navigate(`/account/companies/customer/${values.id}`) : 'Ошибка'
-                }).finally(() => store.companyStore.loadCompanies())
+                })
+                // .finally(() => store.companyStore.loadCompanies())
             } else {
                 store.companyStore.addCompany(data, CompanyType.customer).then((r) => {
                     values.id = r.id
-                    changeStep(3)
-                }).finally(() => store.companyStore.loadCompanies())
+                    navigate('/account/companies')
+                })
+                // .finally(() => store.companyStore.loadCompanies())
             }
         }
-        store.companyStore.loadCompanies()
+        // store.companyStore.loadCompanies()
         mutate(`/account/companies/${values.company_type}/${values.company_id}`).then(r => console.log(`/account/companies/${values.company_type}/${values.id}/retrieve/`, r))
     }, [])
     // @ts-ignore
     return (
         <FormProvider form={formData}>
             <PanelForForms
-              ref={targetRef}
+
+                ref={targetRef}
                 footerClassName={'px-8 pb-8 pt-2'}
                 variant={PanelVariant.default}
-                actionBack={step === 2 ? (<Button
-                  type={'button'}
-                  text={'Назад'}
-                  action={() => {
-                     changeStep(1)
-                  }}
-                  className={'float-right'}
-                  variant={ButtonVariant['accent-outline']}
-                />) : undefined}
-                actionCancel={
-                  step !== 3 ? (<Button
-                        type={'button'}
-                        text={'Отменить'}
-                        action={(e) => {
-                            e.preventDefault()
-                            navigate(-1)
-                        }}
-                        className={'float-right'}
-                    variant={ButtonVariant.cancel}
-                    />) : undefined
-                }
-                actionNext={step !== 3 ? (formData.values.type == CompanyType.customer || formData.values.type == CompanyType.customer ? (
-                      <Button
-                        type={'button'}
-                        action={() => {
-                            formData.validate()
-                            if(step === 2) {
-                                handleSubmit(formData.values)
-                            } else {
-                                changeStep()
-                            }
-                        }}
-                        disabled={!formData.isValid()}
-                        text={step === 1 ? 'Далее' : 'Сохранить'}
-                        className={'float-right'}
-                        variant={ButtonVariant.accent}
-                      />
-                        ) : (
-                          <Button
-                            action={() => handleSubmit(formData.values)}
-                            type={'submit'}
-                            disabled={!formData.isValid()}
-                            text={'Сохранить'}
+                actionBack={
+                    step === 2 ? (
+                        <Button
+                            type={'button'}
+                            text={'Назад'}
+                            action={() => {
+                                changeStep(1)
+                            }}
                             className={'float-right'}
+                            variant={ButtonVariant['accent-outline']}
+                        />
+                    ) : undefined
+                }
+                actionCancel={
+                    step !== 3 ? (
+                        <Button
+                            type={'button'}
+                            text={'Отменить'}
+                            action={(e) => {
+                                e.preventDefault()
+                                navigate(-1)
+                            }}
+                            className={'float-right'}
+                            variant={ButtonVariant.cancel}
+                        />
+                    ) : undefined
+                }
+                actionNext={
+                    step !== 3 ? (
+                        formData.values.type == CompanyType.customer ? (
+                            <Button
+                                type={'button'}
+                                action={() => {
+                                    formData.validate()
+                                    if(step === 1 && edit && formData.values.type == CompanyType.customer && store.appStore.appType !== "admin") {
+                                        handleSubmit(formData.values)
+                                    }
+                                    if (step === 2) {
+                                        handleSubmit(formData.values)
+                                    } else {
+                                        changeStep()
+                                    }
+                                }}
+                                disabled={!formData.isValid()}
+                                text={step === 1 && edit && formData.values.type == CompanyType.customer && store.appStore.appType !== "admin" ? "Сохранить" : step === 1 ? 'Далее' : 'Сохранить'}
+                                className={'float-right'}
+                                variant={ButtonVariant.accent}
+                            />
+                        ) : (
+                            <Button
+                                action={() => handleSubmit(formData.values)}
+                                type={'submit'}
+                                disabled={!formData.isValid()}
+                                text={'Сохранить'}
+                                className={'float-right'}
+                                variant={ButtonVariant.accent}
+                            />
+                        )
+                    ) : (
+                        <LinkStyled
+                            text={'перейти к компании'}
+                            to={`/account/companies/${formData.values.type == CompanyType.performer ? 'performer' : 'customer'}/${formData.values.id}`}
+                            className={'float-right col-start-2 justify-self-end'}
                             variant={ButtonVariant.accent}
-                          />
-                        )) : <LinkStyled text={'перейти к компании'}
-                  to={`/account/companies/${formData.values.type == CompanyType.performer ? 'performer' : 'customer'}/${formData.values.id}`}
-                  className={'float-right col-start-2 justify-self-end'}
-                  variant={ButtonVariant.accent} />
+                        />
+                    )
                 }
             >
                 <form
-                    onSubmit={formData.onSubmit(handleSubmit)}
+                    // onSubmit={formData.onSubmit(handleSubmit)}
                     onReset={formData.onReset}
                     style={{ display: 'contents' }}
                 >
@@ -306,7 +376,7 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         state={step !== 1}
                         animate={animate}
                         className={'!bg-transparent'}
-                        bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+                        bodyClassName={'tablet:flex flex-wrap gap-x-6 gap-y-3'}
                         variant={PanelVariant.textPadding}
                         background={PanelColor.default}
                         header={
@@ -322,73 +392,100 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             </>
                         }
                     >
-                        <TextInput
-
-                            label={'Название'}
-                            {...formData.getInputProps('company_name')}
+                        <Select
+                            allowDeselect={false}
+                            {...formData.getInputProps('type')}
+                            label={'Тип'}
+                            disabled={edit}
+                            defaultValue={formData.values.type}
+                            className={'tablet:!flex-initial desktop:!flex-[0_1_33%] col-span-3'}
+                            data={[
+                                { label: 'Клиент', value: CompanyType.customer },
+                                { label: 'Партнер', value: CompanyType.performer },
+                            ]}
                         />
+                        <TextInput label={'Название'} {...formData.getInputProps('company_name')} />
+                        {formData.values.type === CompanyType.performer && <Select
+                            allowDeselect={false}
+                            {...formData.getInputProps('workload')}
+                            label={'Загруженность'}
+                            defaultValue={formData.values.workload}
+                            className={'tablet:!flex-initial desktop:!flex-[0_1_33%] col-span-3'}
+                            data={[
+                                { label: 'Свободен', value: "1" },
+                                { label: 'Умеренная загрузка', value: "2" },
+                                { label: 'Занят', value: "3" },
+                            ]}
+                        />}
+                        <hr className='my-2 flex-[1_0_100%] col-span-full w-full border-gray-2' />
                         <Select
                             withCheckIcon={false}
                             label={'Город'}
                             searchable={true}
                             {...formData.getInputProps('city')}
-                            className={'!flex-auto'}
-                            onOptionSubmit={props => {
-                               formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name);
-                               formData.setFieldValue('address', '');
+                            // className={'!flex-auto desktop:!flex-[0_1_33%]'}
+                            onOptionSubmit={(props) => {
+                                formData.setFieldValue('city_name', store.catalogStore.cities.get(props).name)
+                                formData.setFieldValue('address', '')
                             }}
-                            data={val(store.catalogStore.cities).filter((c:any) => c.is_active).map((o: any) => ({
-                                label: o.name,
-                                value: String(o.id),
-                            }))}
+                            data={val(store.catalogStore.cities)
+                                .filter((c: any) => c.is_active)
+                                .map((o: any) => ({
+                                    label: o.name,
+                                    value: String(o.id),
+                                }))}
                         />
-                        <InputAutocompleteNew {...formData.getInputProps('address')} city={formData.values.city_name} ctx={formData}/>
+                        <InputAutocompleteNew
+                          {...formData.getInputProps('address')}
+                            city={formData.values.city_name}
+                            ctx={formData}
+                        />
                         <NumberInput
-                          allowLeadingZeros
+                            allowLeadingZeros={true}
                             type={'text'}
+                            valueIsNumericString={true}
                             label={'ИНН'}
                             {...formData.getInputProps('inn')}
                             hideControls
-                            maxLength={10}
+                            maxLength={12}
                             placeholder={'Введите ИНН'}
                         />
                         <NumberInput
-                          allowLeadingZeros
+                            allowLeadingZeros={true}
                             type={'text'}
                             label={'ОГРН'}
+                            valueIsNumericString={true}
                             {...formData.getInputProps('ogrn')}
                             hideControls
-                            maxLength={13}
+                            maxLength={15}
                             placeholder={'Введите ОГРН'}
                         />
                         {formData.values.type === CompanyType.performer && (
-                          <InputBase
-                            component={IMaskInput}
-
-                            label={'Часы работы'}
-                            {...formData.getInputProps('working_time')}
-                            mask={Date}
-                            className={'!flex-[1_0_10rem]'}
-                            /*@ts-ignore*/
-                            blocks={{
-                                YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
-                                MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
-                                DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
-                                HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
-                                mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
-                            }}
-                            pattern={`c ${momentFormat} до ${momentFormat}0`}
-                            format={(date: MomentInput) => moment(date).format(momentFormat)}
-                            parse={(str) => moment(str, momentFormat)}
-                            autofix
-                            overwrite
-                            placeholder='c 00:00 до 23:59'
-                          />
+                            <InputBase
+                                component={IMaskInput}
+                                label={'Часы работы'}
+                                {...formData.getInputProps('working_time')}
+                                mask={Date}
+                                // className={'!flex-[0_1_33%]'}
+                                /*@ts-ignore*/
+                                blocks={{
+                                    YYYY: { mask: IMask.MaskedRange, from: 1970, to: 2030 },
+                                    MM: { mask: IMask.MaskedRange, from: 1, to: 12 },
+                                    DD: { mask: IMask.MaskedRange, from: 1, to: 31 },
+                                    HH: { mask: IMask.MaskedRange, from: 0, to: 23 },
+                                    mm: { mask: IMask.MaskedRange, from: 0, to: 59 },
+                                }}
+                                pattern={`c ${momentFormat} до ${momentFormat}0`}
+                                format={(date: MomentInput) => moment(date).format(momentFormat)}
+                                parse={(str) => moment(str, momentFormat)}
+                                autofix
+                                overwrite
+                                placeholder='c 00:00 до 23:59'
+                            />
                         )}
 
                         <TextInput
-                          className={'!flex-[1_0_100%]'}
-
+                            // className={'!flex-[1_0_100%]'}
                             label={'Юридический адрес'}
                             {...formData.getInputProps('legal_address')}
                             placeholder={'Введите Юридический адрес'}
@@ -396,32 +493,17 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                         {formData.values.type === CompanyType.performer && (
                             <NumberInput
                                 defaultValue={1}
-                              className={'!flex-[1_1_4rem]'}
-
-                              step={1}
-                              hideControls
-                              allowNegative={false}
-                              allowDecimal={false}
+                                // className={'!flex-[1_1_4rem]'}
+                                step={1}
+                                hideControls
+                                allowNegative={false}
+                                allowDecimal={false}
                                 label={'Макс. высота транспорта в см'}
                                 {...formData.getInputProps('height')}
-
                             />
                         )}
-                        <hr className='my-2 flex-[1_0_100%] w-full border-gray-2' />
-                        <Select
-                            allowDeselect={false}
-                            {...formData.getInputProps('type')}
-                            label={'Тип'}
 
-                            disabled={edit}
-                            defaultValue={formData.values.type}
-                            className={'tablet:!flex-initial !flex-[1_0_20rem]'}
-                            data={[
-                                { label: 'Заказчик', value: CompanyType.customer },
-                                { label: 'Партнер', value: CompanyType.performer },
-                            ]}
-                        />
-                        {formData.values.type === CompanyType.performer && (
+                        {formData.values.type === CompanyType.performer && store.appStore.appType === "admin" &&(
                             <NumberInput
                                 type={'text'}
                                 label={'Процент сервиса'}
@@ -457,19 +539,19 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                             />
                         )}
                         <TextInput
-
                             label={'Контактные данные'}
                             {...formData.getInputProps('contacts')}
                             placeholder={'Введите Контактные данные'}
                         />
+
                     </PanelForForms>
                     <PanelForForms
                         state={step !== 2}
                         animate={animate}
                         className={'!bg-transparent'}
-                        bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+                        bodyClassName={'tablet:!flex tablet-max:flex-col tablet-max:*:width-full tablet:flex-wrap gap-x-6 gap-y-3  tablet-max:*:!w-full'}
                         variant={PanelVariant.textPadding}
-                          footerClassName={''}
+                        footerClassName={''}
                         background={PanelColor.default}
                         header={
                             <>
@@ -479,60 +561,91 @@ const FormCreateUpdateCompany = ({ company, edit }: any) => {
                                     variant={HeadingVariant.h2}
                                 />
                                 <div className={''}>
-                                    Укажите информацию о счете компании и предпочтительных исполнителей, если такие есть
+                                    Укажите информацию о счете компании и предпочтительных партнеров, если такие есть
                                 </div>
                             </>
                         }
                     >
-                        <Select
-                            label={'Оплата'}
-                            {...formData.getInputProps('payment')}
-                            className={' w-fit   tablet:!flex-[0_0_auto] !flex-[1_0_20rem]'}
-                            data={[
-                                { label: 'Постоплата', value: Payment.postoplata },
-                                { label: 'Предоплата', value: Payment.predoplata },
-                            ]}
-                        />
-
-                        <Select label={'Овердрафт'} className={' w-fit    tablet:!flex-[0_1_4rem] !flex-[1_0_20rem]'} onOptionSubmit={(value: any) => {
-                            if(value === "2") {
-                                formData.setFieldValue('overdraft_sum', 0);
-                            }
-                        }}{...formData.getInputProps('overdraft')} data={[{ label: 'Да', value: '1' }, { label: 'Нет', value: '2' },]} />
-                        <NumberInput onClick={() => console.log(formData.errors)} disabled={formData.values.overdraft === "2"}    label={'Сумма'}     thousandSeparator=" " suffix={' ₽'} hideControls{...formData.getInputProps('overdraft_sum')} allowNegative={false} min={1}  className={formData.errors.overdraft_sum ? ' filter grayscale' : '' + ' tablet:!flex-[0_0_11rem] !flex-[1_0_20rem]'}/>
+                        {/* <Select */}
+                        {/*     label={'Оплата'} */}
+                        {/*     {...formData.getInputProps('payment')} */}
+                        {/*     className={' w-fit   tablet:!flex-[0_0_auto] !flex-[1_0_20rem]'} */}
+                        {/*     data={[ */}
+                        {/*         { label: 'Постоплата', value: Payment.postoplata }, */}
+                        {/*         { label: 'Предоплата', value: Payment.predoplata }, */}
+                        {/*     ]} */}
+                        {/* /> */}
 
                         <Select
-                            label={'Список Партнеров'}
-                            {...formData.getInputProps('performers_list')}
-                            className={' w-fit  tablet:!flex-[0_0_auto]  !flex-[1_0_20rem]'}
+                            label={'Овердрафт'}
+                            {...formData.getInputProps('overdraft')}
+                            className={' w-fit    tablet:!flex-[0_0_8rem] !flex-[1_0_20rem]'}
+                            onOptionSubmit={(value: any) => {
+                                if (value === '2') {
+                                    formData.setFieldValue('overdraft_sum', 0)
+                                }
+                            }}
                             data={[
                                 { label: 'Да', value: '1' },
                                 { label: 'Нет', value: '2' },
                             ]}
                         />
+                        <NumberInput
+                            label={'Сумма'}
+                            thousandSeparator=' '
+                            suffix={' ₽'}
+                            hideControls
+                            {...formData.getInputProps('overdraft_sum')}
+                          disabled={formData.values.overdraft === '2'}
+                            allowNegative={false}
+                            min={0}
+                            className={
+                                formData.errors.overdraft_sum
+                                    ? ' filter grayscale'
+                                    : '' + ' tablet:!flex-[0_0_11rem] !flex-[1_0_20rem]'
+                            }
+                        />
+
+
+                        {/* <Select */}
+                        {/*     label={'Список Партнеров'} */}
+                        {/*     {...formData.getInputProps('performers_list')} */}
+                        {/*     className={' w-fit  tablet:!flex-[0_0_auto]  !flex-[1_0_20rem]'} */}
+                        {/*     data={[ */}
+                        {/*         { label: 'Да', value: '1' }, */}
+                        {/*         { label: 'Нет', value: '2' }, */}
+                        {/*     ]} */}
+                        {/* /> */}
+
+
                         <hr className={'mt-0 mb-2 flex-[1_0_100%] w-full border-gray-2'} />
-                        {formData.values.performers_list === '1' && <TransferListNew active={formData.values.performer_company}/>}
+
+                        {/* {formData.values.performers_list === '1' && ( */}
+                          <CompanyModalOptionsSelect/>
+                        {/* )} */}
                     </PanelForForms>
-                    <PanelForForms state={step !== 3}
-                      animate={animate}
-                      className={'!bg-transparent'}
-                      bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
-                      variant={PanelVariant.textPadding}
-                      background={PanelColor.default}
-                      header={
-                          <>
-                              <Heading text={`Шаг ${formData.values.type == 'Компания-Партнер' && '2'|| '3'}
+                    <PanelForForms
+                        state={step !== 3}
+                        animate={animate}
+                        className={'!bg-transparent'}
+                        bodyClassName={'!flex flex-wrap gap-x-6 gap-y-3'}
+                        variant={PanelVariant.textPadding}
+                        background={PanelColor.default}
+                        header={
+                            <>
+                                <Heading
+                                    text={`Шаг ${(formData.values.type == 'Партнер' && '2') || '3'}
                                .
                                   Компания создана `}
-                                color={HeadingColor.accent}
-                                variant={HeadingVariant.h2}
-                              />
-                              <div className={''}>
-                                  Вы можете добавить Прайсы и Лимиты для компании или добавить их позже в соответствующем разделе
-                              </div>
-                          </>
-                      }
-
+                                    color={HeadingColor.accent}
+                                    variant={HeadingVariant.h2}
+                                />
+                                <div className={''}>
+                                    Вы можете добавить Прайсы и Лимиты для компании или добавить их позже в
+                                    соответствующем разделе
+                                </div>
+                            </>
+                        }
                     >
                         <div className={'mt-10 flex flex-wrap gap-6 flex-1'}>
                             <CreateField title={'Создать прайс-лист'} />

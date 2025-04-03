@@ -1,22 +1,16 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter } from 'react-router-dom'
 import AuthPage from 'routes/auth'
 import ErrorPage from 'error-page'
 import RegisterPage from 'routes/register/register'
 import RestorePasswordPage from 'routes/restore/restorePasswordPage'
 import RegisterSuccessPage from 'routes/register/registerSucces'
 import {
-    authUser,
-    // companyLoader,
-    filialLoader,
-    filialsLoader,
     groupsCreatLoader,
-    groupsIdLoader,
-    groupsLoader, priceLoader,
+    groupsIdLoader, priceHistoryLoader,
+    priceLoader,
     profileLoader,
-    userLoader,
-    usersLoader
+    userLoader
 } from "routes/loaders/loaders";
-import { carsLoader } from 'routes/loaders/carsLoader'
 import AccountPage from 'routes/account/account'
 import MyProfilePage from 'routes/account/myProfile'
 import DashboardPage from 'routes/dashboard/dashboard'
@@ -41,22 +35,17 @@ import GroupPageCreateAction from 'routes/groups/groupCreateAction'
 import GroupPage from 'routes/groups/group'
 import GroupPageEditAction from 'routes/groups/groupEditAction'
 import React from 'react'
-import ReferencesPage from 'routes/reference/references'
-import ReferencePage from 'routes/reference/reference'
 import ReferencePageCreate from 'routes/reference/referencePageCreate'
 import ReferenceIndex from "routes/reference/referenceIndex";
 import ServicesPage from "routes/reference/Services/references";
 import ServicePage from "routes/reference/Services/reference";
 import ServicesSubTypePage from "routes/reference/Services/subtype";
 import BidsPage from "routes/bids/bids";
-import { bidLoader, bidsLoader } from "routes/loaders/bidsLoader";
 import BidsCreatePage from "routes/bids/BidsCreatePage";
 import PricesPage from "routes/price/prices";
 import BidPage from "routes/bids/bid";
 import PricePage from "routes/price/price";
-import { companiesLoader } from "routes/loaders/companiesLoader";
 import PriceEditPage from "routes/price/priceEdit";
-import PriceHistory from "routes/price/priceHistory";
 import PricesHistoryPage from "routes/price/priceHistory";
 import { referencesLoader } from 'routes/loaders/referenceLoader'
 import RefCarsPage from 'routes/reference/Cars/cars'
@@ -65,11 +54,50 @@ import ReferenceCarPageCreate from "routes/reference/Cars/referenceCarPageCreate
 import RefCitiesPage from "routes/reference/City/cities";
 import ReferenceCityPage from "routes/reference/City/city";
 import ReferenceCityPageCreate from "routes/reference/City/referenceCityPageCreate";
+import LimitsPage from "routes/limits/limits";
+import LimitPageCreateAction from "routes/limits/limitCreateAction";
+import LimitPage from "routes/limits/limit";
+import LimitPageEditAction from "routes/limits/limitEditAction";
+import FinacePage from "routes/finance/finance";
+import TransactionPage from "routes/finance/transaction";
+import PriceHistoryIdPage from "routes/price/priceHistoryId";
+import FinaceIdPage from "routes/finance/financeId";
+import SupportPage from "routes/support/support";
+import PolicyPage from "routes/poliicy";
+import ErrorPageNotFound from "error-page-404";
+import RestorePasswordPageSuccess from "routes/restore/restorePasswordPageSuccess";
+import RestorePasswordNew from "routes/restore/restorePasswordNew";
+import FinaceByTypePage from "routes/finance/financeByType";
+import FinanceByTypeAndTypeId from "routes/finance/financeByTypeAndTypeId";
+import FinanceByTypeAndTypeIdAndCompany from "routes/finance/financeByTypeAndTypeIdAndCompany";
+import ReferenceCarPageUpdate from "routes/reference/Cars/referenceCarPageUpdate";
+import Errors from "components/common/layout/Errors/Errors";
+import Root from "routes/root";
 
 const router = createBrowserRouter([
     {
+        path: '*',
+        element: <ErrorPageNotFound />
+    },
+    {
+      path: '/disconnect',
+      element: <Errors className={''}/>
+    },
+    {
+        path: '/404',
+        element: <ErrorPageNotFound />
+    },
+    {
         path: '/',
         element: <AuthPage />,
+        // index: true,
+
+        // loader: authUser,
+        // errorElement: <ErrorPage />,
+    },
+    {
+        path: '/policy',
+        element: <PolicyPage />,
         errorElement: <ErrorPage />,
     },
     {
@@ -83,21 +111,39 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
     },
     {
-        path: '/register/success',
+        path: '/restore/success',
+        element: <RestorePasswordPageSuccess />,
+        errorElement: <ErrorPage />,
+    },
+  {
+        path: '/restore/newpassword',
+        element: <RestorePasswordNew />,
+        errorElement: <ErrorPage />,
+    },
+
+    {
+        path: '/register/verification',
         element: <RegisterSuccessPage />,
         errorElement: <ErrorPage />,
-        loader: authUser,
     },
     {
         path: '/account',
         element: <AccountPage />,
-        // errorElement: <ErrorPage />,
-        loader: authUser,
+        errorElement: <ErrorPage />,
+        // loader: authUser,
         children: [
+            {
+                path: 'welcome',
+                element: <Root/>
+            },
+            {
+                path: 'support',
+                element: <SupportPage/>
+            },
             {
                 path: 'profile',
                 element: <MyProfilePage />,
-                loader: profileLoader,
+                loader: profileLoader
             },
             {
                 path: 'dashboard',
@@ -106,7 +152,7 @@ const router = createBrowserRouter([
             {
                 path: 'users',
                 element: <UsersPage />,
-                loader: usersLoader,
+                // loader: usersLoader,
                 children: [
                     {
                         path: ':company_type/:company_id/:id',
@@ -142,7 +188,7 @@ const router = createBrowserRouter([
                     {
                         path: ':company_id/:id/edit',
                         element: <CarsPageEditAction />,
-                        loader: carsLoader,
+                        // loader: carsLoader,
                     },
                 ],
             },
@@ -166,9 +212,6 @@ const router = createBrowserRouter([
             {
                 path: 'companies',
                 element: <CompaniesPage />,
-                // loader: companiesLoader,
-                // errorElement: <Navigate to='/account' replace={true} />,
-                // errorElement: <ErrorPage />,
                 children: [
                     {
                         path: ':company_type/:id',
@@ -183,6 +226,27 @@ const router = createBrowserRouter([
                     {
                         path: 'create',
                         element: <CompanyPageCreateAction />,
+                        // loader: companyLoader,
+                    },
+                ],
+            },
+            {
+                path: 'limits',
+                element: <LimitsPage />,
+                children: [
+                    {
+                        path: ':company_id/:id',
+                        element: <LimitPage />,
+                        // loader: companyLoader,
+                    },
+                    {
+                        path: ':company_id/:id/edit',
+                        element: <LimitPageEditAction  />,
+                        // loader: companyLoader,
+                    },
+                    {
+                        path: 'create',
+                        element: <LimitPageCreateAction />,
                         // loader: companyLoader,
                     },
                 ],
@@ -208,9 +272,38 @@ const router = createBrowserRouter([
                 ],
             },
             {
+              path: 'finance/report',
+              element: <FinacePage/>
+            },
+            {
+              path: 'finance/report/:company_id',
+                element: <FinaceIdPage/>,
+                children: [
+                    {
+                        path: ':service_type',
+                        id: 'service_type_company',
+                        element: <FinanceByTypeAndTypeIdAndCompany/>
+                    }
+                ]
+            },
+            {
+                path: 'finance/by-type',
+                element: <FinaceByTypePage/>,
+                children: [
+                    {
+                        path: ':service_type',
+                        element: <FinanceByTypeAndTypeId/>
+                    },
+                ]
+            },
+            {
+                path: 'finance/transaction',
+                element: <TransactionPage/>,
+            },
+            {
                 path: 'groups',
                 element: <GroupsPage />,
-                loader: groupsLoader,
+                // loader: groupsLoader,
                 children: [
                     {
                         path: 'create',
@@ -218,15 +311,33 @@ const router = createBrowserRouter([
                         loader: groupsCreatLoader,
                     },
                     {
+                        path: ':id/create',
+                        element: <GroupPageCreateAction />,
+                        loader: groupsCreatLoader,
+                    },
+                    {
                         path: ':company_type/:id',
                         element: <GroupPage />,
-                        loader: groupsIdLoader,
+                        // loader: groupsIdLoader,
+                        children: [
+                            {
+                                path: ':groupId',
+                                element: <GroupPage />,
+                                // loader: groupsIdLoader,
+                            },
+                        ]
                     },
                     {
                         path: ':company_type/:id/edit',
                         element: <GroupPageEditAction />,
-                        loader: groupsIdLoader,
+                        // loader: groupsIdLoader,
                     },
+                    {
+                        path: ':company_type/:id/:groupId/edit',
+                        element: <GroupPageEditAction />,
+                        // loader: groupsIdLoader,
+                    },
+
                 ],
             },
             {
@@ -238,23 +349,26 @@ const router = createBrowserRouter([
                         element: <RefCarsPage />,
                         // loader: referencesLoader,
                         children: [
+
                             {
                                 path: ':id',
+                                id: "car_id",
                                 element: <ReferenceCarPage />,
                                 // loader: referencesLoader,
                                 children: [
                                     {
                                         path: 'edit',
-                                        element: <ReferenceCarPageCreate edit={true}/>,
+                                        element: <ReferenceCarPageUpdate/>,
                                         // loader: referencesLoader,
                                     },
                                 ],
                             },
-                            {
-                                path: 'create',
-                                element: <ReferenceCarPageCreate  edit={false}/>
-                            }
+
                         ],
+                    },
+                    {
+                        path: 'car_brands/create',
+                        element: <ReferenceCarPageCreate/>
                     },
                     {
                         path: 'cities',
@@ -311,7 +425,7 @@ const router = createBrowserRouter([
             {
                 path: 'price',
                 element: <PricesPage />,
-                // loader: priceLoader,
+                loader: priceLoader,
                 children: [
                     {
                         path: ':id',
@@ -322,23 +436,20 @@ const router = createBrowserRouter([
                                 path: 'edit',
                                 loader: priceLoader,
                                 element: <PriceEditPage />
-                            },
-                            {
-                                path: 'history',
-                                element: <PricesHistoryPage/>,
-                                loader: priceLoader,
-                                children: [
-                                    {
-                                        path: ':bid_id',
-                                        loader: priceLoader,
-                                        element: <PricePage/>,
-                                    },
-                                ],
-
                             }
                         ]
                     },
+                    {
+                        path: ':id/history',
+                        element: <PricesHistoryPage/>,
+                        loader: priceLoader,
+                    }
                 ],
+            },
+            {
+                path: 'price/:id/history/:type/:bid_id',
+                loader: priceHistoryLoader,
+                element: <PriceHistoryIdPage/>,
             },
 
         ],
